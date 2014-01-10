@@ -32,8 +32,11 @@ protected:
 	bool parseAndCheckType(char* json, jsmntype_t type);
 	char* getValueByIndex(int index);
 	char* getValueByKey(char* name);
+	int getArraySize();
 
 private:
+
+	int getNestedTokenCounts(int tokenIndex);
 
 	char* buffer;
 	jsmn_parser parser;
@@ -47,7 +50,7 @@ class JsonObjectParser : public JsonParserBase
 public:
 
 	JsonObjectParser()
-		: JsonParserBase(tokens, N * 2 + 1)
+		: JsonParserBase(tokens, N + 1)
 	{
 
 	}
@@ -64,7 +67,7 @@ public:
 
 private:
 	
-	jsmntok_t tokens[N * 2 + 1];
+	jsmntok_t tokens[N + 1];
 };
 
 template <int N>
@@ -85,7 +88,7 @@ public:
 
 	int getCount()
 	{
-		return getTokenCount();
+		return getArraySize();
 	}
 
 	char* getValue(int index)
