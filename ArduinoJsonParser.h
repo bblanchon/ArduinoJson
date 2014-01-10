@@ -12,55 +12,25 @@
 
 class JsonParserBase
 {
-public:
-
-	JsonParserBase()
-	{
-		jsmn_init(&parser);
-	}
-
 protected:
 
-	bool parseTokens(char* jsonString, jsmntok_t* tokens, int tokenCount)
+	JsonParserBase(jsmntok_t* tokens, int tokenCount)
 	{
-		buffer = jsonString;
+		this->tokenCount = tokenCount;
+		this->tokens = tokens;
 
-		if (JSMN_SUCCESS != jsmn_parse(&parser, jsonString, tokens, tokenCount))
-			return false;
-
-		// Add null termination to each token
-		for (int i = 0; i < tokenCount; i++)
-		{
-			buffer[tokens[i].end] = 0;
-		}
-
-		return true;
+		jsmn_init(&parser);
 	}
-
-	char* getValueByKey(char* name, jsmntok_t* tokens, int tokenCount)
-	{
-		// Scan each keys, every two other token
-		// (skip index 0, because it's the whole json object)
-		for (int i = 1; i < tokenCount; i += 2)
-		{
-			// Early break if we reach the last token
-			if (i >= parser.toknext) break;
-
-			// Get key token string
-			char* key = buffer + tokens[i].start;
-
-			// Compare with desired name
-			if (strcmp(name, key) == 0)
-			{
-				return buffer + tokens[i + 1].start;
-			}
-		}
-	}
+	
+	bool parseTokens(char* jsonString);
+	char* getValueByKey(char* name);
 
 private:
 
 	char* buffer;
 	jsmn_parser parser;
+	int tokenCount;
+	jsmntok_t* tokens;
 };
 
 template <int N>
@@ -68,14 +38,20 @@ class ArduinoJsonParser : JsonParserBase
 {
 public:
 
+	ArduinoJsonParser()
+		: JsonParserBase(tokens, N * 2 + 1)
+	{
+
+	}
+
 	bool parse(char* json)
 	{
-		return parseTokens(json, tokens, N * 2 + 1);
+		return parseTokens(json);
 	}
 	
 	char* getValue(char* name)
 	{
-		return getValueByKey(name, tokens, N * 2 + 1);
+		return getValueByKey(name);
 	}
 
 private:
