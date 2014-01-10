@@ -50,8 +50,8 @@ public:
 			// Get key token string
 			char* key = buffer + tokens[i].start;
 
-			// Compare with desired name, ignoring case
-			if (strcasecmp(name, key) == 0)
+			// Compare with desired name
+			if (strcmp(name, key) == 0)
 			{
 				return buffer + tokens[i + 1].start;
 			}
