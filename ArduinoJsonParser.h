@@ -12,33 +12,41 @@
 
 class JsonParserBase
 {
+public:
+
 protected:
 
-	JsonParserBase(jsmntok_t* tokens, int tokenCount)
+	JsonParserBase(jsmntok_t* tokens, int maxTokenCount)
 	{
-		this->tokenCount = tokenCount;
+		this->maxTokenCount = maxTokenCount;
 		this->tokens = tokens;
 
 		jsmn_init(&parser);
-	}
+	}	
 	
-	bool parseTokens(char* jsonString);
+	int getTokenCount()
+	{
+		return parser.toknext - 1;
+	}
+
+	bool parseAndCheckType(char* json, jsmntype_t type);
+	char* getValueByIndex(int index);
 	char* getValueByKey(char* name);
 
 private:
 
 	char* buffer;
 	jsmn_parser parser;
-	int tokenCount;
+	int maxTokenCount;
 	jsmntok_t* tokens;
 };
 
 template <int N>
-class ArduinoJsonParser : JsonParserBase
+class JsonObjectParser : public JsonParserBase
 {
 public:
 
-	ArduinoJsonParser()
+	JsonObjectParser()
 		: JsonParserBase(tokens, N * 2 + 1)
 	{
 
@@ -46,9 +54,9 @@ public:
 
 	bool parse(char* json)
 	{
-		return parseTokens(json);
+		return parseAndCheckType(json, JSMN_OBJECT);
 	}
-	
+
 	char* getValue(char* name)
 	{
 		return getValueByKey(name);
@@ -57,6 +65,37 @@ public:
 private:
 	
 	jsmntok_t tokens[N * 2 + 1];
+};
+
+template <int N>
+class JsonArrayParser : public JsonParserBase
+{
+public:
+
+	JsonArrayParser()
+		: JsonParserBase(tokens, N + 1)
+	{
+
+	}
+
+	bool parse(char* json)
+	{
+		return parseAndCheckType(json, JSMN_ARRAY);
+	}
+
+	int getCount()
+	{
+		return getTokenCount();
+	}
+
+	char* getValue(int index)
+	{
+		return getValueByIndex(index);
+	}
+
+private:
+
+	jsmntok_t tokens[N + 1];
 };
 
 #endif
