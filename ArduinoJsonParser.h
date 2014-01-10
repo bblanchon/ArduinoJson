@@ -10,21 +10,20 @@
 #include <Arduino.h>
 #include "utility/jsmn.h"
 
-template <int N>
-class ArduinoJsonParser
+class JsonParserBase
 {
 public:
 
-	ArduinoJsonParser()
+	JsonParserBase()
 	{
 		jsmn_init(&parser);
 	}
 
-	boolean parse(char* jsonString)
+protected:
+
+	bool parseTokens(char* jsonString, jsmntok_t* tokens, int tokenCount)
 	{
 		buffer = jsonString;
-
-		int tokenCount = sizeof(tokens) / sizeof(tokens[0]);
 
 		if (JSMN_SUCCESS != jsmn_parse(&parser, jsonString, tokens, tokenCount))
 			return false;
@@ -38,11 +37,11 @@ public:
 		return true;
 	}
 
-	char* getValue(char* name)
+	char* getValueByKey(char* name, jsmntok_t* tokens, int tokenCount)
 	{
 		// Scan each keys, every two other token
 		// (skip index 0, because it's the whole json object)
-		for (int i = 1; i < 2 * N; i += 2)
+		for (int i = 1; i < tokenCount; i += 2)
 		{
 			// Early break if we reach the last token
 			if (i >= parser.toknext) break;
@@ -62,6 +61,25 @@ private:
 
 	char* buffer;
 	jsmn_parser parser;
+};
+
+template <int N>
+class ArduinoJsonParser : JsonParserBase
+{
+public:
+
+	bool parse(char* json)
+	{
+		return parseTokens(json, tokens, N * 2 + 1);
+	}
+	
+	char* getValue(char* name)
+	{
+		return getValueByKey(name, tokens, N * 2 + 1);
+	}
+
+private:
+	
 	jsmntok_t tokens[N * 2 + 1];
 };
 
