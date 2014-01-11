@@ -57,37 +57,22 @@ char* JsonHashTable::getString(char* name)
 
 	return NULL;
 }
-/*
-char* JsonParserBase::getValueByIndex(int index)
+
+char* JsonArray::getString(int index)
 {
-	for (int i = 1; i < parser.toknext; i++)
+	if (json == NULL) return NULL;
+	if (tokens == NULL) return NULL;
+	if (index < 0) return NULL;
+	if (index >= tokens[0].size) return NULL;
+
+	// skip first token, it's the whole object
+	int currentToken = 1;
+
+	for (int i = 0; i < index; i++)
 	{
-		if (index == 0)
-		{
-			return buffer + tokens[i].start;
-		}
-
-		// skip nested objects
-		i += getNestedTokenCounts(i);
-
-		index--;
+		// move forward: current + nested tokens
+		currentToken += 1 + getNestedTokenCounts(currentToken);
 	}
 
-	return NULL;
+	return json + tokens[currentToken].start;
 }
-
-int JsonParserBase::getArraySize()
-{
-	int size = 0;
-
-	for (int i = 1; i < parser.toknext; i++)
-	{
-		// skip nested objects
-		i += getNestedTokenCounts(i);
-
-		size++;
-	}
-
-	return size;
-}
-*/

@@ -10,6 +10,8 @@
 #include <Arduino.h>
 #include "utility/jsmn.h"
 
+class JsonArray;
+
 class JsonObjectBase
 {
 public:
@@ -51,6 +53,7 @@ public:
 	}
 
 	char* getString(char* key);
+	JsonArray getArray(char* key);
 
 private:
 
@@ -61,9 +64,46 @@ private:
 	}
 };
 
+class JsonArray : public JsonObjectBase
+{
+	friend class JsonParserBase;
+
+public:
+
+public:
+
+	JsonArray()
+	{
+
+	}
+
+	char* getString(int index);
+	
+	int getLength()
+	{
+		return tokens != NULL ? tokens[0].size : 0;
+	}
+
+private:
+
+	JsonArray(char* json, jsmntok_t* tokens)
+		: JsonObjectBase(json, tokens)
+	{
+
+	}
+};
+
 class JsonParserBase
 {
 public:
+
+	JsonArray parseArray(char* json)
+	{
+		if (!parse(json) || tokens[0].type != JSMN_ARRAY)
+			return JsonArray();
+
+		return JsonArray(json, tokens);
+	}
 
 	JsonHashTable parseHashTable(char* json)
 	{
@@ -72,7 +112,7 @@ public:
 
 		return JsonHashTable(json, tokens);
 	}
-
+	
 protected:
 
 	JsonParserBase(jsmntok_t* tokens, int maxTokenCount)
