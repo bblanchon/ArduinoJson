@@ -20,11 +20,5 @@ jsmntok_t* JsonParserBase::parse(char* jsonString)
 	if (JSMN_SUCCESS != jsmn_parse(&parser, jsonString, tokens, maxTokenCount))
 		return 0;
 
-	// Add null termination to each token
-	for (int i = 1; i < parser.toknext; i++)
-	{
-		jsonString[tokens[i].end] = 0;
-	}
-
 	return tokens;
 }

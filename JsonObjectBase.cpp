@@ -23,5 +23,8 @@ char* JsonObjectBase::getTokenString(jsmntok_t* token)
 	if (token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING)
 		return 0;
 
+	// add null terminator to the string
+	json[token->end] = 0;
+
 	return json + token->start;
 }
