@@ -1,23 +1,28 @@
 /*
- * malloc-free JSON parser for Arduino
- * Benoit Blanchon 2014
- * MIT License
- */
+* malloc-free JSON parser for Arduino
+* Benoit Blanchon 2014 - MIT License
+*/
 
 #include "JsonParser.h"
 
-bool JsonParserBase::parse(char* jsonString)
+JsonParserBase::JsonParserBase(jsmntok_t* tokens, int maxTokenCount)
 {
-	buffer = jsonString;
+	this->maxTokenCount = maxTokenCount;
+	this->tokens = tokens;
 
+	jsmn_init(&parser);
+}
+
+jsmntok_t* JsonParserBase::parse(char* jsonString)
+{	
 	if (JSMN_SUCCESS != jsmn_parse(&parser, jsonString, tokens, maxTokenCount))
-		return false;
+		return 0;
 
 	// Add null termination to each token
 	for (int i = 1; i < parser.toknext; i++)
 	{
-		buffer[tokens[i].end] = 0;
+		jsonString[tokens[i].end] = 0;
 	}
 
-	return true;
+	return tokens;
 }

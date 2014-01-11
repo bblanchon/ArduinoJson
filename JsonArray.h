@@ -1,7 +1,6 @@
 /*
  * malloc-free JSON parser for Arduino
- * Benoit Blanchon 2014
- * MIT License
+ * Benoit Blanchon 2014 - MIT License
  */
 
 #ifndef __JSONARRAY_H
@@ -31,13 +30,8 @@ public:
 
 private:
 
-	JsonArray(char* json, jsmntok_t* tokens)
-		: JsonObjectBase(json, tokens)
-	{
-	}
-
+	JsonArray(char* json, jsmntok_t* tokens);
 	jsmntok_t* getToken(int index);
 };
 
 #endif
-

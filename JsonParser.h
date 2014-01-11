@@ -1,8 +1,7 @@
 /*
- * malloc-free JSON parser for Arduino
- * Benoit Blanchon 2014
- * MIT License
- */
+* malloc-free JSON parser for Arduino
+* Benoit Blanchon 2014 - MIT License
+*/
 
 #ifndef __JSONPARSER_H
 #define __JSONPARSER_H
@@ -16,35 +15,22 @@ public:
 
 	JsonArray parseArray(char* json)
 	{
-		if (!parse(json) || tokens[0].type != JSMN_ARRAY)
-			return JsonArray();
-
-		return JsonArray(json, tokens);
+		return JsonArray(json, parse(json));
 	}
 
 	JsonHashTable parseHashTable(char* json)
 	{
-		if (!parse(json) || tokens[0].type != JSMN_OBJECT)
-			return JsonHashTable();
-
-		return JsonHashTable(json, tokens);
+		return JsonHashTable(json, parse(json));
 	}
 	
 protected:
 
-	JsonParserBase(jsmntok_t* tokens, int maxTokenCount)
-	{
-		this->maxTokenCount = maxTokenCount;
-		this->tokens = tokens;
-
-		jsmn_init(&parser);
-	}	
+	JsonParserBase(jsmntok_t* tokens, int maxTokenCount);	
 	
-	bool parse(char* json);
-
 private:
 
-	char* buffer;
+	jsmntok_t* parse(char* json);
+
 	jsmn_parser parser;
 	int maxTokenCount;
 	jsmntok_t* tokens;
@@ -58,7 +44,6 @@ public:
 	JsonParser()
 		: JsonParserBase(tokens, N)
 	{
-
 	}
 
 private:

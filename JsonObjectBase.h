@@ -15,8 +15,7 @@ public:
 
 	JsonObjectBase()
 	{
-		json = 0;
-		tokens = 0;
+		makeInvalid();
 	}
 
 	bool success() 
@@ -32,6 +31,12 @@ protected:
 		this->tokens = tokens;
 	}
 		
+	void makeInvalid()
+	{
+		json = 0;
+		tokens = 0;
+	}
+
 	int getNestedTokenCount(int tokenIndex);
 
 	char* json;
