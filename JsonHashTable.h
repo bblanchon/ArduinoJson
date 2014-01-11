@@ -13,14 +13,12 @@ class JsonArray;
 
 class JsonHashTable : public JsonObjectBase
 {
+	friend class JsonArray;
 	friend class JsonParserBase;
 
 public:
 
-	JsonHashTable()
-	{
-
-	}
+	JsonHashTable() {}
 
 	char* getString(char* key)
 	{
@@ -35,7 +33,6 @@ private:
 	JsonHashTable(char* json, jsmntok_t* tokens)
 		: JsonObjectBase(json, tokens)
 	{
-
 	}
 
 	jsmntok_t* getToken(char* key);

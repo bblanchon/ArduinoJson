@@ -5,6 +5,7 @@
  */
 
 #include "JsonArray.h"
+#include "JsonHashTable.h"
 
 jsmntok_t* JsonArray::getToken(int index)
 {
@@ -27,4 +28,10 @@ JsonArray JsonArray::getArray(int index)
 {
 	jsmntok_t* token = getToken(index);
 	return JsonArray(json, token);
+}
+
+JsonHashTable JsonArray::getHashTable(int index)
+{
+	jsmntok_t* token = getToken(index);
+	return JsonHashTable(json, token);
 }

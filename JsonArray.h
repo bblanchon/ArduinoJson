@@ -9,6 +9,8 @@
 
 #include "JsonObjectBase.h"
 
+class JsonHashTable;
+
 class JsonArray : public JsonObjectBase
 {
 	friend class JsonParserBase;
@@ -16,25 +18,21 @@ class JsonArray : public JsonObjectBase
 
 public:
 
-public:
+	JsonArray()	{}
 
-	JsonArray()
+	int getLength()
 	{
-
+		return tokens != 0 ? tokens[0].size : 0;
 	}
-
-	JsonArray getArray(int index);
 
 	char* getString(int index)
 	{
 		jsmntok_t* token = getToken(index);
 		return token != 0 ? json + token->start : 0;
 	}
-	
-	int getLength()
-	{
-		return tokens != 0 ? tokens[0].size : 0;
-	}
+
+	JsonArray getArray(int index);
+	JsonHashTable getHashTable(int index);
 
 private:
 
