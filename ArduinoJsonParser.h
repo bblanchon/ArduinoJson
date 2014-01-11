@@ -10,9 +10,68 @@
 #include <Arduino.h>
 #include "utility/jsmn.h"
 
+class JsonObjectBase
+{
+public:
+
+	JsonObjectBase()
+	{
+		json = NULL;
+		tokens = NULL;
+	}
+
+	bool success() 
+	{ 
+		return json != NULL && tokens != NULL;
+	}
+
+protected:
+	
+	JsonObjectBase(char* json, jsmntok_t* tokens)
+	{
+		this->json = json;
+		this->tokens = tokens;
+	}
+		
+	int getNestedTokenCounts(int tokenIndex);
+
+	char* json;
+	jsmntok_t* tokens;
+};
+
+class JsonHashTable : public JsonObjectBase
+{
+	friend class JsonParserBase;
+
+public:
+
+	JsonHashTable()
+	{
+
+	}
+
+	char* getString(char* key);
+
+private:
+
+	JsonHashTable(char* json, jsmntok_t* tokens)
+		: JsonObjectBase(json, tokens)
+	{
+
+	}
+};
+
 class JsonParserBase
 {
 public:
+
+	JsonHashTable parseHashTable(char* json)
+	{
+		if (!parse(json) || tokens[0].type != JSMN_OBJECT)
+			return JsonHashTable();
+
+		return JsonHashTable(json, tokens);
+	}
 
 protected:
 
@@ -24,19 +83,13 @@ protected:
 		jsmn_init(&parser);
 	}	
 	
-	int getTokenCount()
-	{
-		return parser.toknext - 1;
-	}
-
-	bool parseAndCheckType(char* json, jsmntype_t type);
+	bool parse(char* json);
+	/*
 	char* getValueByIndex(int index);
 	char* getValueByKey(char* name);
 	int getArraySize();
-
+	*/
 private:
-
-	int getNestedTokenCounts(int tokenIndex);
 
 	char* buffer;
 	jsmn_parser parser;
@@ -45,31 +98,21 @@ private:
 };
 
 template <int N>
-class JsonObjectParser : public JsonParserBase
+class JsonParser : public JsonParserBase
 {
 public:
 
-	JsonObjectParser()
-		: JsonParserBase(tokens, N + 1)
+	JsonParser()
+		: JsonParserBase(tokens, N)
 	{
 
-	}
-
-	bool parse(char* json)
-	{
-		return parseAndCheckType(json, JSMN_OBJECT);
-	}
-
-	char* getValue(char* name)
-	{
-		return getValueByKey(name);
 	}
 
 private:
 	
-	jsmntok_t tokens[N + 1];
+	jsmntok_t tokens[N];
 };
-
+/*
 template <int N>
 class JsonArrayParser : public JsonParserBase
 {
@@ -100,6 +143,6 @@ private:
 
 	jsmntok_t tokens[N + 1];
 };
-
+*/
 #endif
 

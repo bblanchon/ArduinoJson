@@ -6,7 +6,7 @@
 
 #include "ArduinoJsonParser.h"
 
-int JsonParserBase::getNestedTokenCounts(int tokenIndex)
+int JsonObjectBase::getNestedTokenCounts(int tokenIndex)
 {
 	int count = 0;
 
@@ -18,48 +18,46 @@ int JsonParserBase::getNestedTokenCounts(int tokenIndex)
 	return count;
 }
 
-bool JsonParserBase::parseAndCheckType(char* jsonString, jsmntype_t type)
+bool JsonParserBase::parse(char* jsonString)
 {
 	buffer = jsonString;
 
 	if (JSMN_SUCCESS != jsmn_parse(&parser, jsonString, tokens, maxTokenCount))
 		return false;
 
-	if (tokens[0].type != type)
-		return false;
-
 	// Add null termination to each token
 	for (int i = 1; i < parser.toknext; i++)
 	{
 		buffer[tokens[i].end] = 0;
-
-		// skip nested objects
-		i += getNestedTokenCounts(i);
 	}
 
 	return true;
 }
 
-char* JsonParserBase::getValueByKey(char* name)
-{
-	// Scan each keys, every two other token
-	// (skip index 0, because it's the whole json object)
-	for (int i = 1; i < parser.toknext; i += 2)
+char* JsonHashTable::getString(char* name)
+{	
+	// skip first token, it's the whole object
+	int currentToken = 1;
+
+	// Scan each keys
+	for (int i = 0; i < tokens[0].size / 2 ; i++)
 	{
 		// Get key token string
-		char* key = buffer + tokens[i].start;
+		char* key = json + tokens[currentToken].start;
 
 		// Compare with desired name
 		if (strcmp(name, key) == 0)
 		{
-			return buffer + tokens[i + 1].start;
+			return json + tokens[currentToken + 1].start;
 		}
 
-		// skip nested objects
-		i += getNestedTokenCounts(i);
+		// move forward: key + value + nested tokens
+		currentToken += 2 + getNestedTokenCounts(currentToken + 1);
 	}
-}
 
+	return NULL;
+}
+/*
 char* JsonParserBase::getValueByIndex(int index)
 {
 	for (int i = 1; i < parser.toknext; i++)
@@ -92,3 +90,4 @@ int JsonParserBase::getArraySize()
 
 	return size;
 }
+*/
