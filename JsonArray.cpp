@@ -24,7 +24,7 @@ jsmntok_t* JsonArray::getToken(int index)
 		return 0;
 
 	// skip first token, it's the whole object
-	int currentToken = 1;
+	jsmntok_t* currentToken = tokens + 1;
 
 	// skip all tokens before the specified index
 	for (int i = 0; i < index; i++)
@@ -33,7 +33,7 @@ jsmntok_t* JsonArray::getToken(int index)
 		currentToken += 1 + getNestedTokenCount(currentToken);
 	}
 
-	return &tokens[currentToken];
+	return currentToken;
 }
 
 JsonArray JsonArray::getArray(int index)
@@ -48,6 +48,5 @@ JsonHashTable JsonArray::getHashTable(int index)
 
 char* JsonArray::getString(int index)
 {
-	jsmntok_t* token = getToken(index);
-	return token != 0 ? json + token->start : 0;
+	return getTokenString(getToken(index));
 }

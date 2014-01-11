@@ -25,18 +25,19 @@ jsmntok_t* JsonHashTable::getToken(char* desiredKey)
 		return 0;
 
 	// skip first token, it's the whole object
-	int currentToken = 1;
+	jsmntok_t* currentToken = tokens + 1;
 
 	// scan each keys
 	for (int i = 0; i < tokens[0].size / 2 ; i++)
 	{
 		// get key token string
-		char* key = json + tokens[currentToken].start;
+		char* key = getTokenString(currentToken);
 
-		// Compare with desired name
+		// compare with desired name
 		if (strcmp(desiredKey, key) == 0)
 		{
-			return &tokens[currentToken + 1];
+			// return the value token that follows the key token
+			return currentToken + 1;
 		}
 
 		// move forward: key + value + nested tokens
@@ -59,6 +60,5 @@ JsonHashTable JsonHashTable::getHashTable(char* key)
 
 char* JsonHashTable::getString(char* key)
 {
-	jsmntok_t* token = getToken(key);
-	return token != 0 ? json + token->start : 0;
+	return getTokenString(getToken(key));
 }

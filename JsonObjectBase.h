@@ -36,8 +36,9 @@ protected:
 		json = 0;
 		tokens = 0;
 	}
-
-	int getNestedTokenCount(int tokenIndex);
+	
+	static int getNestedTokenCount(jsmntok_t* token);
+	char* getTokenString(jsmntok_t* token);
 
 	char* json;
 	jsmntok_t* tokens;

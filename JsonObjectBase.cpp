@@ -6,14 +6,22 @@
 
 #include "JsonObjectBase.h"
 
-int JsonObjectBase::getNestedTokenCount(int tokenIndex)
+int JsonObjectBase::getNestedTokenCount(jsmntok_t* token)
 {
 	int count = 0;
 
-	for (int i = 0; i < tokens[tokenIndex].size; i++)
+	for (int i = 0; i < token->size; i++)
 	{
-		count += 1 + getNestedTokenCount(tokenIndex + 1 + i);
+		count += 1 + getNestedTokenCount(token + 1 + i);
 	}
 
 	return count;
+}
+
+char* JsonObjectBase::getTokenString(jsmntok_t* token)
+{
+	if (token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING)
+		return 0;
+
+	return json + token->start;
 }
