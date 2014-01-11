@@ -31,7 +31,6 @@ private:
 
 	jsmntok_t* parse(char* json);
 
-	jsmn_parser parser;
 	int maxTokenCount;
 	jsmntok_t* tokens;
 };
