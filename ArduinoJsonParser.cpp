@@ -34,7 +34,7 @@ bool JsonParserBase::parse(char* jsonString)
 	return true;
 }
 
-char* JsonHashTable::getString(char* name)
+jsmntok_t* JsonHashTable::getToken(char* name)
 {	
 	// skip first token, it's the whole object
 	int currentToken = 1;
@@ -48,7 +48,7 @@ char* JsonHashTable::getString(char* name)
 		// Compare with desired name
 		if (strcmp(name, key) == 0)
 		{
-			return json + tokens[currentToken + 1].start;
+			return &tokens[currentToken + 1];
 		}
 
 		// move forward: key + value + nested tokens
@@ -56,6 +56,12 @@ char* JsonHashTable::getString(char* name)
 	}
 
 	return NULL;
+}
+
+JsonArray JsonHashTable::getArray(char* key)
+{
+	jsmntok_t* token = getToken(key);
+	return JsonArray(json, token);
 }
 
 char* JsonArray::getString(int index)
