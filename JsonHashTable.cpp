@@ -31,7 +31,7 @@ jsmntok_t* JsonHashTable::getToken(char* name)
 		}
 
 		// move forward: key + value + nested tokens
-		currentToken += 2 + getNestedTokenCounts(currentToken + 1);
+		currentToken += 2 + getNestedTokenCount(currentToken + 1);
 	}
 
 	// nothing found, return NULL

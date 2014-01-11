@@ -18,7 +18,7 @@ jsmntok_t* JsonArray::getToken(int index)
 	for (int i = 0; i < index; i++)
 	{
 		// move forward: current + nested tokens
-		currentToken += 1 + getNestedTokenCounts(currentToken);
+		currentToken += 1 + getNestedTokenCount(currentToken);
 	}
 
 	return &tokens[currentToken];

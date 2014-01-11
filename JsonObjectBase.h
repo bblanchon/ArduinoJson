@@ -32,7 +32,7 @@ protected:
 		this->tokens = tokens;
 	}
 		
-	int getNestedTokenCounts(int tokenIndex);
+	int getNestedTokenCount(int tokenIndex);
 
 	char* json;
 	jsmntok_t* tokens;
