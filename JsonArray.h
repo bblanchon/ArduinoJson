@@ -26,9 +26,7 @@ public:
 	}
 
 	JsonArray getArray(int index);	
-
 	JsonHashTable getHashTable(int index);
-
 	char* getString(int index);
 
 private:

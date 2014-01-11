@@ -20,9 +20,9 @@ public:
 
 	JsonHashTable() {}
 
-	char* getString(char* key);
-
 	JsonArray getArray(char* key);
+	JsonHashTable getHashTable(char* key);
+	char* getString(char* key);
 
 private:
 
