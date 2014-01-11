@@ -85,7 +85,13 @@ public:
 
 	}
 
-	char* getString(int index);
+	JsonArray getArray(int index);
+
+	char* getString(int index)
+	{
+		jsmntok_t* token = getToken(index);
+		return token != NULL ? json + token->start : NULL;
+	}
 	
 	int getLength()
 	{
@@ -99,6 +105,8 @@ private:
 	{
 
 	}
+
+	jsmntok_t* getToken(int index);
 };
 
 class JsonParserBase
@@ -132,11 +140,7 @@ protected:
 	}	
 	
 	bool parse(char* json);
-	/*
-	char* getValueByIndex(int index);
-	char* getValueByKey(char* name);
-	int getArraySize();
-	*/
+
 private:
 
 	char* buffer;
@@ -160,37 +164,6 @@ private:
 	
 	jsmntok_t tokens[N];
 };
-/*
-template <int N>
-class JsonArrayParser : public JsonParserBase
-{
-public:
 
-	JsonArrayParser()
-		: JsonParserBase(tokens, N + 1)
-	{
-
-	}
-
-	bool parse(char* json)
-	{
-		return parseAndCheckType(json, JSMN_ARRAY);
-	}
-
-	int getCount()
-	{
-		return getArraySize();
-	}
-
-	char* getValue(int index)
-	{
-		return getValueByIndex(index);
-	}
-
-private:
-
-	jsmntok_t tokens[N + 1];
-};
-*/
 #endif
 

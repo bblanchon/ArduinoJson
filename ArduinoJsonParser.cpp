@@ -64,7 +64,7 @@ JsonArray JsonHashTable::getArray(char* key)
 	return JsonArray(json, token);
 }
 
-char* JsonArray::getString(int index)
+jsmntok_t* JsonArray::getToken(int index)
 {
 	if (json == NULL) return NULL;
 	if (tokens == NULL) return NULL;
@@ -80,5 +80,11 @@ char* JsonArray::getString(int index)
 		currentToken += 1 + getNestedTokenCounts(currentToken);
 	}
 
-	return json + tokens[currentToken].start;
+	return &tokens[currentToken];
+}
+
+JsonArray JsonArray::getArray(int index)
+{
+	jsmntok_t* token = getToken(index);
+	return JsonArray(json, token);
 }
