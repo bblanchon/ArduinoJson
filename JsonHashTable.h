@@ -20,11 +20,7 @@ public:
 
 	JsonHashTable() {}
 
-	char* getString(char* key)
-	{
-		jsmntok_t* token = getToken(key);
-		return token != 0 ? json + token->start : 0;
-	}
+	char* getString(char* key);
 
 	JsonArray getArray(char* key);
 

@@ -43,3 +43,9 @@ JsonArray JsonHashTable::getArray(char* key)
 	jsmntok_t* token = getToken(key);
 	return JsonArray(json, token);
 }
+
+char* JsonHashTable::getString(char* key)
+{
+	jsmntok_t* token = getToken(key);
+	return token != 0 ? json + token->start : 0;
+}

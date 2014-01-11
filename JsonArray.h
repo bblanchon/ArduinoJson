@@ -25,21 +25,17 @@ public:
 		return tokens != 0 ? tokens[0].size : 0;
 	}
 
-	char* getString(int index)
-	{
-		jsmntok_t* token = getToken(index);
-		return token != 0 ? json + token->start : 0;
-	}
+	JsonArray getArray(int index);	
 
-	JsonArray getArray(int index);
 	JsonHashTable getHashTable(int index);
+
+	char* getString(int index);
 
 private:
 
 	JsonArray(char* json, jsmntok_t* tokens)
 		: JsonObjectBase(json, tokens)
 	{
-
 	}
 
 	jsmntok_t* getToken(int index);
