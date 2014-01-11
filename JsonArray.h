@@ -12,7 +12,9 @@ class JsonHashTable;
 
 class JsonArray : public JsonObjectBase
 {
-	friend class JsonParserBase;
+	template <int N>
+	friend class JsonParser;
+
 	friend class JsonHashTable;
 
 public:

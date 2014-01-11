@@ -9,7 +9,8 @@
 #include "JsonHashTable.h"
 #include "JsonArray.h"
 
-class JsonParserBase
+template <int N>
+class JsonParser
 {
 public:
 
@@ -22,31 +23,20 @@ public:
 	{
 		return JsonHashTable(json, parse(json));
 	}
-	
-protected:
 
-	JsonParserBase(jsmntok_t* tokens, int maxTokenCount);	
-	
 private:
 
-	jsmntok_t* parse(char* json);
-
-	int maxTokenCount;
-	jsmntok_t* tokens;
-};
-
-template <int N>
-class JsonParser : public JsonParserBase
-{
-public:
-
-	JsonParser()
-		: JsonParserBase(tokens, N)
+	jsmntok_t* parse(char* jsonString)
 	{
+		jsmn_parser parser;
+		jsmn_init(&parser);
+
+		if (JSMN_SUCCESS != jsmn_parse(&parser, jsonString, tokens, N))
+			return 0;
+
+		return tokens;
 	}
 
-private:
-	
 	jsmntok_t tokens[N];
 };
 
