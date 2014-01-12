@@ -28,6 +28,7 @@ public:
 
 	JsonArray getArray(int index);	
 	JsonHashTable getHashTable(int index);
+	long getLong(int index);
 	char* getString(int index);
 
 private:

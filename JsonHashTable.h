@@ -23,6 +23,7 @@ public:
 
 	JsonArray getArray(char* key);
 	JsonHashTable getHashTable(char* key);
+	long getLong(char* key);
 	char* getString(char* key);
 
 private:

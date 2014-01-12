@@ -46,7 +46,12 @@ JsonHashTable JsonArray::getHashTable(int index)
 	return JsonHashTable(json, getToken(index));
 }
 
+long JsonArray::getLong(int index)
+{
+	return getLongFromToken(getToken(index));
+}
+
 char* JsonArray::getString(int index)
 {
-	return getTokenString(getToken(index));
+	return getStringFromToken(getToken(index));
 }

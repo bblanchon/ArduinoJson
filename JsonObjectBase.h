@@ -38,7 +38,8 @@ protected:
 	}
 	
 	static int getNestedTokenCount(jsmntok_t* token);
-	char* getTokenString(jsmntok_t* token);
+	char* getStringFromToken(jsmntok_t* token);
+	long getLongFromToken(jsmntok_t* token);
 
 	char* json;
 	jsmntok_t* tokens;

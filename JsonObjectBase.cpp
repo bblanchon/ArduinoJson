@@ -6,6 +6,8 @@
 
 #include "JsonObjectBase.h"
 
+#include <stdlib.h> // for strtol
+
 int JsonObjectBase::getNestedTokenCount(jsmntok_t* token)
 {
 	int count = 0;
@@ -18,7 +20,15 @@ int JsonObjectBase::getNestedTokenCount(jsmntok_t* token)
 	return count;
 }
 
-char* JsonObjectBase::getTokenString(jsmntok_t* token)
+long JsonObjectBase::getLongFromToken(jsmntok_t* token)
+{
+	if (token->type != JSMN_PRIMITIVE)
+		return 0;
+
+	return strtol(json + token->start, 0, 0);
+}
+
+char* JsonObjectBase::getStringFromToken(jsmntok_t* token)
 {
 	if (token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING)
 		return 0;

@@ -31,7 +31,7 @@ jsmntok_t* JsonHashTable::getToken(char* desiredKey)
 	for (int i = 0; i < tokens[0].size / 2 ; i++)
 	{
 		// get key token string
-		char* key = getTokenString(currentToken);
+		char* key = getStringFromToken(currentToken);
 
 		// compare with desired name
 		if (strcmp(desiredKey, key) == 0)
@@ -58,7 +58,12 @@ JsonHashTable JsonHashTable::getHashTable(char* key)
 	return JsonHashTable(json, getToken(key));
 }
 
+long JsonHashTable::getLong(char* key)
+{
+	return getLongFromToken(getToken(key));
+}
+
 char* JsonHashTable::getString(char* key)
 {
-	return getTokenString(getToken(key));
+	return getStringFromToken(getToken(key));
 }
