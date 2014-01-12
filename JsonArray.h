@@ -26,7 +26,8 @@ public:
 		return tokens != 0 ? tokens[0].size : 0;
 	}
 
-	JsonArray getArray(int index);	
+	JsonArray getArray(int index);
+	double getDouble(int index);
 	JsonHashTable getHashTable(int index);
 	long getLong(int index);
 	char* getString(int index);

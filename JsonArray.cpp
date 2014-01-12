@@ -41,6 +41,11 @@ JsonArray JsonArray::getArray(int index)
 	return JsonArray(json, getToken(index));
 }
 
+double JsonArray::getDouble(int index)
+{
+	return getDoubleFromToken(getToken(index));
+}
+
 JsonHashTable JsonArray::getHashTable(int index)
 {
 	return JsonHashTable(json, getToken(index));
