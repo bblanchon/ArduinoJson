@@ -9,7 +9,7 @@
 #include "JsonHashTable.h"
 #include "JsonArray.h"
 
-template <int N>
+template <int SIZE> // SIZE of the parser in bytes  (128, 256 or more are recommended)
 class JsonParser
 {
 public:
@@ -26,18 +26,21 @@ public:
 
 private:
 
-	jsmntok_t* parse(char* jsonString)
+	jsmntok_t* parse(char* json)
 	{
 		jsmn_parser parser;
 		jsmn_init(&parser);
 
-		if (JSMN_SUCCESS != jsmn_parse(&parser, jsonString, tokens, N))
+		jsmntok_t* tokens = (jsmntok_t*) buffer;
+		int maxTokenCount = SIZE / sizeof(jsmntok_t);
+
+		if (JSMN_SUCCESS != jsmn_parse(&parser, json, tokens, maxTokenCount))
 			return 0;
 
 		return tokens;
 	}
 
-	jsmntok_t tokens[N];
+	char buffer[SIZE];
 };
 
 #endif
