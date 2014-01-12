@@ -20,6 +20,23 @@ int JsonObjectBase::getNestedTokenCount(jsmntok_t* token)
 	return count;
 }
 
+bool JsonObjectBase::getBoolFromToken(jsmntok_t* token)
+{
+	if (token->type != JSMN_PRIMITIVE) return 0;
+
+	// "true"
+	if (json[token->start] == 't') return true;
+
+	// "false"
+	if (json[token->start] == 'f') return false;
+
+	// "null"
+	if (json[token->start] == 'n') return false;
+	
+	// number
+	return strtol(json + token->start, 0, 0) != 0;
+}
+
 double JsonObjectBase::getDoubleFromToken(jsmntok_t* token)
 {
 	if (token->type != JSMN_PRIMITIVE) return 0;

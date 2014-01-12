@@ -53,6 +53,11 @@ JsonArray JsonHashTable::getArray(char* key)
 	return JsonArray(json, getToken(key));
 }
 
+bool JsonHashTable::getBool(char* key)
+{
+	return getBoolFromToken(getToken(key));
+}
+
 double JsonHashTable::getDouble(char* key)
 {
 	return getDoubleFromToken(getToken(key));

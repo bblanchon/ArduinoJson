@@ -22,6 +22,7 @@ public:
 	JsonHashTable() {}
 
 	JsonArray getArray(char* key);
+	bool getBool(char* key);
 	double getDouble(char* key);
 	JsonHashTable getHashTable(char* key);
 	long getLong(char* key);

@@ -27,6 +27,7 @@ public:
 	}
 
 	JsonArray getArray(int index);
+	bool getBool(int index);
 	double getDouble(int index);
 	JsonHashTable getHashTable(int index);
 	long getLong(int index);

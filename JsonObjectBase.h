@@ -39,6 +39,7 @@ protected:
 	
 	static int getNestedTokenCount(jsmntok_t* token);
 
+	bool getBoolFromToken(jsmntok_t* token);
 	double getDoubleFromToken(jsmntok_t* token);
 	long getLongFromToken(jsmntok_t* token);
 	char* getStringFromToken(jsmntok_t* token);
