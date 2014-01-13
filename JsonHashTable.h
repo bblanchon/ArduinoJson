@@ -21,6 +21,8 @@ public:
 
 	JsonHashTable() {}
 
+	bool containsKey(char* key);
+
 	JsonArray getArray(char* key);
 	bool getBool(char* key);
 	double getDouble(char* key);

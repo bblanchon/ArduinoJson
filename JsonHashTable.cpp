@@ -48,6 +48,11 @@ jsmntok_t* JsonHashTable::getToken(char* desiredKey)
 	return 0; 
 }
 
+bool JsonHashTable::containsKey(char* key)
+{
+	return getToken(key) != 0;
+}
+
 JsonArray JsonHashTable::getArray(char* key)
 {
 	return JsonArray(json, getToken(key));
