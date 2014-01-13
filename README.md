@@ -50,11 +50,13 @@ To extract data from the JSON string, you need to instanciate a `JsonParser`, an
 > #### How to choose the size ?
 
 > The more bytes you give to the parser, the more complex the JSON can be, so if you have free space on your stack you should increase the size of the parser.
-> Sizes from 128 to 256 are usually good.
+> **A size from 128 to 512 bytes is usually good.**
 
-> Behind the scenes, all these bytes are uses to store *jsmn* tokens.
-> A token is 8 bytes long, so 128 to 256, allows to parse from 16 to 32 tokens.
-> As an example the `char* json` on the top of this page requires 12 tokens.
+> Behind the scenes, all these bytes are used to store *jsmn* tokens.
+> A token is 8 bytes long, so 128 to 512, allows to parse from 16 to 64 tokens.
+> It may seem small but it's very descent for a processor with only 2KB of RAM, you won't get better results with other parsers.
+
+> As an example the `char* json` on the top of this page requires 12 tokens, so 96 bytes would be enough.
 
 ### 4. Extract data
 
