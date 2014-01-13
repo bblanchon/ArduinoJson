@@ -1,0 +1,10 @@
+JsonParser		KEYWORD1
+JsonArray		KEYWORD1
+JsonHashTable	KEYWORD1
+getArray		KEYWORD2
+getBool			KEYWORD2
+getDouble		KEYWORD2
+getHashTable	KEYWORD2
+getLong			KEYWORD2
+parseArray		KEYWORD2
+parseHashTable	KEYWORD2
