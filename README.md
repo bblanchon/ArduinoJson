@@ -125,4 +125,58 @@ And then extract the content by its index in the array:
 or simply:
 
     double a = root.getArray(0).getDouble(0);
-    
+   
+## Code size
+
+### Minimum setup
+
+<table>
+	<tr>
+		<td>strcmp(char*,char*)</td>
+		<td>18</td>
+	</tr>
+	<tr>
+		<td>jsmn_init(jsmn_parser*)</td>
+		<td>20</td>
+	</tr>
+	<tr>
+		<td>JsonParser::parse(char*)</td>
+		<td>106</td>
+	</tr>
+	<tr>
+		<td>JsonObjectBase::getNestedTokenCount(jsmntok_t*)</td>
+		<td>84</td>		
+	</tr>
+	<tr>
+		<td>JsonObjectBase::getStringFromToken(jsmntok_t*)</td>
+		<td>68</td>		
+	</tr>
+	<tr>
+		<td>JsonArray::JsonArray(char*, jsmntok_t*)</td>
+		<td>42</td>		
+	</tr>
+	<tr>
+		<td>JsonArray::getToken(int)</td>
+		<td>112</td>		
+	</tr>
+	<tr>
+		<td>JsonArray::getString(int)</td>
+		<td>18</td>
+	</tr>
+	<tr>
+		<td>JsonHashTable::JsonHashTable(char*, jsmntok_t*)</td>
+		<td>42</td>		
+	</tr>
+	<tr>
+		<td>JsonHashTable::getToken(char*)</td>
+		<td>180</td>		
+	</tr>
+	<tr>
+		<td>JsonHashTable::getString(char*)</td>
+		<td>18</td>
+	</tr>
+	<tr>
+		<th>TOTAL</th>
+		<th>1680</th>
+	</tr>
+</table>
