@@ -1,10 +1,10 @@
 # A malloc-free JSON parser for Arduino
 
-The library is an convenient and efficient wrapper around the *jsmn* tokenizer: http://zserge.com/jsmn.html
+The library is an thin C++ wrapper around the *jsmn* tokenizer: http://zserge.com/jsmn.html
 
-It works without any allocation on the heap (no malloc) and supports nested objects.
+It's design to be very lightweight, works without any allocation on the heap (no malloc) and supports nested objects.
 
-It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library on any other C project.
+It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library on any other C++ project.
 
 ## Example
 
@@ -47,14 +47,14 @@ To extract data from the JSON string, you need to instanciate a `JsonParser`, an
 
     JsonParser<128> parser;
     
-#### How to choose the size ?
+> #### How to choose the size ?
 
-The more bytes you give to the parser, the more complex the JSON can be, so if you have free space on your stack you should increase the size of the parser.
-Sizes from 128 to 256 are usually good.
+> The more bytes you give to the parser, the more complex the JSON can be, so if you have free space on your stack you should increase the size of the parser.
+> Sizes from 128 to 256 are usually good.
 
-Behind the scenes, all these bytes are uses to store *jsmn* tokens.
-A token is 8 bytes long, so 128 to 256, allows to parse from 16 to 32 tokens.
-As an example the `char* json` on the top of this page requires 12 tokens.
+> Behind the scenes, all these bytes are uses to store *jsmn* tokens.
+> A token is 8 bytes long, so 128 to 256, allows to parse from 16 to 32 tokens.
+> As an example the `char* json` on the top of this page requires 12 tokens.
 
 ### 4. Extract data
 
@@ -80,10 +80,10 @@ In this case the root object of the JSON string is a hash table, so you need to 
     
 To check if the parsing was successful, you must check:
 
-   if (!root.success())
-   {
-       // Parsing fail: could be an invalid JSON, or too many tokens
-   }
+    if (!root.success())
+    {
+        // Parsing fail: could be an invalid JSON, or too many tokens
+    }
     
 And then extract the member you need:
     
@@ -110,10 +110,10 @@ In this case the root object of the JSON string is an array, so you need to extr
     
 To check if the parsing was successful, you must check:
 
-   if (!root.success())
-   {
-       // Parsing fail: could be an invalid JSON, or too many tokens
-   }
+    if (!root.success())
+    {
+        // Parsing fail: could be an invalid JSON, or too many tokens
+    }
     
 And then extract the content by its index in the array:
     
