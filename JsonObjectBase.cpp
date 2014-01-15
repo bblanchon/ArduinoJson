@@ -39,21 +39,21 @@ bool JsonObjectBase::getBoolFromToken(jsmntok_t* token)
 
 double JsonObjectBase::getDoubleFromToken(jsmntok_t* token)
 {
-	if (token->type != JSMN_PRIMITIVE) return 0;
+	if (token == 0 || token->type != JSMN_PRIMITIVE) return 0;
 
 	return strtod(json + token->start, 0);
 }
 
 long JsonObjectBase::getLongFromToken(jsmntok_t* token)
 {
-	if (token->type != JSMN_PRIMITIVE) return 0;
+	if (token == 0 || token->type != JSMN_PRIMITIVE) return 0;
 
 	return strtol(json + token->start, 0, 0);
 }
 
 char* JsonObjectBase::getStringFromToken(jsmntok_t* token)
 {
-	if (token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING)
+	if (token == 0 || token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING)
 		return 0;
 
 	// add null terminator to the string
