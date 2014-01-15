@@ -21,19 +21,19 @@ public:
 
 	JsonHashTable() {}
 
-	bool containsKey(char* key);
+	bool containsKey(const char* key);
 
-	JsonArray getArray(char* key);
-	bool getBool(char* key);
-	double getDouble(char* key);
-	JsonHashTable getHashTable(char* key);
-	long getLong(char* key);
-	char* getString(char* key);
+	JsonArray getArray(const char* key);
+	bool getBool(const char* key);
+	double getDouble(const char* key);
+	JsonHashTable getHashTable(const char* key);
+	long getLong(const char* key);
+	char* getString(const char* key);
 
 private:
 
 	JsonHashTable(char* json, jsmntok_t* tokens);
-	jsmntok_t* getToken(char* key);
+	jsmntok_t* getToken(const char* key);
 };
 
 #endif

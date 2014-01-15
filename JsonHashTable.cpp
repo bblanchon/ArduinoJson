@@ -18,7 +18,7 @@ JsonHashTable::JsonHashTable(char* json, jsmntok_t* tokens)
 /*
 * Returns the token for the value associated with the specified key
 */
-jsmntok_t* JsonHashTable::getToken(char* desiredKey)
+jsmntok_t* JsonHashTable::getToken(const char* desiredKey)
 {	
 	// sanity check
 	if (json == 0 || tokens == 0 || desiredKey == 0)
@@ -48,37 +48,37 @@ jsmntok_t* JsonHashTable::getToken(char* desiredKey)
 	return 0; 
 }
 
-bool JsonHashTable::containsKey(char* key)
+bool JsonHashTable::containsKey(const char* key)
 {
 	return getToken(key) != 0;
 }
 
-JsonArray JsonHashTable::getArray(char* key)
+JsonArray JsonHashTable::getArray(const char* key)
 {
 	return JsonArray(json, getToken(key));
 }
 
-bool JsonHashTable::getBool(char* key)
+bool JsonHashTable::getBool(const char* key)
 {
 	return getBoolFromToken(getToken(key));
 }
 
-double JsonHashTable::getDouble(char* key)
+double JsonHashTable::getDouble(const char* key)
 {
 	return getDoubleFromToken(getToken(key));
 }
 
-JsonHashTable JsonHashTable::getHashTable(char* key)
+JsonHashTable JsonHashTable::getHashTable(const char* key)
 {
 	return JsonHashTable(json, getToken(key));
 }
 
-long JsonHashTable::getLong(char* key)
+long JsonHashTable::getLong(const char* key)
 {
 	return getLongFromToken(getToken(key));
 }
 
-char* JsonHashTable::getString(char* key)
+char* JsonHashTable::getString(const char* key)
 {
 	return getStringFromToken(getToken(key));
 }
