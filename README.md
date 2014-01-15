@@ -10,7 +10,7 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 
     char* json = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";
 
-    JsonParser<256> parser;
+    JsonParser<32> parser;
 
     JsonHashTable hashTable = parser.parseHashTable(json);
 
@@ -43,20 +43,20 @@ Just add the following line on the to of your `.ino` file:
     
 ### 3. Create a parser
 
-To extract data from the JSON string, you need to instanciate a `JsonParser`, and specify the number of byte your allocate for the parser itself:
+To extract data from the JSON string, you need to create a `JsonParser`, and specify the number of token you allocate for the parser itself:
 
-    JsonParser<128> parser;
+    JsonParser<32> parser;
     
-> #### How to choose the size ?
+> #### How to choose the number of tokens ?
 
-> The more bytes you give to the parser, the more complex the JSON can be, so if you have free space on your stack you should increase the size of the parser.
-> **A size from 128 to 512 bytes is usually good.**
+> First you need to know exactly what a token is. A token is an element af the JSON object: either a key, a value, an hash-table or an array.
+> As an example the `char* json` on the top of this page contains 12 tokens (don't forget to count 1 for the whole object and 1 more for the array itself).
 
-> Behind the scenes, all these bytes are used to store *jsmn* tokens.
-> A token is 8 bytes long, so 128 to 512, allows to parse from 16 to 64 tokens.
-> It may seem small but it's very descent for a processor with only 2KB of RAM, you won't get better results with other parsers.
+> The more tokens you allocate, the more complex the JSON can be, but also the more memory will be occupied.
+> Each token takes 8 bytes, so `sizeof(JsonParser<32>)` is 256 bytes which is quite big in an Arduino with only 2KB of RAM.
+> Don't forget that you also have to store the JSON string in memory and it's probably big.
 
-> As an example the `char* json` on the top of this page requires 12 tokens, so 96 bytes would be enough.
+> 32 tokens may seem small but it's very descent for an 8-bit processor, you wouldn't get better results with other JSON libraries.
 
 ### 4. Extract data
 

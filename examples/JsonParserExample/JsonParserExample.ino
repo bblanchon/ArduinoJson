@@ -9,7 +9,7 @@ void ParseAnObject()
 {
     char* json = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";
 
-    JsonParser<256> parser;
+    JsonParser<32> parser;
 
     Serial.print("Parse ");
     Serial.println(json);
@@ -49,7 +49,7 @@ void ParseAnArray()
 {
     char* json = "[[1.2,3.4],[5.6,7.8]]";
 
-    JsonParser<256> parser;
+    JsonParser<32> parser;
 
     Serial.print("Parse ");
     Serial.println(json);
