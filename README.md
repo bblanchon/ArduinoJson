@@ -6,6 +6,14 @@ It's design to be very lightweight, works without any allocation on the heap (no
 
 It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library on any other C++ project.
 
+## Features
+
+* Based on the well-proven [jsmn](http://zserge.com/jsmn.html) tokenizer
+* Supports nested objects
+* Works with fixed memory allocation : no `malloc()`
+* Low footprint
+* MIT License
+
 ## Example
 
     char* json = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";
@@ -146,6 +154,10 @@ As you'll see the code size if between 1680 and 3528 bytes, depending on the fea
 	<tr>
 		<td>jsmn_init(jsmn_parser*)</td>
 		<td>20</td>
+	</tr>
+	<tr>
+		<td>jsmn_parse(jsmn_parser*, char const*, jsmntok_t*, unsigned int)</td>
+		<td>960</td>
 	</tr>
 	<tr>
 		<td>JsonParser::parse(char*)</td>
