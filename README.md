@@ -1,6 +1,5 @@
-A malloc-free JSON parser for Arduino
-=====================================
-
+An efficient JSON parser for Arduino
+====================================
 
 This library is an thin C++ wrapper around the *jsmn* tokenizer: http://zserge.com/jsmn.html
 
@@ -10,7 +9,7 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 
 
 Features
--------
+--------
 
 * Based on the well-proven [jsmn](http://zserge.com/jsmn.html) tokenizer
 * Supports nested objects
@@ -40,7 +39,6 @@ Example
     int age = hashTable.getLong("Age");
 
     bool online = hashTable.getBool("Online");
-
 
 
 
@@ -74,7 +72,7 @@ To extract data from the JSON string, you need to create a `JsonParser`, and spe
 > Each token takes 8 bytes, so `sizeof(JsonParser<32>)` is 256 bytes which is quite big in an Arduino with only 2KB of RAM.
 > Don't forget that you also have to store the JSON string in RAM and it's probably big.
 
-> 32 tokens may seem small but it's very descent for an 8-bit processor, you wouldn't get better results with other JSON libraries.
+> 32 tokens may seem small, but it's very decent for an 8-bit processor, you wouldn't get better results with other JSON libraries.
 
 ### 4. Extract data
 
@@ -150,7 +148,6 @@ or simply:
     double a = root.getArray(0).getDouble(0);
 
 
-
 Common pitfalls
 ---------------
 
@@ -204,8 +201,6 @@ When you pass a `char*` to `JsonParser::parseArray()` or `JsonParser::parseHashT
 This is because we want functions like `JsonArray::getString()` to return a null-terminating string without any memory allocation.
    
 
-
-
 Memory usage
 ------------
 
@@ -231,9 +226,6 @@ This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
         <td>4</td>
     </tr>
 </table> 
-
-
-
 
 
 Code size
