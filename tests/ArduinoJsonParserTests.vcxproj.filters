@@ -50,5 +50,8 @@
     <ClCompile Include="TestArrayExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestGbathreeStrings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

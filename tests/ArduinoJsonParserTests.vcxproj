@@ -97,6 +97,7 @@
     <ClCompile Include="..\utility\jsmn.cpp" />
     <ClCompile Include="TestArrayExample.cpp" />
     <ClCompile Include="TestHashTableExample.cpp" />
+    <ClCompile Include="TestGbathreeStrings.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
