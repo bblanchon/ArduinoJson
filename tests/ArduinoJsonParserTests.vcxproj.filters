@@ -47,5 +47,8 @@
     <ClCompile Include="TestHashTableExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestArrayExample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

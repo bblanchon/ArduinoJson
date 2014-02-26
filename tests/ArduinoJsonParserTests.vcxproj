@@ -95,6 +95,7 @@
     <ClCompile Include="..\JsonHashTable.cpp" />
     <ClCompile Include="..\JsonObjectBase.cpp" />
     <ClCompile Include="..\utility\jsmn.cpp" />
+    <ClCompile Include="TestArrayExample.cpp" />
     <ClCompile Include="TestHashTableExample.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
