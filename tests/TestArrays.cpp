@@ -43,7 +43,7 @@ namespace ArduinoJsonParserTests
 			Assert::IsFalse(array.success());
 		}
 		
-		TEST_METHOD(OneDimensionsArray)
+		TEST_METHOD(OneDimensionArray)
 		{
 			char json [] = "[0,0]";
 
@@ -80,7 +80,7 @@ namespace ArduinoJsonParserTests
 
 		TEST_METHOD(TreeDimensionsArray)
 		{
-			char json[] = "[[[[0,0],[0,0]],[[0,0],[0,0]]]]";
+			char json[] = "[[[0,0],[0,0]],[[0,0],[0,0]]]";
 
 			JsonArray array1 = parser.parseArray(json);
 			Assert::IsTrue(array1.success());
@@ -104,6 +104,38 @@ namespace ArduinoJsonParserTests
 					}
 				}
 			}
+		}
+
+		TEST_METHOD(OneDimensionArrayInHashTable)
+		{
+			char json[] = "{a:[0,0],b:[0,0]}";
+
+			JsonHashTable root = parser.parseHashTable(json);
+			Assert::IsTrue(root.success());
+
+			JsonArray arrayA = root.getArray("a");
+			Assert::IsTrue(arrayA.success());
+			Assert::AreEqual(2, arrayA.getLength());
+
+			JsonArray arrayB = root.getArray("b");
+			Assert::IsTrue(arrayB.success());
+			Assert::AreEqual(2, arrayB.getLength());
+		}
+
+		TEST_METHOD(TwoDimensionsArrayInHashTable)
+		{
+			char json[] = "{a:[[0],[0]],b:[[0],[0]]}";
+
+			JsonHashTable root = parser.parseHashTable(json);
+			Assert::IsTrue(root.success());
+
+			JsonArray arrayA = root.getArray("a");
+			Assert::IsTrue(arrayA.success());
+			Assert::AreEqual(2, arrayA.getLength());
+
+			JsonArray arrayB = root.getArray("b");
+			Assert::IsTrue(arrayB.success());
+			Assert::AreEqual(2, arrayB.getLength());
 		}
 	};
 }
