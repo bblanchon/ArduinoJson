@@ -1,7 +1,7 @@
 ArduinoJsonParser change log
 ============================
 
-v1.1 (unreleased)
+v1.1
 ----
 
 * Example: changed `char* json` into `char json[]` so that the byes are not write protected
