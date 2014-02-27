@@ -21,7 +21,7 @@ Features
 Example
 -------
 
-    char* json = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";
+    char json[] = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";
 
     JsonParser<32> parser;
 
@@ -66,7 +66,7 @@ To extract data from the JSON string, you need to create a `JsonParser`, and spe
 > #### How to choose the number of tokens ?
 
 > A token is an element of the JSON object: either a key, a value, an hash-table or an array.
-> As an example the `char* json` on the top of this page contains 12 tokens (don't forget to count 1 for the whole object and 1 more for the array itself).
+> As an example the `char json[]` on the top of this page contains 12 tokens (don't forget to count 1 for the whole object and 1 more for the array itself).
 
 > The more tokens you allocate, the more complex the JSON can be, but also the more memory is occupied.
 > Each token takes 8 bytes, so `sizeof(JsonParser<32>)` is 256 bytes which is quite big in an Arduino with only 2KB of RAM.
@@ -85,7 +85,7 @@ If you need other type, you can get the string value and parse it yourself.
 
 #### Hash-table
 
-Consider we have a `char* json` pointing to the following JSON string:
+Consider we have a `char json[]` containing to the following JSON string:
 
     {
         "Name":"Blanchon",
@@ -120,7 +120,7 @@ And then extract the member you need:
     
 #### Array
 
-Consider we have a `char* json` pointing to the following JSON string:
+Consider we have a `char json[]` containing to the following JSON string:
 
     [
         [ 1.2, 3.4 ],
@@ -196,7 +196,7 @@ because the local variable `parser` will be *removed* from memory when the funct
 
 This will probably never be an issue, but you need to be aware of this feature.
 
-When you pass a `char*` to `JsonParser::parseArray()` or `JsonParser::parseHashTable()`, the content of the string will be altered to add `\0` at the end of the tokens.
+When you pass a `char[]` to `JsonParser::parseArray()` or `JsonParser::parseHashTable()`, the content of the string will be altered to add `\0` at the end of the tokens.
 
 This is because we want functions like `JsonArray::getString()` to return a null-terminating string without any memory allocation.
    
