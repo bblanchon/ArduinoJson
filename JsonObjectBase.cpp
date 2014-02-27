@@ -10,12 +10,14 @@
 
 int JsonObjectBase::getNestedTokenCount(jsmntok_t* token)
 {
-	int count = 0;
-	jsmntok_t* nextSibling = token + 1;
+	int end = token->end;
+	int count = 0;	
 
-	while (nextSibling->start < token->end)
+	token++;
+
+	while (token->start < end)
 	{
-		nextSibling++;
+		token++;
 		count++;
 	}
 
