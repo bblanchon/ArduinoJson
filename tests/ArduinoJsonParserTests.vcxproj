@@ -96,6 +96,7 @@
     <ClCompile Include="..\JsonObjectBase.cpp" />
     <ClCompile Include="..\utility\jsmn.cpp" />
     <ClCompile Include="TestArrayExample.cpp" />
+    <ClCompile Include="TestArrays.cpp" />
     <ClCompile Include="TestHashTableExample.cpp" />
     <ClCompile Include="TestGbathreeStrings.cpp" />
   </ItemGroup>
