@@ -9,7 +9,7 @@
 JsonArray::JsonArray(char* json, jsmntok_t* tokens)
 : JsonObjectBase(json, tokens)
 {
-	if (tokens[0].type != JSMN_ARRAY)
+	if (tokens == 0 || tokens[0].type != JSMN_ARRAY)
 		makeInvalid();
 }
 
