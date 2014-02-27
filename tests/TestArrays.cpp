@@ -11,7 +11,39 @@ namespace ArduinoJsonParserTests
 
 	public:
 		
-		TEST_METHOD(OneDimensionArray)
+		TEST_METHOD(EmptyString)
+		{
+			char json[] = "";
+
+			JsonArray array = parser.parseArray(json);
+			Assert::IsFalse(array.success());
+		}
+
+		TEST_METHOD(EmptyArray)
+		{
+			char json[] = "[]";
+
+			JsonArray array = parser.parseArray(json);
+			Assert::IsTrue(array.success());
+		}
+
+		TEST_METHOD(TooFewClosingBrackets)
+		{
+			char json[] = "[[]";
+
+			JsonArray array = parser.parseArray(json);
+			Assert::IsFalse(array.success());
+		}
+
+		TEST_METHOD(TooManyClosingBrackets)
+		{
+			char json[] = "[]]";
+
+			JsonArray array = parser.parseArray(json);
+			Assert::IsFalse(array.success());
+		}
+		
+		TEST_METHOD(OneDimensionsArray)
 		{
 			char json [] = "[0,0]";
 
@@ -25,7 +57,7 @@ namespace ArduinoJsonParserTests
 			}
 		}
 
-		TEST_METHOD(TwoDimensionArray)
+		TEST_METHOD(TwoDimensionsArray)
 		{
 			char json[] = "[[0,0],[0,0]]";
 
@@ -46,9 +78,9 @@ namespace ArduinoJsonParserTests
 			}
 		}
 
-		TEST_METHOD(TreeDimensionArray)
+		TEST_METHOD(TreeDimensionsArray)
 		{
-			char json[] = "[[[0,0],[0,0]],[[0,0],[0,0]]]]";
+			char json[] = "[[[[0,0],[0,0]],[[0,0],[0,0]]]]";
 
 			JsonArray array1 = parser.parseArray(json);
 			Assert::IsTrue(array1.success());
