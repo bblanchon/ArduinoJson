@@ -7,7 +7,7 @@
 
 void ParseAnObject()
 {
-    char[] json = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";
+    char json[] = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";
 
     JsonParser<32> parser;
 
@@ -47,7 +47,7 @@ void ParseAnObject()
 
 void ParseAnArray()
 {
-    char[] json = "[[1.2,3.4],[5.6,7.8]]";
+    char json[] = "[[1.2,3.4],[5.6,7.8]]";
 
     JsonParser<32> parser;
 
