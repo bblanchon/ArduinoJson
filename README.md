@@ -407,3 +407,10 @@ As you'll see the code size if between 1680 and 3528 bytes, depending on the fea
         <td>710</td>
     </tr>
 </table>
+
+
+Links
+-----
+
+* [The project for which I made me this library](http://blog.benoitblanchon.fr/rfid-payment-terminal/)
+* [Blog post on the motivation for this library](http://blog.benoitblanchon.fr/arduino-json-parser/)
