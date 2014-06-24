@@ -55,6 +55,15 @@ namespace JsonGeneratorTests
             AssertJsonIs("[3.14,2.72]");
         }
 
+        TEST_METHOD(AddOneNumberOverCapacity)
+        {
+            arr.add(3.14);
+            arr.add(2.72);
+            arr.add(1.41);
+
+            AssertJsonIs("[3.14,2.72]");
+        }
+
         void AssertJsonIs(const char* expected)
         {      
             char buffer[256];
