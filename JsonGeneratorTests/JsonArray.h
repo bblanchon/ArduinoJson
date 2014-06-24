@@ -11,12 +11,14 @@ enum JsonObjectType
 {
     JSON_STRING,
     JSON_NUMBER,
+    JSON_BOOLEAN,
 };
 
 union JsonObjectValue
 {
     const char* string;
-    double number;
+    double      number;
+    bool        boolean;
 };
 
 struct JsonObject
@@ -54,6 +56,15 @@ public:
         itemCount++;
     }
 
+    void add(bool value)
+    {
+        if (itemCount >= N) return;
+
+        items[itemCount].type = JSON_BOOLEAN;
+        items[itemCount].value.boolean = value;
+        itemCount++;
+    }
+
     void writeTo(char* buffer, size_t bufferSize)
     {
         buffer[0] = 0;
@@ -73,6 +84,10 @@ public:
 
             case JSON_NUMBER:
                 append(buffer, bufferSize, "%lg", items[i].value.number);
+                break;
+
+            case JSON_BOOLEAN:
+                append(buffer, bufferSize, "true");
                 break;
             }
         }

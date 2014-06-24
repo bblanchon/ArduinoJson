@@ -64,6 +64,13 @@ namespace JsonGeneratorTests
             AssertJsonIs("[3.14,2.72]");
         }
 
+        TEST_METHOD(AddTrue)
+        {
+            arr.add(true);
+
+            AssertJsonIs("[true]");
+        }
+
         void AssertJsonIs(const char* expected)
         {      
             char buffer[256];
