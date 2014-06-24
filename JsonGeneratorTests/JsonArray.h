@@ -76,18 +76,23 @@ public:
             if (i>0)
                 append(buffer, bufferSize, ",");
 
+            JsonObjectValue value = items[i].value;
+
             switch (items[i].type)
             {
             case JSON_STRING:
-                append(buffer, bufferSize, "'%s'", items[i].value.string);
+                if (value.string)
+                    append(buffer, bufferSize, "'%s'", value.string);
+                else
+                    append(buffer, bufferSize, "null");
                 break;
 
             case JSON_NUMBER:
-                append(buffer, bufferSize, "%lg", items[i].value.number);
+                append(buffer, bufferSize, "%lg", value.number);
                 break;
 
             case JSON_BOOLEAN:
-                append(buffer, bufferSize, items[i].value.boolean ? "true" : "false");
+                append(buffer, bufferSize, value.boolean ? "true" : "false");
                 break;
             }
         }

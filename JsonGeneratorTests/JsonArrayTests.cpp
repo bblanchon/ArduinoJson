@@ -16,6 +16,13 @@ namespace JsonGeneratorTests
             AssertJsonIs("[]");
         }
 
+        TEST_METHOD(AddNull)
+        {
+            arr.add((char*)0);
+
+            AssertJsonIs("[null]");
+        }
+
         TEST_METHOD(AddOneString)
         {
             arr.add("hello");
