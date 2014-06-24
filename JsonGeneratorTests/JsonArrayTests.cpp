@@ -7,7 +7,7 @@ namespace JsonGeneratorTests
 {		
     TEST_CLASS(JsonArrayTests)
     {
-        JsonArray<3> arr;
+        JsonArray<2> arr;
         
     public:
         
@@ -27,6 +27,15 @@ namespace JsonGeneratorTests
         {
             arr.add("hello");
             arr.add("world");
+
+            AssertJsonIs("['hello','world']");
+        }
+
+        TEST_METHOD(OverCapacity)
+        {
+            arr.add("hello");
+            arr.add("world");
+            arr.add("lost");
 
             AssertJsonIs("['hello','world']");
         }

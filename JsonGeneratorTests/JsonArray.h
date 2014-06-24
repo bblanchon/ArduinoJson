@@ -16,7 +16,7 @@ public:
     
     void add(const char* data)
     {
-        if (itemCount <= N)
+        if (itemCount < N)
             items[itemCount++] = data;
     }
 
