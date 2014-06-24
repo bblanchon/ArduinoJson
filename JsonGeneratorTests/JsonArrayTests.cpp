@@ -16,14 +16,14 @@ namespace JsonGeneratorTests
             AssertJsonIs("[]");
         }
 
-        TEST_METHOD(OneString)
+        TEST_METHOD(AddOneString)
         {
             arr.add("hello");
 
             AssertJsonIs("['hello']");
         }
 
-        TEST_METHOD(TwoStrings)
+        TEST_METHOD(AddTwoStrings)
         {
             arr.add("hello");
             arr.add("world");
@@ -31,7 +31,7 @@ namespace JsonGeneratorTests
             AssertJsonIs("['hello','world']");
         }
 
-        TEST_METHOD(OverCapacity)
+        TEST_METHOD(AddOneStringOverCapacity)
         {
             arr.add("hello");
             arr.add("world");
@@ -40,11 +40,19 @@ namespace JsonGeneratorTests
             AssertJsonIs("['hello','world']");
         }
 
-        TEST_METHOD(OneNumber)
+        TEST_METHOD(AddOneNumber)
         {
             arr.add(3.14);
 
             AssertJsonIs("[3.14]");
+        }
+
+        TEST_METHOD(AddTwoNumbers)
+        {
+            arr.add(3.14);
+            arr.add(2.72);
+
+            AssertJsonIs("[3.14,2.72]");
         }
 
         void AssertJsonIs(const char* expected)
