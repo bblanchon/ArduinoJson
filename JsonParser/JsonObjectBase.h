@@ -7,7 +7,7 @@
 #ifndef __JSONOBJECTBASE_H
 #define __JSONOBJECTBASE_H
 
-#include "utility/jsmn.h"
+#include "jsmn.h"
 
 class JsonObjectBase
 {

@@ -84,21 +84,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\JsonArray.h" />
-    <ClInclude Include="..\JsonHashTable.h" />
-    <ClInclude Include="..\JsonObjectBase.h" />
-    <ClInclude Include="..\JsonParser.h" />
-    <ClInclude Include="..\utility\jsmn.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\JsonArray.cpp" />
-    <ClCompile Include="..\JsonHashTable.cpp" />
-    <ClCompile Include="..\JsonObjectBase.cpp" />
-    <ClCompile Include="..\utility\jsmn.cpp" />
+    <ClCompile Include="..\JsonParser\jsmn.cpp" />
+    <ClCompile Include="..\JsonParser\JsonArray.cpp" />
+    <ClCompile Include="..\JsonParser\JsonHashTable.cpp" />
+    <ClCompile Include="..\JsonParser\JsonObjectBase.cpp" />
     <ClCompile Include="TestArrayExample.cpp" />
     <ClCompile Include="TestArrays.cpp" />
     <ClCompile Include="TestHashTableExample.cpp" />
     <ClCompile Include="TestGbathreeStrings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\JsonParser\jsmn.h" />
+    <ClInclude Include="..\JsonParser\JsonArray.h" />
+    <ClInclude Include="..\JsonParser\JsonHashTable.h" />
+    <ClInclude Include="..\JsonParser\JsonObjectBase.h" />
+    <ClInclude Include="..\JsonParser\JsonParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
