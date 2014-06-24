@@ -27,7 +27,7 @@ namespace JsonGeneratorTests
         {
             arr.add("hello");
 
-            AssertJsonIs("['hello']");
+            AssertJsonIs("[\"hello\"]");
         }
 
         TEST_METHOD(AddTwoStrings)
@@ -35,7 +35,7 @@ namespace JsonGeneratorTests
             arr.add("hello");
             arr.add("world");
 
-            AssertJsonIs("['hello','world']");
+            AssertJsonIs("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(AddOneStringOverCapacity)
@@ -44,7 +44,7 @@ namespace JsonGeneratorTests
             arr.add("world");
             arr.add("lost");
 
-            AssertJsonIs("['hello','world']");
+            AssertJsonIs("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(AddOneNumber)

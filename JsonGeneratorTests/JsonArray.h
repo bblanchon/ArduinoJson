@@ -82,7 +82,7 @@ public:
             {
             case JSON_STRING:
                 if (value.string)
-                    append(buffer, bufferSize, "'%s'", value.string);
+                    append(buffer, bufferSize, "\"%s\"", value.string);
                 else
                     append(buffer, bufferSize, "null");
                 break;
