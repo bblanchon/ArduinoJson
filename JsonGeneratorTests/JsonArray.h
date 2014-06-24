@@ -87,7 +87,7 @@ public:
                 break;
 
             case JSON_BOOLEAN:
-                append(buffer, bufferSize, "true");
+                append(buffer, bufferSize, items[i].value.boolean ? "true" : "false");
                 break;
             }
         }

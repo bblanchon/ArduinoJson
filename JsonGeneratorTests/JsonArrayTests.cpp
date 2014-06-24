@@ -71,6 +71,13 @@ namespace JsonGeneratorTests
             AssertJsonIs("[true]");
         }
 
+        TEST_METHOD(AddFalse)
+        {
+            arr.add(false);
+
+            AssertJsonIs("[false]");
+        }
+
         void AssertJsonIs(const char* expected)
         {      
             char buffer[256];
