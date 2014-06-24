@@ -40,6 +40,13 @@ namespace JsonGeneratorTests
             AssertJsonIs("['hello','world']");
         }
 
+        TEST_METHOD(OneNumber)
+        {
+            arr.add(3.14);
+
+            AssertJsonIs("[3.14]");
+        }
+
         void AssertJsonIs(const char* expected)
         {      
             char buffer[256];
