@@ -28,8 +28,11 @@ public:
 
         for (int i = 0; i < itemCount; i++)
         {
+            if (i>0)
+                append(",", buffer, bufferSize);
+
             append("'", buffer, bufferSize);
-            append(items[i], buffer, bufferSize);
+            append(items[i], buffer, bufferSize);           
             append("'", buffer, bufferSize);
         }
 

@@ -7,7 +7,7 @@ namespace JsonGeneratorTests
 {		
     TEST_CLASS(JsonArrayTests)
     {
-        JsonArray<32> arr;
+        JsonArray<3> arr;
         
     public:
         
@@ -21,6 +21,14 @@ namespace JsonGeneratorTests
             arr.add("hello");
 
             AssertJsonIs("['hello']");
+        }
+
+        TEST_METHOD(TwoStrings)
+        {
+            arr.add("hello");
+            arr.add("world");
+
+            AssertJsonIs("['hello','world']");
         }
 
         void AssertJsonIs(const char* expected)
