@@ -6,9 +6,3 @@
 #include <string.h>
 
 #include "JsonArray.h"
-
-void JsonArray::writeTo(char* buffer, size_t bufferSize)
-{
-    strncpy(buffer, "[]", bufferSize);
-
-}
