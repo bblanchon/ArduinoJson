@@ -14,8 +14,6 @@ public:
 
 protected:
 
-    virtual void writeTo(StringBuilder& sb) = 0;
-
     enum ObjectType
     {
         JSON_STRING,
@@ -38,32 +36,8 @@ protected:
         ObjectValue value;
     };
 
-    void writeObjectTo(ObjectContainer& obj, StringBuilder& sb)
-    {
-        switch (obj.type)
-        {
-        case JSON_STRING:
-            if (obj.value.string)
-                sb.append("\"%s\"", obj.value.string);
-            else
-                sb.append("null");
-            break;
+    void writeObjectTo(ObjectContainer& obj, StringBuilder& sb);
 
-        case JSON_NUMBER:
-            sb.append("%lg", obj.value.number);
-            break;
-
-        case JSON_BOOLEAN:
-            sb.append(obj.value.boolean ? "true" : "false");
-            break;
-
-        case JSON_OBJECT:
-            if (obj.value.object)
-                obj.value.object->writeTo(sb);
-            else
-                sb.append("null");
-            break;
-        }
-    }
+    virtual void writeTo(StringBuilder& sb) = 0;
 };
 
