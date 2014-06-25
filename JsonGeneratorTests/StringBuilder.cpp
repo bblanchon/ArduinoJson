@@ -12,3 +12,22 @@ void StringBuilder::append(const char* format, ...)
 
     length += strlen(tail);
 }
+
+void StringBuilder::appendEscaped(const char* s)
+{
+    if (length > capacity - 3) return;
+
+    buffer[length++] = '"';
+
+    while (*s && length<capacity-2)
+    {
+        if (*s == '"')
+            buffer[length++] = '\\';
+
+        buffer[length++] = *s;
+
+        s++;
+    }
+
+    buffer[length++] = '"';
+}

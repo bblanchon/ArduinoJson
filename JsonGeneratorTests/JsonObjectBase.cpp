@@ -6,7 +6,7 @@ void JsonObjectBase::writeObjectTo(ObjectContainer& obj, StringBuilder& sb)
     {
     case JSON_STRING:
         if (obj.value.string)
-            sb.append("\"%s\"", obj.value.string);
+            sb.appendEscaped(obj.value.string);
         else
             sb.append("null");
         break;

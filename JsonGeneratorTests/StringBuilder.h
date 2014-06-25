@@ -18,6 +18,7 @@ public:
     }
 
     void append(const char* format, ...);
+    void appendEscaped(const char* s);
 
 private:
     char* buffer;
