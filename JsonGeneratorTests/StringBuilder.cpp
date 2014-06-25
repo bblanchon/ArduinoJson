@@ -5,7 +5,7 @@ void StringBuilder::append(const char* s)
 {
     char* tail = buffer + length;
 
-    strcpy(tail, s);
+    strncpy(tail, s, capacity - length);
 
     length += strlen(tail);
 }
@@ -16,17 +16,35 @@ void StringBuilder::appendEscaped(const char* s)
 
     buffer[length++] = '"';
 
-    while (*s && length<capacity-2)
-    {
-        if (*s == '"')
-            buffer[length++] = '\\';
+    // keep one slot for the end quote
+    capacity--;
 
-        buffer[length++] = *s;
+    while (*s && length<capacity)
+    {
+        switch (*s)
+        {
+        case '"':
+            append("\\\"");
+            break;
+
+        case '\\':
+            append("\\\\");
+            break;
+
+
+        default:
+            buffer[length++] = *s;
+            break;
+        }
 
         s++;
     }
 
     buffer[length++] = '"';
+    buffer[length] = 0;
+
+    // restore the original capacity
+    capacity++;
 }
 
 void StringBuilder::appendFormatted(const char* format, ...)
