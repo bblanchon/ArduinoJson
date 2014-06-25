@@ -84,9 +84,11 @@
   <ItemGroup>
     <ClCompile Include="JsonArray.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
+    <ClCompile Include="StringBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonArray.h" />
+    <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

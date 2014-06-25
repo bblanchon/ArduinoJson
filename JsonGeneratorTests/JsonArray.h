@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <stdarg.h>
+#include "StringBuilder.h"
 
 enum JsonObjectType
 {
@@ -67,14 +67,22 @@ public:
 
     void writeTo(char* buffer, size_t bufferSize)
     {
-        buffer[0] = 0;
+        StringBuilder sb(buffer, bufferSize);
+        writeTo(sb);
+    }
 
-        append(buffer, bufferSize, "[");
+private:
+    JsonObject items[N];
+    int itemCount;
+
+    void writeTo(StringBuilder& sb)
+    {
+        sb.append("[");
 
         for (int i = 0; i < itemCount; i++)
         {
             if (i>0)
-                append(buffer, bufferSize, ",");
+                sb.append(",");
 
             JsonObjectValue value = items[i].value;
 
@@ -82,36 +90,22 @@ public:
             {
             case JSON_STRING:
                 if (value.string)
-                    append(buffer, bufferSize, "\"%s\"", value.string);
+                    sb.append("\"%s\"", value.string);
                 else
-                    append(buffer, bufferSize, "null");
+                    sb.append("null");
                 break;
 
             case JSON_NUMBER:
-                append(buffer, bufferSize, "%lg", value.number);
+                sb.append("%lg", value.number);
                 break;
 
             case JSON_BOOLEAN:
-                append(buffer, bufferSize, value.boolean ? "true" : "false");
+                sb.append(value.boolean ? "true" : "false");
                 break;
             }
         }
 
-        append(buffer, bufferSize, "]");
-    }
-
-private:
-    JsonObject items[N];
-    int itemCount;
-
-    void append(char* dest, size_t destSize, const char* format, ...)
-    {
-        int len = strlen(dest);
-
-        va_list args;
-        va_start(args, format);
-        vsnprintf(dest + len, destSize - len, format, args);
-        va_end(args);
+        sb.append("]");
     }
 };
 

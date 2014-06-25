@@ -21,9 +21,15 @@
     <ClCompile Include="JsonArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StringBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
