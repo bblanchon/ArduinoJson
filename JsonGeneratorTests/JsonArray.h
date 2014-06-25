@@ -5,33 +5,12 @@
 
 #pragma once
 
+#include "JsonObjectBase.h"
 #include "StringBuilder.h"
 
-enum JsonObjectType
-{
-    JSON_STRING,
-    JSON_NUMBER,
-    JSON_BOOLEAN,
-};
-
-union JsonObjectValue
-{
-    const char* string;
-    double      number;
-    bool        boolean;
-};
-
-struct JsonObject
-{
-    JsonObjectType type;
-    JsonObjectValue value;
-};
-
 template<int N>
-class JsonArray
+class JsonArray : public JsonObjectBase
 {
-    
-
 public:
     JsonArray()
     {
@@ -69,34 +48,14 @@ private:
     JsonObject items[N];
     int itemCount;
 
-    void writeTo(StringBuilder& sb)
+    virtual void writeTo(StringBuilder& sb)
     {
         sb.append("[");
 
         for (int i = 0; i < itemCount; i++)
         {
-            if (i>0)
-                sb.append(",");
-
-            JsonObjectValue value = items[i].value;
-
-            switch (items[i].type)
-            {
-            case JSON_STRING:
-                if (value.string)
-                    sb.append("\"%s\"", value.string);
-                else
-                    sb.append("null");
-                break;
-
-            case JSON_NUMBER:
-                sb.append("%lg", value.number);
-                break;
-
-            case JSON_BOOLEAN:
-                sb.append(value.boolean ? "true" : "false");
-                break;
-            }
+            if (i>0) sb.append(",");
+            writeObjectTo(items[i], sb);
         }
 
         sb.append("]");

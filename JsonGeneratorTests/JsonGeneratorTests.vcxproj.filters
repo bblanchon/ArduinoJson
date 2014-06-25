@@ -24,12 +24,18 @@
     <ClCompile Include="StringBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JsonObjectBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StringBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonObjectBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
