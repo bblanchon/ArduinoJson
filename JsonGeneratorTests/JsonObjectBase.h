@@ -16,7 +16,7 @@ protected:
 
     virtual void writeTo(StringBuilder& sb) = 0;
 
-    enum JsonObjectType
+    enum ObjectType
     {
         JSON_STRING,
         JSON_NUMBER,
@@ -24,7 +24,7 @@ protected:
         JSON_OBJECT,
     };
 
-    union JsonObjectValue
+    union ObjectValue
     {
         const char*     string;
         double          number;
@@ -32,13 +32,13 @@ protected:
         JsonObjectBase* object;
     };
 
-    struct JsonObject
+    struct ObjectContainer
     {
-        JsonObjectType type;
-        JsonObjectValue value;
+        ObjectType type;
+        ObjectValue value;
     };
 
-    void writeObjectTo(JsonObject& obj, StringBuilder& sb)
+    void writeObjectTo(ObjectContainer& obj, StringBuilder& sb)
     {
         switch (obj.type)
         {
