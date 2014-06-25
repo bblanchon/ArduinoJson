@@ -57,7 +57,7 @@ long JsonObjectBase::getLongFromToken(jsmntok_t* token)
 
 char* JsonObjectBase::getStringFromToken(jsmntok_t* token)
 {
-	if (token == 0 || token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING)
+	if (token == 0 || token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING && token->type != JSMN_OBJECT)
 		return 0;
 
 	// add null terminator to the string
