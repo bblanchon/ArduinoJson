@@ -111,6 +111,16 @@ namespace JsonGeneratorTests
             AssertJsonIs("[[]]");
         }
 
+        TEST_METHOD(AddOneNestedArrayWithOneItem)
+        {
+            JsonArray<1> nestedArray;
+            nestedArray.add(3.14);
+
+            arr.add(nestedArray);
+
+            AssertJsonIs("[[3.14]]");
+        }
+
         void AssertJsonIs(const char* expected)
         {      
             char buffer[256];
