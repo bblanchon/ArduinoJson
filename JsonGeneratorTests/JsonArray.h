@@ -40,29 +40,23 @@ public:
     
     void add(const char* value)
     {
-        if (itemCount >= N) return;
-
-        items[itemCount].type = JSON_STRING;
-        items[itemCount].value.string = value;
-        itemCount++;
+        JsonObjectValue v;
+        v.string = value;
+        addItem(JSON_STRING, v);
     }
 
     void add(double value)
     {
-        if (itemCount >= N) return;
-        
-        items[itemCount].type = JSON_NUMBER;
-        items[itemCount].value.number = value;
-        itemCount++;
+        JsonObjectValue v;
+        v.number = value;
+        addItem(JSON_NUMBER, v);
     }
 
     void add(bool value)
     {
-        if (itemCount >= N) return;
-
-        items[itemCount].type = JSON_BOOLEAN;
-        items[itemCount].value.boolean = value;
-        itemCount++;
+        JsonObjectValue v;
+        v.boolean = value;
+        addItem(JSON_BOOLEAN, v);
     }
 
     void writeTo(char* buffer, size_t bufferSize)
@@ -106,6 +100,15 @@ private:
         }
 
         sb.append("]");
+    }
+
+    void addItem(JsonObjectType type, JsonObjectValue value)
+    {
+        if (itemCount >= N) return;
+
+        items[itemCount].type = type;
+        items[itemCount].value = value;
+        itemCount++;
     }
 };
 
