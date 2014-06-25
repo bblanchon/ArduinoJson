@@ -38,6 +38,13 @@ public:
         addItem(JSON_BOOLEAN, v);
     }
 
+    void add(JsonObjectBase& value)
+    {
+        JsonObjectValue v;
+        v.object = &value;
+        addItem(JSON_OBJECT, v);
+    }
+
     void writeTo(char* buffer, size_t bufferSize)
     {
         StringBuilder sb(buffer, bufferSize);

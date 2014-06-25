@@ -21,13 +21,15 @@ protected:
         JSON_STRING,
         JSON_NUMBER,
         JSON_BOOLEAN,
+        JSON_OBJECT,
     };
 
     union JsonObjectValue
     {
-        const char* string;
-        double      number;
-        bool        boolean;
+        const char*     string;
+        double          number;
+        bool            boolean;
+        JsonObjectBase* object;
     };
 
     struct JsonObject
@@ -36,7 +38,7 @@ protected:
         JsonObjectValue value;
     };
 
-    void writeObjectTo(const JsonObject& obj, StringBuilder& sb)
+    void writeObjectTo(JsonObject& obj, StringBuilder& sb)
     {
         switch (obj.type)
         {
@@ -53,6 +55,13 @@ protected:
 
         case JSON_BOOLEAN:
             sb.append(obj.value.boolean ? "true" : "false");
+            break;
+
+        case JSON_OBJECT:
+            if (obj.value.object)
+                obj.value.object->writeTo(sb);
+            else
+                sb.append("null");
             break;
         }
     }
