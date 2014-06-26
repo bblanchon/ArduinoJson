@@ -23,6 +23,16 @@ namespace JsonGeneratorTests
             assertResultIs("");
         }
 
+        TEST_METHOD(AppendEmptyString)
+        {
+            append("");
+            assertResultIs("");
+        }
+
+        void append(const char* s)
+        {
+            sb->append(s);
+        }
 
         void assertResultIs(const char* expected)
         {
