@@ -5,11 +5,10 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace JsonGeneratorTests
 {
-    TEST_CLASS(StringBuilderTests)
+    TEST_CLASS(StringBuilderAppendEscapedTests)
     {
         char buffer[16];
         StringBuilder* sb;
-
 
     public:
 
@@ -23,40 +22,40 @@ namespace JsonGeneratorTests
             assertResultIs("");
         }
 
-        TEST_METHOD(AppendEmptyString)
+        TEST_METHOD(EmptyString)
         {
             append("");
-            assertResultIs("");
+            assertResultIs("\"\"");
         }
 
-        TEST_METHOD(AppendOneString)
+        TEST_METHOD(OneString)
         {
             append("ABCD");
-            assertResultIs("ABCD");
+            assertResultIs("\"ABCD\"");
         }
 
-        TEST_METHOD(AppendOneTwoStrings)
+        TEST_METHOD(OneTwoStrings)
         {
             append("ABCD");
             append("EFGH");
-            assertResultIs("ABCDEFGH");
+            assertResultIs("\"ABCD\"\"EFGH\"");
         }
 
-        TEST_METHOD(AppendOverCapacity)
+        TEST_METHOD(OverCapacity)
         {
             append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            assertResultIs("ABCDEFGHIJKLMNO");
+            assertResultIs("\"ABCDEFGHIJKLM\"");
         }
-
-        TEST_METHOD(AppendSpecialChars)
+        /*
+        TEST_METHOD(SpecialChars)
         {
-            append("\\\"\/\b\f\n\r");
-            assertResultIs("\\\"\/\b\f\n\r");
+            append("\\\"\b\f\n\r");
+            assertResultIs("\\\\\\\"\\\b\\\f\\\n\\\r");
         }
-
+        */
         void append(const char* s)
         {
-            sb->append(s);
+            sb->appendEscaped(s);
         }
 
         void assertResultIs(const char* expected)

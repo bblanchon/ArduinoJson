@@ -86,7 +86,8 @@
     <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonObjectBase.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
-    <ClCompile Include="StringBuilderTests.cpp" />
+    <ClCompile Include="StringBuilderAppendEscapedTests.cpp" />
+    <ClCompile Include="StringBuilderAppendTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonArray.h" />

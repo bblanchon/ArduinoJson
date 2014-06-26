@@ -27,7 +27,10 @@
     <ClCompile Include="JsonObjectBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringBuilderTests.cpp">
+    <ClCompile Include="StringBuilderAppendEscapedTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringBuilderAppendTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
