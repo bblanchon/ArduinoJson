@@ -18,9 +18,6 @@
     <ClCompile Include="JsonArrayTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StringBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
