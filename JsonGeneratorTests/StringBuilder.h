@@ -15,6 +15,7 @@ public:
     StringBuilder(char* buf, size_t size)
         : buffer(buf), capacity(size), length(0)
     {
+        buffer[0] = 0;
     }
 
     void append(const char* s);

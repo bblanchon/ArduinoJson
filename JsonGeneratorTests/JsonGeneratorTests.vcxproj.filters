@@ -27,6 +27,9 @@
     <ClCompile Include="JsonObjectBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StringBuilderTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonArray.h">
