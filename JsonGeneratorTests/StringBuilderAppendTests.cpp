@@ -27,11 +27,17 @@ namespace JsonGeneratorTests
             append("");
             assertResultIs("");
         }
-
+        
         TEST_METHOD(Null)
         {
-            append(NULL);
+            append((char*)0);
             assertResultIs("null");
+        }
+
+        TEST_METHOD(Number)
+        {
+            append(3.14);
+            assertResultIs("3.14");
         }
 
         TEST_METHOD(OneString)
@@ -55,8 +61,13 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(SpecialChars)
         {
-            append("\\\"\/\b\f\n\r");
-            assertResultIs("\\\"\/\b\f\n\r");
+            append("\\\"\b\f\n\r");
+            assertResultIs("\\\"\b\f\n\r");
+        }
+
+        void append(double d)
+        {
+            sb->append(d);
         }
 
         void append(const char* s)

@@ -3,8 +3,19 @@
  * Benoit Blanchon 2014 - MIT License
  */
 
+#include <cstdio>
+#include <cstring>
+
 #include "StringBuilder.h"
 
+void StringBuilder::append(double value)
+{
+    char* tail = buffer + length;
+
+    _snprintf(tail, capacity - length, "%lg", value);
+
+    length += strlen(tail);
+}
 
 void StringBuilder::append(const char* s)
 {
@@ -86,16 +97,4 @@ void StringBuilder::appendEscaped(const char* s)
 
     // restore the original capacity
     capacity++;
-}
-
-void StringBuilder::appendFormatted(const char* format, ...)
-{
-    char* tail = buffer + length;
-
-    va_list args;
-    va_start(args, format);
-    vsnprintf(tail, capacity - length, format, args);
-    va_end(args);
-
-    length += strlen(tail);
 }

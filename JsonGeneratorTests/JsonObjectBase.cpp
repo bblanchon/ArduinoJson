@@ -9,7 +9,7 @@ void JsonObjectBase::writeObjectTo(ObjectContainer& obj, StringBuilder& sb)
         break;
 
     case JSON_NUMBER:
-        sb.appendFormatted("%lg", obj.value.number);
+        sb.append(obj.value.number);
         break;
 
     case JSON_BOOLEAN:

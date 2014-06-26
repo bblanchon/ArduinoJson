@@ -5,10 +5,6 @@
 
 #pragma once
 
-#include <cstdarg>
-#include <cstdio>
-#include <cstring>
-
 class StringBuilder
 {
 public:
@@ -18,9 +14,9 @@ public:
         buffer[0] = 0;
     }
 
+    void append(double);
     void append(const char* s);
     void appendEscaped(const char* s);
-    void appendFormatted(const char* format, ...);
 
 private:
     char* buffer;
