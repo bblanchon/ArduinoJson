@@ -45,11 +45,7 @@ public:
         addItem(JSON_OBJECT, v);
     }
 
-    void writeTo(char* buffer, size_t bufferSize)
-    {
-        StringBuilder sb(buffer, bufferSize);
-        writeTo(sb);
-    }
+    using JsonObjectBase::writeTo;
 
 private:
     ObjectContainer items[N];

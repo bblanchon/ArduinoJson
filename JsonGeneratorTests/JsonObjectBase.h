@@ -11,6 +11,11 @@ class JsonObjectBase
 {
 public:
 
+    void writeTo(char* buffer, size_t bufferSize)
+    {
+        StringBuilder sb(buffer, bufferSize);
+        writeTo(sb);
+    }
 
 protected:
 
