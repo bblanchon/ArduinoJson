@@ -35,6 +35,13 @@ namespace JsonGeneratorTests
             assertResultIs("ABCD");
         }
 
+        TEST_METHOD(AppendOneTwoStrings)
+        {
+            append("ABCD");
+            append("EFGH");
+            assertResultIs("ABCDEFGH");
+        }
+
         TEST_METHOD(AppendSpecialChars)
         {
             append("\\\"\/\b\f\n\r");
