@@ -29,6 +29,12 @@ namespace JsonGeneratorTests
             assertResultIs("");
         }
 
+        TEST_METHOD(AppendString)
+        {
+            append("ABCD");
+            assertResultIs("ABCD");
+        }
+
         void append(const char* s)
         {
             sb->append(s);
