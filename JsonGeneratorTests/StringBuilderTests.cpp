@@ -29,10 +29,16 @@ namespace JsonGeneratorTests
             assertResultIs("");
         }
 
-        TEST_METHOD(AppendString)
+        TEST_METHOD(AppendOneString)
         {
             append("ABCD");
             assertResultIs("ABCD");
+        }
+
+        TEST_METHOD(AppendSpecialChars)
+        {
+            append("\\\"\/\b\f\n\r");
+            assertResultIs("\\\"\/\b\f\n\r");
         }
 
         void append(const char* s)
