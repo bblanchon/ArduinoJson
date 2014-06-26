@@ -5,10 +5,7 @@ void JsonObjectBase::writeObjectTo(ObjectContainer& obj, StringBuilder& sb)
     switch (obj.type)
     {
     case JSON_STRING:
-        if (obj.value.string)
-            sb.appendEscaped(obj.value.string);
-        else
-            sb.append("null");
+        sb.appendEscaped(obj.value.string);
         break;
 
     case JSON_NUMBER:

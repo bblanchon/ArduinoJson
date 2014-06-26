@@ -30,20 +30,6 @@ namespace JsonGeneratorTests
             AssertJsonIs("[\"hello\"]");
         }
 
-        TEST_METHOD(AddOneStringContainingDoubleQuote)
-        {
-            arr.add("\"");
-
-            AssertJsonIs("[\"\\\"\"]");
-        }
-
-        TEST_METHOD(AddOneStringContainingBackslash)
-        {
-            arr.add("\\");
-
-            AssertJsonIs("[\"\\\\\"]");
-        }
-
         TEST_METHOD(AddTwoStrings)
         {
             arr.add("hello");
