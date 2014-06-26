@@ -25,6 +25,11 @@ void StringBuilder::append(const char* s)
 
 void StringBuilder::appendEscaped(const char* s)
 {
+    if (!s)
+    {
+        return append("null");
+    }
+
     if (length > capacity - 2)
     {
         // not enough from for quotes

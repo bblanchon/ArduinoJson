@@ -28,6 +28,12 @@ namespace JsonGeneratorTests
             assertResultIs("\"\"");
         }
 
+        TEST_METHOD(Null)
+        {
+            append(NULL);
+            assertResultIs("null");
+        }
+
         TEST_METHOD(OneString)
         {
             append("ABCD");
@@ -44,6 +50,9 @@ namespace JsonGeneratorTests
         TEST_METHOD(OverCapacity)
         {
             append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            assertResultIs("\"ABCDEFGHIJKLMNOPQ\"");
+
+            append("");
             assertResultIs("\"ABCDEFGHIJKLMNOPQ\"");
         }
         
