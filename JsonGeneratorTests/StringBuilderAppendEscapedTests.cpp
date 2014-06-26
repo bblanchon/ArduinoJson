@@ -7,7 +7,7 @@ namespace JsonGeneratorTests
 {
     TEST_CLASS(StringBuilderAppendEscapedTests)
     {
-        char buffer[16];
+        char buffer[20];
         StringBuilder* sb;
 
     public:
@@ -44,15 +44,15 @@ namespace JsonGeneratorTests
         TEST_METHOD(OverCapacity)
         {
             append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            assertResultIs("\"ABCDEFGHIJKLM\"");
+            assertResultIs("\"ABCDEFGHIJKLMNOPQ\"");
         }
-        /*
+        
         TEST_METHOD(SpecialChars)
         {
-            append("\\\"\b\f\n\r");
-            assertResultIs("\\\\\\\"\\\b\\\f\\\n\\\r");
+            append("\\\"\b\f\n\r\t");
+            assertResultIs("\"\\\\\\\"\\b\\f\\n\\r\\t\"");
         }
-        */
+        
         void append(const char* s)
         {
             sb->appendEscaped(s);

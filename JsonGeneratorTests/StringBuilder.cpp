@@ -39,6 +39,25 @@ void StringBuilder::appendEscaped(const char* s)
             append("\\\\");
             break;
 
+        case '\b':
+            append("\\b");
+            break;
+
+        case '\f':
+            append("\\f");
+            break;
+
+        case '\n':
+            append("\\n");
+            break;
+
+        case '\r':
+            append("\\r");
+            break;
+
+        case '\t':
+            append("\\t");
+            break;
 
         default:
             buffer[length++] = *s;
