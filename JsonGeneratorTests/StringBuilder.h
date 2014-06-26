@@ -13,7 +13,7 @@ class StringBuilder
 {
 public:
     StringBuilder(char* buf, size_t size)
-        : buffer(buf), capacity(size), length(0)
+        : buffer(buf), capacity(size-1), length(0)
     {
         buffer[0] = 0;
     }
@@ -24,7 +24,7 @@ public:
 
 private:
     char* buffer;
-    int capacity;
-    int length;
+    size_t capacity;
+    size_t length;
 };
 

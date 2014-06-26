@@ -10,9 +10,12 @@ void StringBuilder::append(const char* s)
 {
     char* tail = buffer + length;
 
-    strncpy(tail, s, capacity - length);
+    while (*s && length<capacity)
+    {
+        buffer[length++] = *s++;
+    }
 
-    length += strlen(tail);
+    buffer[length] = 0;
 }
 
 void StringBuilder::appendEscaped(const char* s)
@@ -24,7 +27,7 @@ void StringBuilder::appendEscaped(const char* s)
     // keep one slot for the end quote
     capacity--;
 
-    while (*s && length<capacity)
+    while (*s && length < capacity)
     {
         switch (*s)
         {

@@ -42,6 +42,12 @@ namespace JsonGeneratorTests
             assertResultIs("ABCDEFGH");
         }
 
+        TEST_METHOD(AppendOverCapacity)
+        {
+            append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            assertResultIs("ABCDEFGHIJKLMNO");
+        }
+
         TEST_METHOD(AppendSpecialChars)
         {
             append("\\\"\/\b\f\n\r");
