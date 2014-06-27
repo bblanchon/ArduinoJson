@@ -19,7 +19,7 @@ public:
 
     void add(const char* key, const char* value)
     {
-        ObjectValue v;
+        JsonValueContent v;
         v.string = value;
         addItem(key, JSON_STRING, v);
     }
@@ -31,7 +31,7 @@ private:
     struct KeyValuePair
     {
         const char* key;
-        ObjectContainer value;
+        JsonValue value;
     };
 
     KeyValuePair items[N];
@@ -46,19 +46,19 @@ private:
             if (i>0) sb.append(",");
             sb.appendEscaped(items[i].key);
             sb.append(":");
-            writeObjectTo(items[i].value, sb);
+            writeValueTo(items[i].value, sb);
         }
 
         sb.append("}");
     }
 
-    void addItem(const char* key, ObjectType type, ObjectValue value)
+    void addItem(const char* key, JsonValueType type, JsonValueContent content)
     {
         if (itemCount >= N) return;
 
         items[itemCount].key = key;
         items[itemCount].value.type = type;
-        items[itemCount].value.value = value;
+        items[itemCount].value.content = content;
         itemCount++;
     }
 };

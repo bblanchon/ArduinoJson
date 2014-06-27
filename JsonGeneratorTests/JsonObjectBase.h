@@ -19,7 +19,7 @@ public:
 
 protected:
 
-    enum ObjectType
+    enum JsonValueType
     {
         JSON_STRING,
         JSON_NUMBER,
@@ -27,7 +27,7 @@ protected:
         JSON_OBJECT,
     };
 
-    union ObjectValue
+    union JsonValueContent
     {
         const char*     string;
         double          number;
@@ -35,13 +35,13 @@ protected:
         JsonObjectBase* object;
     };
 
-    struct ObjectContainer
+    struct JsonValue
     {
-        ObjectType type;
-        ObjectValue value;
+        JsonValueType    type;
+        JsonValueContent content;
     };
 
-    void writeObjectTo(ObjectContainer& obj, StringBuilder& sb);
+    void writeValueTo(JsonValue& obj, StringBuilder& sb);
 
     virtual void writeTo(StringBuilder& sb) = 0;
 };
