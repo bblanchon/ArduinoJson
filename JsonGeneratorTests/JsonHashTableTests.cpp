@@ -44,6 +44,13 @@ namespace JsonGeneratorTests
             jsonIs("{\"pi\":3.14}");
         }
 
+        TEST_METHOD(OneNull)
+        {
+            add("key", (char*)0);
+
+            jsonIs("{\"key\":null}");
+        }
+
     private:
 
         template<typename T>
