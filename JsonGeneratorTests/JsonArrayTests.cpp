@@ -15,21 +15,21 @@ namespace JsonGeneratorTests
             jsonIs("[]");
         }
 
-        TEST_METHOD(AddNull)
+        TEST_METHOD(Null)
         {
             addValue((char*)0);
 
             jsonIs("[null]");
         }
 
-        TEST_METHOD(AddOneString)
+        TEST_METHOD(OneString)
         {
             addValue("hello");
 
             jsonIs("[\"hello\"]");
         }
 
-        TEST_METHOD(AddTwoStrings)
+        TEST_METHOD(TwoStrings)
         {
             addValue("hello");
             addValue("world");

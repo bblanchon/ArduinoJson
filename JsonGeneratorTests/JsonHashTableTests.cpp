@@ -22,6 +22,13 @@ namespace JsonGeneratorTests
             jsonIs("{\"key\":\"value\"}");
         }
 
+        TEST_METHOD(TwoStrings)
+        {
+            add("key1", "value1");
+            add("key2", "value2"); 
+            jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
+        }
+
     private:
 
         template<typename T>
