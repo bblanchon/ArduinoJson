@@ -1,5 +1,6 @@
 #include "CppUnitTest.h"
 #include "JsonArray.h"
+#include "JsonHashTable.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -107,6 +108,15 @@ namespace JsonGeneratorTests
             addNested(nestedArray);
 
             jsonIs("[[]]");
+        }
+
+        TEST_METHOD(AddOneEmptyNestedHash)
+        {
+            JsonHashTable<1> nestedHash;
+
+            addNested(nestedHash);
+
+            jsonIs("[{}]");
         }
 
         TEST_METHOD(AddOneNestedArrayWithOneItem)
