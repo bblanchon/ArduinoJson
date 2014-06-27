@@ -19,25 +19,25 @@ public:
     
     void add(const char* value)
     {
-        addItem(JsonValue(value));
+        add(JsonValue(value));
     }
 
     void add(double value)
     {
-        addItem(JsonValue(value));
+        add(JsonValue(value));
     }
 
     void add(bool value)
     {
-        addItem(JsonValue(value));
+        add(JsonValue(value));
     }
 
     void add(JsonObjectBase& value)
     {
-        addItem(JsonValue(value));
+        add(JsonValue(value));
     }
 
-    void addItem(JsonValue value)
+    void add(JsonValue value)
     {
         if (itemCount >= N) return;
 

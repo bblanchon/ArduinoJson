@@ -19,10 +19,10 @@ public:
 
     void add(const char* key, const char* value)
     {
-        addItem(key, JsonValue(value));
+        add(key, JsonValue(value));
     }
 
-    void addItem(const char* key, JsonValue value)
+    void add(const char* key, JsonValue value)
     {
         if (itemCount >= N) return;
 
