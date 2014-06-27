@@ -16,86 +16,86 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(AddNull)
         {
-            add((char*)0);
+            addValue((char*)0);
 
             jsonIs("[null]");
         }
 
         TEST_METHOD(AddOneString)
         {
-            add("hello");
+            addValue("hello");
 
             jsonIs("[\"hello\"]");
         }
 
         TEST_METHOD(AddTwoStrings)
         {
-            add("hello");
-            add("world");
+            addValue("hello");
+            addValue("world");
 
             jsonIs("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(AddOneStringOverCapacity)
         {
-            add("hello");
-            add("world");
-            add("lost");
+            addValue("hello");
+            addValue("world");
+            addValue("lost");
 
             jsonIs("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(AddOneNumber)
         {
-            add(3.14);
+            addValue(3.14);
 
             jsonIs("[3.14]");
         }
 
         TEST_METHOD(AddTwoNumbers)
         {
-            add(3.14);
-            add(2.72);
+            addValue(3.14);
+            addValue(2.72);
 
             jsonIs("[3.14,2.72]");
         }
 
         TEST_METHOD(AddOneNumberOverCapacity)
         {
-            add(3.14);
-            add(2.72);
-            add(1.41);
+            addValue(3.14);
+            addValue(2.72);
+            addValue(1.41);
 
             jsonIs("[3.14,2.72]");
         }
 
         TEST_METHOD(AddTrue)
         {
-            add(true);
+            addValue(true);
 
             jsonIs("[true]");
         }
 
         TEST_METHOD(AddFalse)
         {
-            add(false);
+            addValue(false);
 
             jsonIs("[false]");
         }
 
         TEST_METHOD(AddTwoBooleans)
         {
-            add(false);
-            add(true);
+            addValue(false);
+            addValue(true);
 
             jsonIs("[false,true]");
         }
 
         TEST_METHOD(AddOneBooleanOverCapacity)
         {
-            add(false);
-            add(true);
-            add(false);
+            addValue(false);
+            addValue(true);
+            addValue(false);
 
             jsonIs("[false,true]");
         }
@@ -104,7 +104,7 @@ namespace JsonGeneratorTests
         {
             JsonArray<1> nestedArray;
             
-            add(nestedArray);
+            addNested(nestedArray);
 
             jsonIs("[[]]");
         }
@@ -114,7 +114,7 @@ namespace JsonGeneratorTests
             JsonArray<1> nestedArray;
             nestedArray.add(3.14);
 
-            add(nestedArray);
+            addNested(nestedArray);
 
             jsonIs("[[3.14]]");
         }
@@ -123,8 +123,13 @@ namespace JsonGeneratorTests
 
         JsonArray<2> arr;
 
+        void addNested(JsonObjectBase& value)
+        {
+            arr.add(value);
+        }
+
         template<typename T>
-        void add(T value)
+        void addValue(T value)
         {
             arr.add(value);
         }
