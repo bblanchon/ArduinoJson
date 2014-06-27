@@ -13,13 +13,13 @@ namespace JsonGeneratorTests
         
         TEST_METHOD(Empty)
         {
-            assertJsonIs("{}");
+            jsonIs("{}");
         }
 
         TEST_METHOD(OneString)
         {
             add("key", "value");
-            assertJsonIs("{\"key\":\"value\"}");
+            jsonIs("{\"key\":\"value\"}");
         }
 
     private:
@@ -30,7 +30,7 @@ namespace JsonGeneratorTests
             hash.add(key, value);
         }
 
-        void assertJsonIs(const char* expected)
+        void jsonIs(const char* expected)
         {
             char buffer[256];
 
