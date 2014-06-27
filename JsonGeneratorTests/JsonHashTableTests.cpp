@@ -16,7 +16,19 @@ namespace JsonGeneratorTests
             assertJsonIs("{}");
         }
 
+        TEST_METHOD(OneString)
+        {
+            add("key", "value");
+            assertJsonIs("{\"key\":\"value\"}");
+        }
+
     private:
+
+        template<typename T>
+        void add(const char* key, T value)
+        {
+            hash.add(key, value);
+        }
 
         void assertJsonIs(const char* expected)
         {
