@@ -37,6 +37,13 @@ namespace JsonGeneratorTests
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
+        TEST_METHOD(OneNumber)
+        {
+            add("pi", 3.14);
+
+            jsonIs("{\"pi\":3.14}");
+        }
+
     private:
 
         template<typename T>

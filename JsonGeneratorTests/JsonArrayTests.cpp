@@ -46,7 +46,7 @@ namespace JsonGeneratorTests
             jsonIs("[\"hello\",\"world\"]");
         }
 
-        TEST_METHOD(AddOneNumber)
+        TEST_METHOD(OneNumber)
         {
             addValue(3.14);
 
