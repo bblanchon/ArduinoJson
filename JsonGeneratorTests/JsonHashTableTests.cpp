@@ -29,6 +29,14 @@ namespace JsonGeneratorTests
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
+        TEST_METHOD(OneStringOverCapacity)
+        {
+            add("key1", "value1");
+            add("key2", "value2");
+            add("key3", "value3");
+            jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
+        }
+
     private:
 
         template<typename T>

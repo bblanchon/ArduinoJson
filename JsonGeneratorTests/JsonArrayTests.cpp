@@ -37,7 +37,7 @@ namespace JsonGeneratorTests
             jsonIs("[\"hello\",\"world\"]");
         }
 
-        TEST_METHOD(AddOneStringOverCapacity)
+        TEST_METHOD(OneStringOverCapacity)
         {
             addValue("hello");
             addValue("world");
