@@ -16,23 +16,9 @@ public:
     {
         itemCount = 0;
     }
-    
-    void add(const char* value)
-    {
-        add(JsonValue(value));
-    }
 
-    void add(double value)
-    {
-        add(JsonValue(value));
-    }
-
-    void add(bool value)
-    {
-        add(JsonValue(value));
-    }
-
-    void add(JsonObjectBase& value)
+    template<typename T>
+    void add(T value)
     {
         add(JsonValue(value));
     }

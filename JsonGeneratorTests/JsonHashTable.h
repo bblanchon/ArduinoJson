@@ -17,7 +17,8 @@ public:
         itemCount = 0;
     }
 
-    void add(const char* key, const char* value)
+    template<typename T>
+    void add(const char* key, T value)
     {
         add(key, JsonValue(value));
     }
