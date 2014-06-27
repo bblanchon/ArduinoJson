@@ -11,23 +11,23 @@ namespace JsonGeneratorTests
         
     public:
         
-        TEST_METHOD(EmptyArray)
+        TEST_METHOD(Empty)
         {
-            AssertJsonIs("[]");
+            assertJsonIs("[]");
         }
 
         TEST_METHOD(AddNull)
         {
             arr.add((char*)0);
 
-            AssertJsonIs("[null]");
+            assertJsonIs("[null]");
         }
 
         TEST_METHOD(AddOneString)
         {
             arr.add("hello");
 
-            AssertJsonIs("[\"hello\"]");
+            assertJsonIs("[\"hello\"]");
         }
 
         TEST_METHOD(AddTwoStrings)
@@ -35,7 +35,7 @@ namespace JsonGeneratorTests
             arr.add("hello");
             arr.add("world");
 
-            AssertJsonIs("[\"hello\",\"world\"]");
+            assertJsonIs("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(AddOneStringOverCapacity)
@@ -44,14 +44,14 @@ namespace JsonGeneratorTests
             arr.add("world");
             arr.add("lost");
 
-            AssertJsonIs("[\"hello\",\"world\"]");
+            assertJsonIs("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(AddOneNumber)
         {
             arr.add(3.14);
 
-            AssertJsonIs("[3.14]");
+            assertJsonIs("[3.14]");
         }
 
         TEST_METHOD(AddTwoNumbers)
@@ -59,7 +59,7 @@ namespace JsonGeneratorTests
             arr.add(3.14);
             arr.add(2.72);
 
-            AssertJsonIs("[3.14,2.72]");
+            assertJsonIs("[3.14,2.72]");
         }
 
         TEST_METHOD(AddOneNumberOverCapacity)
@@ -68,21 +68,21 @@ namespace JsonGeneratorTests
             arr.add(2.72);
             arr.add(1.41);
 
-            AssertJsonIs("[3.14,2.72]");
+            assertJsonIs("[3.14,2.72]");
         }
 
         TEST_METHOD(AddTrue)
         {
             arr.add(true);
 
-            AssertJsonIs("[true]");
+            assertJsonIs("[true]");
         }
 
         TEST_METHOD(AddFalse)
         {
             arr.add(false);
 
-            AssertJsonIs("[false]");
+            assertJsonIs("[false]");
         }
 
         TEST_METHOD(AddTwoBooleans)
@@ -90,7 +90,7 @@ namespace JsonGeneratorTests
             arr.add(false);
             arr.add(true);
 
-            AssertJsonIs("[false,true]");
+            assertJsonIs("[false,true]");
         }
 
         TEST_METHOD(AddOneBooleanOverCapacity)
@@ -99,7 +99,7 @@ namespace JsonGeneratorTests
             arr.add(true);
             arr.add(false);
 
-            AssertJsonIs("[false,true]");
+            assertJsonIs("[false,true]");
         }
 
         TEST_METHOD(AddOneEmptyNestedArray)
@@ -108,7 +108,7 @@ namespace JsonGeneratorTests
             
             arr.add(nestedArray);
 
-            AssertJsonIs("[[]]");
+            assertJsonIs("[[]]");
         }
 
         TEST_METHOD(AddOneNestedArrayWithOneItem)
@@ -118,10 +118,12 @@ namespace JsonGeneratorTests
 
             arr.add(nestedArray);
 
-            AssertJsonIs("[[3.14]]");
+            assertJsonIs("[[3.14]]");
         }
 
-        void AssertJsonIs(const char* expected)
+    private:
+
+        void assertJsonIs(const char* expected)
         {      
             char buffer[256];
 

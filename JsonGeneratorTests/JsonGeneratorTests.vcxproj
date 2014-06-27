@@ -83,6 +83,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="JsonArrayTests.cpp" />
+    <ClCompile Include="JsonHashTableTests.cpp" />
     <ClCompile Include="JsonObjectBase.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
     <ClCompile Include="StringBuilderAppendEscapedTests.cpp" />
@@ -90,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonArray.h" />
+    <ClInclude Include="JsonHashTable.h" />
     <ClInclude Include="JsonObjectBase.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
