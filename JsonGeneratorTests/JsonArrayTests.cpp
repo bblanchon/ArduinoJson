@@ -53,7 +53,7 @@ namespace JsonGeneratorTests
             jsonIs("[3.14]");
         }
 
-        TEST_METHOD(AddTwoNumbers)
+        TEST_METHOD(TwoNumbers)
         {
             addValue(3.14);
             addValue(2.72);
@@ -61,7 +61,7 @@ namespace JsonGeneratorTests
             jsonIs("[3.14,2.72]");
         }
 
-        TEST_METHOD(AddOneNumberOverCapacity)
+        TEST_METHOD(OneNumberOverCapacity)
         {
             addValue(3.14);
             addValue(2.72);
@@ -70,14 +70,14 @@ namespace JsonGeneratorTests
             jsonIs("[3.14,2.72]");
         }
 
-        TEST_METHOD(AddTrue)
+        TEST_METHOD(OneTrue)
         {
             addValue(true);
 
             jsonIs("[true]");
         }
 
-        TEST_METHOD(AddFalse)
+        TEST_METHOD(OneFalse)
         {
             addValue(false);
 

@@ -51,6 +51,21 @@ namespace JsonGeneratorTests
             jsonIs("{\"key\":null}");
         }
 
+        TEST_METHOD(OneTrue)
+        {
+            add("key", true);
+
+            jsonIs("{\"key\":true}");
+        }
+
+        TEST_METHOD(OneFalse)
+        {
+            add("key", false);
+
+            jsonIs("{\"key\":false}");
+        }
+
+
     private:
 
         template<typename T>
