@@ -19,13 +19,20 @@ public:
 
     void add(const char* key, const char* value)
     {
-        JsonValueContent v;
-        v.string = value;
-        addItem(key, JSON_STRING, v);
+        addItem(key, JsonValue(value));
+    }
+
+    void addItem(const char* key, JsonValue value)
+    {
+        if (itemCount >= N) return;
+
+        items[itemCount].key = key;
+        items[itemCount].value = value;
+        itemCount++;
     }
 
     using JsonObjectBase::writeTo;
-
+    
 private:
 
     struct KeyValuePair
@@ -46,20 +53,10 @@ private:
             if (i>0) sb.append(",");
             sb.appendEscaped(items[i].key);
             sb.append(":");
-            writeValueTo(items[i].value, sb);
+            items[i].value.writeTo(sb);
         }
 
         sb.append("}");
-    }
-
-    void addItem(const char* key, JsonValueType type, JsonValueContent content)
-    {
-        if (itemCount >= N) return;
-
-        items[itemCount].key = key;
-        items[itemCount].value.type = type;
-        items[itemCount].value.content = content;
-        itemCount++;
     }
 };
 

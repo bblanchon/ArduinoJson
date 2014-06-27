@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "StringBuilder.h"
+#include "JsonValue.h"
 
 class JsonObjectBase
 {
@@ -16,32 +16,6 @@ public:
         StringBuilder sb(buffer, bufferSize);
         writeTo(sb);
     }
-
-protected:
-
-    enum JsonValueType
-    {
-        JSON_STRING,
-        JSON_NUMBER,
-        JSON_BOOLEAN,
-        JSON_OBJECT,
-    };
-
-    union JsonValueContent
-    {
-        const char*     string;
-        double          number;
-        bool            boolean;
-        JsonObjectBase* object;
-    };
-
-    struct JsonValue
-    {
-        JsonValueType    type;
-        JsonValueContent content;
-    };
-
-    void writeValueTo(JsonValue& obj, StringBuilder& sb);
 
     virtual void writeTo(StringBuilder& sb) = 0;
 };

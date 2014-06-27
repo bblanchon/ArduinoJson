@@ -84,7 +84,7 @@
   <ItemGroup>
     <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonHashTableTests.cpp" />
-    <ClCompile Include="JsonObjectBase.cpp" />
+    <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
     <ClCompile Include="StringBuilderAppendEscapedTests.cpp" />
     <ClCompile Include="StringBuilderAppendTests.cpp" />
@@ -93,6 +93,7 @@
     <ClInclude Include="JsonArray.h" />
     <ClInclude Include="JsonHashTable.h" />
     <ClInclude Include="JsonObjectBase.h" />
+    <ClInclude Include="JsonValue.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

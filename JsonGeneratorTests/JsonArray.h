@@ -19,30 +19,30 @@ public:
     
     void add(const char* value)
     {
-        JsonValueContent v;
-        v.string = value;
-        addItem(JSON_STRING, v);
+        addItem(JsonValue(value));
     }
 
     void add(double value)
     {
-        JsonValueContent v;
-        v.number = value;
-        addItem(JSON_NUMBER, v);
+        addItem(JsonValue(value));
     }
 
     void add(bool value)
     {
-        JsonValueContent v;
-        v.boolean = value;
-        addItem(JSON_BOOLEAN, v);
+        addItem(JsonValue(value));
     }
 
     void add(JsonObjectBase& value)
     {
-        JsonValueContent v;
-        v.object = &value;
-        addItem(JSON_OBJECT, v);
+        addItem(JsonValue(value));
+    }
+
+    void addItem(JsonValue value)
+    {
+        if (itemCount >= N) return;
+
+        items[itemCount] = value;
+        itemCount++;
     }
 
     using JsonObjectBase::writeTo;
@@ -58,19 +58,10 @@ private:
         for (int i = 0; i < itemCount; i++)
         {
             if (i>0) sb.append(",");
-            writeValueTo(items[i], sb);
+            items[i].writeTo(sb);
         }
 
         sb.append("]");
-    }
-
-    void addItem(JsonValueType type, JsonValueContent content)
-    {
-        if (itemCount >= N) return;
-
-        items[itemCount].type = type;
-        items[itemCount].content = content;
-        itemCount++;
     }
 };
 
