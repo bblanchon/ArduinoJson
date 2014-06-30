@@ -1,4 +1,5 @@
 #include "CppUnitTest.h"
+#include "JsonArray.h"
 #include "JsonHashTable.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -18,58 +19,71 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OneString)
         {
-            add("key", "value");
+            addValue("key", "value");
             jsonIs("{\"key\":\"value\"}");
         }
 
         TEST_METHOD(TwoStrings)
         {
-            add("key1", "value1");
-            add("key2", "value2"); 
+            addValue("key1", "value1");
+            addValue("key2", "value2");
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
         TEST_METHOD(OneStringOverCapacity)
         {
-            add("key1", "value1");
-            add("key2", "value2");
-            add("key3", "value3");
+            addValue("key1", "value1");
+            addValue("key2", "value2");
+            addValue("key3", "value3");
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
         TEST_METHOD(OneNumber)
         {
-            add("pi", 3.14);
+            addValue("pi", 3.14);
 
             jsonIs("{\"pi\":3.14}");
         }
 
         TEST_METHOD(OneNull)
         {
-            add("key", (char*)0);
+            addValue("key", (char*) 0);
 
             jsonIs("{\"key\":null}");
         }
 
         TEST_METHOD(OneTrue)
         {
-            add("key", true);
+            addValue("key", true);
 
             jsonIs("{\"key\":true}");
         }
 
         TEST_METHOD(OneFalse)
         {
-            add("key", false);
+            addValue("key", false);
 
             jsonIs("{\"key\":false}");
         }
 
+        TEST_METHOD(AddOneEmptyNestedArray)
+        {
+            JsonArray<1> nestedArray;
+
+            addNested("key", nestedArray);
+
+            jsonIs("{\"key\":[]}");
+        }
 
     private:
+        
+        void addNested(const char* key, JsonObjectBase& value)
+        {
+            hash.add(key, value);
+        }
 
         template<typename T>
-        void add(const char* key, T value)
+        void addValue(const char* key, T value)
         {
             hash.add(key, value);
         }

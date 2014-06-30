@@ -84,7 +84,7 @@ namespace JsonGeneratorTests
             jsonIs("[false]");
         }
 
-        TEST_METHOD(AddTwoBooleans)
+        TEST_METHOD(TwoBooleans)
         {
             addValue(false);
             addValue(true);
@@ -92,7 +92,7 @@ namespace JsonGeneratorTests
             jsonIs("[false,true]");
         }
 
-        TEST_METHOD(AddOneBooleanOverCapacity)
+        TEST_METHOD(OneBooleanOverCapacity)
         {
             addValue(false);
             addValue(true);
@@ -101,7 +101,7 @@ namespace JsonGeneratorTests
             jsonIs("[false,true]");
         }
 
-        TEST_METHOD(AddOneEmptyNestedArray)
+        TEST_METHOD(OneEmptyNestedArray)
         {
             JsonArray<1> nestedArray;
             
@@ -110,7 +110,7 @@ namespace JsonGeneratorTests
             jsonIs("[[]]");
         }
 
-        TEST_METHOD(AddOneEmptyNestedHash)
+        TEST_METHOD(OneEmptyNestedHash)
         {
             JsonHashTable<1> nestedHash;
 
@@ -119,7 +119,7 @@ namespace JsonGeneratorTests
             jsonIs("[{}]");
         }
 
-        TEST_METHOD(AddOneNestedArrayWithOneItem)
+        TEST_METHOD(OneNestedArrayWithOneItem)
         {
             JsonArray<1> nestedArray;
             nestedArray.add(3.14);
