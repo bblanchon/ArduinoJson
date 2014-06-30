@@ -66,13 +66,22 @@ namespace JsonGeneratorTests
             jsonIs("{\"key\":false}");
         }
 
-        TEST_METHOD(AddOneEmptyNestedArray)
+        TEST_METHOD(OneEmptyNestedArray)
         {
             JsonArray<1> nestedArray;
 
             addNested("key", nestedArray);
 
             jsonIs("{\"key\":[]}");
+        }
+
+        TEST_METHOD(OneEmptyNestedHash)
+        {
+            JsonHashTable<1> nestedHash;
+
+            addNested("key", nestedHash);
+
+            jsonIs("{\"key\":{}}");
         }
 
     private:
