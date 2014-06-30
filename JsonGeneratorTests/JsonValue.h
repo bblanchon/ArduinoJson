@@ -18,50 +18,51 @@ public:
     }
 
     JsonValue(const char* value)
-        : type(JSON_STRING)
+        : implementation(&JsonValue::writeStringTo)
     {
         content.string = value;
     }
 
     JsonValue(double value)
-        : type(JSON_NUMBER)
+        : implementation(&JsonValue::writeNumberTo)
     {
         content.number = value;
     }
 
     JsonValue(bool value)
-        : type(JSON_BOOLEAN)
+        : implementation(&JsonValue::writeBooleanTo)
     {
         content.boolean = value;
     }
 
     JsonValue(JsonObjectBase& value)
-        : type(JSON_OBJECT)
+        : implementation(&JsonValue::writeObjectTo)
     {
         content.object = &value;
     }
 
-    void writeTo(StringBuilder& sb);
-
-private:
-
-    enum Type
+    void writeTo(StringBuilder& sb)
     {
-        JSON_STRING,
-        JSON_NUMBER,
-        JSON_BOOLEAN,
-        JSON_OBJECT,
-    };
-
+        // handmade polymorphism
+       (this->*implementation)(sb);
+    }
+    
+private:
+    
     union Content
     {
-        const char*     string;
-        double          number;
         bool            boolean;
+        double          number;
         JsonObjectBase* object;
+        const char*     string;
     };
 
-    Type    type;
     Content content;
-};
 
+    void (JsonValue::*implementation)(StringBuilder& sb);
+
+    void writeBooleanTo(StringBuilder& sb);
+    void writeNumberTo(StringBuilder& sb);
+    void writeObjectTo(StringBuilder& sb);
+    void writeStringTo(StringBuilder& sb);
+};

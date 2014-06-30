@@ -6,27 +6,25 @@
 #include "JsonValue.h"
 #include "JsonObjectBase.h"
 
-void JsonValue::writeTo(StringBuilder& sb)
+void JsonValue::writeBooleanTo(StringBuilder& sb)
 {
-    switch (type)
-    {
-    case JSON_STRING:
-        sb.appendEscaped(content.string);
-        break;
+    sb.append(content.boolean ? "true" : "false");
+}
 
-    case JSON_NUMBER:
-        sb.append(content.number);
-        break;
+void JsonValue::writeNumberTo(StringBuilder& sb)
+{
+    sb.append(content.number);
+}
 
-    case JSON_BOOLEAN:
-        sb.append(content.boolean ? "true" : "false");
-        break;
+void JsonValue::writeObjectTo(StringBuilder& sb)
+{
+    if (content.object)
+        ((JsonObjectBase*) content.object)->writeTo(sb);
+    else
+        sb.append("null");
+}
 
-    case JSON_OBJECT:
-        if (content.object)
-            ((JsonObjectBase*)content.object)->writeTo(sb);
-        else
-            sb.append("null");
-        break;
-    }
+void JsonValue::writeStringTo(StringBuilder& sb)
+{
+    sb.appendEscaped(content.string);
 }
