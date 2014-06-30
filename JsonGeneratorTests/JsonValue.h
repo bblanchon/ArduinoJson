@@ -41,10 +41,10 @@ public:
         content.object = &value;
     }
 
-    void writeTo(StringBuilder& sb)
+    void writeTo(JsonSink& sink)
     {
         // handmade polymorphism
-       (this->*implementation)(sb);
+        (this->*implementation)(sink);
     }
     
 private:
@@ -59,10 +59,10 @@ private:
 
     Content content;
 
-    void (JsonValue::*implementation)(StringBuilder& sb);
+    void (JsonValue::*implementation)(JsonSink& sb);
 
-    void writeBooleanTo(StringBuilder& sb);
-    void writeNumberTo(StringBuilder& sb);
-    void writeObjectTo(StringBuilder& sb);
-    void writeStringTo(StringBuilder& sb);
+    void writeBooleanTo(JsonSink& sb);
+    void writeNumberTo(JsonSink& sb);
+    void writeObjectTo(JsonSink& sb);
+    void writeStringTo(JsonSink& sb);
 };

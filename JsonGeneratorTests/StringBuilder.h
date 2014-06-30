@@ -5,22 +5,38 @@
 
 #pragma once
 
-class StringBuilder
+#include "JsonSink.h"
+
+class StringBuilder : public JsonSink
 {
 public:
-    StringBuilder(char* buf, size_t size)
+    StringBuilder(char* buf, int size)
         : buffer(buf), capacity(size-1), length(0)
     {
         buffer[0] = 0;
     }
 
-    void append(double);
-    void append(const char* s);
-    void appendEscaped(const char* s);
+    virtual void append(char c);
+    virtual void append(const char* s);
+
+    virtual bool hasRoomFor(int n)
+    {
+        return capacity - length >= n;
+    }
+
+    virtual void reserveRoom(int n)
+    {
+        capacity -= n;
+    }
+
+    virtual void releaseRoom(int n)
+    {
+        capacity += n;
+    }
 
 private:
     char* buffer;
-    size_t capacity;
-    size_t length;
+    int capacity;
+    int length;
 };
 

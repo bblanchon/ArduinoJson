@@ -1,13 +1,14 @@
 #include "CppUnitTest.h"
 #include "StringBuilder.h"
+#include "JsonValue.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace JsonGeneratorTests
 {
-    TEST_CLASS(StringBuilderAppendTests)
+    TEST_CLASS(JsonValueTests)
     {
-        char buffer[16];
+        char buffer[20];
         StringBuilder* sb;
 
     public:
@@ -16,22 +17,50 @@ namespace JsonGeneratorTests
         {
             sb = new StringBuilder(buffer, sizeof(buffer));
         }
-        
+                
         TEST_METHOD(InitialState)
         {
             assertResultIs("");
         }
 
-        TEST_METHOD(EmptyString)
-        {
-            append("");
-            assertResultIs("");
-        }
-        
         TEST_METHOD(Null)
         {
             append((char*)0);
             assertResultIs("null");
+        }
+
+        TEST_METHOD(EmptyString)
+        {
+            append("");
+            assertResultIs("\"\"");
+        }
+
+        TEST_METHOD(OneString)
+        {
+            append("ABCD");
+            assertResultIs("\"ABCD\"");
+        }
+
+        TEST_METHOD(OneTwoStrings)
+        {
+            append("ABCD");
+            append("EFGH");
+            assertResultIs("\"ABCD\"\"EFGH\"");
+        }
+
+        TEST_METHOD(OverCapacity)
+        {
+            append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            assertResultIs("\"ABCDEFGHIJKLMNOPQ\"");
+
+            append("");
+            assertResultIs("\"ABCDEFGHIJKLMNOPQ\"");
+        }
+
+        TEST_METHOD(SpecialChars)
+        {
+            append("\\\"\b\f\n\r\t");
+            assertResultIs("\"\\\\\\\"\\b\\f\\n\\r\\t\"");
         }
 
         TEST_METHOD(Number)
@@ -40,39 +69,10 @@ namespace JsonGeneratorTests
             assertResultIs("3.14");
         }
 
-        TEST_METHOD(OneString)
+        template<typename T>
+        void append(T value)
         {
-            append("ABCD");
-            assertResultIs("ABCD");
-        }
-
-        TEST_METHOD(TwoStrings)
-        {
-            append("ABCD");
-            append("EFGH");
-            assertResultIs("ABCDEFGH");
-        }
-
-        TEST_METHOD(OverCapacity)
-        {
-            append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            assertResultIs("ABCDEFGHIJKLMNO");
-        }
-
-        TEST_METHOD(SpecialChars)
-        {
-            append("\\\"\b\f\n\r");
-            assertResultIs("\\\"\b\f\n\r");
-        }
-
-        void append(double d)
-        {
-            sb->append(d);
-        }
-
-        void append(const char* s)
-        {
-            sb->append(s);
+            JsonValue(value).writeTo(*sb);
         }
 
         void assertResultIs(const char* expected)

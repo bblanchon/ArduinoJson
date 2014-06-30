@@ -21,23 +21,17 @@
     <ClCompile Include="StringBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringBuilderAppendEscapedTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StringBuilderAppendTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="JsonHashTableTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JsonValueTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JsonArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StringBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,6 +42,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JsonValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
