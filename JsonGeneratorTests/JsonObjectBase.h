@@ -7,8 +7,9 @@
 
 #include "JsonValue.h"
 #include "Print.h"
+#include "Printable.h"
 
-class JsonObjectBase
+class JsonObjectBase : public Printable
 {
 public:
 
@@ -18,6 +19,6 @@ public:
         return writeTo(sb);
     }
 
-    virtual size_t writeTo(Print& p) = 0;
+    virtual size_t writeTo(Print& p) const = 0;
 };
 

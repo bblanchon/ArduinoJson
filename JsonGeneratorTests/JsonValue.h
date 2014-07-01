@@ -5,11 +5,10 @@
 
 #pragma once
 
+#include "Printable.h"
 #include "StringBuilder.h"
 
-class JsonObjectBase;
-
-class JsonValue
+class JsonValue : public Printable
 {    
 public:
 
@@ -35,13 +34,13 @@ public:
         content.boolean = value;
     }
 
-    JsonValue(JsonObjectBase& value)
+    JsonValue(Printable& value)
         : implementation(&JsonValue::writeObjectTo)
     {
         content.object = &value;
     }
 
-    size_t writeTo(Print& p)
+    virtual size_t writeTo(Print& p) const
     {
         // handmade polymorphism
         return (this->*implementation)(p);
@@ -51,18 +50,18 @@ private:
     
     union Content
     {
-        bool            boolean;
-        double          number;
-        JsonObjectBase* object;
-        const char*     string;
+        bool        boolean;
+        double      number;
+        Printable*  object;
+        const char* string;
     };
 
     Content content;
 
-    size_t(JsonValue::*implementation)(Print& p);
+    size_t(JsonValue::*implementation)(Print& p)const;
 
-    size_t writeBooleanTo(Print& p);
-    size_t writeNumberTo(Print& p);
-    size_t writeObjectTo(Print& p);
-    size_t writeStringTo(Print& p);
+    size_t writeBooleanTo(Print& p) const;
+    size_t writeNumberTo(Print& p) const;
+    size_t writeObjectTo(Print& p) const;
+    size_t writeStringTo(Print& p) const;
 };

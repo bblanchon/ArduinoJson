@@ -37,7 +37,7 @@ private:
     JsonValue items[N];
     int itemCount;
 
-    virtual size_t writeTo(Print& p)
+    virtual size_t writeTo(Print& p) const
     {
         size_t n = 0;
         

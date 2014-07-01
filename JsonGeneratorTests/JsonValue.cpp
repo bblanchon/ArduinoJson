@@ -8,12 +8,12 @@
 #include <cstdio>
 #include <cstring>
 
-size_t JsonValue::writeBooleanTo(Print& p)
+size_t JsonValue::writeBooleanTo(Print& p) const
 {
     return p.write(content.boolean ? "true" : "false");
 }
 
-size_t JsonValue::writeNumberTo(Print& p)
+size_t JsonValue::writeNumberTo(Print& p) const
 {
     char tmp[16];
 
@@ -22,7 +22,7 @@ size_t JsonValue::writeNumberTo(Print& p)
     return p.write(tmp);
 }
 
-size_t JsonValue::writeObjectTo(Print& p)
+size_t JsonValue::writeObjectTo(Print& p) const
 {
     if (content.object)
         return ((JsonObjectBase*)content.object)->writeTo(p);
@@ -30,7 +30,7 @@ size_t JsonValue::writeObjectTo(Print& p)
         return p.write("null");
 }
 
-size_t JsonValue::writeStringTo(Print& p)
+size_t JsonValue::writeStringTo(Print& p) const
 {
     auto s = content.string;
 

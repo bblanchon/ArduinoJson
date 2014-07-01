@@ -94,6 +94,7 @@
     <ClInclude Include="JsonObjectBase.h" />
     <ClInclude Include="Print.h" />
     <ClInclude Include="JsonValue.h" />
+    <ClInclude Include="Printable.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
