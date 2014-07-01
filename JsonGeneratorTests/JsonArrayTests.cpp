@@ -12,6 +12,7 @@ namespace JsonGeneratorTests
         
         TEST_METHOD(Empty)
         {
+            returns(2);
             jsonIs("[]");
         }
 
@@ -19,6 +20,7 @@ namespace JsonGeneratorTests
         {
             addValue((char*)0);
 
+            returns(6);
             jsonIs("[null]");
         }
 
@@ -26,6 +28,7 @@ namespace JsonGeneratorTests
         {
             addValue("hello");
 
+            returns(9);
             jsonIs("[\"hello\"]");
         }
 
@@ -34,6 +37,7 @@ namespace JsonGeneratorTests
             addValue("hello");
             addValue("world");
 
+            returns(17);
             jsonIs("[\"hello\",\"world\"]");
         }
 
@@ -43,6 +47,7 @@ namespace JsonGeneratorTests
             addValue("world");
             addValue("lost");
 
+            returns(17);
             jsonIs("[\"hello\",\"world\"]");
         }
 
@@ -50,6 +55,7 @@ namespace JsonGeneratorTests
         {
             addValue(3.14);
 
+            returns(6);
             jsonIs("[3.14]");
         }
 
@@ -58,6 +64,7 @@ namespace JsonGeneratorTests
             addValue(3.14);
             addValue(2.72);
 
+            returns(11);
             jsonIs("[3.14,2.72]");
         }
 
@@ -67,6 +74,7 @@ namespace JsonGeneratorTests
             addValue(2.72);
             addValue(1.41);
 
+            returns(11);
             jsonIs("[3.14,2.72]");
         }
 
@@ -74,6 +82,7 @@ namespace JsonGeneratorTests
         {
             addValue(true);
 
+            returns(6);
             jsonIs("[true]");
         }
 
@@ -81,6 +90,7 @@ namespace JsonGeneratorTests
         {
             addValue(false);
 
+            returns(7);
             jsonIs("[false]");
         }
 
@@ -89,6 +99,7 @@ namespace JsonGeneratorTests
             addValue(false);
             addValue(true);
 
+            returns(12);
             jsonIs("[false,true]");
         }
 
@@ -98,6 +109,7 @@ namespace JsonGeneratorTests
             addValue(true);
             addValue(false);
 
+            returns(12);
             jsonIs("[false,true]");
         }
 
@@ -107,6 +119,7 @@ namespace JsonGeneratorTests
             
             addNested(nestedArray);
 
+            returns(4);
             jsonIs("[[]]");
         }
 
@@ -116,6 +129,7 @@ namespace JsonGeneratorTests
 
             addNested(nestedHash);
 
+            returns(4);
             jsonIs("[{}]");
         }
 
@@ -126,12 +140,14 @@ namespace JsonGeneratorTests
 
             addNested(nestedArray);
 
+            returns(8);
             jsonIs("[[3.14]]");
         }
 
     private:
 
         JsonArray<2> arr;
+        char buffer[256];
 
         void addNested(JsonObjectBase& value)
         {
@@ -146,11 +162,14 @@ namespace JsonGeneratorTests
 
         void jsonIs(const char* expected)
         {      
-            char buffer[256];
-
             arr.writeTo(buffer, sizeof(buffer));
-
             Assert::AreEqual(expected, buffer);
+        }
+
+        void returns(size_t expected)
+        {
+            size_t actual = arr.writeTo(buffer, sizeof(buffer));
+            Assert::AreEqual(expected, actual);
         }
     };
 }
