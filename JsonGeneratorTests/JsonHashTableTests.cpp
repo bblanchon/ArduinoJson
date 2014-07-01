@@ -9,17 +9,21 @@ namespace JsonGeneratorTests
     TEST_CLASS(JsonHashTableTests)
     {
         JsonHashTable<2> hash;
+        char buffer[256];
 
     public:
         
         TEST_METHOD(Empty)
         {
+            returns(2);
             jsonIs("{}");
         }
 
         TEST_METHOD(OneString)
         {
             addValue("key", "value");
+
+            returns(15);
             jsonIs("{\"key\":\"value\"}");
         }
 
@@ -27,6 +31,8 @@ namespace JsonGeneratorTests
         {
             addValue("key1", "value1");
             addValue("key2", "value2");
+
+            returns(33);
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
@@ -35,6 +41,8 @@ namespace JsonGeneratorTests
             addValue("key1", "value1");
             addValue("key2", "value2");
             addValue("key3", "value3");
+
+            returns(33);
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
@@ -42,6 +50,7 @@ namespace JsonGeneratorTests
         {
             addValue("pi", 3.14);
 
+            returns(11);
             jsonIs("{\"pi\":3.14}");
         }
 
@@ -49,6 +58,7 @@ namespace JsonGeneratorTests
         {
             addValue("key", (char*) 0);
 
+            returns(12);
             jsonIs("{\"key\":null}");
         }
 
@@ -56,6 +66,7 @@ namespace JsonGeneratorTests
         {
             addValue("key", true);
 
+            returns(12);
             jsonIs("{\"key\":true}");
         }
 
@@ -63,24 +74,25 @@ namespace JsonGeneratorTests
         {
             addValue("key", false);
 
+            returns(13);
             jsonIs("{\"key\":false}");
         }
 
         TEST_METHOD(OneEmptyNestedArray)
         {
             JsonArray<1> nestedArray;
-
             addNested("key", nestedArray);
 
+            returns(10);
             jsonIs("{\"key\":[]}");
         }
 
         TEST_METHOD(OneEmptyNestedHash)
         {
             JsonHashTable<1> nestedHash;
-
             addNested("key", nestedHash);
 
+            returns(10);
             jsonIs("{\"key\":{}}");
         }
 
@@ -98,12 +110,15 @@ namespace JsonGeneratorTests
         }
 
         void jsonIs(const char* expected)
-        {
-            char buffer[256];
-
+        {            
             hash.writeTo(buffer, sizeof(buffer));
-
             Assert::AreEqual(expected, buffer);
+        }
+
+        void returns(size_t expected)
+        {
+            size_t actual = hash.writeTo(buffer, sizeof(buffer));
+            Assert::AreEqual(expected, actual);
         }
     };
 }

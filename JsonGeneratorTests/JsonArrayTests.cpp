@@ -8,6 +8,9 @@ namespace JsonGeneratorTests
 {		
     TEST_CLASS(JsonArrayTests)
     {
+        JsonArray<2> arr;
+        char buffer[256];
+
     public:
         
         TEST_METHOD(Empty)
@@ -145,9 +148,6 @@ namespace JsonGeneratorTests
         }
 
     private:
-
-        JsonArray<2> arr;
-        char buffer[256];
 
         void addNested(JsonObjectBase& value)
         {
