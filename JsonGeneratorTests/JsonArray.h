@@ -37,19 +37,25 @@ private:
     JsonValue items[N];
     int itemCount;
 
-    virtual void writeTo(JsonSink& sb)
+    virtual size_t writeTo(JsonSink& sb)
     {
-        sb.append("[");
-        sb.reserveRoom(1);
+        size_t n = 0;
+        
+        n += sb.append("[");
 
         for (int i = 0; i < itemCount; i++)
         {
-            if (i>0) sb.append(",");
-            items[i].writeTo(sb);
+            if (i > 0)
+            {
+                n += sb.append(",");
+            }
+
+            n += items[i].writeTo(sb);
         }
 
-        sb.releaseRoom(1);
-        sb.append("]");
+        n += sb.append("]");
+
+        return n;
     }
 };
 

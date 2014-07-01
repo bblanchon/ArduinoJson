@@ -8,29 +8,29 @@
 #include <cstdio>
 #include <cstring>
 
-void JsonValue::writeBooleanTo(JsonSink& sb)
+size_t JsonValue::writeBooleanTo(JsonSink& sb)
 {
-    sb.append(content.boolean ? "true" : "false");
+    return sb.append(content.boolean ? "true" : "false");
 }
 
-void JsonValue::writeNumberTo(JsonSink& sb)
+size_t JsonValue::writeNumberTo(JsonSink& sb)
 {
     char tmp[16];
 
     _snprintf(tmp, sizeof(tmp), "%lg", content.number);
 
-    sb.append(tmp);
+    return sb.append(tmp);
 }
 
-void JsonValue::writeObjectTo(JsonSink& sink)
+size_t JsonValue::writeObjectTo(JsonSink& sink)
 {
     if (content.object)
-        ((JsonObjectBase*) content.object)->writeTo(sink);
+        return ((JsonObjectBase*)content.object)->writeTo(sink);
     else
-        sink.append("null");
+        return sink.append("null");
 }
 
-void JsonValue::writeStringTo(JsonSink& sink)
+size_t JsonValue::writeStringTo(JsonSink& sink)
 {
     auto s = content.string;
 
@@ -39,54 +39,51 @@ void JsonValue::writeStringTo(JsonSink& sink)
         return sink.append("null");
     }
 
-    if (!sink.hasRoomFor(2))
-    {
-        return;
-    }
+    size_t n = 0;
 
-    sink.append('\"');
-    sink.reserveRoom(1);
+    n += sink.append('\"');
 
     while (*s)
     {
         switch (*s)
         {
         case '"':
-            sink.append("\\\"");
+            n += sink.append("\\\"");
             break;
 
         case '\\':
-            sink.append("\\\\");
+            n += sink.append("\\\\");
             break;
 
         case '\b':
-            sink.append("\\b");
+            n += sink.append("\\b");
             break;
 
         case '\f':
-            sink.append("\\f");
+            n += sink.append("\\f");
             break;
 
         case '\n':
-            sink.append("\\n");
+            n += sink.append("\\n");
             break;
 
         case '\r':
-            sink.append("\\r");
+            n += sink.append("\\r");
             break;
 
         case '\t':
-            sink.append("\\t");
+            n += sink.append("\\t");
             break;
 
         default:
-            sink.append(*s);
+            n += sink.append(*s);
             break;
         }
 
         s++;
     }
 
-    sink.releaseRoom(1);
-    sink.append('\"');
+    n += sink.append('\"');
+
+    return n;
 }

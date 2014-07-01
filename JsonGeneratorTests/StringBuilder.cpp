@@ -5,23 +5,11 @@
 
 #include "StringBuilder.h"
 
-void StringBuilder::append(const char* s)
+size_t StringBuilder::append(char c)
 {
-    char* tail = buffer + length;
-
-    while (*s && length<capacity)
-    {
-        buffer[length++] = *s++;
-    }
-
-    buffer[length] = 0;
-}
-
-
-void StringBuilder::append(char c)
-{
-    if (length >= capacity) return;
+    if (length >= capacity) return 0;
 
     buffer[length++] = c;
     buffer[length] = 0;
+    return 1;
 }

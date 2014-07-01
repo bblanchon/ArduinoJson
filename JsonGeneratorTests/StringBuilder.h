@@ -16,23 +16,8 @@ public:
         buffer[0] = 0;
     }
 
-    virtual void append(char c);
-    virtual void append(const char* s);
-
-    virtual bool hasRoomFor(int n)
-    {
-        return capacity - length >= n;
-    }
-
-    virtual void reserveRoom(int n)
-    {
-        capacity -= n;
-    }
-
-    virtual void releaseRoom(int n)
-    {
-        capacity += n;
-    }
+    virtual size_t append(char c);
+    size_t append(const char* c);
 
 private:
     char* buffer;

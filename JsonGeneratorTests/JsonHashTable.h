@@ -45,24 +45,29 @@ private:
     KeyValuePair items[N];
     int itemCount;
 
-    virtual void writeTo(JsonSink& sink)
+    virtual size_t writeTo(JsonSink& sink)
     {
-        sink.append("{");
-        sink.reserveRoom(1);
+        size_t n = 0;
+
+        n += sink.append('{');
 
         for (int i = 0; i < itemCount; i++)
         {
-            if (i>0) sink.append(",");
-
             JsonValue key(items[i].key);
 
-            key.writeTo(sink);
-            sink.append(":");
-            items[i].value.writeTo(sink);
+            if (i > 0)
+            {
+                n += sink.append(',');
+            }
+
+            n += key.writeTo(sink);
+            n += sink.append(':');
+            n += items[i].value.writeTo(sink);
         }
 
-        sink.releaseRoom(1);
-        sink.append("}");
+        n += sink.append('}');
+
+        return n;
     }
 };
 

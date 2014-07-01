@@ -51,10 +51,10 @@ namespace JsonGeneratorTests
         TEST_METHOD(OverCapacity)
         {
             append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            assertResultIs("\"ABCDEFGHIJKLMNOPQ\"");
+            assertResultIs("\"ABCDEFGHIJKLMNOPQR");
 
             append("");
-            assertResultIs("\"ABCDEFGHIJKLMNOPQ\"");
+            assertResultIs("\"ABCDEFGHIJKLMNOPQR");
         }
 
         TEST_METHOD(SpecialChars)

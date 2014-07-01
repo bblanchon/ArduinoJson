@@ -12,12 +12,12 @@ class JsonObjectBase
 {
 public:
 
-    void writeTo(char* buffer, size_t bufferSize)
+    size_t writeTo(char* buffer, size_t bufferSize)
     {
         StringBuilder sb(buffer, bufferSize);
-        writeTo(sb);
+        return writeTo(sb);
     }
 
-    virtual void writeTo(JsonSink& sb) = 0;
+    virtual size_t writeTo(JsonSink& sb) = 0;
 };
 

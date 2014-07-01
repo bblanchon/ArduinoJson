@@ -9,11 +9,16 @@ class JsonSink
 {
 public:
 
-    virtual void append(char c) = 0;
-    virtual void append(const char* s) = 0;
-
-    virtual bool hasRoomFor(int n) = 0;
-    virtual void reserveRoom(int n) = 0;
-    virtual void releaseRoom(int n) = 0;
+    virtual size_t append(char c) = 0;
+    
+    size_t append(const char* s)
+    {
+        size_t n = 0;
+        while (*s)
+        {
+            n += append(*s++);
+        }
+        return n;
+    }
 };
 
