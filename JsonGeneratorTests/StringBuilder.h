@@ -16,8 +16,7 @@ public:
         buffer[0] = 0;
     }
 
-    virtual size_t append(char c);
-    size_t append(const char* c);
+    virtual size_t write(char c);
 
 private:
     char* buffer;

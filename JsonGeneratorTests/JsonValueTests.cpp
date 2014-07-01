@@ -26,7 +26,7 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(Null)
         {
-            append((char*)0);
+            write((char*)0);
 
             assertReturns(4);
             assertResultIs("null");
@@ -34,7 +34,7 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(EmptyString)
         {
-            append("");
+            write("");
 
             assertReturns(2);
             assertResultIs("\"\"");
@@ -42,17 +42,17 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OneString)
         {
-            append("ABCD");
+            write("ABCD");
             assertReturns(6);
             assertResultIs("\"ABCD\"");
         }
 
         TEST_METHOD(OneTwoStrings)
         {
-            append("ABCD");
+            write("ABCD");
             assertReturns(6);
 
-            append("EFGH");
+            write("EFGH");
             assertReturns(6);
             
             assertResultIs("\"ABCD\"\"EFGH\"");
@@ -60,31 +60,31 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OverCapacity)
         {
-            append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            write("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
             assertReturns(19);
             assertResultIs("\"ABCDEFGHIJKLMNOPQR");
 
-            append("ABC");
+            write("ABC");
             assertReturns(0);
             assertResultIs("\"ABCDEFGHIJKLMNOPQR");
         }
 
         TEST_METHOD(SpecialChars)
         {
-            append("\\\"\b\f\n\r\t");
+            write("\\\"\b\f\n\r\t");
             assertReturns(16);
             assertResultIs("\"\\\\\\\"\\b\\f\\n\\r\\t\"");
         }
 
         TEST_METHOD(Number)
         {
-            append(3.14);
+            write(3.14);
             assertReturns(4);
             assertResultIs("3.14");
         }
 
         template<typename T>
-        void append(T value)
+        void write(T value)
         {
             returnValue = JsonValue(value).writeTo(*sb);
         }

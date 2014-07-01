@@ -49,7 +49,7 @@ private:
     {
         size_t n = 0;
 
-        n += sink.append('{');
+        n += sink.write('{');
 
         for (int i = 0; i < itemCount; i++)
         {
@@ -57,15 +57,15 @@ private:
 
             if (i > 0)
             {
-                n += sink.append(',');
+                n += sink.write(',');
             }
 
             n += key.writeTo(sink);
-            n += sink.append(':');
+            n += sink.write(':');
             n += items[i].value.writeTo(sink);
         }
 
-        n += sink.append('}');
+        n += sink.write('}');
 
         return n;
     }

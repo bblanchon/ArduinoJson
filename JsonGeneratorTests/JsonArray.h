@@ -41,19 +41,19 @@ private:
     {
         size_t n = 0;
         
-        n += sb.append("[");
+        n += sb.write("[");
 
         for (int i = 0; i < itemCount; i++)
         {
             if (i > 0)
             {
-                n += sb.append(",");
+                n += sb.write(",");
             }
 
             n += items[i].writeTo(sb);
         }
 
-        n += sb.append("]");
+        n += sb.write("]");
 
         return n;
     }

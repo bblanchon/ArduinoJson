@@ -5,7 +5,7 @@
 
 #include "StringBuilder.h"
 
-size_t StringBuilder::append(char c)
+size_t StringBuilder::write(char c)
 {
     if (length >= capacity) return 0;
 

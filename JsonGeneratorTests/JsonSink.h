@@ -9,14 +9,14 @@ class JsonSink
 {
 public:
 
-    virtual size_t append(char c) = 0;
+    virtual size_t write(char c) = 0;
     
-    size_t append(const char* s)
+    size_t write(const char* s)
     {
         size_t n = 0;
         while (*s)
         {
-            n += append(*s++);
+            n += write(*s++);
         }
         return n;
     }

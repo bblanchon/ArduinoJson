@@ -10,7 +10,7 @@
 
 size_t JsonValue::writeBooleanTo(JsonSink& sb)
 {
-    return sb.append(content.boolean ? "true" : "false");
+    return sb.write(content.boolean ? "true" : "false");
 }
 
 size_t JsonValue::writeNumberTo(JsonSink& sb)
@@ -19,7 +19,7 @@ size_t JsonValue::writeNumberTo(JsonSink& sb)
 
     _snprintf(tmp, sizeof(tmp), "%lg", content.number);
 
-    return sb.append(tmp);
+    return sb.write(tmp);
 }
 
 size_t JsonValue::writeObjectTo(JsonSink& sink)
@@ -27,7 +27,7 @@ size_t JsonValue::writeObjectTo(JsonSink& sink)
     if (content.object)
         return ((JsonObjectBase*)content.object)->writeTo(sink);
     else
-        return sink.append("null");
+        return sink.write("null");
 }
 
 size_t JsonValue::writeStringTo(JsonSink& sink)
@@ -36,54 +36,54 @@ size_t JsonValue::writeStringTo(JsonSink& sink)
 
     if (!s)
     {
-        return sink.append("null");
+        return sink.write("null");
     }
 
     size_t n = 0;
 
-    n += sink.append('\"');
+    n += sink.write('\"');
 
     while (*s)
     {
         switch (*s)
         {
         case '"':
-            n += sink.append("\\\"");
+            n += sink.write("\\\"");
             break;
 
         case '\\':
-            n += sink.append("\\\\");
+            n += sink.write("\\\\");
             break;
 
         case '\b':
-            n += sink.append("\\b");
+            n += sink.write("\\b");
             break;
 
         case '\f':
-            n += sink.append("\\f");
+            n += sink.write("\\f");
             break;
 
         case '\n':
-            n += sink.append("\\n");
+            n += sink.write("\\n");
             break;
 
         case '\r':
-            n += sink.append("\\r");
+            n += sink.write("\\r");
             break;
 
         case '\t':
-            n += sink.append("\\t");
+            n += sink.write("\\t");
             break;
 
         default:
-            n += sink.append(*s);
+            n += sink.write(*s);
             break;
         }
 
         s++;
     }
 
-    n += sink.append('\"');
+    n += sink.write('\"');
 
     return n;
 }
