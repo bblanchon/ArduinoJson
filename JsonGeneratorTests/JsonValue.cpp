@@ -8,82 +8,82 @@
 #include <cstdio>
 #include <cstring>
 
-size_t JsonValue::writeBooleanTo(JsonSink& sb)
+size_t JsonValue::writeBooleanTo(Print& p)
 {
-    return sb.write(content.boolean ? "true" : "false");
+    return p.write(content.boolean ? "true" : "false");
 }
 
-size_t JsonValue::writeNumberTo(JsonSink& sb)
+size_t JsonValue::writeNumberTo(Print& p)
 {
     char tmp[16];
 
     _snprintf(tmp, sizeof(tmp), "%lg", content.number);
 
-    return sb.write(tmp);
+    return p.write(tmp);
 }
 
-size_t JsonValue::writeObjectTo(JsonSink& sink)
+size_t JsonValue::writeObjectTo(Print& p)
 {
     if (content.object)
-        return ((JsonObjectBase*)content.object)->writeTo(sink);
+        return ((JsonObjectBase*)content.object)->writeTo(p);
     else
-        return sink.write("null");
+        return p.write("null");
 }
 
-size_t JsonValue::writeStringTo(JsonSink& sink)
+size_t JsonValue::writeStringTo(Print& p)
 {
     auto s = content.string;
 
     if (!s)
     {
-        return sink.write("null");
+        return p.write("null");
     }
 
     size_t n = 0;
 
-    n += sink.write('\"');
+    n += p.write('\"');
 
     while (*s)
     {
         switch (*s)
         {
         case '"':
-            n += sink.write("\\\"");
+            n += p.write("\\\"");
             break;
 
         case '\\':
-            n += sink.write("\\\\");
+            n += p.write("\\\\");
             break;
 
         case '\b':
-            n += sink.write("\\b");
+            n += p.write("\\b");
             break;
 
         case '\f':
-            n += sink.write("\\f");
+            n += p.write("\\f");
             break;
 
         case '\n':
-            n += sink.write("\\n");
+            n += p.write("\\n");
             break;
 
         case '\r':
-            n += sink.write("\\r");
+            n += p.write("\\r");
             break;
 
         case '\t':
-            n += sink.write("\\t");
+            n += p.write("\\t");
             break;
 
         default:
-            n += sink.write(*s);
+            n += p.write(*s);
             break;
         }
 
         s++;
     }
 
-    n += sink.write('\"');
+    n += p.write('\"');
 
     return n;
 }

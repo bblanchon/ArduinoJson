@@ -92,7 +92,7 @@
     <ClInclude Include="JsonArray.h" />
     <ClInclude Include="JsonHashTable.h" />
     <ClInclude Include="JsonObjectBase.h" />
-    <ClInclude Include="JsonSink.h" />
+    <ClInclude Include="Print.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>

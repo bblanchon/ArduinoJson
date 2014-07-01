@@ -6,7 +6,7 @@
 #pragma once
 
 #include "JsonValue.h"
-#include "JsonSink.h"
+#include "Print.h"
 
 class JsonObjectBase
 {
@@ -18,6 +18,6 @@ public:
         return writeTo(sb);
     }
 
-    virtual size_t writeTo(JsonSink& sb) = 0;
+    virtual size_t writeTo(Print& p) = 0;
 };
 

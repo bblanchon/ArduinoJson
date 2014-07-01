@@ -37,23 +37,23 @@ private:
     JsonValue items[N];
     int itemCount;
 
-    virtual size_t writeTo(JsonSink& sb)
+    virtual size_t writeTo(Print& p)
     {
         size_t n = 0;
         
-        n += sb.write("[");
+        n += p.write("[");
 
         for (int i = 0; i < itemCount; i++)
         {
             if (i > 0)
             {
-                n += sb.write(",");
+                n += p.write(",");
             }
 
-            n += items[i].writeTo(sb);
+            n += items[i].writeTo(p);
         }
 
-        n += sb.write("]");
+        n += p.write("]");
 
         return n;
     }

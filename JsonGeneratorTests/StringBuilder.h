@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "JsonSink.h"
+#include "Print.h"
 
-class StringBuilder : public JsonSink
+class StringBuilder : public Print
 {
 public:
     StringBuilder(char* buf, int size)

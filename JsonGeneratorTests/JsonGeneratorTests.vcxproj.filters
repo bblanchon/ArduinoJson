@@ -47,7 +47,7 @@
     <ClInclude Include="JsonArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonSink.h">
+    <ClInclude Include="Print.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

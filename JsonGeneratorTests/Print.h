@@ -5,7 +5,7 @@
 
 #pragma once
 
-class JsonSink
+class Print
 {
 public:
 
