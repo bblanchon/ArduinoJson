@@ -43,9 +43,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)/../JsonGenerator;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)/../JsonGenerator;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,20 +84,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\JsonGenerator\JsonValue.cpp" />
+    <ClCompile Include="..\JsonGenerator\StringBuilder.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonHashTableTests.cpp" />
-    <ClCompile Include="JsonValue.cpp" />
-    <ClCompile Include="StringBuilder.cpp" />
     <ClCompile Include="JsonValueTests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JsonArray.h" />
-    <ClInclude Include="JsonHashTable.h" />
-    <ClInclude Include="JsonObjectBase.h" />
-    <ClInclude Include="Print.h" />
-    <ClInclude Include="JsonValue.h" />
-    <ClInclude Include="Printable.h" />
-    <ClInclude Include="StringBuilder.h" />
+    <ClInclude Include="..\JsonGenerator\JsonArray.h" />
+    <ClInclude Include="..\JsonGenerator\JsonHashTable.h" />
+    <ClInclude Include="..\JsonGenerator\JsonObjectBase.h" />
+    <ClInclude Include="..\JsonGenerator\JsonValue.h" />
+    <ClInclude Include="..\JsonGenerator\Print.h" />
+    <ClInclude Include="..\JsonGenerator\Printable.h" />
+    <ClInclude Include="..\JsonGenerator\StringBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

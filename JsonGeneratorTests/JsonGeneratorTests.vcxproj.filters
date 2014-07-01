@@ -18,39 +18,39 @@
     <ClCompile Include="JsonArrayTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="JsonHashTableTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonValueTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\JsonGenerator\JsonValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JsonGenerator\StringBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="StringBuilder.h">
+    <ClInclude Include="..\JsonGenerator\JsonArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonObjectBase.h">
+    <ClInclude Include="..\JsonGenerator\JsonHashTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonHashTable.h">
+    <ClInclude Include="..\JsonGenerator\JsonObjectBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonValue.h">
+    <ClInclude Include="..\JsonGenerator\JsonValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonArray.h">
+    <ClInclude Include="..\JsonGenerator\Print.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Print.h">
+    <ClInclude Include="..\JsonGenerator\Printable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Printable.h">
+    <ClInclude Include="..\JsonGenerator\StringBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
