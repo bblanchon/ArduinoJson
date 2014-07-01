@@ -111,13 +111,13 @@ namespace JsonGeneratorTests
 
         void jsonIs(const char* expected)
         {            
-            hash.writeTo(buffer, sizeof(buffer));
+            hash.printTo(buffer, sizeof(buffer));
             Assert::AreEqual(expected, buffer);
         }
 
         void returns(size_t expected)
         {
-            size_t actual = hash.writeTo(buffer, sizeof(buffer));
+            size_t actual = hash.printTo(buffer, sizeof(buffer));
             Assert::AreEqual(expected, actual);
         }
     };

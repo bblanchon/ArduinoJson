@@ -32,7 +32,7 @@ public:
         itemCount++;
     }
 
-    using JsonObjectBase::writeTo;
+    using JsonObjectBase::printTo;
     
 private:
 
@@ -45,7 +45,7 @@ private:
     KeyValuePair items[N];
     int itemCount;
 
-    virtual size_t writeTo(Print& p) const
+    virtual size_t printTo(Print& p) const
     {
         size_t n = 0;
 
@@ -60,9 +60,9 @@ private:
                 n += p.write(',');
             }
 
-            n += key.writeTo(p);
+            n += key.printTo(p);
             n += p.write(':');
-            n += items[i].value.writeTo(p);
+            n += items[i].value.printTo(p);
         }
 
         n += p.write('}');

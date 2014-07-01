@@ -86,7 +86,7 @@ namespace JsonGeneratorTests
         template<typename T>
         void write(T value)
         {
-            returnValue = JsonValue(value).writeTo(*sb);
+            returnValue = JsonValue(value).printTo(*sb);
         }
 
         void assertResultIs(const char* expected)

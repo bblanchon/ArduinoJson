@@ -4,35 +4,34 @@
  */
 
 #include "JsonValue.h"
-#include "JsonObjectBase.h"
 #include <cstdio>
 #include <cstring>
 
-size_t JsonValue::writeBooleanTo(Print& p) const
+size_t JsonValue::printBooleanTo(Print& p) const
 {
     return p.write(content.boolean ? "true" : "false");
 }
 
-size_t JsonValue::writeNumberTo(Print& p) const
+size_t JsonValue::printNumberTo(Print& p) const
 {
     char tmp[16];
 
-    _snprintf(tmp, sizeof(tmp), "%lg", content.number);
+    sprintf(tmp, "%lg", content.number);
 
     return p.write(tmp);
 }
 
-size_t JsonValue::writeObjectTo(Print& p) const
+size_t JsonValue::printObjectTo(Print& p) const
 {
     if (content.object)
-        return ((JsonObjectBase*)content.object)->writeTo(p);
+        return ((Printable*) content.object)->printTo(p);
     else
         return p.write("null");
 }
 
-size_t JsonValue::writeStringTo(Print& p) const
+size_t JsonValue::printStringTo(Print& p) const
 {
-    auto s = content.string;
+    const char* s = content.string;
 
     if (!s)
     {

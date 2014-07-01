@@ -31,13 +31,13 @@ public:
         itemCount++;
     }
 
-    using JsonObjectBase::writeTo;
+    using JsonObjectBase::printTo;
 
 private:
     JsonValue items[N];
     int itemCount;
 
-    virtual size_t writeTo(Print& p) const
+    virtual size_t printTo(Print& p) const
     {
         size_t n = 0;
         
@@ -50,7 +50,7 @@ private:
                 n += p.write(",");
             }
 
-            n += items[i].writeTo(p);
+            n += items[i].printTo(p);
         }
 
         n += p.write("]");

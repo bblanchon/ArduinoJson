@@ -17,30 +17,30 @@ public:
     }
 
     JsonValue(const char* value)
-        : implementation(&JsonValue::writeStringTo)
+        : implementation(&JsonValue::printStringTo)
     {
         content.string = value;
     }
 
     JsonValue(double value)
-        : implementation(&JsonValue::writeNumberTo)
+        : implementation(&JsonValue::printNumberTo)
     {
         content.number = value;
     }
 
     JsonValue(bool value)
-        : implementation(&JsonValue::writeBooleanTo)
+        : implementation(&JsonValue::printBooleanTo)
     {
         content.boolean = value;
     }
 
     JsonValue(Printable& value)
-        : implementation(&JsonValue::writeObjectTo)
+        : implementation(&JsonValue::printObjectTo)
     {
         content.object = &value;
     }
 
-    virtual size_t writeTo(Print& p) const
+    virtual size_t printTo(Print& p) const
     {
         // handmade polymorphism
         return (this->*implementation)(p);
@@ -60,8 +60,8 @@ private:
 
     size_t(JsonValue::*implementation)(Print& p)const;
 
-    size_t writeBooleanTo(Print& p) const;
-    size_t writeNumberTo(Print& p) const;
-    size_t writeObjectTo(Print& p) const;
-    size_t writeStringTo(Print& p) const;
+    size_t printBooleanTo(Print& p) const;
+    size_t printNumberTo(Print& p) const;
+    size_t printObjectTo(Print& p) const;
+    size_t printStringTo(Print& p) const;
 };

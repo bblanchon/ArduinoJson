@@ -16,7 +16,7 @@ public:
         buffer[0] = 0;
     }
 
-    virtual size_t write(char c);
+    virtual size_t write(uint8_t c);
 
 private:
     char* buffer;

@@ -162,13 +162,13 @@ namespace JsonGeneratorTests
 
         void jsonIs(const char* expected)
         {      
-            arr.writeTo(buffer, sizeof(buffer));
+            arr.printTo(buffer, sizeof(buffer));
             Assert::AreEqual(expected, buffer);
         }
 
         void returns(size_t expected)
         {
-            size_t actual = arr.writeTo(buffer, sizeof(buffer));
+            size_t actual = arr.printTo(buffer, sizeof(buffer));
             Assert::AreEqual(expected, actual);
         }
     };

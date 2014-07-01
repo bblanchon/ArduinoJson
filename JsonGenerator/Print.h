@@ -5,12 +5,16 @@
 
 #pragma once
 
+#ifndef ARDUINO
+
+typedef unsigned char uint8_t;
+
 class Print
 {
 public:
 
-    virtual size_t write(char c) = 0;
-    
+    virtual size_t write(uint8_t c) = 0;
+
     size_t write(const char* s)
     {
         size_t n = 0;
@@ -22,3 +26,8 @@ public:
     }
 };
 
+#else
+
+#include <Print.h>
+
+#endif

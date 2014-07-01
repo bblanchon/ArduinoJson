@@ -13,12 +13,12 @@ class JsonObjectBase : public Printable
 {
 public:
 
-    size_t writeTo(char* buffer, size_t bufferSize)
+    size_t printTo(char* buffer, size_t bufferSize)
     {
         StringBuilder sb(buffer, bufferSize);
-        return writeTo(sb);
+        return printTo(sb);
     }
 
-    virtual size_t writeTo(Print& p) const = 0;
+    virtual size_t printTo(Print& p) const = 0;
 };
 
