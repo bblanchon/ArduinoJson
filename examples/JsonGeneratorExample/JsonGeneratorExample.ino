@@ -14,12 +14,12 @@ void setup()
     h.add("pi", 3.14);
 
     JsonArray<3> a;
-    a.add(1.0);
-    a.add(2.0);
-    a.add(3.0);
+    a.add(1);
+    a.add(2);
+    a.add(3);
     h.add("list", a);
 
-    h.add("hellow", "world");
+    h.add("hello", "world");
 
     Serial.print(h);
 }
