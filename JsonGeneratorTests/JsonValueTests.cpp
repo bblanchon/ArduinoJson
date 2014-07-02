@@ -83,6 +83,20 @@ namespace JsonGeneratorTests
             assertResultIs("3.14");
         }
 
+        TEST_METHOD(Integer)
+        {
+            write(314);
+            assertReturns(3);
+            assertResultIs("314");
+        }
+
+        TEST_METHOD(Short)
+        {
+            write((short)314);
+            assertReturns(3);
+            assertResultIs("314");
+        }
+
         TEST_METHOD(Long)
         {
             write(314L);

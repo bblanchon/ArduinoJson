@@ -15,7 +15,7 @@ public:
     JsonValue()
     {
     }
-
+    
     JsonValue(bool value)
         : implementation(&JsonValue::printBoolTo)
     {
@@ -32,6 +32,10 @@ public:
         : implementation(&JsonValue::printLongTo)
     {
         content.asLong = value;
+    }
+
+    JsonValue(int value) : JsonValue((long) value)
+    {        
     }
 
     JsonValue(Printable& value)
