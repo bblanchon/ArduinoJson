@@ -30,6 +30,9 @@
     <ClCompile Include="..\JsonGenerator\StringBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StringBuilderTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonGenerator\JsonArray.h">

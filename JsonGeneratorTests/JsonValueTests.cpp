@@ -8,21 +8,10 @@ namespace JsonGeneratorTests
 {
     TEST_CLASS(JsonValueTests)
     {
-        char buffer[20];
-        StringBuilder* sb;
+        char buffer[1024];
         size_t returnValue;
 
     public:
-
-        TEST_METHOD_INITIALIZE(Initialize)
-        {
-            sb = new StringBuilder(buffer, sizeof(buffer));
-        }
-                
-        TEST_METHOD(InitialState)
-        {
-            assertResultIs("");
-        }
 
         TEST_METHOD(Null)
         {
@@ -38,35 +27,6 @@ namespace JsonGeneratorTests
 
             assertReturns(2);
             assertResultIs("\"\"");
-        }
-
-        TEST_METHOD(OneString)
-        {
-            write("ABCD");
-            assertReturns(6);
-            assertResultIs("\"ABCD\"");
-        }
-
-        TEST_METHOD(OneTwoStrings)
-        {
-            write("ABCD");
-            assertReturns(6);
-
-            write("EFGH");
-            assertReturns(6);
-            
-            assertResultIs("\"ABCD\"\"EFGH\"");
-        }
-
-        TEST_METHOD(OverCapacity)
-        {
-            write("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            assertReturns(19);
-            assertResultIs("\"ABCDEFGHIJKLMNOPQR");
-
-            write("ABC");
-            assertReturns(0);
-            assertResultIs("\"ABCDEFGHIJKLMNOPQR");
         }
 
         TEST_METHOD(SpecialChars)
@@ -107,7 +67,8 @@ namespace JsonGeneratorTests
         template<typename T>
         void write(T value)
         {
-            returnValue = JsonValue(value).printTo(*sb);
+            StringBuilder sb(buffer, sizeof(buffer));
+            returnValue = JsonValue(value).printTo(sb);
         }
 
         void assertResultIs(const char* expected)
