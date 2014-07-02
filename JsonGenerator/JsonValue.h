@@ -16,10 +16,10 @@ public:
     {
     }
 
-    JsonValue(const char* value)
-        : implementation(&JsonValue::printStringTo)
+    JsonValue(bool value)
+        : implementation(&JsonValue::printBoolTo)
     {
-        content.asString = value;
+        content.asBool = value;
     }
 
     JsonValue(double value)
@@ -28,16 +28,22 @@ public:
         content.asDouble = value;
     }
 
-    JsonValue(bool value)
-        : implementation(&JsonValue::printBoolTo)
+    JsonValue(long value)
+        : implementation(&JsonValue::printLongTo)
     {
-        content.asBool = value;
+        content.asLong = value;
     }
 
     JsonValue(Printable& value)
         : implementation(&JsonValue::printPrintableTo)
     {
         content.asPrintable = &value;
+    }
+
+    JsonValue(const char* value)
+        : implementation(&JsonValue::printStringTo)
+    {
+        content.asString = value;
     }
 
     virtual size_t printTo(Print& p) const
@@ -52,6 +58,7 @@ private:
     {
         bool        asBool;
         double      asDouble;
+        long        asLong;
         Printable*  asPrintable;
         const char* asString;
     };
@@ -62,6 +69,7 @@ private:
 
     size_t printBoolTo(Print& p) const;
     size_t printDoubleTo(Print& p) const;
+    size_t printLongTo(Print& p) const;
     size_t printPrintableTo(Print& p) const;
     size_t printStringTo(Print& p) const;
 };

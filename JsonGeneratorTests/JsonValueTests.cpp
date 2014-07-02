@@ -76,11 +76,18 @@ namespace JsonGeneratorTests
             assertResultIs("\"\\\\\\\"\\b\\f\\n\\r\\t\"");
         }
 
-        TEST_METHOD(Number)
+        TEST_METHOD(Double)
         {
             write(3.14);
             assertReturns(4);
             assertResultIs("3.14");
+        }
+
+        TEST_METHOD(Long)
+        {
+            write(314L);
+            assertReturns(3);
+            assertResultIs("314");
         }
 
         template<typename T>
