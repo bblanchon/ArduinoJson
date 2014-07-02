@@ -40,8 +40,10 @@ public:
         content.asLong = value;
     }
 
-    JsonValue(int value) : JsonValue((long) value)
-    {        
+    JsonValue(int value) 
+        : implementation(&JsonValue::printLongTo)
+    {
+        content.asLong = value;
     }
 
     JsonValue(Printable& value)
