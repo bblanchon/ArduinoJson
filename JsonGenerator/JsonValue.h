@@ -28,6 +28,12 @@ public:
         content.asDouble = value;
     }
 
+    JsonValue(float value)
+        : implementation(&JsonValue::printFloatTo)
+    {
+        content.asFloat = value;
+    }
+    
     JsonValue(long value)
         : implementation(&JsonValue::printLongTo)
     {
@@ -62,6 +68,7 @@ private:
     {
         bool        asBool;
         double      asDouble;
+        float       asFloat;
         long        asLong;
         Printable*  asPrintable;
         const char* asString;
@@ -73,6 +80,7 @@ private:
 
     size_t printBoolTo(Print& p) const;
     size_t printDoubleTo(Print& p) const;
+    size_t printFloatTo(Print& p) const;
     size_t printLongTo(Print& p) const;
     size_t printPrintableTo(Print& p) const;
     size_t printStringTo(Print& p) const;

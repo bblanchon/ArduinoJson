@@ -85,11 +85,18 @@ namespace JsonGeneratorTests
             assertResultIs("\"\\t\"");
         }
 
+        TEST_METHOD(Float)
+        {
+            write(3.40282346e38F);
+           // assertReturns(4);
+            assertResultIs("3.40282347e+038");
+        }
+
         TEST_METHOD(Double)
         {
-            write(3.14);
-            assertReturns(4);
-            assertResultIs("3.14");
+            write(1.7976931348623157e308);
+            // assertReturns(4);
+            assertResultIs("1.7976931348623157e+308");
         }
 
         TEST_METHOD(Integer)

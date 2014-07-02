@@ -15,21 +15,23 @@ size_t JsonValue::printBoolTo(Print& p) const
 size_t JsonValue::printDoubleTo(Print& p) const
 {
     char tmp[32];
+    sprintf(tmp, "%.17lg", content.asDouble);
+    return p.write(tmp);
+}
 
-    sprintf(tmp, "%lg", content.asDouble);
-
+size_t JsonValue::printFloatTo(Print& p) const
+{
+    char tmp[16];
+    sprintf(tmp, "%.9g", content.asFloat);
     return p.write(tmp);
 }
 
 size_t JsonValue::printLongTo(Print& p) const
 {
     char tmp[32];
-
     sprintf(tmp, "%ld", content.asLong);
-
     return p.write(tmp);
 }
-
 
 size_t JsonValue::printPrintableTo(Print& p) const
 {
