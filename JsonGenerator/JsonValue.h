@@ -23,19 +23,19 @@ public:
     }
 
     JsonValue(double value)
-        : implementation(&JsonValue::printNumberTo)
+        : implementation(&JsonValue::printDoubleTo)
     {
         content.asDouble = value;
     }
 
     JsonValue(bool value)
-        : implementation(&JsonValue::printBooleanTo)
+        : implementation(&JsonValue::printBoolTo)
     {
         content.asBool = value;
     }
 
     JsonValue(Printable& value)
-        : implementation(&JsonValue::printObjectTo)
+        : implementation(&JsonValue::printPrintableTo)
     {
         content.asPrintable = &value;
     }
@@ -60,8 +60,8 @@ private:
 
     size_t(JsonValue::*implementation)(Print& p)const;
 
-    size_t printBooleanTo(Print& p) const;
-    size_t printNumberTo(Print& p) const;
-    size_t printObjectTo(Print& p) const;
+    size_t printBoolTo(Print& p) const;
+    size_t printDoubleTo(Print& p) const;
+    size_t printPrintableTo(Print& p) const;
     size_t printStringTo(Print& p) const;
 };

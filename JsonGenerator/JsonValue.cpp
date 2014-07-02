@@ -7,12 +7,12 @@
 #include <cstdio>
 #include <cstring>
 
-size_t JsonValue::printBooleanTo(Print& p) const
+size_t JsonValue::printBoolTo(Print& p) const
 {
     return p.write(content.asBool ? "true" : "false");
 }
 
-size_t JsonValue::printNumberTo(Print& p) const
+size_t JsonValue::printDoubleTo(Print& p) const
 {
     char tmp[16];
 
@@ -21,7 +21,7 @@ size_t JsonValue::printNumberTo(Print& p) const
     return p.write(tmp);
 }
 
-size_t JsonValue::printObjectTo(Print& p) const
+size_t JsonValue::printPrintableTo(Print& p) const
 {
     if (content.asPrintable)
         return ((Printable*) content.asPrintable)->printTo(p);
