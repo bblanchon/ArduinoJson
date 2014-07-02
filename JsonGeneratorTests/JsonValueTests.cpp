@@ -29,11 +29,60 @@ namespace JsonGeneratorTests
             assertResultIs("\"\"");
         }
 
-        TEST_METHOD(SpecialChars)
+        TEST_METHOD(QuotationMark)
         {
-            write("\\\"\b\f\n\r\t");
-            assertReturns(16);
-            assertResultIs("\"\\\\\\\"\\b\\f\\n\\r\\t\"");
+            write("\"");
+            assertReturns(4);
+            assertResultIs("\"\\\"\"");
+        }
+
+        TEST_METHOD(ReverseSolidus)
+        {
+            write("\\");
+            assertReturns(4);
+            assertResultIs("\"\\\\\"");
+        }
+
+        TEST_METHOD(Solidus)
+        {
+            write("/");
+            assertReturns(3);
+            assertResultIs("\"/\""); // but the JSON format allows \/
+        }
+
+        TEST_METHOD(Backspace)
+        {
+            write("\b");
+            assertReturns(4);
+            assertResultIs("\"\\b\"");
+        }
+
+        TEST_METHOD(Formfeed)
+        {
+            write("\f");
+            assertReturns(4);
+            assertResultIs("\"\\f\"");
+        }
+
+        TEST_METHOD(Newline)
+        {
+            write("\n");
+            assertReturns(4);
+            assertResultIs("\"\\n\"");
+        }
+
+        TEST_METHOD(CarriageReturn)
+        {
+            write("\r");
+            assertReturns(4);
+            assertResultIs("\"\\r\"");
+        }    
+
+        TEST_METHOD(HorizontalTab)
+        {
+            write("\t");
+            assertReturns(4);
+            assertResultIs("\"\\t\"");
         }
 
         TEST_METHOD(Double)
