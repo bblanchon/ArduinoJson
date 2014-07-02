@@ -9,29 +9,29 @@
 
 size_t JsonValue::printBooleanTo(Print& p) const
 {
-    return p.write(content.boolean ? "true" : "false");
+    return p.write(content.asBool ? "true" : "false");
 }
 
 size_t JsonValue::printNumberTo(Print& p) const
 {
     char tmp[16];
 
-    sprintf(tmp, "%lg", content.number);
+    sprintf(tmp, "%lg", content.asDouble);
 
     return p.write(tmp);
 }
 
 size_t JsonValue::printObjectTo(Print& p) const
 {
-    if (content.object)
-        return ((Printable*) content.object)->printTo(p);
+    if (content.asPrintable)
+        return ((Printable*) content.asPrintable)->printTo(p);
     else
         return p.write("null");
 }
 
 size_t JsonValue::printStringTo(Print& p) const
 {
-    const char* s = content.string;
+    const char* s = content.asString;
 
     if (!s)
     {

@@ -19,25 +19,25 @@ public:
     JsonValue(const char* value)
         : implementation(&JsonValue::printStringTo)
     {
-        content.string = value;
+        content.asString = value;
     }
 
     JsonValue(double value)
         : implementation(&JsonValue::printNumberTo)
     {
-        content.number = value;
+        content.asDouble = value;
     }
 
     JsonValue(bool value)
         : implementation(&JsonValue::printBooleanTo)
     {
-        content.boolean = value;
+        content.asBool = value;
     }
 
     JsonValue(Printable& value)
         : implementation(&JsonValue::printObjectTo)
     {
-        content.object = &value;
+        content.asPrintable = &value;
     }
 
     virtual size_t printTo(Print& p) const
@@ -50,10 +50,10 @@ private:
     
     union Content
     {
-        bool        boolean;
-        double      number;
-        Printable*  object;
-        const char* string;
+        bool        asBool;
+        double      asDouble;
+        Printable*  asPrintable;
+        const char* asString;
     };
 
     Content content;
