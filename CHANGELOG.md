@@ -1,5 +1,10 @@
-ArduinoJsonParser change log
-============================
+Arduino JSON: change log
+========================
+
+v2.0
+----
+
+* Added JSON encoding
 
 v1.2
 ----
