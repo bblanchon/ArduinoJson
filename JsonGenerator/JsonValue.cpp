@@ -4,8 +4,6 @@
  */
 
 #include "JsonValue.h"
-#include <cstdio>
-#include <cstring>
 
 size_t JsonValue::printBoolTo(Print& p) const
 {
@@ -14,23 +12,17 @@ size_t JsonValue::printBoolTo(Print& p) const
 
 size_t JsonValue::printDoubleTo(Print& p) const
 {
-    char tmp[32];
-    sprintf(tmp, "%.17lg", content.asDouble);
-    return p.write(tmp);
+    return p.print(content.asDouble);
 }
 
 size_t JsonValue::printFloatTo(Print& p) const
 {
-    char tmp[16];
-    sprintf(tmp, "%.9g", content.asFloat);
-    return p.write(tmp);
+    return p.print(content.asFloat);
 }
 
 size_t JsonValue::printLongTo(Print& p) const
 {
-    char tmp[32];
-    sprintf(tmp, "%ld", content.asLong);
-    return p.write(tmp);
+    return p.print(content.asLong);
 }
 
 size_t JsonValue::printPrintableTo(Print& p) const

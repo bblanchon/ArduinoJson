@@ -9,6 +9,7 @@
 
 typedef unsigned char uint8_t;
 
+// This class reproduces Arduino's Print
 class Print
 {
 public:
@@ -16,6 +17,8 @@ public:
     virtual size_t write(uint8_t c) = 0;
 
     size_t write(const char* s);
+    size_t print(double, int = 2);
+    size_t print(long);
 };
 
 #else
