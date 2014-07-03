@@ -5,6 +5,8 @@
 
 #include "StringBuilder.h"
 
+using namespace ArduinoJson::Generator;
+
 size_t StringBuilder::write(uint8_t c)
 {
     if (length >= capacity) return 0;

@@ -8,59 +8,64 @@
 #include "JsonObjectBase.h"
 #include "StringBuilder.h"
 
-template<int N>
-class JsonArray : public JsonObjectBase
+namespace ArduinoJson
 {
-public:
-    JsonArray()
+    namespace Generator
     {
-        itemCount = 0;
-    }
-
-    template<typename T>
-    void add(T value)
-    {
-        add(JsonValue(value));
-    }
-
-    void add(double value, int digits=2)
-    {
-        add(JsonValue(value, digits));
-    }
-
-    void add(JsonValue value)
-    {
-        if (itemCount >= N) return;
-
-        items[itemCount] = value;
-        itemCount++;
-    }
-
-    using JsonObjectBase::printTo;
-
-private:
-    JsonValue items[N];
-    int itemCount;
-
-    virtual size_t printTo(Print& p) const
-    {
-        size_t n = 0;
-        
-        n += p.write('[');
-
-        for (int i = 0; i < itemCount; i++)
+        template<int N>
+        class JsonArray : public JsonObjectBase
         {
-            if (i > 0)
+        public:
+            JsonArray()
             {
-                n += p.write(',');
+                itemCount = 0;
             }
 
-            n += items[i].printTo(p);
-        }
+            template<typename T>
+            void add(T value)
+            {
+                add(JsonValue(value));
+            }
 
-        n += p.write(']');
+            void add(double value, int digits = 2)
+            {
+                add(JsonValue(value, digits));
+            }
 
-        return n;
+            void add(JsonValue value)
+            {
+                if (itemCount >= N) return;
+
+                items[itemCount] = value;
+                itemCount++;
+            }
+
+            using JsonObjectBase::printTo;
+
+        private:
+            JsonValue items[N];
+            int itemCount;
+
+            virtual size_t printTo(Print& p) const
+            {
+                size_t n = 0;
+
+                n += p.write('[');
+
+                for (int i = 0; i < itemCount; i++)
+                {
+                    if (i > 0)
+                    {
+                        n += p.write(',');
+                    }
+
+                    n += items[i].printTo(p);
+                }
+
+                n += p.write(']');
+
+                return n;
+            }
+        };
     }
-};
-
+}

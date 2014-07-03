@@ -5,6 +5,8 @@
 
 #include <JsonGenerator.h>
 
+using namespace ArduinoJson::Generator;
+
 void setup()
 {
     Serial.begin(9600);

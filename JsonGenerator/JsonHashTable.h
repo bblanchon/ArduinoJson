@@ -7,72 +7,77 @@
 
 #include "JsonObjectBase.h"
 
-template<int N>
-class JsonHashTable : public JsonObjectBase
+namespace ArduinoJson
 {
-public:
-
-    JsonHashTable()
+    namespace Generator
     {
-        itemCount = 0;
-    }
-
-    template<typename T>
-    void add(const char* key, T value)
-    {
-        add(key, JsonValue(value));
-    }
-
-    void add(const char* key, double value, int digits=2)
-    {
-        add(key, JsonValue(value, digits));
-    }
-
-    void add(const char* key, JsonValue value)
-    {
-        if (itemCount >= N) return;
-
-        items[itemCount].key = key;
-        items[itemCount].value = value;
-        itemCount++;
-    }
-
-    using JsonObjectBase::printTo;
-    
-private:
-
-    struct KeyValuePair
-    {
-        const char* key;
-        JsonValue value;
-    };
-
-    KeyValuePair items[N];
-    int itemCount;
-
-    virtual size_t printTo(Print& p) const
-    {
-        size_t n = 0;
-
-        n += p.write('{');
-
-        for (int i = 0; i < itemCount; i++)
+        template<int N>
+        class JsonHashTable : public JsonObjectBase
         {
-            JsonValue key(items[i].key);
+        public:
 
-            if (i > 0)
+            JsonHashTable()
             {
-                n += p.write(',');
+                itemCount = 0;
             }
 
-            n += key.printTo(p);
-            n += p.write(':');
-            n += items[i].value.printTo(p);
-        }
+            template<typename T>
+            void add(const char* key, T value)
+            {
+                add(key, JsonValue(value));
+            }
 
-        n += p.write('}');
+            void add(const char* key, double value, int digits = 2)
+            {
+                add(key, JsonValue(value, digits));
+            }
 
-        return n;
+            void add(const char* key, JsonValue value)
+            {
+                if (itemCount >= N) return;
+
+                items[itemCount].key = key;
+                items[itemCount].value = value;
+                itemCount++;
+            }
+
+            using JsonObjectBase::printTo;
+
+        private:
+
+            struct KeyValuePair
+            {
+                const char* key;
+                JsonValue value;
+            };
+
+            KeyValuePair items[N];
+            int itemCount;
+
+            virtual size_t printTo(Print& p) const
+            {
+                size_t n = 0;
+
+                n += p.write('{');
+
+                for (int i = 0; i < itemCount; i++)
+                {
+                    JsonValue key(items[i].key);
+
+                    if (i > 0)
+                    {
+                        n += p.write(',');
+                    }
+
+                    n += key.printTo(p);
+                    n += p.write(':');
+                    n += items[i].value.printTo(p);
+                }
+
+                n += p.write('}');
+
+                return n;
+            }
+        };
     }
-};
-
+}

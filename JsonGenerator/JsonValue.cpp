@@ -5,6 +5,8 @@
 
 #include "JsonValue.h"
 
+using namespace ArduinoJson::Generator;
+
 size_t JsonValue::printBoolTo(Print& p) const
 {
     return p.print(content.asBool ? "true" : "false");

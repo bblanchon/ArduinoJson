@@ -9,16 +9,21 @@
 #include "Print.h"
 #include "Printable.h"
 
-class JsonObjectBase : public Printable
+namespace ArduinoJson
 {
-public:
-
-    size_t printTo(char* buffer, size_t bufferSize)
+    namespace Generator
     {
-        StringBuilder sb(buffer, bufferSize);
-        return printTo(sb);
+        class JsonObjectBase : public Printable
+        {
+        public:
+
+            size_t printTo(char* buffer, size_t bufferSize)
+            {
+                StringBuilder sb(buffer, bufferSize);
+                return printTo(sb);
+            }
+
+            virtual size_t printTo(Print& p) const = 0;
+        };
     }
-
-    virtual size_t printTo(Print& p) const = 0;
-};
-
+}
