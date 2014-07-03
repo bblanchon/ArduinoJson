@@ -1,5 +1,5 @@
 /*
-* malloc-free JSON parser for Arduino
+* Arduino JSON library
 * Benoit Blanchon 2014 - MIT License
 */
 

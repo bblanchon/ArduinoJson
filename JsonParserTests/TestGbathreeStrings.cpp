@@ -1,3 +1,8 @@
+/*
+* Arduino JSON library
+* Benoit Blanchon 2014 - MIT License
+*/
+
 #include "CppUnitTest.h"
 #include "JsonParser.h"
 #include <string>

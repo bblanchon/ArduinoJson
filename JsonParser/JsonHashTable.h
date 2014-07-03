@@ -1,10 +1,9 @@
 /*
-* malloc-free JSON parser for Arduino
+* Arduino JSON library
 * Benoit Blanchon 2014 - MIT License
 */
 
-#ifndef __JSONHASHTABLE_H
-#define __JSONHASHTABLE_H
+#pragma once
 
 #include "JsonObjectBase.h"
 
@@ -35,5 +34,3 @@ private:
 	JsonHashTable(char* json, jsmntok_t* tokens);
 	jsmntok_t* getToken(const char* key);
 };
-
-#endif

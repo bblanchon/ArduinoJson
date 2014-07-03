@@ -1,11 +1,9 @@
 /*
- * malloc-free JSON parser for Arduino
- * Benoit Blanchon 2014
- * MIT License
- */
+* Arduino JSON library
+* Benoit Blanchon 2014 - MIT License
+*/
 
-#ifndef __JSONOBJECTBASE_H
-#define __JSONOBJECTBASE_H
+#pragma once
 
 #include "jsmn.h"
 
@@ -47,6 +45,3 @@ protected:
 	char* json;
 	jsmntok_t* tokens;
 };
-
-#endif
-
