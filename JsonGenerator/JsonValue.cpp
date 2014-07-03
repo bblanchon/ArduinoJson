@@ -7,7 +7,7 @@
 
 size_t JsonValue::printBoolTo(Print& p) const
 {
-    return p.write(content.asBool ? "true" : "false");
+    return p.print(content.asBool ? "true" : "false");
 }
 
 size_t JsonValue::printDoubleTo(Print& p) const
@@ -30,7 +30,7 @@ size_t JsonValue::printPrintableTo(Print& p) const
     if (content.asPrintable)
         return ((Printable*) content.asPrintable)->printTo(p);
     else
-        return p.write("null");
+        return p.print("null");
 }
 
 size_t JsonValue::printStringTo(Print& p) const
@@ -39,7 +39,7 @@ size_t JsonValue::printStringTo(Print& p) const
 
     if (!s)
     {
-        return p.write("null");
+        return p.print("null");
     }
 
     size_t n = 0;
@@ -51,31 +51,31 @@ size_t JsonValue::printStringTo(Print& p) const
         switch (*s)
         {
         case '"':
-            n += p.write("\\\"");
+            n += p.print("\\\"");
             break;
 
         case '\\':
-            n += p.write("\\\\");
+            n += p.print("\\\\");
             break;
 
         case '\b':
-            n += p.write("\\b");
+            n += p.print("\\b");
             break;
 
         case '\f':
-            n += p.write("\\f");
+            n += p.print("\\f");
             break;
 
         case '\n':
-            n += p.write("\\n");
+            n += p.print("\\n");
             break;
 
         case '\r':
-            n += p.write("\\r");
+            n += p.print("\\r");
             break;
 
         case '\t':
-            n += p.write("\\t");
+            n += p.print("\\t");
             break;
 
         default:

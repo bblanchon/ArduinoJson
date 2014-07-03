@@ -64,7 +64,7 @@ namespace JsonGeneratorTests
 
         void write(const char* value)
         {
-            returnValue = sb->write(value);
+            returnValue = sb->print(value);
         }
 
         void assertResultIs(const char* expected)

@@ -9,7 +9,7 @@
 #include <cstdio>
 //#include <cstring>
 
-size_t Print::write(const char* s)
+size_t Print::print(const char s[])
 {
     size_t n = 0;
     while (*s)
@@ -23,14 +23,14 @@ size_t Print::print(double value, int digits)
 {
     char tmp[32];
     sprintf(tmp, "%.*lg", digits+1, value);
-    return write(tmp);
+    return print(tmp);
 }
 
 size_t Print::print(long value)
 {
     char tmp[32];
     sprintf(tmp, "%ld", value);
-    return write(tmp);
+    return print(tmp);
 }
 
 #endif
