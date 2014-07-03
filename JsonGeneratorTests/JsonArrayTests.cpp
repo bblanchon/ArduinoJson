@@ -54,31 +54,31 @@ namespace JsonGeneratorTests
             jsonIs("[\"hello\",\"world\"]");
         }
 
-        TEST_METHOD(OneNumber)
+        TEST_METHOD(OneInteger)
         {
-            addValue(3.14);
+            addValue(1);
 
-            returnValueIs(6);
-            jsonIs("[3.14]");
+            returnValueIs(3);
+            jsonIs("[1]");
         }
 
-        TEST_METHOD(TwoNumbers)
+        TEST_METHOD(TwoIntegers)
         {
-            addValue(3.14);
-            addValue(2.72);
+            addValue(1);
+            addValue(2);
 
-            returnValueIs(11);
-            jsonIs("[3.14,2.72]");
+            returnValueIs(5);
+            jsonIs("[1,2]");
         }
 
-        TEST_METHOD(OneNumberOverCapacity)
+        TEST_METHOD(OneIntegerOverCapacity)
         {
-            addValue(3.14);
-            addValue(2.72);
-            addValue(1.41);
+            addValue(1);
+            addValue(2);
+            addValue(3);
 
-            returnValueIs(11);
-            jsonIs("[3.14,2.72]");
+            returnValueIs(5);
+            jsonIs("[1,2]");
         }
 
         TEST_METHOD(OneTrue)
@@ -136,15 +136,15 @@ namespace JsonGeneratorTests
             jsonIs("[{}]");
         }
 
-        TEST_METHOD(OneNestedArrayWithOneItem)
+        TEST_METHOD(OneNestedArrayWithOneInteger)
         {
             JsonArray<1> nestedArray;
-            nestedArray.add(3.14);
+            nestedArray.add(1);
 
             addNested(nestedArray);
 
-            returnValueIs(8);
-            jsonIs("[[3.14]]");
+            returnValueIs(5);
+            jsonIs("[[1]]");
         }
 
     private:

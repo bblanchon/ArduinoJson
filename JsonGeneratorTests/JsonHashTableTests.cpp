@@ -46,12 +46,12 @@ namespace JsonGeneratorTests
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
-        TEST_METHOD(OneNumber)
+        TEST_METHOD(OneInteger)
         {
-            addValue("pi", 3.14);
+            addValue("key", 1);
 
-            returnValueIs(11);
-            jsonIs("{\"pi\":3.14}");
+            returnValueIs(9);
+            jsonIs("{\"key\":1}");
         }
 
         TEST_METHOD(OneNull)
