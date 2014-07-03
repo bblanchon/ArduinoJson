@@ -22,10 +22,11 @@ public:
         content.asBool = value;
     }
 
-    JsonValue(double value)
+    JsonValue(double value, int digits=2)
         : implementation(&JsonValue::printDoubleTo)
     {
-        content.asDouble = value;
+        content.asDouble.value = value;
+        content.asDouble.digits = digits;
     }
 
     JsonValue(float value)
@@ -69,11 +70,15 @@ private:
     union Content
     {
         bool        asBool;
-        double      asDouble;
         float       asFloat;
         long        asLong;
         Printable*  asPrintable;
         const char* asString;
+        
+        struct {
+            double value;
+            int digits;
+        } asDouble;
     };
 
     Content content;

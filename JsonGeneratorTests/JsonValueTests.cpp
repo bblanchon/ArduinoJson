@@ -16,107 +16,102 @@ namespace JsonGeneratorTests
         TEST_METHOD(Null)
         {
             write((char*)0);
-
-            assertReturns(4);
             assertResultIs("null");
         }
 
         TEST_METHOD(EmptyString)
         {
             write("");
-
-            assertReturns(2);
             assertResultIs("\"\"");
         }
 
         TEST_METHOD(QuotationMark)
         {
             write("\"");
-            assertReturns(4);
             assertResultIs("\"\\\"\"");
         }
 
         TEST_METHOD(ReverseSolidus)
         {
             write("\\");
-            assertReturns(4);
             assertResultIs("\"\\\\\"");
         }
 
         TEST_METHOD(Solidus)
         {
             write("/");
-            assertReturns(3);
             assertResultIs("\"/\""); // but the JSON format allows \/
         }
 
         TEST_METHOD(Backspace)
         {
             write("\b");
-            assertReturns(4);
             assertResultIs("\"\\b\"");
         }
 
         TEST_METHOD(Formfeed)
         {
             write("\f");
-            assertReturns(4);
             assertResultIs("\"\\f\"");
         }
 
         TEST_METHOD(Newline)
         {
             write("\n");
-            assertReturns(4);
             assertResultIs("\"\\n\"");
         }
 
         TEST_METHOD(CarriageReturn)
         {
             write("\r");
-            assertReturns(4);
             assertResultIs("\"\\r\"");
         }    
 
         TEST_METHOD(HorizontalTab)
         {
             write("\t");
-            assertReturns(4);
             assertResultIs("\"\\t\"");
         }
 
-        TEST_METHOD(Float)
+        TEST_METHOD(DoubleDefaultDigits)
         {
-            write(3.40282346e38F);
-           // assertReturns(4);
-            assertResultIs("3.40282347e+038");
+            write(3.14159265358979323846);
+            assertResultIs("3.14");
         }
 
-        TEST_METHOD(Double)
+        TEST_METHOD(DoubleZeroDigits)
         {
-            write(1.7976931348623157e308);
-            // assertReturns(4);
-            assertResultIs("1.7976931348623157e+308");
+            write(3.14159265358979323846, 0);
+            assertResultIs("3");
+        }
+
+        TEST_METHOD(DoubleOneDigit)
+        {
+            write(3.14159265358979323846, 1);
+            assertResultIs("3.1");
+        }
+
+        TEST_METHOD(DoubleTwoDigits)
+        {
+            write(3.14159265358979323846, 2);
+            assertResultIs("3.14");
         }
 
         TEST_METHOD(Integer)
         {
             write(314);
-            assertReturns(3);
             assertResultIs("314");
         }
 
         TEST_METHOD(Short)
         {
             write((short)314);
-            assertReturns(3);
             assertResultIs("314");
         }
 
         TEST_METHOD(Long)
         {
             write(314L);
-            assertReturns(3);
             assertResultIs("314");
         }
 
@@ -127,14 +122,16 @@ namespace JsonGeneratorTests
             returnValue = JsonValue(value).printTo(sb);
         }
 
+        void write(double value, int digits)
+        {
+            StringBuilder sb(buffer, sizeof(buffer));
+            returnValue = JsonValue(value, digits).printTo(sb);
+        }
+
         void assertResultIs(const char* expected)
         {
             Assert::AreEqual(expected, buffer);
-        }
-
-        void assertReturns(size_t expected)
-        {
-            Assert::AreEqual(expected, returnValue);
+            Assert::AreEqual(strlen(expected), returnValue);
         }
     };
 }

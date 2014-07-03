@@ -22,7 +22,7 @@ size_t Print::write(const char* s)
 size_t Print::print(double value, int digits)
 {
     char tmp[32];
-    sprintf(tmp, "%.*lg", digits, value);
+    sprintf(tmp, "%.*lg", digits+1, value);
     return write(tmp);
 }
 

@@ -12,7 +12,7 @@ size_t JsonValue::printBoolTo(Print& p) const
 
 size_t JsonValue::printDoubleTo(Print& p) const
 {
-    return p.print(content.asDouble);
+    return p.print(content.asDouble.value, content.asDouble.digits);
 }
 
 size_t JsonValue::printFloatTo(Print& p) const
