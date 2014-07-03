@@ -54,6 +54,12 @@ namespace JsonGeneratorTests
             jsonIs("[\"hello\",\"world\"]");
         }
 
+        TEST_METHOD(OneDouble)
+        {
+            addValue(3.14159265358979323846, 4);
+            jsonIs("[3.1416]");
+        }
+
         TEST_METHOD(OneInteger)
         {
             addValue(1);
@@ -158,6 +164,11 @@ namespace JsonGeneratorTests
         void addValue(T value)
         {
             arr.add(value);
+        }
+
+        void addValue(double value, int digits)
+        {
+            arr.add(value, digits);
         }
 
         void jsonIs(const char* expected)

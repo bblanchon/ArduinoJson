@@ -23,6 +23,11 @@ public:
         add(key, JsonValue(value));
     }
 
+    void add(const char* key, double value, int digits=2)
+    {
+        add(key, JsonValue(value, digits));
+    }
+
     void add(const char* key, JsonValue value)
     {
         if (itemCount >= N) return;

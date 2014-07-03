@@ -23,6 +23,11 @@ public:
         add(JsonValue(value));
     }
 
+    void add(double value, int digits=2)
+    {
+        add(JsonValue(value, digits));
+    }
+
     void add(JsonValue value)
     {
         if (itemCount >= N) return;
