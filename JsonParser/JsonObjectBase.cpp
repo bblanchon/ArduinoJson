@@ -3,9 +3,10 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
+#include <stdlib.h> // for strtol, strtod
 #include "JsonObjectBase.h"
 
-#include <stdlib.h> // for strtol, strtod
+using namespace ArduinoJson::Parser;
 
 int JsonObjectBase::getNestedTokenCount(jsmntok_t* token)
 {

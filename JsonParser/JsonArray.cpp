@@ -6,6 +6,8 @@
 #include "JsonArray.h"
 #include "JsonHashTable.h"
 
+using namespace ArduinoJson::Parser;
+
 JsonArray::JsonArray(char* json, jsmntok_t* tokens)
 : JsonObjectBase(json, tokens)
 {

@@ -7,41 +7,47 @@
 
 #include "jsmn.h"
 
-class JsonObjectBase
+namespace ArduinoJson
 {
-public:
+    namespace Parser
+    {
+        class JsonObjectBase
+        {
+        public:
 
-	JsonObjectBase()
-	{
-		makeInvalid();
-	}
+            JsonObjectBase()
+            {
+                makeInvalid();
+            }
 
-	bool success() 
-	{ 
-		return json != 0 && tokens != 0;
-	}
+            bool success()
+            {
+                return json != 0 && tokens != 0;
+            }
 
-protected:
-	
-	JsonObjectBase(char* json, jsmntok_t* tokens)
-	{
-		this->json = json;
-		this->tokens = tokens;
-	}
-		
-	void makeInvalid()
-	{
-		json = 0;
-		tokens = 0;
-	}
-	
-	static int getNestedTokenCount(jsmntok_t* token);
+        protected:
 
-	bool getBoolFromToken(jsmntok_t* token);
-	double getDoubleFromToken(jsmntok_t* token);
-	long getLongFromToken(jsmntok_t* token);
-	char* getStringFromToken(jsmntok_t* token);
+            JsonObjectBase(char* json, jsmntok_t* tokens)
+            {
+                this->json = json;
+                this->tokens = tokens;
+            }
 
-	char* json;
-	jsmntok_t* tokens;
-};
+            void makeInvalid()
+            {
+                json = 0;
+                tokens = 0;
+            }
+
+            static int getNestedTokenCount(jsmntok_t* token);
+
+            bool getBoolFromToken(jsmntok_t* token);
+            double getDoubleFromToken(jsmntok_t* token);
+            long getLongFromToken(jsmntok_t* token);
+            char* getStringFromToken(jsmntok_t* token);
+
+            char* json;
+            jsmntok_t* tokens;
+        };
+    }
+}

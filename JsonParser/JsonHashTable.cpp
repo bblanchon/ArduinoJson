@@ -3,10 +3,11 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
+#include <string.h> // for strcmp()
 #include "JsonArray.h"
 #include "JsonHashTable.h"
 
-#include <string.h> // for strcmp()
+using namespace ArduinoJson::Parser;
 
 JsonHashTable::JsonHashTable(char* json, jsmntok_t* tokens)
 : JsonObjectBase(json, tokens)

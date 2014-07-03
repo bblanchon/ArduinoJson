@@ -5,6 +5,8 @@
 
 #include <JsonParser.h>
 
+using namespace ArduinoJson::Parser;
+
 void ParseAnObject()
 {
     char json[] = "{\"Name\":\"Blanchon\",\"Skills\":[\"C\",\"C++\",\"C#\"],\"Age\":32,\"Online\":true}";

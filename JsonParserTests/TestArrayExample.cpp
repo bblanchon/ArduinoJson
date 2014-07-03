@@ -7,6 +7,7 @@
 #include "JsonParser.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace ArduinoJson::Parser;
 
 namespace ArduinoJsonParserTests
 {

@@ -7,30 +7,36 @@
 
 #include "JsonObjectBase.h"
 
-class JsonArray;
-
-class JsonHashTable : public JsonObjectBase
+namespace ArduinoJson
 {
-	template <int N>
-	friend class JsonParser;
+    namespace Parser
+    {
+        class JsonArray;
 
-	friend class JsonArray;
+        class JsonHashTable : public JsonObjectBase
+        {
+            template <int N>
+            friend class JsonParser;
 
-public:
+            friend class JsonArray;
 
-	JsonHashTable() {}
+        public:
 
-	bool containsKey(const char* key);
+            JsonHashTable() {}
 
-	JsonArray getArray(const char* key);
-	bool getBool(const char* key);
-	double getDouble(const char* key);
-	JsonHashTable getHashTable(const char* key);
-	long getLong(const char* key);
-	char* getString(const char* key);
+            bool containsKey(const char* key);
 
-private:
+            JsonArray getArray(const char* key);
+            bool getBool(const char* key);
+            double getDouble(const char* key);
+            JsonHashTable getHashTable(const char* key);
+            long getLong(const char* key);
+            char* getString(const char* key);
 
-	JsonHashTable(char* json, jsmntok_t* tokens);
-	jsmntok_t* getToken(const char* key);
-};
+        private:
+
+            JsonHashTable(char* json, jsmntok_t* tokens);
+            jsmntok_t* getToken(const char* key);
+        };
+    }
+}
