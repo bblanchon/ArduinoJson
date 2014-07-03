@@ -11,7 +11,7 @@ void setup()
 
     JsonHashTable<3> h;    
 
-    h.add("pi", 3.14);
+    h.add("pi", 3.14159265358979323846, 4);
 
     JsonArray<3> a;
     a.add(1);
