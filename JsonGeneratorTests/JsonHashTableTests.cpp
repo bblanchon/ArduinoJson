@@ -15,7 +15,7 @@ namespace JsonGeneratorTests
         
         TEST_METHOD(Empty)
         {
-            returns(2);
+            returnValueIs(2);
             jsonIs("{}");
         }
 
@@ -23,7 +23,7 @@ namespace JsonGeneratorTests
         {
             addValue("key", "value");
 
-            returns(15);
+            returnValueIs(15);
             jsonIs("{\"key\":\"value\"}");
         }
 
@@ -32,7 +32,7 @@ namespace JsonGeneratorTests
             addValue("key1", "value1");
             addValue("key2", "value2");
 
-            returns(33);
+            returnValueIs(33);
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
@@ -42,7 +42,7 @@ namespace JsonGeneratorTests
             addValue("key2", "value2");
             addValue("key3", "value3");
 
-            returns(33);
+            returnValueIs(33);
             jsonIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
@@ -50,7 +50,7 @@ namespace JsonGeneratorTests
         {
             addValue("pi", 3.14);
 
-            returns(11);
+            returnValueIs(11);
             jsonIs("{\"pi\":3.14}");
         }
 
@@ -58,7 +58,7 @@ namespace JsonGeneratorTests
         {
             addValue("key", (char*) 0);
 
-            returns(12);
+            returnValueIs(12);
             jsonIs("{\"key\":null}");
         }
 
@@ -66,7 +66,7 @@ namespace JsonGeneratorTests
         {
             addValue("key", true);
 
-            returns(12);
+            returnValueIs(12);
             jsonIs("{\"key\":true}");
         }
 
@@ -74,7 +74,7 @@ namespace JsonGeneratorTests
         {
             addValue("key", false);
 
-            returns(13);
+            returnValueIs(13);
             jsonIs("{\"key\":false}");
         }
 
@@ -83,7 +83,7 @@ namespace JsonGeneratorTests
             JsonArray<1> nestedArray;
             addNested("key", nestedArray);
 
-            returns(10);
+            returnValueIs(10);
             jsonIs("{\"key\":[]}");
         }
 
@@ -92,7 +92,7 @@ namespace JsonGeneratorTests
             JsonHashTable<1> nestedHash;
             addNested("key", nestedHash);
 
-            returns(10);
+            returnValueIs(10);
             jsonIs("{\"key\":{}}");
         }
 
@@ -115,7 +115,7 @@ namespace JsonGeneratorTests
             Assert::AreEqual(expected, buffer);
         }
 
-        void returns(size_t expected)
+        void returnValueIs(size_t expected)
         {
             size_t actual = hash.printTo(buffer, sizeof(buffer));
             Assert::AreEqual(expected, actual);
