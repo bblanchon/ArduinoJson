@@ -89,6 +89,7 @@
     <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonHashTableTests.cpp" />
     <ClCompile Include="JsonValueTests.cpp" />
+    <ClCompile Include="Print.cpp" />
     <ClCompile Include="StringBuilderTests.cpp" />
   </ItemGroup>
   <ItemGroup>
