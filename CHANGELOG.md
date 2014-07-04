@@ -1,10 +1,14 @@
-Arduino JSON: change log
-========================
+Arduino JSON library: change log
+================================
 
 v2.0
 ----
 
-* Added JSON encoding
+* Added JSON encoding.
+
+**Breaking change**: you need to add the following line at the top of your program.
+
+	using namespace ArduinoJson::Parser;
 
 v1.2
 ----
