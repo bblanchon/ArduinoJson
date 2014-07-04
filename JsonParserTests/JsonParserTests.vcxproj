@@ -14,6 +14,7 @@
     <ProjectGuid>{4DD596EF-0185-4AB4-A3C2-F20C496F7806}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ArduinoJsonParserTests</RootNamespace>
+    <ProjectName>JsonParserTests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
