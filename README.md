@@ -18,11 +18,11 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 
 # Feature comparisons
 
-| Library      | Memory allocation | Nested objects | Encoding | Code size
-| ------------ | ----------------- | ---------------- | --
-| Arduino JSON | static | yes | yes |  2.7 kB
-| [json-arduino v1.5]( https://github.com/not404/json-arduino) | dynamic | no | no | 3.4 kB (+28%)
-| [aJson v1.0](https://github.com/interactive-matter/aJson) | dynamic | yes | yes | 5.2 kB (+94%)
+| Library      | Memory allocation | Nested objects | Encoding | Code size |
+| ------------ | ----------------- | -------------- | -------- | --------- |
+| Arduino JSON | static | yes | yes |  2.7 kB |
+| [json-arduino v1.5]( https://github.com/not404/json-arduino) | dynamic | no | no | 3.4 kB (+28%) |
+| [aJson v1.0](https://github.com/interactive-matter/aJson) | dynamic | yes | yes | 5.2 kB (+94%) |
 
 Code size was measured with a program parsing `{"sensor":"outdoor","value":25.6}`.
 For each library, I wrote a program that extracts a string and a float. I subtracted the size of a program doing the same without any JSON parsing involved. The target platform was an Arduino Duemilanove.
