@@ -5,9 +5,9 @@ Arduino JSON library
 
 It's design to be very lightweight, works without any allocation on the heap (no malloc).
 
-It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library on any other C++ project (in fact it's been written with Visual Studio ;-) 
+It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library in any other C++ project.
 
-# Features:
+# Features
 
 * JSON decoding: [more details here](/JsonParser/)
 * JSON encoding: [more details here](/JsonGenerator/)
@@ -16,16 +16,23 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 * Small footprint
 * MIT License
 
-# Feature comparisons
+# Feature comparison
 
-| Library      | Memory allocation | Nested objects | Encoding | Code size |
-| ------------ | ----------------- | -------------- | -------- | --------- |
-| Arduino JSON | static | yes | yes |  2.7 kB |
-| [json-arduino v1.5]( https://github.com/not404/json-arduino) | dynamic | no | no | 3.4 kB (+28%) |
-| [aJson v1.0](https://github.com/interactive-matter/aJson) | dynamic | yes | yes | 5.2 kB (+94%) |
+| Library      | Memory allocation | Nested objects | Encoding | Parser size | Encoder size |
+| ------------ | ----------------- | -------------- | -------- | ----------- | ------------ |
+| Arduino JSON | static            | yes            | yes      | 2616 Bytes  | 896 bytes    |
+| json-arduino | dynamic           | no             | no       | 3348 (+28%) | N/A          |
+| aJson        | dynamic           | yes            | yes      | 5088 (+94%) | 4678 (+419%) |
 
-Code size was measured with a program parsing `{"sensor":"outdoor","value":25.6}`.
-For each library, I wrote a program that extracts a string and a float. I subtracted the size of a program doing the same without any JSON parsing involved. The target platform was an Arduino Duemilanove.
+Parser size was measured with a program parsing `{"sensor":"outdoor","value":25.6}`.
+For each library, I wrote a program that extracts a string and a float. I subtracted the size of a program doing the same without any JSON parsing involved. [Source files are here](https://gist.github.com/bblanchon/e8ba914a7109f3642c0f).
+
+Encoder size was measured with a program generating `{"sensor":"outdoor","value":25.6}`.
+[Source files are here](https://gist.github.com/bblanchon/60224e9dcfeab4ddc7e9).
+
+In each case the target platform was an Arduino Duemilanove and Arduino IDE 1.0.5 was used. 
+
+Links: [json-arduino](https://github.com/not404/json-arduino), [aJson](https://github.com/interactive-matter/aJson) 
 
 # Testimonials
 
