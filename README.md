@@ -7,7 +7,8 @@ It's design to be very lightweight, works without any allocation on the heap (no
 
 It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library in any other C++ project.
 
-# Features
+Features
+--------
 
 * JSON decoding: [more details here](/JsonParser/)
 * JSON encoding: [more details here](/JsonGenerator/)
@@ -16,7 +17,8 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 * Small footprint
 * MIT License
 
-# Feature comparison
+Feature comparison
+------------------
 
 | Library      | Memory allocation | Nested objects | Encoding | Parser size | Encoder size |
 | ------------ | ----------------- | -------------- | -------- | ----------- | ------------ |
@@ -34,7 +36,8 @@ In each case the target platform was an Arduino Duemilanove and Arduino IDE 1.0.
 
 Links: [json-arduino](https://github.com/not404/json-arduino), [aJson](https://github.com/interactive-matter/aJson) 
 
-# Testimonials
+Testimonials
+------------
 
 From Arduino's Forum user `jflaplante`:
 > I tried the  [aJson and json-arduino] before trying your library. I always ran into memory problem after a while. 
@@ -45,3 +48,9 @@ From Arduino's Forum user `gbathree`:
 
 From StackOverflow user `thegreendroid`:
 > It has a really elegant, simple API and it works like a charm on embedded and Windows/Linux platforms. We recently started using this on an embedded project and I can vouch for its quality.
+
+Links
+-----
+
+* [The project for which I made me this library](http://blog.benoitblanchon.fr/rfid-payment-terminal/)
+* [Blog post on the motivation for this library](http://blog.benoitblanchon.fr/arduino-json-parser/)
