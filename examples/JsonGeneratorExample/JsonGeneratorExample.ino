@@ -1,5 +1,5 @@
 /*
- * Arduino JSON library
+ * Arduino JSON library - Generator example
  * Benoit Blanchon 2014 - MIT License
  */
 
@@ -11,19 +11,17 @@ void setup()
 {
     Serial.begin(9600);
 
-    JsonHashTable<3> h;    
+    JsonHashTable<3> json;
 
-    h.add("pi", 3.14159265358979323846, 4);
+    json.add("sensor", "gps");
+    json.add("time", 1351824120);
 
-    JsonArray<3> a;
-    a.add(1);
-    a.add(2);
-    a.add(3);
-    h.add("list", a);
+    JsonArray<3> array;
+    array.add(48.756080, 6);
+    array.add(2.302038, 6);
+    json.add("data", array);
 
-    h.add("hello", "world");
-
-    Serial.print(h);
+    Serial.print(json); // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 }
 
 void loop()
