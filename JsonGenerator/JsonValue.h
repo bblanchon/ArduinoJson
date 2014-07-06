@@ -26,7 +26,7 @@ namespace ArduinoJson
                 content.asBool = value;
             }
 
-            JsonValue(double value, int digits = 2)
+            JsonValue(double value, uint8_t digits = 2)
                 : implementation(&JsonValue::printDoubleTo)
             {
                 content.asDouble.value = value;
@@ -57,14 +57,13 @@ namespace ArduinoJson
                 content.asString = value;
             }
 
-            virtual size_t printTo(Print& p) const
+            size_t printTo(Print& p) const
             {
                 // handmade polymorphism
                 return (this->*implementation)(p);
             }
 
         private:
-
             union Content
             {
                 bool        asBool;
@@ -74,7 +73,7 @@ namespace ArduinoJson
 
                 struct {
                     double value;
-                    int digits;
+                    uint8_t digits;
                 } asDouble;
             };
 
