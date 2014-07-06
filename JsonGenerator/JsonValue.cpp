@@ -7,32 +7,32 @@
 
 using namespace ArduinoJson::Generator;
 
-size_t JsonValue::printBoolTo(Print& p) const
+size_t JsonValue::printBoolTo(const Content& c, Print& p)
 {
-    return p.print(content.asBool ? "true" : "false");
+    return p.print(c.asBool ? "true" : "false");
 }
 
-size_t JsonValue::printDoubleTo(Print& p) const
+size_t JsonValue::printDoubleTo(const Content& c, Print& p)
 {
-    return p.print(content.asDouble.value, content.asDouble.digits);
+    return p.print(c.asDouble.value, c.asDouble.digits);
 }
 
-size_t JsonValue::printLongTo(Print& p) const
+size_t JsonValue::printLongTo(const Content& c, Print& p)
 {
-    return p.print(content.asLong);
+    return p.print(c.asLong);
 }
 
-size_t JsonValue::printPrintableTo(Print& p) const
+size_t JsonValue::printPrintableTo(const Content& c, Print& p)
 {
-    if (content.asPrintable)
-        return ((Printable*) content.asPrintable)->printTo(p);
+    if (c.asPrintable)
+        return ((Printable*) c.asPrintable)->printTo(p);
     else
         return p.print("null");
 }
 
-size_t JsonValue::printStringTo(Print& p) const
+size_t JsonValue::printStringTo(const Content& c, Print& p)
 {
-    const char* s = content.asString;
+    const char* s = c.asString;
 
     if (!s)
     {

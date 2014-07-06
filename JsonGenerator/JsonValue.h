@@ -21,38 +21,38 @@ namespace ArduinoJson
             }
 
             JsonValue(bool value)
-                : implementation(&JsonValue::printBoolTo)
+                : printToImpl(&printBoolTo)
             {
                 content.asBool = value;
             }
 
             JsonValue(double value, uint8_t digits = 2)
-                : implementation(&JsonValue::printDoubleTo)
+                : printToImpl(&printDoubleTo)
             {
                 content.asDouble.value = value;
                 content.asDouble.digits = digits;
             }
 
             JsonValue(long value)
-                : implementation(&JsonValue::printLongTo)
+                : printToImpl(&printLongTo)
             {
                 content.asLong = value;
             }
 
             JsonValue(int value)
-                : implementation(&JsonValue::printLongTo)
+                : printToImpl(&printLongTo)
             {
                 content.asLong = value;
             }
 
             JsonValue(Printable& value)
-                : implementation(&JsonValue::printPrintableTo)
+                : printToImpl(&printPrintableTo)
             {
                 content.asPrintable = &value;
             }
 
             JsonValue(const char* value)
-                : implementation(&JsonValue::printStringTo)
+                : printToImpl(&printStringTo)
             {
                 content.asString = value;
             }
@@ -60,7 +60,7 @@ namespace ArduinoJson
             size_t printTo(Print& p) const
             {
                 // handmade polymorphism
-                return (this->*implementation)(p);
+                return printToImpl(content, p);
             }
 
         private:
@@ -79,13 +79,13 @@ namespace ArduinoJson
 
             Content content;
 
-            size_t(JsonValue::*implementation)(Print& p)const;
+            size_t(*printToImpl)(const Content&, Print& p);
 
-            size_t printBoolTo(Print& p) const;
-            size_t printDoubleTo(Print& p) const;
-            size_t printLongTo(Print& p) const;
-            size_t printPrintableTo(Print& p) const;
-            size_t printStringTo(Print& p) const;
+            static size_t printBoolTo(const Content&, Print& p);
+            static size_t printDoubleTo(const Content&, Print& p);
+            static size_t printLongTo(const Content&, Print& p);
+            static size_t printPrintableTo(const Content&, Print& p);
+            static size_t printStringTo(const Content&, Print& p);
         };
     }
 }
