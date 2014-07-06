@@ -33,12 +33,6 @@ namespace ArduinoJson
                 content.asDouble.digits = digits;
             }
 
-            JsonValue(float value)
-                : implementation(&JsonValue::printFloatTo)
-            {
-                content.asFloat = value;
-            }
-
             JsonValue(long value)
                 : implementation(&JsonValue::printLongTo)
             {
@@ -74,7 +68,6 @@ namespace ArduinoJson
             union Content
             {
                 bool        asBool;
-                float       asFloat;
                 long        asLong;
                 Printable*  asPrintable;
                 const char* asString;
@@ -91,7 +84,6 @@ namespace ArduinoJson
 
             size_t printBoolTo(Print& p) const;
             size_t printDoubleTo(Print& p) const;
-            size_t printFloatTo(Print& p) const;
             size_t printLongTo(Print& p) const;
             size_t printPrintableTo(Print& p) const;
             size_t printStringTo(Print& p) const;

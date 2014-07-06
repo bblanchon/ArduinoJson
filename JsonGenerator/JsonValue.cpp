@@ -17,11 +17,6 @@ size_t JsonValue::printDoubleTo(Print& p) const
     return p.print(content.asDouble.value, content.asDouble.digits);
 }
 
-size_t JsonValue::printFloatTo(Print& p) const
-{
-    return p.print(content.asFloat);
-}
-
 size_t JsonValue::printLongTo(Print& p) const
 {
     return p.print(content.asLong);
