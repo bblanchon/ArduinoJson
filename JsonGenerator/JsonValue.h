@@ -12,7 +12,7 @@ namespace ArduinoJson
 {
     namespace Generator
     {
-        class JsonValue : public Printable
+        class JsonValue
         {
         public:
 
