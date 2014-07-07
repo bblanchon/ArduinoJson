@@ -73,12 +73,12 @@ namespace JsonGeneratorTests
             write("\t");
             assertResultIs("\"\\t\"");
         }
-        /*
+        
         TEST_METHOD(DoubleDefaultDigits)
         {
             write(3.14159265358979323846);
             assertResultIs("3.14");
-        }*/
+        }
 
         TEST_METHOD(DoubleZeroDigits)
         {

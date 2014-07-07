@@ -46,7 +46,7 @@ namespace ArduinoJson
                 content.asString = value;
             }
 
-            template<int DIGITS>
+            template<int DIGITS=2>
             void set(double value)
             {
                 printToImpl = &printDoubleTo<DIGITS>;
