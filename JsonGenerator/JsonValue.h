@@ -47,6 +47,11 @@ namespace ArduinoJson
                 content.asString.set(value);
             }
 
+            void set(double value)
+            {
+                set<2>(value);
+            }
+
             template<int DIGITS>
             void set(double value)
             {
