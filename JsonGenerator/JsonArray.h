@@ -39,7 +39,8 @@ namespace ArduinoJson
             {
                 if (itemCount >= N) return;
 
-                items[itemCount++].set<DIGITS>(value);
+                Internals::JsonValue& v = items[itemCount++];
+                v.set<DIGITS>(value);
             }
 
             using JsonObjectBase::printTo;
