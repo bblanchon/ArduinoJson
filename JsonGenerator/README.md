@@ -23,8 +23,8 @@ Example
 -------
 
     JsonArray<2> array;
-    array.add(48.756080, 6);
-    array.add(2.302038, 6);
+    array.add<6>(48.756080);
+    array.add<6>(2.302038);
 
     JsonHashTable<3> root;
     root.add("sensor", "gps");
@@ -75,7 +75,7 @@ Then you can add strings, integer, booleans, etc:
 
 There are two syntaxes for the floating point values:
 
-	array.add(3.1415, 4);  // 4 digits: "3.1415" 
+	array.add<4>(3.1415);  // 4 digits: "3.1415" 
     array.add(3.14);	   // 2 digits: "3.14"
 
 > ##### About floating point precision
@@ -110,7 +110,7 @@ Then you can add strings, integer, booleans, etc:
 
 As for the arrays, there are two syntaxes for the floating point values:
 
-	array.add("key4", 3.1415, 4);  // 4 digits: "3.1415" 
+	array.add<4>("key4", 3.1415);  // 4 digits: "3.1415" 
     array.add("key5", 3.14);	   // 2 digits: "3.14"
 
 Finally you can add nested objects:
