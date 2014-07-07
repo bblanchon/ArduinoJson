@@ -19,6 +19,8 @@ namespace ArduinoJson
 
             size_t printTo(char* buffer, size_t bufferSize)
             {
+                using namespace Internals;
+
                 StringBuilder sb(buffer, bufferSize);
                 return printTo(sb);
             }

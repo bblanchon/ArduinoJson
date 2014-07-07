@@ -6,7 +6,7 @@
 #include "EscapedString.h"
 #include "JsonValue.h"
 
-using namespace ArduinoJson::Generator;
+using namespace ArduinoJson::Internals;
 
 size_t JsonValue::printBoolTo(const Content& c, Print& p)
 {

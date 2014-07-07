@@ -5,7 +5,7 @@
 
 #include "StringBuilder.h"
 
-using namespace ArduinoJson::Generator;
+using namespace ArduinoJson::Internals;
 
 size_t StringBuilder::write(uint8_t c)
 {

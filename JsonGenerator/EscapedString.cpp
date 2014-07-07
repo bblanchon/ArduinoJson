@@ -5,6 +5,7 @@
 
 #include "EscapedString.h"
 
+using namespace ArduinoJson::Internals;
 
 size_t EscapedString::printTo(Print& p) const
 {

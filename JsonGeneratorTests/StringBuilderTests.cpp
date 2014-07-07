@@ -2,18 +2,18 @@
 #include "StringBuilder.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-using namespace ArduinoJson::Generator;
+using namespace ArduinoJson::Internals;
 
 namespace JsonGeneratorTests
 {
-	TEST_CLASS(StringBuilderTests)
-	{
+    TEST_CLASS(StringBuilderTests)
+    {
         char buffer[20];
         Print* sb;
         size_t returnValue;
 
-	public:
-		
+    public:
+        
         TEST_METHOD_INITIALIZE(Initialize)
         {
             sb = new StringBuilder(buffer, sizeof(buffer));
@@ -77,5 +77,5 @@ namespace JsonGeneratorTests
         {
             Assert::AreEqual(expected, returnValue);
         }
-	};
+    };
 }

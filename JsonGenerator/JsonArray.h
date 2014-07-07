@@ -45,7 +45,7 @@ namespace ArduinoJson
             using JsonObjectBase::printTo;
 
         private:
-            JsonValue items[N];
+            Internals::JsonValue items[N];
             int itemCount;
 
             virtual size_t printTo(Print& p) const

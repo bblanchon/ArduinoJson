@@ -11,7 +11,7 @@
 
 namespace ArduinoJson
 {
-    namespace Generator
+    namespace Internals
     {
         class JsonValue
         {

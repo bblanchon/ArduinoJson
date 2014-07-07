@@ -7,18 +7,23 @@
 
 #include "Print.h"
 
-class EscapedString
+namespace ArduinoJson
 {
-public:
-
-    void set(const char* s)    
+    namespace Internals
     {
-        rawString = s;
+        class EscapedString
+        {
+        public:
+
+            void set(const char* s)
+            {
+                rawString = s;
+            }
+
+            size_t printTo(Print&) const;
+
+        private:
+            const char* rawString;
+        };
     }
-
-    size_t printTo(Print&) const;
-
-private:
-    const char* rawString;
-};
-
+}
