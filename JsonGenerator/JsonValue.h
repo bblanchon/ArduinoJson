@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "EscapedString.h"
 #include "Printable.h"
 #include "StringBuilder.h"
 
@@ -43,7 +44,7 @@ namespace ArduinoJson
             void set(const char* value)
             {
                 printToImpl = &printStringTo;
-                content.asString = value;
+                content.asString.set(value);
             }
 
             template<int DIGITS=2>
@@ -62,11 +63,11 @@ namespace ArduinoJson
         private:
             union Content
             {
-                bool        asBool;
-                long        asLong;
-                Printable*  asPrintable;
-                const char* asString;
-                double      asDouble;
+                bool          asBool;
+                long          asLong;
+                Printable*    asPrintable;
+                EscapedString asString;
+                double        asDouble;
             };
 
             Content content;

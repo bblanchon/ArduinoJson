@@ -10,10 +10,10 @@
 class EscapedString
 {
 public:
-    EscapedString(const char* s)
-        : rawString(s)
-    {
 
+    void set(const char* s)    
+    {
+        rawString = s;
     }
 
     size_t printTo(Print&) const;

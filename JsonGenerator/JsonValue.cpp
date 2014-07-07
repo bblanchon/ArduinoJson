@@ -28,6 +28,5 @@ size_t JsonValue::printPrintableTo(const Content& c, Print& p)
 
 size_t JsonValue::printStringTo(const Content& c, Print& p)
 {
-    EscapedString s(c.asString);
-    return s.printTo(p);
+    return c.asString.printTo(p);
 }

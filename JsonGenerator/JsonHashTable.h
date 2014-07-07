@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "EscapedString.h"
 #include "JsonObjectBase.h"
 
 namespace ArduinoJson
@@ -26,7 +27,7 @@ namespace ArduinoJson
             {
                 if (itemCount >= N) return;
 
-                items[itemCount].key = key;
+                items[itemCount].key.set(key);
                 items[itemCount].value.set(value);
                 itemCount++;
             }
@@ -36,7 +37,7 @@ namespace ArduinoJson
             {
                 if (itemCount >= N) return;
 
-                items[itemCount].key = key;
+                items[itemCount].key.set(key);
                 items[itemCount].value.set<DIGITS>(value);
                 itemCount++;
             }
@@ -47,7 +48,7 @@ namespace ArduinoJson
 
             struct KeyValuePair
             {
-                const char* key;
+                EscapedString key;
                 JsonValue value;
             };
 
@@ -62,15 +63,12 @@ namespace ArduinoJson
 
                 for (int i = 0; i < itemCount; i++)
                 {
-                    JsonValue key;
-                    key.set(items[i].key);
-
                     if (i > 0)
                     {
                         n += p.write(',');
                     }
 
-                    n += key.printTo(p);
+                    n += items[i].key.printTo(p);
                     n += p.write(':');
                     n += items[i].value.printTo(p);
                 }
