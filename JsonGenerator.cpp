@@ -7,3 +7,4 @@
 
 #include "JsonGenerator/JsonValue.cpp"
 #include "JsonGenerator/StringBuilder.cpp"
+#include "JsonGenerator/EscapedString.cpp"
