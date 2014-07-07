@@ -24,20 +24,17 @@ namespace ArduinoJson
             template<typename T>
             void add(T value)
             {
-                add(JsonValue(value));
+                if (itemCount >= N) return;
+
+                items[itemCount++].set(value);
             }
 
-            void add(double value, int digits = 2)
-            {
-                add(JsonValue(value, digits));
-            }
-
-            void add(JsonValue value)
+            template<int DIGITS>
+            void add(double value)
             {
                 if (itemCount >= N) return;
 
-                items[itemCount] = value;
-                itemCount++;
+                items[itemCount++].set<DIGITS>(value);
             }
 
             using JsonObjectBase::printTo;

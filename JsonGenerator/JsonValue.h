@@ -15,46 +15,43 @@ namespace ArduinoJson
         class JsonValue
         {
         public:
-
-            JsonValue()
+            
+            void set(bool value)
             {
-            }
-
-            JsonValue(bool value)
-                : printToImpl(&printBoolTo)
-            {
+                printToImpl = &printBoolTo;
                 content.asBool = value;
             }
 
-            JsonValue(double value, uint8_t digits = 2)
-                : printToImpl(&printDoubleTo)
+            void set(long value)               
             {
-                content.asDouble.value = value;
-                content.asDouble.digits = digits;
-            }
-
-            JsonValue(long value)
-                : printToImpl(&printLongTo)
-            {
+                printToImpl = &printLongTo;
                 content.asLong = value;
             }
 
-            JsonValue(int value)
-                : printToImpl(&printLongTo)
+            void set(int value)
             {
+                printToImpl = &printLongTo;
                 content.asLong = value;
             }
 
-            JsonValue(Printable& value)
-                : printToImpl(&printPrintableTo)
+            void set(Printable& value)
             {
+                printToImpl = &printPrintableTo;
                 content.asPrintable = &value;
             }
 
-            JsonValue(const char* value)
-                : printToImpl(&printStringTo)
+            void set(const char* value)
             {
+                printToImpl = &printStringTo;
                 content.asString = value;
+            }
+
+            template<int DIGITS>
+            void set(double value)
+            {
+                printToImpl = &printDoubleTo;
+                content.asDouble.value = value;
+                content.asDouble.digits = DIGITS;
             }
 
             size_t printTo(Print& p) const

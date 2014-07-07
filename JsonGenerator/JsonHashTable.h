@@ -24,20 +24,20 @@ namespace ArduinoJson
             template<typename T>
             void add(const char* key, T value)
             {
-                add(key, JsonValue(value));
+                if (itemCount >= N) return;
+
+                items[itemCount].key = key;
+                items[itemCount].value.set(value);
+                itemCount++;
             }
 
-            void add(const char* key, double value, int digits = 2)
-            {
-                add(key, JsonValue(value, digits));
-            }
-
-            void add(const char* key, JsonValue value)
+            template<int DIGITS>
+            void add(const char* key, double value)
             {
                 if (itemCount >= N) return;
 
                 items[itemCount].key = key;
-                items[itemCount].value = value;
+                items[itemCount].value.set<DIGITS>(value);
                 itemCount++;
             }
 
@@ -62,7 +62,8 @@ namespace ArduinoJson
 
                 for (int i = 0; i < itemCount; i++)
                 {
-                    JsonValue key(items[i].key);
+                    JsonValue key;
+                    key.set(items[i].key);
 
                     if (i > 0)
                     {

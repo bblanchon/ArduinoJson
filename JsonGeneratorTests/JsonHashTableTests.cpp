@@ -51,7 +51,7 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OneDouble)
         {
-            addValue("key", 3.14159265358979323846, 4);
+            addValue<4>("key", 3.14159265358979323846);
             jsonIs("{\"key\":3.1416}");
         }
 
@@ -93,7 +93,7 @@ namespace JsonGeneratorTests
         
         void addNested(const char* key, JsonObjectBase& value)
         {
-            hash.add(key, value);
+            hash.add<JsonObjectBase&>(key, value);
         }
 
         template<typename T>
@@ -102,9 +102,10 @@ namespace JsonGeneratorTests
             hash.add(key, value);
         }
 
-        void addValue(const char* key, double value, int digits)
+        template<int DIGITS>
+        void addValue(const char* key, double value)
         {
-            hash.add(key, value, digits);
+            hash.add<DIGITS>(key, value);
         }
 
         void jsonIs(const char* expected)

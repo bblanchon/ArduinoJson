@@ -57,7 +57,7 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OneDouble)
         {
-            addValue(3.14159265358979323846, 4);
+            addValue<4>(3.14159265358979323846);
             jsonIs("[3.1416]");
         }
 
@@ -158,7 +158,7 @@ namespace JsonGeneratorTests
 
         void addNested(JsonObjectBase& value)
         {
-            arr.add(value);
+            arr.add<JsonObjectBase&>(value);
         }
 
         template<typename T>
@@ -167,9 +167,10 @@ namespace JsonGeneratorTests
             arr.add(value);
         }
 
-        void addValue(double value, int digits)
+        template<int DIGITS>
+        void addValue(double value)
         {
-            arr.add(value, digits);
+            arr.add<DIGITS>(value);
         }
 
         void jsonIs(const char* expected)
