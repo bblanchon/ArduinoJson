@@ -12,8 +12,8 @@ void setup()
     Serial.begin(9600);
 
     JsonArray<2> array;
-    array.add(48.756080, 6);
-    array.add(2.302038, 6);
+    array.add<6>(48.756080); // 6 is the number of decimals to print
+    array.add<6>(2.302038);  // if not specified, 2 digits are printed
 
     JsonHashTable<3> root; 
     root.add("sensor", "gps");
