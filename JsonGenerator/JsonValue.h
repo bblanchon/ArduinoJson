@@ -49,9 +49,8 @@ namespace ArduinoJson
             template<int DIGITS>
             void set(double value)
             {
-                printToImpl = &printDoubleTo;
-                content.asDouble.value = value;
-                content.asDouble.digits = DIGITS;
+                printToImpl = &printDoubleTo<DIGITS>;
+                content.asDouble = value;
             }
 
             size_t printTo(Print& p) const
@@ -67,22 +66,23 @@ namespace ArduinoJson
                 long        asLong;
                 Printable*  asPrintable;
                 const char* asString;
-
-                struct {
-                    double value;
-                    uint8_t digits;
-                } asDouble;
+                double      asDouble;
             };
 
             Content content;
 
-            size_t(*printToImpl)(const Content&, Print& p);
+            size_t(*printToImpl)(const Content&, Print&);
 
-            static size_t printBoolTo(const Content&, Print& p);
-            static size_t printDoubleTo(const Content&, Print& p);
-            static size_t printLongTo(const Content&, Print& p);
-            static size_t printPrintableTo(const Content&, Print& p);
-            static size_t printStringTo(const Content&, Print& p);
+            static size_t printBoolTo(const Content&, Print&);
+            static size_t printLongTo(const Content&, Print&);
+            static size_t printPrintableTo(const Content&, Print&);
+            static size_t printStringTo(const Content&, Print&);
+
+            template<int DIGITS>
+            static size_t printDoubleTo(const Content& c, Print& p)
+            {
+                return p.print(c.asDouble, DIGITS);
+            }
         };
     }
 }

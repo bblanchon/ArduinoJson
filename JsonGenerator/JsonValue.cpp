@@ -12,11 +12,6 @@ size_t JsonValue::printBoolTo(const Content& c, Print& p)
     return p.print(c.asBool ? "true" : "false");
 }
 
-size_t JsonValue::printDoubleTo(const Content& c, Print& p)
-{
-    return p.print(c.asDouble.value, c.asDouble.digits);
-}
-
 size_t JsonValue::printLongTo(const Content& c, Print& p)
 {
     return p.print(c.asLong);
