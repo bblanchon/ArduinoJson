@@ -73,12 +73,6 @@ namespace JsonGeneratorTests
             write("\t");
             assertResultIs("\"\\t\"");
         }
-        
-        TEST_METHOD(DoubleDefaultDigits)
-        {
-            write(3.14159265358979323846);
-            assertResultIs("3.14");
-        }
 
         TEST_METHOD(DoubleZeroDigits)
         {
@@ -97,7 +91,7 @@ namespace JsonGeneratorTests
             write<2>(3.14159265358979323846);
             assertResultIs("3.14");
         }
-
+        
         TEST_METHOD(Integer)
         {
             write(314);
@@ -116,21 +110,21 @@ namespace JsonGeneratorTests
             assertResultIs("314");
         }
 
-        template<typename T>
-        void write(T value)
-        {
-            StringBuilder sb(buffer, sizeof(buffer));
-            JsonValue jsonValue;
-            jsonValue.set(value);
-            returnValue = jsonValue.printTo(sb);
-        }
-
         template<int DIGITS>
         void write(double value)
         {
             StringBuilder sb(buffer, sizeof(buffer));
             JsonValue jsonValue;
             jsonValue.set<DIGITS>(value);
+            returnValue = jsonValue.printTo(sb);
+        }
+
+        template<typename T>
+        void write(T value)
+        {
+            StringBuilder sb(buffer, sizeof(buffer));
+            JsonValue jsonValue;
+            jsonValue.set(value);
             returnValue = jsonValue.printTo(sb);
         }
 

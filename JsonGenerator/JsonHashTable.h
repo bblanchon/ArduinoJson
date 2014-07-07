@@ -42,6 +42,11 @@ namespace ArduinoJson
                 itemCount++;
             }
 
+            void add(const char* key, double value)
+            {
+                add<2>(key, value);
+            }
+
             using JsonObjectBase::printTo;
 
         private:

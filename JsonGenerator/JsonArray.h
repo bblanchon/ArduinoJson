@@ -29,6 +29,11 @@ namespace ArduinoJson
                 items[itemCount++].set(value);
             }
 
+            void add(double value)
+            {
+                add<2>(value);
+            }
+
             template<int DIGITS>
             void add(double value)
             {

@@ -55,7 +55,13 @@ namespace JsonGeneratorTests
             jsonIs("[\"hello\",\"world\"]");
         }
 
-        TEST_METHOD(OneDouble)
+        TEST_METHOD(OneDoubleDefaultDigits)
+        {
+            addValue(3.14159265358979323846);
+            jsonIs("[3.14]");
+        }
+
+        TEST_METHOD(OneDoubleFourDigits)
         {
             addValue<4>(3.14159265358979323846);
             jsonIs("[3.1416]");

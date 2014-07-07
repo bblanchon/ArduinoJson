@@ -49,10 +49,16 @@ namespace JsonGeneratorTests
             jsonIs("{\"key\":1}");
         }
 
-        TEST_METHOD(OneDouble)
+        TEST_METHOD(OneDoubleFourDigits)
         {
             addValue<4>("key", 3.14159265358979323846);
             jsonIs("{\"key\":3.1416}");
+        }
+
+        TEST_METHOD(OneDoubleDefaultDigits)
+        {
+            addValue("key", 3.14159265358979323846);
+            jsonIs("{\"key\":3.14}");
         }
 
         TEST_METHOD(OneNull)
