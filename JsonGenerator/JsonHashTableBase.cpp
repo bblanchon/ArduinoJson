@@ -8,7 +8,7 @@ size_t JsonHashTableBase::printTo(Print& p) const
 
     n += p.write('{');
 
-    for (int i = 0; i < itemCount; i++)
+    for (int i = 0; i < count; i++)
     {
         if (i > 0)
         {

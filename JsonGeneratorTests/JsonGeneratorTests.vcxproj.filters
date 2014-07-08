@@ -42,6 +42,9 @@
     <ClCompile Include="..\JsonGenerator\JsonHashTableBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\JsonGenerator\JsonArrayBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonGenerator\JsonArray.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonGenerator\JsonHashTableBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JsonGenerator\JsonArrayBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

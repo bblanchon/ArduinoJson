@@ -5,65 +5,24 @@
 
 #pragma once
 
-#include "JsonObjectBase.h"
-#include "StringBuilder.h"
+#include "JsonArrayBase.h"
 
 namespace ArduinoJson
 {
     namespace Generator
     {
         template<int N>
-        class JsonArray : public JsonObjectBase
+        class JsonArray : public JsonArrayBase
         {
         public:
             JsonArray()
+                : JsonArrayBase(items, N)
             {
-                itemCount = 0;
-            }
 
-            template<typename T>
-            void add(T value)
-            {
-                if (itemCount >= N) return;
-
-                items[itemCount++].set(value);
-            }
-
-            template<int DIGITS>
-            void add(double value)
-            {
-                if (itemCount >= N) return;
-
-                Internals::JsonValue& v = items[itemCount++];
-                v.set<DIGITS>(value);
-            }
-
-            using JsonObjectBase::printTo;
+            }         
 
         private:
             Internals::JsonValue items[N];
-            int itemCount;
-
-            virtual size_t printTo(Print& p) const
-            {
-                size_t n = 0;
-
-                n += p.write('[');
-
-                for (int i = 0; i < itemCount; i++)
-                {
-                    if (i > 0)
-                    {
-                        n += p.write(',');
-                    }
-
-                    n += items[i].printTo(p);
-                }
-
-                n += p.write(']');
-
-                return n;
-            }
         };
     }
 }

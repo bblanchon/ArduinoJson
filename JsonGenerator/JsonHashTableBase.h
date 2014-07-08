@@ -19,21 +19,21 @@ namespace ArduinoJson
             template<typename T>
             void add(const char* key, T value)
             {
-                if (itemCount >= capacity) return;
+                if (count >= capacity) return;
 
-                items[itemCount].key.set(key);
-                items[itemCount].value.set(value);
-                itemCount++;
+                items[count].key.set(key);
+                items[count].value.set(value);
+                count++;
             }
 
             template<int DIGITS>
             void add(const char* key, double value)
             {
-                if (itemCount >= capacity) return;
+                if (count >= capacity) return;
 
-                items[itemCount].key.set(key);
-                items[itemCount].value.set<DIGITS>(value);
-                itemCount++;
+                items[count].key.set(key);
+                items[count].value.set<DIGITS>(value);
+                count++;
             }
 
             using JsonObjectBase::printTo;
@@ -49,13 +49,13 @@ namespace ArduinoJson
             };
 
             JsonHashTableBase(KeyValuePair* items, int capacity)
-                : items(items), capacity(capacity), itemCount(0)
+                : items(items), capacity(capacity), count(0)
             {
             }
 
         private:
             KeyValuePair* items;
-            int itemCount;
+            int count;
             int capacity;
         };
     }
