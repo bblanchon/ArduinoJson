@@ -1,3 +1,8 @@
+/*
+* Arduino JSON library
+* Benoit Blanchon 2014 - MIT License
+*/
+
 #include "JsonHashTable.h"
 
 using namespace ArduinoJson::Generator;
@@ -7,6 +12,8 @@ size_t JsonHashTableBase::printTo(Print& p) const
     size_t n = 0;
 
     n += p.write('{');
+
+    // NB: the code has been optimized for a small size on a 8-bit AVR
 
     KeyValuePair* current = items;
     for (int i = count; i > 0; i--)

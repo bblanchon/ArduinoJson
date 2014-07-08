@@ -1,3 +1,8 @@
+/*
+* Arduino JSON library
+* Benoit Blanchon 2014 - MIT License
+*/
+
 #include "CppUnitTest.h"
 #include "StringBuilder.h"
 
@@ -21,59 +26,58 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(InitialState)
         {
-            assertResultIs("");
+            outputMustBe("");
         }
 
         TEST_METHOD(OverCapacity)
         {
-            write("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            assertReturns(19);
-            assertResultIs("ABCDEFGHIJKLMNOPQRS");
+            print("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            resultMustBe(19);
 
-            write("ABC");
-            assertReturns(0);
-            assertResultIs("ABCDEFGHIJKLMNOPQRS");
+            print("ABC");
+            resultMustBe(0);
+
+            outputMustBe("ABCDEFGHIJKLMNOPQRS");
         }
 
         TEST_METHOD(EmptyString)
         {
-            write("");
-
-            assertReturns(0);
-            assertResultIs("");
+            print("");
+            resultMustBe(0);
+            outputMustBe("");
         }
 
         TEST_METHOD(OneString)
         {
-            write("ABCD");
-            assertReturns(4);
-            assertResultIs("ABCD");
+            print("ABCD");
+            resultMustBe(4);
+            outputMustBe("ABCD");
         }
 
         TEST_METHOD(TwoStrings)
         {
-            write("ABCD");
-            assertReturns(4);
+            print("ABCD");
+            resultMustBe(4);
 
-            write("EFGH");
-            assertReturns(4);
+            print("EFGH");
+            resultMustBe(4);
 
-            assertResultIs("ABCDEFGH");
+            outputMustBe("ABCDEFGH");
         }
 
     private:
 
-        void write(const char* value)
+        void print(const char* value)
         {
             returnValue = sb->print(value);
         }
 
-        void assertResultIs(const char* expected)
+        void outputMustBe(const char* expected)
         {
             Assert::AreEqual(expected, buffer);
         }
 
-        void assertReturns(size_t expected)
+        void resultMustBe(size_t expected)
         {
             Assert::AreEqual(expected, returnValue);
         }

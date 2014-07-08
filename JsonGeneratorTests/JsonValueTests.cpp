@@ -1,3 +1,8 @@
+/*
+* Arduino JSON library
+* Benoit Blanchon 2014 - MIT License
+*/
+
 #include "CppUnitTest.h"
 #include "StringBuilder.h"
 #include "JsonValue.h"
@@ -14,104 +19,64 @@ namespace JsonGeneratorTests
 
     public:
 
-        TEST_METHOD(Null)
+        TEST_METHOD(String)
         {
-            write((char*)0);
-            assertResultIs("null");
+            whenInputIs("hello");
+            outputMustBe("\"hello\"");
         }
 
-        TEST_METHOD(EmptyString)
+        TEST_METHOD(Float)
         {
-            write("");
-            assertResultIs("\"\"");
-        }
-
-        TEST_METHOD(QuotationMark)
-        {
-            write("\"");
-            assertResultIs("\"\\\"\"");
-        }
-
-        TEST_METHOD(ReverseSolidus)
-        {
-            write("\\");
-            assertResultIs("\"\\\\\"");
-        }
-
-        TEST_METHOD(Solidus)
-        {
-            write("/");
-            assertResultIs("\"/\""); // but the JSON format allows \/
-        }
-
-        TEST_METHOD(Backspace)
-        {
-            write("\b");
-            assertResultIs("\"\\b\"");
-        }
-
-        TEST_METHOD(Formfeed)
-        {
-            write("\f");
-            assertResultIs("\"\\f\"");
-        }
-
-        TEST_METHOD(Newline)
-        {
-            write("\n");
-            assertResultIs("\"\\n\"");
-        }
-
-        TEST_METHOD(CarriageReturn)
-        {
-            write("\r");
-            assertResultIs("\"\\r\"");
-        }    
-
-        TEST_METHOD(HorizontalTab)
-        {
-            write("\t");
-            assertResultIs("\"\\t\"");
+            whenInputIs(3.1415f);
+            outputMustBe("3.14");
         }
 
         TEST_METHOD(DoubleZeroDigits)
         {
-            write<0>(3.14159265358979323846);
-            assertResultIs("3");
+            whenInputIs<0>(3.14159265358979323846);
+            outputMustBe("3");
         }
 
         TEST_METHOD(DoubleOneDigit)
         {
-            write<1>(3.14159265358979323846);
-            assertResultIs("3.1");
+            whenInputIs<1>(3.14159265358979323846);
+            outputMustBe("3.1");
         }
 
         TEST_METHOD(DoubleTwoDigits)
         {
-            write<2>(3.14159265358979323846);
-            assertResultIs("3.14");
+            whenInputIs<2>(3.14159265358979323846);
+            outputMustBe("3.14");
         }
         
         TEST_METHOD(Integer)
         {
-            write(314);
-            assertResultIs("314");
+            whenInputIs(314);
+            outputMustBe("314");
+        }
+
+        TEST_METHOD(Char)
+        {
+            whenInputIs('A');
+            outputMustBe("65");
         }
 
         TEST_METHOD(Short)
         {
-            write((short)314);
-            assertResultIs("314");
+            whenInputIs((short)314);
+            outputMustBe("314");
         }
 
         TEST_METHOD(Long)
         {
-            write(314L);
-            assertResultIs("314");
+            whenInputIs(314159265L);
+            outputMustBe("314159265");
         }
 
+    private:
+
         template<int DIGITS>
-        void write(double value)
+        void whenInputIs(double value)
         {
             StringBuilder sb(buffer, sizeof(buffer));
             JsonValue jsonValue;
@@ -120,7 +85,7 @@ namespace JsonGeneratorTests
         }
 
         template<typename T>
-        void write(T value)
+        void whenInputIs(T value)
         {
             StringBuilder sb(buffer, sizeof(buffer));
             JsonValue jsonValue;
@@ -128,7 +93,7 @@ namespace JsonGeneratorTests
             returnValue = jsonValue.printTo(sb);
         }
 
-        void assertResultIs(const char* expected)
+        void outputMustBe(const char* expected)
         {
             Assert::AreEqual(expected, buffer);
             Assert::AreEqual(strlen(expected), returnValue);

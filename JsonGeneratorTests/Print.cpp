@@ -7,7 +7,6 @@
 
 #include "Print.h"
 #include <cstdio>
-//#include <cstring>
 
 size_t Print::print(const char s[])
 {

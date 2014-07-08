@@ -1,3 +1,8 @@
+/*
+* Arduino JSON library
+* Benoit Blanchon 2014 - MIT License
+*/
+
 #include "CppUnitTest.h"
 #include "JsonArray.h"
 #include "JsonHashTable.h"
@@ -16,137 +21,117 @@ namespace JsonGeneratorTests
         
         TEST_METHOD(Empty)
         {
-            returnValueIs(2);
-            jsonIs("[]");
+            outputMustBe("[]");
         }
 
         TEST_METHOD(Null)
         {
-            addValue((char*)0);
+            add((char*)0);
 
-            returnValueIs(6);
-            jsonIs("[null]");
+            outputMustBe("[null]");
         }
 
         TEST_METHOD(OneString)
         {
-            addValue("hello");
+            add("hello");
 
-            returnValueIs(9);
-            jsonIs("[\"hello\"]");
+            outputMustBe("[\"hello\"]");
         }
 
         TEST_METHOD(TwoStrings)
         {
-            addValue("hello");
-            addValue("world");
+            add("hello");
+            add("world");
 
-            returnValueIs(17);
-            jsonIs("[\"hello\",\"world\"]");
+            outputMustBe("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(OneStringOverCapacity)
         {
-            addValue("hello");
-            addValue("world");
-            addValue("lost");
+            add("hello");
+            add("world");
+            add("lost");
 
-            returnValueIs(17);
-            jsonIs("[\"hello\",\"world\"]");
+            outputMustBe("[\"hello\",\"world\"]");
         }
 
         TEST_METHOD(OneDoubleDefaultDigits)
         {
-            addValue(3.14159265358979323846);
-            jsonIs("[3.14]");
+            add(3.14159265358979323846);
+            outputMustBe("[3.14]");
         }
 
         TEST_METHOD(OneDoubleFourDigits)
         {
-            addValue<4>(3.14159265358979323846);
-            jsonIs("[3.1416]");
+            add<4>(3.14159265358979323846);
+            outputMustBe("[3.1416]");
         }
 
         TEST_METHOD(OneInteger)
         {
-            addValue(1);
+            add(1);
 
-            returnValueIs(3);
-            jsonIs("[1]");
+            outputMustBe("[1]");
         }
 
         TEST_METHOD(TwoIntegers)
         {
-            addValue(1);
-            addValue(2);
+            add(1);
+            add(2);
 
-            returnValueIs(5);
-            jsonIs("[1,2]");
+            outputMustBe("[1,2]");
         }
 
         TEST_METHOD(OneIntegerOverCapacity)
         {
-            addValue(1);
-            addValue(2);
-            addValue(3);
+            add(1);
+            add(2);
+            add(3);
 
-            returnValueIs(5);
-            jsonIs("[1,2]");
+            outputMustBe("[1,2]");
         }
 
         TEST_METHOD(OneTrue)
         {
-            addValue(true);
+            add(true);
 
-            returnValueIs(6);
-            jsonIs("[true]");
+            outputMustBe("[true]");
         }
 
         TEST_METHOD(OneFalse)
         {
-            addValue(false);
+            add(false);
 
-            returnValueIs(7);
-            jsonIs("[false]");
+            outputMustBe("[false]");
         }
 
         TEST_METHOD(TwoBooleans)
         {
-            addValue(false);
-            addValue(true);
+            add(false);
+            add(true);
 
-            returnValueIs(12);
-            jsonIs("[false,true]");
+            outputMustBe("[false,true]");
         }
 
         TEST_METHOD(OneBooleanOverCapacity)
         {
-            addValue(false);
-            addValue(true);
-            addValue(false);
+            add(false);
+            add(true);
+            add(false);
 
-            returnValueIs(12);
-            jsonIs("[false,true]");
+            outputMustBe("[false,true]");
         }
 
         TEST_METHOD(OneEmptyNestedArray)
         {
-            JsonArray<1> nestedArray;
-            
-            addNested(nestedArray);
-
-            returnValueIs(4);
-            jsonIs("[[]]");
+           addNested(JsonArray<1>());
+            outputMustBe("[[]]");
         }
 
         TEST_METHOD(OneEmptyNestedHash)
         {
-            JsonHashTable<1> nestedHash;
-
-            addNested(nestedHash);
-
-            returnValueIs(4);
-            jsonIs("[{}]");
+            addNested(JsonHashTable<1>());
+            outputMustBe("[{}]");
         }
 
         TEST_METHOD(OneNestedArrayWithOneInteger)
@@ -156,8 +141,7 @@ namespace JsonGeneratorTests
 
             addNested(nestedArray);
 
-            returnValueIs(5);
-            jsonIs("[[1]]");
+            outputMustBe("[[1]]");
         }
 
     private:
@@ -168,27 +152,22 @@ namespace JsonGeneratorTests
         }
 
         template<typename T>
-        void addValue(T value)
+        void add(T value)
         {
             arr.add(value);
         }
 
         template<int DIGITS>
-        void addValue(double value)
+        void add(double value)
         {
             arr.add<DIGITS>(value);
         }
 
-        void jsonIs(const char* expected)
+        void outputMustBe(const char* expected)
         {      
-            arr.printTo(buffer, sizeof(buffer));
+            size_t n = arr.printTo(buffer, sizeof(buffer));
             Assert::AreEqual(expected, buffer);
-        }
-
-        void returnValueIs(size_t expected)
-        {
-            size_t actual = arr.printTo(buffer, sizeof(buffer));
-            Assert::AreEqual(expected, actual);
+            Assert::AreEqual(strlen(expected), n);
         }
     };
 }

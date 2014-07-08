@@ -45,6 +45,9 @@
     <ClCompile Include="..\JsonGenerator\JsonArrayBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EscapedStringTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonGenerator\JsonArray.h">

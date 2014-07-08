@@ -89,6 +89,7 @@
     <ClCompile Include="..\JsonGenerator\JsonHashTableBase.cpp" />
     <ClCompile Include="..\JsonGenerator\JsonValue.cpp" />
     <ClCompile Include="..\JsonGenerator\StringBuilder.cpp" />
+    <ClCompile Include="EscapedStringTests.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonHashTableTests.cpp" />
     <ClCompile Include="JsonValueTests.cpp" />
