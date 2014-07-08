@@ -8,6 +8,7 @@ size_t JsonHashTableBase::printTo(Print& p) const
 
     n += p.write('{');
 
+    KeyValuePair* current = items;
     for (int i = 0; i < count; i++)
     {
         if (i > 0)
@@ -15,9 +16,11 @@ size_t JsonHashTableBase::printTo(Print& p) const
             n += p.write(',');
         }
 
-        n += items[i].key.printTo(p);
+        n += current->key.printTo(p);
         n += p.write(':');
-        n += items[i].value.printTo(p);
+        n += current->value.printTo(p);
+
+        current++;
     }
 
     n += p.write('}');
