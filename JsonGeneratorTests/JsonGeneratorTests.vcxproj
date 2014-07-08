@@ -85,6 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\JsonGenerator\EscapedString.cpp" />
+    <ClCompile Include="..\JsonGenerator\JsonHashTableBase.cpp" />
     <ClCompile Include="..\JsonGenerator\JsonValue.cpp" />
     <ClCompile Include="..\JsonGenerator\StringBuilder.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="..\JsonGenerator\EscapedString.h" />
     <ClInclude Include="..\JsonGenerator\JsonArray.h" />
     <ClInclude Include="..\JsonGenerator\JsonHashTable.h" />
+    <ClInclude Include="..\JsonGenerator\JsonHashTableBase.h" />
     <ClInclude Include="..\JsonGenerator\JsonObjectBase.h" />
     <ClInclude Include="..\JsonGenerator\JsonValue.h" />
     <ClInclude Include="..\JsonGenerator\Print.h" />

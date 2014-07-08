@@ -39,6 +39,9 @@
     <ClCompile Include="..\JsonGenerator\EscapedString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\JsonGenerator\JsonHashTableBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonGenerator\JsonArray.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonGenerator\EscapedString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JsonGenerator\JsonHashTableBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

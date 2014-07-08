@@ -164,4 +164,4 @@ This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
 | Type                   | Size in bytes |
 | ---------------------- | ------------- |
 | JsonArray&lt;N&gt;     | 4 + 6 x N     |
-| JsonHashTable&lt;N&gt; | 4 + 8 x N     |
+| JsonHashTable&lt;N&gt; | 8 + 8 x N     |
