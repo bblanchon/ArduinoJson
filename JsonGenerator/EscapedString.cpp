@@ -11,50 +11,37 @@ static inline char getSpecialChar(char c)
 {
     // Optimized for code size on a 8-bit AVR
 
-    const char*p = "\"\"\\\\\bb\ff\nn\rr\tt\0";
+    const char* p = "\"\"\\\\\bb\ff\nn\rr\tt\0";
 
     while (p[0] && p[0] != c)
     {
         p += 2;
     }
-    
+
     return p[1];
 }
 
 static inline size_t printCharTo(char c, Print& p)
 {
     char specialChar = getSpecialChar(c);
-    if (specialChar)
-    {
-        return p.write('\\') + p.write(specialChar);
-    }
-    else
-    {
-        return p.write(c);
-    }
+
+    return specialChar != 0
+        ? p.write('\\') + p.write(specialChar)
+        : p.write(c);
 }
 
 size_t EscapedString::printTo(Print& p) const
 {
     const char* s = rawString;
 
-    if (!s)
-    {
-        return p.print("null");
-    }
-
-    size_t n = 0;
-
-    n += p.write('\"');
+    if (!s) return p.print("null");
+    
+    size_t n = p.write('\"');
 
     while (*s)
     {
-        n += printCharTo(*s, p);
-
-        s++;        
+        n += printCharTo(*s++, p);
     }
 
-    n += p.write('\"');
-
-    return n;
+    return n + p.write('\"');
 }
