@@ -5,6 +5,7 @@ v2.0
 ----
 
 * Added JSON encoding.
+* Renamed the library `ArduinoJsonParser` becomes `ArduinoJson`
 
 **Breaking change**: you need to add the following line at the top of your program.
 
