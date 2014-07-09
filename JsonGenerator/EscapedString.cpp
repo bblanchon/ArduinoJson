@@ -9,31 +9,19 @@ using namespace ArduinoJson::Internals;
 
 static inline char getSpecialChar(char c)
 {
-    switch (c)
+    // Optimized for code size on a 8-bit AVR
+
+    const char* specials = "\"\"\\\\\bb\ff\nn\rr\tt";
+    
+    while (true)
     {
-    case '"':
-        return '"';
+        if (specials[0] == 0)
+            return 0;
 
-    case '\\':
-        return '\\';
+        if (specials[0] == c)
+            return specials[1];
 
-    case '\b':
-        return 'b';
-
-    case '\f':
-        return 'f';
-
-    case '\n':
-        return 'n';
-
-    case '\r':
-        return 'r';
-
-    case '\t':
-        return 't';
-
-    default:
-        return 0;
+        specials += 2;
     }
 }
 
