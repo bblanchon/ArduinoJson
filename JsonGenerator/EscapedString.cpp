@@ -7,6 +7,36 @@
 
 using namespace ArduinoJson::Internals;
 
+static inline char getSpecialChar(char c)
+{
+    switch (c)
+    {
+    case '"':
+        return '"';
+
+    case '\\':
+        return '\\';
+
+    case '\b':
+        return 'b';
+
+    case '\f':
+        return 'f';
+
+    case '\n':
+        return 'n';
+
+    case '\r':
+        return 'r';
+
+    case '\t':
+        return 't';
+
+    default:
+        return 0;
+    }
+}
+
 size_t EscapedString::printTo(Print& p) const
 {
     const char* s = rawString;
@@ -22,42 +52,19 @@ size_t EscapedString::printTo(Print& p) const
 
     while (*s)
     {
-        switch (*s)
+        char specialChar = getSpecialChar(*s);
+
+        if (specialChar)
         {
-        case '"':
-            n += p.print("\\\"");
-            break;
-
-        case '\\':
-            n += p.print("\\\\");
-            break;
-
-        case '\b':
-            n += p.print("\\b");
-            break;
-
-        case '\f':
-            n += p.print("\\f");
-            break;
-
-        case '\n':
-            n += p.print("\\n");
-            break;
-
-        case '\r':
-            n += p.print("\\r");
-            break;
-
-        case '\t':
-            n += p.print("\\t");
-            break;
-
-        default:
+            n += p.write('\\');
+            n += p.write(specialChar);
+        }
+        else
+        {
             n += p.write(*s);
-            break;
         }
 
-        s++;
+        s++;        
     }
 
     n += p.write('\"');
