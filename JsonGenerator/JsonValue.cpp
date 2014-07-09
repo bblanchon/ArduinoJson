@@ -21,7 +21,7 @@ size_t JsonValue::printLongTo(const Content& c, Print& p)
 size_t JsonValue::printPrintableTo(const Content& c, Print& p)
 {
     if (c.asPrintable)
-        return ((Printable*) c.asPrintable)->printTo(p);
+        return c.asPrintable->printTo(p);
     else
         return p.print("null");
 }
