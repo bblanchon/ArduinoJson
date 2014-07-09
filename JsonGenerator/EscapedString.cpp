@@ -11,18 +11,14 @@ static inline char getSpecialChar(char c)
 {
     // Optimized for code size on a 8-bit AVR
 
-    const char* specials = "\"\"\\\\\bb\ff\nn\rr\tt";
-    
-    while (true)
+    const char*p = "\"\"\\\\\bb\ff\nn\rr\tt\0";
+
+    while (p[0] && p[0] != c)
     {
-        if (specials[0] == 0)
-            return 0;
-
-        if (specials[0] == c)
-            return specials[1];
-
-        specials += 2;
+        p += 2;
     }
+    
+    return p[1];
 }
 
 size_t EscapedString::printTo(Print& p) const
