@@ -15,7 +15,7 @@ size_t JsonHashTableBase::printTo(Print& p) const
 
     // NB: the code has been optimized for a small size on a 8-bit AVR
 
-    KeyValuePair* current = items;
+    const KeyValuePair* current = items;
     for (int i = count; i > 0; i--)
     {       
         n += current->key.printTo(p);

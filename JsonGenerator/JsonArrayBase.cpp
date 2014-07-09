@@ -6,6 +6,7 @@
 #include "JsonArrayBase.h"
 
 using namespace ArduinoJson::Generator;
+using namespace ArduinoJson::Internals;
 
 size_t JsonArrayBase::printTo(Print& p) const
 {
@@ -13,14 +14,18 @@ size_t JsonArrayBase::printTo(Print& p) const
 
     n += p.write('[');
 
-    for (int i = 0; i < count; i++)
-    {
-        if (i > 0)
+    // NB: the code has been optimized for a small size on a 8-bit AVR
+
+    const JsonValue* current = items;
+    for (int i = count; i > 0; i--)
+    {       
+        n += current->printTo(p);
+        current++;
+
+        if (i > 1)
         {
             n += p.write(',');
         }
-
-        n += items[i].printTo(p);
     }
 
     n += p.write(']');
