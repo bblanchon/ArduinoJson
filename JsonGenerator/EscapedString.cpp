@@ -21,6 +21,19 @@ static inline char getSpecialChar(char c)
     return p[1];
 }
 
+static inline size_t printCharTo(char c, Print& p)
+{
+    char specialChar = getSpecialChar(c);
+    if (specialChar)
+    {
+        return p.write('\\') + p.write(specialChar);
+    }
+    else
+    {
+        return p.write(c);
+    }
+}
+
 size_t EscapedString::printTo(Print& p) const
 {
     const char* s = rawString;
@@ -36,17 +49,7 @@ size_t EscapedString::printTo(Print& p) const
 
     while (*s)
     {
-        char specialChar = getSpecialChar(*s);
-
-        if (specialChar)
-        {
-            n += p.write('\\');
-            n += p.write(specialChar);
-        }
-        else
-        {
-            n += p.write(*s);
-        }
+        n += printCharTo(*s, p);
 
         s++;        
     }
