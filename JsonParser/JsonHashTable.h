@@ -15,9 +15,7 @@ namespace ArduinoJson
 
         class JsonHashTable : public JsonObjectBase
         {
-            template <int N>
-            friend class JsonParser;
-
+            friend class JsonParserBase;
             friend class JsonArray;
 
         public:

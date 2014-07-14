@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "JsonHashTable.h"
-#include "JsonArray.h"
+#include "JsonParserBase.h"
 
 namespace ArduinoJson
 {
@@ -26,45 +25,15 @@ namespace ArduinoJson
         * longer life that the JsonParser.
         */
         template <int MAX_TOKENS>
-        class JsonParser
+        class JsonParser : public JsonParserBase
         {
         public:
-
-            /*
-            * Parse the JSON string and return a array.
-            *
-            * The content of the string may be altered to add '\0' at the
-            * end of string tokens
-            */
-            JsonArray parseArray(char* json)
+            JsonParser()
+                : JsonParserBase(tokens, MAX_TOKENS)
             {
-                return JsonArray(json, parse(json));
-            }
-
-            /*
-            * Parse the JSON string and return a array.
-            *
-            * The content of the string may be altered to add '\0' at the
-            * end of string tokens
-            */
-            JsonHashTable parseHashTable(char* json)
-            {
-                return JsonHashTable(json, parse(json));
             }
 
         private:
-
-            jsmntok_t* parse(char* json)
-            {
-                jsmn_parser parser;
-                jsmn_init(&parser);
-
-                if (JSMN_SUCCESS != jsmn_parse(&parser, json, tokens, MAX_TOKENS))
-                    return 0;
-
-                return tokens;
-            }
-
             jsmntok_t tokens[MAX_TOKENS];
         };
     }

@@ -36,6 +36,9 @@
     <ClCompile Include="JsonHashTableTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\JsonParser\JsonParserBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonParser\jsmn.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonParser\JsonParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JsonParser\JsonParserBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
