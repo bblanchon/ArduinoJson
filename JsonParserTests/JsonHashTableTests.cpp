@@ -42,7 +42,7 @@ namespace ArduinoJsonParserTests
             whenInputIs("{\"key\":0}");
 
             parseMustFail();
-            itemMustNotExists("key");
+            itemMustNotExist("key");
         }
 
         TEST_METHOD(TwoIntegers)
@@ -54,7 +54,7 @@ namespace ArduinoJsonParserTests
             parseMustSucceed();
             itemMustBe("key1", 1L);
             itemMustBe("key2", 2L);
-            itemMustNotExists("key3");
+            itemMustNotExist("key3");
         }
 
         TEST_METHOD(TwoBooleans)
@@ -66,7 +66,7 @@ namespace ArduinoJsonParserTests
             parseMustSucceed();
             itemMustBe("key1", true);
             itemMustBe("key2", false);
-            itemMustNotExists("key3");
+            itemMustNotExist("key3");
         }
 
         TEST_METHOD(TwoStrings)
@@ -78,7 +78,7 @@ namespace ArduinoJsonParserTests
             parseMustSucceed();
             itemMustBe("key1", "hello");
             itemMustBe("key2", "world");
-            itemMustNotExists("key3");
+            itemMustNotExist("key3");
         }
 
         TEST_METHOD(TwoNestedArrays)
@@ -100,7 +100,7 @@ namespace ArduinoJsonParserTests
             arrayItemMustBe(1, 4L);
             arrayItemMustBe(2, 0L);
 
-            itemMustNotExists("key3");
+            itemMustNotExist("key3");
         }
 
     private:
@@ -141,7 +141,7 @@ namespace ArduinoJsonParserTests
             Assert::AreEqual(expected, hashTable.getString(key));
         }
 
-        void itemMustNotExists(const char* key)
+        void itemMustNotExist(const char* key)
         {
             Assert::IsFalse(hashTable.containsKey(key));
             Assert::IsFalse(hashTable.getHashTable(key).success());
