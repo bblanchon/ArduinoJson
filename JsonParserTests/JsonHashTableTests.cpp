@@ -15,10 +15,11 @@ namespace ArduinoJsonParserTests
 {		
     TEST_CLASS(JsonHashTableTests)
 	{
-		JsonParser<32> parser;
 		JsonHashTable hashTable;
         JsonArray nestedArray;
 		char json[256];
+        jsmntok_t tokens[32];
+        JsonParserBase parser = JsonParserBase(tokens, 32);
 
 	public:
 
@@ -34,9 +35,22 @@ namespace ArduinoJsonParserTests
             parseMustSucceed();
         }
 
+        TEST_METHOD(NotEnoughTokens)
+        {
+            setTokenCountTo(2);
+
+            whenInputIs("{\"key\":0}");
+
+            parseMustFail();
+            itemMustNotExists("key");
+        }
+
         TEST_METHOD(TwoIntegers)
         {
+            setTokenCountTo(5);
+
             whenInputIs("{\"key1\":1,\"key2\":2}");
+
             parseMustSucceed();
             itemMustBe("key1", 1L);
             itemMustBe("key2", 2L);
@@ -45,7 +59,10 @@ namespace ArduinoJsonParserTests
 
         TEST_METHOD(TwoBooleans)
         {
+            setTokenCountTo(5);
+
             whenInputIs("{\"key1\":true,\"key2\":false}");
+
             parseMustSucceed();
             itemMustBe("key1", true);
             itemMustBe("key2", false);
@@ -54,7 +71,10 @@ namespace ArduinoJsonParserTests
 
         TEST_METHOD(TwoStrings)
         {
+            setTokenCountTo(5);
+
             whenInputIs("{\"key1\":\"hello\",\"key2\":\"world\"}");
+
             parseMustSucceed();
             itemMustBe("key1", "hello");
             itemMustBe("key2", "world");
@@ -63,6 +83,8 @@ namespace ArduinoJsonParserTests
 
         TEST_METHOD(TwoNestedArrays)
         {
+            setTokenCountTo(9);
+
             whenInputIs("{\"key1\":[1,2],\"key2\":[3,4]}");
             parseMustSucceed();
 
@@ -82,6 +104,11 @@ namespace ArduinoJsonParserTests
         }
 
     private:
+
+        void setTokenCountTo(int n)
+        {
+            parser = JsonParserBase(tokens, n);
+        }
 
         void whenInputIs(const char* input)
         {
