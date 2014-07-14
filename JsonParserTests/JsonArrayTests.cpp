@@ -14,154 +14,136 @@ namespace ArduinoJsonParserTests
 	TEST_CLASS(JsonArrayTests)
 	{
 		JsonParser<32> parser;
+        JsonArray array;
+        char json[256];
 
 	public:
 		
 		TEST_METHOD(EmptyString)
 		{
-			char json[] = "";
-
-			JsonArray array = parser.parseArray(json);
-			Assert::IsFalse(array.success());
+            whenInputIs("");
+            parseMustFail();             
 		}
 
 		TEST_METHOD(EmptyArray)
 		{
-			char json[] = "[]";
-
-			JsonArray array = parser.parseArray(json);
-			Assert::IsTrue(array.success());
+            whenInputIs("[]");
+            parseMustSucceed();
+            lengthMustBe(0);
 		}
 
 		TEST_METHOD(TooFewClosingBrackets)
 		{
-			char json[] = "[[]";
-
-			JsonArray array = parser.parseArray(json);
-			Assert::IsFalse(array.success());
+            whenInputIs("[[]");
+            parseMustFail();
 		}
 
 		TEST_METHOD(TooManyClosingBrackets)
 		{
-			char json[] = "[]]";
-
-			JsonArray array = parser.parseArray(json);
-			Assert::IsFalse(array.success());
+            whenInputIs("[]]");
+            parseMustFail();
 		}
 		
-		TEST_METHOD(OneDimensionArray)
+		TEST_METHOD(TwoIntegers)
 		{
-			char json [] = "[0,0]";
-
-			JsonArray array = parser.parseArray(json);
-			Assert::IsTrue(array.success());
-			Assert::AreEqual(2, array.getLength());
-
-			for (int i = 0; i < 2; i++)
-			{
-				Assert::AreEqual(0L, array.getLong(i));
-			}
+            whenInputIs("[1,2]");
+            parseMustSucceed();
+            lengthMustBe(2);
+            itemMustBe(0, 1L);
+            itemMustBe(1, 2L);
 		}
+
+        TEST_METHOD(TwoBooleans)
+        {
+            whenInputIs("[true,false]");
+            parseMustSucceed();
+            lengthMustBe(2);
+            itemMustBe(0, true);
+            itemMustBe(1, false);
+        }
+
+        TEST_METHOD(TwoStrings)
+        {
+            whenInputIs("[\"hello\",\"world\"]");
+            parseMustSucceed();
+            lengthMustBe(2);
+            itemMustBe(0, "hello");
+            itemMustBe(1, "world");
+        }
 
 		TEST_METHOD(TwoDimensionsArray)
 		{
-			char json[] = "[[0,0],[0,0]]";
-
-			JsonArray array1 = parser.parseArray(json);
-			Assert::IsTrue(array1.success());
-			Assert::AreEqual(2, array1.getLength());
-
-			for (int i = 0; i < 2; i++)
-			{
-				JsonArray array2 = array1.getArray(i);
-
-				Assert::AreEqual(2, array2.getLength());
-
-				for (int j = 0; j < 2; j++)
-				{
-					Assert::AreEqual(0L, array2.getLong(j));
-				}
-			}
+            whenInputIs("[[1,2],[3,4]]");
+            parseMustSucceed();
+            lengthMustBe(2);
+            itemMustBe(0, 0, 1L);
+            itemMustBe(0, 1, 2L);
+            itemMustBe(1, 0, 3L);
+            itemMustBe(1, 1, 4L);
 		}
 
-		TEST_METHOD(TreeDimensionsArray)
-		{
-			char json[] = "[[[0,0],[0,0]],[[0,0],[0,0]]]";
-
-			JsonArray array1 = parser.parseArray(json);
-			Assert::IsTrue(array1.success());
-			Assert::AreEqual(2, array1.getLength());
-
-			for (int i = 0; i < 2; i++)
-			{
-				JsonArray array2 = array1.getArray(i);
-
-				Assert::AreEqual(2, array2.getLength());
-
-				for (int j = 0; j < 2; j++)
-				{
-					JsonArray array3 = array2.getArray(j);
-
-					Assert::AreEqual(2, array3.getLength());
-
-					for (int k = 0; k < 2; k++)
-					{
-						Assert::AreEqual(0L, array3.getLong(k));
-					}
-				}
-			}
-		}
-
-		TEST_METHOD(OneDimensionArrayInHashTable)
-		{
-			char json[] = "{a:[0,0],b:[0,0]}";
-
-			JsonHashTable root = parser.parseHashTable(json);
-			Assert::IsTrue(root.success());
-
-			JsonArray arrayA = root.getArray("a");
-			Assert::IsTrue(arrayA.success());
-			Assert::AreEqual(2, arrayA.getLength());
-
-			JsonArray arrayB = root.getArray("b");
-			Assert::IsTrue(arrayB.success());
-			Assert::AreEqual(2, arrayB.getLength());
-		}
-
-		TEST_METHOD(TwoDimensionsArrayInHashTable)
-		{
-			char json[] = "{a:[[0],[0]],b:[[0],[0]]}";
-
-			JsonHashTable root = parser.parseHashTable(json);
-			Assert::IsTrue(root.success());
-
-			JsonArray arrayA = root.getArray("a");
-			Assert::IsTrue(arrayA.success());
-			Assert::AreEqual(2, arrayA.getLength());
-
-			JsonArray arrayB = root.getArray("b");
-			Assert::IsTrue(arrayB.success());
-			Assert::AreEqual(2, arrayB.getLength());
-		}
-
-        TEST_METHOD(MatrixOfDoubles)
+        TEST_METHOD(ThreeDimensionsArray)
         {
-            char json[] = "[[1.2,3.4],[5.6,7.8]]";
+            whenInputIs("[[[1,2],[3,4]],[[5,6],[7,8]]]");
+            parseMustSucceed();
+            lengthMustBe(2);
+            itemMustBe(0, 0, 0, 1L);
+            itemMustBe(0, 0, 1, 2L);
+            itemMustBe(0, 1, 0, 3L);
+            itemMustBe(0, 1, 1, 4L);
+            itemMustBe(1, 0, 0, 5L);
+            itemMustBe(1, 0, 1, 6L);
+            itemMustBe(1, 1, 0, 7L);
+            itemMustBe(1, 1, 1, 8L);
+        }        
+		
+    private:
 
-            JsonArray array = parser.parseArray(json);
+        void whenInputIs(const char* input)
+        {
+            strcpy(json, input);
+            array = parser.parseArray(json);
+        }
+
+        void parseMustFail()
+        {
+            Assert::IsFalse(array.success());
+            lengthMustBe(0);
+        }
+
+        void parseMustSucceed()
+        {
             Assert::IsTrue(array.success());
+        }
 
-            Assert::AreEqual(2, array.getLength());
+        void lengthMustBe(int expected)
+        {
+            Assert::AreEqual(expected, array.getLength());
+        }
 
-            JsonArray innerArray0 = array.getArray(0);
-            Assert::AreEqual(2, innerArray0.getLength());
-            Assert::AreEqual(1.2, innerArray0.getDouble(0));
-            Assert::AreEqual(3.4, innerArray0.getDouble(1));
+        void itemMustBe(int index, long expected)
+        {
+            Assert::AreEqual(expected, array.getLong(index));
+        }
 
-            JsonArray innerArray1 = array.getArray(1);
-            Assert::AreEqual(2, innerArray1.getLength());
-            Assert::AreEqual(5.6, innerArray1.getDouble(0));
-            Assert::AreEqual(7.8, innerArray1.getDouble(1));
+        void itemMustBe(int index, bool expected)
+        {
+            Assert::AreEqual(expected, array.getBool(index));
+        }
+
+        void itemMustBe(int index, const char* expected)
+        {
+            Assert::AreEqual(expected, array.getString(index));
+        }
+
+        void itemMustBe(int index0, int index1, long expected)
+        {
+            Assert::AreEqual(expected, array.getArray(index0).getLong(index1));
+        }
+
+        void itemMustBe(int index0, int index1, int index2, long expected)
+        {
+            Assert::AreEqual(expected, array.getArray(index0).getArray(index1).getLong(index2));
         }
 	};
 }

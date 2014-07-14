@@ -63,5 +63,37 @@ namespace ArduinoJsonParserTests
 			bool online = hashTable.getBool("Online");
 			Assert::AreEqual(true, online);
 		}
+
+        TEST_METHOD(OneDimensionArrayInHashTable)
+        {
+            char json[] = "{a:[0,0],b:[0,0]}";
+
+            JsonHashTable root = parser.parseHashTable(json);
+            Assert::IsTrue(root.success());
+
+            JsonArray arrayA = root.getArray("a");
+            Assert::IsTrue(arrayA.success());
+            Assert::AreEqual(2, arrayA.getLength());
+
+            JsonArray arrayB = root.getArray("b");
+            Assert::IsTrue(arrayB.success());
+            Assert::AreEqual(2, arrayB.getLength());
+        }
+
+        TEST_METHOD(TwoDimensionsArrayInHashTable)
+        {
+            char json[] = "{a:[[0],[0]],b:[[0],[0]]}";
+
+            JsonHashTable root = parser.parseHashTable(json);
+            Assert::IsTrue(root.success());
+
+            JsonArray arrayA = root.getArray("a");
+            Assert::IsTrue(arrayA.success());
+            Assert::AreEqual(2, arrayA.getLength());
+
+            JsonArray arrayB = root.getArray("b");
+            Assert::IsTrue(arrayB.success());
+            Assert::AreEqual(2, arrayB.getLength());
+        }
 	};
 }
