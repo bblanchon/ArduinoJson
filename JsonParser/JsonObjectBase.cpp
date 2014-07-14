@@ -10,15 +10,15 @@ using namespace ArduinoJson::Parser;
 
 int JsonObjectBase::getNestedTokenCount(jsmntok_t* token)
 {
-    int end = token->end;
-    int count = 0;	
+    int tokensToVisit = token->size;
+    int count = 0;
 
-    token++;
-
-    while (token->start < end)
+    while (tokensToVisit)
     {
-        token++;
         count++;
+        token++;
+        tokensToVisit--;
+        tokensToVisit += token->size;
     }
 
     return count;
