@@ -11,7 +11,7 @@ using namespace ArduinoJson::Parser;
 
 namespace ArduinoJsonParserTests
 {
-	TEST_CLASS(TestArrays)
+	TEST_CLASS(JsonArrayTests)
 	{
 		JsonParser<32> parser;
 
@@ -143,5 +143,25 @@ namespace ArduinoJsonParserTests
 			Assert::IsTrue(arrayB.success());
 			Assert::AreEqual(2, arrayB.getLength());
 		}
+
+        TEST_METHOD(MatrixOfDoubles)
+        {
+            char json[] = "[[1.2,3.4],[5.6,7.8]]";
+
+            JsonArray array = parser.parseArray(json);
+            Assert::IsTrue(array.success());
+
+            Assert::AreEqual(2, array.getLength());
+
+            JsonArray innerArray0 = array.getArray(0);
+            Assert::AreEqual(2, innerArray0.getLength());
+            Assert::AreEqual(1.2, innerArray0.getDouble(0));
+            Assert::AreEqual(3.4, innerArray0.getDouble(1));
+
+            JsonArray innerArray1 = array.getArray(1);
+            Assert::AreEqual(2, innerArray1.getLength());
+            Assert::AreEqual(5.6, innerArray1.getDouble(0));
+            Assert::AreEqual(7.8, innerArray1.getDouble(1));
+        }
 	};
 }

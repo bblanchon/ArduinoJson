@@ -13,7 +13,7 @@ using namespace ArduinoJson::Parser;
 
 namespace ArduinoJsonParserTests
 {
-	TEST_CLASS(TestGbathreeSample1)
+	TEST_CLASS(GbathreeBug)
 	{
 		char json[1024];
 		JsonParser<200> parser;

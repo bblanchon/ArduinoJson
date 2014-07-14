@@ -89,10 +89,9 @@
     <ClCompile Include="..\JsonParser\JsonArray.cpp" />
     <ClCompile Include="..\JsonParser\JsonHashTable.cpp" />
     <ClCompile Include="..\JsonParser\JsonObjectBase.cpp" />
-    <ClCompile Include="TestArrayExample.cpp" />
-    <ClCompile Include="TestArrays.cpp" />
-    <ClCompile Include="TestHashTableExample.cpp" />
-    <ClCompile Include="TestGbathreeStrings.cpp" />
+    <ClCompile Include="JsonArrayTests.cpp" />
+    <ClCompile Include="JsonHashTableTests.cpp" />
+    <ClCompile Include="GbathreeBug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonParser\jsmn.h" />

@@ -13,7 +13,7 @@ using namespace ArduinoJson::Parser;
 
 namespace ArduinoJsonParserTests
 {		
-	TEST_CLASS(TestHashTableExample)
+    TEST_CLASS(JsonHashTableTests)
 	{
 		char json[128];
 		JsonParser<32> parser;
