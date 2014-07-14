@@ -210,7 +210,7 @@ This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
     </tr>
     <tr>
         <td>Parser&lt;N&gt;</td>
-        <td>8 x N</td>
+        <td>4 + 8 x N</td>
     </tr>
     <tr>
         <td>JsonArray</td>
