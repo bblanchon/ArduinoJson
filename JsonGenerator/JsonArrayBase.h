@@ -43,7 +43,7 @@ namespace ArduinoJson
 
         private:
             Internals::JsonValue* items;
-            int count, capacity;
+            int capacity, count;
         };
     }
 }

@@ -55,8 +55,7 @@ namespace ArduinoJson
 
         private:
             KeyValuePair* items;
-            int count;
-            int capacity;
+            int capacity, count;
         };
     }
 }
