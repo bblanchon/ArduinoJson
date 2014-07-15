@@ -1,10 +1,16 @@
-Arduino JSON library: change log
-================================
+Arduino JSON: change log
+========================
+
+master
+------
+
+* Fixed case `#include "jsmn.cpp"` which caused an error in Linux (issue #6)
+* Fixed a buffer overrun in JSON Parser (issue #5)
 
 v2.0
 ----
 
-* Added JSON encoding.
+* Added JSON encoding (issue #2)
 * Renamed the library `ArduinoJsonParser` becomes `ArduinoJson`
 
 **Breaking change**: you need to add the following line at the top of your program.
@@ -14,7 +20,7 @@ v2.0
 v1.2
 ----
 
-* Example: changed `char[] json` into `char json[]`. Damn it C# !
+* Fixed error in JSON parser example (issue #1)
 
 v1.1
 ----
