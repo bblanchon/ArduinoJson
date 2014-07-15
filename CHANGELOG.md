@@ -1,8 +1,8 @@
 Arduino JSON: change log
 ========================
 
-master
-------
+v2.1
+----
 
 * Fixed case `#include "jsmn.cpp"` which caused an error in Linux (issue #6)
 * Fixed a buffer overrun in JSON Parser (issue #5)
