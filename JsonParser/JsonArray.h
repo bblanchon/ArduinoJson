@@ -28,12 +28,17 @@ namespace ArduinoJson
                 return JsonObjectBase::success() && tokens->type == JSMN_ARRAY;
             }
 
-            int getLength()
+            int size()
             {
                 return success() ? tokens[0].size : 0;
             }
 
             JsonValue operator[](int index);
+
+            DEPRECATED int getLength()
+            {
+                return size();
+            }
                       
             DEPRECATED JsonArray getArray(int index)
             {
