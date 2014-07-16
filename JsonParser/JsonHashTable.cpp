@@ -4,8 +4,9 @@
 */
 
 #include <string.h> // for strcmp()
-#include "JsonArray.h"
 #include "JsonHashTable.h"
+#include "JsonArray.h"
+#include "JsonValue.h"
 
 using namespace ArduinoJson::Parser;
 
@@ -19,11 +20,11 @@ JsonHashTable::JsonHashTable(char* json, jsmntok_t* tokens)
 /*
 * Returns the token for the value associated with the specified key
 */
-jsmntok_t* JsonHashTable::getToken(const char* desiredKey)
+JsonValue JsonHashTable::operator [](const char* desiredKey)
 {	
 	// sanity check
 	if (json == 0 || tokens == 0 || desiredKey == 0)
-		return 0;
+        return JsonValue();
 
 	// skip first token, it's the whole object
 	jsmntok_t* currentToken = tokens + 1;
@@ -32,13 +33,13 @@ jsmntok_t* JsonHashTable::getToken(const char* desiredKey)
 	for (int i = 0; i < tokens[0].size / 2 ; i++)
 	{
 		// get key token string
-		char* key = getStringFromToken(currentToken);
+		char* key = JsonValue(json, currentToken);
 
 		// compare with desired name
 		if (strcmp(desiredKey, key) == 0)
 		{
 			// return the value token that follows the key token
-			return currentToken + 1;
+			return JsonValue(json, currentToken + 1);
 		}
 
 		// move forward: key + value + nested tokens
@@ -46,40 +47,10 @@ jsmntok_t* JsonHashTable::getToken(const char* desiredKey)
 	}
 
 	// nothing found, return NULL
-	return 0; 
+    return JsonValue();
 }
 
-bool JsonHashTable::containsKey(const char* key)
+JsonArray JsonHashTable::getArray(const char* key) DEPRECATED
 {
-	return getToken(key) != 0;
-}
-
-JsonArray JsonHashTable::getArray(const char* key)
-{
-	return JsonArray(json, getToken(key));
-}
-
-bool JsonHashTable::getBool(const char* key)
-{
-	return getBoolFromToken(getToken(key));
-}
-
-double JsonHashTable::getDouble(const char* key)
-{
-	return getDoubleFromToken(getToken(key));
-}
-
-JsonHashTable JsonHashTable::getHashTable(const char* key)
-{
-	return JsonHashTable(json, getToken(key));
-}
-
-long JsonHashTable::getLong(const char* key)
-{
-	return getLongFromToken(getToken(key));
-}
-
-char* JsonHashTable::getString(const char* key)
-{
-	return getStringFromToken(getToken(key));
+    return (JsonArray) (*this)[key];
 }

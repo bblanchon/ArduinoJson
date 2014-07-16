@@ -6,6 +6,9 @@
 #pragma once
 
 #include "JsonObjectBase.h"
+#include "JsonValue.h"
+
+#define DEPRECATED
 
 namespace ArduinoJson
 {
@@ -16,7 +19,7 @@ namespace ArduinoJson
         class JsonArray : public JsonObjectBase
         {
             friend class JsonParserBase;
-            friend class JsonHashTable;
+            friend class JsonValue;
 
         public:
 
@@ -27,17 +30,38 @@ namespace ArduinoJson
                 return tokens != 0 ? tokens[0].size : 0;
             }
 
-            JsonArray getArray(int index);
-            bool getBool(int index);
-            double getDouble(int index);
-            JsonHashTable getHashTable(int index);
-            long getLong(int index);
-            char* getString(int index);
+            JsonValue operator[](int index);
+                      
+            JsonArray getArray(int index) DEPRECATED
+            {
+                return (JsonArray) (*this)[index];
+            }
+
+            bool getBool(int index) DEPRECATED
+            {
+                return (bool) (*this)[index];
+            }
+
+            double getDouble(int index) DEPRECATED
+            {
+                return (double) (*this)[index];
+            }
+
+            JsonHashTable getHashTable(int index) DEPRECATED;
+
+            long getLong(int index) DEPRECATED
+            {
+                return (long) (*this)[index];
+            }
+
+            char* getString(int index) DEPRECATED
+            {
+                return (char*) (*this)[index];
+            }
 
         private:
 
             JsonArray(char* json, jsmntok_t* tokens);
-            jsmntok_t* getToken(int index);
         };
     }
 }

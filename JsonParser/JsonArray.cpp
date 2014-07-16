@@ -19,11 +19,11 @@ JsonArray::JsonArray(char* json, jsmntok_t* tokens)
 /*
 * Returns the token for the value at the specified index
 */
-jsmntok_t* JsonArray::getToken(int index)
+JsonValue JsonArray::operator[](int index)
 {
 	// sanity check
 	if (json == 0 || tokens == 0 || index < 0 || index >= tokens[0].size)
-		return 0;
+        return JsonValue();
 
 	// skip first token, it's the whole object
 	jsmntok_t* currentToken = tokens + 1;
@@ -35,35 +35,11 @@ jsmntok_t* JsonArray::getToken(int index)
 		currentToken += 1 + getNestedTokenCount(currentToken);
 	}
 
-	return currentToken;
+	return JsonValue(json, currentToken);
 }
 
-JsonArray JsonArray::getArray(int index)
-{
-	return JsonArray(json, getToken(index));
-}
 
-bool JsonArray::getBool(int index)
+JsonHashTable JsonArray::getHashTable(int index) DEPRECATED
 {
-	return getBoolFromToken(getToken(index));
-}
-
-double JsonArray::getDouble(int index)
-{
-	return getDoubleFromToken(getToken(index));
-}
-
-JsonHashTable JsonArray::getHashTable(int index)
-{
-	return JsonHashTable(json, getToken(index));
-}
-
-long JsonArray::getLong(int index)
-{
-	return getLongFromToken(getToken(index));
-}
-
-char* JsonArray::getString(int index)
-{
-	return getStringFromToken(getToken(index));
+    return (JsonHashTable) (*this)[index];
 }

@@ -6,6 +6,9 @@
 #pragma once
 
 #include "JsonObjectBase.h"
+#include "JsonValue.h"
+
+#define DEPRECATED
 
 namespace ArduinoJson
 {
@@ -16,25 +19,49 @@ namespace ArduinoJson
         class JsonHashTable : public JsonObjectBase
         {
             friend class JsonParserBase;
-            friend class JsonArray;
+            friend class JsonValue;
 
         public:
 
             JsonHashTable() {}
 
-            bool containsKey(const char* key);
+            JsonValue operator[](const char* key);
 
-            JsonArray getArray(const char* key);
-            bool getBool(const char* key);
-            double getDouble(const char* key);
-            JsonHashTable getHashTable(const char* key);
-            long getLong(const char* key);
-            char* getString(const char* key);
+            bool containsKey(const char* key)
+            {
+                return (*this)[key].success();
+            }
+
+            JsonArray getArray(const char* key) DEPRECATED;
+
+            bool getBool(const char* key) DEPRECATED
+            {
+                return (bool) (*this)[key];
+            }
+
+            double getDouble(const char* key) DEPRECATED
+            {
+                return (double) (*this)[key];
+            }
+
+            JsonHashTable getHashTable(const char* key) DEPRECATED
+            {
+                return (JsonHashTable) (*this)[key];
+            }
+
+            long getLong(const char* key) DEPRECATED
+            {
+                return (long) (*this)[key];
+            }
+
+            char* getString(const char* key) DEPRECATED
+            {
+                return (char*) (*this)[key];
+            }
 
         private:
 
             JsonHashTable(char* json, jsmntok_t* tokens);
-            jsmntok_t* getToken(const char* key);
         };
     }
 }
