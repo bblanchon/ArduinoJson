@@ -8,8 +8,6 @@
 #include "JsonObjectBase.h"
 #include "JsonValue.h"
 
-#define DEPRECATED
-
 namespace ArduinoJson
 {
     namespace Parser
@@ -37,29 +35,29 @@ namespace ArduinoJson
 
             JsonValue operator[](int index);
                       
-            JsonArray getArray(int index) DEPRECATED
+            DEPRECATED JsonArray getArray(int index)
             {
                 return (JsonArray) (*this)[index];
             }
 
-            bool getBool(int index) DEPRECATED
+            DEPRECATED bool getBool(int index)
             {
                 return (bool) (*this)[index];
             }
 
-            double getDouble(int index) DEPRECATED
+            DEPRECATED double getDouble(int index)
             {
                 return (double) (*this)[index];
             }
 
-            JsonHashTable getHashTable(int index) DEPRECATED;
+            DEPRECATED JsonHashTable getHashTable(int index);
 
-            long getLong(int index) DEPRECATED
+            DEPRECATED long getLong(int index)
             {
                 return (long) (*this)[index];
             }
 
-            char* getString(int index) DEPRECATED
+            DEPRECATED char* getString(int index)
             {
                 return (char*) (*this)[index];
             }

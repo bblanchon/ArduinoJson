@@ -18,11 +18,7 @@ namespace ArduinoJson
 
         class JsonValue : public JsonObjectBase
         {
-            friend JsonArray;
-            friend JsonHashTable;
-
         public:
-
             JsonValue() {}
 
             JsonValue(char* json, jsmntok_t* tokens)

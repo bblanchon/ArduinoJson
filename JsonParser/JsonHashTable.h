@@ -8,8 +8,6 @@
 #include "JsonObjectBase.h"
 #include "JsonValue.h"
 
-#define DEPRECATED
-
 namespace ArduinoJson
 {
     namespace Parser
@@ -37,29 +35,29 @@ namespace ArduinoJson
                 return (*this)[key].success();
             }
 
-            JsonArray getArray(const char* key) DEPRECATED;
+            DEPRECATED JsonArray getArray(const char* key);
 
-            bool getBool(const char* key) DEPRECATED
+            DEPRECATED bool getBool(const char* key)
             {
                 return (bool) (*this)[key];
             }
 
-            double getDouble(const char* key) DEPRECATED
+            DEPRECATED double getDouble(const char* key)
             {
                 return (double) (*this)[key];
             }
 
-            JsonHashTable getHashTable(const char* key) DEPRECATED
+            DEPRECATED JsonHashTable getHashTable(const char* key)
             {
                 return (JsonHashTable) (*this)[key];
             }
 
-            long getLong(const char* key) DEPRECATED
+            DEPRECATED long getLong(const char* key)
             {
                 return (long) (*this)[key];
             }
 
-            char* getString(const char* key) DEPRECATED
+            DEPRECATED char* getString(const char* key)
             {
                 return (char*) (*this)[key];
             }

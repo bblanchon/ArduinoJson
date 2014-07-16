@@ -9,4 +9,5 @@
 #include "JsonParser/JsonHashTable.cpp"
 #include "JsonParser/JsonObjectBase.cpp"
 #include "JsonParser/JsonParserBase.cpp"
+#include "JsonParser/JsonValue.cpp"
 #include "JsonParser/jsmn.cpp"

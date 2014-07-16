@@ -31,7 +31,7 @@ JsonValue JsonArray::operator[](int index)
 }
 
 
-JsonHashTable JsonArray::getHashTable(int index) DEPRECATED
+DEPRECATED JsonHashTable JsonArray::getHashTable(int index)
 {
     return (JsonHashTable) (*this)[index];
 }

@@ -43,7 +43,7 @@ JsonValue JsonHashTable::operator [](const char* desiredKey)
     return JsonValue();
 }
 
-JsonArray JsonHashTable::getArray(const char* key) DEPRECATED
+DEPRECATED JsonArray JsonHashTable::getArray(const char* key)
 {
     return (JsonArray) (*this)[key];
 }
