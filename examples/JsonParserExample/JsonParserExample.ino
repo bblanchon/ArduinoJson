@@ -23,17 +23,17 @@ void setup()
         return;
     }
 
-    char* sensor = root.getString("sensor");
+    char* sensor = root["sensor"];
     Serial.println(sensor);
 
-    long time = root.getLong("time");
+    long time = root["time"];
     Serial.println(time);
     
-    JsonArray coords = root.getArray("data");
+    JsonArray coords = root["data"];
     
-    for (int i = 0; i < coords.getLength(); i++)
+    for (int i = 0; i < coords.size(); i++)
     {
-        double value = coords.getDouble(i);
+        double value = coords[i];
         Serial.println(value, 6);
     }
 }
