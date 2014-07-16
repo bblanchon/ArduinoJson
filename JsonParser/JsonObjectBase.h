@@ -16,8 +16,9 @@ namespace ArduinoJson
         public:
 
             JsonObjectBase()
+                : json(0), tokens(0)
             {
-                makeInvalid();
+
             }
 
             bool success()
@@ -28,15 +29,9 @@ namespace ArduinoJson
         protected:
 
             JsonObjectBase(char* json, jsmntok_t* tokens)
+                : json(json), tokens(tokens)
             {
-                this->json = json;
-                this->tokens = tokens;
-            }
 
-            void makeInvalid()
-            {
-                json = 0;
-                tokens = 0;
             }
 
             static int getNestedTokenCount(jsmntok_t* token);

@@ -7,6 +7,8 @@
 
 #include "jsmn.h"
 
+#include "JsonObjectBase.h"
+
 namespace ArduinoJson
 {
     namespace Parser
@@ -14,15 +16,19 @@ namespace ArduinoJson
         class JsonArray;
         class JsonHashTable;
 
-        class JsonValue
+        class JsonValue : public JsonObjectBase
         {
             friend JsonArray;
             friend JsonHashTable;
 
         public:
-            bool success()
+
+            JsonValue() {}
+
+            JsonValue(char* json, jsmntok_t* tokens)
+                : JsonObjectBase(json, tokens)
             {
-                return token != 0;
+
             }
 
             operator bool();
@@ -31,22 +37,6 @@ namespace ArduinoJson
             operator char*();
             operator JsonArray();
             operator JsonHashTable();
-
-        private:
-            JsonValue()
-                : json(0), token(0)
-            {
-
-            }
-
-            JsonValue(char* json, jsmntok_t* token)
-                : json(json), token(token)
-            {
-
-            }
-
-            char* json;
-            jsmntok_t* token;
         };
     }
 }

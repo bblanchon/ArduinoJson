@@ -23,8 +23,13 @@ namespace ArduinoJson
 
         public:
 
-            JsonHashTable() {}
+            JsonHashTable()	{}
 
+            bool success()
+            {
+                return JsonObjectBase::success() && tokens->type == JSMN_OBJECT;
+            }
+            
             JsonValue operator[](const char* key);
 
             bool containsKey(const char* key)
@@ -61,7 +66,11 @@ namespace ArduinoJson
 
         private:
 
-            JsonHashTable(char* json, jsmntok_t* tokens);
+            JsonHashTable(char* json, jsmntok_t* tokens)
+                : JsonObjectBase(json, tokens)
+            {
+
+            }
         };
     }
 }

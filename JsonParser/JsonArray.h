@@ -25,9 +25,14 @@ namespace ArduinoJson
 
             JsonArray()	{}
 
+            bool success()
+            {
+                return JsonObjectBase::success() && tokens->type == JSMN_ARRAY;
+            }
+
             int getLength()
             {
-                return tokens != 0 ? tokens[0].size : 0;
+                return success() ? tokens[0].size : 0;
             }
 
             JsonValue operator[](int index);
@@ -61,7 +66,11 @@ namespace ArduinoJson
 
         private:
 
-            JsonArray(char* json, jsmntok_t* tokens);
+            JsonArray(char* json, jsmntok_t* tokens)
+                : JsonObjectBase(json, tokens)
+            {
+
+            }
         };
     }
 }

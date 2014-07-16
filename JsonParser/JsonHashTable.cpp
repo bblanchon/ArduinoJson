@@ -10,20 +10,13 @@
 
 using namespace ArduinoJson::Parser;
 
-JsonHashTable::JsonHashTable(char* json, jsmntok_t* tokens)
-: JsonObjectBase(json, tokens)
-{
-	if (tokens == 0 || tokens[0].type != JSMN_OBJECT)
-		makeInvalid();
-}
-
 /*
 * Returns the token for the value associated with the specified key
 */
 JsonValue JsonHashTable::operator [](const char* desiredKey)
 {	
 	// sanity check
-	if (json == 0 || tokens == 0 || desiredKey == 0)
+    if (!success() || desiredKey == 0)
         return JsonValue();
 
 	// skip first token, it's the whole object

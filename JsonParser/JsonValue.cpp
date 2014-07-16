@@ -12,52 +12,52 @@ using namespace ArduinoJson::Parser;
 
 JsonValue::operator bool()
 {
-    if (token == 0 || token->type != JSMN_PRIMITIVE) return 0;
+    if (tokens == 0 || tokens->type != JSMN_PRIMITIVE) return 0;
 
     // "true"
-    if (json[token->start] == 't') return true;
+    if (json[tokens->start] == 't') return true;
 
     // "false"
-    if (json[token->start] == 'f') return false;
+    if (json[tokens->start] == 'f') return false;
 
     // "null"
-    if (json[token->start] == 'n') return false;
+    if (json[tokens->start] == 'n') return false;
 
     // number
-    return strtol(json + token->start, 0, 0) != 0;
+    return strtol(json + tokens->start, 0, 0) != 0;
 }
 
 JsonValue::operator double()
 {
-    if (token == 0 || token->type != JSMN_PRIMITIVE) return 0;
+    if (tokens == 0 || tokens->type != JSMN_PRIMITIVE) return 0;
 
-    return strtod(json + token->start, 0);
+    return strtod(json + tokens->start, 0);
 }
 
 JsonValue::operator long()
 {
-    if (token == 0 || token->type != JSMN_PRIMITIVE) return 0;
+    if (tokens == 0 || tokens->type != JSMN_PRIMITIVE) return 0;
 
-    return strtol(json + token->start, 0, 0);
+    return strtol(json + tokens->start, 0, 0);
 }
 
 JsonValue::operator char*()
 {
-    if (token == 0 || token->type != JSMN_PRIMITIVE && token->type != JSMN_STRING)
+    if (tokens == 0 || tokens->type != JSMN_PRIMITIVE && tokens->type != JSMN_STRING)
         return 0;
 
     // add null terminator to the string
-    json[token->end] = 0;
+    json[tokens->end] = 0;
 
-    return json + token->start;
+    return json + tokens->start;
 }
 
 JsonValue::operator JsonArray()
 {
-    return JsonArray(json, token);
+    return JsonArray(json, tokens);
 }
 
 JsonValue::operator JsonHashTable()
 {
-    return JsonHashTable(json, token);
+    return JsonHashTable(json, tokens);
 }
