@@ -97,9 +97,9 @@ namespace JsonGeneratorTests
 
     private:
         
-        void addNested(const char* key, JsonObjectBase& value)
+        void addNested(const char* key, Printable& value)
         {
-            hash.add<JsonObjectBase&>(key, value);
+            hash.add<Printable&>(key, value);
         }
 
         template<typename T>

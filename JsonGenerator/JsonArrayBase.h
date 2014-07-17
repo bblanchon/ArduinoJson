@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include "JsonObjectBase.h"
+#include "JsonPrintable.h"
 
 namespace ArduinoJson
 {
     namespace Generator
     {
-        class JsonArrayBase : public JsonObjectBase
+        class JsonArrayBase : public JsonPrintable
         {
         public:
             JsonArrayBase(Internals::JsonValue* items, int capacity)
@@ -39,7 +39,7 @@ namespace ArduinoJson
 
             virtual size_t printTo(Print& p) const;
 
-            using JsonObjectBase::printTo;
+            using JsonPrintable::printTo;
 
         private:
             Internals::JsonValue* items;

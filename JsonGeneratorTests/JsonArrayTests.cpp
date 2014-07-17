@@ -146,9 +146,9 @@ namespace JsonGeneratorTests
 
     private:
 
-        void addNested(JsonObjectBase& value)
+        void addNested(Printable& value)
         {
-            arr.add<JsonObjectBase&>(value);
+            arr.add<Printable&>(value);
         }
 
         template<typename T>

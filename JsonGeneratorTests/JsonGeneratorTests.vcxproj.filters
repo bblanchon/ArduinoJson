@@ -56,9 +56,6 @@
     <ClInclude Include="..\JsonGenerator\JsonHashTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\JsonGenerator\JsonObjectBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\JsonGenerator\JsonValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -78,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonGenerator\JsonArrayBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JsonGenerator\JsonPrintable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

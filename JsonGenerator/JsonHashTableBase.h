@@ -5,14 +5,14 @@
 
 #pragma once
 
-#include "JsonObjectBase.h"
+#include "JsonPrintable.h"
 #include "EscapedString.h"
 
 namespace ArduinoJson
 {
     namespace Generator
     {
-        class JsonHashTableBase : public JsonObjectBase
+        class JsonHashTableBase : public JsonPrintable
         {
         public:
 
@@ -36,7 +36,7 @@ namespace ArduinoJson
                 count++;
             }
 
-            using JsonObjectBase::printTo;
+            using JsonPrintable::printTo;
 
             virtual size_t printTo(Print& p) const;
 
