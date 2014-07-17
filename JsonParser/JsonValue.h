@@ -7,10 +7,12 @@
 
 #include "jsmn.h"
 
+#ifndef ARDUINO_JSON_NO_DEPRECATED_WARNING
 #ifdef __GNUC__
 #define DEPRECATED __attribute__((deprecated))
 #elif defined(_MSC_VER)
 #define DEPRECATED __declspec(deprecated)
+#endif
 #else
 #define DEPRECATED
 #endif

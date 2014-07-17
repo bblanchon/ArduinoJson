@@ -3,6 +3,8 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
+#define ARDUINO_JSON_NO_DEPRECATED_WARNING
+
 #include "CppUnitTest.h"
 #include "JsonParser.h"
 #include <string>
