@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "JsonObjectBase.h"
 #include "JsonValue.h"
 
 namespace ArduinoJson

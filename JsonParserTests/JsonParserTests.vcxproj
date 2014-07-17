@@ -88,7 +88,6 @@
     <ClCompile Include="..\JsonParser\jsmn.cpp" />
     <ClCompile Include="..\JsonParser\JsonArray.cpp" />
     <ClCompile Include="..\JsonParser\JsonHashTable.cpp" />
-    <ClCompile Include="..\JsonParser\JsonObjectBase.cpp" />
     <ClCompile Include="..\JsonParser\JsonParserBase.cpp" />
     <ClCompile Include="..\JsonParser\JsonValue.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
@@ -99,7 +98,6 @@
     <ClInclude Include="..\JsonParser\jsmn.h" />
     <ClInclude Include="..\JsonParser\JsonArray.h" />
     <ClInclude Include="..\JsonParser\JsonHashTable.h" />
-    <ClInclude Include="..\JsonParser\JsonObjectBase.h" />
     <ClInclude Include="..\JsonParser\JsonParser.h" />
     <ClInclude Include="..\JsonParser\JsonParserBase.h" />
     <ClInclude Include="..\JsonParser\JsonValue.h" />

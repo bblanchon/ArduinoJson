@@ -55,16 +55,21 @@ JsonValue::operator char*()
 
 JsonValue::operator JsonArray()
 {
-    return tokens->type != JSMN_ARRAY
+    return tokens != 0 && tokens->type == JSMN_ARRAY
         ? JsonArray(*this)
         : JsonArray();
 }
 
 JsonValue::operator JsonHashTable()
 {
-    return tokens->type != JSMN_OBJECT
+    return tokens != 0 && tokens->type == JSMN_OBJECT
         ? JsonHashTable(*this)
         : JsonHashTable();
+}
+
+int JsonValue::size()
+{
+    return tokens != 0 && tokens->type == JSMN_ARRAY ? tokens->size : 0;
 }
 
 /*
@@ -73,7 +78,7 @@ JsonValue::operator JsonHashTable()
 JsonValue JsonValue::operator [](const char* desiredKey)
 {
     // sanity check
-    if (!json || !desiredKey || tokens->type != JSMN_OBJECT)
+    if (json == 0 || desiredKey == 0 || tokens->type != JSMN_OBJECT)
         return JsonValue();
 
     // skip first token, it's the whole object
@@ -98,4 +103,42 @@ JsonValue JsonValue::operator [](const char* desiredKey)
 
     // nothing found, return NULL
     return JsonValue();
+}
+
+/*
+* Returns the token for the value at the specified index
+*/
+JsonValue JsonValue::operator[](int index)
+{
+    // sanity check
+    if (index < 0 || index >= size())
+        return JsonValue();
+
+    // skip first token, it's the whole object
+    jsmntok_t* currentToken = tokens + 1;
+
+    // skip all tokens before the specified index
+    for (int i = 0; i < index; i++)
+    {
+        // move forward: current + nested tokens
+        currentToken += 1 + getNestedTokenCount(currentToken);
+    }
+
+    return JsonValue(json, currentToken);
+}
+
+int JsonValue::getNestedTokenCount(jsmntok_t* token)
+{
+    int tokensToVisit = token->size;
+    int count = 0;
+
+    while (tokensToVisit)
+    {
+        count++;
+        token++;
+        tokensToVisit--;
+        tokensToVisit += token->size;
+    }
+
+    return count;
 }

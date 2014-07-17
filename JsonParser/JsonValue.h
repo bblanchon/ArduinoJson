@@ -6,7 +6,14 @@
 #pragma once
 
 #include "jsmn.h"
-#include "JsonObjectBase.h"
+
+#ifdef __GNUC__
+#define DEPRECATED __attribute__((deprecated))
+#elif defined(_MSC_VER)
+#define DEPRECATED __declspec(deprecated)
+#else
+#define DEPRECATED
+#endif
 
 namespace ArduinoJson
 {
@@ -15,15 +22,24 @@ namespace ArduinoJson
         class JsonArray;
         class JsonHashTable;
 
-        class JsonValue : public JsonObjectBase
+        class JsonValue
         {
         public:
-            JsonValue() {}
-
-            JsonValue(char* json, jsmntok_t* tokens)
-                : JsonObjectBase(json, tokens)
+            JsonValue()
+                : json(0), tokens(0)
             {
 
+            }
+
+            JsonValue(char* json, jsmntok_t* tokens)
+                : json(json), tokens(tokens)
+            {
+
+            }
+
+            bool success()
+            {
+                return json != 0 && tokens != 0;
             }
 
             operator bool();
@@ -33,7 +49,17 @@ namespace ArduinoJson
             operator JsonArray();
             operator JsonHashTable();
 
-            JsonValue operator[](const char* key);
+            JsonValue operator[](const char*);
+            JsonValue operator[](int);
+
+            int size();
+
+        private:
+
+            char* json;
+            jsmntok_t* tokens;
+
+            static int getNestedTokenCount(jsmntok_t* token);
         };
     }
 }

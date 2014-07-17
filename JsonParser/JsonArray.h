@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "JsonObjectBase.h"
 #include "JsonValue.h"
 
 namespace ArduinoJson
@@ -14,26 +13,32 @@ namespace ArduinoJson
     {
         class JsonHashTable;
 
-        class JsonArray : public JsonObjectBase
+        class JsonArray
         {
-            friend class JsonParserBase;
-            friend class JsonValue;
-
         public:
 
             JsonArray()	{}
 
+            JsonArray(JsonValue& value)
+                : value(value)
+            {
+
+            }
+            
             bool success()
             {
-                return JsonObjectBase::success() && tokens->type == JSMN_ARRAY;
+                return value.success();
             }
 
             int size()
             {
-                return success() ? tokens[0].size : 0;
+                return value.size();
             }
 
-            JsonValue operator[](int index);
+            JsonValue operator[](int index)
+            {
+                return value[index];
+            }
 
             DEPRECATED int getLength()
             {
@@ -69,11 +74,7 @@ namespace ArduinoJson
 
         private:
 
-            JsonArray(char* json, jsmntok_t* tokens)
-                : JsonObjectBase(json, tokens)
-            {
-
-            }
+            JsonValue value;
         };
     }
 }
