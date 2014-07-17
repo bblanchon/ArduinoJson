@@ -11,31 +11,27 @@ void setup()
 {
     Serial.begin(9600);
 
-    char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
+    char json [] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
     JsonParser<16> parser;
 
-    JsonHashTable root = parser.parseHashTable(json);
+    JsonValue root = parser.parse(json);
 
     if (!root.success())
     {
-        Serial.println("JsonParser.parseHashTable() failed");
+        Serial.println("JsonParser.parse() failed");
         return;
     }
 
-    char* sensor = root["sensor"];
-    Serial.println(sensor);
+    char*  sensor = root["sensor"];
+    long   time = root["time"];
+    double latitude = root["data"][0];
+    double longitude = root["data"][1];
 
-    long time = root["time"];
+    Serial.println(sensor);
     Serial.println(time);
-    
-    JsonArray coords = root["data"];
-    
-    for (int i = 0; i < coords.size(); i++)
-    {
-        double value = coords[i];
-        Serial.println(value, 6);
-    }
+    Serial.println(latitude, 6);
+    Serial.println(longitude, 6);
 }
 
 void loop()
