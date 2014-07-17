@@ -22,17 +22,15 @@ Features
 Example
 -------
 
-    char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
+	JsonParser<32> parser;
+    char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";   
 
-    JsonParser<32> parser;
+    JsonHashTable root = parser.parse(json);
 
-    JsonHashTable root = parser.parseHashTable(json);
-
-    char* sensor = root.getString("sensor");
-
-    long time = root.getLong("time");
-    
-    JsonArray coords = root.getArray("data");
+    char*  sensor    = root["sensor"];
+    long   time      = root["time"];
+    double latitude  = root["data"][0];
+    double longitude = root["data"][1];
 
 
 How to  use ?

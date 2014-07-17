@@ -15,7 +15,7 @@ void setup()
 
     JsonParser<16> parser;
 
-    JsonValue root = parser.parse(json);
+    JsonHashTable root = parser.parse(json);
 
     if (!root.success())
     {
@@ -23,9 +23,9 @@ void setup()
         return;
     }
 
-    char*  sensor = root["sensor"];
-    long   time = root["time"];
-    double latitude = root["data"][0];
+    char*  sensor    = root["sensor"];
+    long   time      = root["time"];
+    double latitude  = root["data"][0];
     double longitude = root["data"][1];
 
     Serial.println(sensor);
