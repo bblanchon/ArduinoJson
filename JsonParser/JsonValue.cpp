@@ -4,6 +4,7 @@
  */
 
 #include <stdlib.h> // for strtol, strtod
+#include <string.h> // for strcmp()
 #include "JsonArray.h"
 #include "JsonHashTable.h"
 #include "JsonValue.h"
@@ -54,10 +55,47 @@ JsonValue::operator char*()
 
 JsonValue::operator JsonArray()
 {
-    return JsonArray(json, tokens);
+    return tokens->type != JSMN_ARRAY
+        ? JsonArray(*this)
+        : JsonArray();
 }
 
 JsonValue::operator JsonHashTable()
 {
-    return JsonHashTable(json, tokens);
+    return tokens->type != JSMN_OBJECT
+        ? JsonHashTable(*this)
+        : JsonHashTable();
+}
+
+/*
+* Returns the token for the value associated with the specified key
+*/
+JsonValue JsonValue::operator [](const char* desiredKey)
+{
+    // sanity check
+    if (!json || !desiredKey || tokens->type != JSMN_OBJECT)
+        return JsonValue();
+
+    // skip first token, it's the whole object
+    jsmntok_t* currentToken = tokens + 1;
+
+    // scan each keys
+    for (int i = 0; i < tokens[0].size / 2; i++)
+    {
+        // get key token string
+        char* key = JsonValue(json, currentToken);
+
+        // compare with desired name
+        if (strcmp(desiredKey, key) == 0)
+        {
+            // return the value token that follows the key token
+            return JsonValue(json, currentToken + 1);
+        }
+
+        // move forward: key + value + nested tokens
+        currentToken += 2 + getNestedTokenCount(currentToken + 1);
+    }
+
+    // nothing found, return NULL
+    return JsonValue();
 }

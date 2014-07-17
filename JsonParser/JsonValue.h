@@ -32,6 +32,8 @@ namespace ArduinoJson
             operator char*();
             operator JsonArray();
             operator JsonHashTable();
+
+            JsonValue operator[](const char* key);
         };
     }
 }

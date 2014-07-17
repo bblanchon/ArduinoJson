@@ -14,9 +14,8 @@ namespace ArduinoJson
     {
         class JsonArray;
 
-        class JsonHashTable : public JsonObjectBase
+        class JsonHashTable
         {
-            friend class JsonParserBase;
             friend class JsonValue;
 
         public:
@@ -25,50 +24,55 @@ namespace ArduinoJson
 
             bool success()
             {
-                return JsonObjectBase::success() && tokens->type == JSMN_OBJECT;
+                return value.success();
             }
             
-            JsonValue operator[](const char* key);
+            JsonValue operator[](const char* key)
+            {
+                return value[key];
+            }
 
             bool containsKey(const char* key)
             {
-                return (*this)[key].success();
+                return value[key];
             }
 
             DEPRECATED JsonArray getArray(const char* key);
 
             DEPRECATED bool getBool(const char* key)
             {
-                return (bool) (*this)[key];
+                return value[key];
             }
 
             DEPRECATED double getDouble(const char* key)
             {
-                return (double) (*this)[key];
+                return value[key];
             }
 
             DEPRECATED JsonHashTable getHashTable(const char* key)
             {
-                return (JsonHashTable) (*this)[key];
+                return value[key];
             }
 
             DEPRECATED long getLong(const char* key)
             {
-                return (long) (*this)[key];
+                return value[key];
             }
 
             DEPRECATED char* getString(const char* key)
             {
-                return (char*) (*this)[key];
+                return value[key];
             }
 
         private:
 
-            JsonHashTable(char* json, jsmntok_t* tokens)
-                : JsonObjectBase(json, tokens)
+            JsonHashTable(JsonValue& value)
+                : value(value)
             {
 
             }
+
+            JsonValue value;
         };
     }
 }

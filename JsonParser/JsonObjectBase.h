@@ -21,6 +21,8 @@ namespace ArduinoJson
     {
         class JsonObjectBase
         {
+            friend class JsonHashTable;
+
         public:
 
             JsonObjectBase()
