@@ -6,13 +6,14 @@
 #pragma once
 
 #include "JsonValue.h"
+#include "JsonArrayIterator.h"
 
 namespace ArduinoJson
 {
     namespace Parser
     {
         class JsonHashTable;
-
+               
         class JsonArray
         {
         public:
@@ -38,6 +39,16 @@ namespace ArduinoJson
             JsonValue operator[](int index)
             {
                 return value[index];
+            }
+
+            JsonArrayIterator begin()
+            {
+                return JsonArrayIterator(value);
+            }
+
+            JsonArrayIterator end()
+            {
+                return JsonArrayIterator();
             }
 
             DEPRECATED int getLength()

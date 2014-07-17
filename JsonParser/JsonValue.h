@@ -26,6 +26,8 @@ namespace ArduinoJson
 
         class JsonValue
         {
+            friend class JsonArrayIterator;
+
         public:
             JsonValue()
                 : json(0), tokens(0)
