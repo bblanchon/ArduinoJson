@@ -6,7 +6,6 @@
 #pragma once
 
 #include "jsmn.h"
-
 #include "JsonObjectBase.h"
 
 namespace ArduinoJson

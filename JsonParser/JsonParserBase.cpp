@@ -7,13 +7,13 @@
 
 using namespace ArduinoJson::Parser;
 
-jsmntok_t* JsonParserBase::parse(char* json)
+JsonValue JsonParserBase::parse(char* json)
 {
     jsmn_parser parser;
     jsmn_init(&parser);
 
     if (JSMN_SUCCESS != jsmn_parse(&parser, json, tokens, maxTokens))
-        return 0;
+        return JsonValue();
 
-    return tokens;
+    return JsonValue(json, tokens);
 }
