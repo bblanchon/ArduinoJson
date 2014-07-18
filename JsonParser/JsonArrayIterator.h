@@ -12,8 +12,6 @@ namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonHashTable;
-
         class JsonArrayIterator
         {
         public:

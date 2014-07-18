@@ -5,7 +5,7 @@
 
 #include <stdlib.h> // for strtol, strtod
 #include "JsonArray.h"
-#include "JsonHashTable.h"
+#include "JsonObject.h"
 #include "JsonValue.h"
 
 using namespace ArduinoJson::Parser;
@@ -18,7 +18,7 @@ JsonValue JsonValue::operator[](int index)
 
 JsonValue JsonValue::operator[](const char* key)
 {
-    return JsonHashTable(json, token)[key];
+    return JsonObject(json, token)[key];
 }
 
 JsonValue::operator bool()
@@ -62,9 +62,9 @@ JsonValue::operator JsonArray()
         : JsonArray::null();
 }
 
-JsonValue::operator JsonHashTable()
+JsonValue::operator JsonObject()
 {
     return token.isObject()
-        ? JsonHashTable(json, token)
-        : JsonHashTable::null();
+        ? JsonObject(json, token)
+        : JsonObject::null();
 }

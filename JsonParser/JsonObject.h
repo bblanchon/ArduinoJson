@@ -13,13 +13,17 @@ namespace ArduinoJson
     {
         class JsonArray;
 
-        class JsonHashTable
+        class JsonObject
         {
-            friend class JsonValue;
-
         public:
 
-            JsonHashTable()	
+            JsonObject(char* json, Internal::JsonToken token)
+                : json(json), token(token)
+            {
+
+            }
+
+            JsonObject()
                 : token(Internal::JsonToken::null())
             {
             }
@@ -51,7 +55,7 @@ namespace ArduinoJson
                 return getValue(key);
             }
 
-            DEPRECATED JsonHashTable getHashTable(const char* key)
+            DEPRECATED JsonObject getHashTable(const char* key)
             {
                 return getValue(key);
             }
@@ -66,23 +70,19 @@ namespace ArduinoJson
                 return getValue(key);
             }
 
-            static JsonHashTable null()
+            static JsonObject null()
             {
-                return JsonHashTable();
+                return JsonObject();
             }
 
         private:
-
-            JsonHashTable(char* json, Internal::JsonToken token)
-                : json(json), token(token)
-            {
-
-            }
 
             char* json;
             Internal::JsonToken token;
 
             JsonValue getValue(const char* key);
         };
+
+        typedef JsonObject JsonHashTable;
     }
 }

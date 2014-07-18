@@ -13,7 +13,7 @@ namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonHashTable;
+        class JsonObject;
                
         class JsonArray
         {          
@@ -73,7 +73,7 @@ namespace ArduinoJson
                 return (double) (*this)[index];
             }
 
-            DEPRECATED JsonHashTable getHashTable(int index);
+            DEPRECATED JsonObject getHashTable(int index);
 
             DEPRECATED long getLong(int index)
             {

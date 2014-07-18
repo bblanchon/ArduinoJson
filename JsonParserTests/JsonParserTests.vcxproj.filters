@@ -21,16 +21,10 @@
     <ClCompile Include="..\JsonParser\JsonArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\JsonParser\JsonHashTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="JsonArrayTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GbathreeBug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonHashTableTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\JsonParser\JsonParserBase.cpp">
@@ -45,15 +39,18 @@
     <ClCompile Include="..\JsonParser\JsonToken.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\JsonParser\JsonObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonObjectTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonParser\jsmn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonParser\JsonArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\JsonParser\JsonHashTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonParser\JsonParser.h">
@@ -69,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonParser\JsonToken.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JsonParser\JsonObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

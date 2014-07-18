@@ -4,14 +4,14 @@
 */
 
 #include "JsonArray.h"
-#include "JsonHashTable.h"
+#include "JsonObject.h"
 
 using namespace ArduinoJson::Parser;
 using namespace ArduinoJson::Internal;
 
-DEPRECATED JsonHashTable JsonArray::getHashTable(int index)
+DEPRECATED JsonObject JsonArray::getHashTable(int index)
 {
-    return (JsonHashTable) (*this)[index];
+    return (JsonObject) (*this)[index];
 }
 
 /*

@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "JsonHashTable.h"
 #include "JsonArray.h"
+#include "JsonObject.h"
 
 namespace ArduinoJson
 {
@@ -31,7 +31,7 @@ namespace ArduinoJson
             */
             DEPRECATED JsonArray parseArray(char* json)
             {
-                return (JsonArray)parse(json);
+                return parse(json);
             }
 
             /*
@@ -40,9 +40,9 @@ namespace ArduinoJson
             * The content of the string may be altered to add '\0' at the
             * end of string tokens
             */
-            DEPRECATED JsonHashTable parseHashTable(char* json)
+            DEPRECATED JsonObject parseHashTable(char* json)
             {
-                return (JsonHashTable)parse(json);
+                return parse(json);
             }
 
         private:

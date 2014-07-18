@@ -4,14 +4,14 @@
 */
 
 #include <string.h> // for strcmp()
-#include "JsonHashTable.h"
 #include "JsonArray.h"
+#include "JsonObject.h"
 #include "JsonValue.h"
 
 using namespace ArduinoJson::Parser;
 using namespace ArduinoJson::Internal;
 
-DEPRECATED JsonArray JsonHashTable::getArray(const char* key)
+DEPRECATED JsonArray JsonObject::getArray(const char* key)
 {
     return (*this)[key];
 }
@@ -19,7 +19,7 @@ DEPRECATED JsonArray JsonHashTable::getArray(const char* key)
 /*
 * Returns the token for the value associated with the specified key
 */
-JsonValue JsonHashTable::getValue(const char* desiredKey)
+JsonValue JsonObject::getValue(const char* desiredKey)
 {
     // sanity check
     if (desiredKey == 0 || !token.isObject())

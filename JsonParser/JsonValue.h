@@ -22,7 +22,7 @@ namespace ArduinoJson
     namespace Parser
     {
         class JsonArray;
-        class JsonHashTable;
+        class JsonObject;
 
         class JsonValue
         {
@@ -44,7 +44,7 @@ namespace ArduinoJson
             operator long();
             operator char*();
             operator JsonArray();
-            operator JsonHashTable();
+            operator JsonObject();
             JsonValue operator[](int index);
             JsonValue operator[](const char*key);
 
