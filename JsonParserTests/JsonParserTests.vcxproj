@@ -89,6 +89,7 @@
     <ClCompile Include="..\JsonParser\JsonArray.cpp" />
     <ClCompile Include="..\JsonParser\JsonHashTable.cpp" />
     <ClCompile Include="..\JsonParser\JsonParserBase.cpp" />
+    <ClCompile Include="..\JsonParser\JsonToken.cpp" />
     <ClCompile Include="..\JsonParser\JsonValue.cpp" />
     <ClCompile Include="JsonArrayIteratorTests.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="..\JsonParser\JsonHashTable.h" />
     <ClInclude Include="..\JsonParser\JsonParser.h" />
     <ClInclude Include="..\JsonParser\JsonParserBase.h" />
+    <ClInclude Include="..\JsonParser\JsonToken.h" />
     <ClInclude Include="..\JsonParser\JsonValue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

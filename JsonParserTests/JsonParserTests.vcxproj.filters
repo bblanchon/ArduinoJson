@@ -42,6 +42,9 @@
     <ClCompile Include="JsonArrayIteratorTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\JsonParser\JsonToken.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JsonParser\jsmn.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\JsonParser\JsonArrayIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JsonParser\JsonToken.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

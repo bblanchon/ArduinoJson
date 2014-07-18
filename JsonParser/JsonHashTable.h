@@ -19,59 +19,70 @@ namespace ArduinoJson
 
         public:
 
-            JsonHashTable()	{}
+            JsonHashTable()	
+                : token(Internal::JsonToken::null())
+            {
+            }
 
             bool success()
             {
-                return value.success();
+                return token.isObject();
             }
             
             JsonValue operator[](const char* key)
             {
-                return value[key];
+                return getValue(key);
             }
 
             bool containsKey(const char* key)
             {
-                return value[key];
+                return getValue(key).success();
             }
 
             DEPRECATED JsonArray getArray(const char* key);
 
             DEPRECATED bool getBool(const char* key)
             {
-                return value[key];
+                return getValue(key);
             }
 
             DEPRECATED double getDouble(const char* key)
             {
-                return value[key];
+                return getValue(key);
             }
 
             DEPRECATED JsonHashTable getHashTable(const char* key)
             {
-                return value[key];
+                return getValue(key);
             }
 
             DEPRECATED long getLong(const char* key)
             {
-                return value[key];
+                return getValue(key);
             }
 
             DEPRECATED char* getString(const char* key)
             {
-                return value[key];
+                return getValue(key);
+            }
+
+            static JsonHashTable null()
+            {
+                return JsonHashTable();
             }
 
         private:
 
-            JsonHashTable(JsonValue& value)
-                : value(value)
+            JsonHashTable(char* json, Internal::JsonToken token)
+                : json(json), token(token)
             {
 
             }
 
-            JsonValue value;
+            char* json;
+            Internal::JsonToken token;
+
+            JsonValue getValue(const char* key);
         };
     }
 }

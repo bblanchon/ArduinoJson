@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "jsmn.h"
+#include "JsonToken.h"
 
 #ifndef ARDUINO_JSON_NO_DEPRECATED_WARNING
 #ifdef __GNUC__
@@ -26,44 +26,37 @@ namespace ArduinoJson
 
         class JsonValue
         {
-            friend class JsonArrayIterator;
-
         public:
-            JsonValue()
-                : json(0), tokens(0)
-            {
 
-            }
-
-            JsonValue(char* json, jsmntok_t* tokens)
-                : json(json), tokens(tokens)
+            JsonValue(char* json, Internal::JsonToken token)
+                : json(json), token(token)
             {
 
             }
 
             bool success()
             {
-                return json != 0 && tokens != 0;
+                return token.isValid();
             }
-
+            
             operator bool();
             operator double();
             operator long();
             operator char*();
             operator JsonArray();
             operator JsonHashTable();
+            JsonValue operator[](int index);
+            JsonValue operator[](const char*key);
 
-            JsonValue operator[](const char*);
-            JsonValue operator[](int);
-
-            int size();
+            static JsonValue null()
+            {
+                return JsonValue(0, Internal::JsonToken(0));
+            }
 
         private:
 
             char* json;
-            jsmntok_t* tokens;
-
-            static int getNestedTokenCount(jsmntok_t* token);
+            Internal::JsonToken token;
         };
     }
 }

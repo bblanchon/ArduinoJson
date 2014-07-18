@@ -7,6 +7,7 @@
 
 #include "JsonValue.h"
 #include "JsonArrayIterator.h"
+#include "JsonToken.h"
 
 namespace ArduinoJson
 {
@@ -15,40 +16,41 @@ namespace ArduinoJson
         class JsonHashTable;
                
         class JsonArray
-        {
+        {          
         public:
 
-            JsonArray()	{}
+            JsonArray()
+                : token(0)
+            {
 
-            JsonArray(JsonValue& value)
-                : value(value)
+            }
+
+            JsonArray(char* json, Internal::JsonToken token)
+                : json(json), token(token)
             {
 
             }
             
             bool success()
             {
-                return value.success();
+                return token.isArray();
             }
 
             int size()
             {
-                return value.size();
+                return success() ? token.size() : 0;
             }
 
-            JsonValue operator[](int index)
-            {
-                return value[index];
-            }
+            JsonValue operator[](int index);
 
             JsonArrayIterator begin()
             {
-                return JsonArrayIterator(value);
+                return JsonArrayIterator(json, token);
             }
 
             JsonArrayIterator end()
             {
-                return JsonArrayIterator();
+                return JsonArrayIterator(json, token + token.nestedTokenCount());
             }
 
             DEPRECATED int getLength()
@@ -83,9 +85,15 @@ namespace ArduinoJson
                 return (char*) (*this)[index];
             }
 
+            static JsonArray null()
+            {
+                return JsonArray();
+            }
+
         private:
 
-            JsonValue value;
+            char* json;
+            Internal::JsonToken token;
         };
     }
 }

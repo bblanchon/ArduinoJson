@@ -11,7 +11,7 @@ namespace JsonParserTests
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(SimpleIteraton)
 		{
             char json [] = "[1,2,3]";
             JsonParser<4> parser;

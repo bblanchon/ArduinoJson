@@ -3,13 +3,51 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
+#include <string.h> // for strcmp()
 #include "JsonHashTable.h"
 #include "JsonArray.h"
 #include "JsonValue.h"
 
 using namespace ArduinoJson::Parser;
+using namespace ArduinoJson::Internal;
 
 DEPRECATED JsonArray JsonHashTable::getArray(const char* key)
 {
-    return (JsonArray) (*this)[key];
+    return (*this)[key];
+}
+
+/*
+* Returns the token for the value associated with the specified key
+*/
+JsonValue JsonHashTable::getValue(const char* desiredKey)
+{
+    // sanity check
+    if (desiredKey == 0 || !token.isObject())
+        return JsonValue::null();
+
+    // skip first token, it's the whole object
+    JsonToken runningToken = token + 1;
+
+    // scan each keys
+    for (int i = 0; i < token.size() / 2; i++)
+    {
+        // get 'key' token string
+        char* key = runningToken.getText(json);
+
+        // move to the 'value' token
+        runningToken += 1;
+
+        // compare with desired name
+        if (strcmp(desiredKey, key) == 0)
+        {
+            // return the value token that follows the key token
+            return JsonValue(json, runningToken);
+        }
+
+        // skip nested tokens
+        runningToken += 1 + runningToken.nestedTokenCount();
+    }
+
+    // nothing found, return NULL
+    return JsonValue::null();
 }
