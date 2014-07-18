@@ -45,12 +45,12 @@ namespace ArduinoJson
 
             JsonArrayIterator begin()
             {
-                return JsonArrayIterator(json, token);
+                return JsonArrayIterator(json, token.firstChild());
             }
 
             JsonArrayIterator end()
             {
-                return JsonArrayIterator(json, token + token.nestedTokenCount());
+                return JsonArrayIterator(json, token.nextSibling());
             }
 
             DEPRECATED int getLength()

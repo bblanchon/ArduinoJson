@@ -11,13 +11,13 @@ namespace JsonParserTests
 	{
 	public:
 		
-		TEST_METHOD(SimpleIteraton)
+		TEST_METHOD(ThreeIntegers)
 		{
             char json [] = "[1,2,3]";
             JsonParser<4> parser;
 
             JsonArray a = parser.parse(json);
-
+            
             long expected = 1;
 
             for (auto i : a)

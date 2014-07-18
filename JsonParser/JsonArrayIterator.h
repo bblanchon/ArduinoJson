@@ -23,7 +23,7 @@ namespace ArduinoJson
             JsonArrayIterator operator++()
             {
                 JsonArrayIterator prev = *this;
-                token += 1;
+                token = token.nextSibling();
                 return prev;
             }
 

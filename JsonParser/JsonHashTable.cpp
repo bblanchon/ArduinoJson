@@ -26,7 +26,7 @@ JsonValue JsonHashTable::getValue(const char* desiredKey)
         return JsonValue::null();
 
     // skip first token, it's the whole object
-    JsonToken runningToken = token + 1;
+    JsonToken runningToken = token.firstChild();
 
     // scan each keys
     for (int i = 0; i < token.size() / 2; i++)
@@ -35,7 +35,7 @@ JsonValue JsonHashTable::getValue(const char* desiredKey)
         char* key = runningToken.getText(json);
 
         // move to the 'value' token
-        runningToken += 1;
+        runningToken = runningToken.nextSibling();
 
         // compare with desired name
         if (strcmp(desiredKey, key) == 0)
@@ -45,7 +45,7 @@ JsonValue JsonHashTable::getValue(const char* desiredKey)
         }
 
         // skip nested tokens
-        runningToken += 1 + runningToken.nestedTokenCount();
+        runningToken = runningToken.nextSibling();
     }
 
     // nothing found, return NULL

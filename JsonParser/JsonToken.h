@@ -27,14 +27,14 @@ namespace ArduinoJson
                 return json + token->start;
             }
 
-            JsonToken operator+ (int n)
+            JsonToken firstChild() const
             {
-                return JsonToken(token + n);
+                return JsonToken(token + 1);
             }
 
-            void operator+= (int n)
+            JsonToken nextSibling() const
             {
-                token += n;
+                return JsonToken(token + 1 + nestedTokenCount());
             }
 
             bool operator!= (const JsonToken& other)
@@ -77,10 +77,11 @@ namespace ArduinoJson
                 return JsonToken(0);
             }
 
-            int nestedTokenCount() const;
-
         private:
             jsmntok_t* token;
+
+            int nestedTokenCount() const;
+
         };
     }
 }

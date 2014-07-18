@@ -24,14 +24,14 @@ JsonValue JsonArray::operator[](int index)
         return JsonValue::null();
 
     // skip first token, it's the whole object
-    JsonToken currentToken = token + 1;
+    JsonToken runningToken = token.firstChild();
 
     // skip all tokens before the specified index
     for (int i = 0; i < index; i++)
     {
         // move forward: current + nested tokens
-        currentToken += 1 + currentToken.nestedTokenCount();
+        runningToken = runningToken.nextSibling();
     }
 
-    return JsonValue(json, currentToken);
+    return JsonValue(json, runningToken);
 }
