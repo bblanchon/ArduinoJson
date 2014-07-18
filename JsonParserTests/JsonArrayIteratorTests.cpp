@@ -14,16 +14,16 @@ namespace JsonParserTests
 		TEST_METHOD(ThreeIntegers)
 		{
             char json [] = "[1,2,3]";
+            long expected [] = { 1, 2, 3 };
             JsonParser<4> parser;
 
             JsonArray a = parser.parse(json);
-            
-            long expected = 1;
 
-            for (auto i : a)
+            int index = 0;
+
+            for (long i : a)
             {
-                Assert::AreEqual(expected, (long)*i);
-                expected++;
+                Assert::AreEqual(expected[index++], i);
             }
 		}
 

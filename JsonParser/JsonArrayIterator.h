@@ -16,43 +16,34 @@ namespace ArduinoJson
 
         class JsonArrayIterator
         {
-            friend class JsonArray;
-
         public:
-
-            JsonArrayIterator operator++()
-            {
-                JsonArrayIterator prev = *this;
-                token = token.nextSibling();
-                return prev;
-            }
-
-            JsonValue operator*()
-            {
-                return JsonValue(json, token);
-            }
-
-            bool operator !=(const JsonArrayIterator& other)
-            {
-                return token != other.token || json != other.json;
-            }
-
-        private:
-
-            char* json;
-            Internal::JsonToken token;
-
-            JsonArrayIterator()
-                : json(0), token(0)
-            {
-
-            }
 
             JsonArrayIterator(char* json, Internal::JsonToken& token)
                 : json(json), token(token)
             {
 
             }
+
+            const JsonArrayIterator& operator++()
+            {
+                token = token.nextSibling();
+                return *this;
+            }
+
+            JsonValue operator*() const
+            {
+                return JsonValue(json, token);
+            }
+
+            bool operator !=(const JsonArrayIterator& other)
+            {
+                return token != other.token;
+            }
+
+        private:
+
+            char* json;
+            Internal::JsonToken token;
         };
     }
 }
