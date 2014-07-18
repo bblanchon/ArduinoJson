@@ -6,14 +6,13 @@ using namespace ArduinoJson::Internal;
 JsonToken JsonToken::nextSibling() const
 {
     jsmntok_t* t = token;
-    int yetToVisit = t->size;
-
+    int yetToVisit = 1;
+    
     while (yetToVisit)
     {
+        yetToVisit += t->size - 1;
         t++;
-        yetToVisit--;
-        yetToVisit += t->size;
     }
 
-    return t + 1;
+    return t;
 }

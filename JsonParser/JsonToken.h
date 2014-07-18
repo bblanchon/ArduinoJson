@@ -29,7 +29,7 @@ namespace ArduinoJson
 
             JsonToken firstChild() const
             {
-                return JsonToken(token + 1);
+                return token + 1;
             }
 
             JsonToken nextSibling() const;
@@ -71,7 +71,7 @@ namespace ArduinoJson
 
             static JsonToken null()
             {
-                return JsonToken(0);
+                return 0;
             }
 
         private:
