@@ -6,17 +6,18 @@
 #pragma once
 
 #include "JsonValue.h"
+#include "JsonPair.h"
 #include "JsonToken.h"
 
 namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonArrayIterator
+        class JsonObjectIterator
         {
         public:
 
-            JsonArrayIterator(char* json, Internal::JsonToken token)
+            JsonObjectIterator(char* json, Internal::JsonToken token)
                 : json(json), token(token)
             {
 
@@ -24,15 +25,15 @@ namespace ArduinoJson
 
             void operator++()
             {
-                token = token.nextSibling();
+                token = token.nextSibling().nextSibling();
             }
 
-            JsonValue operator*() const
+            JsonPair operator*() const
             {
-                return JsonValue(json, token);
+                return JsonPair(json, token);
             }
 
-            bool operator !=(const JsonArrayIterator& other)
+            bool operator !=(const JsonObjectIterator& other)
             {
                 return token != other.token;
             }

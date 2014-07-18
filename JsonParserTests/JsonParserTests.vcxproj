@@ -93,6 +93,7 @@
     <ClCompile Include="..\JsonParser\JsonValue.cpp" />
     <ClCompile Include="JsonArrayIteratorTests.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
+    <ClCompile Include="JsonObjectIteratorTests.cpp" />
     <ClCompile Include="JsonObjectTests.cpp" />
     <ClCompile Include="GbathreeBug.cpp" />
   </ItemGroup>
@@ -101,6 +102,8 @@
     <ClInclude Include="..\JsonParser\JsonArray.h" />
     <ClInclude Include="..\JsonParser\JsonArrayIterator.h" />
     <ClInclude Include="..\JsonParser\JsonObject.h" />
+    <ClInclude Include="..\JsonParser\JsonObjectIterator.h" />
+    <ClInclude Include="..\JsonParser\JsonPair.h" />
     <ClInclude Include="..\JsonParser\JsonParser.h" />
     <ClInclude Include="..\JsonParser\JsonParserBase.h" />
     <ClInclude Include="..\JsonParser\JsonToken.h" />

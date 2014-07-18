@@ -6,6 +6,7 @@
 #pragma once
 
 #include "JsonValue.h"
+#include "JsonObjectIterator.h"
 
 namespace ArduinoJson
 {
@@ -41,6 +42,16 @@ namespace ArduinoJson
             bool containsKey(const char* key)
             {
                 return getValue(key).success();
+            }
+
+            JsonObjectIterator begin()
+            {
+                return JsonObjectIterator(json, token.firstChild());
+            }
+
+            JsonObjectIterator end()
+            {
+                return JsonObjectIterator(json, token.nextSibling());
             }
 
             DEPRECATED JsonArray getArray(const char* key);

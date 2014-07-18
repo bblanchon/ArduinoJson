@@ -7,25 +7,28 @@ using namespace ArduinoJson::Parser;
 
 namespace JsonParserTests
 {
-	TEST_CLASS(JsonArrayIteratorTests)
-	{
-	public:
-		
-		TEST_METHOD(ThreeIntegers)
-		{
-            char json [] = "[1,2,3]";
-            long expected [] = { 1, 2, 3 };
-            JsonParser<4> parser;
+    TEST_CLASS(JsonObjectIteratorTests)
+    {
+    public:
 
-            JsonArray a = parser.parse(json);
+        TEST_METHOD(ThreeStrings)
+        {
+            char json [] = "{\"key1\":\"value1\",\"key2\":\"value2\",\"key3\":\"value3\"}";
+            char* expectedKeys [] = { "key1", "key2", "key3" };
+            char* expectedValues [] = { "value1", "value2", "value3" };
+            JsonParser<7> parser;
+
+            JsonHashTable a = parser.parse(json);
 
             int index = 0;
 
-            for (long i : a)
+            for (auto i : a)
             {
-                Assert::AreEqual(expected[index++], i);
+                Assert::AreEqual(expectedKeys[index], i.key());
+                Assert::AreEqual(expectedValues[index], (const char*) i.value());
+                index++;
             }
-		}
+        }
 
-	};
+    };
 }
