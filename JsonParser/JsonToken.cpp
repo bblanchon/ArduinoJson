@@ -3,19 +3,17 @@
 
 using namespace ArduinoJson::Internal;
 
-int JsonToken::nestedTokenCount() const
+JsonToken JsonToken::nextSibling() const
 {
     jsmntok_t* t = token;
     int yetToVisit = t->size;
-    int count = 0;
 
     while (yetToVisit)
     {
-        count++;
         t++;
         yetToVisit--;
         yetToVisit += t->size;
     }
 
-    return count;
+    return t + 1;
 }

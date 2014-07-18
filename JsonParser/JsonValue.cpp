@@ -11,6 +11,16 @@
 using namespace ArduinoJson::Parser;
 using namespace ArduinoJson::Internal;
 
+JsonValue JsonValue::operator[](int index)
+{
+    return JsonArray(json, token)[index];
+}
+
+JsonValue JsonValue::operator[](const char* key)
+{
+    return JsonHashTable(json, token)[key];
+}
+
 JsonValue::operator bool()
 {
     if (!token.isPrimitive()) return 0;

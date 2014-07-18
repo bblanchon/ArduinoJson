@@ -32,10 +32,7 @@ namespace ArduinoJson
                 return JsonToken(token + 1);
             }
 
-            JsonToken nextSibling() const
-            {
-                return JsonToken(token + 1 + nestedTokenCount());
-            }
+            JsonToken nextSibling() const;
 
             bool operator!= (const JsonToken& other)
             {
@@ -79,9 +76,6 @@ namespace ArduinoJson
 
         private:
             jsmntok_t* token;
-
-            int nestedTokenCount() const;
-
         };
     }
 }

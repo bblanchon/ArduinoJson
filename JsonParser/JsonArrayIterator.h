@@ -18,7 +18,7 @@ namespace ArduinoJson
         {
         public:
 
-            JsonArrayIterator(char* json, Internal::JsonToken& token)
+            JsonArrayIterator(char* json, Internal::JsonToken token)
                 : json(json), token(token)
             {
 
