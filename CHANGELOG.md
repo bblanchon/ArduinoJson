@@ -1,6 +1,31 @@
 Arduino JSON: change log
 ========================
 
+v3.0
+----
+
+* New parser API, see bellow
+* Renamed `JsonHashTable` into `JsonObject`
+* Added iterators for `JsonArray` and `JsonObject`
+
+Old parser API:
+
+    JsonHashTable root = parser.parseHashTable(json);
+
+	char*  sensor    = root.getString("sensor");
+	long   time      = root.getLong("time");
+	double latitude  = root.getArray("data").getDouble(0);
+    double longitude = root.getArray("data").getDouble(1);
+
+New parser API:
+
+	JsonObject root = parser.parse(json);
+
+	char*  sensor    = root["sensor"];
+    long   time      = root["time"];
+    double latitude  = root["data"][0];
+    double longitude = root["data"][1];
+
 v2.1
 ----
 
