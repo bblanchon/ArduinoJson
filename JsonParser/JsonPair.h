@@ -11,29 +11,24 @@ namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonPair
+        class JsonPair : public JsonToken
         {
         public:
-
-            JsonPair(char* json, Internal::JsonToken token)
-                : json(json), token(token)
+            JsonPair(JsonToken token)
+                : JsonToken(token)
             {
 
             }
 
             const char* key()
             {
-                return token.getText(json);
+                return getText();
             }
 
             JsonValue value()
             {
-                return JsonValue(json, token.nextSibling());
+                return JsonValue(nextSibling());
             }
-
-        private:
-            char* json;
-            Internal::JsonToken token;
         };
     }
 }

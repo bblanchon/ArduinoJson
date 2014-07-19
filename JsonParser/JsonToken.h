@@ -9,29 +9,37 @@
 
 namespace ArduinoJson
 {
-    namespace Internal
+    namespace Parser
     {
         class JsonToken
         {
         public:
 
-            JsonToken(jsmntok_t* token)
-                :token(token)
+            JsonToken()
+                : token(0)
             {
 
             }
 
-            char* getText(char* json)
+            JsonToken(char* json, jsmntok_t* token)
+                : json(json),  token(token)
+            {
+
+            }
+
+            char* getText()
             {
                 json[token->end] = 0;
                 return json + token->start;
             }
 
+            // TODO: should be protected
             JsonToken firstChild() const
             {
-                return token + 1;
+                return JsonToken(json, token + 1);
             }
 
+            // TODO: should be protected
             JsonToken nextSibling() const;
 
             bool operator!= (const JsonToken& other)
@@ -39,10 +47,12 @@ namespace ArduinoJson
                 return token != other.token;
             }
 
-            int size()
+            static JsonToken null()
             {
-                return token->size;
+                return JsonToken(0, 0);
             }
+
+        protected:
 
             bool isValid()
             {
@@ -69,12 +79,13 @@ namespace ArduinoJson
                 return token != 0 && token->type == JSMN_STRING;
             }
 
-            static JsonToken null()
+            int size()
             {
-                return 0;
+                return token->size;
             }
 
         private:
+            char* json;
             jsmntok_t* token;
         };
     }

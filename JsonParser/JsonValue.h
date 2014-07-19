@@ -24,19 +24,19 @@ namespace ArduinoJson
         class JsonArray;
         class JsonObject;
 
-        class JsonValue
+        class JsonValue : public JsonToken
         {
         public:
 
-            JsonValue(char* json, Internal::JsonToken token)
-                : json(json), token(token)
+            JsonValue(JsonToken token)
+                : JsonToken(token)
             {
 
             }
 
             bool success()
             {
-                return token.isValid();
+                return isValid();
             }
             
             operator bool();
@@ -47,16 +47,6 @@ namespace ArduinoJson
             operator JsonObject();
             JsonValue operator[](int index);
             JsonValue operator[](const char*key);
-
-            static JsonValue null()
-            {
-                return JsonValue(0, Internal::JsonToken(0));
-            }
-
-        private:
-
-            char* json;
-            Internal::JsonToken token;
         };
     }
 }

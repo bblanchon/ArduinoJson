@@ -7,7 +7,6 @@
 #include "JsonToken.h"
 
 using namespace ArduinoJson::Parser;
-using namespace ArduinoJson::Internal;
 
 JsonValue JsonParserBase::parse(char* json)
 {
@@ -17,5 +16,5 @@ JsonValue JsonParserBase::parse(char* json)
     if (JSMN_SUCCESS != jsmn_parse(&parser, json, tokens, maxTokens))
         return JsonValue::null();
 
-    return JsonValue(json, JsonToken(tokens));
+    return JsonToken(json, tokens);
 }

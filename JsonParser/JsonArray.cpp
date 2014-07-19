@@ -7,7 +7,6 @@
 #include "JsonObject.h"
 
 using namespace ArduinoJson::Parser;
-using namespace ArduinoJson::Internal;
 
 DEPRECATED JsonObject JsonArray::getHashTable(int index)
 {
@@ -17,14 +16,14 @@ DEPRECATED JsonObject JsonArray::getHashTable(int index)
 /*
 * Returns the token for the value at the specified index
 */
-JsonValue JsonArray::operator[](int index)
+JsonValue JsonArray::getValue(int index)
 {
     // sanity check
-    if (index < 0 || !token.isArray() || index >= token.size())
+    if (index < 0 || !isArray() || index >= size())
         return JsonValue::null();
 
     // skip first token, it's the whole object
-    JsonToken runningToken = token.firstChild();
+    JsonToken runningToken = firstChild();
 
     // skip all tokens before the specified index
     for (int i = 0; i < index; i++)
@@ -33,5 +32,5 @@ JsonValue JsonArray::operator[](int index)
         runningToken = runningToken.nextSibling();
     }
 
-    return JsonValue(json, runningToken);
+    return runningToken;
 }

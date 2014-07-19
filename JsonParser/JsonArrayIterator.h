@@ -12,35 +12,25 @@ namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonArrayIterator
+        class JsonArrayIterator : public JsonToken
         {
         public:
 
-            JsonArrayIterator(char* json, Internal::JsonToken token)
-                : json(json), token(token)
+            JsonArrayIterator(JsonToken token)
+                : JsonToken(token)
             {
 
             }
 
             void operator++()
             {
-                token = token.nextSibling();
+                *this = JsonArrayIterator(nextSibling());
             }
 
             JsonValue operator*() const
             {
-                return JsonValue(json, token);
+                return JsonValue(*this);
             }
-
-            bool operator !=(const JsonArrayIterator& other)
-            {
-                return token != other.token;
-            }
-
-        private:
-
-            char* json;
-            Internal::JsonToken token;
         };
     }
 }

@@ -14,24 +14,23 @@ namespace ArduinoJson
     {
         class JsonArray;
 
-        class JsonObject
+        class JsonObject : public JsonToken
         {
         public:
-
-            JsonObject(char* json, Internal::JsonToken token)
-                : json(json), token(token)
+            JsonObject()
             {
 
             }
 
-            JsonObject()
-                : token(Internal::JsonToken::null())
+            JsonObject(JsonToken token)
+                : JsonToken(token)
             {
+
             }
 
             bool success()
             {
-                return token.isObject();
+                return isObject();
             }
             
             JsonValue operator[](const char* key)
@@ -46,12 +45,12 @@ namespace ArduinoJson
 
             JsonObjectIterator begin()
             {
-                return JsonObjectIterator(json, token.firstChild());
+                return firstChild();
             }
 
             JsonObjectIterator end()
             {
-                return JsonObjectIterator(json, token.nextSibling());
+                return nextSibling();
             }
 
             DEPRECATED JsonArray getArray(const char* key);
@@ -83,13 +82,10 @@ namespace ArduinoJson
 
             static JsonObject null()
             {
-                return JsonObject();
+                return JsonObject(JsonToken::null());
             }
 
         private:
-
-            char* json;
-            Internal::JsonToken token;
 
             JsonValue getValue(const char* key);
         };

@@ -9,7 +9,6 @@
 #include "JsonValue.h"
 
 using namespace ArduinoJson::Parser;
-using namespace ArduinoJson::Internal;
 
 DEPRECATED JsonArray JsonObject::getArray(const char* key)
 {
@@ -22,17 +21,17 @@ DEPRECATED JsonArray JsonObject::getArray(const char* key)
 JsonValue JsonObject::getValue(const char* desiredKey)
 {
     // sanity check
-    if (desiredKey == 0 || !token.isObject())
+    if (desiredKey == 0 || !isObject())
         return JsonValue::null();
 
     // skip first token, it's the whole object
-    JsonToken runningToken = token.firstChild();
+    JsonToken runningToken = firstChild();
 
     // scan each keys
-    for (int i = 0; i < token.size() / 2; i++)
+    for (int i = 0; i < size() / 2; i++)
     {
         // get 'key' token string
-        char* key = runningToken.getText(json);
+        char* key = runningToken.getText();
 
         // move to the 'value' token
         runningToken = runningToken.nextSibling();
@@ -41,7 +40,7 @@ JsonValue JsonObject::getValue(const char* desiredKey)
         if (strcmp(desiredKey, key) == 0)
         {
             // return the value token that follows the key token
-            return JsonValue(json, runningToken);
+            return runningToken;
         }
 
         // skip nested tokens
@@ -49,5 +48,5 @@ JsonValue JsonObject::getValue(const char* desiredKey)
     }
 
     // nothing found, return NULL
-    return JsonValue::null();
+    return null();
 }

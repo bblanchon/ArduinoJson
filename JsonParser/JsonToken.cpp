@@ -1,7 +1,7 @@
 
 #include "JsonToken.h"
 
-using namespace ArduinoJson::Internal;
+using namespace ArduinoJson::Parser;
 
 JsonToken JsonToken::nextSibling() const
 {
@@ -14,5 +14,5 @@ JsonToken JsonToken::nextSibling() const
         t++;
     }
 
-    return t;
+    return JsonToken(json, t);
 }

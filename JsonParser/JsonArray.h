@@ -15,42 +15,42 @@ namespace ArduinoJson
     {
         class JsonObject;
                
-        class JsonArray
+        class JsonArray : public JsonToken
         {          
         public:
 
-            JsonArray()
-                : token(0)
-            {
-
+            JsonArray() 
+            {            
             }
 
-            JsonArray(char* json, Internal::JsonToken token)
-                : json(json), token(token)
+            JsonArray(JsonToken token) 
+                : JsonToken(token) 
             {
-
             }
-            
+
             bool success()
             {
-                return token.isArray();
+                return isArray();
             }
 
             int size()
             {
-                return success() ? token.size() : 0;
+                return isArray() ? JsonToken::size() : 0;
             }
 
-            JsonValue operator[](int index);
+            JsonValue operator[](int index)
+            {
+                return getValue(index);
+            }
 
             JsonArrayIterator begin()
             {
-                return JsonArrayIterator(json, token.firstChild());
+                return firstChild();
             }
 
             JsonArrayIterator end()
             {
-                return JsonArrayIterator(json, token.nextSibling());
+                return nextSibling();
             }
 
             DEPRECATED int getLength()
@@ -60,40 +60,34 @@ namespace ArduinoJson
                       
             DEPRECATED JsonArray getArray(int index)
             {
-                return (JsonArray) (*this)[index];
+                return getValue(index);
             }
 
             DEPRECATED bool getBool(int index)
             {
-                return (bool) (*this)[index];
+                return getValue(index);
             }
 
             DEPRECATED double getDouble(int index)
             {
-                return (double) (*this)[index];
+                return getValue(index);
             }
 
             DEPRECATED JsonObject getHashTable(int index);
 
             DEPRECATED long getLong(int index)
             {
-                return (long) (*this)[index];
+                return getValue(index);
             }
 
             DEPRECATED char* getString(int index)
             {
-                return (char*) (*this)[index];
-            }
-
-            static JsonArray null()
-            {
-                return JsonArray();
+                return getValue(index);
             }
 
         private:
 
-            char* json;
-            Internal::JsonToken token;
+            JsonValue getValue(int index);
         };
     }
 }
