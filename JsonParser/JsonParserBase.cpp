@@ -8,7 +8,7 @@
 
 using namespace ArduinoJson::Parser;
 
-JsonToken JsonParserBase::parseToken(char* json)
+JsonValue JsonParserBase::parse(char* json)
 {
     jsmn_parser parser;
     jsmn_init(&parser);
