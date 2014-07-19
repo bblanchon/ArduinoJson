@@ -43,5 +43,21 @@ namespace JsonParserTests
                 Assert::AreEqual(expected[index++], i);
             }
 		}
+
+        TEST_METHOD(ThreeStrings)
+        {
+            char json[] = "[\"1\",\"2\",\"3\"]";
+            char* expected[] = { "1", "2", "3" };
+            JsonParser<4> parser;
+
+            JsonArray a = parser.parse(json);
+
+            int index = 0;
+
+            for (const char* i : a)
+            {
+                Assert::AreEqual(expected[index++], i);
+            }
+        }
 	};
 }
