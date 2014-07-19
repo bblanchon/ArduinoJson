@@ -25,7 +25,7 @@ Example
 	JsonParser<32> parser;
     char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";   
 
-    JsonHashTable root = parser.parse(json);
+    JsonObject root = parser.parse(json);
 
     char*  sensor    = root["sensor"];
     long   time      = root["time"];
@@ -58,7 +58,7 @@ To extract data from the JSON string, you need to create a `JsonParser`, and spe
     
 > #### How to choose the number of tokens ?
 
-> A token is an element of the JSON object: either a key, a value, an hash-table or an array.
+> A token is an element of the JSON object: either a key, a value, an object or an array.
 > As an example the `char json[]` on the top of this page contains 12 tokens (don't forget to count 1 for the whole object and 1 more for the array itself).
 
 > The more tokens you allocate, the more complex the JSON can be, but also the more memory is occupied.
@@ -71,28 +71,24 @@ To extract data from the JSON string, you need to create a `JsonParser`, and spe
 
 To use this library, you need to know beforehand what is the type of data contained in the JSON string, which is very likely.
 
-The root object has to be either a hash-table (like `{"key":"value"}`) or an array (like `[1,2]`). 
+The root object has to be either an object (like `{"key":"value"}`) or an array (like `[1,2]`). 
 
-The nested objects can be either arrays, booleans, hash-tables, numbers or strings.
+The nested objects can be either arrays, booleans, objects, numbers or strings.
 If you need other type, you can get the string value and parse it yourself.
 
-#### Hash-table
+#### Object
 
 Consider we have a `char json[]` containing to the following JSON string:
 
     {
-        "Name":"Blanchon",
-        "Skills":[
-            "C",
-            "C++",
-            "C#"],
-        "Age":32,
-        "Online":true
+        "sensor":"gps",
+		"time":1351824120,
+		"data":[48.756080,2.302038]
     }
 
-In this case the root object of the JSON string is a hash-table, so you need to extract a `JsonHashTable`:
+In this case the string contains a JSON object, so you need to extract a `JsonObject`:
    
-    JsonHashTable root = parser.parseHashTable(json);
+    JsonObject root = parser.parse(json);
     
 To check if the parsing was successful, you must check:
 
@@ -103,13 +99,10 @@ To check if the parsing was successful, you must check:
     
 And then extract the member you need:
     
-    char* name = hashTable.getString("Name");
-
-    JsonArray skills = hashTable.getArray("Skills");
-
-    int age = hashTable.getLong("Age");
-
-    bool online = hashTable.getBool("Online");
+    char*  sensor    = root["sensor"];
+    long   time      = root["time"];
+    double latitude  = root["data"][0];
+    double longitude = root["data"][1];
     
 #### Array
 
@@ -122,7 +115,7 @@ Consider we have a `char json[]` containing to the following JSON string:
 
 In this case the root object of the JSON string is an array, so you need to extract a `JsonArray`:
    
-    JsonArray root = parser.parseArray(json);
+    JsonArray root = parser.parse(json);
     
 To check if the parsing was successful, you must check:
 
@@ -133,20 +126,17 @@ To check if the parsing was successful, you must check:
     
 And then extract the content by its index in the array:
     
-    JsonArray row0 = root.getArray(0);
-    double a = row0.getDouble(0);
-    
-or simply:
-
-    double a = root.getArray(0).getDouble(0);
-
-
+    double a = root[0][0];
+	double b = root[0][1];
+	double c = root[1][0];
+	double d = root[1][1];
+	
 Common pitfalls
 ---------------
 
 ### 1. Not enough tokens
 
-By design, the library has no way to tell you why `JsonParser::parseArray()` or `JsonParser::parseHashTable()` failed.
+By design, the library has no way to tell you why `JsonParser::parse()` failed.
 
 There are basically two reasons why they may fail:
 
@@ -173,7 +163,7 @@ That is why an 8-bit processor is not able to parse long and complex JSON string
 
 ### 3. JsonParser not in memory
 
-To reduce the memory consumption, `JsonArray` and `JsonHashTable` contains pointer to the token that are inside the `JsonParser`. This can only work if the `JsonParser` is still in memory.
+To reduce the memory consumption, `JsonValue`, `JsonArray` and `JsonObject` contains pointer to the token that are inside the `JsonParser`. This can only work if the `JsonParser` is still in memory.
 
 For example, don't do this:
 
@@ -189,7 +179,7 @@ because the local variable `parser` will be *removed* from memory when the funct
 
 This will probably never be an issue, but you need to be aware of this feature.
 
-When you pass a `char[]` to `JsonParser::parseArray()` or `JsonParser::parseHashTable()`, the content of the string will be altered to add `\0` at the end of the tokens.
+When you pass a `char[]` to `JsonParser::parse()`, the content of the string will be altered to add `\0` at the end of the tokens.
 
 This is because we want functions like `JsonArray::getString()` to return a null-terminating string without any memory allocation.
    
@@ -215,188 +205,7 @@ This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
         <td>4</td>
     </tr>
     <tr>
-        <td>JsonHashTable</td>
+        <td>JsonObject</td>
         <td>4</td>
     </tr>
 </table> 
-
-
-Code size
----------
-
-Theses tables has been created by analyzing the map file generated by AVR-GCC after adding `-Wl,-Map,foo.map` to the command line.
-
-As you'll see the code size is between 1680 and 3528 bytes, depending on the features you use.
-
-### Minimum setup
-
-<table>
-    <tr>
-        <th>Function</th>
-        <th>Size in bytes</th>
-    </tr>
-    <tr>
-        <td>strcmp(char*,char*)</td>
-        <td>18</td>
-    </tr>
-    <tr>
-        <td>jsmn_init(jsmn_parser*)</td>
-        <td>20</td>
-    </tr>
-    <tr>
-        <td>jsmn_parse(jsmn_parser*, char const*, jsmntok_t*, unsigned int)</td>
-        <td>960</td>
-    </tr>
-    <tr>
-        <td>JsonParser::parse(char*)</td>
-        <td>106</td>
-    </tr>
-    <tr>
-        <td>JsonObjectBase::getNestedTokenCount(jsmntok_t*)</td>
-        <td>84</td>        
-    </tr>
-    <tr>
-        <td>JsonObjectBase::getStringFromToken(jsmntok_t*)</td>
-        <td>68</td>        
-    </tr>
-    <tr>
-        <td>JsonArray::JsonArray(char*, jsmntok_t*)</td>
-        <td>42</td>        
-    </tr>
-    <tr>
-        <td>JsonArray::getToken(int)</td>
-        <td>112</td>        
-    </tr>
-    <tr>
-        <td>JsonArray::getString(int)</td>
-        <td>18</td>
-    </tr>
-    <tr>
-        <td>JsonHashTable::JsonHashTable(char*, jsmntok_t*)</td>
-        <td>42</td>        
-    </tr>
-    <tr>
-        <td>JsonHashTable::getToken(char*)</td>
-        <td>180</td>        
-    </tr>
-    <tr>
-        <td>JsonHashTable::getString(char*)</td>
-        <td>18</td>
-    </tr>
-    <tr>
-        <td>TOTAL</td>
-        <td>1680</td>
-    </tr>
-</table>
-
-### Additional space to parse nested  objects
-
-<table>
-    <tr>
-        <th>Function</th>
-        <th>Size in bytes</th>
-    </tr>
-    <tr>
-        <td>JsonArray::getArray(int)</td>
-        <td>42</td>
-    </tr>    
-    <tr>
-        <td>JsonArray::getHashTable(int)</td>
-        <td>64</td>        
-    </tr>
-    <tr>
-        <td>JsonHashTable::getArray(char*)</td>
-        <td>64</td>
-    </tr>
-    <tr>
-        <td>JsonHashTable::getHashTable(char*)</td>
-        <td>42</td>
-    </tr>
-    <tr>
-        <td>TOTAL</td>
-        <td>212</td>
-    </tr>
-</table>
-
-### Additional space to parse `bool` values
-
-<table>
-    <tr>
-        <th>Function</th>
-        <th>Size in bytes</th>
-    </tr>
-    <tr>
-        <td>JsonObjectBase::getBoolFromToken(jsmntok_t*)</td>
-        <td>82</td>
-    </tr>    
-    <tr>
-        <td>JsonArray::getBool(int)</td>
-        <td>18</td>        
-    </tr>
-    <tr>
-        <td>JsonHashTable::getBool(char*)</td>
-        <td>18</td>
-    </tr>
-    <tr>
-        <td>TOTAL</td>
-        <td>130</td>
-    </tr>
-</table>
-
-### Additional space to parse `double` values
-
-<table>
-    <tr>
-        <th>Function</th>
-        <th>Size in bytes</th>
-    </tr>
-    <tr>
-        <td>strtod(char*,int)</td>
-        <td>704</td>
-    </tr>    
-    <tr>
-        <td>JsonObjectBase::getDoubleFromToken(jsmntok_t*)</td>
-        <td>44</td>
-    </tr>    
-    <tr>
-        <td>JsonArray::getDouble(int)</td>
-        <td>18</td>        
-    </tr>
-    <tr>
-        <td>JsonHashTable::getDouble(char*)</td>
-        <td>18</td>
-    </tr>
-    <tr>
-        <td>TOTAL</td>
-        <td>796</td>
-    </tr>
-</table>
-
-### Additional space to parse `long` values
-
-<table>
-    <tr>
-        <th>Function</th>
-        <th>Size in bytes</th>
-    </tr>
-    <tr>
-        <td>strtol(char*,char**,int)</td>
-        <td>606</td>
-    </tr>    
-    <tr>
-        <td>JsonObjectBase::getLongFromToken(jsmntok_t*)</td>
-        <td>56</td>
-    </tr>    
-    <tr>
-        <td>JsonArray::getLong(int)</td>
-        <td>18</td>        
-    </tr>
-    <tr>
-        <td>JsonHashTable::getLong(char*)</td>
-        <td>18</td>
-    </tr>
-    <tr>
-        <td>TOTAL</td>
-        <td>710</td>
-    </tr>
-</table>
