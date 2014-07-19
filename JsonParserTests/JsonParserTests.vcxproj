@@ -91,9 +91,9 @@
     <ClCompile Include="..\JsonParser\JsonParserBase.cpp" />
     <ClCompile Include="..\JsonParser\JsonToken.cpp" />
     <ClCompile Include="..\JsonParser\JsonValue.cpp" />
-    <ClCompile Include="JsonArrayIteratorTests.cpp" />
-    <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonObjectIteratorTests.cpp" />
+    <ClCompile Include="JsonArrayTests.cpp" />
+    <ClCompile Include="JsonArrayIteratorTests.cpp" />
     <ClCompile Include="JsonObjectTests.cpp" />
     <ClCompile Include="GbathreeBug.cpp" />
   </ItemGroup>

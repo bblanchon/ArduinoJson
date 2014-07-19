@@ -42,12 +42,12 @@ namespace ArduinoJson
 
             JsonObjectIterator begin()
             {
-                return firstChild();
+                return isObject() ? firstChild() : null();
             }
 
             JsonObjectIterator end()
             {
-                return nextSibling();
+                return isObject() ? nextSibling() : null();
             }
 
             DEPRECATED JsonArray getArray(const char* key);
