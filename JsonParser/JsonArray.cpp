@@ -10,17 +10,17 @@ using namespace ArduinoJson::Parser;
 
 DEPRECATED JsonObject JsonArray::getHashTable(int index)
 {
-    return (JsonObject) (*this)[index];
+    return operator[](index);
 }
 
 /*
 * Returns the token for the value at the specified index
 */
-JsonValue JsonArray::getValue(int index)
+JsonValue JsonArray::operator[](int index)
 {
     // sanity check
     if (index < 0 || !isArray() || index >= size())
-        return JsonValue::null();
+        return null();
 
     // skip first token, it's the whole object
     JsonToken runningToken = firstChild();

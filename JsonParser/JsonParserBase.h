@@ -21,7 +21,10 @@ namespace ArduinoJson
             {
             }
 
-            JsonValue parse(char* json);
+            JsonValue parse(char* json)
+            {
+                return parseToken(json);
+            }
 
             /*
             * Parse the JSON string and return a array.
@@ -31,7 +34,7 @@ namespace ArduinoJson
             */
             DEPRECATED JsonArray parseArray(char* json)
             {
-                return parse(json);
+                return parseToken(json);
             }
 
             /*
@@ -42,12 +45,14 @@ namespace ArduinoJson
             */
             DEPRECATED JsonObject parseHashTable(char* json)
             {
-                return parse(json);
+                return parseToken(json);
             }
 
         private:
             jsmntok_t* tokens;
             int maxTokens;
+
+            JsonToken parseToken(char* json);
         };
     }
 }

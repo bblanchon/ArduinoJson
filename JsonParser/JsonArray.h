@@ -15,7 +15,7 @@ namespace ArduinoJson
     {
         class JsonObject;
                
-        class JsonArray : public JsonToken
+        class JsonArray : JsonValue
         {          
         public:
 
@@ -23,8 +23,8 @@ namespace ArduinoJson
             {            
             }
 
-            JsonArray(JsonToken token) 
-                : JsonToken(token) 
+            JsonArray(JsonValue value)
+                : JsonValue(value)
             {
             }
 
@@ -38,10 +38,7 @@ namespace ArduinoJson
                 return isArray() ? JsonToken::size() : 0;
             }
 
-            JsonValue operator[](int index)
-            {
-                return getValue(index);
-            }
+            JsonValue operator[](int index);
 
             JsonArrayIterator begin()
             {
@@ -60,34 +57,30 @@ namespace ArduinoJson
                       
             DEPRECATED JsonArray getArray(int index)
             {
-                return getValue(index);
+                return operator[](index);
             }
 
             DEPRECATED bool getBool(int index)
             {
-                return getValue(index);
+                return operator[](index);
             }
 
             DEPRECATED double getDouble(int index)
             {
-                return getValue(index);
+                return operator[](index);
             }
 
             DEPRECATED JsonObject getHashTable(int index);
 
             DEPRECATED long getLong(int index)
             {
-                return getValue(index);
+                return operator[](index);
             }
 
             DEPRECATED char* getString(int index)
             {
-                return getValue(index);
+                return operator[](index);
             }
-
-        private:
-
-            JsonValue getValue(int index);
         };
     }
 }

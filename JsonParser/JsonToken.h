@@ -33,16 +33,14 @@ namespace ArduinoJson
                 return json + token->start;
             }
 
-            // TODO: should be protected
             JsonToken firstChild() const
             {
                 return JsonToken(json, token + 1);
             }
 
-            // TODO: should be protected
             JsonToken nextSibling() const;
 
-            bool operator!= (const JsonToken& other)
+            bool operator!= (const JsonToken& other) const
             {
                 return token != other.token;
             }
@@ -51,8 +49,6 @@ namespace ArduinoJson
             {
                 return JsonToken(0, 0);
             }
-
-        protected:
 
             bool isValid()
             {

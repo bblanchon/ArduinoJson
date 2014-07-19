@@ -11,7 +11,7 @@ namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonPair : public JsonToken
+        class JsonPair : JsonToken
         {
         public:
             JsonPair(JsonToken token)
@@ -27,7 +27,7 @@ namespace ArduinoJson
 
             JsonValue value()
             {
-                return JsonValue(nextSibling());
+                return nextSibling();
             }
         };
     }

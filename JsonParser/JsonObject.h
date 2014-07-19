@@ -14,7 +14,7 @@ namespace ArduinoJson
     {
         class JsonArray;
 
-        class JsonObject : public JsonToken
+        class JsonObject : JsonValue
         {
         public:
             JsonObject()
@@ -22,8 +22,8 @@ namespace ArduinoJson
 
             }
 
-            JsonObject(JsonToken token)
-                : JsonToken(token)
+            JsonObject(JsonValue value)
+                : JsonValue(value)
             {
 
             }
@@ -33,14 +33,11 @@ namespace ArduinoJson
                 return isObject();
             }
             
-            JsonValue operator[](const char* key)
-            {
-                return getValue(key);
-            }
+            JsonValue operator[](const char* key);
 
             bool containsKey(const char* key)
             {
-                return getValue(key).success();
+                return operator[](key).success();
             }
 
             JsonObjectIterator begin()
@@ -57,37 +54,33 @@ namespace ArduinoJson
 
             DEPRECATED bool getBool(const char* key)
             {
-                return getValue(key);
+                return operator[](key);
             }
 
             DEPRECATED double getDouble(const char* key)
             {
-                return getValue(key);
+                return operator[](key);
             }
 
             DEPRECATED JsonObject getHashTable(const char* key)
             {
-                return getValue(key);
+                return operator[](key);
             }
 
             DEPRECATED long getLong(const char* key)
             {
-                return getValue(key);
+                return operator[](key);
             }
 
             DEPRECATED char* getString(const char* key)
             {
-                return getValue(key);
+                return operator[](key);
             }
 
             static JsonObject null()
             {
                 return JsonObject(JsonToken::null());
             }
-
-        private:
-
-            JsonValue getValue(const char* key);
         };
 
         typedef JsonObject JsonHashTable;

@@ -12,7 +12,7 @@ namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonArrayIterator : public JsonToken
+        class JsonArrayIterator : JsonToken
         {
         public:
 
@@ -30,6 +30,11 @@ namespace ArduinoJson
             JsonValue operator*() const
             {
                 return JsonValue(*this);
+            }
+
+            bool operator!= (const JsonArrayIterator& other) const
+            {
+                return JsonToken::operator!=(other);
             }
         };
     }

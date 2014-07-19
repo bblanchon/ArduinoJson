@@ -12,17 +12,17 @@ using namespace ArduinoJson::Parser;
 
 DEPRECATED JsonArray JsonObject::getArray(const char* key)
 {
-    return (*this)[key];
+    return operator[](key);
 }
 
 /*
 * Returns the token for the value associated with the specified key
 */
-JsonValue JsonObject::getValue(const char* desiredKey)
+JsonValue JsonObject::operator[](const char* desiredKey)
 {
     // sanity check
     if (desiredKey == 0 || !isObject())
-        return JsonValue::null();
+        return null();
 
     // skip first token, it's the whole object
     JsonToken runningToken = firstChild();

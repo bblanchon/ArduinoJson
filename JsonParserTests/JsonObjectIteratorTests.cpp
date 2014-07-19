@@ -17,7 +17,8 @@ namespace JsonParserTests
             long expected [] = { 1, 2, 3 };
             JsonParser<4> parser;
 
-            JsonArray a = parser.parse(json);
+            JsonValue v = parser.parse(json);
+            JsonArray a = (ArduinoJson::Parser::JsonArray)v;
 
             int index = 0;
 

@@ -24,9 +24,14 @@ namespace ArduinoJson
         class JsonArray;
         class JsonObject;
 
-        class JsonValue : public JsonToken
+        class JsonValue : protected JsonToken
         {
         public:
+
+            JsonValue()
+            {
+
+            }
 
             JsonValue(JsonToken token)
                 : JsonToken(token)
