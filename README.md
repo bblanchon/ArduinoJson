@@ -1,7 +1,7 @@
 Arduino JSON library
 ====================
 
-*A simple and efficient JSON library for embedded systems.*
+*An elegant and efficient JSON library for embedded systems.*
 
 It's design to be very lightweight, works without any allocation on the heap (no malloc).
 
@@ -22,9 +22,9 @@ Feature comparison
 
 | Library      | Memory allocation | Nested objects | Parser size | Encoder size  |
 | ------------ | ----------------- | -------------- | ----------- | ------------- |
-| Arduino JSON | static            | yes            | 2616 Bytes  | 628 bytes     |
-| json-arduino | dynamic           | no             | 3348 (+28%) | not supported |
-| aJson        | dynamic           | yes            | 5088 (+94%) | 4678 (+640%)  |
+| Arduino JSON | static            | yes            | 2642 Bytes  | 628 bytes     |
+| json-arduino | dynamic           | no             | 3348 (+27%) | not supported |
+| aJson        | dynamic           | yes            | 5088 (+93%) | 4678 (+640%)  |
 
 "Parser size" was measured with a program parsing `{"sensor":"outdoor","value":25.6}`.
 For each library, I wrote a program that extracts a string and a float. I subtracted the size of a program doing the same without any JSON parsing involved. [Source files are here](https://gist.github.com/bblanchon/e8ba914a7109f3642c0f).
@@ -52,5 +52,6 @@ From StackOverflow user `thegreendroid`:
 Links
 -----
 
-* [The project for which I made me this library](http://blog.benoitblanchon.fr/rfid-payment-terminal/)
-* [Blog post on the motivation for this library](http://blog.benoitblanchon.fr/arduino-json-parser/)
+* [The project I originally wrote this library for](http://blog.benoitblanchon.fr/rfid-payment-terminal/)
+* [Motivation for this library](http://blog.benoitblanchon.fr/arduino-json-parser/)
+* [Release of version 2](http://blog.benoitblanchon.fr/arduino-json-v2-0/)
