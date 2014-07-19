@@ -53,13 +53,3 @@ JsonValue::operator char*()
 {
     return isString() || isPrimitive() ? getText() : 0;
 }
-
-JsonValue::operator JsonArray()
-{
-    return *this;
-}
-
-JsonValue::operator JsonObject()
-{
-    return *this;
-}

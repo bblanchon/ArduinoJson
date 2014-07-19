@@ -48,8 +48,6 @@ namespace ArduinoJson
             operator double();
             operator long();
             operator char*();
-            operator JsonArray();
-            operator JsonObject();
             JsonValue operator[](int index);
             JsonValue operator[](const char*key);
         };
