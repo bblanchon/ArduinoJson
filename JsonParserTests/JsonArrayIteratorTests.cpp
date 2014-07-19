@@ -10,6 +10,23 @@ namespace JsonParserTests
 	TEST_CLASS(JsonArrayIteratorTests)
 	{
 	public:
+
+        TEST_METHOD(EmptyJson)
+        {
+            char json[] = "";
+            JsonParser<1> parser;
+
+            JsonArray a = parser.parse(json);
+
+            int loopCount = 0;
+
+            for (long i : a)
+            {
+                loopCount++;
+            }
+
+            Assert::AreEqual(0, loopCount);
+        }
 		
 		TEST_METHOD(ThreeIntegers)
 		{
@@ -17,8 +34,7 @@ namespace JsonParserTests
             long expected [] = { 1, 2, 3 };
             JsonParser<4> parser;
 
-            JsonValue v = parser.parse(json);
-            JsonArray a = (ArduinoJson::Parser::JsonArray)v;
+            JsonArray a = parser.parse(json);
 
             int index = 0;
 
@@ -27,6 +43,5 @@ namespace JsonParserTests
                 Assert::AreEqual(expected[index++], i);
             }
 		}
-
 	};
 }

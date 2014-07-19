@@ -35,19 +35,19 @@ namespace ArduinoJson
 
             int size()
             {
-                return isArray() ? JsonToken::size() : 0;
+                return isArray() ? childrenCount() : 0;
             }
 
             JsonValue operator[](int index);
 
             JsonArrayIterator begin()
             {
-                return firstChild();
+                return isArray() ? firstChild() : null();
             }
 
             JsonArrayIterator end()
             {
-                return nextSibling();
+                return isArray() ? nextSibling() : null();
             }
 
             DEPRECATED int getLength()

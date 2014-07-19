@@ -28,7 +28,7 @@ JsonValue JsonObject::operator[](const char* desiredKey)
     JsonToken runningToken = firstChild();
 
     // scan each keys
-    for (int i = 0; i < size() / 2; i++)
+    for (int i = 0; i < childrenCount() / 2; i++)
     {
         // get 'key' token string
         char* key = runningToken.getText();

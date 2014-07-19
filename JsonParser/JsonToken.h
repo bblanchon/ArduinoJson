@@ -75,7 +75,7 @@ namespace ArduinoJson
                 return token != 0 && token->type == JSMN_STRING;
             }
 
-            int size()
+            int childrenCount()
             {
                 return token->size;
             }
