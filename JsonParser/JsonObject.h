@@ -31,9 +31,12 @@ namespace ArduinoJson
             bool success()
             {
                 return isObject();
+            }           
+
+            JsonValue operator[](const char* key)
+            {
+                return JsonValue::operator[](key);
             }
-            
-            JsonValue operator[](const char* key);
 
             bool containsKey(const char* key)
             {

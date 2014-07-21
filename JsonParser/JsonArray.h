@@ -33,12 +33,15 @@ namespace ArduinoJson
                 return isArray();
             }
 
+            JsonValue operator[](int index)
+            {
+                return JsonValue::operator[](index);
+            }
+
             int size()
             {
                 return isArray() ? childrenCount() : 0;
             }
-
-            JsonValue operator[](int index);
 
             JsonArrayIterator begin()
             {
