@@ -79,11 +79,6 @@ namespace ArduinoJson
             {
                 return operator[](key);
             }
-
-            static JsonObject null()
-            {
-                return JsonObject(JsonToken::null());
-            }
         };
 
         typedef JsonObject JsonHashTable;

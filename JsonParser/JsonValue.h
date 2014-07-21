@@ -21,9 +21,6 @@ namespace ArduinoJson
 {
     namespace Parser
     {
-        class JsonArray;
-        class JsonObject;
-
         class JsonValue : protected JsonToken
         {
         public:

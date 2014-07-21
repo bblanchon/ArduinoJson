@@ -7,7 +7,6 @@
 
 #include "JsonValue.h"
 #include "JsonArrayIterator.h"
-#include "JsonToken.h"
 
 namespace ArduinoJson
 {
