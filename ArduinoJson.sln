@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonParserTests", "JsonPars
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonParser", "JsonParser\JsonParser.vcxproj", "{C15274DE-2695-4DFE-8520-4424223FE6DA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonGenerator", "JsonGenerator\JsonGenerator.vcxproj", "{C6536D27-738D-4CEB-A2BC-E13C8897D894}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{C15274DE-2695-4DFE-8520-4424223FE6DA}.Debug|Win32.Build.0 = Debug|Win32
 		{C15274DE-2695-4DFE-8520-4424223FE6DA}.Release|Win32.ActiveCfg = Release|Win32
 		{C15274DE-2695-4DFE-8520-4424223FE6DA}.Release|Win32.Build.0 = Release|Win32
+		{C6536D27-738D-4CEB-A2BC-E13C8897D894}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C6536D27-738D-4CEB-A2BC-E13C8897D894}.Debug|Win32.Build.0 = Debug|Win32
+		{C6536D27-738D-4CEB-A2BC-E13C8897D894}.Release|Win32.ActiveCfg = Release|Win32
+		{C6536D27-738D-4CEB-A2BC-E13C8897D894}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
