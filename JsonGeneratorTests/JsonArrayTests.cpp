@@ -5,7 +5,7 @@
 
 #include "CppUnitTest.h"
 #include "JsonArray.h"
-#include "JsonHashTable.h"
+#include "JsonObject.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ArduinoJson::Generator;

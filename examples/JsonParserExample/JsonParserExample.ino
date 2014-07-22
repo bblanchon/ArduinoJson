@@ -15,7 +15,7 @@ void setup()
 
     JsonParser<16> parser;
 
-    JsonHashTable root = parser.parse(json);
+    JsonObject root = parser.parse(json);
 
     if (!root.success())
     {

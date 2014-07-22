@@ -3,11 +3,11 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
-#include "JsonHashTable.h"
+#include "JsonObjectBase.h"
 
 using namespace ArduinoJson::Generator;
 
-size_t JsonHashTableBase::printTo(Print& p) const
+size_t JsonObjectBase::printTo(Print& p) const
 {
     size_t n = 0;
 

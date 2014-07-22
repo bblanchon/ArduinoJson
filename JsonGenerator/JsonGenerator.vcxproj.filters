@@ -24,12 +24,6 @@
     <ClInclude Include="JsonArrayBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonHashTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JsonHashTableBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="JsonPrintable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,15 +39,18 @@
     <ClInclude Include="StringBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonObjectBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EscapedString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonArrayBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonHashTableBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonValue.cpp">
@@ -63,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Print.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonObjectBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

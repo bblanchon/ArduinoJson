@@ -4,4 +4,4 @@
 */
 
 #include "JsonGenerator/JsonArray.h"
-#include "JsonGenerator/JsonHashTable.h"
+#include "JsonGenerator/JsonObject.h"

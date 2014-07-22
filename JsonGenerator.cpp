@@ -7,6 +7,6 @@
 
 #include "JsonGenerator/EscapedString.cpp"
 #include "JsonGenerator/JsonArrayBase.cpp"
+#include "JsonGenerator/JsonObjectBase.cpp"
 #include "JsonGenerator/JsonValue.cpp"
-#include "JsonGenerator/JsonHashTableBase.cpp"
 #include "JsonGenerator/StringBuilder.cpp"

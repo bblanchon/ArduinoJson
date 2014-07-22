@@ -15,7 +15,7 @@ void setup()
     array.add<6>(48.756080); // 6 is the number of decimals to print
     array.add<6>(2.302038);  // if not specified, 2 digits are printed
 
-    JsonHashTable<3> root; 
+    JsonObject<3> root; 
     root.add("sensor", "gps");
     root.add("time", 1351824120);
     root.add("data", array);

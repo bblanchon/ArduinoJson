@@ -12,7 +12,7 @@ namespace ArduinoJson
 {
     namespace Generator
     {
-        class JsonHashTableBase : public JsonPrintable
+        class JsonObjectBase : public JsonPrintable
         {
         public:
 
@@ -48,7 +48,7 @@ namespace ArduinoJson
                 Internals::JsonValue      value;
             };
 
-            JsonHashTableBase(KeyValuePair* items, int capacity)
+            JsonObjectBase(KeyValuePair* items, int capacity)
                 : items(items), capacity(capacity), count(0)
             {
             }

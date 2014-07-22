@@ -16,14 +16,14 @@ namespace ArduinoJson
         class JsonValue
         {
         public:
-            
+
             void set(bool value)
             {
                 printToImpl = &printBoolTo;
                 content.asBool = value;
             }
 
-            void set(long value)               
+            void set(long value)
             {
                 printToImpl = &printLongTo;
                 content.asLong = value;
@@ -52,7 +52,7 @@ namespace ArduinoJson
                 set<2>(value);
             }
 
-            template<int DIGITS>
+            template <int DIGITS>
             void set(double value)
             {
                 printToImpl = &printDoubleTo<DIGITS>;
@@ -68,23 +68,23 @@ namespace ArduinoJson
         private:
             union Content
             {
-                bool          asBool;
-                long          asLong;
-                Printable*    asPrintable;
+                bool asBool;
+                long asLong;
+                Printable* asPrintable;
                 EscapedString asString;
-                double        asDouble;
+                double asDouble;
             };
 
             Content content;
 
-            size_t(*printToImpl)(const Content&, Print&);
+            size_t(* printToImpl)(const Content&, Print&);
 
             static size_t printBoolTo(const Content&, Print&);
             static size_t printLongTo(const Content&, Print&);
             static size_t printPrintableTo(const Content&, Print&);
             static size_t printStringTo(const Content&, Print&);
 
-            template<int DIGITS>
+            template <int DIGITS>
             static size_t printDoubleTo(const Content& c, Print& p)
             {
                 return p.print(c.asDouble, DIGITS);
