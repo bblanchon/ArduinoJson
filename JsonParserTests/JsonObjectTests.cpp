@@ -3,8 +3,6 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
-#define ARDUINO_JSON_NO_DEPRECATED_WARNING
-
 #include "CppUnitTest.h"
 #include "JsonParser.h"
 #include <string>
@@ -14,16 +12,16 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ArduinoJson::Parser;
 
 namespace ArduinoJsonParserTests
-{		
+{
     TEST_CLASS(JsonHashTableTests)
-	{
-		JsonHashTable hashTable;
+    {
+        JsonHashTable hashTable;
         JsonArray nestedArray;
-		char json[256];
+        char json[256];
         jsmntok_t tokens[32];
         JsonParserBase parser = JsonParserBase(tokens, 32);
 
-	public:
+    public:
 
         TEST_METHOD(EmptyString)
         {
@@ -150,7 +148,7 @@ namespace ArduinoJsonParserTests
             Assert::IsFalse(hashTable.getArray(key).success());
             Assert::IsFalse(hashTable.getBool(key));
             Assert::AreEqual(0.0, hashTable.getDouble(key));
-            Assert::AreEqual(0L,  hashTable.getLong(key));
+            Assert::AreEqual(0L, hashTable.getLong(key));
             Assert::IsNull(hashTable.getString(key));
         }
 
@@ -169,5 +167,5 @@ namespace ArduinoJsonParserTests
         {
             Assert::AreEqual(expected, nestedArray.getLong(index));
         }
-	};
+    };
 }

@@ -7,7 +7,7 @@
 
 #include "JsonToken.h"
 
-#ifndef ARDUINO_JSON_NO_DEPRECATED_WARNING
+#ifndef ARDUINO_JSON_NO_DEPRECATION_WARNING
 #ifdef __GNUC__
 #define DEPRECATED __attribute__((deprecated))
 #elif defined(_MSC_VER)

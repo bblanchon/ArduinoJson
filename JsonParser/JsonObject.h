@@ -97,6 +97,6 @@ namespace ArduinoJson
         };
 
         // Obsolete: Use JsonObject instead
-        typedef JsonObject JsonHashTable;
+        DEPRECATED typedef JsonObject JsonHashTable;
     }
 }

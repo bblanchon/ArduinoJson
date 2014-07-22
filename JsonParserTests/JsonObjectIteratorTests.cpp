@@ -1,9 +1,13 @@
+/*
+* Arduino JSON library
+* Benoit Blanchon 2014 - MIT License
+*/
+
 #include "CppUnitTest.h"
 #include "JsonParser.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ArduinoJson::Parser;
-
 
 namespace JsonParserTests
 {
@@ -16,7 +20,7 @@ namespace JsonParserTests
             char json [] = "{}";
             JsonParser<1> parser;
 
-            JsonHashTable a = parser.parse(json);           
+            JsonHashTable a = parser.parse(json);
 
             int loopCount = 0;
 
@@ -48,8 +52,8 @@ namespace JsonParserTests
         TEST_METHOD(ThreeStrings)
         {
             char json[] = "{\"key1\":\"value1\",\"key2\":\"value2\",\"key3\":\"value3\"}";
-            char* expectedKeys[] = { "key1", "key2", "key3" };
-            char* expectedValues[] = { "value1", "value2", "value3" };
+            char* expectedKeys[] = {"key1", "key2", "key3"};
+            char* expectedValues[] = {"value1", "value2", "value3"};
             JsonParser<7> parser;
 
             JsonHashTable a = parser.parse(json);
@@ -63,6 +67,5 @@ namespace JsonParserTests
                 index++;
             }
         }
-
     };
 }
