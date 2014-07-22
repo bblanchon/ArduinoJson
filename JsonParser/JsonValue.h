@@ -21,32 +21,52 @@ namespace ArduinoJson
 {
     namespace Parser
     {
+        // A JSON value
+        // Can be converted to string, double, bool, array or object.
         class JsonValue : protected JsonToken
         {
         public:
 
+            // Create a invalid value
             JsonValue()
             {
-
             }
 
+            // Convert a JsonToken to a JsonValue
             JsonValue(JsonToken token)
                 : JsonToken(token)
             {
-
             }
 
+            // Tell is the JsonValue is valid
             bool success()
             {
                 return isValid();
             }
-            
+
+            // Convert the JsonValue to a bool.
+            // Returns false if the JsonValue is not a boolean.
             operator bool();
+
+            // Convert the JsonValue to a floating point value.
+            // Returns false if the JsonValue is not a number.
             operator double();
+
+            // Convert the JsonValue to a long integer.
+            // Returns 0 if the JsonValue is not a number.
             operator long();
-            operator char*();
+
+            // Convert the JsonValue to a string.
+            // Returns 0 if the JsonValue is not a string.
+            operator char*();            
+            
+            // Get the nested value at the specified index.            
+            // Returns an invalid JsonValue if the current value is not an array.
             JsonValue operator[](int index);
-            JsonValue operator[](const char*key);
+
+            // Get the nested value matching the specified index.            
+            // Returns an invalid JsonValue if the current value is not an object.
+            JsonValue operator[](const char* key);
         };
     }
 }

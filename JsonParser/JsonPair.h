@@ -19,7 +19,6 @@ namespace ArduinoJson
             JsonPair(JsonToken token)
                 : JsonToken(token)
             {
-
             }
 
             // Get the key
