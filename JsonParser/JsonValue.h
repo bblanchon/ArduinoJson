@@ -45,7 +45,7 @@ namespace ArduinoJson
             }
 
             // Convert the JsonValue to a bool.
-            // Returns false if the JsonValue is not a boolean.
+            // Returns false if the JsonValue is not a primitve.
             operator bool();
 
             // Convert the JsonValue to a floating point value.

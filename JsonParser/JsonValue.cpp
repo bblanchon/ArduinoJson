@@ -11,6 +11,8 @@
 
 using namespace ArduinoJson::Parser;
 
+// Convert the JsonValue to a bool.
+// Returns false if the JsonValue is not a primitve.
 JsonValue::operator bool()
 {
     if (!isPrimitive()) return 0;
@@ -30,24 +32,50 @@ JsonValue::operator bool()
     return strtol(text, 0, 0) != 0;
 }
 
+// Convert the JsonValue to a floating point value.
+// Returns false if the JsonValue is not a number.
 JsonValue::operator double()
 {
     return isPrimitive() ? strtod(getText(), 0) : 0;
 }
 
+// Convert the JsonValue to a floating point value.
+// Returns false if the JsonValue is not a number.
 JsonValue::operator long()
 {
     return isPrimitive() ? strtol(getText(), 0, 0) : 0;
 }
 
+// Convert the JsonValue to a string.
+// Returns 0 if the JsonValue is not a string.
 JsonValue::operator char*()
 {
     return isString() || isPrimitive() ? getText() : 0;
 }
 
-/*
-* Returns the token for the value associated with the specified key
-*/
+// Get the nested value at the specified index.            
+// Returns an invalid JsonValue if the current value is not an array.
+JsonValue JsonValue::operator[](int index)
+{
+    // sanity check
+    if (index < 0 || !isArray() || index >= childrenCount())
+        return null();
+
+    // skip first token, it's the whole object
+    JsonToken runningToken = firstChild();
+
+    // skip all tokens before the specified index
+    for (int i = 0; i < index; i++)
+    {
+        // move forward: current + nested tokens
+        runningToken = runningToken.nextSibling();
+    }
+
+    return runningToken;
+}
+
+// Get the nested value matching the specified index.            
+// Returns an invalid JsonValue if the current value is not an object.
 JsonValue JsonValue::operator[](const char* desiredKey)
 {
     // sanity check
@@ -79,26 +107,4 @@ JsonValue JsonValue::operator[](const char* desiredKey)
 
     // nothing found, return NULL
     return null();
-}
-
-/*
-* Returns the token for the value at the specified index
-*/
-JsonValue JsonValue::operator[](int index)
-{
-    // sanity check
-    if (index < 0 || !isArray() || index >= childrenCount())
-        return null();
-
-    // skip first token, it's the whole object
-    JsonToken runningToken = firstChild();
-
-    // skip all tokens before the specified index
-    for (int i = 0; i < index; i++)
-    {
-        // move forward: current + nested tokens
-        runningToken = runningToken.nextSibling();
-    }
-
-    return runningToken;
 }
