@@ -213,21 +213,38 @@ Here are the size of the main classes of the library.
 
 This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
 
-<table>
-    <tr>
-        <th>Type</th>
-        <th>Size in bytes</th>
-    </tr>
-    <tr>
-        <td>Parser&lt;N&gt;</td>
-        <td>4 + 8 x N</td>
-    </tr>
-    <tr>
-        <td>JsonArray</td>
-        <td>4</td>
-    </tr>
-    <tr>
-        <td>JsonObject</td>
-        <td>4</td>
-    </tr>
-</table> 
+| Type         | Size in bytes |
+| ------------ | ------------- |
+| `Parser<N>`  | 4 + 8 x N     |
+| `JsonArray`  | 4             |
+| `JsonObject` | 4             |
+| `JsonValue`  | 4             |
+
+Code size
+---------
+
+The sizes have been obtained with Arduino IDE 1.0.5 for a Duemilanove.
+
+### Minimum setup
+
+| Function                             | Size |
+| ------------------------------------ | ---- |
+| `jsmn_parse()`                       | 962  |
+| `JsonValue::operator[](char const*)` | 218  | 
+| `JsonParserBase::parse()`            | 116  | 
+| `JsonValue::operator[](int)`         | 108  |
+| `strcmp()`                           | 18   | 
+
+### Additional space for integers
+
+| Function                     | Size |
+| ---------------------------- | ---- |
+| `strtol()`                   | 606  |
+| `JsonValue::operator long()` | 94   |
+
+### Additional space for floating points
+
+| Function                         | Size  |
+| -------------------------------- | ----- |
+| `strtod()`                       | 1369  |
+| `JsonValue::operator double()`   | 82    |
