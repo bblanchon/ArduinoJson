@@ -41,6 +41,18 @@ namespace ArduinoJson
             {
                 return JsonToken::operator!=(other);
             }
+
+            // Get the key of the JsonPair pointed by the iterator
+            const char* key() const
+            {
+                return operator*().key();
+            }
+
+            // Get the key of the JsonPair pointed by the iterator
+            JsonValue value() const
+            {
+                return operator*().value();
+            }
         };
     }
 }
