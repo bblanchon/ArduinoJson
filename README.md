@@ -49,9 +49,10 @@ From Arduino's Forum user `gbathree`:
 From StackOverflow user `thegreendroid`:
 > It has a really elegant, simple API and it works like a charm on embedded and Windows/Linux platforms. We recently started using this on an embedded project and I can vouch for its quality.
 
-Links
+Related blog posts
 -----
 
 * [The project I originally wrote this library for](http://blog.benoitblanchon.fr/rfid-payment-terminal/)
 * [Motivation for this library](http://blog.benoitblanchon.fr/arduino-json-parser/)
 * [Release of version 2](http://blog.benoitblanchon.fr/arduino-json-v2-0/)
+* [Release of version 3](http://blog.benoitblanchon.fr/arduino-json-v3-0/)
