@@ -49,6 +49,13 @@ Just add the following lines at the top of your `.ino` file:
     #include <JsonParser.h>
 
     using namespace ArduinoJson::Parser;
+
+> ##### Having a namespace conflict?
+> To be able to use both `ArduinoJson::Generator` and `ArduinoJson::Parser` in the same file, you need to do one of the followings:
+> 
+> * Put the `using` statements into different functions
+> * `using namespace ArduinoJson`, then prefix the type names by `Generator::` or `Parser::`
+> * Create aliases for the namespaces or the types (C++11 only)
     
 ### 3. Create a parser
 
@@ -103,6 +110,14 @@ And then extract the member you need:
     long   time      = root["time"];
     double latitude  = root["data"][0];
     double longitude = root["data"][1];
+
+You can also iterate through the key-value pairs of the object:
+
+    for (JsonObjectIterator i=root.begin(); i!=root.end(); ++i)
+    {
+      Serial.println(i.key());
+      Serial.println((char*)i.value());
+    }
     
 #### Array
 
@@ -130,6 +145,13 @@ And then extract the content by its index in the array:
 	double b = root[0][1];
 	double c = root[1][0];
 	double d = root[1][1];
+
+You can also iterate through the key-value pairs of the object:
+
+    for (JsonArrayIterator i=array.begin(); i!=array.end(); ++i)
+    {
+      Serial.println((char*)*i);
+    }
 	
 Common pitfalls
 ---------------
