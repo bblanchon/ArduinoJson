@@ -172,3 +172,31 @@ This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
 | --------------------| ------------- |
 | JsonArray&lt;N&gt;  | 8 + 6 x N     |
 | JsonObject&lt;N&gt; | 8 + 8 x N     |
+
+
+Code size
+---------
+
+### Minimum setup
+
+| Function                     | Size |
+| ---------------------------- | ---- |
+| `JsonObjectBase::printTo()`  | 222  |
+| `EscapedString::printTo()`   | 202  |
+| `JsonArrayBase::printTo()`   | 164  |
+| `Print::print(char const*)`  | 146  |
+| `JsonValue::printStringTo()` | 6    |
+
+### Additional space for integers
+
+| Function                     | Size |
+| ---------------------------- | ---- |
+| `Print::print(long, int)`    | 328  |
+| `JsonValue::printLongTo()`   | 22   |
+
+### Additional space for floating point
+
+| Function                       | Size |
+| ------------------------------ | ---- |
+| `Print::print(double, int)`    | 1548 |
+| `JsonValue::printDouleTo<2>()` | 22   |
