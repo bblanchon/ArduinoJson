@@ -15,7 +15,7 @@ Features
 * Elegant API, very easy to use 
 * Fixed memory allocation (no malloc)
 * Small footprint
-* Implements Arduino's Printable interface
+* Implements Arduino's `Printable interface
 * MIT License
 
 
@@ -26,7 +26,7 @@ Example
     array.add<6>(48.756080);
     array.add<6>(2.302038);
 
-    JsonHashTable<3> root;
+    JsonObject<3> root;
     root.add("sensor", "gps");
     root.add("time", 1351824120);
     root.add("data", array);
@@ -50,12 +50,19 @@ Just add the following lines at the top of your `.ino` file:
     #include <JsonGenerator.h>
 
     using namespace ArduinoJson::Generator;
+
+> ##### Having a namespace conflict?
+> To be able to use both `ArduinoJson::Generator` and `ArduinoJson::Parser` in the same file, you need to do one of the followings:
+> 
+> * Put the `using` statements into different functions
+> * `using namespace ArduinoJson`, then prefix the type names by `Generator::` or `Parser::`
+> * Create aliases for the namespaces or the types (C++11 only)
    
 ### 3. Create object tree
 
-In order to generate a JSON string, you need to build the equivalent object tree. You usually start by the root which can be either an array or an hash-table.
+In order to generate a JSON string, you need to build the equivalent object tree. You usually start by the root which can be either a JSON Array or a JSON Object.
 
-#### Array
+#### JSON Array
 
 You create an array with the following line:
 
@@ -91,22 +98,22 @@ Finally you can add nested object to the array:
 
 or
 
-    JsonHashTable<8> nestedHash;
-    array.add(nestedHash);
+    JsonObject<8> nestedObject;
+    array.add(nestedObject);
 
-#### Hash-table
+#### JSON Object
 
-You create a hash-table with the following line:
+You create a JSON object (ie hash-table/dictionary) with the following line:
 
-    JsonHashTable<8> hash;
+    JsonObject<8> object;
 
-Like with the array class, there is a template parameter that gives the capacity of the hash-table.
+Like with the array class, there is a template parameter that gives the capacity of the object.
 
 Then you can add strings, integer, booleans, etc: 
 
-    hash.add("key1", "bazinga!");
-    hash.add("key2", 42);
-    hash.add("key3", true);
+    object.add("key1", "bazinga!");
+    object.add("key2", 42);
+    object.add("key3", true);
 
 As for the arrays, there are two syntaxes for the floating point values:
 
@@ -116,12 +123,12 @@ As for the arrays, there are two syntaxes for the floating point values:
 Finally you can add nested objects:
 
     JsonArray<8> nestedArray;
-    hash.add("key6", nestedArray);
+    object.add("key6", nestedArray);
 
 or
 
-    JsonHashTable<8> nestedHash;
-    hash.add("key7", nestedHash);
+    JsonObject<8> nestedObject;
+    object.add("key7", nestedObject);
 
 ### 4. Get the JSON string
 
@@ -133,7 +140,7 @@ Both ways are the easy way :-)
 
 #### Use a classic `char[]`
 
-Whether you have a `JsonArray` or a `JsonHashTable`, simply call `printTo()` with the destination buffer, like so:
+Whether you have a `JsonArray` or a `JsonObject`, simply call `printTo()` with the destination buffer, like so:
 
 	char buffer[256];
     array.printTo(buffer, sizeof(buffer));
@@ -149,7 +156,7 @@ or
     array.printTo(Serial);
 
 > ##### About the Printable interface
-> `JsonArray` and `JsonHashTable` implement Arduino's `Printable` interface.
+> `JsonArray` and `JsonObject` implement Arduino's `Printable` interface.
 > This is why you can call `Serial.print()` like in the example above.
 > You can do the same with any other implementation of `Print`:  `HardwareSerial`,  `SoftwareSerial`, `LiquidCrystal`, `EthernetClient`, `WiFiClient`...
    
@@ -161,7 +168,7 @@ Here are the size of the main classes of the library.
 
 This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
 
-| Type                   | Size in bytes |
-| ---------------------- | ------------- |
-| JsonArray&lt;N&gt;     | 8 + 6 x N     |
-| JsonHashTable&lt;N&gt; | 8 + 8 x N     |
+| Type                | Size in bytes |
+| --------------------| ------------- |
+| JsonArray&lt;N&gt;  | 8 + 6 x N     |
+| JsonObject&lt;N&gt; | 8 + 8 x N     |
