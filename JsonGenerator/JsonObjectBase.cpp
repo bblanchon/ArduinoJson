@@ -36,7 +36,7 @@ size_t JsonObjectBase::printTo(Print& p) const
     return n;
 }
 
-JsonValue& JsonObjectBase::getValue(char const* key)
+JsonValue& JsonObjectBase::operator[](char const* key)
 {
     for (int i = 0; i < count; ++i)
     {

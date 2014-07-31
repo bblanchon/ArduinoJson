@@ -16,16 +16,18 @@ namespace ArduinoJson
         {
         public:
 
+            JsonValue& operator[](const char*);
+
             template<typename T>
             void add(const char* key, T value)
             {
-                getValue(key) = value;
+                operator[](key) = value;
             }
 
             template<int DIGITS>
             void add(const char* key, double value)
             {
-                getValue(key).set<DIGITS>(value);
+                operator[](key).set<DIGITS>(value);
             }
 
             using JsonPrintable::printTo;
@@ -44,8 +46,6 @@ namespace ArduinoJson
                 : items(items), capacity(capacity), count(0)
             {
             }
-
-            JsonValue& getValue(const char* key);
 
         private:
             KeyValuePair* items;

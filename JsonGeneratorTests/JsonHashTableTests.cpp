@@ -34,7 +34,6 @@ namespace JsonGeneratorTests
         {
             add("key1", "value1");
             add("key2", "value2");
-
             outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
@@ -106,19 +105,19 @@ namespace JsonGeneratorTests
         
         void addNested(const char* key, Printable& value)
         {
-            hash.add<Printable&>(key, value);
+            hash[key] = value;
         }
 
         template<typename T>
         void add(const char* key, T value)
         {
-            hash.add(key, value);
+            hash[key] = value;
         }
 
         template<int DIGITS>
         void add(const char* key, double value)
         {
-            hash.add<DIGITS>(key, value);
+            hash[key].set<DIGITS>(value);
         }
 
         void outputMustBe(const char* expected)
