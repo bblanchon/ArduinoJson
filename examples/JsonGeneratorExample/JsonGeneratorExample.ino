@@ -16,9 +16,9 @@ void setup()
     array.add<6>(2.302038);  // if not specified, 2 digits are printed
 
     JsonObject<3> root; 
-    root.add("sensor", "gps");
-    root.add("time", 1351824120);
-    root.add("data", array);
+    root["sensor"] = "gps";
+    root["time"] = 1351824120;
+    root["data"] = array;
 
     Serial.print(root); // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 }
