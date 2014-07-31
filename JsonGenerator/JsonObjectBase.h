@@ -26,7 +26,7 @@ namespace ArduinoJson
             void add(const char* key, double value)
             {
                 getValue(key).set<DIGITS>(value);
-            }           
+            }
 
             using JsonPrintable::printTo;
 
@@ -37,7 +37,7 @@ namespace ArduinoJson
             struct KeyValuePair
             {
                 Internals::EscapedString  key;
-                Internals::JsonValue      value;
+                JsonValue      value;
             };
 
             JsonObjectBase(KeyValuePair* items, int capacity)
@@ -45,7 +45,7 @@ namespace ArduinoJson
             {
             }
 
-            Internals::JsonValue& getValue(const char* key);
+            JsonValue& getValue(const char* key);
 
         private:
             KeyValuePair* items;

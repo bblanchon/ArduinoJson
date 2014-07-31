@@ -6,7 +6,7 @@
 #include "EscapedString.h"
 #include "JsonValue.h"
 
-using namespace ArduinoJson::Internals;
+using namespace ArduinoJson::Generator;
 
 JsonValue JsonValue::nullInstance;
 

@@ -14,7 +14,7 @@ namespace ArduinoJson
         class JsonArrayBase : public JsonPrintable
         {
         public:
-            JsonArrayBase(Internals::JsonValue* items, int capacity)
+            JsonArrayBase(JsonValue* items, int capacity)
                 : items(items), capacity(capacity), count(0)
             {
 
@@ -33,7 +33,7 @@ namespace ArduinoJson
             {
                 if (count >= capacity) return;
 
-                Internals::JsonValue& v = items[count++];
+                JsonValue& v = items[count++];
                 v.set<DIGITS>(value);
             }
 
@@ -42,7 +42,7 @@ namespace ArduinoJson
             using JsonPrintable::printTo;
 
         private:
-            Internals::JsonValue* items;
+            JsonValue* items;
             int capacity, count;
         };
     }

@@ -11,7 +11,7 @@
 
 namespace ArduinoJson
 {
-    namespace Internals
+    namespace Generator
     {
         class JsonValue
         {
@@ -76,7 +76,7 @@ namespace ArduinoJson
                 bool asBool;
                 long asLong;
                 Printable* asPrintable;
-                EscapedString asString;
+                Internals::EscapedString asString;
                 double asDouble;
             };
 

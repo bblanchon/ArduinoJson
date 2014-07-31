@@ -8,6 +8,7 @@
 #include "JsonValue.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace ArduinoJson::Generator;
 using namespace ArduinoJson::Internals;
 
 namespace JsonGeneratorTests

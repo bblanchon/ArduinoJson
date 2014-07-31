@@ -22,7 +22,7 @@ namespace ArduinoJson
             }         
 
         private:
-            Internals::JsonValue items[N];
+            JsonValue items[N];
         };
     }
 }
