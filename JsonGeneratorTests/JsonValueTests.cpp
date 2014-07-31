@@ -89,7 +89,7 @@ namespace JsonGeneratorTests
         {
             StringBuilder sb(buffer, sizeof(buffer));
             JsonValue jsonValue;
-            jsonValue.set(value);
+            jsonValue = value;
             returnValue = jsonValue.printTo(sb);
         }
 

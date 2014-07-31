@@ -17,37 +17,37 @@ namespace ArduinoJson
         {
         public:
 
-            void set(bool value)
+            void operator=(bool value)
             {
                 printToImpl = &printBoolTo;
                 content.asBool = value;
             }
 
-            void set(long value)
+            void operator=(long value)
             {
                 printToImpl = &printLongTo;
                 content.asLong = value;
             }
 
-            void set(int value)
+            void operator=(int value)
             {
                 printToImpl = &printLongTo;
                 content.asLong = value;
             }
 
-            void set(Printable& value)
+            void operator=(Printable& value)
             {
                 printToImpl = &printPrintableTo;
                 content.asPrintable = &value;
             }
 
-            void set(const char* value)
+            void operator=(const char* value)
             {
                 printToImpl = &printStringTo;
                 content.asString.set(value);
             }
 
-            void set(double value)
+            void operator=(double value)
             {
                 set<2>(value);
             }
@@ -55,7 +55,7 @@ namespace ArduinoJson
             template <int DIGITS>
             void set(double value)
             {
-                printToImpl = &printDoubleTo<DIGITS>;
+                printToImpl = &printDoubleTo < DIGITS > ;
                 content.asDouble = value;
             }
 
@@ -82,7 +82,7 @@ namespace ArduinoJson
 
             Content content;
 
-            size_t(* printToImpl)(const Content&, Print&);
+            size_t(*printToImpl)(const Content&, Print&);
 
             static size_t printBoolTo(const Content&, Print&);
             static size_t printLongTo(const Content&, Print&);

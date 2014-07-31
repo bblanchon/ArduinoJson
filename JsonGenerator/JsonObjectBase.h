@@ -19,7 +19,7 @@ namespace ArduinoJson
             template<typename T>
             void add(const char* key, T value)
             {
-                getValue(key).set(value);
+                getValue(key) = value;
             }
 
             template<int DIGITS>

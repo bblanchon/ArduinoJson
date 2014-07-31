@@ -25,7 +25,7 @@ namespace ArduinoJson
             {
                 if (count >= capacity) return;
 
-                items[count++].set(value);
+                items[count++] = value;
             }
 
             template<int DIGITS>
