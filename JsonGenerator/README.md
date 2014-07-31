@@ -27,9 +27,9 @@ Example
     array.add<6>(2.302038);
 
     JsonObject<3> root;
-    root.add("sensor", "gps");
-    root.add("time", 1351824120);
-    root.add("data", array);
+    root["sensor"] = "gps";
+    root["time"] = 1351824120;
+    root["data"] = array;
 
     Serial.print(root); // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 
@@ -111,24 +111,24 @@ Like with the array class, there is a template parameter that gives the capacity
 
 Then you can add strings, integer, booleans, etc: 
 
-    object.add("key1", "bazinga!");
-    object.add("key2", 42);
-    object.add("key3", true);
+    object["key1"] = "bazinga!";
+    object["key2"] = 42;
+    object["key3"] = true;
 
 As for the arrays, there are two syntaxes for the floating point values:
 
-	array.add<4>("key4", 3.1415);  // 4 digits: "3.1415" 
-    array.add("key5", 3.14);	   // 2 digits: "3.14"
+	object["key4"].set<4>(3.1415);  // 4 digits "3.1415" 
+    object["key5"] = 3.1415;	    // default: 2 digits "3.14"
 
 Finally you can add nested objects:
 
     JsonArray<8> nestedArray;
-    object.add("key6", nestedArray);
+    object["key6"] = nestedArray;
 
 or
 
     JsonObject<8> nestedObject;
-    object.add("key7", nestedObject);
+    object["key7"] = nestedObject;
 
 ### 4. Get the JSON string
 
