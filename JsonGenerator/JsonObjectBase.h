@@ -19,22 +19,20 @@ namespace ArduinoJson
             template<typename T>
             void add(const char* key, T value)
             {
-                if (count >= capacity) return;
+                KeyValuePair* pair = getMatchingPair(key);
+                if (!pair) return;
 
-                items[count].key.set(key);
-                items[count].value.set(value);
-                count++;
+                pair->value.set(value);
             }
 
             template<int DIGITS>
             void add(const char* key, double value)
             {
-                if (count >= capacity) return;
+                KeyValuePair* pair = getMatchingPair(key);
+                if (!pair) return;
 
-                items[count].key.set(key);
-                items[count].value.set<DIGITS>(value);
-                count++;
-            }
+                pair->value.set<DIGITS>(value);
+            }           
 
             using JsonPrintable::printTo;
 
@@ -52,6 +50,8 @@ namespace ArduinoJson
                 : items(items), capacity(capacity), count(0)
             {
             }
+
+            KeyValuePair* getMatchingPair(const char* key);
 
         private:
             KeyValuePair* items;

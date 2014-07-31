@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Print.h"
+#include <string.h> // for strcmp
 
 namespace ArduinoJson
 {
@@ -21,6 +22,11 @@ namespace ArduinoJson
             }
 
             size_t printTo(Print&) const;
+            
+            bool equals(char const* s)
+            {
+                return strcmp(s, rawString) == 0;
+            }
 
         private:
             const char* rawString;

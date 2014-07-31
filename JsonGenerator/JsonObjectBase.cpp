@@ -34,3 +34,20 @@ size_t JsonObjectBase::printTo(Print& p) const
 
     return n;
 }
+
+JsonObjectBase::KeyValuePair* JsonObjectBase::getMatchingPair(char const* key)
+{
+    for (int i = 0; i < count; ++i)
+    {
+        if (items[i].key.equals(key))
+        {
+            return &items[i];
+        }
+    }
+
+    if (count >= capacity) return 0;
+    
+    KeyValuePair* p = &items[count++];
+    p->key.set(key);
+    return p;
+}
