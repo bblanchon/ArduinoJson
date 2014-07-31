@@ -1,6 +1,26 @@
 Arduino JSON: change log
 ========================
 
+master
+------
+
+* Calling `Generator::JsonObject.add()` twice with the same `key` now replaces the `value`
+* Added `Generator::JsonObject.operator[]`, see bellow the new API
+
+Old generator API:
+
+	JsonObject<3> root; 
+    root.add("sensor", "gps");
+    root.add("time", 1351824120);
+    root.add("data", array);
+
+New generator API:
+
+	JsonObject<3> root; 
+    root["sensor"] = "gps";
+    root["time"] = 1351824120;
+    root["data"] = array;
+
 v3.0
 ----
 
