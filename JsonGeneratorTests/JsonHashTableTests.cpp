@@ -38,6 +38,13 @@ namespace JsonGeneratorTests
             outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
+        TEST_METHOD(ReplaceExistingKey)
+        {
+            add("key", "value1");
+            add("key", "value2");
+            outputMustBe("{\"key\":\"value2\"}");
+        }
+
         TEST_METHOD(OneStringOverCapacity)
         {
             add("key1", "value1");
