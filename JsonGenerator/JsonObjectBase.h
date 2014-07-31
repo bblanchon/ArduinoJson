@@ -19,19 +19,13 @@ namespace ArduinoJson
             template<typename T>
             void add(const char* key, T value)
             {
-                KeyValuePair* pair = getMatchingPair(key);
-                if (!pair) return;
-
-                pair->value.set(value);
+                getValue(key).set(value);
             }
 
             template<int DIGITS>
             void add(const char* key, double value)
             {
-                KeyValuePair* pair = getMatchingPair(key);
-                if (!pair) return;
-
-                pair->value.set<DIGITS>(value);
+                getValue(key).set<DIGITS>(value);
             }           
 
             using JsonPrintable::printTo;
@@ -51,7 +45,7 @@ namespace ArduinoJson
             {
             }
 
-            KeyValuePair* getMatchingPair(const char* key);
+            Internals::JsonValue& getValue(const char* key);
 
         private:
             KeyValuePair* items;

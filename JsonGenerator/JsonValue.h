@@ -65,6 +65,11 @@ namespace ArduinoJson
                 return printToImpl(content, p);
             }
 
+            static JsonValue& null()
+            {
+                return nullInstance;
+            }
+
         private:
             union Content
             {
@@ -89,6 +94,8 @@ namespace ArduinoJson
             {
                 return p.print(c.asDouble, DIGITS);
             }
+
+            static JsonValue nullInstance;
         };
     }
 }
