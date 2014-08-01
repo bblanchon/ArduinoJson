@@ -6,6 +6,7 @@
 #include "CppUnitTest.h"
 #include "StringBuilder.h"
 #include "JsonValue.h"
+#include "JsonArray.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ArduinoJson::Generator;
@@ -45,6 +46,12 @@ namespace JsonGeneratorTests
             setValueAndCheckCast(42L);
         }
 
+        TEST_METHOD(Array)
+        {
+            JsonArray<2> array;
+            setValueAndCheckCast(array);
+        }
+
         TEST_METHOD(String)
         {
             setValueAndCheckCast("hello");
@@ -58,6 +65,14 @@ namespace JsonGeneratorTests
             value = expected;
             T actual = value;
             Assert::AreEqual(expected, actual);
+        }
+
+        template<int N>
+        void setValueAndCheckCast(JsonArray<N>& expected)
+        {
+            value = expected;
+            Printable& actual = value;
+            Assert::AreEqual((void*) &expected, (void*) &actual);
         }
     };
 }
