@@ -12,13 +12,12 @@ using namespace ArduinoJson::Generator;
 
 namespace JsonGeneratorTests
 {
-    TEST_CLASS(JsonHashTableTests)
+    TEST_CLASS(JsonObject_PrintTo_Tests)
     {
-        JsonHashTable<2> hash;
-        char buffer[256];
+        JsonObject<2> object;
 
     public:
-        
+
         TEST_METHOD(Empty)
         {
             outputMustBe("{}");
@@ -26,105 +25,101 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OneString)
         {
-            add("key", "value");
+            object["key"] = "value";
+
             outputMustBe("{\"key\":\"value\"}");
         }
 
         TEST_METHOD(TwoStrings)
         {
-            add("key1", "value1");
-            add("key2", "value2");
+            object["key1"] = "value1";
+            object["key2"] = "value2";
+
             outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
         TEST_METHOD(ReplaceExistingKey)
         {
-            add("key", "value1");
-            add("key", "value2");
+            object["key"] = "value1";
+            object["key"] = "value2";
+
             outputMustBe("{\"key\":\"value2\"}");
         }
 
         TEST_METHOD(OneStringOverCapacity)
         {
-            add("key1", "value1");
-            add("key2", "value2");
-            add("key3", "value3");
+            object["key1"] = "value1";
+            object["key2"] = "value2";
+            object["key3"] = "value3";
 
             outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
         TEST_METHOD(OneInteger)
         {
-            add("key", 1);
+            object["key"] = 1;
             outputMustBe("{\"key\":1}");
         }
 
         TEST_METHOD(OneDoubleFourDigits)
         {
-            add<4>("key", 3.14159265358979323846);
+            object["key"].set<4>(3.14159265358979323846);
             outputMustBe("{\"key\":3.1416}");
         }
 
         TEST_METHOD(OneDoubleDefaultDigits)
         {
-            add("key", 3.14159265358979323846);
+            object["key"] = 3.14159265358979323846;
             outputMustBe("{\"key\":3.14}");
         }
 
         TEST_METHOD(OneNull)
         {
-            add("key", (char*) 0);
+            object["key"] = (char*) 0;
             outputMustBe("{\"key\":null}");
         }
 
         TEST_METHOD(OneTrue)
         {
-            add("key", true);
+            object["key"] = true;
             outputMustBe("{\"key\":true}");
         }
 
         TEST_METHOD(OneFalse)
         {
-            add("key", false);
+            object["key"] = false;
             outputMustBe("{\"key\":false}");
         }
 
         TEST_METHOD(OneEmptyNestedArray)
         {
-            addNested("key", JsonArray<1>());
+            auto nestedArray = JsonArray<1>();
+
+            object["key"] = nestedArray;
+            
             outputMustBe("{\"key\":[]}");
         }
 
-        TEST_METHOD(OneEmptyNestedHash)
+        TEST_METHOD(OneEmptyNestedObject)
         {
-            addNested("key", JsonHashTable<1>());
+            auto nestedObject = JsonObject<1>();
+
+            object["key"] = nestedObject;
+
             outputMustBe("{\"key\":{}}");
         }
 
     private:
-        
-        void addNested(const char* key, Printable& value)
-        {
-            hash[key] = value;
-        }
-
-        template<typename T>
-        void add(const char* key, T value)
-        {
-            hash[key] = value;
-        }
-
-        template<int DIGITS>
-        void add(const char* key, double value)
-        {
-            hash[key].set<DIGITS>(value);
-        }
 
         void outputMustBe(const char* expected)
-        {            
-            size_t actual = hash.printTo(buffer, sizeof(buffer));
+        {
+            char buffer[256];
+            size_t result;
+            
+            result = object.printTo(buffer, sizeof(buffer));
+            
+            Assert::AreEqual(strlen(expected), result);
             Assert::AreEqual(expected, buffer);
-            Assert::AreEqual(strlen(expected), actual);
         }
     };
 }
