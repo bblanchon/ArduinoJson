@@ -69,6 +69,11 @@ namespace ArduinoJson
                 return "";
             }
 
+            operator double()
+            {
+                return content.asDouble;
+            }
+
             operator int()
             {
                 return content.asLong;

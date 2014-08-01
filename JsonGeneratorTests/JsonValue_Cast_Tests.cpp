@@ -19,9 +19,15 @@ namespace JsonGeneratorTests
 
     public:
 
-        TEST_METHOD(String)
-        {            
-            setValueAndCheckCast("hello");
+        TEST_METHOD(Bool)
+        {
+            setValueAndCheckCast(true);
+            setValueAndCheckCast(false);
+        }
+
+        TEST_METHOD(Double)
+        {
+            setValueAndCheckCast(3.14156);
         }
 
         TEST_METHOD(Integer)
@@ -34,10 +40,9 @@ namespace JsonGeneratorTests
             setValueAndCheckCast(42L);
         }
 
-        TEST_METHOD(Bool)
+        TEST_METHOD(String)
         {
-            setValueAndCheckCast(true);
-            setValueAndCheckCast(false);
+            setValueAndCheckCast("hello");
         }
 
     private:
