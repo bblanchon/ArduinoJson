@@ -21,15 +21,22 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(String)
         {            
-            value = "hello";
-            mustCastTo("hello");
+            setValueAndCheckCast("hello");
         }
+
+        TEST_METHOD(Integer)
+        {
+            setValueAndCheckCast(42);
+        }
+
 
     private:
 
-        void mustCastTo(const char* expected)
+        template<typename T>
+        void setValueAndCheckCast(T expected)
         {
-            const char* actual = value;
+            value = expected;
+            T actual = value;
             Assert::AreEqual(expected, actual);
         }
     };
