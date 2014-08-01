@@ -29,6 +29,10 @@ namespace JsonGeneratorTests
             setValueAndCheckCast(42);
         }
 
+        TEST_METHOD(Long)
+        {
+            setValueAndCheckCast(42L);
+        }
 
     private:
 

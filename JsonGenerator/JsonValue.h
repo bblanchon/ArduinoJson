@@ -69,6 +69,11 @@ namespace ArduinoJson
                 return content.asLong;
             }
 
+            operator long()
+            {
+                return content.asLong;
+            }
+
             size_t printTo(Print& p) const
             {
                 // handmade polymorphism
