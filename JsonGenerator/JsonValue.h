@@ -59,6 +59,11 @@ namespace ArduinoJson
                 content.asDouble = value;
             }
 
+            operator const char*()
+            {
+                return "";
+            }
+
             size_t printTo(Print& p) const
             {
                 // handmade polymorphism

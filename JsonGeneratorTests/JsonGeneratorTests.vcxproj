@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClCompile Include="EscapedStringTests.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
+    <ClCompile Include="JsonObject_Indexer_Tests.cpp" />
     <ClCompile Include="JsonObject_PrintTo_Tests.cpp" />
     <ClCompile Include="JsonValueTests.cpp" />
     <ClCompile Include="StringBuilderTests.cpp" />
