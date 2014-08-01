@@ -88,6 +88,7 @@
     <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonObject_Indexer_Tests.cpp" />
     <ClCompile Include="JsonObject_PrintTo_Tests.cpp" />
+    <ClCompile Include="JsonValue_Cast_Tests.cpp" />
     <ClCompile Include="JsonValue_PrintTo_Tests.cpp" />
     <ClCompile Include="StringBuilderTests.cpp" />
   </ItemGroup>

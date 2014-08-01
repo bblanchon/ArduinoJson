@@ -33,5 +33,8 @@
     <ClCompile Include="JsonValue_PrintTo_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JsonValue_Cast_Tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
