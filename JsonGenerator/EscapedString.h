@@ -20,10 +20,15 @@ namespace ArduinoJson
             {                
             }
 
-            size_t printTo(Print&) const;
+            size_t printTo(Print& p) const
+            {
+                return printTo(rawString, p);
+            }
             
         private:
             const char* rawString;
+
+            static size_t printTo(const char*, Print&);
         };
     }
 }

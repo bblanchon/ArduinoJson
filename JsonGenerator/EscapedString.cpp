@@ -30,10 +30,8 @@ static inline size_t printCharTo(char c, Print& p)
         : p.write(c);
 }
 
-size_t EscapedString::printTo(Print& p) const
+size_t EscapedString::printTo(const char* s, Print& p)
 {
-    const char* s = rawString;
-
     if (!s) return p.print("null");
     
     size_t n = p.write('\"');
