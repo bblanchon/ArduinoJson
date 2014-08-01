@@ -83,8 +83,7 @@ namespace JsonGeneratorTests
         void whenInputIs(const char* input)
         {
             StringBuilder sb(buffer, sizeof(buffer));  
-            EscapedString escapedString = input;
-            returnValue = escapedString.printTo(sb);
+            returnValue = EscapedString::printTo(input, sb);
         }
 
         void outputMustBe(const char* expected)

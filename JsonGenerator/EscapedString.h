@@ -14,20 +14,6 @@ namespace ArduinoJson
         class EscapedString
         {
         public:
-
-            EscapedString(const char* s)
-                : rawString(s)
-            {                
-            }
-
-            size_t printTo(Print& p) const
-            {
-                return printTo(rawString, p);
-            }
-            
-        private:
-            const char* rawString;
-
             static size_t printTo(const char*, Print&);
         };
     }

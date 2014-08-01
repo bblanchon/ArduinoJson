@@ -20,7 +20,7 @@ size_t JsonObjectBase::printTo(Print& p) const
     const KeyValuePair* current = items;
     for (int i = count; i > 0; i--)
     {       
-        n += EscapedString(current->key).printTo(p);
+        n += EscapedString::printTo(current->key, p);
         n += p.write(':');
         n += current->value.printTo(p);
 
