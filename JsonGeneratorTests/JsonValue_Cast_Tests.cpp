@@ -30,6 +30,11 @@ namespace JsonGeneratorTests
             setValueAndCheckCast(3.14156);
         }
 
+        TEST_METHOD(Float)
+        {
+            setValueAndCheckCast(3.14f);
+        }
+
         TEST_METHOD(Integer)
         {
             setValueAndCheckCast(42);
