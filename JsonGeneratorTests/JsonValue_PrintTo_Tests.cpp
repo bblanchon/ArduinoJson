@@ -13,7 +13,7 @@ using namespace ArduinoJson::Internals;
 
 namespace JsonGeneratorTests
 {
-    TEST_CLASS(JsonValueTests)
+    TEST_CLASS(JsonValue_PrintTo_Tests)
     {
         char buffer[1024];
         size_t returnValue;
@@ -22,62 +22,62 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(String)
         {
-            whenInputIs("hello");
+            setValueTo("hello");
             outputMustBe("\"hello\"");
         }
 
         TEST_METHOD(Float)
         {
-            whenInputIs(3.1415f);
+            setValueTo(3.1415f);
             outputMustBe("3.14");
         }
 
         TEST_METHOD(DoubleZeroDigits)
         {
-            whenInputIs<0>(3.14159265358979323846);
+            setValueTo<0>(3.14159265358979323846);
             outputMustBe("3");
         }
 
         TEST_METHOD(DoubleOneDigit)
         {
-            whenInputIs<1>(3.14159265358979323846);
+            setValueTo<1>(3.14159265358979323846);
             outputMustBe("3.1");
         }
 
         TEST_METHOD(DoubleTwoDigits)
         {
-            whenInputIs<2>(3.14159265358979323846);
+            setValueTo<2>(3.14159265358979323846);
             outputMustBe("3.14");
         }
         
         TEST_METHOD(Integer)
         {
-            whenInputIs(314);
+            setValueTo(314);
             outputMustBe("314");
         }
 
         TEST_METHOD(Char)
         {
-            whenInputIs('A');
+            setValueTo('A');
             outputMustBe("65");
         }
 
         TEST_METHOD(Short)
         {
-            whenInputIs((short)314);
+            setValueTo((short)314);
             outputMustBe("314");
         }
 
         TEST_METHOD(Long)
         {
-            whenInputIs(314159265L);
+            setValueTo(314159265L);
             outputMustBe("314159265");
         }
 
     private:
 
         template<int DIGITS>
-        void whenInputIs(double value)
+        void setValueTo(double value)
         {
             StringBuilder sb(buffer, sizeof(buffer));
             JsonValue jsonValue;
@@ -86,7 +86,7 @@ namespace JsonGeneratorTests
         }
 
         template<typename T>
-        void whenInputIs(T value)
+        void setValueTo(T value)
         {
             StringBuilder sb(buffer, sizeof(buffer));
             JsonValue jsonValue;
