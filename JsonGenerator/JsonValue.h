@@ -66,7 +66,7 @@ namespace ArduinoJson
 
             operator const char*()
             {
-                return "";
+                return content.asString;
             }
 
             operator double()
