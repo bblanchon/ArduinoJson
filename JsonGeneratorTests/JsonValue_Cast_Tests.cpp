@@ -34,6 +34,12 @@ namespace JsonGeneratorTests
             setValueAndCheckCast(42L);
         }
 
+        TEST_METHOD(Bool)
+        {
+            setValueAndCheckCast(true);
+            setValueAndCheckCast(false);
+        }
+
     private:
 
         template<typename T>

@@ -59,6 +59,11 @@ namespace ArduinoJson
                 content.asDouble = value;
             }
 
+            operator bool()
+            {
+                return content.asBool;
+            }
+
             operator const char*()
             {
                 return "";
