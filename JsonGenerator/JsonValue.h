@@ -44,7 +44,7 @@ namespace ArduinoJson
             void operator=(const char* value)
             {
                 printToImpl = &printStringTo;
-                content.asString.set(value);
+                content.asString = value;
             }
 
             void operator=(double value)
@@ -108,11 +108,11 @@ namespace ArduinoJson
         private:
             union Content
             {
-                bool asBool;
-                long asLong;
-                Printable* asPrintable;
-                Internals::EscapedString asString;
-                double asDouble;
+                bool        asBool;
+                double      asDouble;
+                long        asLong;
+                Printable*  asPrintable;
+                const char* asString;
             };
 
             Content content;

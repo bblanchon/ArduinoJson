@@ -7,6 +7,7 @@
 #include "JsonValue.h"
 
 using namespace ArduinoJson::Generator;
+using namespace ArduinoJson::Internals;
 
 JsonValue JsonValue::nullInstance;
 
@@ -30,5 +31,5 @@ size_t JsonValue::printPrintableTo(const Content& c, Print& p)
 
 size_t JsonValue::printStringTo(const Content& c, Print& p)
 {
-    return c.asString.printTo(p);
+    return EscapedString(c.asString).printTo(p);
 }

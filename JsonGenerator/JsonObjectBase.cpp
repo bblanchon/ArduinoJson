@@ -4,6 +4,7 @@
 */
 
 #include "JsonObjectBase.h"
+#include <string.h> // for strcmp
 
 using namespace ArduinoJson::Generator;
 using namespace ArduinoJson::Internals;
@@ -19,7 +20,7 @@ size_t JsonObjectBase::printTo(Print& p) const
     const KeyValuePair* current = items;
     for (int i = count; i > 0; i--)
     {       
-        n += current->key.printTo(p);
+        n += EscapedString(current->key).printTo(p);
         n += p.write(':');
         n += current->value.printTo(p);
 
@@ -40,7 +41,7 @@ JsonValue& JsonObjectBase::operator[](char const* key)
 {
     for (int i = 0; i < count; ++i)
     {
-        if (items[i].key.equals(key))
+        if (!strcmp(items[i].key, key))
         {
             return items[i].value;
         }
@@ -49,6 +50,6 @@ JsonValue& JsonObjectBase::operator[](char const* key)
     if (count >= capacity)        
         return JsonValue::null();
     
-    items[count].key.set(key);
+    items[count].key = key;
     return items[count++].value;
 }

@@ -16,8 +16,7 @@ namespace JsonGeneratorTests
     {
         char buffer[1024];
         size_t returnValue;
-        EscapedString escapedString;
-
+        
     public:
 
         TEST_METHOD(Null)
@@ -83,8 +82,8 @@ namespace JsonGeneratorTests
     private:
         void whenInputIs(const char* input)
         {
-            StringBuilder sb(buffer, sizeof(buffer));            
-            escapedString.set(input);
+            StringBuilder sb(buffer, sizeof(buffer));  
+            EscapedString escapedString = input;
             returnValue = escapedString.printTo(sb);
         }
 

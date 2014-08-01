@@ -38,8 +38,8 @@ namespace ArduinoJson
 
             struct KeyValuePair
             {
-                Internals::EscapedString  key;
-                JsonValue      value;
+                const char* key;
+                JsonValue   value;
             };
 
             JsonObjectBase(KeyValuePair* items, int capacity)
