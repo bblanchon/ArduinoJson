@@ -39,17 +39,22 @@ size_t JsonObjectBase::printTo(Print& p) const
 
 JsonValue& JsonObjectBase::operator[](char const* key)
 {
-    for (int i = 0; i < count; ++i)
+    KeyValuePair* p = items;
+
+    for (int i = count; i > 0; --i)
     {
-        if (!strcmp(items[i].key, key))
-        {
-            return items[i].value;
-        }
+        bool keyMatches = strcmp(p->key, key) == 0;
+
+        if (keyMatches)
+            return p->value;
+
+        p++;
     }
 
     if (count >= capacity)        
         return JsonValue::null();
     
-    items[count].key = key;
-    return items[count++].value;
+    count++;
+    p->key = key;
+    return p->value;
 }
