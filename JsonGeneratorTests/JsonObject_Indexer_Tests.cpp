@@ -35,12 +35,16 @@ namespace JsonGeneratorTests
 
         void mustContain(const char* key, const char* expected)
         {
+            Assert::IsTrue(object.containsKey(key));
+
             const char* actual = object[key];
             Assert::AreEqual(expected, actual);
         }
 
         void mustNotContain(const char* key)
         {
+            Assert::IsFalse(object.containsKey(key));
+
             const char* actual = object[key];
             Assert::IsNull(actual);
         }
