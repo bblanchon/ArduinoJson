@@ -7,7 +7,6 @@
 
 #include "JsonPrintable.h"
 #include "EscapedString.h"
-#include <string.h> // for strcmp
 
 namespace ArduinoJson
 {
@@ -43,11 +42,6 @@ namespace ArduinoJson
             {
                 const char* key;
                 JsonValue   value;
-
-                bool matches(const char* candidateKey) const
-                {
-                    return strcmp(key, candidateKey) == 0;
-                }
             };
 
             JsonObjectBase(KeyValuePair* items, int capacity)
@@ -60,6 +54,8 @@ namespace ArduinoJson
             int capacity, count;
 
             static JsonValue nullValue;
+
+            KeyValuePair* getMatchingPair(const char* key) const;
         };
     }
 }
