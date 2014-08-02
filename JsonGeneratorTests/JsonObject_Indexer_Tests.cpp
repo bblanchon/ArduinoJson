@@ -18,10 +18,10 @@ namespace JsonGeneratorTests
 
     public:
 
-    /*    TEST_METHOD(Empty)
+        TEST_METHOD(Empty)
         {
             mustNotContain("key");
-        }*/
+        }
 
         TEST_METHOD(OneString)
         {
@@ -35,8 +35,14 @@ namespace JsonGeneratorTests
 
         void mustContain(const char* key, const char* expected)
         {
-            auto actual = (const char*) object[key];
+            const char* actual = object[key];
             Assert::AreEqual(expected, actual);
+        }
+
+        void mustNotContain(const char* key)
+        {
+            const char* actual = object[key];
+            Assert::IsNull(actual);
         }
     };
 }

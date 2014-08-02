@@ -9,8 +9,6 @@
 using namespace ArduinoJson::Generator;
 using namespace ArduinoJson::Internals;
 
-JsonValue JsonValue::nullInstance;
-
 size_t JsonValue::printBoolTo(const Content& c, Print& p)
 {
     return p.print(c.asBool ? "true" : "false");

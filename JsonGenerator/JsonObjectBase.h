@@ -50,6 +50,8 @@ namespace ArduinoJson
         private:
             KeyValuePair* items;
             int capacity, count;
+
+            static JsonValue nullValue;
         };
     }
 }

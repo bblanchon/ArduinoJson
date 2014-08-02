@@ -9,6 +9,10 @@
 using namespace ArduinoJson::Generator;
 using namespace ArduinoJson::Internals;
 
+
+JsonValue JsonObjectBase::nullValue;
+
+
 size_t JsonObjectBase::printTo(Print& p) const
 {
     size_t n = 0;
@@ -51,10 +55,19 @@ JsonValue& JsonObjectBase::operator[](char const* key)
         p++;
     }
 
-    if (count >= capacity)        
-        return JsonValue::null();
-    
-    count++;
-    p->key = key;
-    return p->value;
+    JsonValue* value;
+
+    if (count < capacity)
+    {
+        count++;
+        p->key = key;
+        value = &p->value;
+    }
+    else
+    {
+        value = &nullValue;
+    }
+
+    value->reset();
+    return *value;
 }
