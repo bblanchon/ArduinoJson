@@ -1,9 +1,9 @@
 Arduino JSON library - Generator
 ================================
 
-This library is a simple JSON encoder for embedded systems.
+*An elegant and efficient JSON encoder for embedded systems.*
 
-It's design to be very lightweight, works without any allocation on the heap (no malloc) and supports nested objects.
+It's design to have the most intuitive API, the smallest footprint and works without any allocation on the heap (no malloc).
 
 It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library in any other C++ project.
 
@@ -11,10 +11,10 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 Features
 --------
 
-* Supports nested objects
 * Elegant API, very easy to use 
 * Fixed memory allocation (no malloc)
 * Small footprint
+* Supports nested objects
 * Implements Arduino's `Printable interface
 * MIT License
 
@@ -23,8 +23,8 @@ Example
 -------
 
     JsonArray<2> array;
-    array.add<6>(48.756080);
-    array.add<6>(2.302038);
+    array.add<6>(48.756080);  // <6> specifies the number of digits in the output
+    array.add<6>(2.302038);   // (the default is 2)
 
     JsonObject<3> root;
     root["sensor"] = "gps";
@@ -80,7 +80,7 @@ Then you can add strings, integer, booleans, etc:
     array.add(42);
     array.add(true);
 
-There are two syntaxes for the floating point values:
+There are two syntaxes for floating point values:
 
 	array.add<4>(3.1415);  // 4 digits: "3.1415" 
     array.add(3.14);	   // 2 digits: "3.14"
@@ -130,6 +130,11 @@ or
     JsonObject<8> nestedObject;
     object["key7"] = nestedObject;
 
+> ##### Other JsonObject functions
+> * `object.add(key, value)` is a synonym for `object[key] = value`
+> * `object.containsKey(key)` returns `true` is the `key` is present in `object`
+> * `object.remove(key)` removes the `value` associated with `key`
+
 ### 4. Get the JSON string
 
 There are two ways tho get the resulting JSON string.
@@ -177,15 +182,20 @@ This table is for an 8-bit Arduino, types would be bigger on a 32-bit processor.
 Code size
 ---------
 
+The following values has been obtained with Arduino IDE 1.0.5, targeting an Arduino Duelmilanove with an ATmega 328.
+
 ### Minimum setup
 
-| Function                     | Size |
-| ---------------------------- | ---- |
-| `JsonObjectBase::printTo()`  | 222  |
-| `EscapedString::printTo()`   | 202  |
-| `JsonArrayBase::printTo()`   | 164  |
-| `Print::print(char const*)`  | 146  |
-| `JsonValue::printStringTo()` | 6    |
+| Function                            | Size |
+| ----------------------------------- | ---- |
+| `JsonObjectBase::printTo()`         | 234  |
+| `EscapedString::printTo()`          | 196  |
+| `JsonArrayBase::printTo()`          | 164  |
+| `Print::print(char const*)`         | 146  |
+| `JsonObjectBase::operator[]`        | 114  |
+| `JsonObjectBase::getMatchingPair()` | 72   |
+| `JsonValue::printPrintableTo()`     | 40   |
+| `JsonValue::printStringTo()`        | 12   |
 
 ### Additional space for integers
 

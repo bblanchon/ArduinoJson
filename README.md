@@ -3,7 +3,7 @@ Arduino JSON library
 
 *An elegant and efficient JSON library for embedded systems.*
 
-It's design to be very lightweight, works without any allocation on the heap (no malloc).
+It's design to have the most intuitive API, the smallest footprint and works without any allocation on the heap (no malloc).
 
 It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library in any other C++ project.
 
