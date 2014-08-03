@@ -12,22 +12,23 @@ namespace ArduinoJson
 {
     namespace Generator
     {
+        typedef const char* JsonKey;
+
         class JsonObjectBase : public JsonPrintable
         {
         public:
+            JsonValue& operator[](JsonKey);
 
-            JsonValue& operator[](const char*);
-
-            bool containsKey(const char*) const;
+            bool containsKey(JsonKey) const;
 
             template<typename T>
-            void add(const char* key, T value)
+            void add(JsonKey key, T value)
             {
                 operator[](key) = value;
             }
 
             template<int DIGITS>
-            void add(const char* key, double value)
+            void add(JsonKey key, double value)
             {
                 operator[](key).set<DIGITS>(value);
             }
@@ -40,7 +41,7 @@ namespace ArduinoJson
 
             struct KeyValuePair
             {
-                const char* key;
+                JsonKey     key;
                 JsonValue   value;
             };
 
@@ -55,7 +56,7 @@ namespace ArduinoJson
 
             static JsonValue nullValue;
 
-            KeyValuePair* getMatchingPair(const char* key) const;
+            KeyValuePair* getMatchingPair(JsonKey key) const;
         };
     }
 }

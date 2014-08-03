@@ -39,7 +39,7 @@ size_t JsonObjectBase::printTo(Print& p) const
     return n;
 }
 
-JsonObjectBase::KeyValuePair* JsonObjectBase::getMatchingPair(char const* key) const
+JsonObjectBase::KeyValuePair* JsonObjectBase::getMatchingPair(JsonKey key) const
 {
     KeyValuePair* p = items;
 
@@ -54,13 +54,14 @@ JsonObjectBase::KeyValuePair* JsonObjectBase::getMatchingPair(char const* key) c
     return 0;
 }
 
-JsonValue& JsonObjectBase::operator[](char const* key)
+JsonValue& JsonObjectBase::operator[](JsonKey key)
 {
     KeyValuePair* match = getMatchingPair(key);
-    JsonValue* value;
 
     if (match)
         return match->value;
+
+    JsonValue* value;
 
     if (count < capacity)
     {
@@ -77,7 +78,7 @@ JsonValue& JsonObjectBase::operator[](char const* key)
     return *value;
 }
 
-bool JsonObjectBase::containsKey(char const* key) const
+bool JsonObjectBase::containsKey(JsonKey key) const
 {
     return getMatchingPair(key) != 0;
 }
