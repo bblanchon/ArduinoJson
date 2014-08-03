@@ -4,9 +4,9 @@ Arduino JSON: change log
 v3.1
 ----
 
-* Calling `Generator::JsonObject.add()` twice with the same `key` now replaces the `value`
-* Added `Generator::JsonObject.operator[]`, see bellow the new API
-* Added `Generator::JsonObject.remove()`
+* Calling `Generator::JsonObject::add()` twice with the same `key` now replaces the `value`
+* Added `Generator::JsonObject::operator[]`, see bellow the new API
+* Added `Generator::JsonObject::remove()`
 
 Old generator API:
 
