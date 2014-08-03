@@ -22,9 +22,9 @@ Feature comparison
 
 | Library      | Memory allocation | Nested objects | Parser size | Encoder size  |
 | ------------ | ----------------- | -------------- | ----------- | ------------- |
-| Arduino JSON | static            | yes            | 2642 Bytes  | 628 bytes     |
+| Arduino JSON | static            | yes            | 2642 Bytes  | 862 bytes     |
 | json-arduino | dynamic           | no             | 3348 (+27%) | not supported |
-| aJson        | dynamic           | yes            | 5088 (+93%) | 4678 (+640%)  |
+| aJson        | dynamic           | yes            | 5088 (+93%) | 4678 (+540%)  |
 
 "Parser size" was measured with a program parsing `{"sensor":"outdoor","value":25.6}`.
 For each library, I wrote a program that extracts a string and a float. I subtracted the size of a program doing the same without any JSON parsing involved. [Source files are here](https://gist.github.com/bblanchon/e8ba914a7109f3642c0f).
