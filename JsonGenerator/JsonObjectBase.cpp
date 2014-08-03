@@ -82,3 +82,11 @@ bool JsonObjectBase::containsKey(JsonKey key) const
 {
     return getMatchingPair(key) != 0;
 }
+
+void JsonObjectBase::remove(JsonKey key)
+{
+    KeyValuePair* match = getMatchingPair(key);    
+    if (match == 0) return;
+
+    *match = items[--count];
+}

@@ -22,14 +22,35 @@ namespace JsonGeneratorTests
         {
             mustNotContain("key");
         }
-
-        TEST_METHOD(OneString)
+        
+        TEST_METHOD(TwoStrings)
         {
-            object["key"] = "value";
+            object["key1"] = "value1";
+            object["key2"] = "value2";
 
-            mustContain("key", "value");
+            mustContain("key1", "value1");
+            mustContain("key2", "value2");
         }
 
+        TEST_METHOD(RemoveFirst)
+        {
+            object["key1"] = "value1";
+            object["key2"] = "value2";
+            object.remove("key1");
+
+            mustNotContain("key1");
+            mustContain("key2", "value2");
+        }
+
+        TEST_METHOD(RemoveLast)
+        {
+            object["key1"] = "value1";
+            object["key2"] = "value2";
+            object.remove("key2");
+
+            mustContain("key1", "value1");
+            mustNotContain("key2");
+        }
 
     private:
 

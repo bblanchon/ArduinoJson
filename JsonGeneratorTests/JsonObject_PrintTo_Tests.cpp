@@ -38,6 +38,33 @@ namespace JsonGeneratorTests
             outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
         }
 
+        TEST_METHOD(RemoveFirst)
+        {
+            object["key1"] = "value1";
+            object["key2"] = "value2";
+            object.remove("key1");
+
+            outputMustBe("{\"key2\":\"value2\"}");
+        }
+
+        TEST_METHOD(RemoveLast)
+        {
+            object["key1"] = "value1";
+            object["key2"] = "value2";
+            object.remove("key2");
+
+            outputMustBe("{\"key1\":\"value1\"}");
+        }
+
+        TEST_METHOD(RemoveUnexistingKey)
+        {
+            object["key1"] = "value1";
+            object["key2"] = "value2";
+            object.remove("key3");
+
+            outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
+        }
+
         TEST_METHOD(ReplaceExistingKey)
         {
             object["key"] = "value1";

@@ -18,8 +18,8 @@ namespace ArduinoJson
         {
         public:
             JsonValue& operator[](JsonKey);
-
             bool containsKey(JsonKey) const;
+            void remove(JsonKey key);
 
             template<typename T>
             void add(JsonKey key, T value)
@@ -53,7 +53,6 @@ namespace ArduinoJson
         private:
             KeyValuePair* items;
             int capacity, count;
-
             static JsonValue nullValue;
 
             KeyValuePair* getMatchingPair(JsonKey key) const;
