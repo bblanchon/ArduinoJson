@@ -1,6 +1,11 @@
 Arduino JSON: change log
 ========================
 
+v3.2
+----
+
+* Fixed a bug when adding nested object in `JsonArray` (bug introduced in v3.1).
+
 v3.1
 ----
 
