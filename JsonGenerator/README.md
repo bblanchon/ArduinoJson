@@ -101,6 +101,33 @@ or
     JsonObject<8> nestedObject;
     array.add(nestedObject);
 
+> ##### CAUTION! Nested objects must be in memory
+> Calling `add()` makes the `JsonArray` store a pointer to the nested object.
+> This is designed to avoid memory duplication.
+> But it can only work if the object is in memory when `printTo()` is executed.
+> For instance, don't do this:
+> 
+>     void addNestedObject()
+>     {
+>         JsonObject<2> nestedObject;
+>         // ...
+>         array.add(nestedObject); // <- DON'T !!
+>         
+>         // array now contains a pointer to a local variable that will be
+>         // discarded as soon as the function exits 
+>     } 
+>     
+> For the same reason, don't do this either:
+> 
+>     for( int i=0; i<100; i++)
+>     {
+>         JsonObject<2> nestedObject;
+>         // ...
+>         array.add(nestedObject); // <- DON'T !!
+>     }  
+>     // array now contains 100 pointers to the same a local variable
+>     // that is out of the scope anyway
+
 #### JSON Object
 
 You create a JSON object (ie hash-table/dictionary) with the following line:
