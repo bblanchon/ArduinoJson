@@ -41,13 +41,14 @@ namespace JsonGeneratorTests
                 object["id"] = persons[i].id;
                 object["name"] = persons[i].name;
 
-                json.add(object);
+                json.add(object); // <- Adding a reference to a temporary variable
             }
 
             char buffer[256];
             json.printTo(buffer, sizeof(buffer));
 
-            Assert::AreEqual("[]", buffer);
+            // the same values are repeated, that's normal
+            Assert::AreEqual("[{\"id\":2,\"name\":\"John\"},{\"id\":2,\"name\":\"John\"}]", buffer);  
         }
 
         TEST_METHOD(RightWayToAddObjectInAnArray)
@@ -55,9 +56,8 @@ namespace JsonGeneratorTests
             JsonArray<2> json;
             JsonObject<2> object[2];
 
-            for (int i = 0; i < 1; i++) 
+            for (int i = 0; i < 2; i++) 
             {
-                object[i] = JsonObject<2>();
                 object[i]["id"] = persons[i].id;
                 object[i]["name"] = persons[i].name;
 
@@ -67,7 +67,7 @@ namespace JsonGeneratorTests
             char buffer[256];
             json.printTo(buffer, sizeof(buffer));
 
-            Assert::AreEqual("[TODO]", buffer);
+            Assert::AreEqual("[{\"id\":1,\"name\":\"Jeff\"},{\"id\":2,\"name\":\"John\"}]", buffer);
         }
     };
 }
