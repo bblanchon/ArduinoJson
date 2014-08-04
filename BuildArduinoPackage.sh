@@ -1,7 +1,9 @@
 #!/bin/bash
 
 ZIP="C:\Program Files\7-Zip\7z.exe"
-OUTPUT="ArduinoJson.zip"
+
+TAG=$(git describe)
+OUTPUT="ArduinoJson-$TAG.zip"
 
 cd ..
 
