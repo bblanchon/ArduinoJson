@@ -35,7 +35,7 @@ namespace ArduinoJson
                 content.asLong = value;
             }
 
-            void operator=(Printable& value)
+            void operator=(const Printable& value)
             {
                 printToImpl = &printPrintableTo;
                 content.asPrintable = &value;
@@ -89,7 +89,7 @@ namespace ArduinoJson
                 return content.asLong;
             }
 
-            operator Printable&()
+            operator const Printable&()
             {
                 return *content.asPrintable;
             }
@@ -109,11 +109,11 @@ namespace ArduinoJson
         private:
             union Content
             {
-                bool        asBool;
-                double      asDouble;
-                long        asLong;
-                Printable*  asPrintable;
-                const char* asString;
+                bool                asBool;
+                double              asDouble;
+                long                asLong;
+                const Printable*    asPrintable;
+                const char*         asString;
             };
 
             Content content;

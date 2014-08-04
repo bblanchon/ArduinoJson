@@ -71,7 +71,7 @@ namespace JsonGeneratorTests
         void setValueAndCheckCast(JsonArray<N>& expected)
         {
             value = expected;
-            Printable& actual = value;
+            const Printable& actual = value;
             Assert::AreEqual((void*) &expected, (void*) &actual);
         }
     };

@@ -20,12 +20,17 @@ namespace ArduinoJson
 
             }
 
+            void add(const Printable& nestedObject)
+            {
+                if (count < capacity)
+                    items[count++] = nestedObject;
+            }
+
             template<typename T>
             void add(T value)
             {
-                if (count >= capacity) return;
-
-                items[count++] = value;
+                if (count < capacity)
+                    items[count++] = value;
             }
 
             template<int DIGITS>

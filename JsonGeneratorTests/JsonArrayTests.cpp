@@ -124,13 +124,19 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OneEmptyNestedArray)
         {
-           addNested(JsonArray<1>());
+            JsonArray<1> nestedArray;
+            
+            arr.add(nestedArray);
+
             outputMustBe("[[]]");
         }
 
         TEST_METHOD(OneEmptyNestedHash)
         {
-            addNested(JsonHashTable<1>());
+            JsonObject<1> nestedObject;
+
+            arr.add(nestedObject);
+
             outputMustBe("[{}]");
         }
 
@@ -139,17 +145,12 @@ namespace JsonGeneratorTests
             JsonArray<1> nestedArray;
             nestedArray.add(1);
 
-            addNested(nestedArray);
+            arr.add(nestedArray);
 
             outputMustBe("[[1]]");
         }
 
     private:
-
-        void addNested(Printable& value)
-        {
-            arr.add<Printable&>(value);
-        }
 
         template<typename T>
         void add(T value)
