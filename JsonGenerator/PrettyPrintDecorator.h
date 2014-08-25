@@ -29,10 +29,14 @@ private:
 
     size_t writeln();
 
-    size_t writeNormalChar(uint8_t c);
+    size_t handleStringChar(uint8_t);
+    size_t handleMarkupChar(uint8_t);
+
+    size_t writeClosing(uint8_t);
     size_t writeColumn();
     size_t writeComma();
-    size_t writeOpening(uint8_t c);
-    size_t writeClosing(uint8_t c);
+    size_t writeNormalChar(uint8_t);
+    size_t writeOpening(uint8_t);
+    size_t writeQuote();
 };
 

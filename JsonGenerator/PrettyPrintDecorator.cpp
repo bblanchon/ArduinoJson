@@ -7,53 +7,42 @@
 
 size_t PrettyPrintDecorator::write(uint8_t c)
 {
-    size_t n;
-
-    switch (c)
-    {
-    case '{':
-    case '[':
-        n = inString ? writeNormalChar(c) : writeOpening(c);        
-        break;
-
-    case '}':
-    case ']':  
-        n = inString ? writeNormalChar(c) : writeClosing(c);
-        break;
-        
-    case ',':
-        n = inString ? writeNormalChar(c) : writeComma();
-        break;
-
-    case ':':
-        n = inString ? writeNormalChar(c) : writeColumn();
-        break;
-
-    case '\"':
-        n = writeNormalChar(c);
-
-        if (previousChar != '\\')
-            inString = !inString;
-
-        break;
-
-    default:
-        n = writeNormalChar(c);     
-        break;
-    }
-
+    size_t n = inString ? handleStringChar(c) : handleMarkupChar(c);    
     previousChar = c;
     return n;
 }
 
-size_t PrettyPrintDecorator::writeln()
+size_t PrettyPrintDecorator::handleStringChar(uint8_t c)
 {
-    size_t n = sink.write('\n');
+    bool isQuote = c == '"' && previousChar != '\\';
 
-    for (int i = 0; i < indent; i++)
-        n += sink.write(' ');
+    return isQuote ? writeQuote() : writeNormalChar(c);
+}
 
-    return n;
+size_t PrettyPrintDecorator::handleMarkupChar(uint8_t c)
+{
+    switch (c)
+    {
+    case '{':
+    case '[':
+        return writeOpening(c);
+
+    case '}':
+    case ']':
+        return writeClosing(c);
+
+    case ',':
+        return writeComma();
+
+    case ':':
+        return writeColumn();
+
+    case '"':
+        return writeQuote();
+
+    default:
+        return writeNormalChar(c); // <- should not happen anyway
+    }
 }
 
 size_t PrettyPrintDecorator::writeNormalChar(uint8_t c)
@@ -84,6 +73,13 @@ size_t PrettyPrintDecorator::writeOpening(uint8_t c)
     return n;
 }
 
+size_t PrettyPrintDecorator::writeQuote()
+{
+    size_t n = writeNormalChar('"');
+    inString = !inString;
+    return n;
+}
+
 size_t PrettyPrintDecorator::writeClosing(uint8_t c)
 {
     bool inEmptyBlock = previousChar == '{' || previousChar == '[';
@@ -91,4 +87,14 @@ size_t PrettyPrintDecorator::writeClosing(uint8_t c)
     indent--;
 
     return inEmptyBlock ? sink.write(c) : writeln() + sink.write(c);
+}
+
+size_t PrettyPrintDecorator::writeln()
+{
+    size_t n = sink.write('\n');
+
+    for (int i = 0; i < indent; i++)
+        n += sink.write(' ');
+
+    return n;
 }
