@@ -34,6 +34,16 @@ namespace JsonGeneratorTests
                 "]");
         }
 
+        TEST_METHOD(TwoElements)
+        {
+            whenInputIs("[1,2]");
+            outputMustBe(
+                "[\n"
+                " 1,\n"
+                " 2\n"
+                "]");
+        }
+
     private:
 
         void whenInputIs(const char input[])
