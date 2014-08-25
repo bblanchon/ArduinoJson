@@ -12,7 +12,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace JsonGeneratorTests
 {
-    TEST_CLASS(IntentedPrintTests)
+    TEST_CLASS(Indented_Array_Tests)
     {
         char buffer[1024];
         size_t returnValue;
@@ -23,6 +23,15 @@ namespace JsonGeneratorTests
         {
             whenInputIs("[]");
             outputMustBe("[]");
+        }
+
+        TEST_METHOD(OneElement)
+        {
+            whenInputIs("[1]");
+            outputMustBe(
+                "[\n"
+                " 1\n"
+                "]");
         }
 
     private:

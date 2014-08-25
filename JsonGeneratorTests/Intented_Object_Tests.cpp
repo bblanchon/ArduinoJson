@@ -12,7 +12,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace JsonGeneratorTests
 {
-    TEST_CLASS(IntentedPrintTests)
+    TEST_CLASS(Indented_Object_Tests)
     {
         char buffer[1024];
         size_t returnValue;

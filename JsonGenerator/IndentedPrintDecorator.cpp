@@ -10,14 +10,16 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     switch (c)
     {
     case '{':
+    case '[':
         indent++;
         previousChar = c;
         return sink.write(c);
 
     case '}':
+    case ']':
         indent--;
 
-        if (previousChar == '{')
+        if (previousChar == '{' || previousChar == '[')
         {
             previousChar = c;
             return sink.write(c);
@@ -58,7 +60,7 @@ size_t IndentedPrintDecorator::write(uint8_t c)
 
     default:
 
-        if (previousChar == '{')
+        if (previousChar == '{' || previousChar == '[')
         {
             previousChar = c;
             return writeln() + sink.write(c);
