@@ -49,8 +49,7 @@ size_t PrettyPrintDecorator::handleMarkupChar(uint8_t c)
 
 size_t PrettyPrintDecorator::writeValueChar(uint8_t c)
 {
-    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
-    return inEmptyBlock ? writeln() + sink.write(c) : sink.write(c);
+    return inEmptyBlock() ? writeLineBreak() + sink.write(c) : sink.write(c);
 }
 
 size_t PrettyPrintDecorator::writeColumn()
@@ -60,14 +59,12 @@ size_t PrettyPrintDecorator::writeColumn()
 
 size_t PrettyPrintDecorator::writeComma()
 {
-    return sink.write(',') + writeln();
+    return sink.write(',') + writeLineBreak();
 }
 
 size_t PrettyPrintDecorator::writeOpening(uint8_t c)
 {
-    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
-
-    size_t n = inEmptyBlock ? writeln() + sink.write(c) : sink.write(c);
+    size_t n = inEmptyBlock() ? writeLineBreak() + sink.write(c) : sink.write(c);
 
     indent++;
 
@@ -76,9 +73,7 @@ size_t PrettyPrintDecorator::writeOpening(uint8_t c)
 
 size_t PrettyPrintDecorator::writeQuote()
 {
-    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
-
-    size_t n = inEmptyBlock ? writeln() + sink.write('"') : sink.write('"');
+    size_t n = inEmptyBlock() ? writeLineBreak() + sink.write('"') : sink.write('"');
 
     inString = true;
 
@@ -87,14 +82,12 @@ size_t PrettyPrintDecorator::writeQuote()
 
 size_t PrettyPrintDecorator::writeClosing(uint8_t c)
 {
-    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
-
     indent--;
 
-    return inEmptyBlock ? sink.write(c) : writeln() + sink.write(c);
+    return inEmptyBlock() ? sink.write(c) : writeLineBreak() + sink.write(c);
 }
 
-size_t PrettyPrintDecorator::writeln()
+size_t PrettyPrintDecorator::writeLineBreak()
 {
     size_t n = sink.write('\n');
 
