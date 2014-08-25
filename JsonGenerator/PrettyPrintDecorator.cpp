@@ -12,74 +12,33 @@ size_t PrettyPrintDecorator::write(uint8_t c)
     switch (c)
     {
     case '{':
-    case '[':              
-
-        if (previousChar == '{' || previousChar == '[')
-        {
-            n = writeln() + sink.write(c);
-        }
-        else
-        {
-            n = sink.write(c);
-        }
-
-        indent++;
+    case '[':
+        n = inString ? writeNormalChar(c) : writeOpening(c);        
         break;
 
     case '}':
-    case ']':
-        indent--;
-
-        if (previousChar == '{' || previousChar == '[')
-        {
-            n = sink.write(c);
-        }
-        else
-        {
-            n = writeln() + sink.write(c);
-        }
+    case ']':  
+        n = inString ? writeNormalChar(c) : writeClosing(c);
         break;
         
     case ',':
-        if (isInAString)
-        {
-            n = sink.write(c);
-        }
-        else
-        {
-            n = sink.write(c) + writeln();
-        }
+        n = inString ? writeNormalChar(c) : writeComma();
         break;
 
     case ':':
-        if (isInAString)
-        {
-            n = sink.write(c);
-        }
-        else
-        {
-            n = sink.write(c) + sink.write(' ');
-        }
+        n = inString ? writeNormalChar(c) : writeColumn();
         break;
 
     case '\"':
+        n = writeNormalChar(c);
+
         if (previousChar != '\\')
-        {
-            isInAString = !isInAString;
-        }
-        // no break;
+            inString = !inString;
+
+        break;
 
     default:
-
-        if (previousChar == '{' || previousChar == '[')
-        {
-            n = writeln() + sink.write(c);
-        }
-        else
-        {
-            n = sink.write(c);
-        }
-
+        n = writeNormalChar(c);     
         break;
     }
 
@@ -95,4 +54,51 @@ size_t PrettyPrintDecorator::writeln()
         n += sink.write(' ');
 
     return n;
+}
+
+size_t PrettyPrintDecorator::writeNormalChar(uint8_t c)
+{
+    bool inEmptyBlock = !inString && (previousChar == '{' || previousChar == '[');
+
+    return inEmptyBlock ? writeln() + sink.write(c) : sink.write(c);
+}
+
+size_t PrettyPrintDecorator::writeColumn()
+{
+    return sink.write(':') + sink.write(' ');
+}
+
+size_t PrettyPrintDecorator::writeComma()
+{
+    return sink.write(',') + writeln();
+}
+
+size_t PrettyPrintDecorator::writeOpening(uint8_t c)
+{
+    size_t n;
+    
+    if (previousChar == '{' || previousChar == '[')
+    {
+        n = writeln() + sink.write(c);
+    }
+    else
+    {
+        n = sink.write(c);
+    }
+
+    indent++;
+    return n;
+}
+
+size_t PrettyPrintDecorator::writeClosing(uint8_t c)
+{
+    indent--;
+    if (previousChar == '{' || previousChar == '[')
+    {
+        return sink.write(c);
+    }
+    else
+    {
+        return writeln() + sink.write(c);
+    }
 }

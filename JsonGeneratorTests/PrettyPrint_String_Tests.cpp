@@ -30,6 +30,30 @@ namespace JsonGeneratorTests
             whenInputIs ("\":\\\"',\"");
             outputMustBe("\":\\\"',\"");
         }
+
+        TEST_METHOD(OpeningCurlyBrace)
+        {
+            whenInputIs ("\"{\"");
+            outputMustBe("\"{\"");
+        }
+
+        TEST_METHOD(OpeningSquareBrace)
+        {
+            whenInputIs("\"[\"");
+            outputMustBe("\"[\"");
+        }
+
+        TEST_METHOD(ClosingCurlyBrace)
+        {
+            whenInputIs("\"}\"");
+            outputMustBe("\"}\"");
+        }
+
+        TEST_METHOD(ClosingSquareBrace)
+        {
+            whenInputIs("\"]\"");
+            outputMustBe("\"]\"");
+        }
                
     private:
 

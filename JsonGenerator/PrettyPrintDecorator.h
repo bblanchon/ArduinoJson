@@ -16,7 +16,7 @@ public:
         : indent(0), sink(p)
     {
         previousChar = 0;
-        isInAString = false;
+        inString = false;
     }
 
     virtual size_t write(uint8_t);
@@ -25,8 +25,14 @@ private:
     int indent;
     uint8_t previousChar;
     Print& sink;
-    bool isInAString;
+    bool inString;
 
     size_t writeln();
+
+    size_t writeNormalChar(uint8_t c);
+    size_t writeColumn();
+    size_t writeComma();
+    size_t writeOpening(uint8_t c);
+    size_t writeClosing(uint8_t c);
 };
 
