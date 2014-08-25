@@ -12,17 +12,18 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace JsonGeneratorTests
 {
-	TEST_CLASS(IntentedPrintTests)
-	{
-        char buffer[256];
+    TEST_CLASS(IntentedPrintTests)
+    {
+        char buffer[1024];
+        size_t returnValue;
 
-	public:
-		
-		TEST_METHOD(EmptyString)
-		{
+    public:
+        
+        TEST_METHOD(EmptyString)
+        {
             whenInputIs("");
             outputMustBe("");
-		}
+        }
 
     private:
 
@@ -31,12 +32,13 @@ namespace JsonGeneratorTests
             StringBuilder sb(buffer, sizeof(buffer));
             IndentedPrintDecorator decorator(sb);
 
-            decorator.print(input);
+            returnValue = decorator.print(input);
         }
 
         void outputMustBe(const char* expected)
         {
             Assert::AreEqual(expected, buffer);
+            Assert::AreEqual(strlen(expected), returnValue);
         }
-	};
+    };
 }
