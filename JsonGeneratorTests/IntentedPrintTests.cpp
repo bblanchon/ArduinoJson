@@ -37,6 +37,14 @@ namespace JsonGeneratorTests
             outputMustBe("[]");
         }
 
+        TEST_METHOD(ObjectWithOneMember)
+        {
+            whenInputIs("{\"key\":\"value\"}");
+            outputMustBe(
+                "{\n"
+                " \"key\":\"value\"\n"
+                "}");
+        }
 
     private:
 

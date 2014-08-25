@@ -13,14 +13,16 @@ class IndentedPrintDecorator : public Print
 public:
 
     IndentedPrintDecorator(Print& p)
-        : currentLevel(0), sink(p)
+        : indent(0), sink(p)
     {
     }
 
     virtual size_t write(uint8_t);
 
 private:
-    int currentLevel;
+    int indent;
     Print& sink;
+
+    size_t writeln();
 };
 
