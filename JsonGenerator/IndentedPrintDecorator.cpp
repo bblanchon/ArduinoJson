@@ -10,15 +10,33 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     switch (c)
     {
     case '{':
-        indent++;        
-        return sink.write(c) + writeln();
+        indent++;
+        emptyBlock = true;
+        return sink.write(c);
 
     case '}':
         indent--;
-        return writeln() + sink.write(c);
+
+        if (emptyBlock)
+        {
+            return sink.write(c);
+        }
+        else
+        {
+            return writeln() + sink.write(c);
+        }
 
     default:
-        return sink.write(c);
+
+        if (emptyBlock)
+        {
+            emptyBlock = false;
+            return writeln() + sink.write(c);
+        }
+        else
+        {
+            return sink.write(c);
+        }
     }
 }
 

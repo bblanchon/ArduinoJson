@@ -13,7 +13,7 @@ class IndentedPrintDecorator : public Print
 public:
 
     IndentedPrintDecorator(Print& p)
-        : indent(0), sink(p)
+        : indent(0), sink(p), emptyBlock(false)
     {
     }
 
@@ -21,6 +21,7 @@ public:
 
 private:
     int indent;
+    bool emptyBlock;
     Print& sink;
 
     size_t writeln();
