@@ -8,7 +8,7 @@
 #include "JsonValue.h"
 #include "Print.h"
 #include "Printable.h"
-#include "IndentedPrintDecorator.h"
+#include "PrettyPrintDecorator.h"
 
 namespace ArduinoJson
 {
@@ -28,7 +28,7 @@ namespace ArduinoJson
 
             size_t prettyPrintTo(Print& p) const
             {
-                IndentedPrintDecorator decorator(p);
+                PrettyPrintDecorator decorator(p);
                 return printTo(decorator);
             }
 

@@ -39,13 +39,13 @@
     <ClCompile Include="Issue10.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Intented_Array_Tests.cpp">
+    <ClCompile Include="PrettyPrint_Array_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Intented_Object_Tests.cpp">
+    <ClCompile Include="PrettyPrint_Object_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Intented_String_Tests.cpp">
+    <ClCompile Include="PrettyPrint_String_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

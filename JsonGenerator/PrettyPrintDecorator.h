@@ -8,11 +8,11 @@
 
 #include "Print.h"
 
-class IndentedPrintDecorator : public Print
+class PrettyPrintDecorator : public Print
 {
 public:
 
-    IndentedPrintDecorator(Print& p)
+    PrettyPrintDecorator(Print& p)
         : indent(0), sink(p)
     {
         previousChar = 0;

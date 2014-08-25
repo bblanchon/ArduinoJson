@@ -45,7 +45,7 @@
     <ClInclude Include="JsonObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IndentedPrintDecorator.h">
+    <ClInclude Include="PrettyPrintDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,7 +68,7 @@
     <ClCompile Include="JsonObjectBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IndentedPrintDecorator.cpp">
+    <ClCompile Include="PrettyPrintDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

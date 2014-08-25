@@ -3,9 +3,9 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
-#include "IndentedPrintDecorator.h"
+#include "PrettyPrintDecorator.h"
 
-size_t IndentedPrintDecorator::write(uint8_t c)
+size_t PrettyPrintDecorator::write(uint8_t c)
 {
     switch (c)
     {
@@ -85,7 +85,7 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     }
 }
 
-size_t IndentedPrintDecorator::writeln()
+size_t PrettyPrintDecorator::writeln()
 {
     size_t n = sink.write('\n');
 

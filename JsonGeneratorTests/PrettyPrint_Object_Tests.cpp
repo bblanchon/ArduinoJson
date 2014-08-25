@@ -4,7 +4,7 @@
 */
 
 #include "CppUnitTest.h"
-#include "IndentedPrintDecorator.h"
+#include "PrettyPrintDecorator.h"
 #include "StringBuilder.h"
 
 using namespace ArduinoJson::Internals;
@@ -12,7 +12,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace JsonGeneratorTests
 {
-    TEST_CLASS(Indented_Object_Tests)
+    TEST_CLASS(PrettyPrint_Object_Tests)
     {
         char buffer[1024];
         size_t returnValue;
@@ -73,7 +73,7 @@ namespace JsonGeneratorTests
         void whenInputIs(const char input[])
         {
             StringBuilder sb(buffer, sizeof(buffer));
-            IndentedPrintDecorator decorator(sb);
+            PrettyPrintDecorator decorator(sb);
 
             returnValue = decorator.print(input);
         }
