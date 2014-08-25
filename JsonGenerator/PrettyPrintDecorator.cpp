@@ -75,30 +75,20 @@ size_t PrettyPrintDecorator::writeComma()
 
 size_t PrettyPrintDecorator::writeOpening(uint8_t c)
 {
-    size_t n;
-    
-    if (previousChar == '{' || previousChar == '[')
-    {
-        n = writeln() + sink.write(c);
-    }
-    else
-    {
-        n = sink.write(c);
-    }
+    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
+
+    size_t n = inEmptyBlock ? writeln() + sink.write(c) : sink.write(c);
 
     indent++;
+
     return n;
 }
 
 size_t PrettyPrintDecorator::writeClosing(uint8_t c)
 {
+    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
+
     indent--;
-    if (previousChar == '{' || previousChar == '[')
-    {
-        return sink.write(c);
-    }
-    else
-    {
-        return writeln() + sink.write(c);
-    }
+
+    return inEmptyBlock ? sink.write(c) : writeln() + sink.write(c);
 }
