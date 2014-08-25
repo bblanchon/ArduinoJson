@@ -13,16 +13,19 @@ class IndentedPrintDecorator : public Print
 public:
 
     IndentedPrintDecorator(Print& p)
-        : indent(0), sink(p), emptyBlock(false)
+        : indent(0), sink(p)
     {
+        previousChar = 0;
+        isInAString = false;
     }
 
     virtual size_t write(uint8_t);
 
 private:
     int indent;
-    bool emptyBlock;
+    uint8_t previousChar;
     Print& sink;
+    bool isInAString;
 
     size_t writeln();
 };

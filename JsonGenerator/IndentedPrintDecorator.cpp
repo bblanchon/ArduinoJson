@@ -11,33 +11,50 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     {
     case '{':
         indent++;
-        emptyBlock = true;
+        previousChar = c;
         return sink.write(c);
 
     case '}':
         indent--;
 
-        if (emptyBlock)
+        if (previousChar == '{')
+        {
+            previousChar = c;
+            return sink.write(c);
+        }
+        else
+        {
+            previousChar = c;
+            return writeln() + sink.write(c);
+        }
+        
+    case ',':
+        previousChar = c;
+        if (isInAString)
         {
             return sink.write(c);
         }
         else
         {
-            return writeln() + sink.write(c);
+            return sink.write(c) + writeln();
         }
 
-    case ',':
-        return sink.write(c) + writeln();
+    case '\"':
+        if (previousChar != '\\')
+        {
+            isInAString = !isInAString;
+        }
 
     default:
 
-        if (emptyBlock)
+        if (previousChar == '{')
         {
-            emptyBlock = false;
+            previousChar = c;
             return writeln() + sink.write(c);
         }
         else
         {
+            previousChar = c;
             return sink.write(c);
         }
     }

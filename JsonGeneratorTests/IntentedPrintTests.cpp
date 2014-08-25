@@ -56,6 +56,15 @@ namespace JsonGeneratorTests
                 "}");
         }
 
+        TEST_METHOD(ObjectTrickyCharacters)
+        {
+            whenInputIs("{\"key\":\":\\\"',\"}");
+            outputMustBe(
+                "{\n"
+                " \"key\":\":\\\"',\"\n"
+                "}");
+        }
+
     private:
 
         void whenInputIs(const char input[])
