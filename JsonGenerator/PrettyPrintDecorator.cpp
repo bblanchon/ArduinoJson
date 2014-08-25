@@ -7,12 +7,12 @@
 
 size_t PrettyPrintDecorator::write(uint8_t c)
 {
+    size_t n;
+
     switch (c)
     {
     case '{':
-    case '[':
-              
-        size_t n;
+    case '[':              
 
         if (previousChar == '{' || previousChar == '[')
         {
@@ -23,9 +23,8 @@ size_t PrettyPrintDecorator::write(uint8_t c)
             n = sink.write(c);
         }
 
-        previousChar = c;
         indent++;
-        return n;
+        break;
 
     case '}':
     case ']':
@@ -33,56 +32,59 @@ size_t PrettyPrintDecorator::write(uint8_t c)
 
         if (previousChar == '{' || previousChar == '[')
         {
-            previousChar = c;
-            return sink.write(c);
+            n = sink.write(c);
         }
         else
         {
-            previousChar = c;
-            return writeln() + sink.write(c);
+            n = writeln() + sink.write(c);
         }
+        break;
         
     case ',':
-        previousChar = c;
         if (isInAString)
         {
-            return sink.write(c);
+            n = sink.write(c);
         }
         else
         {
-            return sink.write(c) + writeln();
+            n = sink.write(c) + writeln();
         }
+        break;
 
     case ':':
-        previousChar = c;
         if (isInAString)
         {
-            return sink.write(c);
+            n = sink.write(c);
         }
         else
         {
-            return sink.write(c) + sink.write(' ');
+            n = sink.write(c) + sink.write(' ');
         }
+        break;
 
     case '\"':
         if (previousChar != '\\')
         {
             isInAString = !isInAString;
         }
+        // no break;
 
     default:
 
         if (previousChar == '{' || previousChar == '[')
         {
-            previousChar = c;
-            return writeln() + sink.write(c);
+            n = writeln() + sink.write(c);
         }
         else
         {
-            previousChar = c;
-            return sink.write(c);
+            n = sink.write(c);
         }
+
+        break;
     }
+
+    previousChar = c;
+    return n;
 }
 
 size_t PrettyPrintDecorator::writeln()
