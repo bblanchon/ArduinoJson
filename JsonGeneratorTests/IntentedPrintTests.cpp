@@ -25,6 +25,12 @@ namespace JsonGeneratorTests
             outputMustBe("");
         }
 
+        TEST_METHOD(EmptyObject)
+        {
+            whenInputIs("{}");
+            outputMustBe("{}");
+        }
+
     private:
 
         void whenInputIs(const char input[])
