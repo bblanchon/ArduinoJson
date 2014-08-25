@@ -44,6 +44,16 @@ namespace JsonGeneratorTests
                 "]");
         }
 
+        TEST_METHOD(EmptyNestedArrays)
+        {
+            whenInputIs("[[],[]]");
+            outputMustBe(
+                "[\n"
+                " [],\n"
+                " []\n"
+                "]");
+        }
+
     private:
 
         void whenInputIs(const char input[])

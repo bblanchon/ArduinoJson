@@ -11,9 +11,21 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     {
     case '{':
     case '[':
-        indent++;
+              
+        size_t n;
+
+        if (previousChar == '{' || previousChar == '[')
+        {
+            n = writeln() + sink.write(c);
+        }
+        else
+        {
+            n = sink.write(c);
+        }
+
         previousChar = c;
-        return sink.write(c);
+        indent++;
+        return n;
 
     case '}':
     case ']':
