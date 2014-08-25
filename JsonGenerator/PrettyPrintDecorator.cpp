@@ -5,6 +5,8 @@
 
 #include "PrettyPrintDecorator.h"
 
+using namespace ArduinoJson::Generator;
+
 size_t PrettyPrintDecorator::write(uint8_t c)
 {
     size_t n = inString ? handleStringChar(c) : handleMarkupChar(c);    

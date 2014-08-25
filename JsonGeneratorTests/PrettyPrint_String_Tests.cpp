@@ -8,6 +8,7 @@
 #include "StringBuilder.h"
 
 using namespace ArduinoJson::Internals;
+using namespace ArduinoJson::Generator;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace JsonGeneratorTests
