@@ -35,12 +35,28 @@ private:
     size_t handleStringChar(uint8_t);
     size_t handleMarkupChar(uint8_t);
 
-    size_t writeClosing(uint8_t);
-    size_t writeColumn();
-    size_t writeComma();
-    size_t writeLineBreak();
-    size_t writeOpening(uint8_t);
-    size_t writeQuote();
-    size_t writeValueChar(uint8_t);
+    size_t handleBlockClose(uint8_t);
+    size_t handleBlockOpen(uint8_t);
+    size_t handleColumn();
+    size_t handleComma();
+    size_t handleQuoteOpen();
+    size_t handleNormalChar(uint8_t);
+
+    size_t breakAndIndent();
+
+    size_t breakThenWrite(uint8_t c)
+    {
+        return breakAndIndent() + writeChar(c);
+    }
+
+    size_t writeThenBreak(uint8_t c)
+    {
+        return writeChar(c) + breakAndIndent();
+    }
+
+    size_t writeChar(uint8_t c)
+    {
+        return sink.write(c);
+    }
 };
 
