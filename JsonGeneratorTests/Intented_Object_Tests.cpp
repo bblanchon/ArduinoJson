@@ -18,12 +18,6 @@ namespace JsonGeneratorTests
         size_t returnValue;
 
     public:
-        
-        TEST_METHOD(EmptyString)
-        {
-            whenInputIs("");
-            outputMustBe("");
-        }
 
         TEST_METHOD(EmptyObject)
         {
@@ -31,13 +25,7 @@ namespace JsonGeneratorTests
             outputMustBe("{}");
         }
 
-        TEST_METHOD(EmptyArray)
-        {
-            whenInputIs("[]");
-            outputMustBe("[]");
-        }
-
-        TEST_METHOD(ObjectWithOneMember)
+        TEST_METHOD(OneMember)
         {
             whenInputIs("{\"key\":\"value\"}");
             outputMustBe(
@@ -46,7 +34,7 @@ namespace JsonGeneratorTests
                 "}");
         }
 
-        TEST_METHOD(ObjectWithTwoMembers)
+        TEST_METHOD(TwoMembers)
         {
             whenInputIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
             outputMustBe(
@@ -56,16 +44,7 @@ namespace JsonGeneratorTests
                 "}");
         }
 
-        TEST_METHOD(ObjectTrickyCharacters)
-        {
-            whenInputIs("{\"key\":\":\\\"',\"}");
-            outputMustBe(
-                "{\n"
-                " \"key\": \":\\\"',\"\n"
-                "}");
-        }
-
-        TEST_METHOD(ObjectWithEmptyNestedObjects)
+        TEST_METHOD(EmptyNestedObjects)
         {
             whenInputIs("{\"key1\":{},\"key2\":{}}");
             outputMustBe(

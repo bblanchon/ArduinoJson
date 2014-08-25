@@ -85,7 +85,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EscapedStringTests.cpp" />
-    <ClCompile Include="IntentedPrintTests.cpp" />
+    <ClCompile Include="Intented_Array_Tests.cpp" />
+    <ClCompile Include="Intented_Object_Tests.cpp" />
+    <ClCompile Include="Intented_String_Tests.cpp" />
     <ClCompile Include="Issue10.cpp" />
     <ClCompile Include="JsonArrayTests.cpp" />
     <ClCompile Include="JsonObject_Indexer_Tests.cpp" />

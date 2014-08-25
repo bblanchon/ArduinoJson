@@ -39,7 +39,13 @@
     <ClCompile Include="Issue10.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntentedPrintTests.cpp">
+    <ClCompile Include="Intented_Array_Tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Intented_Object_Tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Intented_String_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
