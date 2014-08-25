@@ -39,6 +39,17 @@ size_t IndentedPrintDecorator::write(uint8_t c)
             return sink.write(c) + writeln();
         }
 
+    case ':':
+        previousChar = c;
+        if (isInAString)
+        {
+            return sink.write(c);
+        }
+        else
+        {
+            return sink.write(c) + sink.write(' ');
+        }
+
     case '\"':
         if (previousChar != '\\')
         {
