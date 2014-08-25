@@ -16,7 +16,9 @@ size_t PrettyPrintDecorator::handleStringChar(uint8_t c)
 {
     bool isQuote = c == '"' && previousChar != '\\';
 
-    return isQuote ? writeQuote() : writeNormalChar(c);
+    if (isQuote) inString = false;
+
+    return sink.write(c);
 }
 
 size_t PrettyPrintDecorator::handleMarkupChar(uint8_t c)
@@ -41,14 +43,13 @@ size_t PrettyPrintDecorator::handleMarkupChar(uint8_t c)
         return writeQuote();
 
     default:
-        return writeNormalChar(c); // <- should not happen anyway
+        return writeValueChar(c);
     }
 }
 
-size_t PrettyPrintDecorator::writeNormalChar(uint8_t c)
+size_t PrettyPrintDecorator::writeValueChar(uint8_t c)
 {
-    bool inEmptyBlock = !inString && (previousChar == '{' || previousChar == '[');
-
+    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
     return inEmptyBlock ? writeln() + sink.write(c) : sink.write(c);
 }
 
@@ -75,8 +76,12 @@ size_t PrettyPrintDecorator::writeOpening(uint8_t c)
 
 size_t PrettyPrintDecorator::writeQuote()
 {
-    size_t n = writeNormalChar('"');
-    inString = !inString;
+    bool inEmptyBlock = previousChar == '{' || previousChar == '[';
+
+    size_t n = inEmptyBlock ? writeln() + sink.write('"') : sink.write('"');
+
+    inString = true;
+
     return n;
 }
 

@@ -35,7 +35,7 @@ private:
     size_t writeClosing(uint8_t);
     size_t writeColumn();
     size_t writeComma();
-    size_t writeNormalChar(uint8_t);
+    size_t writeValueChar(uint8_t);
     size_t writeOpening(uint8_t);
     size_t writeQuote();
 };
