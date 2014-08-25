@@ -46,6 +46,16 @@ namespace JsonGeneratorTests
                 "}");
         }
 
+        TEST_METHOD(ObjectWithTwoMembers)
+        {
+            whenInputIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
+            outputMustBe(
+                "{\n"
+                " \"key1\":\"value1\",\n"
+                " \"key2\":\"value2\"\n"
+                "}");
+        }
+
     private:
 
         void whenInputIs(const char input[])

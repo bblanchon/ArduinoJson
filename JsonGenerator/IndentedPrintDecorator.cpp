@@ -26,6 +26,9 @@ size_t IndentedPrintDecorator::write(uint8_t c)
             return writeln() + sink.write(c);
         }
 
+    case ',':
+        return sink.write(c) + writeln();
+
     default:
 
         if (emptyBlock)
