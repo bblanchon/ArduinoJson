@@ -39,5 +39,8 @@
     <ClCompile Include="Issue10.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IntentedPrintTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

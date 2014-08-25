@@ -7,5 +7,5 @@
 
 size_t IndentedPrintDecorator::write(uint8_t c)
 {
-    return print.write(c);
+    return sink.write(c);
 }

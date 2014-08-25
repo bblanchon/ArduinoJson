@@ -13,7 +13,7 @@ class IndentedPrintDecorator : public Print
 public:
 
     IndentedPrintDecorator(Print& p)
-        : currentLevel(0), print(p)
+        : currentLevel(0), sink(p)
     {
     }
 
@@ -21,6 +21,6 @@ public:
 
 private:
     int currentLevel;
-    Print& print;
+    Print& sink;
 };
 
