@@ -54,6 +54,19 @@ namespace JsonGeneratorTests
                 "}");
         }
 
+        TEST_METHOD(NestedObjects)
+        {
+            whenInputIs("{\"key1\":{\"a\":1},\"key2\":{\"b\":2}}");
+            outputMustBe(
+                "{\n"
+                " \"key1\": {\n"
+                "  \"a\": 1\n"
+                " },\n"
+                " \"key2\": {\n"
+                "  \"b\": 2\n"
+                " }\n"
+                "}");
+        }
 
     private:
 
