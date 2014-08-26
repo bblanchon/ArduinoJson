@@ -45,21 +45,7 @@ namespace ArduinoJson
             size_t handleQuoteOpen();
             size_t handleNormalChar(uint8_t);
             size_t indentIfNeeded();
-
-            size_t breakThenWrite(uint8_t c)
-            {
-                return sink.println() + writeChar(c);
-            }
-
-            size_t writeThenBreak(uint8_t c)
-            {
-                return writeChar(c) + sink.println();
-            }
-
-            size_t writeChar(uint8_t c)
-            {
-                return sink.write(c);
-            }
+            size_t unindentIfNeeded();
         };
     }
 }
