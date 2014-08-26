@@ -30,8 +30,8 @@ namespace JsonGeneratorTests
         {
             whenInputIs("{\"key\":\"value\"}");
             outputMustBe(
-                "{\n"
-                " \"key\": \"value\"\n"
+                "{\r\n"
+                " \"key\": \"value\"\r\n"
                 "}");
         }
 
@@ -39,9 +39,9 @@ namespace JsonGeneratorTests
         {
             whenInputIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
             outputMustBe(
-                "{\n"
-                " \"key1\": \"value1\",\n"
-                " \"key2\": \"value2\"\n"
+                "{\r\n"
+                " \"key1\": \"value1\",\r\n"
+                " \"key2\": \"value2\"\r\n"
                 "}");
         }
 
@@ -49,9 +49,9 @@ namespace JsonGeneratorTests
         {
             whenInputIs("{\"key1\":{},\"key2\":{}}");
             outputMustBe(
-                "{\n"
-                " \"key1\": {},\n"
-                " \"key2\": {}\n"
+                "{\r\n"
+                " \"key1\": {},\r\n"
+                " \"key2\": {}\r\n"
                 "}");
         }
 
@@ -59,13 +59,13 @@ namespace JsonGeneratorTests
         {
             whenInputIs("{\"key1\":{\"a\":1},\"key2\":{\"b\":2}}");
             outputMustBe(
-                "{\n"
-                " \"key1\": {\n"
-                "  \"a\": 1\n"
-                " },\n"
-                " \"key2\": {\n"
-                "  \"b\": 2\n"
-                " }\n"
+                "{\r\n"
+                " \"key1\": {\r\n"
+                "  \"a\": 1\r\n"
+                " },\r\n"
+                " \"key2\": {\r\n"
+                "  \"b\": 2\r\n"
+                " }\r\n"
                 "}");
         }
 
