@@ -19,7 +19,7 @@ namespace ArduinoJson
                 : sink(p)
             {
                 level = 0;
-                tabSize = 1;
+                tabSize = 2;
                 isNewLine = true;
             }
 

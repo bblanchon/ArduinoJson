@@ -31,7 +31,7 @@ namespace JsonGeneratorTests
             whenInputIs("[1]");
             outputMustBe(
                 "[\r\n"
-                " 1\r\n"
+                "  1\r\n"
                 "]");
         }
 
@@ -40,8 +40,8 @@ namespace JsonGeneratorTests
             whenInputIs("[1,2]");
             outputMustBe(
                 "[\r\n"
-                " 1,\r\n"
-                " 2\r\n"
+                "  1,\r\n"
+                "  2\r\n"
                 "]");
         }
 
@@ -50,8 +50,8 @@ namespace JsonGeneratorTests
             whenInputIs("[[],[]]");
             outputMustBe(
                 "[\r\n"
-                " [],\r\n"
-                " []\r\n"
+                "  [],\r\n"
+                "  []\r\n"
                 "]");
         }
 
@@ -60,14 +60,14 @@ namespace JsonGeneratorTests
             whenInputIs("[[1,2],[3,4]]");
             outputMustBe(
                 "[\r\n"
-                " [\r\n"
-                "  1,\r\n"
-                "  2\r\n"
-                " ],\r\n"
-                " [\r\n"
-                "  3,\r\n"
-                "  4\r\n"
-                " ]\r\n"
+                "  [\r\n"
+                "    1,\r\n"
+                "    2\r\n"
+                "  ],\r\n"
+                "  [\r\n"
+                "    3,\r\n"
+                "    4\r\n"
+                "  ]\r\n"
                 "]");
         }
 
