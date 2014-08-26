@@ -37,8 +37,8 @@ namespace ArduinoJson
             
             size_t writeTabs();
 
-            const int MAX_LEVEL = 15; // because it's only 4 bits
-            const int MAX_TAB_SIZE = 7; // because it's only 3 bits
+            static const int MAX_LEVEL = 15; // because it's only 4 bits
+            static const int MAX_TAB_SIZE = 7; // because it's only 3 bits
         };
     }
 }
