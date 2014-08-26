@@ -14,7 +14,7 @@ size_t JsonPrettyPrint::write(uint8_t c)
     return n;
 }
 
-size_t JsonPrettyPrint::handleStringChar(uint8_t c)
+inline size_t JsonPrettyPrint::handleStringChar(uint8_t c)
 {
     bool isQuote = c == '"' && previousChar != '\\';
 
@@ -23,7 +23,7 @@ size_t JsonPrettyPrint::handleStringChar(uint8_t c)
     return sink.write(c);
 }
 
-size_t JsonPrettyPrint::handleMarkupChar(uint8_t c)
+inline size_t JsonPrettyPrint::handleMarkupChar(uint8_t c)
 {
     switch (c)
     {
@@ -49,33 +49,33 @@ size_t JsonPrettyPrint::handleMarkupChar(uint8_t c)
     }
 }
 
-size_t JsonPrettyPrint::handleBlockOpen(uint8_t c)
+inline size_t JsonPrettyPrint::handleBlockOpen(uint8_t c)
 {
     return indentIfNeeded() + sink.write(c);
 }
 
-size_t JsonPrettyPrint::handleBlockClose(uint8_t c)
+inline size_t JsonPrettyPrint::handleBlockClose(uint8_t c)
 {  
     return unindentIfNeeded() + sink.write(c);
 }
 
-size_t JsonPrettyPrint::handleColumn()
+inline size_t JsonPrettyPrint::handleColumn()
 {
     return sink.write(':') + sink.write(' ');
 }
 
-size_t JsonPrettyPrint::handleComma()
+inline size_t JsonPrettyPrint::handleComma() 
 {
     return sink.write(',') + sink.println();
 }
 
-size_t JsonPrettyPrint::handleQuoteOpen()
+inline size_t JsonPrettyPrint::handleQuoteOpen()
 {
     inString = true;
     return indentIfNeeded() + sink.write('"');
 }
 
-size_t JsonPrettyPrint::handleNormalChar(uint8_t c)
+inline size_t JsonPrettyPrint::handleNormalChar(uint8_t c)
 {
     return indentIfNeeded() + sink.write(c);
 }

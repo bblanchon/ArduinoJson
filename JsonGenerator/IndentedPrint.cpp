@@ -34,7 +34,7 @@ size_t IndentedPrint::write(uint8_t c)
     return n;
 }
 
-size_t IndentedPrint::writeTabs()
+inline size_t IndentedPrint::writeTabs()
 {
     size_t n = 0;
 
