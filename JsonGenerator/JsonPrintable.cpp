@@ -25,5 +25,5 @@ size_t JsonPrintable::prettyPrintTo(IndentedPrint& p) const
 size_t JsonPrintable::prettyPrintTo(Print& p) const
 {
     IndentedPrint indentedPrint(p);
-    return printTo(indentedPrint);
+    return prettyPrintTo(indentedPrint);
 }
