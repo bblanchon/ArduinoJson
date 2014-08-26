@@ -1,5 +1,7 @@
 #include "IndentedPrint.h"
 
+using namespace ArduinoJson::Generator;
+
 void IndentedPrint::indent()
 {
     if (level<127)

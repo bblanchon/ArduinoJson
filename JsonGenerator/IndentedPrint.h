@@ -7,27 +7,33 @@
 
 #include "Print.h"
 
-class IndentedPrint : public Print
+namespace ArduinoJson
 {
-public:
-    
-    IndentedPrint(Print& p)
-        : sink(p)
+    namespace Generator
     {
-        level = 0;
-        isNewLine = true;
+        class IndentedPrint : public Print
+        {
+        public:
+
+            IndentedPrint(Print& p)
+                : sink(p)
+            {
+                level = 0;
+                isNewLine = true;
+            }
+
+            virtual size_t write(uint8_t);
+
+            void indent();
+            void unindent();
+
+        private:
+            Print& sink;
+            uint8_t level : 7;
+            bool isNewLine : 1;
+
+            size_t writeTabs();
+        };
     }
-
-    virtual size_t write(uint8_t);
-
-    void indent();
-    void unindent();
-
-private:
-    Print& sink;
-    uint8_t level : 7;
-    bool isNewLine : 1;
-
-    size_t writeTabs();
-};
+}
 
