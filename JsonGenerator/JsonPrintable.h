@@ -5,10 +5,9 @@
 
 #pragma once
 
-#include "JsonValue.h"
 #include "Print.h"
 #include "Printable.h"
-#include "JsonPrettyPrint.h"
+#include "IndentedPrint.h"
 
 namespace ArduinoJson
 {
@@ -18,27 +17,12 @@ namespace ArduinoJson
         {
         public:
 
-            size_t printTo(char* buffer, size_t bufferSize)
-            {
-                using namespace Internals;
-
-                StringBuilder sb(buffer, bufferSize);
-                return printTo(sb);
-            }
-
-            size_t prettyPrintTo(IndentedPrint& p) const
-            {
-                JsonPrettyPrint decorator(p);
-                return printTo(decorator);
-            }
-
-            size_t prettyPrintTo(Print& p) const
-            {
-                IndentedPrint decorator(p);
-                return printTo(decorator);
-            }
-
             virtual size_t printTo(Print& p) const = 0;
+
+            size_t printTo(char* buffer, size_t bufferSize);
+
+            size_t prettyPrintTo(IndentedPrint& p) const;
+            size_t prettyPrintTo(Print& p) const;
         };
     }
 }

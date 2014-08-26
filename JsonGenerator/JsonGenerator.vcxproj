@@ -30,6 +30,7 @@
     <ClCompile Include="JsonPrettyPrint.cpp" />
     <ClCompile Include="JsonArrayBase.cpp" />
     <ClCompile Include="JsonObjectBase.cpp" />
+    <ClCompile Include="JsonPrintable.cpp" />
     <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="Print.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
