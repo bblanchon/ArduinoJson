@@ -14,23 +14,20 @@ public:
     IndentedPrintDecorator(Print& p)
         : sink(p)
     {
-        pendingTabCount = 0;
-        currentTabCount = 0;
+        level = 0;
         isNewLine = true;
     }
+
+    virtual size_t write(uint8_t);
 
     void indent();
     void unindent();
 
-    bool isNewLine;
-    virtual size_t write(uint8_t);
-
 private:
     Print& sink;
-    int currentTabCount;
-    int pendingTabCount;
+    uint8_t level : 7;
+    bool isNewLine : 1;
 
-    size_t writeCurrentTabs();
-    size_t writeTabs(int count);
+    size_t writeTabs();
 };
 

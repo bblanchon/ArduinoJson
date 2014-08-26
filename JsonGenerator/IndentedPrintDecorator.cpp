@@ -2,12 +2,14 @@
 
 void IndentedPrintDecorator::indent()
 {
-    currentTabCount++;
+    if (level<127)
+        level++;
 }
 
 void IndentedPrintDecorator::unindent()
 {
-    currentTabCount--;
+    if (level>0)
+        level--;
 }
 
 size_t IndentedPrintDecorator::write(uint8_t c)
@@ -15,7 +17,7 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     size_t n = 0;
 
     if (isNewLine)
-        n += writeCurrentTabs();
+        n += writeTabs();
 
     n += sink.write(c);
 
@@ -24,16 +26,11 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     return n;
 }
 
-size_t IndentedPrintDecorator::writeCurrentTabs()
-{
-    return writeTabs(currentTabCount);
-}
-
-size_t IndentedPrintDecorator::writeTabs(int count)
+size_t IndentedPrintDecorator::writeTabs()
 {
     size_t n = 0;
 
-    for (int i = 0; i<count; i++)
+    for (int i = 0; i<level; i++)
         n += sink.write(' ');
 
     return n;
