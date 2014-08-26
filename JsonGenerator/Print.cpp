@@ -32,4 +32,9 @@ size_t Print::print(long value)
     return print(tmp);
 }
 
+size_t Print::println()
+{
+    return /*write('\r') +*/ write('\n');
+}
+
 #endif

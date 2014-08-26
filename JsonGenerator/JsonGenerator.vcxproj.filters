@@ -48,6 +48,9 @@
     <ClInclude Include="PrettyPrintDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IndentedPrintDecorator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EscapedString.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PrettyPrintDecorator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IndentedPrintDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

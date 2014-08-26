@@ -1,4 +1,3 @@
-#pragma once
 /*
 * Arduino JSON library
 * Benoit Blanchon 2014 - MIT License
@@ -7,6 +6,7 @@
 #pragma once
 
 #include "Print.h"
+#include "IndentedPrintDecorator.h"
 
 namespace ArduinoJson
 {
@@ -16,8 +16,8 @@ namespace ArduinoJson
         {
         public:
 
-            PrettyPrintDecorator(Print& p)
-                : indent(0), sink(p)
+            PrettyPrintDecorator(IndentedPrintDecorator& p)
+                : sink(p)
             {
                 previousChar = 0;
                 inString = false;
@@ -25,10 +25,9 @@ namespace ArduinoJson
 
             virtual size_t write(uint8_t);
 
-        private:
-            int indent;
+        private:            
             uint8_t previousChar;
-            Print& sink;
+            IndentedPrintDecorator& sink;
             bool inString;
 
             bool inEmptyBlock()
@@ -45,17 +44,16 @@ namespace ArduinoJson
             size_t handleComma();
             size_t handleQuoteOpen();
             size_t handleNormalChar(uint8_t);
-
-            size_t breakAndIndent();
+            size_t indentIfNeeded();
 
             size_t breakThenWrite(uint8_t c)
             {
-                return breakAndIndent() + writeChar(c);
+                return sink.println() + writeChar(c);
             }
 
             size_t writeThenBreak(uint8_t c)
             {
-                return writeChar(c) + breakAndIndent();
+                return writeChar(c) + sink.println();
             }
 
             size_t writeChar(uint8_t c)

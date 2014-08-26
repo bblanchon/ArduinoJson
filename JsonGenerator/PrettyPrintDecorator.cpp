@@ -51,18 +51,20 @@ size_t PrettyPrintDecorator::handleMarkupChar(uint8_t c)
 
 size_t PrettyPrintDecorator::handleBlockOpen(uint8_t c)
 {
-    size_t n = inEmptyBlock() ? breakThenWrite(c) : writeChar(c);
-
-    indent++;
-
-    return n;
+    return indentIfNeeded() + writeChar(c);
 }
 
 size_t PrettyPrintDecorator::handleBlockClose(uint8_t c)
-{
-    indent--;
-
-    return inEmptyBlock() ? writeChar(c) : breakThenWrite(c);
+{  
+    if (inEmptyBlock())
+    {
+        return writeChar(c);
+    }
+    else
+    {
+        sink.unindent();
+        return breakThenWrite(c);
+    }
 }
 
 size_t PrettyPrintDecorator::handleColumn()
@@ -77,7 +79,7 @@ size_t PrettyPrintDecorator::handleComma()
 
 size_t PrettyPrintDecorator::handleQuoteOpen()
 {
-    size_t n = inEmptyBlock() ? breakThenWrite('"') : writeChar('"');
+    size_t n = indentIfNeeded() + writeChar('"');
 
     inString = true;
 
@@ -86,15 +88,13 @@ size_t PrettyPrintDecorator::handleQuoteOpen()
 
 size_t PrettyPrintDecorator::handleNormalChar(uint8_t c)
 {
-    return inEmptyBlock() ? breakThenWrite(c) : writeChar(c);
+    return indentIfNeeded() + writeChar(c);
 }
 
-size_t PrettyPrintDecorator::breakAndIndent()
+size_t PrettyPrintDecorator::indentIfNeeded()
 {
-    size_t n = writeChar('\n');
+    if (!inEmptyBlock()) return 0;
 
-    for (int i = 0; i < indent; i++)
-        n += writeChar(' ');
-
-    return n;
+    sink.indent();
+    return sink.println();
 }
