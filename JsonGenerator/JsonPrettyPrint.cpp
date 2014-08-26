@@ -3,18 +3,18 @@
 * Benoit Blanchon 2014 - MIT License
 */
 
-#include "PrettyPrintDecorator.h"
+#include "JsonPrettyPrint.h"
 
 using namespace ArduinoJson::Generator;
 
-size_t PrettyPrintDecorator::write(uint8_t c)
+size_t JsonPrettyPrint::write(uint8_t c)
 {
     size_t n = inString ? handleStringChar(c) : handleMarkupChar(c);    
     previousChar = c;
     return n;
 }
 
-size_t PrettyPrintDecorator::handleStringChar(uint8_t c)
+size_t JsonPrettyPrint::handleStringChar(uint8_t c)
 {
     bool isQuote = c == '"' && previousChar != '\\';
 
@@ -23,7 +23,7 @@ size_t PrettyPrintDecorator::handleStringChar(uint8_t c)
     return sink.write(c);
 }
 
-size_t PrettyPrintDecorator::handleMarkupChar(uint8_t c)
+size_t JsonPrettyPrint::handleMarkupChar(uint8_t c)
 {
     switch (c)
     {
@@ -49,38 +49,38 @@ size_t PrettyPrintDecorator::handleMarkupChar(uint8_t c)
     }
 }
 
-size_t PrettyPrintDecorator::handleBlockOpen(uint8_t c)
+size_t JsonPrettyPrint::handleBlockOpen(uint8_t c)
 {
     return indentIfNeeded() + sink.write(c);
 }
 
-size_t PrettyPrintDecorator::handleBlockClose(uint8_t c)
+size_t JsonPrettyPrint::handleBlockClose(uint8_t c)
 {  
     return unindentIfNeeded() + sink.write(c);
 }
 
-size_t PrettyPrintDecorator::handleColumn()
+size_t JsonPrettyPrint::handleColumn()
 {
     return sink.write(':') + sink.write(' ');
 }
 
-size_t PrettyPrintDecorator::handleComma()
+size_t JsonPrettyPrint::handleComma()
 {
     return sink.write(',') + sink.println();
 }
 
-size_t PrettyPrintDecorator::handleQuoteOpen()
+size_t JsonPrettyPrint::handleQuoteOpen()
 {
     inString = true;
     return indentIfNeeded() + sink.write('"');
 }
 
-size_t PrettyPrintDecorator::handleNormalChar(uint8_t c)
+size_t JsonPrettyPrint::handleNormalChar(uint8_t c)
 {
     return indentIfNeeded() + sink.write(c);
 }
 
-size_t PrettyPrintDecorator::indentIfNeeded()
+size_t JsonPrettyPrint::indentIfNeeded()
 {
     if (!inEmptyBlock()) return 0;
 
@@ -88,7 +88,7 @@ size_t PrettyPrintDecorator::indentIfNeeded()
     return sink.println();
 }
 
-size_t PrettyPrintDecorator::unindentIfNeeded()
+size_t JsonPrettyPrint::unindentIfNeeded()
 {
     if (inEmptyBlock()) return 0;
 

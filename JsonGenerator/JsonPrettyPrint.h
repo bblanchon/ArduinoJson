@@ -12,11 +12,11 @@ namespace ArduinoJson
 {
     namespace Generator
     {
-        class PrettyPrintDecorator : public Print
+        class JsonPrettyPrint : public Print
         {
         public:
 
-            PrettyPrintDecorator(IndentedPrint& p)
+            JsonPrettyPrint(IndentedPrint& p)
                 : sink(p)
             {
                 previousChar = 0;

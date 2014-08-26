@@ -45,10 +45,10 @@
     <ClInclude Include="JsonObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PrettyPrintDecorator.h">
+    <ClInclude Include="IndentedPrint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IndentedPrint.h">
+    <ClInclude Include="JsonPrettyPrint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,10 +71,10 @@
     <ClCompile Include="JsonObjectBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PrettyPrintDecorator.cpp">
+    <ClCompile Include="IndentedPrint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IndentedPrint.cpp">
+    <ClCompile Include="JsonPrettyPrint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

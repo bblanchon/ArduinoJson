@@ -4,7 +4,7 @@
 */
 
 #include "CppUnitTest.h"
-#include "PrettyPrintDecorator.h"
+#include "JsonPrettyPrint.h"
 #include "StringBuilder.h"
 
 using namespace ArduinoJson::Internals;
@@ -75,7 +75,7 @@ namespace JsonGeneratorTests
         {
             StringBuilder sb(buffer, sizeof(buffer));
             IndentedPrint indentedPrint(sb);
-            PrettyPrintDecorator decorator(indentedPrint);
+            JsonPrettyPrint decorator(indentedPrint);
 
             returnValue = decorator.print(input);
         }
