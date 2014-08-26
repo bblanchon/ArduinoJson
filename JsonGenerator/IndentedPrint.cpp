@@ -1,18 +1,18 @@
-#include "IndentedPrintDecorator.h"
+#include "IndentedPrint.h"
 
-void IndentedPrintDecorator::indent()
+void IndentedPrint::indent()
 {
     if (level<127)
         level++;
 }
 
-void IndentedPrintDecorator::unindent()
+void IndentedPrint::unindent()
 {
     if (level>0)
         level--;
 }
 
-size_t IndentedPrintDecorator::write(uint8_t c)
+size_t IndentedPrint::write(uint8_t c)
 {
     size_t n = 0;
 
@@ -26,7 +26,7 @@ size_t IndentedPrintDecorator::write(uint8_t c)
     return n;
 }
 
-size_t IndentedPrintDecorator::writeTabs()
+size_t IndentedPrint::writeTabs()
 {
     size_t n = 0;
 

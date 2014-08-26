@@ -7,11 +7,11 @@
 
 #include "Print.h"
 
-class IndentedPrintDecorator : public Print
+class IndentedPrint : public Print
 {
 public:
     
-    IndentedPrintDecorator(Print& p)
+    IndentedPrint(Print& p)
         : sink(p)
     {
         level = 0;

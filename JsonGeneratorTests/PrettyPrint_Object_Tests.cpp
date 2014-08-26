@@ -74,7 +74,7 @@ namespace JsonGeneratorTests
         void whenInputIs(const char input[])
         {
             StringBuilder sb(buffer, sizeof(buffer));
-            IndentedPrintDecorator indentedPrint(sb);
+            IndentedPrint indentedPrint(sb);
             PrettyPrintDecorator decorator(indentedPrint);
 
             returnValue = decorator.print(input);

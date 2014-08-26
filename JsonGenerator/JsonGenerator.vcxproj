@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EscapedString.h" />
-    <ClInclude Include="IndentedPrintDecorator.h" />
+    <ClInclude Include="IndentedPrint.h" />
     <ClInclude Include="PrettyPrintDecorator.h" />
     <ClInclude Include="JsonArray.h" />
     <ClInclude Include="JsonArrayBase.h" />
@@ -26,7 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EscapedString.cpp" />
-    <ClCompile Include="IndentedPrintDecorator.cpp" />
+    <ClCompile Include="IndentedPrint.cpp" />
     <ClCompile Include="PrettyPrintDecorator.cpp" />
     <ClCompile Include="JsonArrayBase.cpp" />
     <ClCompile Include="JsonObjectBase.cpp" />

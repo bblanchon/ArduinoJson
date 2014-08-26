@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Print.h"
-#include "IndentedPrintDecorator.h"
+#include "IndentedPrint.h"
 
 namespace ArduinoJson
 {
@@ -16,7 +16,7 @@ namespace ArduinoJson
         {
         public:
 
-            PrettyPrintDecorator(IndentedPrintDecorator& p)
+            PrettyPrintDecorator(IndentedPrint& p)
                 : sink(p)
             {
                 previousChar = 0;
@@ -27,7 +27,7 @@ namespace ArduinoJson
 
         private:            
             uint8_t previousChar;
-            IndentedPrintDecorator& sink;
+            IndentedPrint& sink;
             bool inString;
 
             bool inEmptyBlock()

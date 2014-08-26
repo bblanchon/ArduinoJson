@@ -26,7 +26,7 @@ namespace ArduinoJson
                 return printTo(sb);
             }
 
-            size_t prettyPrintTo(IndentedPrintDecorator& p) const
+            size_t prettyPrintTo(IndentedPrint& p) const
             {
                 PrettyPrintDecorator decorator(p);
                 return printTo(decorator);
@@ -34,7 +34,7 @@ namespace ArduinoJson
 
             size_t prettyPrintTo(Print& p) const
             {
-                IndentedPrintDecorator decorator(p);
+                IndentedPrint decorator(p);
                 return printTo(decorator);
             }
 

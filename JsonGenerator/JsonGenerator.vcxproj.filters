@@ -48,7 +48,7 @@
     <ClInclude Include="PrettyPrintDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IndentedPrintDecorator.h">
+    <ClInclude Include="IndentedPrint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +74,7 @@
     <ClCompile Include="PrettyPrintDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IndentedPrintDecorator.cpp">
+    <ClCompile Include="IndentedPrint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
