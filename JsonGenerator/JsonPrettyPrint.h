@@ -12,6 +12,7 @@ namespace ArduinoJson
 {
     namespace Generator
     {
+        // Converts a compact JSON string into an indented one.
         class JsonPrettyPrint : public Print
         {
         public:

@@ -11,6 +11,9 @@ namespace ArduinoJson
 {
     namespace Generator
     {
+        // Decorator on top of Print to allow indented output.
+        // This class is used by JsonPrintable::prettyPrintTo() but can also be used
+        // for your own purpose, like logging.
         class IndentedPrint : public Print
         {
         public:
@@ -25,8 +28,13 @@ namespace ArduinoJson
 
             virtual size_t write(uint8_t);
 
+            // Adds one level of indentation
             void indent();
+
+            // Removes one level of indentation
             void unindent();
+
+            // Set the number of space printed for each level of indentation
             void setTabSize(uint8_t n);
 
         private:
