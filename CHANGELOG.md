@@ -1,6 +1,18 @@
 Arduino JSON: change log
 ========================
 
+v3.3
+----
+
+* Added indented output for the JSON generator, see example bellow.
+* Added `IndentedPrint`, a decorator for `Print` to allow indented output
+
+Example:
+
+    JsonOject<2> json;
+    json["key"] = "value";
+    json.prettyPrintTo(Serial);
+
 v3.2
 ----
 
