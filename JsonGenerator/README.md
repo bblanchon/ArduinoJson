@@ -15,6 +15,7 @@ Features
 * Fixed memory allocation (no malloc)
 * Small footprint
 * Supports nested objects
+* Supports indented output
 * Implements Arduino's `Printable interface
 * MIT License
 
@@ -177,6 +178,13 @@ Whether you have a `JsonArray` or a `JsonObject`, simply call `printTo()` with t
 	char buffer[256];
     array.printTo(buffer, sizeof(buffer));
 
+> ##### Want an indented output?
+> By default the generated JSON is as small as possible. It contains no extra space, nor line break.
+> But if you want an indented, more readable output, you can.
+> Simply call `prettyPrintTo` instead of `printTo()`:
+> 
+>     array.prettyPrintTo(buffer, sizeof(buffer));
+
 #### Send to a stream
 
 It's very likely that the generated JSON will end up in a stream like `Serial` or `EthernetClient `, so you can save some time and memory by doing this:
@@ -190,7 +198,7 @@ or
 > ##### About the Printable interface
 > `JsonArray` and `JsonObject` implement Arduino's `Printable` interface.
 > This is why you can call `Serial.print()` like in the example above.
-> You can do the same with any other implementation of `Print`:  `HardwareSerial`,  `SoftwareSerial`, `LiquidCrystal`, `EthernetClient`, `WiFiClient`...
+> You can do the same with any other implementation of `Print`:  `HardwareSerial`,  `SoftwareSerial`, `LiquidCrystal`, `EthernetClient`, `WiFiClient`, `Wire`...
    
 
 Memory usage
