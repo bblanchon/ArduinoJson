@@ -11,33 +11,27 @@ using namespace ArduinoJson::Parser;
 
 namespace ArduinoJsonParserTests
 {
-	TEST_CLASS(JsonArrayTests)
-	{
+    TEST_CLASS(JsonArrayTests)
+    {
         JsonArray array;
         char json[256];
         jsmntok_t tokens[32];
         JsonParserBase parser = JsonParserBase(tokens, 32);
 
-	public:
-		
-		TEST_METHOD(EmptyString)
-		{
-            whenInputIs("");
-            parseMustFail();             
-		}
-
-		TEST_METHOD(TooFewClosingBrackets)
-		{
+    public:
+        
+        TEST_METHOD(TooFewClosingBrackets)
+        {
             whenInputIs("[[]");
             parseMustFail();
-		}
+        }
 
-		TEST_METHOD(TooManyClosingBrackets)
-		{
+        TEST_METHOD(TooManyClosingBrackets)
+        {
             whenInputIs("[]]");
             parseMustFail();
-		}
-		
+        }
+        
         TEST_METHOD(EmptyArray)
         {
             whenInputIs("[]");
@@ -55,8 +49,8 @@ namespace ArduinoJsonParserTests
             itemMustNotExist(0);
         }
 
-		TEST_METHOD(TwoIntegers)
-		{
+        TEST_METHOD(TwoIntegers)
+        {
             setTokenCountTo(3);
 
             whenInputIs("[1,2]");
@@ -66,7 +60,7 @@ namespace ArduinoJsonParserTests
             itemMustBe(0, 1L);
             itemMustBe(1, 2L);
             itemMustNotExist(2);
-		}
+        }
 
         TEST_METHOD(TwoBooleans)
         {
@@ -94,8 +88,8 @@ namespace ArduinoJsonParserTests
             itemMustNotExist(2);
         }
 
-		TEST_METHOD(TwoDimensionsArray)
-		{
+        TEST_METHOD(TwoDimensionsArray)
+        {
             setTokenCountTo(7);
 
             whenInputIs("[[1,2],[3,4]]");
@@ -107,7 +101,7 @@ namespace ArduinoJsonParserTests
             itemMustBe(1, 0, 3L);
             itemMustBe(1, 1, 4L);
             itemMustNotExist(2);
-		}
+        }
 
         TEST_METHOD(ThreeDimensionsArray)
         {
@@ -127,7 +121,7 @@ namespace ArduinoJsonParserTests
             itemMustBe(1, 1, 1, 8L);
             itemMustNotExist(2);
         }        
-		
+        
     private:
 
         void setTokenCountTo(int n)
@@ -191,5 +185,5 @@ namespace ArduinoJsonParserTests
             Assert::AreEqual(0L, array.getLong(index));
             Assert::IsNull(array.getString(index));
         }
-	};
+    };
 }

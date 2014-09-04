@@ -90,6 +90,7 @@
     <ClCompile Include="JsonArrayIteratorTests.cpp" />
     <ClCompile Include="JsonObjectTests.cpp" />
     <ClCompile Include="GbathreeBug.cpp" />
+    <ClCompile Include="JsonStringTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JsonParser\JsonParser.vcxproj">
