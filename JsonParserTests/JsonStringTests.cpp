@@ -33,8 +33,56 @@ namespace ArduinoJsonParserTests
 
         TEST_METHOD(EscapedQuote)
         {
-            whenInputIs("\\\"");
-            outputMustBe("\"");
+            whenInputIs("\"12\\\"34\"");  // ie 12\"34
+            outputMustBe("12\"34");
+        }
+
+        TEST_METHOD(EscapedReverseSolidus)
+        {
+            whenInputIs("\"12\\\\34\""); // ie 12\\34
+            outputMustBe("12\\34");
+        }
+
+        TEST_METHOD(EscapedSolidus)
+        {
+            whenInputIs("\"12\\/34\"");
+            outputMustBe("12/34");
+        }
+
+        TEST_METHOD(EscapedBackspace)
+        {
+            whenInputIs("\"12\\b34\"");
+            outputMustBe("12\b34");
+        }
+
+        TEST_METHOD(EscapedFormfeed)
+        {
+            whenInputIs("\"12\\f34\"");
+            outputMustBe("12\f34");
+        }
+        
+        TEST_METHOD(EscapedNewline)
+        {
+            whenInputIs("\"12\\n34\""); 
+            outputMustBe("12\n34");
+        }
+
+        TEST_METHOD(EscapedCarriageReturn)
+        {
+            whenInputIs("\"12\\r34\"");
+            outputMustBe("12\r34");
+        }
+
+        TEST_METHOD(EscapedTab)
+        {
+            whenInputIs("\"12\\t34\"");
+            outputMustBe("12\t34");
+        }
+
+        TEST_METHOD(AllEscapedCharsTogether)
+        {
+            whenInputIs("1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"");
+            outputMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
         }
 
     private:       
