@@ -31,6 +31,12 @@ namespace ArduinoJsonParserTests
             outputMustBe(0);
         }
 
+        TEST_METHOD(SimpleString)
+        {
+            whenInputIs("\"Hi!\"");
+            outputMustBe("Hi!");
+        }
+
         TEST_METHOD(EscapedQuote)
         {
             whenInputIs("\"12\\\"34\"");  // ie 12\"34
@@ -81,7 +87,7 @@ namespace ArduinoJsonParserTests
 
         TEST_METHOD(AllEscapedCharsTogether)
         {
-            whenInputIs("1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"");
+            whenInputIs("\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"");
             outputMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
         }
 
