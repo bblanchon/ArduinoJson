@@ -9,14 +9,15 @@ using namespace ArduinoJson::Parser;
 
 static char unescapeChar(char c)
 {
-    switch (c)
+    // Optimized for code size on a 8-bit AVR
+
+    const char* p = "b\bf\fn\nr\rt\t";
+
+    while (true)
     {
-    case 'b': return '\b';
-    case 'f': return '\f';
-    case 'n': return '\n';
-    case 'r': return '\r';
-    case 't': return '\t';
-    default: return c;
+        if (p[0] == 0) return c;
+        if (p[0] == c) return p[1];
+        p += 2;
     }
 }
 
