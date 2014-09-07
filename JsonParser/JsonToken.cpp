@@ -24,24 +24,20 @@ static void unescapeString(char* s)
 {
     char* readPtr = s;
     char* writePtr = s;
+    char c;
 
-    while (true)
+    do
     {
-        if (*readPtr == '\\')
+        c = *readPtr++;        
+
+        if (c == '\\')
         {
-            readPtr++;
-            *writePtr = unescapeChar(*readPtr);
-        }
-        else
-        {
-            *writePtr = *readPtr;
+            c = unescapeChar(*readPtr++);
         }
 
-        if (*writePtr == 0) break;
+        *writePtr++ = c;
 
-        readPtr++;
-        writePtr++;
-    }
+    } while (c != 0);
 }
 
 char* JsonToken::getText()
