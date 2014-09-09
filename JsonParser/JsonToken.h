@@ -91,6 +91,9 @@ namespace ArduinoJson
         private:
             char* json;
             jsmntok_t* token;
+            
+            static char unescapeChar(char c);
+            static void unescapeString(char* s);
         };
     }
 }

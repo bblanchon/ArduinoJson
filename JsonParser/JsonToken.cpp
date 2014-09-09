@@ -7,21 +7,17 @@
 
 using namespace ArduinoJson::Parser;
 
-static char unescapeChar(char c)
+char* JsonToken::getText()
 {
-    // Optimized for code size on a 8-bit AVR
+    char* s = json + token->start;
+    json[token->end] = 0;
 
-    const char* p = "b\bf\fn\nr\rt\t";
+    unescapeString(s);
 
-    while (true)
-    {
-        if (p[0] == 0) return c;
-        if (p[0] == c) return p[1];
-        p += 2;
-    }
+    return s;
 }
 
-static void unescapeString(char* s)
+inline void JsonToken::unescapeString(char* s)
 {
     char* readPtr = s;
     char* writePtr = s;
@@ -29,7 +25,7 @@ static void unescapeString(char* s)
 
     do
     {
-        c = *readPtr++;        
+        c = *readPtr++;
 
         if (c == '\\')
         {
@@ -41,14 +37,18 @@ static void unescapeString(char* s)
     } while (c != 0);
 }
 
-char* JsonToken::getText()
+inline char JsonToken::unescapeChar(char c)
 {
-    char* s = json + token->start;
-    json[token->end] = 0;
+    // Optimized for code size on a 8-bit AVR
 
-    unescapeString(s);
+    const char* p = "b\bf\fn\nr\rt\t";
 
-    return s;
+    while (true)
+    {
+        if (p[0] == 0) return c;
+        if (p[0] == c) return p[1];
+        p += 2;
+    }
 }
 
 JsonToken JsonToken::nextSibling() const
