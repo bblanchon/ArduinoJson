@@ -23,12 +23,6 @@ namespace ArduinoJsonParserTests
 
     public:
 
-        TEST_METHOD(EmptyString)
-        {
-            whenInputIs("");
-            parseMustFail();
-        }
-
         TEST_METHOD(EmptyHashTable)
         {
             whenInputIs("{}");

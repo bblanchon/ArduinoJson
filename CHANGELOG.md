@@ -1,10 +1,16 @@
 Arduino JSON: change log
 ========================
 
+v3.4
+----
+
+* Fixed escaped char parsing (issue #16)
+  
+
 v3.3
 ----
 
-* Added indented output for the JSON generator, see example bellow.
+* Added indented output for the JSON generator (issue #11), see example bellow.
 * Added `IndentedPrint`, a decorator for `Print` to allow indented output
 
 Example:
@@ -23,7 +29,7 @@ v3.1
 
 * Calling `Generator::JsonObject::add()` twice with the same `key` now replaces the `value`
 * Added `Generator::JsonObject::operator[]`, see bellow the new API
-* Added `Generator::JsonObject::remove()`
+* Added `Generator::JsonObject::remove()` (issue #9)
 
 Old generator API:
 
@@ -44,7 +50,7 @@ v3.0
 
 * New parser API, see bellow
 * Renamed `JsonHashTable` into `JsonObject`
-* Added iterators for `JsonArray` and `JsonObject`
+* Added iterators for `JsonArray` and `JsonObject` (issue #4)
 
 Old parser API:
 

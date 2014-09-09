@@ -29,11 +29,7 @@ namespace ArduinoJson
             }
 
             // Get content of the JSON token
-            char* getText()
-            {
-                json[token->end] = 0;
-                return json + token->start;
-            }
+            char* getText();
 
             // Get the number of children tokens
             int childrenCount()
@@ -95,6 +91,9 @@ namespace ArduinoJson
         private:
             char* json;
             jsmntok_t* token;
+            
+            static char unescapeChar(char c);
+            static void unescapeString(char* s);
         };
     }
 }
