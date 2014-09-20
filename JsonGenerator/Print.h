@@ -7,7 +7,8 @@
 
 #ifndef ARDUINO
 
-typedef unsigned char uint8_t;
+#include <stddef.h>
+#include <stdint.h>
 
 // This class reproduces Arduino's Print
 class Print
