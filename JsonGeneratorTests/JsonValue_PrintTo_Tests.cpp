@@ -26,6 +26,12 @@ namespace JsonGeneratorTests
             outputMustBe("\"hello\"");
         }
 
+        TEST_METHOD(ZeroFloat)
+        {
+            setValueTo(0.0f);
+            outputMustBe("0.0");
+        }
+
         TEST_METHOD(Float)
         {
             setValueTo(3.1415f);
