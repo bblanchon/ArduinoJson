@@ -24,9 +24,15 @@
     <ClInclude Include="JsonValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

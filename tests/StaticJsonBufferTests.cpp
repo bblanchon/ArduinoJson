@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <StaticJsonBuffer.h>
+#include <JsonValue.h>
 
 TEST(StaticJsonBuffer, CapacityMatchTemplateParameter)
 {
@@ -35,10 +36,22 @@ TEST(StaticJsonBuffer, GivenBufferIsFull_WhenCreateObjectIsCalled_ThenSizeDoesNo
     EXPECT_EQ(1, json.size());
 }
 
-TEST(StaticJsonBuffer, WhenWhenCreateObjectIsCalled_ThenAnEmptyJsonObjectIsReturned)
+TEST(StaticJsonBuffer, WhenCreateObjectIsCalled_ThenAnEmptyJsonObjectIsReturned)
 {
     StaticJsonBuffer<42> json;
 
     JsonObject obj = json.createObject();
     EXPECT_EQ(0, obj.size());
+}
+
+TEST(StaticJsonBuffer, GivenAJsonObject_WhenValuesAreAdded_ThenSizeIsIncreasedByTwo)
+{
+    StaticJsonBuffer<42> json;
+    JsonObject obj = json.createObject();    
+
+    obj["hello"]; 
+    EXPECT_EQ(3, json.size());
+
+    obj["world"];
+    EXPECT_EQ(5, json.size());
 }

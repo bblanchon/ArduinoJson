@@ -4,8 +4,10 @@
 #include "JsonObject.h"
 
 template<int CAPACITY>
-class StaticJsonBuffer //: public JsonBuffer
+class StaticJsonBuffer : public JsonBuffer
 {
+    friend JsonObject;
+
 public:
     
     explicit StaticJsonBuffer()
@@ -14,14 +16,6 @@ public:
     }
 
     virtual ~StaticJsonBuffer() {}
-
-    JsonObject createObject()
-    {
-        if (_size < CAPACITY)
-            _size++;
-
-        return JsonObject();
-    }
 
     int capacity()
     {
@@ -34,7 +28,11 @@ public:
     }
 
 protected:
-    //virtual JsonNode& allocateNode();
+    virtual /*JsonNode&*/void allocateNode()
+    {
+        if (_size < CAPACITY)
+            _size++;
+    }
 
 private:
     //JsonNode _buffer[CAPACITY];

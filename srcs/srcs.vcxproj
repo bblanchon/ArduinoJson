@@ -65,11 +65,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="JsonBuffer.h" />
     <ClInclude Include="JsonObject.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="StaticJsonBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="JsonBuffer.cpp" />
     <ClCompile Include="JsonObject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,4 +1,4 @@
-//#include "JsonBuffer.h"
+#include "JsonBuffer.h"
 #include "JsonObject.h"
 #include "JsonValue.h"
 //#include "JsonNode.h"
@@ -33,6 +33,8 @@
 
 JsonValue JsonObject::operator[](char const* key)
 {
+    _buffer->createNode();
+    _buffer->createNode();
     _size++;
     return JsonValue();
 }

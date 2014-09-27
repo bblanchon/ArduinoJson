@@ -24,9 +24,8 @@ class JsonObject
 
 public:
 
-
-    explicit JsonObject()
-        : _size(0)
+    JsonObject(JsonBuffer* buffer)
+        : _size(0), _buffer(buffer)
     {
     }
 
@@ -41,8 +40,8 @@ private:
 
     int _size;
 
-    //    JsonBuffer& _buffer;
-    //    JsonNode& _node;
+    JsonBuffer* _buffer;
+    //JsonNode* _node;
     //
     //    void addNodeAt(char const* key, JsonNode& node);
     //    JsonNode& getNodeAt(const char* key);
