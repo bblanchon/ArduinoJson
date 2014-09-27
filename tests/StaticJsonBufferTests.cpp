@@ -34,3 +34,11 @@ TEST(StaticJsonBuffer, GivenBufferIsFull_WhenCreateObjectIsCalled_ThenSizeDoesNo
     json.createObject();
     EXPECT_EQ(1, json.size());
 }
+
+TEST(StaticJsonBuffer, WhenWhenCreateObjectIsCalled_ThenAnEmptyJsonObjectIsReturned)
+{
+    StaticJsonBuffer<42> json;
+
+    JsonObject obj = json.createObject();
+    EXPECT_EQ(0, obj.size());
+}

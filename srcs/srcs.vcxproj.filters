@@ -18,5 +18,8 @@
     <ClInclude Include="StaticJsonBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

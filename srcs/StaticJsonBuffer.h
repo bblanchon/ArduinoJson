@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JsonBuffer.h"
+#include "JsonObject.h"
 
 template<int CAPACITY>
 class StaticJsonBuffer //: public JsonBuffer
@@ -14,11 +15,12 @@ public:
 
     virtual ~StaticJsonBuffer() {}
 
-    /*JsonObject*/
-    void createObject()
+    JsonObject createObject()
     {
         if (_size < CAPACITY)
             _size++;
+
+        return JsonObject();
     }
 
     int capacity()
