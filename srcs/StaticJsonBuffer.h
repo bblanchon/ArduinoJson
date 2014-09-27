@@ -6,6 +6,12 @@ template<int CAPACITY>
 class StaticJsonBuffer //: public JsonBuffer
 {
 public:
+    
+    explicit StaticJsonBuffer()
+        : _size(0)
+    {
+    }
+
     virtual ~StaticJsonBuffer() {}
 
     int capacity()
