@@ -23,3 +23,14 @@ TEST(StaticJsonBuffer, WhenCreateObjectIsCalled_ThenSizeIsIncreasedByOne)
     json.createObject();
     EXPECT_EQ(2, json.size());
 }
+
+TEST(StaticJsonBuffer, GivenBufferIsFull_WhenCreateObjectIsCalled_ThenSizeDoesNotChange)
+{
+    StaticJsonBuffer<1> json;
+
+    json.createObject();
+    EXPECT_EQ(1, json.size());
+
+    json.createObject();
+    EXPECT_EQ(1, json.size());
+}

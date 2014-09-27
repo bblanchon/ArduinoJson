@@ -14,7 +14,12 @@ public:
 
     virtual ~StaticJsonBuffer() {}
 
-    /*JsonObject*/void createObject() { _size++; }
+    /*JsonObject*/
+    void createObject()
+    {
+        if (_size < CAPACITY)
+            _size++;
+    }
 
     int capacity()
     {
