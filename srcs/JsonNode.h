@@ -1,5 +1,7 @@
 #pragma once
 
+class JsonBuffer;
+
 enum JsonNodeType
 {
     JSON_UNDEFINED,
@@ -37,7 +39,8 @@ struct JsonNode
         struct
         {
             JsonNode* child;
-        } asObjectNode;
+            JsonBuffer* buffer;
+        } asObject;
 
     } content;
 };

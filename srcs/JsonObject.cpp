@@ -33,7 +33,7 @@
 
 size_t JsonObject::size()
 {
-    JsonNode* firstChild = _node->content.asObjectNode.child;
+    JsonNode* firstChild = _node->content.asObject.child;
 
     int size = 0;
 
@@ -55,7 +55,7 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
 {
     if (!_node || _node->type != JSON_OBJECT) return 0;
 
-    JsonNode* firstChild = _node->content.asObjectNode.child;
+    JsonNode* firstChild = _node->content.asObject.child;
     JsonNode* lastChild = 0;
 
     for (JsonNode* child = firstChild; child; child = child->next)
@@ -68,16 +68,18 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
         lastChild = child;
     }
 
-    JsonNode* newValueNode = _buffer->createNode(JSON_UNDEFINED);
+    JsonBuffer* buffer = _node->content.asObject.buffer;
 
-    JsonNode* newKeyNode = _buffer->createNode(JSON_KEY);
+    JsonNode* newValueNode = buffer->createNode(JSON_UNDEFINED);
+    
+    JsonNode* newKeyNode = buffer->createNode(JSON_KEY);
     newKeyNode->content.asKey.key = key;
     newKeyNode->content.asKey.value = newValueNode;
 
     if (lastChild)
         lastChild->next = newKeyNode;
     else
-        _node->content.asObjectNode.child = newKeyNode;
+        _node->content.asObject.child = newKeyNode;
 
     return newValueNode;
 }

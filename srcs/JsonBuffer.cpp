@@ -7,7 +7,11 @@
 JsonObject JsonBuffer::createObject()
 {
     JsonNode* node = createNode(JSON_OBJECT);
-    return JsonObject(this, node);
+
+    if (node)
+        node->content.asObject.buffer = this;
+
+    return JsonObject(node);
 }
 
 JsonNode* JsonBuffer::createNode(JsonNodeType type)

@@ -1,6 +1,5 @@
 #pragma once
 
-class JsonBuffer;
 class JsonValue;
 struct JsonNode;
 
@@ -12,8 +11,8 @@ public:
     {
     }
 
-    JsonObject(JsonBuffer* buffer, JsonNode* node)
-        : _buffer(buffer), _node(node)
+    JsonObject(JsonNode* node)
+        : _node(node)
     {
     }
 
@@ -22,7 +21,7 @@ public:
     JsonValue operator[](const char* key);
 
 private:
-    JsonBuffer* _buffer;
     JsonNode* _node;
+
     JsonNode* getOrCreateNodeAt(char const* key);
 };

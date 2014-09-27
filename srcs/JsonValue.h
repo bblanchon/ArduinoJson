@@ -1,8 +1,7 @@
 #pragma once
 
+struct JsonNode;
 //class JsonBuffer;
-//class JsonNode;
-//class JsonObject;
 
 class JsonValue
 {
