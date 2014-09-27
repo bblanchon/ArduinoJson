@@ -14,9 +14,11 @@ public:
     }
 
    // void operator=(const JsonObject& object);
+    void operator=(double);
     void operator=(int);
     
    // operator JsonObject();
+    operator double();
     operator int();
 
 private:

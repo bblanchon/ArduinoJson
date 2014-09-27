@@ -2,10 +2,13 @@
 #include "JsonNode.h"
 #include "JsonValue.h"
 
-//void JsonValue::operator=(JsonObject const& object)
-//{
-//    _node = object._node;
-//}
+void JsonValue::operator=(double value)
+{
+    if (!_node) return;
+
+    _node->type = JSON_DOUBLE_2_DECIMALS;
+    _node->content.asDouble = value;
+}
 
 void JsonValue::operator=(int value)
 {
@@ -15,10 +18,12 @@ void JsonValue::operator=(int value)
     _node->content.asInteger = value;
 }
 
-//JsonValue::operator JsonObject()
-//{
-//    return JsonObject(_buffer, _node);
-//}
+JsonValue::operator double()
+{
+    if (!_node || _node->type < JSON_DOUBLE_0_DECIMALS) return 0;
+
+    return _node->content.asDouble;
+}
 
 JsonValue::operator int()
 {

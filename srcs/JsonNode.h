@@ -24,6 +24,7 @@ struct JsonNode
 
     union
     {
+        double asDouble;
         int asInteger;
 
         struct 

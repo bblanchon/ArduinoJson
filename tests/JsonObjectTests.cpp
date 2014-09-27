@@ -28,7 +28,7 @@ TEST(JsonObjectTests, WhenTheSameValueIsAddedTwice_ThenSizeIsOnlyIncreasedByOne)
     EXPECT_EQ(1, object.size());
 }
 
-TEST(JsonObjectTests, WhenAnIntegerIsStore_TheSameIntegerIsRetreived)
+TEST(JsonObjectTests, GivenAnIntegerStored_WhenRetreivingTheValue_ThenTheValueIsTheSame)
 {
     StaticJsonBuffer<42> json;
 
@@ -39,4 +39,17 @@ TEST(JsonObjectTests, WhenAnIntegerIsStore_TheSameIntegerIsRetreived)
 
     EXPECT_EQ(123, (int) object["hello"]);
     EXPECT_EQ(456, (int) object["world"]);
+}
+
+TEST(JsonObjectTests, GivenAnDoubleStored_WhenRetreivingTheValue_ThenTheValueIsTheSame)
+{
+    StaticJsonBuffer<42> json;
+
+    JsonObject object = json.createObject();
+
+    object["hello"] = 123.45;
+    object["world"] = 456.78;
+
+    EXPECT_EQ(123.45, (double) object["hello"]);
+    EXPECT_EQ(456.78, (double) object["world"]);
 }

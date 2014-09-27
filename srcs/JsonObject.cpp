@@ -2,7 +2,7 @@
 #include "JsonObject.h"
 #include "JsonValue.h"
 #include "JsonNode.h"
-#include <string.h>
+#include <string.h> // for strcmp
 
 //JsonValue& JsonObject::operator[](char const* key)
 //{
