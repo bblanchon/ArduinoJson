@@ -34,28 +34,28 @@ void JsonValue::operator=(int value)
     _node->content.asInteger = value;
 }
 
-JsonValue::operator bool()
+JsonValue::operator bool() const
 {
     if (!_node || _node->type != JSON_BOOLEAN) return 0;
 
     return _node->content.asBoolean;
 }
 
-JsonValue::operator char const*()
+JsonValue::operator char const*() const
 {
     if (!_node || _node->type != JSON_STRING) return 0;
 
     return _node->content.asString;
 }
 
-JsonValue::operator double()
+JsonValue::operator double() const
 {
     if (!_node || _node->type < JSON_DOUBLE_0_DECIMALS) return 0;
 
     return _node->content.asDouble;
 }
 
-JsonValue::operator int()
+JsonValue::operator int() const
 {
     if (!_node || _node->type != JSON_INTEGER) return 0;
 

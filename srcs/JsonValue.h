@@ -18,10 +18,10 @@ public:
     void operator=(double);
     void operator=(int);
 
-    operator bool();
-    operator const char*();
-    operator double();
-    operator int();
+    operator bool() const;
+    operator const char*() const;
+    operator double() const;
+    operator int() const;
 
 private:
     //JsonBuffer& _buffer;
