@@ -28,13 +28,14 @@ public:
     }
 
 protected:
-    virtual /*JsonNode&*/void allocateNode()
+    virtual JsonNode* allocateNode()
     {
-        if (_size < CAPACITY)
-            _size++;
+        if (_size >= CAPACITY) return 0;
+
+        return &_buffer[_size++];
     }
 
 private:
-    //JsonNode _buffer[CAPACITY];
+    JsonNode _buffer[CAPACITY];
     int _size;
 };

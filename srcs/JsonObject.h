@@ -24,27 +24,20 @@ class JsonObject
 
 public:
 
-    JsonObject(JsonBuffer* buffer)
-        : _size(0), _buffer(buffer)
+    JsonObject(JsonBuffer* buffer, JsonNode* node)
+        : _buffer(buffer), _node(node)
     {
     }
 
-    int size()
-    {
-        return _size;
-    }
+    size_t size();
 
     JsonValue operator[](const char* key);
-
 private:
 
-    int _size;
-
     JsonBuffer* _buffer;
-    //JsonNode* _node;
-    //
-    //    void addNodeAt(char const* key, JsonNode& node);
-    //    JsonNode& getNodeAt(const char* key);
+    JsonNode* _node;
+    JsonNode* getOrCreateNodeAt(char const* key);
+
     //
     //    // TODO: pull up
     //    void appendChild(JsonNode& newChild);

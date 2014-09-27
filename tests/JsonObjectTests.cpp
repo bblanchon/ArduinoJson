@@ -14,3 +14,16 @@ TEST(JsonObjectTests, WhenValueIsAdded_ThenSizeIsIncreasedByOne)
     object["world"];
     EXPECT_EQ(2, object.size());
 }
+
+TEST(JsonObjectTests, WhenTheSameValueIsAddedTwice_ThenSizeIsOnlyIncreasedByOne)
+{
+    StaticJsonBuffer<42> json;
+
+    JsonObject object = json.createObject();
+
+    object["hello"];
+    EXPECT_EQ(1, object.size());
+
+    object["hello"];
+    EXPECT_EQ(1, object.size());
+}

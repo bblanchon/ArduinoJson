@@ -55,3 +55,15 @@ TEST(StaticJsonBuffer, GivenAJsonObject_WhenValuesAreAdded_ThenSizeIsIncreasedBy
     obj["world"];
     EXPECT_EQ(5, json.size());
 }
+
+TEST(StaticJsonBuffer, GivenAJsonObject_WhenSameValuesAreAddedTwice_ThenSizeIsOnlyIncreasedByTwo)
+{
+    StaticJsonBuffer<42> json;
+    JsonObject obj = json.createObject();
+
+    obj["hello"];
+    EXPECT_EQ(3, json.size());
+
+    obj["hello"];
+    EXPECT_EQ(3, json.size());
+}

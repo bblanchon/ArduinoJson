@@ -1,15 +1,21 @@
 #include "JsonBuffer.h"
-//#include "JsonNode.h"
+#include "JsonNode.h"
 #include "JsonObject.h"
+#include <string.h> // for memset
 
 
 JsonObject JsonBuffer::createObject()
 {
-    allocateNode();
-    return JsonObject(this);
+    JsonNode* node = createNode(JSON_OBJECT);
+    return JsonObject(this, node);
 }
 
-void JsonBuffer::createNode()
+JsonNode* JsonBuffer::createNode(JsonNodeType type)
 {
-    allocateNode();
+    JsonNode* node = allocateNode();
+    if (!node) return 0;
+    
+    memset(node, 0, sizeof(JsonNode));
+    node->type = type;
+    return node;
 }

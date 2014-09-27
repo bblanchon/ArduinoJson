@@ -66,6 +66,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="JsonBuffer.h" />
+    <ClInclude Include="JsonNode.h" />
     <ClInclude Include="JsonObject.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="StaticJsonBuffer.h" />
