@@ -14,10 +14,12 @@ public:
     }
 
     void operator=(bool);
+    void operator=(const char*);
     void operator=(double);
     void operator=(int);
 
     operator bool();
+    operator const char*();
     operator double();
     operator int();
 

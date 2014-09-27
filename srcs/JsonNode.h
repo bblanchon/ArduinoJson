@@ -26,6 +26,7 @@ struct JsonNode
         bool asBoolean;
         double asDouble;
         int asInteger;
+        const char* asString;
 
         struct 
         {

@@ -10,6 +10,14 @@ void JsonValue::operator=(bool value)
     _node->content.asBoolean = value;
 }
 
+void JsonValue::operator=(char const* value)
+{
+    if (!_node) return;
+
+    _node->type = JSON_STRING;
+    _node->content.asString = value;
+}
+
 void JsonValue::operator=(double value)
 {
     if (!_node) return;
@@ -31,6 +39,13 @@ JsonValue::operator bool()
     if (!_node || _node->type != JSON_BOOLEAN) return 0;
 
     return _node->content.asBoolean;
+}
+
+JsonValue::operator char const*()
+{
+    if (!_node || _node->type != JSON_STRING) return 0;
+
+    return _node->content.asString;
 }
 
 JsonValue::operator double()

@@ -50,7 +50,6 @@ TEST_F(JsonObjectTests, CanStoreDoubles)
     EXPECT_EQ(456.78, (double) object["world"]);
 }
 
-
 TEST_F(JsonObjectTests, CanStoreBooleans)
 {
     object["hello"] = true;
@@ -58,4 +57,13 @@ TEST_F(JsonObjectTests, CanStoreBooleans)
 
     EXPECT_TRUE((bool) object["hello"]);
     EXPECT_FALSE((bool) object["world"]);
+}
+
+TEST_F(JsonObjectTests, CanStoreStrings)
+{
+    object["hello"] = "h3110";
+    object["world"] = "w0r1d";
+
+    EXPECT_STREQ("h3110", (const char*) object["hello"]);
+    EXPECT_STREQ("w0r1d", (const char*) object["world"]);
 }
