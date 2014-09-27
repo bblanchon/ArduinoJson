@@ -7,6 +7,10 @@ struct JsonNode;
 class JsonObject
 {
 public:
+    JsonObject()
+        : _node(0)
+    {
+    }
 
     JsonObject(JsonBuffer* buffer, JsonNode* node)
         : _buffer(buffer), _node(node)
@@ -16,8 +20,8 @@ public:
     size_t size();
 
     JsonValue operator[](const char* key);
-private:
 
+private:
     JsonBuffer* _buffer;
     JsonNode* _node;
     JsonNode* getOrCreateNodeAt(char const* key);

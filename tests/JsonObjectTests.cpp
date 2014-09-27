@@ -2,12 +2,20 @@
 #include <StaticJsonBuffer.h>
 #include <JsonValue.h>
 
-TEST(JsonObjectTests, WhenValueIsAdded_ThenSizeIsIncreasedByOne)
+class JsonObjectTests : public ::testing::Test
 {
+protected:
+    virtual void SetUp() 
+    {
+        object = json.createObject();
+    }
+
     StaticJsonBuffer<42> json;
+    JsonObject object;
+};
 
-    JsonObject object = json.createObject();
-
+TEST_F(JsonObjectTests, Grow_WhenValuesAreAdded)
+{   
     object["hello"];
     EXPECT_EQ(1, object.size());
 
@@ -15,12 +23,8 @@ TEST(JsonObjectTests, WhenValueIsAdded_ThenSizeIsIncreasedByOne)
     EXPECT_EQ(2, object.size());
 }
 
-TEST(JsonObjectTests, WhenTheSameValueIsAddedTwice_ThenSizeIsOnlyIncreasedByOne)
+TEST_F(JsonObjectTests, DoNotGrow_WhenSameValueIsAdded)
 {
-    StaticJsonBuffer<42> json;
-
-    JsonObject object = json.createObject();
-
     object["hello"];
     EXPECT_EQ(1, object.size());
 
@@ -28,12 +32,8 @@ TEST(JsonObjectTests, WhenTheSameValueIsAddedTwice_ThenSizeIsOnlyIncreasedByOne)
     EXPECT_EQ(1, object.size());
 }
 
-TEST(JsonObjectTests, GivenAnIntegerStored_WhenRetreivingTheValue_ThenTheValueIsTheSame)
+TEST_F(JsonObjectTests, CanStoreIntegers)
 {
-    StaticJsonBuffer<42> json;
-
-    JsonObject object = json.createObject();
-
     object["hello"] = 123;
     object["world"] = 456;
 
@@ -41,12 +41,8 @@ TEST(JsonObjectTests, GivenAnIntegerStored_WhenRetreivingTheValue_ThenTheValueIs
     EXPECT_EQ(456, (int) object["world"]);
 }
 
-TEST(JsonObjectTests, GivenAnDoubleStored_WhenRetreivingTheValue_ThenTheValueIsTheSame)
+TEST_F(JsonObjectTests, CanStoreDoubles)
 {
-    StaticJsonBuffer<42> json;
-
-    JsonObject object = json.createObject();
-
     object["hello"] = 123.45;
     object["world"] = 456.78;
 
@@ -55,12 +51,8 @@ TEST(JsonObjectTests, GivenAnDoubleStored_WhenRetreivingTheValue_ThenTheValueIsT
 }
 
 
-TEST(JsonObjectTests, GivenABooleanStored_WhenRetreivingTheValue_ThenTheValueIsTheSame)
+TEST_F(JsonObjectTests, CanStoreBooleans)
 {
-    StaticJsonBuffer<42> json;
-
-    JsonObject object = json.createObject();
-
     object["hello"] = true;
     object["world"] = false;
 
