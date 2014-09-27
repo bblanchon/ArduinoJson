@@ -7,17 +7,17 @@
 class JsonValue
 {
 public:
-
-    JsonValue(JsonNode* node)
+    
+    explicit JsonValue(JsonNode* node)
         : _node(node)
     {
     }
 
-   // void operator=(const JsonObject& object);
+    void operator=(bool);
     void operator=(double);
     void operator=(int);
-    
-   // operator JsonObject();
+
+    operator bool();
     operator double();
     operator int();
 

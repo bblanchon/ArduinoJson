@@ -7,8 +7,7 @@ enum JsonNodeType
     JSON_ARRAY,
     JSON_OBJECT,
     JSON_KEY,
-    JSON_TRUE,
-    JSON_FALSE,
+    JSON_BOOLEAN,
     JSON_STRING,
     JSON_INTEGER,
     JSON_DOUBLE_0_DECIMALS,
@@ -24,6 +23,7 @@ struct JsonNode
 
     union
     {
+        bool asBoolean;
         double asDouble;
         int asInteger;
 

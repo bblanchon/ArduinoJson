@@ -53,3 +53,17 @@ TEST(JsonObjectTests, GivenAnDoubleStored_WhenRetreivingTheValue_ThenTheValueIsT
     EXPECT_EQ(123.45, (double) object["hello"]);
     EXPECT_EQ(456.78, (double) object["world"]);
 }
+
+
+TEST(JsonObjectTests, GivenABooleanStored_WhenRetreivingTheValue_ThenTheValueIsTheSame)
+{
+    StaticJsonBuffer<42> json;
+
+    JsonObject object = json.createObject();
+
+    object["hello"] = true;
+    object["world"] = false;
+
+    EXPECT_TRUE((bool) object["hello"]);
+    EXPECT_FALSE((bool) object["world"]);
+}

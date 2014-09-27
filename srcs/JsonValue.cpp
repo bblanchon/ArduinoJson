@@ -2,6 +2,14 @@
 #include "JsonNode.h"
 #include "JsonValue.h"
 
+void JsonValue::operator=(bool value)
+{
+    if (!_node) return;
+
+    _node->type = JSON_BOOLEAN;
+    _node->content.asBoolean = value;
+}
+
 void JsonValue::operator=(double value)
 {
     if (!_node) return;
@@ -16,6 +24,13 @@ void JsonValue::operator=(int value)
 
     _node->type = JSON_INTEGER;
     _node->content.asInteger = value;
+}
+
+JsonValue::operator bool()
+{
+    if (!_node || _node->type != JSON_BOOLEAN) return 0;
+
+    return _node->content.asBoolean;
 }
 
 JsonValue::operator double()
