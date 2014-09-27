@@ -67,3 +67,15 @@ TEST_F(JsonObjectTests, CanStoreStrings)
     EXPECT_STREQ("h3110", (const char*) object["hello"]);
     EXPECT_STREQ("w0r1d", (const char*) object["world"]);
 }
+
+TEST_F(JsonObjectTests, CanStoreInnerObjects)
+{
+    JsonObject innerObject1 = json.createObject();
+    JsonObject innerObject2 = json.createObject();
+
+    object["hello"] = innerObject1;
+    object["world"] = innerObject2;
+
+    EXPECT_EQ(innerObject1, (JsonObject) object["hello"]);
+    EXPECT_EQ(innerObject2, (JsonObject) object["world"]);
+}

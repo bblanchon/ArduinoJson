@@ -1,8 +1,10 @@
 #include "JsonBuffer.h"
-#include "JsonNode.h"
-#include "JsonObject.h"
+
 #include <string.h> // for memset
 
+#include "JsonNode.h"
+#include "JsonObject.h"
+#include "JsonValue.h"
 
 JsonObject JsonBuffer::createObject()
 {
@@ -12,6 +14,12 @@ JsonObject JsonBuffer::createObject()
         node->content.asObject.buffer = this;
 
     return JsonObject(node);
+}
+
+JsonValue JsonBuffer::createValue()
+{
+    JsonNode* node = createNode(JSON_UNDEFINED);
+    return JsonValue(node);
 }
 
 JsonNode* JsonBuffer::createNode(JsonNodeType type)

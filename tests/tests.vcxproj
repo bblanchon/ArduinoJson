@@ -86,6 +86,7 @@
     <ClCompile Include="..\third-party\gtest-1.7.0\src\gtest-all.cc" />
     <ClCompile Include="..\third-party\gtest-1.7.0\src\gtest_main.cc" />
     <ClCompile Include="JsonObjectTests.cpp" />
+    <ClCompile Include="JsonValueTests.cpp" />
     <ClCompile Include="StaticJsonBufferTests.cpp" />
   </ItemGroup>
   <ItemGroup>

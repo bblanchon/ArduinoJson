@@ -34,6 +34,13 @@ void JsonValue::operator=(int value)
     _node->content.asInteger = value;
 }
 
+void JsonValue::operator=(const JsonObject& object)
+{
+    if (!_node) return;
+
+    _node = object._node;
+}
+
 JsonValue::operator bool() const
 {
     if (!_node || _node->type != JSON_BOOLEAN) return 0;
@@ -60,4 +67,9 @@ JsonValue::operator int() const
     if (!_node || _node->type != JSON_INTEGER) return 0;
 
     return _node->content.asInteger;
+}
+
+JsonValue::operator JsonObject() const
+{
+    return JsonObject(_node);
 }

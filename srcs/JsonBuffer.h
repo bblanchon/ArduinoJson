@@ -4,6 +4,7 @@
 #include "JsonNode.h"
 
 class JsonObject;
+class JsonValue;
 struct JsonNode;
 
 class JsonBuffer
@@ -14,6 +15,8 @@ public:
 //    virtual ~JsonBuffer() = 0;
 
     JsonObject createObject();
+    JsonValue createValue();
+
 protected:
     virtual JsonNode* allocateNode() = 0;
 
