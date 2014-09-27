@@ -74,6 +74,7 @@
   <ItemGroup>
     <ClCompile Include="JsonBuffer.cpp" />
     <ClCompile Include="JsonObject.cpp" />
+    <ClCompile Include="JsonValue.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

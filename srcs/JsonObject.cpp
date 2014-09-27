@@ -48,7 +48,7 @@ size_t JsonObject::size()
 JsonValue JsonObject::operator[](char const* key)
 {
     JsonNode* node = getOrCreateNodeAt(key);
-    return JsonValue(/*node*/);
+    return JsonValue(node);
 }
 
 JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
