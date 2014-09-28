@@ -76,3 +76,12 @@ TEST_F(JsonValueTests, DoubleValuesAreCopied)
 
     EXPECT_EQ(123.45, (double) jsonValue2);
 }
+
+TEST_F(JsonValueTests, BooleanValuesAreCopied)
+{
+    jsonValue1 = true;
+    jsonValue2 = jsonValue1;
+    jsonValue1 = false;
+
+    EXPECT_TRUE((bool) jsonValue2);
+}
