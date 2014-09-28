@@ -61,10 +61,16 @@ void JsonValue::operator=(JsonValue const& value)
         _node->content.asInteger = value._node->content.asInteger;
         break;
 
+    case JSON_DOUBLE_0_DECIMALS:
+
     case JSON_OBJECT:
     case JSON_ARRAY:
     case JSON_PROXY:
         setAsProxyTo(value._node);
+
+    default:
+        *_node = *value._node;
+        break;
     }
 }
 

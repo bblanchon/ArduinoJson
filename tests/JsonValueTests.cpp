@@ -59,12 +59,20 @@ TEST_F(JsonValueTests, CanStoreObject)
     EXPECT_EQ(innerObject1, (JsonObject) jsonValue1);
 }
 
-TEST_F(JsonValueTests, CanCopyInteger)
+TEST_F(JsonValueTests, IntegerValuesAreCopied)
 {
     jsonValue1 = 123;
     jsonValue2 = jsonValue1;
     jsonValue1 = 456;
 
-    EXPECT_EQ(456, (int) jsonValue1);
     EXPECT_EQ(123, (int) jsonValue2);
+}
+
+TEST_F(JsonValueTests, DoubleValuesAreCopied)
+{
+    jsonValue1 = 123.45;
+    jsonValue2 = jsonValue1;
+    jsonValue1 = 456.78;
+
+    EXPECT_EQ(123.45, (double) jsonValue2);
 }
