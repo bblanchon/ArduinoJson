@@ -30,5 +30,7 @@ public:
 
 private:
     JsonNode* _node;
+
+    JsonNode* getActualNode() const;
 };
 

@@ -51,6 +51,11 @@ JsonValue JsonObject::operator[](char const* key)
     return JsonValue(node);
 }
 
+bool JsonObject::operator==(JsonObject const& other) const
+{
+    return _node == other._node;
+}
+
 JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
 {
     if (!_node || _node->type != JSON_OBJECT) return 0;

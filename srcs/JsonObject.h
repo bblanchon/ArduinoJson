@@ -22,10 +22,7 @@ public:
 
     JsonValue operator[](const char* key);
 
-    bool operator== (const JsonObject& other) const
-    {
-        return _node == other._node;
-    }
+    bool operator==(const JsonObject& other) const;
 
 private:
     JsonNode* _node;

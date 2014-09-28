@@ -5,6 +5,7 @@ class JsonBuffer;
 enum JsonNodeType
 {
     JSON_UNDEFINED,
+    JSON_PROXY,
     JSON_NULL,
     JSON_ARRAY,
     JSON_OBJECT,
@@ -41,6 +42,11 @@ struct JsonNode
             JsonNode* child;
             JsonBuffer* buffer;
         } asObject;
+
+        struct
+        {
+            JsonNode* target;
+        } asProxy;
 
     } content;
 };
