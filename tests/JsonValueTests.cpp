@@ -7,52 +7,64 @@ class JsonValueTests : public ::testing::Test
 protected:
     virtual void SetUp()
     {
-        jsonValue = json.createValue();
+        jsonValue1 = json.createValue();
+        jsonValue2 = json.createValue();
     }
 
     StaticJsonBuffer<42> json;
-    JsonValue jsonValue;
+    JsonValue jsonValue1;
+    JsonValue jsonValue2;
 };
 
 
 TEST_F(JsonValueTests, CanStoreInteger)
 {
-    jsonValue = 123;
+    jsonValue1 = 123;
 
-    EXPECT_EQ(123, (int) jsonValue);
+    EXPECT_EQ(123, (int) jsonValue1);
 }
 
 TEST_F(JsonValueTests, CanStoreDouble)
 {
-    jsonValue = 123.45;
+    jsonValue1 = 123.45;
 
-    EXPECT_EQ(123.45, (double) jsonValue);
+    EXPECT_EQ(123.45, (double) jsonValue1);
 }
 
 TEST_F(JsonValueTests, CanStoreTrue)
 {
-    jsonValue = true;
-    EXPECT_TRUE((bool) jsonValue);
+    jsonValue1 = true;
+    EXPECT_TRUE((bool) jsonValue1);
 }
 
 TEST_F(JsonValueTests, CanStoreFalse)
 {
-    jsonValue = false;
-    EXPECT_FALSE((bool) jsonValue);
+    jsonValue1 = false;
+    EXPECT_FALSE((bool) jsonValue1);
 }
 
 TEST_F(JsonValueTests, CanStoreString)
 {
-    jsonValue = "hello";
+    jsonValue1 = "hello";
  
-    EXPECT_STREQ("hello", (const char*) jsonValue);
+    EXPECT_STREQ("hello", (const char*) jsonValue1);
 }
 
 TEST_F(JsonValueTests, CanStoreObject)
 {
     JsonObject innerObject1 = json.createObject();
 
-    jsonValue = innerObject1;
+    jsonValue1 = innerObject1;
 
-    EXPECT_EQ(innerObject1, (JsonObject) jsonValue);
+    EXPECT_EQ(innerObject1, (JsonObject) jsonValue1);
+}
+
+TEST_F(JsonValueTests, CanCopyInteger)
+{
+    jsonValue1 = 123;
+    jsonValue2 = jsonValue1;
+    jsonValue1 = 456;
+
+    EXPECT_EQ(456, (int) jsonValue1);
+    EXPECT_EQ(123, (int) jsonValue2);
 }

@@ -21,6 +21,7 @@ public:
     void operator=(double);
     void operator=(int);
     void operator=(const JsonObject&);
+    void operator=(const JsonValue&);
     
     operator bool() const;
     operator const char*() const;
@@ -31,6 +32,7 @@ public:
 private:
     JsonNode* _node;
 
+    void setAsProxyTo(JsonNode*);
     JsonNode* getActualNode() const;
 };
 

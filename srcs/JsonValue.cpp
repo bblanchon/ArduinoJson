@@ -36,13 +36,36 @@ void JsonValue::operator=(int value)
 
 void JsonValue::operator=(const JsonObject& object)
 {
-    if (_node) 
+    setAsProxyTo(object._node);
+}
+
+void JsonValue::operator=(JsonValue const& value)
+{
+    if (!_node)
     {
-        _node->type = JSON_PROXY;
-        _node->content.asProxy.target = object._node;
+        _node = value._node;
+        return;
     }
     
-    _node = object._node;
+    JsonNodeType nodeType = value._node ? value._node->type : JSON_UNDEFINED;
+    
+
+    switch (nodeType)
+    {
+    case JSON_UNDEFINED:
+        _node->type = JSON_UNDEFINED;
+        break;
+
+    case JSON_INTEGER:
+        _node->type = JSON_INTEGER;
+        _node->content.asInteger = value._node->content.asInteger;
+        break;
+
+    case JSON_OBJECT:
+    case JSON_ARRAY:
+    case JSON_PROXY:
+        setAsProxyTo(value._node);
+    }
 }
 
 JsonValue::operator bool() const
@@ -84,6 +107,17 @@ JsonValue::operator int() const
 JsonValue::operator JsonObject() const
 {
     return JsonObject(getActualNode());
+}
+
+void JsonValue::setAsProxyTo(JsonNode* target)
+{
+    if (_node)
+    {
+        _node->type = JSON_PROXY;
+        _node->content.asProxy.target = target;
+    }
+
+    _node = target;
 }
 
 JsonNode* JsonValue::getActualNode() const
