@@ -16,7 +16,7 @@ namespace ArduinoJson
         {
         public:
             JsonArrayBase(JsonValue* items, int capacity)
-                : items(items), capacity(capacity), count(0)
+                : _items(items), _capacity(capacity), _count(0)
             {
 
             }
@@ -54,9 +54,9 @@ namespace ArduinoJson
             template<int DIGITS>
             void add(double value)
             {
-                if (count >= capacity) return;
+                if (_count >= _capacity) return;
 
-                JsonValue& v = items[count++];
+                JsonValue& v = _items[_count++];
                 v.set<DIGITS>(value);
             }
 
@@ -65,14 +65,14 @@ namespace ArduinoJson
             using JsonPrintable::printTo;
 
         private:
-            JsonValue* items;
-            int capacity, count;
+            JsonValue* _items;
+            int _capacity, _count;
 
             template<typename T>
             void addIfPossible(T value)
             {
-                if (count < capacity)
-                    items[count++] = value;
+                if (_count < _capacity)
+                    _items[_count++] = value;
             }
         };
     }

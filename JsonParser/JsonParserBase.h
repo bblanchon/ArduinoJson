@@ -19,7 +19,7 @@ namespace ArduinoJson
 
             // Create a JSON parser using the provided buffer
             JsonParserBase(jsmntok_t* tokens, int maxTokens)
-                : tokens(tokens), maxTokens(maxTokens)
+                : _tokens(tokens), _maxTokens(maxTokens)
             {
             }
 
@@ -42,8 +42,8 @@ namespace ArduinoJson
             }
 
         private:
-            jsmntok_t* tokens;
-            int maxTokens;
+            jsmntok_t* _tokens;
+            int _maxTokens;
         };
     }
 }

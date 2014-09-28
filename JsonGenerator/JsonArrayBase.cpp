@@ -16,8 +16,8 @@ size_t JsonArrayBase::printTo(Print& p) const
 
     // NB: the code has been optimized for a small size on a 8-bit AVR
 
-    const JsonValue* current = items;
-    for (int i = count; i > 0; i--)
+    const JsonValue* current = _items;
+    for (int i = _count; i > 0; i--)
     {       
         n += current->printTo(p);
         current++;

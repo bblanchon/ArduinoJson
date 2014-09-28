@@ -9,7 +9,7 @@
 using namespace ArduinoJson::Generator;
 using namespace ArduinoJson::Internals;
 
-JsonValue JsonObjectBase::nullValue;
+JsonValue JsonObjectBase::_nullValue;
 
 size_t JsonObjectBase::printTo(Print& p) const
 {
@@ -19,8 +19,8 @@ size_t JsonObjectBase::printTo(Print& p) const
 
     // NB: the code has been optimized for a small size on a 8-bit AVR
 
-    const KeyValuePair* current = items;
-    for (int i = count; i > 0; i--)
+    const KeyValuePair* current = _items;
+    for (int i = _count; i > 0; i--)
     {       
         n += EscapedString::printTo(current->key, p);
         n += p.write(':');
@@ -41,9 +41,9 @@ size_t JsonObjectBase::printTo(Print& p) const
 
 JsonObjectBase::KeyValuePair* JsonObjectBase::getMatchingPair(JsonKey key) const
 {
-    KeyValuePair* p = items;
+    KeyValuePair* p = _items;
 
-    for (int i = count; i > 0; --i)
+    for (int i = _count; i > 0; --i)
     {
         if (!strcmp(p->key, key))
             return p;
@@ -63,15 +63,15 @@ JsonValue& JsonObjectBase::operator[](JsonKey key)
 
     JsonValue* value;
 
-    if (count < capacity)
+    if (_count < _capacity)
     {
-        items[count].key = key;
-        value = &items[count].value;
-        count++;
+        _items[_count].key = key;
+        value = &_items[_count].value;
+        _count++;
     }
     else
     {
-        value = &nullValue;
+        value = &_nullValue;
     }
 
     value->reset();
@@ -88,5 +88,5 @@ void JsonObjectBase::remove(JsonKey key)
     KeyValuePair* match = getMatchingPair(key);    
     if (match == 0) return;
 
-    *match = items[--count];
+    *match = _items[--_count];
 }

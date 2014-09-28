@@ -26,12 +26,12 @@ namespace ArduinoJson
         {
         public:
             JsonObject()
-                : JsonObjectBase(items, N)
+                : JsonObjectBase(_items, N)
             {
             }
 
         private:
-            KeyValuePair items[N];
+            KeyValuePair _items[N];
         };
 
         

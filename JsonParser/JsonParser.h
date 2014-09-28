@@ -24,12 +24,12 @@ namespace ArduinoJson
         {
         public:
             JsonParser()
-                : JsonParserBase(tokens, MAX_TOKENS)
+                : JsonParserBase(_tokens, MAX_TOKENS)
             {
             }
 
         private:
-            jsmntok_t tokens[MAX_TOKENS];
+            jsmntok_t _tokens[MAX_TOKENS];
         };
     }
 }

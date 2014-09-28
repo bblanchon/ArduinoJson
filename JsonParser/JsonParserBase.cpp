@@ -13,8 +13,8 @@ JsonValue JsonParserBase::parse(char* json)
     jsmn_parser parser;
     jsmn_init(&parser);
 
-    if (JSMN_SUCCESS != jsmn_parse(&parser, json, tokens, maxTokens))
+    if (JSMN_SUCCESS != jsmn_parse(&parser, json, _tokens, _maxTokens))
         return JsonToken::null();
 
-    return JsonToken(json, tokens);
+    return JsonToken(json, _tokens);
 }

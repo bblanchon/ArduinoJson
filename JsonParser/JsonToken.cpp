@@ -9,8 +9,8 @@ using namespace ArduinoJson::Parser;
 
 char* JsonToken::getText()
 {
-    char* s = json + token->start;
-    json[token->end] = 0;
+    char* s = _json + _token->start;
+    _json[_token->end] = 0;
 
     unescapeString(s);
 
@@ -54,7 +54,7 @@ inline char JsonToken::unescapeChar(char c)
 JsonToken JsonToken::nextSibling() const
 {
     // start with current token
-    jsmntok_t* t = token;
+    jsmntok_t* t = _token;
 
     // count the number of token to skip
     int yetToVisit = 1;
@@ -67,5 +67,5 @@ JsonToken JsonToken::nextSibling() const
     }
 
     // build a JsonToken at the new location
-    return JsonToken(json, t);
+    return JsonToken(_json, t);
 }

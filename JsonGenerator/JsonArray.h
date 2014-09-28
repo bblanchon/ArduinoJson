@@ -16,13 +16,13 @@ namespace ArduinoJson
         {
         public:
             JsonArray()
-                : JsonArrayBase(items, N)
+                : JsonArrayBase(_items, N)
             {
 
             }         
 
         private:
-            JsonValue items[N];
+            JsonValue _items[N];
         };
     }
 }

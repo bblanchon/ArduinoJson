@@ -19,32 +19,32 @@ namespace ArduinoJson
 
             void operator=(bool value)
             {
-                printToImpl = &printBoolTo;
-                content.asBool = value;
+                _printToImpl = &printBoolTo;
+                _content.asBool = value;
             }
 
             void operator=(long value)
             {
-                printToImpl = &printLongTo;
-                content.asLong = value;
+                _printToImpl = &printLongTo;
+                _content.asLong = value;
             }
 
             void operator=(int value)
             {
-                printToImpl = &printLongTo;
-                content.asLong = value;
+                _printToImpl = &printLongTo;
+                _content.asLong = value;
             }
 
             void operator=(const Printable& value)
             {
-                printToImpl = &printPrintableTo;
-                content.asPrintable = &value;
+                _printToImpl = &printPrintableTo;
+                _content.asPrintable = &value;
             }
 
             void operator=(const char* value)
             {
-                printToImpl = &printStringTo;
-                content.asString = value;
+                _printToImpl = &printStringTo;
+                _content.asString = value;
             }
 
             void operator=(double value)
@@ -55,55 +55,55 @@ namespace ArduinoJson
             template <int DIGITS>
             void set(double value)
             {
-                printToImpl = &printDoubleTo < DIGITS > ;
-                content.asDouble = value;
+                _printToImpl = &printDoubleTo < DIGITS > ;
+                _content.asDouble = value;
             }
 
             operator bool()
             {
-                return content.asBool;
+                return _content.asBool;
             }
 
             operator const char*()
             {
-                return content.asString;
+                return _content.asString;
             }
 
             operator double()
             {
-                return content.asDouble;
+                return _content.asDouble;
             }
 
             operator float()
             {
-                return (float)content.asDouble;
+                return (float)_content.asDouble;
             }
 
             operator int()
             {
-                return content.asLong;
+                return _content.asLong;
             }
 
             operator long()
             {
-                return content.asLong;
+                return _content.asLong;
             }
 
             operator const Printable&()
             {
-                return *content.asPrintable;
+                return *_content.asPrintable;
             }
 
             size_t printTo(Print& p) const
             {
                 // handmade polymorphism
-                return printToImpl(content, p);
+                return _printToImpl(_content, p);
             }
 
             void reset()
             {
-                content.asDouble = 0;
-                printToImpl = printStringTo;
+                _content.asDouble = 0;
+                _printToImpl = printStringTo;
             }
 
         private:
@@ -116,9 +116,9 @@ namespace ArduinoJson
                 const char*         asString;
             };
 
-            Content content;
+            Content _content;
 
-            size_t(*printToImpl)(const Content&, Print&);
+            size_t(*_printToImpl)(const Content&, Print&);
 
             static size_t printBoolTo(const Content&, Print&);
             static size_t printLongTo(const Content&, Print&);

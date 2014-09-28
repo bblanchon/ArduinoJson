@@ -18,22 +18,22 @@ namespace ArduinoJson
         public:
 
             JsonPrettyPrint(IndentedPrint& p)
-                : sink(p)
+                : _sink(p)
             {
-                previousChar = 0;
-                inString = false;
+                _previousChar = 0;
+                _inString = false;
             }
 
             virtual size_t write(uint8_t);
 
         private:            
-            uint8_t previousChar;
-            IndentedPrint& sink;
-            bool inString;
+            uint8_t _previousChar;
+            IndentedPrint& _sink;
+            bool _inString;
 
             bool inEmptyBlock()
             {
-                return previousChar == '{' || previousChar == '[';
+                return _previousChar == '{' || _previousChar == '[';
             }
 
             size_t handleStringChar(uint8_t);

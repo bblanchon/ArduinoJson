@@ -4,32 +4,32 @@ using namespace ArduinoJson::Generator;
 
 void IndentedPrint::indent()
 {
-    if (level < MAX_LEVEL)
-        level++;
+    if (_level < MAX_LEVEL)
+        _level++;
 }
 
 void IndentedPrint::unindent()
 {
-    if (level > 0)
-        level--;
+    if (_level > 0)
+        _level--;
 }
 
 void IndentedPrint::setTabSize(uint8_t n)
 {
     if (n < MAX_TAB_SIZE)
-        tabSize = n;
+        _tabSize = n;
 }
 
 size_t IndentedPrint::write(uint8_t c)
 {
     size_t n = 0;
 
-    if (isNewLine)
+    if (_isNewLine)
         n += writeTabs();
 
-    n += sink.write(c);
+    n += _sink.write(c);
 
-    isNewLine = c == '\n';
+    _isNewLine = c == '\n';
 
     return n;
 }
@@ -38,8 +38,8 @@ inline size_t IndentedPrint::writeTabs()
 {
     size_t n = 0;
 
-    for (int i = 0; i < level*tabSize; i++)
-        n += sink.write(' ');
+    for (int i = 0; i < _level*_tabSize; i++)
+        n += _sink.write(' ');
 
     return n;
 }

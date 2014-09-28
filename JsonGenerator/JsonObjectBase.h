@@ -47,14 +47,14 @@ namespace ArduinoJson
             };
 
             JsonObjectBase(KeyValuePair* items, int capacity)
-                : items(items), capacity(capacity), count(0)
+                : _items(items), _capacity(capacity), _count(0)
             {
             }
 
         private:
-            KeyValuePair* items;
-            int capacity, count;
-            static JsonValue nullValue;
+            KeyValuePair* _items;
+            int _capacity, _count;
+            static JsonValue _nullValue;
 
             KeyValuePair* getMatchingPair(JsonKey key) const;
         };

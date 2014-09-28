@@ -19,11 +19,11 @@ namespace ArduinoJson
         public:
 
             IndentedPrint(Print& p)
-                : sink(p)
+                : _sink(p)
             {
-                level = 0;
-                tabSize = 2;
-                isNewLine = true;
+                _level = 0;
+                _tabSize = 2;
+                _isNewLine = true;
             }
 
             virtual size_t write(uint8_t);
@@ -38,10 +38,10 @@ namespace ArduinoJson
             void setTabSize(uint8_t n);
 
         private:
-            Print& sink;
-            uint8_t level : 4;
-            uint8_t tabSize : 3;
-            bool isNewLine : 1;
+            Print& _sink;
+            uint8_t _level : 4;
+            uint8_t _tabSize : 3;
+            bool _isNewLine : 1;
             
             size_t writeTabs();
 

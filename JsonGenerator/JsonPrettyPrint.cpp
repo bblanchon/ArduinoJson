@@ -9,18 +9,18 @@ using namespace ArduinoJson::Generator;
 
 size_t JsonPrettyPrint::write(uint8_t c)
 {
-    size_t n = inString ? handleStringChar(c) : handleMarkupChar(c);    
-    previousChar = c;
+    size_t n = _inString ? handleStringChar(c) : handleMarkupChar(c);    
+    _previousChar = c;
     return n;
 }
 
 inline size_t JsonPrettyPrint::handleStringChar(uint8_t c)
 {
-    bool isQuote = c == '"' && previousChar != '\\';
+    bool isQuote = c == '"' && _previousChar != '\\';
 
-    if (isQuote) inString = false;
+    if (isQuote) _inString = false;
 
-    return sink.write(c);
+    return _sink.write(c);
 }
 
 inline size_t JsonPrettyPrint::handleMarkupChar(uint8_t c)
@@ -51,47 +51,47 @@ inline size_t JsonPrettyPrint::handleMarkupChar(uint8_t c)
 
 inline size_t JsonPrettyPrint::handleBlockOpen(uint8_t c)
 {
-    return indentIfNeeded() + sink.write(c);
+    return indentIfNeeded() + _sink.write(c);
 }
 
 inline size_t JsonPrettyPrint::handleBlockClose(uint8_t c)
 {  
-    return unindentIfNeeded() + sink.write(c);
+    return unindentIfNeeded() + _sink.write(c);
 }
 
 inline size_t JsonPrettyPrint::handleColumn()
 {
-    return sink.write(':') + sink.write(' ');
+    return _sink.write(':') + _sink.write(' ');
 }
 
 inline size_t JsonPrettyPrint::handleComma() 
 {
-    return sink.write(',') + sink.println();
+    return _sink.write(',') + _sink.println();
 }
 
 inline size_t JsonPrettyPrint::handleQuoteOpen()
 {
-    inString = true;
-    return indentIfNeeded() + sink.write('"');
+    _inString = true;
+    return indentIfNeeded() + _sink.write('"');
 }
 
 inline size_t JsonPrettyPrint::handleNormalChar(uint8_t c)
 {
-    return indentIfNeeded() + sink.write(c);
+    return indentIfNeeded() + _sink.write(c);
 }
 
 size_t JsonPrettyPrint::indentIfNeeded()
 {
     if (!inEmptyBlock()) return 0;
 
-    sink.indent();
-    return sink.println();
+    _sink.indent();
+    return _sink.println();
 }
 
 size_t JsonPrettyPrint::unindentIfNeeded()
 {
     if (inEmptyBlock()) return 0;
 
-    sink.unindent();
-    return sink.println();
+    _sink.unindent();
+    return _sink.println();
 }
