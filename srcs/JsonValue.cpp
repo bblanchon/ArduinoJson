@@ -47,8 +47,7 @@ void JsonValue::operator=(JsonValue const& value)
         return;
     }
     
-    JsonNodeType nodeType = value._node ? value._node->type : JSON_UNDEFINED;
-    
+    JsonNodeType nodeType = value._node ? value._node->type : JSON_UNDEFINED;    
 
     switch (nodeType)
     {

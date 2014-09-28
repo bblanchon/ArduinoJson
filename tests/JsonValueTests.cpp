@@ -85,3 +85,12 @@ TEST_F(JsonValueTests, BooleanValuesAreCopied)
 
     EXPECT_TRUE((bool) jsonValue2);
 }
+
+TEST_F(JsonValueTests, CharPointersAreCopied)
+{
+    jsonValue1 = "hello";
+    jsonValue2 = jsonValue1;
+    jsonValue1 = "world";
+
+    EXPECT_STREQ("hello", (const char*) jsonValue2);
+}
