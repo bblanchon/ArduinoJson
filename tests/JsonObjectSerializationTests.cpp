@@ -45,7 +45,7 @@ TEST_F(JsonObjectSerializationTests, TwoStrings)
 
     outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
 }
-/*
+
 TEST_F(JsonObjectSerializationTests, RemoveFirst)
 {
     object["key1"] = "value1";
@@ -80,7 +80,7 @@ TEST_F(JsonObjectSerializationTests, ReplaceExistingKey)
 
     outputMustBe("{\"key\":\"value2\"}");
 }
-
+/*
 TEST_F(JsonObjectSerializationTests, OneStringOverCapacity)
 {
     object["key1"] = "value1";
