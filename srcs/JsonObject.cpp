@@ -88,3 +88,8 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
 
     return newValueNode;
 }
+
+void JsonObject::serialize(char* buffer, size_t bufferSize) const
+{
+    strcpy_s(buffer, bufferSize, "{}");
+}

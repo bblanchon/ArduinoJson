@@ -24,6 +24,8 @@ public:
 
     bool operator==(const JsonObject& other) const;
 
+    void serialize(char* buffer, size_t bufferSize) const;
+
 private:
     JsonNode* _node;
 

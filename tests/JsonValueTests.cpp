@@ -94,3 +94,15 @@ TEST_F(JsonValueTests, CharPointersAreCopied)
 
     EXPECT_STREQ("hello", (const char*) jsonValue2);
 }
+
+TEST_F(JsonValueTests, ObjectPointsAreCopied)
+{
+    JsonObject object = json.createObject();
+
+    jsonValue1 = object;
+    jsonValue2 = jsonValue1;
+    
+    object["hello"] = "world";
+
+    EXPECT_EQ(1, ((JsonObject) jsonValue2).size());
+}
