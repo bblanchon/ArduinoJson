@@ -2,6 +2,7 @@
 
 #include <string.h> // for strcmp
 
+#include "EscapedString.h"
 #include "JsonBuffer.h"
 #include "JsonValue.h"
 #include "JsonNode.h"
@@ -75,5 +76,28 @@ size_t JsonObject::printTo(char* buffer, size_t bufferSize) const
 
 size_t JsonObject::printTo(Print& p) const
 {
-    return p.print("{}");
+    size_t n = 0;
+
+    n += p.write('{');
+
+    JsonNode* firstChild = _node->content.asObject.child;
+
+    for (JsonNode* child = firstChild; child; child = child->next)
+    {
+        const char* childKey = child->content.asKey.key;
+        const char* childValue = child->content.asKey.value->content.asString;
+
+        n += EscapedString::printTo(childKey, p);
+        n += p.write(':');
+        n += EscapedString::printTo(childValue, p);
+
+        if (child->next)
+        {
+            n += p.write(',');
+        }
+    }
+
+    n += p.write('}');
+
+    return n;
 }

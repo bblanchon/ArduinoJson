@@ -67,6 +67,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EscapedString.h" />
     <ClInclude Include="JsonBuffer.h" />
     <ClInclude Include="JsonNode.h" />
     <ClInclude Include="JsonObject.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EscapedString.cpp" />
     <ClCompile Include="JsonBuffer.cpp" />
     <ClCompile Include="JsonObject.cpp" />
     <ClCompile Include="JsonValue.cpp" />
