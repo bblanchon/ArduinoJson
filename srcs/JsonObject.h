@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Printable.h"
+
 class JsonValue;
 struct JsonNode;
 
@@ -24,7 +26,8 @@ public:
 
     bool operator==(const JsonObject& other) const;
 
-    void serialize(char* buffer, size_t bufferSize) const;
+    void printTo(char* buffer, size_t bufferSize) const;
+    void printTo(Print& print) const;
 
 private:
     JsonNode* _node;

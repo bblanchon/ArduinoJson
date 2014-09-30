@@ -1,8 +1,13 @@
-#include "JsonBuffer.h"
 #include "JsonObject.h"
+
+#include <string.h> // for strcmp
+
+#include "JsonBuffer.h"
 #include "JsonValue.h"
 #include "JsonNode.h"
-#include <string.h> // for strcmp
+#include "StringBuilder.h"
+
+using namespace ArduinoJson::Internals;
 
 //JsonValue& JsonObject::operator[](char const* key)
 //{
@@ -89,7 +94,13 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
     return newValueNode;
 }
 
-void JsonObject::serialize(char* buffer, size_t bufferSize) const
+void JsonObject::printTo(char* buffer, size_t bufferSize) const
 {
-    strcpy_s(buffer, bufferSize, "{}");
+    StringBuilder sb(buffer, bufferSize);
+    printTo(sb);
+}
+
+void JsonObject::printTo(Print& p) const
+{
+    p.print("{}");
 }

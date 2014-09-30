@@ -13,7 +13,7 @@ protected:
     void jsonMustBe(const char* expected)
     {        
         char actual[256];
-        object.serialize(actual, sizeof(actual));
+        object.printTo(actual, sizeof(actual));
 
         EXPECT_STREQ(expected, actual);
     }
