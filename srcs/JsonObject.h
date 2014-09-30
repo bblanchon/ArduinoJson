@@ -23,6 +23,7 @@ public:
     size_t size();
 
     JsonValue operator[](const char* key);
+    void remove(const char* key);
 
     bool operator==(const JsonObject& other) const;
 

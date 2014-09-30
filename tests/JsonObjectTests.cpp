@@ -32,6 +32,18 @@ TEST_F(JsonObjectTests, DoNotGrow_WhenSameValueIsAdded)
     EXPECT_EQ(1, object.size());
 }
 
+TEST_F(JsonObjectTests, Shrink_WhenValuesAreRemoved)
+{
+    object["hello"];
+    object["world"];
+
+    object.remove("hello");
+    EXPECT_EQ(1, object.size());
+
+    object.remove("world");
+    EXPECT_EQ(0, object.size());
+}
+
 TEST_F(JsonObjectTests, CanStoreIntegers)
 {
     object["hello"] = 123;

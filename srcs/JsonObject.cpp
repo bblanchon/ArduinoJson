@@ -30,6 +30,26 @@ JsonValue JsonObject::operator[](char const* key)
     return JsonValue(node);
 }
 
+void JsonObject::remove(char const* key)
+{
+    JsonNode* firstChild = _node->content.asObject.child;
+    JsonNode* lastChild = 0;
+
+    for (JsonNode* child = firstChild; child; child = child->next)
+    {
+        const char* childKey = child->content.asKey.key;
+
+        if (!strcmp(childKey, key))
+        {
+            if (lastChild)
+                lastChild->next = child->next;
+            else
+                _node->content.asObject.child = child->next;
+        }       
+        lastChild = child;
+    }
+}
+
 bool JsonObject::operator==(JsonObject const& other) const
 {
     return _node == other._node;
