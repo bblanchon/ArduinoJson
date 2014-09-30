@@ -90,6 +90,7 @@
     <ClCompile Include="JsonObjectTests.cpp" />
     <ClCompile Include="JsonValueTests.cpp" />
     <ClCompile Include="StaticJsonBufferTests.cpp" />
+    <ClCompile Include="StringBuilderTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\srcs\srcs.vcxproj">
