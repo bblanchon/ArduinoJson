@@ -89,13 +89,13 @@ TEST_F(JsonObjectSerializationTests, OneStringOverCapacity)
 
     outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
 }
-/*
+
 TEST_F(JsonObjectSerializationTests, OneInteger)
 {
     object["key"] = 1;
     outputMustBe("{\"key\":1}");
 }
-
+/*
 TEST_F(JsonObjectSerializationTests, OneDoubleFourDigits)
 {
     object["key"].set<4>(3.14159265358979323846);

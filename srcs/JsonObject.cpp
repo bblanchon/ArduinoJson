@@ -108,11 +108,21 @@ size_t JsonObject::printTo(Print& p) const
     for (JsonNode* child = firstChild; child; child = child->next)
     {
         const char* childKey = child->content.asKey.key;
-        const char* childValue = child->content.asKey.value->content.asString;
+        JsonNode* childValue = child->content.asKey.value;
 
         n += EscapedString::printTo(childKey, p);
         n += p.write(':');
-        n += EscapedString::printTo(childValue, p);
+
+        switch (childValue->type)
+        {
+        case JSON_STRING:
+            n += EscapedString::printTo(childValue->content.asString, p);
+            break;
+
+        case JSON_INTEGER:
+            n += p.print(childValue->content.asInteger);
+            break;
+        }
 
         if (child->next)
         {
