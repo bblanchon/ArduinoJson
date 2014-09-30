@@ -95,10 +95,10 @@ TEST_F(JsonObjectSerializationTests, OneInteger)
     object["key"] = 1;
     outputMustBe("{\"key\":1}");
 }
-/*
+
 TEST_F(JsonObjectSerializationTests, OneDoubleFourDigits)
 {
-    object["key"].set<4>(3.14159265358979323846);
+    object["key"].set(3.14159265358979323846, 4);
     outputMustBe("{\"key\":3.1416}");
 }
 
@@ -107,7 +107,7 @@ TEST_F(JsonObjectSerializationTests, OneDoubleDefaultDigits)
     object["key"] = 3.14159265358979323846;
     outputMustBe("{\"key\":3.14}");
 }
-
+/*
 TEST_F(JsonObjectSerializationTests, OneNull)
 {
     object["key"] = (char*) 0;

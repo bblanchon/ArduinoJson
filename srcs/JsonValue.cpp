@@ -20,9 +20,14 @@ void JsonValue::operator=(char const* value)
 
 void JsonValue::operator=(double value)
 {
+    set(value, 2);
+}
+
+void JsonValue::set(double value, int decimals)
+{
     if (!_node) return;
 
-    _node->type = JSON_DOUBLE_2_DECIMALS;
+    _node->type = (JsonNodeType) (JSON_DOUBLE_0_DECIMALS + decimals);
     _node->content.asDouble = value;
 }
 

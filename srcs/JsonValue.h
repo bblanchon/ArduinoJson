@@ -29,10 +29,11 @@ public:
     operator int() const;
     operator JsonObject() const;
 
+    void set(double value, int decimals);
+
 private:
     JsonNode* _node;
 
     void setAsProxyTo(JsonNode*);
     JsonNode* getActualNode() const;
 };
-

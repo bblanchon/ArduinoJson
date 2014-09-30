@@ -124,6 +124,9 @@ size_t JsonObject::printTo(Print& p) const
             break;
         }
 
+        if (childValue->type >= JSON_DOUBLE_0_DECIMALS)
+            n += p.print(childValue->content.asDouble, childValue->type - JSON_DOUBLE_0_DECIMALS);
+
         if (child->next)
         {
             n += p.write(',');
