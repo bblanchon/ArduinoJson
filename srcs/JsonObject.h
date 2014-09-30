@@ -5,7 +5,7 @@
 class JsonValue;
 struct JsonNode;
 
-class JsonObject
+class JsonObject : public Printable
 {
     friend JsonValue;
 
@@ -26,8 +26,8 @@ public:
 
     bool operator==(const JsonObject& other) const;
 
-    void printTo(char* buffer, size_t bufferSize) const;
-    void printTo(Print& print) const;
+    size_t printTo(char* buffer, size_t bufferSize) const;
+    virtual size_t printTo(Print& print) const;
 
 private:
     JsonNode* _node;

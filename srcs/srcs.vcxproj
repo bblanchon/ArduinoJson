@@ -72,6 +72,7 @@
     <ClInclude Include="JsonObject.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="Print.h" />
+    <ClInclude Include="Printable.h" />
     <ClInclude Include="StaticJsonBuffer.h" />
     <ClInclude Include="StringBuilder.h" />
   </ItemGroup>

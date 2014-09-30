@@ -9,33 +9,6 @@
 
 using namespace ArduinoJson::Internals;
 
-//JsonValue& JsonObject::operator[](char const* key)
-//{
-//    addNodeAt(key, innerObject._node);
-//    return innerObject;
-//}
-//
-//void JsonObject::addNodeAt(const char* key, JsonNode& node)
-//{
-//    JsonNode& keyNode = _buffer.createNode();
-//    keyNode.becomeKey(key, node);
-//    appendChild(keyNode);
-//}
-//
-//void JsonObject::appendChild(JsonNode& newChild)
-//{
-//    JsonNode* lastChild = _node.asObjectNode.child;
-//    while (lastChild->next)
-//    {
-//        lastChild = lastChild->next;
-//    }
-//
-//    if (lastChild)
-//        lastChild->next = &newChild;
-//    else
-//        _node.asObjectNode.child = &newChild;
-//}
-
 size_t JsonObject::size()
 {
     JsonNode* firstChild = _node->content.asObject.child;
@@ -94,13 +67,13 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
     return newValueNode;
 }
 
-void JsonObject::printTo(char* buffer, size_t bufferSize) const
+size_t JsonObject::printTo(char* buffer, size_t bufferSize) const
 {
     StringBuilder sb(buffer, bufferSize);
-    printTo(sb);
+    return printTo(sb);
 }
 
-void JsonObject::printTo(Print& p) const
+size_t JsonObject::printTo(Print& p) const
 {
-    p.print("{}");
+    return p.print("{}");
 }

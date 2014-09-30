@@ -13,9 +13,10 @@ protected:
     void jsonMustBe(const char* expected)
     {        
         char actual[256];
-        object.printTo(actual, sizeof(actual));
+        int result = object.printTo(actual, sizeof(actual));
 
         EXPECT_STREQ(expected, actual);
+        EXPECT_EQ(strlen(expected), result);
     }
 
     JsonObject object;
