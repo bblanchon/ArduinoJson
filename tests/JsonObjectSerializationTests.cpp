@@ -107,7 +107,7 @@ TEST_F(JsonObjectSerializationTests, OneDoubleDefaultDigits)
     object["key"] = 3.14159265358979323846;
     outputMustBe("{\"key\":3.14}");
 }
-/*
+
 TEST_F(JsonObjectSerializationTests, OneNull)
 {
     object["key"] = (char*) 0;
@@ -125,7 +125,7 @@ TEST_F(JsonObjectSerializationTests, OneFalse)
     object["key"] = false;
     outputMustBe("{\"key\":false}");
 }
-
+/*
 TEST_F(JsonObjectSerializationTests, OneEmptyNestedArray)
 {
     auto nestedArray = JsonArray<1>();

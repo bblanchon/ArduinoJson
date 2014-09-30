@@ -122,6 +122,10 @@ size_t JsonObject::printTo(Print& p) const
         case JSON_INTEGER:
             n += p.print(childValue->content.asInteger);
             break;
+
+        case JSON_BOOLEAN:
+            n += p.print(childValue->content.asBoolean ? "true" : "false");
+            break;
         }
 
         if (childValue->type >= JSON_DOUBLE_0_DECIMALS)
