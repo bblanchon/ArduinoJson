@@ -23,7 +23,7 @@ protected:
     JsonObject object;
 
 private:
-    StaticJsonBuffer<42> json;
+    StaticJsonBuffer<5> json;
 };
 
 TEST_F(JsonObjectSerializationTests, EmptyObject)
@@ -80,7 +80,7 @@ TEST_F(JsonObjectSerializationTests, ReplaceExistingKey)
 
     outputMustBe("{\"key\":\"value2\"}");
 }
-/*
+
 TEST_F(JsonObjectSerializationTests, OneStringOverCapacity)
 {
     object["key1"] = "value1";
@@ -89,7 +89,7 @@ TEST_F(JsonObjectSerializationTests, OneStringOverCapacity)
 
     outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
 }
-
+/*
 TEST_F(JsonObjectSerializationTests, OneInteger)
 {
     object["key"] = 1;

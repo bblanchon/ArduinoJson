@@ -75,8 +75,11 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
     JsonBuffer* buffer = _node->content.asObject.buffer;
 
     JsonNode* newValueNode = buffer->createNode(JSON_UNDEFINED);
+    if (!newValueNode) return 0;
     
     JsonNode* newKeyNode = buffer->createNode(JSON_KEY);
+    if (!newKeyNode) return 0;
+
     newKeyNode->content.asKey.key = key;
     newKeyNode->content.asKey.value = newValueNode;
 
