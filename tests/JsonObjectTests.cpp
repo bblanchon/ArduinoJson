@@ -44,6 +44,16 @@ TEST_F(JsonObjectTests, Shrink_WhenValuesAreRemoved)
     EXPECT_EQ(0, object.size());
 }
 
+TEST_F(JsonObjectTests, DoNotShrink_WhenRemoveIsCalledWithAWrongKey)
+{
+    object["hello"];
+    object["world"];
+
+    object.remove(":-P");
+
+    EXPECT_EQ(2, object.size());
+}
+
 TEST_F(JsonObjectTests, CanStoreIntegers)
 {
     object["hello"] = 123;
