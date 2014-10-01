@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "EscapedString.h"
-#include "StringBuilder.h"
+#include <Internals/EscapedString.h>
+#include <Internals/StringBuilder.h>
 
 using namespace ArduinoJson::Internals;
 

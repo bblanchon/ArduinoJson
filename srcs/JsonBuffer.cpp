@@ -2,9 +2,9 @@
 
 #include <string.h> // for memset
 
-#include "JsonNode.h"
 #include "JsonObject.h"
 #include "JsonValue.h"
+#include "Internals/JsonNode.h"
 
 JsonObject JsonBuffer::createObject()
 {

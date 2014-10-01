@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Printable.h"
+#include "Arduino/Printable.h"
 
 class JsonValue;
 struct JsonNode;

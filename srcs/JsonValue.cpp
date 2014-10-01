@@ -1,6 +1,7 @@
 #include "JsonObject.h"
-#include "JsonNode.h"
+
 #include "JsonValue.h"
+#include "Internals/JsonNode.h"
 
 void JsonValue::operator=(bool value)
 {

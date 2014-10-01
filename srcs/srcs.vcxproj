@@ -39,7 +39,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)\bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)\bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -67,25 +74,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="EscapedString.h" />
+    <ClInclude Include="Internals\EscapedString.h" />
     <ClInclude Include="JsonBuffer.h" />
-    <ClInclude Include="JsonNode.h" />
-    <ClInclude Include="JsonNodeSerializer.h" />
+    <ClInclude Include="Internals\JsonNode.h" />
+    <ClInclude Include="Internals\JsonNodeSerializer.h" />
     <ClInclude Include="JsonObject.h" />
     <ClInclude Include="JsonValue.h" />
-    <ClInclude Include="Print.h" />
-    <ClInclude Include="Printable.h" />
+    <ClInclude Include="Arduino\Print.h" />
+    <ClInclude Include="Arduino\Printable.h" />
     <ClInclude Include="StaticJsonBuffer.h" />
-    <ClInclude Include="StringBuilder.h" />
+    <ClInclude Include="Internals\StringBuilder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EscapedString.cpp" />
+    <ClCompile Include="Internals\EscapedString.cpp" />
     <ClCompile Include="JsonBuffer.cpp" />
-    <ClCompile Include="JsonNodeSerializer.cpp" />
+    <ClCompile Include="Internals\JsonNodeSerializer.cpp" />
     <ClCompile Include="JsonObject.cpp" />
     <ClCompile Include="JsonValue.cpp" />
-    <ClCompile Include="Print.cpp" />
-    <ClCompile Include="StringBuilder.cpp" />
+    <ClCompile Include="Arduino\Print.cpp" />
+    <ClCompile Include="Internals\StringBuilder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

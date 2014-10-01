@@ -2,12 +2,12 @@
 
 #include <string.h> // for strcmp
 
-#include "EscapedString.h"
 #include "JsonBuffer.h"
 #include "JsonValue.h"
-#include "JsonNode.h"
-#include "StringBuilder.h"
-#include "JsonNodeSerializer.h"
+#include "Internals/EscapedString.h"
+#include "Internals/JsonNode.h"
+#include "Internals/JsonNodeSerializer.h"
+#include "Internals/StringBuilder.h"
 
 using namespace ArduinoJson::Internals;
 

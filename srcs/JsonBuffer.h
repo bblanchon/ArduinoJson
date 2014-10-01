@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stddef.h>
-#include "JsonNode.h"
+#include "Internals/JsonNode.h"
+
 
 class JsonObject;
 class JsonValue;

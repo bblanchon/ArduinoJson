@@ -27,22 +27,22 @@
     <ClInclude Include="JsonBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonNode.h">
+    <ClInclude Include="Internals\EscapedString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StringBuilder.h">
+    <ClInclude Include="Internals\JsonNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Print.h">
+    <ClInclude Include="Internals\JsonNodeSerializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Printable.h">
+    <ClInclude Include="Internals\StringBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EscapedString.h">
+    <ClInclude Include="Arduino\Print.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonNodeSerializer.h">
+    <ClInclude Include="Arduino\Printable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,16 +56,16 @@
     <ClCompile Include="JsonValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringBuilder.cpp">
+    <ClCompile Include="Internals\EscapedString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Print.cpp">
+    <ClCompile Include="Internals\JsonNodeSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EscapedString.cpp">
+    <ClCompile Include="Internals\StringBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonNodeSerializer.cpp">
+    <ClCompile Include="Arduino\Print.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
