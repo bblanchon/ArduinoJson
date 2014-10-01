@@ -48,6 +48,9 @@
     <ClInclude Include="JsonContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Internals\JsonNodeIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonObject.cpp">

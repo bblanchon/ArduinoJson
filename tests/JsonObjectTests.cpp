@@ -14,6 +14,11 @@ protected:
     JsonObject object;
 };
 
+TEST_F(JsonObjectTests, InitialSizeIsZero)
+{
+    EXPECT_EQ(0, object.size());
+}
+
 TEST_F(JsonObjectTests, Grow_WhenValuesAreAdded)
 {   
     object["hello"];

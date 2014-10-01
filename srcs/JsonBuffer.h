@@ -9,7 +9,7 @@ struct JsonNode;
 
 class JsonBuffer
 {
-    friend class JsonObject;
+    friend class JsonContainer;
 
 public:
 //    virtual ~JsonBuffer() = 0;
