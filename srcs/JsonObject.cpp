@@ -13,7 +13,7 @@ using namespace ArduinoJson::Internals;
 
 size_t JsonObject::size()
 {
-    JsonNode* firstChild = _node->content.asObject.child;
+    JsonNode* firstChild = _node->content.asContainer.child;
 
     int size = 0;
 
@@ -33,7 +33,7 @@ JsonValue JsonObject::operator[](char const* key)
 
 void JsonObject::remove(char const* key)
 {
-    JsonNode* firstChild = _node->content.asObject.child;
+    JsonNode* firstChild = _node->content.asContainer.child;
     JsonNode* lastChild = 0;
 
     for (JsonNode* child = firstChild; child; child = child->next)
@@ -45,7 +45,7 @@ void JsonObject::remove(char const* key)
             if (lastChild)
                 lastChild->next = child->next;
             else
-                _node->content.asObject.child = child->next;
+                _node->content.asContainer.child = child->next;
         }       
         lastChild = child;
     }
@@ -60,7 +60,7 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
 {
     if (!_node || _node->type != JSON_OBJECT) return 0;
 
-    JsonNode* firstChild = _node->content.asObject.child;
+    JsonNode* firstChild = _node->content.asContainer.child;
     JsonNode* lastChild = 0;
 
     for (JsonNode* child = firstChild; child; child = child->next)
@@ -73,7 +73,7 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
         lastChild = child;
     }
 
-    JsonBuffer* buffer = _node->content.asObject.buffer;
+    JsonBuffer* buffer = _node->content.asContainer.buffer;
 
     JsonNode* newValueNode = buffer->createNode(JSON_UNDEFINED);
     if (!newValueNode) return 0;
@@ -87,19 +87,7 @@ JsonNode* JsonObject::getOrCreateNodeAt(char const* key)
     if (lastChild)
         lastChild->next = newKeyNode;
     else
-        _node->content.asObject.child = newKeyNode;
+        _node->content.asContainer.child = newKeyNode;
 
     return newValueNode;
-}
-
-size_t JsonObject::printTo(char* buffer, size_t bufferSize) const
-{
-    StringBuilder sb(buffer, bufferSize);
-    return printTo(sb);
-}
-
-size_t JsonObject::printTo(Print& p) const
-{
-    JsonNodeSerializer serializer(p);
-    return serializer.serialize(_node);
 }

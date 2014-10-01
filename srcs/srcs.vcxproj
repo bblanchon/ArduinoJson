@@ -78,6 +78,7 @@
     <ClInclude Include="JsonBuffer.h" />
     <ClInclude Include="Internals\JsonNode.h" />
     <ClInclude Include="Internals\JsonNodeSerializer.h" />
+    <ClInclude Include="JsonContainer.h" />
     <ClInclude Include="JsonObject.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="Arduino\Print.h" />
@@ -89,6 +90,7 @@
     <ClCompile Include="Internals\EscapedString.cpp" />
     <ClCompile Include="JsonBuffer.cpp" />
     <ClCompile Include="Internals\JsonNodeSerializer.cpp" />
+    <ClCompile Include="JsonContainer.cpp" />
     <ClCompile Include="JsonObject.cpp" />
     <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="Arduino\Print.cpp" />

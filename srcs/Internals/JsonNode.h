@@ -41,7 +41,7 @@ struct JsonNode
         {
             JsonNode* child;
             JsonBuffer* buffer;
-        } asObject;
+        } asContainer;
 
         struct
         {

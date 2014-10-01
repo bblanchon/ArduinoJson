@@ -45,6 +45,9 @@
     <ClInclude Include="Arduino\Printable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonObject.cpp">
@@ -66,6 +69,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Arduino\Print.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,22 +1,21 @@
 #pragma once
 
-#include "Arduino/Printable.h"
+#include "JsonContainer.h"
 
 class JsonValue;
 struct JsonNode;
 
-class JsonObject : public Printable
+class JsonObject : public JsonContainer
 {
     friend JsonValue;
 
 public:
     JsonObject()
-        : _node(0)
     {
     }
 
-    JsonObject(JsonNode* node)
-        : _node(node)
+    explicit JsonObject(JsonNode* node)
+        : JsonContainer(node)
     {
     }
 
@@ -27,11 +26,6 @@ public:
 
     bool operator==(const JsonObject& other) const;
 
-    size_t printTo(char* buffer, size_t bufferSize) const;
-    virtual size_t printTo(Print& print) const;
-
 private:
-    JsonNode* _node;
-
     JsonNode* getOrCreateNodeAt(char const* key);
 };

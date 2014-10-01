@@ -41,7 +41,7 @@ size_t JsonNodeSerializer::serializeObject(const JsonNode* node)
 
     n += _sink.write('{');
 
-    JsonNode* firstChild = node->content.asObject.child;
+    JsonNode* firstChild = node->content.asContainer.child;
 
     for (JsonNode* child = firstChild; child; child = child->next)
     {
