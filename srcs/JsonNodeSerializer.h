@@ -15,5 +15,8 @@ public:
 
 private:
     Print& _sink;
+
+    size_t serializeObject(const JsonNode* node);
+    size_t serializeKeyValue(const JsonNode* node);
 };
 

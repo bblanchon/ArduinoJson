@@ -5,7 +5,34 @@
 
 using namespace ArduinoJson::Internals;
 
-size_t JsonNodeSerializer::serialize(JsonNode const* node)
+size_t JsonNodeSerializer::serialize(const JsonNode* node)
+{
+    if (!node) return 0;
+
+    switch (node->type)
+    {
+    case JSON_OBJECT:
+        return serializeObject(node);
+
+    case JSON_STRING:
+        return EscapedString::printTo(node->content.asString, _sink);
+
+    case JSON_INTEGER:
+        return _sink.print(node->content.asInteger);
+
+    case JSON_BOOLEAN:
+        return _sink.print(node->content.asBoolean ? "true" : "false");
+    }
+
+    if (node->type >= JSON_DOUBLE_0_DECIMALS)
+    {
+        return _sink.print(node->content.asDouble, node->type - JSON_DOUBLE_0_DECIMALS);
+    }
+
+    return 0;
+}
+
+size_t JsonNodeSerializer::serializeObject(const JsonNode* node)
 {
     size_t n = 0;
 
@@ -15,30 +42,8 @@ size_t JsonNodeSerializer::serialize(JsonNode const* node)
 
     for (JsonNode* child = firstChild; child; child = child->next)
     {
-        const char* childKey = child->content.asKey.key;
-        JsonNode* childValue = child->content.asKey.value;
-
-        n += EscapedString::printTo(childKey, _sink);
-        n += _sink.write(':');
-
-        switch (childValue->type)
-        {
-        case JSON_STRING:
-            n += EscapedString::printTo(childValue->content.asString, _sink);
-            break;
-
-        case JSON_INTEGER:
-            n += _sink.print(childValue->content.asInteger);
-            break;
-
-        case JSON_BOOLEAN:
-            n += _sink.print(childValue->content.asBoolean ? "true" : "false");
-            break;
-        }
-
-        if (childValue->type >= JSON_DOUBLE_0_DECIMALS)
-            n += _sink.print(childValue->content.asDouble, childValue->type - JSON_DOUBLE_0_DECIMALS);
-
+        n += serializeKeyValue(child);
+        
         if (child->next)
         {
             n += _sink.write(',');
@@ -48,4 +53,15 @@ size_t JsonNodeSerializer::serialize(JsonNode const* node)
     n += _sink.write('}');
 
     return n;
+}
+
+size_t JsonNodeSerializer::serializeKeyValue(JsonNode const* node)
+{
+    const char* childKey = node->content.asKey.key;
+    JsonNode* childValue = node->content.asKey.value;
+
+    return
+        EscapedString::printTo(childKey, _sink) +
+        _sink.write(':') +
+        serialize(childValue);
 }
