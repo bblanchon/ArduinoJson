@@ -22,6 +22,9 @@ size_t JsonNodeSerializer::serialize(const JsonNode* node)
 
     case JSON_BOOLEAN:
         return _sink.print(node->content.asBoolean ? "true" : "false");
+
+    case JSON_PROXY:
+        return serialize(node->content.asProxy.target);
     }
 
     if (node->type >= JSON_DOUBLE_0_DECIMALS)

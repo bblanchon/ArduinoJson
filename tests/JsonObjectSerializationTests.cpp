@@ -21,8 +21,6 @@ protected:
     }
 
     JsonObject object;
-
-private:
     StaticJsonBuffer<5> json;
 };
 
@@ -134,12 +132,12 @@ TEST_F(JsonObjectSerializationTests, OneEmptyNestedArray)
 
     outputMustBe("{\"key\":[]}");
 }
-
+*/
 TEST_F(JsonObjectSerializationTests, OneEmptyNestedObject)
 {
-    auto nestedObject = JsonObject<1>();
+    auto nestedObject = json.createObject();
 
     object["key"] = nestedObject;
 
     outputMustBe("{\"key\":{}}");
-}*/
+}
