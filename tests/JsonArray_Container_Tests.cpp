@@ -75,3 +75,15 @@ TEST_F(JsonArray_Container_Tests, CanStoreInnerArrays)
     EXPECT_EQ(innerarray1, (JsonArray) array[0]);
     EXPECT_EQ(innerarray2, (JsonArray) array[1]);
 }
+
+TEST_F(JsonArray_Container_Tests, CanStoreInnerObjects)
+{
+    JsonObject innerObject1 = json.createObject();
+    JsonObject innerObject2 = json.createObject();
+
+    array.add(innerObject1);
+    array.add(innerObject2);
+
+    EXPECT_EQ(innerObject1, (JsonObject) array[0]);
+    EXPECT_EQ(innerObject2, (JsonObject) array[1]);
+}
