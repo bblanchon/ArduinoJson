@@ -95,6 +95,18 @@ TEST_F(JsonObject_Container_Tests, CanStoreStrings)
     EXPECT_STREQ("w0r1d", (const char*) object["world"]);
 }
 
+TEST_F(JsonObject_Container_Tests, CanStoreInnerArrays)
+{
+    JsonArray innerarray1 = json.createArray();
+    JsonArray innerarray2 = json.createArray();
+
+    object["hello"] = innerarray1;
+    object["world"] = innerarray2;
+
+    EXPECT_EQ(innerarray1, (JsonArray) object["hello"]);
+    EXPECT_EQ(innerarray2, (JsonArray) object["world"]);
+}
+
 TEST_F(JsonObject_Container_Tests, CanStoreInnerObjects)
 {
     JsonObject innerObject1 = json.createObject();
