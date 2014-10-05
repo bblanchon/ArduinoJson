@@ -33,9 +33,6 @@
     <ClInclude Include="Internals\JsonNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Internals\JsonNodeSerializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Internals\StringBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,6 +51,9 @@
     <ClInclude Include="JsonArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Internals\JsonWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonObject.cpp">
@@ -68,9 +68,6 @@
     <ClCompile Include="Internals\EscapedString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Internals\JsonNodeSerializer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Internals\StringBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,6 +78,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Internals\JsonNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Internals\JsonWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

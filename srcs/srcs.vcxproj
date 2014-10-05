@@ -78,7 +78,7 @@
     <ClInclude Include="JsonArray.h" />
     <ClInclude Include="JsonBuffer.h" />
     <ClInclude Include="Internals\JsonNode.h" />
-    <ClInclude Include="Internals\JsonNodeSerializer.h" />
+    <ClInclude Include="Internals\JsonWriter.h" />
     <ClInclude Include="JsonContainer.h" />
     <ClInclude Include="Internals\JsonNodeIterator.h" />
     <ClInclude Include="JsonObject.h" />
@@ -90,9 +90,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Internals\EscapedString.cpp" />
+    <ClCompile Include="Internals\JsonNode.cpp" />
     <ClCompile Include="JsonArray.cpp" />
     <ClCompile Include="JsonBuffer.cpp" />
-    <ClCompile Include="Internals\JsonNodeSerializer.cpp" />
+    <ClCompile Include="Internals\JsonWriter.cpp" />
     <ClCompile Include="JsonContainer.cpp" />
     <ClCompile Include="JsonObject.cpp" />
     <ClCompile Include="JsonValue.cpp" />

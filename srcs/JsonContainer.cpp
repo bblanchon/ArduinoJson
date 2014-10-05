@@ -1,7 +1,7 @@
 #include "JsonContainer.h"
 
 #include "JsonBuffer.h"
-#include "Internals/JsonNodeSerializer.h"
+#include "Internals/JsonWriter.h"
 #include "Internals/StringBuilder.h"
 
 size_t JsonContainer::printTo(char* buffer, size_t bufferSize) const
@@ -12,8 +12,9 @@ size_t JsonContainer::printTo(char* buffer, size_t bufferSize) const
 
 size_t JsonContainer::printTo(Print& p) const
 {
-    JsonNodeSerializer serializer(p);
-    return serializer.serialize(_node);
+    JsonWriter writer(p);
+    _node->writeTo(writer);
+    return writer.bytesWritten();
 }
 
 JsonNode* JsonContainer::createNode(JsonNodeType type)

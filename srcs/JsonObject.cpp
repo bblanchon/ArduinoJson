@@ -6,7 +6,6 @@
 #include "JsonValue.h"
 #include "Internals/EscapedString.h"
 #include "Internals/JsonNode.h"
-#include "Internals/JsonNodeSerializer.h"
 #include "Internals/StringBuilder.h"
 
 using namespace ArduinoJson::Internals;

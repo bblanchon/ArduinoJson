@@ -19,10 +19,14 @@ enum JsonNodeType
     // etc.
 };
 
+class JsonWriter;
+
 struct JsonNode
 {
-    JsonNode* next;
-    JsonNodeType type;
+    JsonNode* next;    
+    JsonNodeType type; // <- TODO: hide
+    
+    void writeTo(JsonWriter&);
 
     union
     {
@@ -49,4 +53,8 @@ struct JsonNode
         } asProxy;
 
     } content;
+
+private:
+    inline void writeArrayTo(JsonWriter&);
+    inline void writeObjectTo(JsonWriter&);
 };
