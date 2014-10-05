@@ -54,7 +54,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreBooleans)
     EXPECT_TRUE((bool) array[0]);
     EXPECT_FALSE((bool) array[1]);
 }
-/*
+
 TEST_F(JsonArray_Container_Tests, CanStoreStrings)
 {
     array.add("h3110");
@@ -63,7 +63,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreStrings)
     EXPECT_STREQ("h3110", (const char*) array[0]);
     EXPECT_STREQ("w0r1d", (const char*) array[1]);
 }
-
+/*
 TEST_F(JsonArray_Container_Tests, CanStoreInnerArrays)
 {
     JsonArray innerarray1 = json.createArray();
