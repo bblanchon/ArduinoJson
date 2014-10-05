@@ -11,6 +11,9 @@ size_t JsonNodeSerializer::serialize(const JsonNode* node)
 
     switch (node->type)
     {
+    case JSON_ARRAY:
+        return serializeArray(node);
+
     case JSON_OBJECT:
         return serializeObject(node);
 
@@ -33,6 +36,29 @@ size_t JsonNodeSerializer::serialize(const JsonNode* node)
     }
 
     return 0;
+}
+
+size_t JsonNodeSerializer::serializeArray(JsonNode const* node)
+{
+    size_t n = 0;
+
+    n += _sink.write('[');
+    
+    JsonNode* firstChild = node->content.asContainer.child;
+
+    for (JsonNode* child = firstChild; child; child = child->next)
+    {
+        n += serialize(child);
+
+        if (child->next)
+        {
+            n += _sink.write(',');
+        }
+    }
+
+    n += _sink.write(']');
+
+    return n;
 }
 
 size_t JsonNodeSerializer::serializeObject(const JsonNode* node)

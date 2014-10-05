@@ -8,9 +8,12 @@
 #include <JsonObject.h>
 #include <StaticJsonBuffer.h>
 
-class JsonArray_Serialization_Tests : testing::Test 
+class JsonArray_Serialization_Tests : public testing::Test 
 {
 protected:
+    JsonArray array;
+    StaticJsonBuffer<3> json;
+
     virtual void SetUp()
     {
         array = json.createArray();
@@ -24,11 +27,9 @@ protected:
     }
 
 private:
-    JsonArray array;
     char buffer[256];
-    StaticJsonBuffer<32> json;
 };
-/*
+
 TEST_F(JsonArray_Serialization_Tests, Empty)
 {
     outputMustBe("[]");
@@ -73,7 +74,7 @@ TEST_F(JsonArray_Serialization_Tests, OneDoubleDefaultDigits)
 
 TEST_F(JsonArray_Serialization_Tests, OneDoubleFourDigits)
 {
-    array.add<4>(3.14159265358979323846);
+    array.add(3.14159265358979323846, 4);
     outputMustBe("[3.1416]");
 }
 
@@ -134,7 +135,7 @@ TEST_F(JsonArray_Serialization_Tests, OneBooleanOverCapacity)
 
 TEST_F(JsonArray_Serialization_Tests, OneEmptyNestedArray)
 {
-    JsonArray<1> nestedArray;
+    JsonArray nestedArray = json.createArray();
     
     array.add(nestedArray);
 
@@ -143,20 +144,9 @@ TEST_F(JsonArray_Serialization_Tests, OneEmptyNestedArray)
 
 TEST_F(JsonArray_Serialization_Tests, OneEmptyNestedHash)
 {
-    JsonObject<1> nestedObject;
+    JsonObject nestedObject = json.createObject();
 
     array.add(nestedObject);
 
     outputMustBe("[{}]");
 }
-
-TEST_F(JsonArray_Serialization_Tests, OneNestedArrayWithOneInteger)
-{
-    JsonArray<1> nestedArray;
-    nestedArray.add(1);
-
-    array.add(nestedArray);
-
-    outputMustBe("[[1]]");
-}
-*/
