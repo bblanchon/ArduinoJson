@@ -19,7 +19,7 @@ size_t JsonContainer::printTo(Print& p) const
 JsonNode* JsonContainer::createNode(JsonNodeType type)
 {
     JsonBuffer* buffer = _node->content.asContainer.buffer;
-    return buffer->createNode(JSON_UNDEFINED);
+    return buffer->createNode(type);
 }
 
 bool JsonContainer::checkNodeType(JsonNodeType expectedType)

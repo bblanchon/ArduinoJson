@@ -36,7 +36,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreIntegers)
     EXPECT_EQ(123, (int) array[0]);
     EXPECT_EQ(456, (int) array[1]);
 }
-/*
+
 TEST_F(JsonArray_Container_Tests, CanStoreDoubles)
 {
     array.add(123.45);
@@ -45,7 +45,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreDoubles)
     EXPECT_EQ(123.45, (double) array[0]);
     EXPECT_EQ(456.78, (double) array[1]);
 }
-
+/*
 TEST_F(JsonArray_Container_Tests, CanStoreBooleans)
 {
     array.add(true);

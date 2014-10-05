@@ -16,16 +16,9 @@ public:
 
     JsonValue operator[](int index) const;
 
-    template<typename T>
-    void add(T value)
-    {
-        JsonNode* node = createNode(JSON_UNDEFINED);
-        if (!node) return;
-
-        JsonValue jsonValue(node);
-        jsonValue = value;
-
-        addChild(node);
-    }
+    void add(const char* value);
+    void add(double value, int decimals=2);
+    void add(int value) { add((long) value); }
+    void add(long value);
 };
 
