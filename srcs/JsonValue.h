@@ -1,5 +1,7 @@
 #pragma once
 
+class JsonArray;
+class JsonContainer;
 class JsonObject;
 struct JsonNode;
 
@@ -21,13 +23,14 @@ public:
     void operator=(const char*);
     void operator=(double);
     void operator=(int);
-    void operator=(const JsonObject&);
+    void operator=(const JsonContainer&);
     void operator=(const JsonValue&);
     
     operator bool() const;
     operator const char*() const;
     operator double() const;
     operator int() const;
+    operator JsonArray() const;
     operator JsonObject() const;
 
     void set(double value, int decimals);

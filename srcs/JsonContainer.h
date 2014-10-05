@@ -6,10 +6,12 @@
 
 struct JsonNode;
 class JsonValue;
+class JsonArray;
 
 class JsonContainer : public Printable
 {
     friend JsonValue;
+    friend JsonArray;
 
 public:
     JsonContainer()

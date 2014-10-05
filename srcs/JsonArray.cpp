@@ -48,3 +48,12 @@ void JsonArray::add(long value)
     node->content.asInteger = value;
     addChild(node);
 }
+
+void JsonArray::add(JsonContainer& innerContainer)
+{
+    JsonNode* node = createNode(JSON_PROXY);
+    if (!node) return;
+
+    node->content.asProxy.target = innerContainer._node;
+    addChild(node);
+}

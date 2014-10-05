@@ -1,6 +1,7 @@
-#include "JsonObject.h"
-
 #include "JsonValue.h"
+
+#include "JsonArray.h"
+#include "JsonObject.h"
 #include "Internals/JsonNode.h"
 
 void JsonValue::operator=(bool value)
@@ -40,7 +41,7 @@ void JsonValue::operator=(int value)
     _node->content.asInteger = value;
 }
 
-void JsonValue::operator=(const JsonObject& object)
+void JsonValue::operator=(const JsonContainer& object)
 {
     setAsProxyTo(object._node);
 }
@@ -72,6 +73,7 @@ void JsonValue::operator=(JsonValue const& value)
     case JSON_ARRAY:
     case JSON_PROXY:
         setAsProxyTo(value._node);
+        break;
 
     default:
         *_node = *value._node;
@@ -113,6 +115,11 @@ JsonValue::operator int() const
     if (!node || node->type != JSON_INTEGER) return 0;
 
     return node->content.asInteger;
+}
+
+JsonValue::operator JsonArray() const
+{
+    return JsonArray(getActualNode());
 }
 
 JsonValue::operator JsonObject() const
