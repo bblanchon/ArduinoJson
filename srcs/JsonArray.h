@@ -16,6 +16,7 @@ public:
 
     JsonValue operator[](int index) const;
 
+    void add(bool value);
     void add(const char* value);
     void add(double value, int decimals=2);
     void add(int value) { add((long) value); }

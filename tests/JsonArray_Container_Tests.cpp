@@ -45,7 +45,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreDoubles)
     EXPECT_EQ(123.45, (double) array[0]);
     EXPECT_EQ(456.78, (double) array[1]);
 }
-/*
+
 TEST_F(JsonArray_Container_Tests, CanStoreBooleans)
 {
     array.add(true);
@@ -54,7 +54,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreBooleans)
     EXPECT_TRUE((bool) array[0]);
     EXPECT_FALSE((bool) array[1]);
 }
-
+/*
 TEST_F(JsonArray_Container_Tests, CanStoreStrings)
 {
     array.add("h3110");

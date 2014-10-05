@@ -13,6 +13,15 @@ JsonValue JsonArray::operator[](int index) const
     return JsonValue();
 }
 
+void JsonArray::add(bool value)
+{
+    JsonNode* node = createNode(JSON_BOOLEAN);
+    if (!node) return;
+
+    node->content.asBoolean = value;
+    addChild(node);
+}
+
 void JsonArray::add(char const* value)
 {
     JsonNode* node = createNode(JSON_STRING);
