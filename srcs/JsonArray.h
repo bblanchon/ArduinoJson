@@ -16,7 +16,10 @@ public:
 
  //   JsonValue operator[](int index);
 
-   // template<typename T>
-   // void add(T value);
+    template<typename T>
+    void add(T value)
+    {
+        addChild(createNode(JSON_UNDEFINED));
+    }
 };
 

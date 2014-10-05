@@ -18,7 +18,7 @@ TEST_F(JsonArray_Container_Tests, InitialSizeIsZero)
 {
     EXPECT_EQ(0, array.size());
 }
-/*
+
 TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded)
 {
     array.add("hello");
@@ -27,7 +27,7 @@ TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded)
     array.add("world");
     EXPECT_EQ(2, array.size());
 }
-
+/*
 TEST_F(JsonArray_Container_Tests, CanStoreIntegers)
 {
     array.add(123);

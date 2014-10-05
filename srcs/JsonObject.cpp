@@ -38,16 +38,12 @@ JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
 {
     if (!checkNodeType(JSON_OBJECT)) return 0;
 
-    JsonNode* lastChild = 0;
-
     for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it)
     {
         const char* childKey = it->content.asKey.key;
 
         if (!strcmp(childKey, key))
             return it->content.asKey.value;
-
-        lastChild = *it;
     }
       
     JsonNode* newValueNode = createNode(JSON_UNDEFINED);
@@ -59,7 +55,7 @@ JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
     newKeyNode->content.asKey.key = key;
     newKeyNode->content.asKey.value = newValueNode;
 
-    insertChildAfter(newKeyNode, lastChild);
+    addChild(newKeyNode);
 
     return newValueNode;
 }

@@ -32,12 +32,20 @@ bool JsonContainer::operator==(const JsonContainer & other) const
     return _node == other._node;
 }
 
-void JsonContainer::insertChildAfter(JsonNode* newChild, JsonNode* previous)
+void JsonContainer::addChild(JsonNode* newChild)
 {
-    if (previous)
-        previous->next = newChild;
-    else
-        _node->content.asContainer.child = newChild;
+    JsonNode* lastChild = _node->content.asContainer.child;
+
+    if (!lastChild)
+    {
+        _node->content.asContainer.child = newChild = newChild;
+        return;
+    }
+
+    while (lastChild->next)
+        lastChild = lastChild->next;
+
+    lastChild->next = newChild;
 }
 
 void JsonContainer::removeChildAfter(JsonNode* child, JsonNode* previous)

@@ -41,7 +41,7 @@ protected:
         return JsonNodeIterator(0);
     }
 
-    void insertChildAfter(JsonNode* newChild, JsonNode* insertAfterMe);
+    void addChild(JsonNode* newChild);
     void removeChildAfter(JsonNode* child, JsonNode* previous);
     JsonNode* createNode(JsonNodeType type);
 
