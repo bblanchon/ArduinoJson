@@ -2,7 +2,7 @@
 #include <StaticJsonBuffer.h>
 #include <JsonValue.h>
 
-class JsonObjectTests : public ::testing::Test
+class JsonObject_Container_Tests : public ::testing::Test
 {
 protected:
     virtual void SetUp() 
@@ -14,12 +14,12 @@ protected:
     JsonObject object;
 };
 
-TEST_F(JsonObjectTests, InitialSizeIsZero)
+TEST_F(JsonObject_Container_Tests, InitialSizeIsZero)
 {
     EXPECT_EQ(0, object.size());
 }
 
-TEST_F(JsonObjectTests, Grow_WhenValuesAreAdded)
+TEST_F(JsonObject_Container_Tests, Grow_WhenValuesAreAdded)
 {   
     object["hello"];
     EXPECT_EQ(1, object.size());
@@ -28,7 +28,7 @@ TEST_F(JsonObjectTests, Grow_WhenValuesAreAdded)
     EXPECT_EQ(2, object.size());
 }
 
-TEST_F(JsonObjectTests, DoNotGrow_WhenSameValueIsAdded)
+TEST_F(JsonObject_Container_Tests, DoNotGrow_WhenSameValueIsAdded)
 {
     object["hello"];
     EXPECT_EQ(1, object.size());
@@ -37,7 +37,7 @@ TEST_F(JsonObjectTests, DoNotGrow_WhenSameValueIsAdded)
     EXPECT_EQ(1, object.size());
 }
 
-TEST_F(JsonObjectTests, Shrink_WhenValuesAreRemoved)
+TEST_F(JsonObject_Container_Tests, Shrink_WhenValuesAreRemoved)
 {
     object["hello"];
     object["world"];
@@ -49,7 +49,7 @@ TEST_F(JsonObjectTests, Shrink_WhenValuesAreRemoved)
     EXPECT_EQ(0, object.size());
 }
 
-TEST_F(JsonObjectTests, DoNotShrink_WhenRemoveIsCalledWithAWrongKey)
+TEST_F(JsonObject_Container_Tests, DoNotShrink_WhenRemoveIsCalledWithAWrongKey)
 {
     object["hello"];
     object["world"];
@@ -59,7 +59,7 @@ TEST_F(JsonObjectTests, DoNotShrink_WhenRemoveIsCalledWithAWrongKey)
     EXPECT_EQ(2, object.size());
 }
 
-TEST_F(JsonObjectTests, CanStoreIntegers)
+TEST_F(JsonObject_Container_Tests, CanStoreIntegers)
 {
     object["hello"] = 123;
     object["world"] = 456;
@@ -68,7 +68,7 @@ TEST_F(JsonObjectTests, CanStoreIntegers)
     EXPECT_EQ(456, (int) object["world"]);
 }
 
-TEST_F(JsonObjectTests, CanStoreDoubles)
+TEST_F(JsonObject_Container_Tests, CanStoreDoubles)
 {
     object["hello"] = 123.45;
     object["world"] = 456.78;
@@ -77,7 +77,7 @@ TEST_F(JsonObjectTests, CanStoreDoubles)
     EXPECT_EQ(456.78, (double) object["world"]);
 }
 
-TEST_F(JsonObjectTests, CanStoreBooleans)
+TEST_F(JsonObject_Container_Tests, CanStoreBooleans)
 {
     object["hello"] = true;
     object["world"] = false;
@@ -86,7 +86,7 @@ TEST_F(JsonObjectTests, CanStoreBooleans)
     EXPECT_FALSE((bool) object["world"]);
 }
 
-TEST_F(JsonObjectTests, CanStoreStrings)
+TEST_F(JsonObject_Container_Tests, CanStoreStrings)
 {
     object["hello"] = "h3110";
     object["world"] = "w0r1d";
@@ -95,7 +95,7 @@ TEST_F(JsonObjectTests, CanStoreStrings)
     EXPECT_STREQ("w0r1d", (const char*) object["world"]);
 }
 
-TEST_F(JsonObjectTests, CanStoreInnerObjects)
+TEST_F(JsonObject_Container_Tests, CanStoreInnerObjects)
 {
     JsonObject innerObject1 = json.createObject();
     JsonObject innerObject2 = json.createObject();

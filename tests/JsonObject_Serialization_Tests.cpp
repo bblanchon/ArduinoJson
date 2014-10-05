@@ -3,7 +3,7 @@
 #include <JsonValue.h>
 #include <StaticJsonBuffer.h>
 
-class JsonObjectSerializationTests : public testing::Test
+class JsonObject_Serialization_Tests : public testing::Test
 {
 protected:
     virtual void SetUp()
@@ -24,19 +24,19 @@ protected:
     StaticJsonBuffer<5> json;
 };
 
-TEST_F(JsonObjectSerializationTests, EmptyObject)
+TEST_F(JsonObject_Serialization_Tests, EmptyObject)
 {
     outputMustBe("{}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneString)
+TEST_F(JsonObject_Serialization_Tests, OneString)
 {
     object["key"] = "value";
 
     outputMustBe("{\"key\":\"value\"}");
 }
 
-TEST_F(JsonObjectSerializationTests, TwoStrings)
+TEST_F(JsonObject_Serialization_Tests, TwoStrings)
 {
     object["key1"] = "value1";
     object["key2"] = "value2";
@@ -44,7 +44,7 @@ TEST_F(JsonObjectSerializationTests, TwoStrings)
     outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
 }
 
-TEST_F(JsonObjectSerializationTests, RemoveFirst)
+TEST_F(JsonObject_Serialization_Tests, RemoveFirst)
 {
     object["key1"] = "value1";
     object["key2"] = "value2";
@@ -53,7 +53,7 @@ TEST_F(JsonObjectSerializationTests, RemoveFirst)
     outputMustBe("{\"key2\":\"value2\"}");
 }
 
-TEST_F(JsonObjectSerializationTests, RemoveLast)
+TEST_F(JsonObject_Serialization_Tests, RemoveLast)
 {
     object["key1"] = "value1";
     object["key2"] = "value2";
@@ -62,7 +62,7 @@ TEST_F(JsonObjectSerializationTests, RemoveLast)
     outputMustBe("{\"key1\":\"value1\"}");
 }
 
-TEST_F(JsonObjectSerializationTests, RemoveUnexistingKey)
+TEST_F(JsonObject_Serialization_Tests, RemoveUnexistingKey)
 {
     object["key1"] = "value1";
     object["key2"] = "value2";
@@ -71,7 +71,7 @@ TEST_F(JsonObjectSerializationTests, RemoveUnexistingKey)
     outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
 }
 
-TEST_F(JsonObjectSerializationTests, ReplaceExistingKey)
+TEST_F(JsonObject_Serialization_Tests, ReplaceExistingKey)
 {
     object["key"] = "value1";
     object["key"] = "value2";
@@ -79,7 +79,7 @@ TEST_F(JsonObjectSerializationTests, ReplaceExistingKey)
     outputMustBe("{\"key\":\"value2\"}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneStringOverCapacity)
+TEST_F(JsonObject_Serialization_Tests, OneStringOverCapacity)
 {
     object["key1"] = "value1";
     object["key2"] = "value2";
@@ -88,43 +88,43 @@ TEST_F(JsonObjectSerializationTests, OneStringOverCapacity)
     outputMustBe("{\"key1\":\"value1\",\"key2\":\"value2\"}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneInteger)
+TEST_F(JsonObject_Serialization_Tests, OneInteger)
 {
     object["key"] = 1;
     outputMustBe("{\"key\":1}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneDoubleFourDigits)
+TEST_F(JsonObject_Serialization_Tests, OneDoubleFourDigits)
 {
     object["key"].set(3.14159265358979323846, 4);
     outputMustBe("{\"key\":3.1416}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneDoubleDefaultDigits)
+TEST_F(JsonObject_Serialization_Tests, OneDoubleDefaultDigits)
 {
     object["key"] = 3.14159265358979323846;
     outputMustBe("{\"key\":3.14}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneNull)
+TEST_F(JsonObject_Serialization_Tests, OneNull)
 {
     object["key"] = (char*) 0;
     outputMustBe("{\"key\":null}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneTrue)
+TEST_F(JsonObject_Serialization_Tests, OneTrue)
 {
     object["key"] = true;
     outputMustBe("{\"key\":true}");
 }
 
-TEST_F(JsonObjectSerializationTests, OneFalse)
+TEST_F(JsonObject_Serialization_Tests, OneFalse)
 {
     object["key"] = false;
     outputMustBe("{\"key\":false}");
 }
 /*
-TEST_F(JsonObjectSerializationTests, OneEmptyNestedArray)
+TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArray)
 {
     auto nestedArray = JsonArray<1>();
 
@@ -133,7 +133,7 @@ TEST_F(JsonObjectSerializationTests, OneEmptyNestedArray)
     outputMustBe("{\"key\":[]}");
 }
 */
-TEST_F(JsonObjectSerializationTests, OneEmptyNestedObject)
+TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedObject)
 {
     auto nestedObject = json.createObject();
 

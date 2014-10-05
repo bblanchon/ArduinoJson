@@ -6,16 +6,6 @@
 #include "JsonValue.h"
 #include "Internals/JsonNode.h"
 
-JsonObject JsonBuffer::createObject()
-{
-    JsonNode* node = createNode(JSON_OBJECT);
-
-    if (node)
-        node->content.asContainer.buffer = this;
-
-    return JsonObject(node);
-}
-
 JsonValue JsonBuffer::createValue()
 {
     JsonNode* node = createNode(JSON_UNDEFINED);
@@ -29,5 +19,15 @@ JsonNode* JsonBuffer::createNode(JsonNodeType type)
     
     memset(node, 0, sizeof(JsonNode));
     node->type = type;
+    return node;
+}
+
+JsonNode* JsonBuffer::createContainerNode(JsonNodeType type)
+{
+    JsonNode* node = createNode(type);
+
+    if (node)
+        node->content.asContainer.buffer = this;
+
     return node;
 }

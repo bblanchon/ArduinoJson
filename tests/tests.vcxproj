@@ -86,8 +86,10 @@
     <ClCompile Include="..\third-party\gtest-1.7.0\src\gtest-all.cc" />
     <ClCompile Include="..\third-party\gtest-1.7.0\src\gtest_main.cc" />
     <ClCompile Include="EscapedStringTests.cpp" />
-    <ClCompile Include="JsonObjectSerializationTests.cpp" />
-    <ClCompile Include="JsonObjectTests.cpp" />
+    <ClCompile Include="JsonArray_Container_Tests.cpp" />
+    <ClCompile Include="JsonArray_Serialization_Tests.cpp" />
+    <ClCompile Include="JsonObject_Serialization_Tests.cpp" />
+    <ClCompile Include="JsonObject_Container_Tests.cpp" />
     <ClCompile Include="JsonValueTests.cpp" />
     <ClCompile Include="StaticJsonBufferTests.cpp" />
     <ClCompile Include="StringBuilderTests.cpp" />

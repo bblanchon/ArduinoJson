@@ -51,6 +51,9 @@
     <ClInclude Include="Internals\JsonNodeIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonObject.cpp">
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

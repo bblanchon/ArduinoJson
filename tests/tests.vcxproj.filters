@@ -27,19 +27,25 @@
     <ClCompile Include="StaticJsonBufferTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonObjectTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="JsonValueTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonObjectSerializationTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EscapedStringTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StringBuilderTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonArray_Serialization_Tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonObject_Serialization_Tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonObject_Container_Tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonArray_Container_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
