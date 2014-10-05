@@ -27,7 +27,7 @@ TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded)
     array.add("world");
     EXPECT_EQ(2, array.size());
 }
-/*
+
 TEST_F(JsonArray_Container_Tests, CanStoreIntegers)
 {
     array.add(123);
@@ -36,7 +36,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreIntegers)
     EXPECT_EQ(123, (int) array[0]);
     EXPECT_EQ(456, (int) array[1]);
 }
-
+/*
 TEST_F(JsonArray_Container_Tests, CanStoreDoubles)
 {
     array.add(123.45);

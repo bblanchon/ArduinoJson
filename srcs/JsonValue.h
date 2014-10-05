@@ -1,5 +1,6 @@
 #pragma once
 
+class JsonObject;
 struct JsonNode;
 
 class JsonValue
