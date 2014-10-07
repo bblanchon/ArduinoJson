@@ -57,3 +57,16 @@ void JsonArray::add(JsonContainer& innerContainer)
     node->content.asProxy.target = innerContainer._node;
     addChild(node);
 }
+
+JsonArray JsonArray::createNestedArray()
+{
+    JsonNode* node = createNode(JSON_ARRAY);
+    
+    if (node)
+    {
+        node->content.asContainer.buffer = _node->content.asContainer.buffer;
+        addChild(node);
+    }
+
+    return JsonArray(node);
+}

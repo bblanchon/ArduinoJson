@@ -8,7 +8,7 @@
 #include <JsonObject.h>
 #include <StaticJsonBuffer.h>
 
-class JsonArray_Serialization_Tests : public testing::Test 
+class JsonArray_PrintTo_Tests : public testing::Test 
 {
 protected:
     JsonArray array;
@@ -30,26 +30,26 @@ private:
     char buffer[256];
 };
 
-TEST_F(JsonArray_Serialization_Tests, Empty)
+TEST_F(JsonArray_PrintTo_Tests, Empty)
 {
     outputMustBe("[]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, Null)
+TEST_F(JsonArray_PrintTo_Tests, Null)
 {
     array.add((char*) 0);
 
     outputMustBe("[null]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneString)
+TEST_F(JsonArray_PrintTo_Tests, OneString)
 {
     array.add("hello");
 
     outputMustBe("[\"hello\"]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, TwoStrings)
+TEST_F(JsonArray_PrintTo_Tests, TwoStrings)
 {
     array.add("hello");
     array.add("world");
@@ -57,7 +57,7 @@ TEST_F(JsonArray_Serialization_Tests, TwoStrings)
     outputMustBe("[\"hello\",\"world\"]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneStringOverCapacity)
+TEST_F(JsonArray_PrintTo_Tests, OneStringOverCapacity)
 {
     array.add("hello");
     array.add("world");
@@ -66,26 +66,26 @@ TEST_F(JsonArray_Serialization_Tests, OneStringOverCapacity)
     outputMustBe("[\"hello\",\"world\"]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneDoubleDefaultDigits)
+TEST_F(JsonArray_PrintTo_Tests, OneDoubleDefaultDigits)
 {
     array.add(3.14159265358979323846);
     outputMustBe("[3.14]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneDoubleFourDigits)
+TEST_F(JsonArray_PrintTo_Tests, OneDoubleFourDigits)
 {
     array.add(3.14159265358979323846, 4);
     outputMustBe("[3.1416]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneInteger)
+TEST_F(JsonArray_PrintTo_Tests, OneInteger)
 {
     array.add(1);
 
     outputMustBe("[1]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, TwoIntegers)
+TEST_F(JsonArray_PrintTo_Tests, TwoIntegers)
 {
     array.add(1);
     array.add(2);
@@ -93,7 +93,7 @@ TEST_F(JsonArray_Serialization_Tests, TwoIntegers)
     outputMustBe("[1,2]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneIntegerOverCapacity)
+TEST_F(JsonArray_PrintTo_Tests, OneIntegerOverCapacity)
 {
     array.add(1);
     array.add(2);
@@ -102,21 +102,21 @@ TEST_F(JsonArray_Serialization_Tests, OneIntegerOverCapacity)
     outputMustBe("[1,2]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneTrue)
+TEST_F(JsonArray_PrintTo_Tests, OneTrue)
 {
     array.add(true);
 
     outputMustBe("[true]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneFalse)
+TEST_F(JsonArray_PrintTo_Tests, OneFalse)
 {
     array.add(false);
 
     outputMustBe("[false]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, TwoBooleans)
+TEST_F(JsonArray_PrintTo_Tests, TwoBooleans)
 {
     array.add(false);
     array.add(true);
@@ -124,7 +124,7 @@ TEST_F(JsonArray_Serialization_Tests, TwoBooleans)
     outputMustBe("[false,true]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneBooleanOverCapacity)
+TEST_F(JsonArray_PrintTo_Tests, OneBooleanOverCapacity)
 {
     array.add(false);
     array.add(true);
@@ -133,7 +133,7 @@ TEST_F(JsonArray_Serialization_Tests, OneBooleanOverCapacity)
     outputMustBe("[false,true]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneEmptyNestedArray)
+TEST_F(JsonArray_PrintTo_Tests, OneEmptyNestedArray)
 {
     JsonArray nestedArray = json.createArray();
     
@@ -142,7 +142,7 @@ TEST_F(JsonArray_Serialization_Tests, OneEmptyNestedArray)
     outputMustBe("[[]]");
 }
 
-TEST_F(JsonArray_Serialization_Tests, OneEmptyNestedHash)
+TEST_F(JsonArray_PrintTo_Tests, OneEmptyNestedHash)
 {
     JsonObject nestedObject = json.createObject();
 

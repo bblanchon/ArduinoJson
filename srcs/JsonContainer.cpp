@@ -1,24 +1,42 @@
 #include "JsonContainer.h"
 
 #include "JsonBuffer.h"
-#include "Internals/JsonWriter.h"
 #include "Internals/StringBuilder.h"
+#include "Internals/CompactJsonWriter.h"
+#include "Internals/PrettyJsonWriter.h"
+
+using namespace ArduinoJson::Internals;
 
 size_t JsonContainer::printTo(char* buffer, size_t bufferSize) const
 {
-    ArduinoJson::Internals::StringBuilder sb(buffer, bufferSize);
+    StringBuilder sb(buffer, bufferSize);
     return printTo(sb);
 }
 
 size_t JsonContainer::printTo(Print& p) const
 {
-    JsonWriter writer(p);
+    CompactJsonWriter writer(p);
+    _node->writeTo(writer);
+    return writer.bytesWritten();
+}
+
+size_t JsonContainer::prettyPrintTo(char* buffer, size_t bufferSize) const
+{
+    StringBuilder sb(buffer, bufferSize);
+    return prettyPrintTo(sb);
+}
+
+size_t JsonContainer::prettyPrintTo(IndentedPrint& p) const
+{
+    PrettyJsonWriter writer(p);
     _node->writeTo(writer);
     return writer.bytesWritten();
 }
 
 JsonNode* JsonContainer::createNode(JsonNodeType type)
 {
+    if (!_node) return 0;
+
     JsonBuffer* buffer = _node->content.asContainer.buffer;
     return buffer->createNode(type);
 }

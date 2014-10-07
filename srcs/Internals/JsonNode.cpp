@@ -17,15 +17,15 @@ void JsonNode::writeTo(JsonWriter& writer)
         break;
 
     case JSON_STRING:
-        writer.writeValue(content.asString);
+        writer.writeString(content.asString);
         break;
 
     case JSON_INTEGER:
-        writer.writeValue(content.asInteger);
+        writer.writeInteger(content.asInteger);
         break;
 
     case JSON_BOOLEAN:
-        writer.writeValue(content.asBoolean);
+        writer.writeBoolean(content.asBoolean);
         break;
 
     case JSON_PROXY:
@@ -33,40 +33,61 @@ void JsonNode::writeTo(JsonWriter& writer)
         break;
 
     default: // >= JSON_DOUBLE_0_DECIMALS
-        writer.writeValue(content.asDouble, type - JSON_DOUBLE_0_DECIMALS);
+        writer.writeDouble(content.asDouble, type - JSON_DOUBLE_0_DECIMALS);
         break;
     }
 }
 
 void JsonNode::writeArrayTo(JsonWriter& writer)
 {
-    writer.beginArray();
-
     JsonNode* child = content.asContainer.child;
-    
-    while(child)
+
+    if (child)
     {
-        child->writeTo(writer);
+        writer.beginArray();
 
-        child = child->next;
+        while (true)
+        {
+            child->writeTo(writer);
+
+            child = child->next;
+            if (!child) break;
+            
+            writer.writeComma();
+        } 
+
+        writer.endArray();
     }
-
-    writer.endArray();
+    else
+    {
+        writer.writeEmptyArray();
+    }
 }
 
 void JsonNode::writeObjectTo(JsonWriter& writer)
 {
-    writer.beginObject();
-
     JsonNode* child = content.asContainer.child;
 
-    while (child)
+    if (child)
     {
-        writer.writeKey(child->content.asKey.key);
-        child->content.asKey.value->writeTo(writer);
+        writer.beginObject();
 
-        child = child->next;
+        while (true)
+        {
+            writer.writeString(child->content.asKey.key);
+            writer.writeColon();
+            child->content.asKey.value->writeTo(writer);
+
+            child = child->next;
+            if (!child) break;
+
+            writer.writeComma();
+        }
+
+        writer.endObject();
     }
-
-    writer.endObject();
+    else
+    {
+        writer.writeEmptyObject();
+    }
 }

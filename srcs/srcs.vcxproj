@@ -74,7 +74,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Internals\CompactJsonWriter.h" />
     <ClInclude Include="Internals\EscapedString.h" />
+    <ClInclude Include="Internals\IndentedPrint.h" />
     <ClInclude Include="JsonArray.h" />
     <ClInclude Include="JsonBuffer.h" />
     <ClInclude Include="Internals\JsonNode.h" />
@@ -85,11 +87,14 @@
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="Arduino\Print.h" />
     <ClInclude Include="Arduino\Printable.h" />
+    <ClInclude Include="Internals\PrettyJsonWriter.h" />
     <ClInclude Include="StaticJsonBuffer.h" />
     <ClInclude Include="Internals\StringBuilder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Internals\CompactJsonWriter.cpp" />
     <ClCompile Include="Internals\EscapedString.cpp" />
+    <ClCompile Include="Internals\IndentedPrint.cpp" />
     <ClCompile Include="Internals\JsonNode.cpp" />
     <ClCompile Include="JsonArray.cpp" />
     <ClCompile Include="JsonBuffer.cpp" />
@@ -99,6 +104,7 @@
     <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="Arduino\Print.cpp" />
     <ClCompile Include="Internals\StringBuilder.cpp" />
+    <ClCompile Include="Internals\PrettyJsonWriter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

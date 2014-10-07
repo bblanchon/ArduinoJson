@@ -3,6 +3,7 @@
 #include "Arduino/Printable.h"
 #include "Internals/JsonNodeIterator.h"
 #include "Internals/JsonNode.h"
+#include "Internals/IndentedPrint.h"
 
 struct JsonNode;
 class JsonValue;
@@ -30,6 +31,13 @@ public:
 
     size_t printTo(char* buffer, size_t bufferSize) const;
     virtual size_t printTo(Print& print) const;
+
+    size_t prettyPrintTo(char* buffer, size_t bufferSize) const;
+    size_t prettyPrintTo(ArduinoJson::Generator::IndentedPrint& print) const;
+    size_t prettyPrintTo(Print& print) const
+    {
+        return prettyPrintTo(ArduinoJson::Generator::IndentedPrint(print));
+    }
 
 protected:
 

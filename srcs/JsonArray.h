@@ -22,5 +22,7 @@ public:
     void add(int value) { add((long) value); }
     void add(long value);
     void add(JsonContainer& innerContainer);
+    
+    JsonArray createNestedArray();
 };
 

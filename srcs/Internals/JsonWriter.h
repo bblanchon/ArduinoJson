@@ -6,7 +6,7 @@ class JsonWriter
 {
 public:
     explicit JsonWriter(Print& sink)
-        : _sink(sink), _length(0), _isCommaNeeded(false)
+        : _sink(sink), _length(0)
     {
     }
 
@@ -15,28 +15,35 @@ public:
         return _length;
     }
 
-    void beginArray();
-    void endArray();
+    virtual void beginArray() = 0;
 
-    void beginObject();
-    void endObject();
+    virtual void endArray() = 0;
 
-    void writeKey(const char* key);
+    virtual void beginObject() = 0;
 
-    void writeValue(const char* value);
-    void writeValue(long value);
-    void writeValue(bool value);
-    void writeValue(double value, int decimals);
+    virtual void endObject() = 0;
 
-private:
+    void writeString(const char* value);
+    void writeInteger(long value);
+    void writeBoolean(bool value);
+    void writeDouble(double value, int decimals);
+
+    virtual void writeColon() = 0;
+
+    virtual void writeComma() = 0;
+
+    void writeEmptyArray()
+    {
+        _length += _sink.print("[]");
+    }
+
+    void writeEmptyObject()
+    {
+        _length += _sink.print("{}");
+    }
+
+protected:
     Print& _sink;
     size_t _length;
-    bool _isCommaNeeded;
-
-    void writeCommaIfNeeded()
-    {
-        if (_isCommaNeeded)
-            _length += _sink.write(',');
-    }
 };
 
