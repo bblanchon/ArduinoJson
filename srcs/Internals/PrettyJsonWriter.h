@@ -16,14 +16,12 @@ public:
     virtual void beginArray()
     {
         _length += _sink.write('[');
-        _indenter.indent();
-        _length += _indenter.println();
+        indent();
     }
 
     virtual void endArray()
     {
-        _length += _indenter.println();
-        _indenter.unindent();
+        unindent();
         _length += _sink.write(']');
     }
 
@@ -41,14 +39,27 @@ public:
     virtual void beginObject()
     {
         _length += _sink.write('{');
+        indent();
     }
 
     virtual void endObject()
     {
+        unindent();
         _length += _sink.write('}');
-        _indenter.unindent();
     }
 
 private:
     IndentedPrint& _indenter;
+
+    void indent()
+    {
+        _indenter.indent();
+        _length += _indenter.println();
+    }
+
+    void unindent()
+    {
+        _length += _indenter.println();
+        _indenter.unindent();
+    }
 };

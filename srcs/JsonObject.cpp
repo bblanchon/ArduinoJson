@@ -33,6 +33,20 @@ void JsonObject::remove(char const* key)
     }
 }
 
+JsonObject JsonObject::createNestedObject(char const* key)
+{
+    JsonNode* node = getOrCreateNodeAt(key);
+
+    if (node)
+    {
+        node->type = JSON_OBJECT;
+        node->content.asContainer.child = 0;
+        node->content.asContainer.buffer = _node->content.asContainer.buffer;
+    }
+
+    return JsonObject(node);
+}
+
 JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
 {
     if (!checkNodeType(JSON_OBJECT)) return 0;

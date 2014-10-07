@@ -89,6 +89,7 @@
     <ClCompile Include="JsonArray_Container_Tests.cpp" />
     <ClCompile Include="JsonArray_PrettyPrintTo_Tests.cpp" />
     <ClCompile Include="JsonArray_PrintTo_Tests.cpp" />
+    <ClCompile Include="JsonObject_PrettyPrintTo_Tests.cpp" />
     <ClCompile Include="JsonObject_Serialization_Tests.cpp" />
     <ClCompile Include="JsonObject_Container_Tests.cpp" />
     <ClCompile Include="JsonValueTests.cpp" />

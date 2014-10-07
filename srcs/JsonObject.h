@@ -8,6 +8,7 @@ struct JsonNode;
 class JsonObject : public JsonContainer
 {
 public:
+
     JsonObject()
     {
     }
@@ -19,6 +20,8 @@ public:
 
     JsonValue operator[](const char* key);
     void remove(const char* key);
+
+    JsonObject createNestedObject(const char* key);
 
 private:
     JsonNode* getOrCreateNodeAt(char const* key);

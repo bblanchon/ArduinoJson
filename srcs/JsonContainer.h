@@ -57,7 +57,6 @@ protected:
 
     bool checkNodeType(JsonNodeType expectedType);
 
-private:
     JsonNode* _node;
 };
 
