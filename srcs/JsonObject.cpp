@@ -33,17 +33,15 @@ void JsonObject::remove(char const* key)
     }
 }
 
+JsonArray JsonObject::createNestedArray(char const* key)
+{
+    JsonNode* node = createContainerNodeAt(key, JSON_ARRAY);
+    return JsonArray(node);
+}
+
 JsonObject JsonObject::createNestedObject(char const* key)
 {
-    JsonNode* node = getOrCreateNodeAt(key);
-
-    if (node)
-    {
-        node->type = JSON_OBJECT;
-        node->content.asContainer.child = 0;
-        node->content.asContainer.buffer = _node->content.asContainer.buffer;
-    }
-
+    JsonNode* node = createContainerNodeAt(key, JSON_OBJECT);
     return JsonObject(node);
 }
 
@@ -71,4 +69,16 @@ JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
     addChild(newKeyNode);
 
     return newValueNode;
+}
+
+JsonNode* JsonObject::createContainerNodeAt(char const* key, JsonNodeType type)
+{
+    JsonNode* node = getOrCreateNodeAt(key);
+    if (!node) return 0;
+    
+    node->type = type;
+    node->content.asContainer.child = 0;
+    node->content.asContainer.buffer = _node->content.asContainer.buffer;
+
+    return node;
 }

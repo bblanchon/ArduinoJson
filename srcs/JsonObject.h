@@ -2,6 +2,7 @@
 
 #include "JsonContainer.h"
 
+class JsonArray;
 class JsonValue;
 struct JsonNode;
 
@@ -21,8 +22,10 @@ public:
     JsonValue operator[](const char* key);
     void remove(const char* key);
 
+    JsonArray createNestedArray(const char* key);
     JsonObject createNestedObject(const char* key);
 
 private:
-    JsonNode* getOrCreateNodeAt(char const* key);
+    JsonNode* getOrCreateNodeAt(const char* key);
+    JsonNode* createContainerNodeAt(const char* key, JsonNodeType type);
 };

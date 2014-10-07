@@ -57,33 +57,33 @@ TEST_F(JsonObject_PrettyPrintTo_Tests, TwoMembers)
         "}");
 }
 
-TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyNestedObjects)
+TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyNestedContainers)
 {
     object.createNestedObject("key1");
-    object.createNestedObject("key2");
+    object.createNestedArray("key2");
 
     outputMustBe(
         "{\r\n"
         "  \"key1\": {},\r\n"
-        "  \"key2\": {}\r\n"
+        "  \"key2\": []\r\n"
         "}");
 }
 
-TEST_F(JsonObject_PrettyPrintTo_Tests, NestedObjects)
+TEST_F(JsonObject_PrettyPrintTo_Tests, NestedContainers)
 {
     JsonObject nested1 = object.createNestedObject("key1");
     nested1["a"] = 1;
 
-    JsonObject nested2 = object.createNestedObject("key2");
-    nested2["b"] = 2;
+    JsonArray nested2 = object.createNestedArray("key2");
+    nested2.add(2);
 
     outputMustBe(
         "{\r\n"
         "  \"key1\": {\r\n"
         "    \"a\": 1\r\n"
         "  },\r\n"
-        "  \"key2\": {\r\n"
-        "    \"b\": 2\r\n"
-        "  }\r\n"
+        "  \"key2\": [\r\n"
+        "    2\r\n"
+        "  ]\r\n"
         "}");
 }
