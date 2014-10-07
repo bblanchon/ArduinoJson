@@ -2,10 +2,6 @@
 
 #include "JsonContainer.h"
 
-class JsonArray;
-class JsonValue;
-struct JsonNode;
-
 class JsonObject : public JsonContainer
 {
 public:

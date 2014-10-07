@@ -1,5 +1,6 @@
 #include "JsonArray.h"
 
+#include "JsonObject.h"
 #include "JsonValue.h"
 
 JsonValue JsonArray::operator[](int index) const
@@ -49,7 +50,7 @@ void JsonArray::add(long value)
     addChild(node);
 }
 
-void JsonArray::add(JsonContainer& innerContainer)
+void JsonArray::add(JsonContainer innerContainer)
 {
     JsonNode* node = createNode(JSON_PROXY);
     if (!node) return;
@@ -60,13 +61,23 @@ void JsonArray::add(JsonContainer& innerContainer)
 
 JsonArray JsonArray::createNestedArray()
 {
-    JsonNode* node = createNode(JSON_ARRAY);
-    
-    if (node)
-    {
-        node->content.asContainer.buffer = _node->content.asContainer.buffer;
-        addChild(node);
-    }
-
+    JsonNode* node = createNestedContainer(JSON_ARRAY);
     return JsonArray(node);
+}
+
+JsonObject JsonArray::createNestedObject()
+{
+    JsonNode* node = createNestedContainer(JSON_OBJECT);
+    return JsonObject(node);
+}
+
+JsonNode* JsonArray::createNestedContainer(JsonNodeType type)
+{
+    JsonNode* node = createNode(type);
+    if (!node) return 0;
+
+    node->content.asContainer.buffer = _node->content.asContainer.buffer;
+    addChild(node);
+
+    return node;
 }

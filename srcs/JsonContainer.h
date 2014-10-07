@@ -5,9 +5,9 @@
 #include "Internals/JsonNode.h"
 #include "Internals/IndentedPrint.h"
 
-struct JsonNode;
-class JsonValue;
 class JsonArray;
+class JsonObject;
+class JsonValue;
 
 class JsonContainer : public Printable
 {

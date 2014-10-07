@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 #include <JsonArray.h>
 #include <JsonObject.h>
+#include <JsonValue.h>
 #include <StaticJsonBuffer.h>
 
 class JsonArray_PrettyPrintTo_Tests : public testing::Test
@@ -75,9 +76,8 @@ TEST_F(JsonArray_PrettyPrintTo_Tests, NestedArrays)
     nested1.add(1);
     nested1.add(2);
 
-    JsonArray nested2 = array.createNestedArray();
-    nested2.add(3);
-    nested2.add(4);
+    JsonObject nested2 = array.createNestedObject();
+    nested2["key"] = 3;
 
     outputMustBe(
         "[\r\n"
@@ -85,9 +85,8 @@ TEST_F(JsonArray_PrettyPrintTo_Tests, NestedArrays)
         "    1,\r\n"
         "    2\r\n"
         "  ],\r\n"
-        "  [\r\n"
-        "    3,\r\n"
-        "    4\r\n"
-        "  ]\r\n"
+        "  {\r\n"
+        "    \"key\": 3\r\n"
+        "  }\r\n"
         "]");
 }
