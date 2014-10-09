@@ -50,6 +50,7 @@ void JsonArray::add(long value)
     addChild(node);
 }
 
+// TODO: we should have the same issue as in JsonValue
 void JsonArray::add(JsonContainer nestedContainer)
 {
     JsonNode* node = createNode();

@@ -3,11 +3,16 @@
 #include "JsonWriter.h"
 #include "../JsonArray.h"
 #include "../JsonObject.h"
+#include "../JsonBuffer.h"
 
 void JsonNode::writeTo(JsonWriter& writer)
 {
     switch (type)
     {
+    case JSON_PROXY:
+        content.asProxy.target->writeTo(writer);
+        break;
+
     case JSON_ARRAY:
         writeArrayTo(writer);
         break;
@@ -36,7 +41,11 @@ void JsonNode::writeTo(JsonWriter& writer)
 
 void JsonNode::addChild(JsonNode* childToAdd)
 {
-    if (type != JSON_ARRAY && type != JSON_OBJECT) return;
+    if (type == JSON_PROXY) 
+        return content.asProxy.target->addChild(childToAdd);
+
+    if (type != JSON_ARRAY && type != JSON_OBJECT) 
+        return;
 
     JsonNode* lastChild = content.asContainer.child;
 
@@ -54,6 +63,9 @@ void JsonNode::addChild(JsonNode* childToAdd)
 
 void JsonNode::removeChild(JsonNode* childToRemove)
 {
+    if (type == JSON_PROXY)
+        return content.asProxy.target->removeChild(childToRemove);
+
     if (type != JSON_ARRAY && type != JSON_OBJECT) return;
 
     if (content.asContainer.child == childToRemove)
@@ -121,4 +133,17 @@ void JsonNode::writeObjectTo(JsonWriter& writer)
     {
         writer.writeEmptyObject();
     }
+}
+
+void JsonNode::setAsProxyOfSelf()
+{
+    JsonBuffer* buffer = content.asContainer.buffer;
+    if (!buffer) return;
+        
+    JsonNode* newNode = buffer->createNode(); 
+    if (!newNode) return;
+
+    *newNode = *this;
+
+    setAsProxyOf(newNode);
 }

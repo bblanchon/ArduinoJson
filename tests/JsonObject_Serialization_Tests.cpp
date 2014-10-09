@@ -123,21 +123,35 @@ TEST_F(JsonObject_Serialization_Tests, OneFalse)
     object["key"] = false;
     outputMustBe("{\"key\":false}");
 }
-/*
-TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArray)
+
+TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArrayViaProxy)
 {
-    auto nestedArray = JsonArray<1>();
+    auto nestedArray = json.createArray();
 
     object["key"] = nestedArray;
 
     outputMustBe("{\"key\":[]}");
 }
-*/
-TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedObject)
-{
-    auto nestedObject = json.createObject();
 
-    object["key"] = nestedObject;
+TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedObjectViaProxy)
+{
+    auto nestedArray = json.createObject();
+
+    object["key"] = nestedArray;
 
     outputMustBe("{\"key\":{}}");
+}
+
+TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedObject)
+{
+    object.createNestedObject("key");
+
+    outputMustBe("{\"key\":{}}");
+}
+
+TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArray)
+{
+    object.createNestedArray("key");
+
+    outputMustBe("{\"key\":[]}");
 }

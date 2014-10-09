@@ -6,6 +6,7 @@
 class JsonBuffer
 {
     friend class JsonContainer;
+    friend class JsonNode;
 
 public:
     virtual ~JsonBuffer() {};

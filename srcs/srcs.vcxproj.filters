@@ -63,6 +63,9 @@
     <ClInclude Include="Internals\IndentedPrint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Internals\JsonNodeWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonObject.cpp">

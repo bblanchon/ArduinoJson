@@ -1,21 +1,19 @@
 #pragma once
 
+#include "Internals/JsonNodeWrapper.h"
+
 class JsonArray;
 class JsonContainer;
 class JsonObject;
-class JsonNode;
 
-class JsonValue
+class JsonValue : public JsonNodeWrapper
 {
 public:
-    
-    explicit JsonValue()
-        : _node(0)
-    {
-    }
+
+    JsonValue() {}
 
     explicit JsonValue(JsonNode* node)
-        : _node(node)
+        : JsonNodeWrapper(node)
     {
     }
 
@@ -23,9 +21,9 @@ public:
     void operator=(const char*);
     void operator=(double x) { set(x, 2); }
     void operator=(int);
-    void operator=(const JsonContainer&);
-    void operator=(const JsonValue&);
-    
+    void operator=(const JsonValue& value) { duplicate(value); }
+    void operator=(const JsonNodeWrapper& object) { duplicate(object); }
+        
     operator bool() const;
     operator const char*() const;
     operator double() const;
@@ -35,7 +33,4 @@ public:
     operator JsonObject() const;
 
     void set(double value, int decimals);
-
-private:
-    JsonNode* _node;
 };

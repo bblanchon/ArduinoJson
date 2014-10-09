@@ -18,6 +18,7 @@ class JsonNode
         JSON_BOOLEAN,
         JSON_STRING,
         JSON_LONG,
+        JSON_PROXY,
         JSON_DOUBLE_0_DECIMALS,
         JSON_DOUBLE_1_DECIMAL,
         JSON_DOUBLE_2_DECIMALS,
@@ -126,11 +127,13 @@ public:
 
     JsonBuffer* getContainerBuffer()
     {
+        if (type == JSON_PROXY) return content.asProxy.target->getContainerBuffer();
         return type == JSON_ARRAY || type == JSON_OBJECT ? content.asContainer.buffer : 0;
     }
 
     JsonNode* getContainerChild()
     {
+        if (type == JSON_PROXY) return content.asProxy.target->getContainerChild();
         return type == JSON_ARRAY || type == JSON_OBJECT ? content.asContainer.child : 0;
     }
 
@@ -148,6 +151,23 @@ public:
 
     void removeChild(JsonNode* childToRemove);
 
+    void duplicate(JsonNode* other)
+    {
+        if (!other)
+        {
+            type = JSON_UNDEFINED;
+        } 
+        else  if (other->type == JSON_ARRAY || other->type==JSON_OBJECT)
+        {
+            other->setAsProxyOfSelf();
+            setAsProxyOf(other->content.asProxy.target);
+        } 
+        else
+        {
+            *this = *other;
+        }
+    }
+
 private:
     JsonNode* next;
     JsonNodeContent content;
@@ -155,4 +175,12 @@ private:
 
     inline void writeArrayTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
     inline void writeObjectTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
+
+    void setAsProxyOfSelf();
+
+    void setAsProxyOf(JsonNode* target)
+    {
+        type = JSON_PROXY;
+        content.asProxy.target = target;
+    }
 };

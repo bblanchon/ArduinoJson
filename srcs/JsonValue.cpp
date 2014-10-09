@@ -28,32 +28,6 @@ void JsonValue::operator=(int value)
         _node->setAsLong(value);
 }
 
-// TODO: it's a duplicate
-void JsonValue::operator=(const JsonContainer& object)
-{
-    if (!_node)
-    {
-        _node = object._node;
-    }
-    else
-    {
-        *_node = *object._node;
-    }
-}
-
-// TODO: it's a duplicate
-void JsonValue::operator=(JsonValue const& value)
-{
-    if (!_node)
-    {
-        _node = value._node;        
-    }
-    else
-    {
-        *_node = *value._node;
-    }    
-}
-
 JsonValue::operator bool() const
 {
     return _node ? _node->getAsBoolean() : false;

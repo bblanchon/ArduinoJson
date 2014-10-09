@@ -4,24 +4,23 @@
 #include "Internals/JsonNodeIterator.h"
 #include "Internals/JsonNode.h"
 #include "Internals/IndentedPrint.h"
-
+#include "Internals/JsonNodeWrapper.h"
 class JsonArray;
 class JsonObject;
 class JsonValue;
 
-class JsonContainer : public Printable
+class JsonContainer : public Printable, public JsonNodeWrapper
 {
-    friend JsonValue;
+  // friend JsonValue;
     friend JsonArray;
 
 public:
-    JsonContainer()
-        : _node(0)
-    {
-    }
 
-    JsonContainer(JsonNode* node)
-        : _node(node)
+
+    JsonContainer() {}
+
+    explicit JsonContainer(JsonNode* node)
+        : JsonNodeWrapper(node)
     {
     }
 
@@ -54,7 +53,5 @@ protected:
     void addChild(JsonNode*);
     void removeChild(JsonNode*);
     JsonNode* createNode();
-
-    JsonNode* _node;
 };
 

@@ -83,6 +83,7 @@
     <ClInclude Include="Internals\JsonWriter.h" />
     <ClInclude Include="JsonContainer.h" />
     <ClInclude Include="Internals\JsonNodeIterator.h" />
+    <ClInclude Include="Internals\JsonNodeWrapper.h" />
     <ClInclude Include="JsonObject.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="Arduino\Print.h" />
