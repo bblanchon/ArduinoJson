@@ -3,7 +3,7 @@
 class JsonArray;
 class JsonContainer;
 class JsonObject;
-struct JsonNode;
+class JsonNode;
 
 class JsonValue
 {

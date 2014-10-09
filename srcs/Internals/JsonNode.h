@@ -19,16 +19,19 @@ enum JsonNodeType
 };
 
 class JsonWriter;
+class JsonNodeIterator;
 
-struct JsonNode
+class JsonNode
 {
+    friend class JsonNodeIterator;
+
+public:
     JsonNode()
         : type(JSON_UNDEFINED), next(0)
     {
         
     }
-
-    JsonNode* next;
+    
     void writeTo(JsonWriter&); // TODO: <- move in JsonNodeSerializer
 
     void setAsArray(JsonBuffer* buffer)
@@ -122,6 +125,7 @@ struct JsonNode
 
 private:
     JsonNodeType type; // <- TODO: hide
+    JsonNode* next;
 
     inline void writeArrayTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
     inline void writeObjectTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
