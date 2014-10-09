@@ -71,13 +71,3 @@ JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
 
     return newValueNode;
 }
-
-JsonNode* JsonObject::createContainerNodeAt(char const* key, JsonNodeType type)
-{
-    JsonNode* node = getOrCreateNodeAt(key);
-    if (!node) return 0;
-    
-    node->setAsArray(_node->getContainerBuffer());
-
-    return node;
-}

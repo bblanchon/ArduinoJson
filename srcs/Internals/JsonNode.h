@@ -1,29 +1,54 @@
 #pragma once
 
 class JsonBuffer;
-
-enum JsonNodeType
-{
-    JSON_UNDEFINED,
-    JSON_NULL,
-    JSON_ARRAY,
-    JSON_OBJECT,
-    JSON_KEY_VALUE,
-    JSON_BOOLEAN,
-    JSON_STRING,
-    JSON_LONG,
-    JSON_DOUBLE_0_DECIMALS,
-    JSON_DOUBLE_1_DECIMAL,
-    JSON_DOUBLE_2_DECIMALS,
-    // etc.
-};
-
 class JsonWriter;
 class JsonNodeIterator;
 
 class JsonNode
 {
     friend class JsonNodeIterator;
+
+    enum JsonNodeType
+    {
+        JSON_UNDEFINED,
+        JSON_NULL,
+        JSON_ARRAY,
+        JSON_OBJECT,
+        JSON_KEY_VALUE,
+        JSON_BOOLEAN,
+        JSON_STRING,
+        JSON_LONG,
+        JSON_DOUBLE_0_DECIMALS,
+        JSON_DOUBLE_1_DECIMAL,
+        JSON_DOUBLE_2_DECIMALS,
+        // etc.
+    };
+
+    union JsonNodeContent
+    {
+        bool asBoolean;
+        double asDouble;
+        long asInteger;
+        const char* asString;
+
+        struct
+        {
+            const char* key;
+            JsonNode* value;
+        } asKey;
+
+        struct
+        {
+            JsonNode* child;
+            JsonBuffer* buffer;
+        } asContainer;
+
+        struct
+        {
+            JsonNode* target;
+        } asProxy;
+
+    };
 
 public:
     JsonNode()
@@ -124,35 +149,10 @@ public:
     void removeChildFromContainer(JsonNode* childToRemove);
 
 private:
-    JsonNodeType type; // <- TODO: hide
     JsonNode* next;
+    JsonNodeContent content;
+    JsonNodeType type;
 
     inline void writeArrayTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
     inline void writeObjectTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
-
-    union
-    {
-        bool asBoolean;
-        double asDouble;
-        long asInteger;
-        const char* asString;
-
-        struct
-        {
-            const char* key;
-            JsonNode* value;
-        } asKey;
-
-        struct
-        {
-            JsonNode* child;
-            JsonBuffer* buffer;
-        } asContainer;
-
-        struct
-        {
-            JsonNode* target;
-        } asProxy;
-
-    } content;
 };

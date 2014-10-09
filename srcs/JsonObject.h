@@ -23,5 +23,4 @@ public:
 
 private:
     JsonNode* getOrCreateNodeAt(const char* key);
-    JsonNode* createContainerNodeAt(const char* key, JsonNodeType type);
 };
