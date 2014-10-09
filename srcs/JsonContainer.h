@@ -43,7 +43,7 @@ protected:
 
     JsonNodeIterator beginChildren() const
     {
-        return JsonNodeIterator(_node ? _node->content.asContainer.child : 0);
+        return JsonNodeIterator(_node ? _node->getContainerChild() : 0);
     }
 
     JsonNodeIterator endChildren() const
@@ -51,9 +51,9 @@ protected:
         return JsonNodeIterator(0);
     }
 
-    void addChild(JsonNode* newChild);
-    void removeChildAfter(JsonNode* child, JsonNode* previous);
-    JsonNode* createNode(JsonNodeType type);
+    void addChild(JsonNode*);
+    void removeChild(JsonNode*);
+    JsonNode* createNode(JsonNodeType type = JSON_UNDEFINED);
 
     bool checkNodeType(JsonNodeType expectedType);
 

@@ -12,12 +12,16 @@ public:
 
     JsonArray createArray()
     {
-        return JsonArray(createContainerNode(JSON_ARRAY));
+        JsonNode* node = createNode();
+        if (node) node->setAsArray(this);
+        return JsonArray(node);
     }
 
     JsonObject createObject()
     {
-        return JsonObject(createContainerNode(JSON_OBJECT));
+        JsonNode* node = createNode();
+        if (node) node->setAsObject(this);
+        return JsonObject(node);
     }
 
     JsonValue createValue();
@@ -26,7 +30,6 @@ protected:
     virtual JsonNode* allocateNode() = 0;
 
 private:
-    JsonNode* createNode(JsonNodeType type);
-    JsonNode* createContainerNode(JsonNodeType type);
+    JsonNode* createNode(JsonNodeType type = JSON_UNDEFINED);
 };
 

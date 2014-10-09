@@ -6,144 +6,80 @@
 
 void JsonValue::operator=(bool value)
 {
-    if (!_node) return;
-
-    _node->type = JSON_BOOLEAN;
-    _node->content.asBoolean = value;
+    if (_node)
+        _node->setAsBoolean(value);
 }
 
 void JsonValue::operator=(char const* value)
 {
-    if (!_node) return;
-
-    _node->type = JSON_STRING;
-    _node->content.asString = value;
-}
-
-void JsonValue::operator=(double value)
-{
-    set(value, 2);
+    if (_node)
+        _node->setAsString(value);
 }
 
 void JsonValue::set(double value, int decimals)
 {
-    if (!_node) return;
-
-    _node->type = (JsonNodeType) (JSON_DOUBLE_0_DECIMALS + decimals);
-    _node->content.asDouble = value;
+    if (_node)
+        _node->setAsDouble(value, decimals);
 }
 
 void JsonValue::operator=(int value)
 {
-    if (!_node) return;
-
-    _node->type = JSON_INTEGER;
-    _node->content.asInteger = value;
+    if (_node)
+        _node->setAsLong(value);
 }
 
+// TODO: it's a duplicate
 void JsonValue::operator=(const JsonContainer& object)
 {
-    setAsProxyTo(object._node);
+    if (!_node)
+    {
+        _node = object._node;
+    }
+    else
+    {
+        *_node = *object._node;
+    }
 }
 
+// TODO: it's a duplicate
 void JsonValue::operator=(JsonValue const& value)
 {
     if (!_node)
     {
-        _node = value._node;
-        return;
+        _node = value._node;        
     }
-    
-    JsonNodeType nodeType = value._node ? value._node->type : JSON_UNDEFINED;    
-
-    switch (nodeType)
+    else
     {
-    case JSON_UNDEFINED:
-        _node->type = JSON_UNDEFINED;
-        break;
-
-    case JSON_INTEGER:
-        _node->type = JSON_INTEGER;
-        _node->content.asInteger = value._node->content.asInteger;
-        break;
-
-    case JSON_DOUBLE_0_DECIMALS:
-
-    case JSON_OBJECT:
-    case JSON_ARRAY:
-    case JSON_PROXY:
-        setAsProxyTo(value._node);
-        break;
-
-    default:
         *_node = *value._node;
-        break;
-    }
+    }    
 }
 
 JsonValue::operator bool() const
 {
-    const JsonNode* node = getActualNode();
-
-    if (!node || node->type != JSON_BOOLEAN) return 0;
-
-    return node->content.asBoolean;
+    return _node ? _node->getAsBoolean() : false;
 }
 
 JsonValue::operator char const*() const
 {
-    const JsonNode* node = getActualNode();
-
-    if (!node || node->type != JSON_STRING) return 0;
-
-    return node->content.asString;
+    return _node ? _node->getAsString() : 0;
 }
 
 JsonValue::operator double() const
 {
-    const JsonNode* node = getActualNode();
-
-    if (!node || node->type < JSON_DOUBLE_0_DECIMALS) return 0;
-
-    return node->content.asDouble;
+    return _node ? _node->getAsDouble() : 0;
 }
 
-JsonValue::operator int() const
+JsonValue::operator long() const
 {
-    const JsonNode* node = getActualNode();
-
-    if (!node || node->type != JSON_INTEGER) return 0;
-
-    return node->content.asInteger;
+    return _node ? _node->getAsInteger() : 0;
 }
 
 JsonValue::operator JsonArray() const
 {
-    return JsonArray(getActualNode());
+    return JsonArray(_node);
 }
 
 JsonValue::operator JsonObject() const
 {
-    return JsonObject(getActualNode());
-}
-
-void JsonValue::setAsProxyTo(JsonNode* target)
-{
-    if (_node)
-    {
-        _node->type = JSON_PROXY;
-        _node->content.asProxy.target = target;
-    }
-
-    _node = target;
-}
-
-JsonNode* JsonValue::getActualNode() const
-{
-    JsonNode* target = _node;
-
-    while (target && target->type == JSON_PROXY)
-        target = target->content.asProxy.target;
-
-    return target;
+    return JsonObject(_node);
 }

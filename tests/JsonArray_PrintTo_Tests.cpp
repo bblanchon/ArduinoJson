@@ -135,18 +135,14 @@ TEST_F(JsonArray_PrintTo_Tests, OneBooleanOverCapacity)
 
 TEST_F(JsonArray_PrintTo_Tests, OneEmptyNestedArray)
 {
-    JsonArray nestedArray = json.createArray();
-    
-    array.add(nestedArray);
+    array.createNestedArray();
 
     outputMustBe("[[]]");
 }
 
 TEST_F(JsonArray_PrintTo_Tests, OneEmptyNestedHash)
 {
-    JsonObject nestedObject = json.createObject();
-
-    array.add(nestedObject);
+    array.createNestedObject();
 
     outputMustBe("[{}]");
 }

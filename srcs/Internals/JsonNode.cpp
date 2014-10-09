@@ -20,16 +20,12 @@ void JsonNode::writeTo(JsonWriter& writer)
         writer.writeString(content.asString);
         break;
 
-    case JSON_INTEGER:
+    case JSON_LONG:
         writer.writeInteger(content.asInteger);
         break;
 
     case JSON_BOOLEAN:
         writer.writeBoolean(content.asBoolean);
-        break;
-
-    case JSON_PROXY:
-        content.asProxy.target->writeTo(writer);
         break;
 
     default: // >= JSON_DOUBLE_0_DECIMALS

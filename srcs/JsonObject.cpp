@@ -18,30 +18,34 @@ JsonValue JsonObject::operator[](char const* key)
 
 void JsonObject::remove(char const* key)
 {
-    JsonNode* lastChild = 0;
-
     for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it)
     {
-        const char* childKey = it->content.asKey.key;
+        const char* childKey = it->getAsObjectKey();
 
         if (!strcmp(childKey, key))
         {
-            removeChildAfter(*it, lastChild);
-        }      
-
-        lastChild = *it;
+            removeChild(*it);
+        }
     }
 }
 
 JsonArray JsonObject::createNestedArray(char const* key)
 {
-    JsonNode* node = createContainerNodeAt(key, JSON_ARRAY);
+    JsonNode* node = getOrCreateNodeAt(key);
+
+    if (node)
+        node->setAsArray(_node->getContainerBuffer());
+
     return JsonArray(node);
 }
 
 JsonObject JsonObject::createNestedObject(char const* key)
 {
-    JsonNode* node = createContainerNodeAt(key, JSON_OBJECT);
+    JsonNode* node = getOrCreateNodeAt(key);
+    
+    if (node)
+        node->setAsObject(_node->getContainerBuffer());
+
     return JsonObject(node);
 }
 
@@ -51,20 +55,19 @@ JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
 
     for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it)
     {
-        const char* childKey = it->content.asKey.key;
+        const char* childKey = it->getAsObjectKey();
 
         if (!strcmp(childKey, key))
-            return it->content.asKey.value;
+            return it->getAsObjectValue();
     }
       
     JsonNode* newValueNode = createNode(JSON_UNDEFINED);
     if (!newValueNode) return 0;
     
-    JsonNode* newKeyNode = createNode(JSON_KEY);
+    JsonNode* newKeyNode = createNode(JSON_KEY_VALUE);
     if (!newKeyNode) return 0;
 
-    newKeyNode->content.asKey.key = key;
-    newKeyNode->content.asKey.value = newValueNode;
+    newKeyNode->setAsObjectKeyValue(key, newValueNode);
 
     addChild(newKeyNode);
 
@@ -76,9 +79,7 @@ JsonNode* JsonObject::createContainerNodeAt(char const* key, JsonNodeType type)
     JsonNode* node = getOrCreateNodeAt(key);
     if (!node) return 0;
     
-    node->type = type;
-    node->content.asContainer.child = 0;
-    node->content.asContainer.buffer = _node->content.asContainer.buffer;
+    node->setAsArray(_node->getContainerBuffer());
 
     return node;
 }

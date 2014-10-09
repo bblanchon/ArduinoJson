@@ -21,12 +21,9 @@ public:
     void add(double value, int decimals=2);
     void add(int value) { add((long) value); }
     void add(long value);
-    void add(JsonContainer nestedArray);
+    void add(JsonContainer nestedArray); // TODO: should allow JsonValue too
 
     JsonArray createNestedArray();
     JsonObject createNestedObject();
-
-private:
-    JsonNode* createNestedContainer(JsonNodeType type);
 };
 

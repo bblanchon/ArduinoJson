@@ -59,7 +59,7 @@ TEST_F(JsonValueTests, CanStoreObject)
     EXPECT_EQ(innerObject1, (JsonObject) jsonValue1);
 }
 
-TEST_F(JsonValueTests, IntegerValuesAreCopied)
+TEST_F(JsonValueTests, IntegersAreCopiedByValue)
 {
     jsonValue1 = 123;
     jsonValue2 = jsonValue1;
@@ -68,7 +68,7 @@ TEST_F(JsonValueTests, IntegerValuesAreCopied)
     EXPECT_EQ(123, (int) jsonValue2);
 }
 
-TEST_F(JsonValueTests, DoubleValuesAreCopied)
+TEST_F(JsonValueTests, DoublesAreCopiedByValue)
 {
     jsonValue1 = 123.45;
     jsonValue2 = jsonValue1;
@@ -77,7 +77,7 @@ TEST_F(JsonValueTests, DoubleValuesAreCopied)
     EXPECT_EQ(123.45, (double) jsonValue2);
 }
 
-TEST_F(JsonValueTests, BooleanValuesAreCopied)
+TEST_F(JsonValueTests, BooleansAreCopiedByValue)
 {
     jsonValue1 = true;
     jsonValue2 = jsonValue1;
@@ -86,7 +86,7 @@ TEST_F(JsonValueTests, BooleanValuesAreCopied)
     EXPECT_TRUE((bool) jsonValue2);
 }
 
-TEST_F(JsonValueTests, CharPointersAreCopied)
+TEST_F(JsonValueTests, StringsAreCopiedByValue)
 {
     jsonValue1 = "hello";
     jsonValue2 = jsonValue1;
@@ -95,14 +95,27 @@ TEST_F(JsonValueTests, CharPointersAreCopied)
     EXPECT_STREQ("hello", (const char*) jsonValue2);
 }
 
-TEST_F(JsonValueTests, ObjectPointsAreCopied)
+
+TEST_F(JsonValueTests, ObjectsAreCopiedByReference)
 {
     JsonObject object = json.createObject();
 
     jsonValue1 = object;
     jsonValue2 = jsonValue1;
-    
+
     object["hello"] = "world";
+
+    EXPECT_EQ(1, ((JsonObject) jsonValue2).size());
+}
+
+TEST_F(JsonValueTests, ArraysAreCopiedByReference)
+{
+    JsonArray array = json.createArray();
+
+    jsonValue1 = array;
+    jsonValue2 = jsonValue1;
+    
+    array.add("world");
 
     EXPECT_EQ(1, ((JsonObject) jsonValue2).size());
 }

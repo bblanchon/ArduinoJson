@@ -37,7 +37,9 @@ JsonNode* JsonContainer::createNode(JsonNodeType type)
 {
     if (!_node) return 0;
 
-    JsonBuffer* buffer = _node->content.asContainer.buffer;
+    JsonBuffer* buffer = _node->getContainerBuffer();
+    if (!buffer) return 0;
+
     return buffer->createNode(type);
 }
 
@@ -48,31 +50,19 @@ bool JsonContainer::checkNodeType(JsonNodeType expectedType)
 
 bool JsonContainer::operator==(const JsonContainer & other) const
 {
-    return _node == other._node;
+    return _node->getContainerChild() == other._node->getContainerChild();
 }
 
-void JsonContainer::addChild(JsonNode* newChild)
+void JsonContainer::addChild(JsonNode* childToAdd)
 {
-    JsonNode* lastChild = _node->content.asContainer.child;
-
-    if (!lastChild)
-    {
-        _node->content.asContainer.child = newChild = newChild;
-        return;
-    }
-
-    while (lastChild->next)
-        lastChild = lastChild->next;
-
-    lastChild->next = newChild;
+    if (_node)
+        _node->addChildToContainer(childToAdd);
 }
 
-void JsonContainer::removeChildAfter(JsonNode* child, JsonNode* previous)
+void JsonContainer::removeChild(JsonNode* childToRemove)
 {
-    if (previous)
-        previous->next = child->next;
-    else
-        _node->content.asContainer.child = child->next;
+    if (_node)
+        _node->removeChildFromContainer(childToRemove);
 }
 
 size_t JsonContainer::size() const

@@ -16,68 +16,71 @@ JsonValue JsonArray::operator[](int index) const
 
 void JsonArray::add(bool value)
 {
-    JsonNode* node = createNode(JSON_BOOLEAN);
+    JsonNode* node = createNode();
     if (!node) return;
 
-    node->content.asBoolean = value;
+    node->setAsBoolean(value);
     addChild(node);
 }
 
 void JsonArray::add(char const* value)
 {
-    JsonNode* node = createNode(JSON_STRING);
+    JsonNode* node = createNode();
     if (!node) return;
 
-    node->content.asString = value;
+    node->setAsString(value);
     addChild(node);
 }
 
 void JsonArray::add(double value, int decimals)
 {
-    JsonNode* node = createNode((JsonNodeType)(JSON_DOUBLE_0_DECIMALS + decimals));
+    JsonNode* node = createNode();
     if (!node) return;
 
-    node->content.asDouble = value;
+    node->setAsDouble(value, decimals);
     addChild(node);
 }
 
 void JsonArray::add(long value)
 {
-    JsonNode* node = createNode(JSON_INTEGER);
+    JsonNode* node = createNode(JSON_LONG);
     if (!node) return;
 
-    node->content.asInteger = value;
+    node->setAsLong(value);
     addChild(node);
 }
 
-void JsonArray::add(JsonContainer innerContainer)
+void JsonArray::add(JsonContainer nestedContainer)
 {
-    JsonNode* node = createNode(JSON_PROXY);
+    JsonNode* node = createNode();
     if (!node) return;
 
-    node->content.asProxy.target = innerContainer._node;
+    *node = *nestedContainer._node;
     addChild(node);
 }
 
 JsonArray JsonArray::createNestedArray()
 {
-    JsonNode* node = createNestedContainer(JSON_ARRAY);
+    JsonNode* node = createNode();
+    
+    if (node)
+    {
+        node->setAsArray(_node->getContainerBuffer());
+        addChild(node);
+    }
+    
     return JsonArray(node);
 }
 
 JsonObject JsonArray::createNestedObject()
 {
-    JsonNode* node = createNestedContainer(JSON_OBJECT);
+    JsonNode* node = createNode();
+    
+    if (node)
+    {
+        node->setAsObject(_node->getContainerBuffer());
+        addChild(node);
+    }
+    
     return JsonObject(node);
-}
-
-JsonNode* JsonArray::createNestedContainer(JsonNodeType type)
-{
-    JsonNode* node = createNode(type);
-    if (!node) return 0;
-
-    node->content.asContainer.buffer = _node->content.asContainer.buffer;
-    addChild(node);
-
-    return node;
 }

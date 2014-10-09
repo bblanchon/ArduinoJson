@@ -21,13 +21,3 @@ JsonNode* JsonBuffer::createNode(JsonNodeType type)
     node->type = type;
     return node;
 }
-
-JsonNode* JsonBuffer::createContainerNode(JsonNodeType type)
-{
-    JsonNode* node = createNode(type);
-
-    if (node)
-        node->content.asContainer.buffer = this;
-
-    return node;
-}
