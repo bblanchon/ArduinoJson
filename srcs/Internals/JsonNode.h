@@ -86,7 +86,7 @@ public:
 
     void setAsDouble(double value, int decimals)
     {
-        type = (JsonNodeType) (JSON_DOUBLE_0_DECIMALS + decimals);
+        type = static_cast<JsonNodeType>(JSON_DOUBLE_0_DECIMALS + decimals);
         content.asDouble = value;
     }
 
@@ -111,7 +111,7 @@ public:
 
     double getAsDouble()
     {
-        return type > JSON_DOUBLE_0_DECIMALS ? content.asDouble : 0;
+        return type >= JSON_DOUBLE_0_DECIMALS ? content.asDouble : 0;
     }
 
     long getAsInteger()
@@ -144,9 +144,9 @@ public:
         return type == JSON_KEY_VALUE ? content.asKey.value : 0;
     }
 
-    void addChildToContainer(JsonNode* childToAdd);
+    void addChild(JsonNode* childToAdd);
 
-    void removeChildFromContainer(JsonNode* childToRemove);
+    void removeChild(JsonNode* childToRemove);
 
 private:
     JsonNode* next;

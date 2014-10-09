@@ -34,7 +34,7 @@ void JsonNode::writeTo(JsonWriter& writer)
     }
 }
 
-void JsonNode::addChildToContainer(JsonNode* childToAdd)
+void JsonNode::addChild(JsonNode* childToAdd)
 {
     if (type != JSON_ARRAY && type != JSON_OBJECT) return;
 
@@ -52,7 +52,7 @@ void JsonNode::addChildToContainer(JsonNode* childToAdd)
     lastChild->next = childToAdd;
 }
 
-void JsonNode::removeChildFromContainer(JsonNode* childToRemove)
+void JsonNode::removeChild(JsonNode* childToRemove)
 {
     if (type != JSON_ARRAY && type != JSON_OBJECT) return;
 

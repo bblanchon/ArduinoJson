@@ -51,13 +51,13 @@ bool JsonContainer::operator==(const JsonContainer & other) const
 void JsonContainer::addChild(JsonNode* childToAdd)
 {
     if (_node)
-        _node->addChildToContainer(childToAdd);
+        _node->addChild(childToAdd);
 }
 
 void JsonContainer::removeChild(JsonNode* childToRemove)
 {
     if (_node)
-        _node->removeChildFromContainer(childToRemove);
+        _node->removeChild(childToRemove);
 }
 
 size_t JsonContainer::size() const
