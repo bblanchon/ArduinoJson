@@ -27,9 +27,9 @@ public:
     JsonValue createValue();
 
 protected:
-    virtual JsonNode* allocateNode() = 0;
+    virtual void* allocateNode() = 0;
 
 private:
-    JsonNode* createNode(JsonNodeType type = JSON_UNDEFINED);
+    JsonNode* createNode();
 };
 

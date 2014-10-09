@@ -22,9 +22,13 @@ class JsonWriter;
 
 struct JsonNode
 {
-    JsonNode* next;
-    JsonNodeType type; // <- TODO: hide
+    JsonNode()
+        : type(JSON_UNDEFINED), next(0)
+    {
+        
+    }
 
+    JsonNode* next;
     void writeTo(JsonWriter&); // TODO: <- move in JsonNodeSerializer
 
     void setAsArray(JsonBuffer* buffer)
@@ -112,42 +116,13 @@ struct JsonNode
         return type == JSON_KEY_VALUE ? content.asKey.value : 0;
     }
 
-    void addChildToContainer(JsonNode* childToAdd)
-    {
-        if (type != JSON_ARRAY && type != JSON_OBJECT) return;
+    void addChildToContainer(JsonNode* childToAdd);
 
-        JsonNode* lastChild = content.asContainer.child;
-
-        if (!lastChild)
-        {
-            content.asContainer.child = childToAdd;
-            return;
-        }
-
-        while (lastChild->next)
-            lastChild = lastChild->next;
-
-        lastChild->next = childToAdd;
-    }
-
-    void removeChildFromContainer(JsonNode* childToRemove)
-    {
-        if (type != JSON_ARRAY && type != JSON_OBJECT) return;
-
-        if (content.asContainer.child == childToRemove)
-        {
-            content.asContainer.child = childToRemove->next;
-            return;
-        }
-
-        for (JsonNode* child = content.asContainer.child; child; child = child->next)
-        {
-            if (child->next == childToRemove)
-                child->next = childToRemove->next;
-        }
-    }
+    void removeChildFromContainer(JsonNode* childToRemove);
 
 private:
+    JsonNodeType type; // <- TODO: hide
+
     inline void writeArrayTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
     inline void writeObjectTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
 

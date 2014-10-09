@@ -28,7 +28,7 @@ public:
     }
 
 protected:
-    virtual JsonNode* allocateNode()
+    virtual void* allocateNode()
     {
         if (_size >= CAPACITY) return 0;
 

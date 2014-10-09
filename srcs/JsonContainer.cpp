@@ -33,19 +33,14 @@ size_t JsonContainer::prettyPrintTo(IndentedPrint& p) const
     return writer.bytesWritten();
 }
 
-JsonNode* JsonContainer::createNode(JsonNodeType type)
+JsonNode* JsonContainer::createNode()
 {
     if (!_node) return 0;
 
     JsonBuffer* buffer = _node->getContainerBuffer();
     if (!buffer) return 0;
 
-    return buffer->createNode(type);
-}
-
-bool JsonContainer::checkNodeType(JsonNodeType expectedType)
-{
-    return _node && _node->type == expectedType;
+    return buffer->createNode();
 }
 
 bool JsonContainer::operator==(const JsonContainer & other) const

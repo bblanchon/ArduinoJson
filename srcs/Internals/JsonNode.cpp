@@ -34,6 +34,41 @@ void JsonNode::writeTo(JsonWriter& writer)
     }
 }
 
+void JsonNode::addChildToContainer(JsonNode* childToAdd)
+{
+    if (type != JSON_ARRAY && type != JSON_OBJECT) return;
+
+    JsonNode* lastChild = content.asContainer.child;
+
+    if (!lastChild)
+    {
+        content.asContainer.child = childToAdd;
+        return;
+    }
+
+    while (lastChild->next)
+        lastChild = lastChild->next;
+
+    lastChild->next = childToAdd;
+}
+
+void JsonNode::removeChildFromContainer(JsonNode* childToRemove)
+{
+    if (type != JSON_ARRAY && type != JSON_OBJECT) return;
+
+    if (content.asContainer.child == childToRemove)
+    {
+        content.asContainer.child = childToRemove->next;
+        return;
+    }
+
+    for (JsonNode* child = content.asContainer.child; child; child = child->next)
+    {
+        if (child->next == childToRemove)
+            child->next = childToRemove->next;
+    }
+}
+
 void JsonNode::writeArrayTo(JsonWriter& writer)
 {
     JsonNode* child = content.asContainer.child;

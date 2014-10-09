@@ -104,6 +104,7 @@ TEST_F(JsonValueTests, ObjectsAreCopiedByReference)
     jsonValue2 = jsonValue1;
 
     object["hello"] = "world";
+    jsonValue1 = 0;
 
     EXPECT_EQ(1, ((JsonObject) jsonValue2).size());
 }
@@ -114,6 +115,7 @@ TEST_F(JsonValueTests, ArraysAreCopiedByReference)
 
     jsonValue1 = array;
     jsonValue2 = jsonValue1;
+    jsonValue1 = 0;
     
     array.add("world");
 

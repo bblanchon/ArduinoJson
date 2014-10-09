@@ -51,8 +51,6 @@ JsonObject JsonObject::createNestedObject(char const* key)
 
 JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
 {
-    if (!checkNodeType(JSON_OBJECT)) return 0;
-
     for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it)
     {
         const char* childKey = it->getAsObjectKey();
@@ -61,10 +59,10 @@ JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
             return it->getAsObjectValue();
     }
       
-    JsonNode* newValueNode = createNode(JSON_UNDEFINED);
+    JsonNode* newValueNode = createNode();
     if (!newValueNode) return 0;
     
-    JsonNode* newKeyNode = createNode(JSON_KEY_VALUE);
+    JsonNode* newKeyNode = createNode();
     if (!newKeyNode) return 0;
 
     newKeyNode->setAsObjectKeyValue(key, newValueNode);

@@ -43,7 +43,7 @@ void JsonArray::add(double value, int decimals)
 
 void JsonArray::add(long value)
 {
-    JsonNode* node = createNode(JSON_LONG);
+    JsonNode* node = createNode();
     if (!node) return;
 
     node->setAsLong(value);

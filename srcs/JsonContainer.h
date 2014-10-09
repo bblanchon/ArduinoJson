@@ -53,9 +53,7 @@ protected:
 
     void addChild(JsonNode*);
     void removeChild(JsonNode*);
-    JsonNode* createNode(JsonNodeType type = JSON_UNDEFINED);
-
-    bool checkNodeType(JsonNodeType expectedType);
+    JsonNode* createNode();
 
     JsonNode* _node;
 };
