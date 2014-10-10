@@ -70,7 +70,7 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(Short)
         {
-            setValueTo((short)314);
+            setValueTo(static_cast<short>(314));
             outputMustBe("314");
         }
 

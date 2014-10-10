@@ -102,7 +102,7 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(OneNull)
         {
-            object["key"] = (char*) 0;
+            object["key"] = static_cast<char*>(0);
             outputMustBe("{\"key\":null}");
         }
 

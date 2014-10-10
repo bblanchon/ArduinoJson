@@ -26,7 +26,7 @@ namespace JsonGeneratorTests
 
         TEST_METHOD(Null)
         {
-            array.add((char*) 0);
+            array.add(static_cast<char*>(0));
 
             outputMustBe("[null]");
         }

@@ -72,7 +72,9 @@ namespace JsonGeneratorTests
         {
             value = expected;
             const Printable& actual = value;
-            Assert::AreEqual((void*) &expected, (void*) &actual);
+            Assert::AreEqual(
+                reinterpret_cast<const void*>(&expected), 
+                reinterpret_cast<const void*>(&actual));
         }
     };
 }
