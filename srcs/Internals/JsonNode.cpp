@@ -89,7 +89,7 @@ void JsonNode::writeArrayTo(JsonWriter& writer)
     {
         writer.beginArray();
 
-        while (true)
+        for (;;)
         {
             child->writeTo(writer);
 
@@ -115,7 +115,7 @@ void JsonNode::writeObjectTo(JsonWriter& writer)
     {
         writer.beginObject();
 
-        while (true)
+        for (;;)
         {
             writer.writeString(child->content.asKey.key);
             writer.writeColon();
