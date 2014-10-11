@@ -11,7 +11,7 @@ protected:
     void whenInputIs(const char* input)
     {
         StringBuilder sb(buffer, sizeof(buffer));  
-        returnValue = EscapedString::printTo(input, sb);
+        returnValue = EscapedString::printTo(input, &sb);
     }
 
     void outputMustBe(const char* expected)

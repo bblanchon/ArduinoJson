@@ -14,7 +14,7 @@ namespace ArduinoJson
         class EscapedString
         {
         public:
-            static size_t printTo(const char*, Print&);
+            static size_t printTo(const char*, Print*);
         };
     }
 }

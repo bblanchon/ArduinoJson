@@ -33,10 +33,7 @@ public:
 
     size_t prettyPrintTo(char* buffer, size_t bufferSize) const;
     size_t prettyPrintTo(ArduinoJson::Generator::IndentedPrint& print) const;
-    size_t prettyPrintTo(Print& print) const
-    {
-        return prettyPrintTo(ArduinoJson::Generator::IndentedPrint(print));
-    }
+    size_t prettyPrintTo(Print& print) const;
 
 protected:
 

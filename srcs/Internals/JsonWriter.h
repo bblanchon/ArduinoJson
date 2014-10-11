@@ -5,7 +5,7 @@
 class JsonWriter
 {
 public:
-    explicit JsonWriter(Print& sink)
+    explicit JsonWriter(Print* sink)
         : _sink(sink), _length(0)
     {
     }
@@ -34,16 +34,16 @@ public:
 
     void writeEmptyArray()
     {
-        _length += _sink.print("[]");
+        _length += _sink->print("[]");
     }
 
     void writeEmptyObject()
     {
-        _length += _sink.print("{}");
+        _length += _sink->print("{}");
     }
 
 protected:
-    Print& _sink;
+    Print* _sink;
     size_t _length;
 };
 

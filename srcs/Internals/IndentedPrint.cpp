@@ -27,7 +27,7 @@ size_t IndentedPrint::write(uint8_t c)
     if (isNewLine)
         n += writeTabs();
 
-    n += sink.write(c);
+    n += sink->write(c);
 
     isNewLine = c == '\n';
 
@@ -39,7 +39,7 @@ inline size_t IndentedPrint::writeTabs()
     size_t n = 0;
 
     for (int i = 0; i < level*tabSize; i++)
-        n += sink.write(' ');
+        n += sink->write(' ');
 
     return n;
 }

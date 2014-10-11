@@ -15,7 +15,7 @@ size_t JsonContainer::printTo(char* buffer, size_t bufferSize) const
 
 size_t JsonContainer::printTo(Print& p) const
 {
-    CompactJsonWriter writer(p);
+    CompactJsonWriter writer(&p);
     _node->writeTo(writer);
     return writer.bytesWritten();
 }
@@ -28,9 +28,15 @@ size_t JsonContainer::prettyPrintTo(char* buffer, size_t bufferSize) const
 
 size_t JsonContainer::prettyPrintTo(IndentedPrint& p) const
 {
-    PrettyJsonWriter writer(p);
+    PrettyJsonWriter writer(&p);
     _node->writeTo(writer);
     return writer.bytesWritten();
+}
+
+size_t JsonContainer::prettyPrintTo(Print& print) const
+{
+    IndentedPrint indentedPrint = IndentedPrint(print);
+    return prettyPrintTo(indentedPrint);
 }
 
 JsonNode* JsonContainer::createNode()
