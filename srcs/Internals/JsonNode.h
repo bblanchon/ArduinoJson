@@ -147,6 +147,11 @@ public:
         return type == JSON_KEY_VALUE ? content.asKey.value : 0;
     }
 
+    JsonNode* getProxyTarget()
+    {        
+        return type == JSON_PROXY ? content.asProxy.target : this;
+    }
+
     void addChild(JsonNode* childToAdd);
 
     void removeChild(JsonNode* childToRemove);

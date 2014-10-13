@@ -51,7 +51,9 @@ JsonNode* JsonContainer::createNode()
 
 bool JsonContainer::operator==(const JsonContainer & other) const
 {
-    return _node->getContainerChild() == other._node->getContainerChild();
+    if (_node == other._node) return true;
+    if (!_node || !other._node) return false;
+    return _node->getProxyTarget() == other._node->getProxyTarget();
 }
 
 void JsonContainer::addChild(JsonNode* childToAdd)
