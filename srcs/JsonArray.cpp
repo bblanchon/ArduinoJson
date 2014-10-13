@@ -56,7 +56,7 @@ void JsonArray::add(JsonContainer nestedContainer)
     JsonNode* node = createNode();
     if (!node) return;
 
-    *node = *nestedContainer._node;
+    node->duplicate(nestedContainer._node);
     addChild(node);
 }
 

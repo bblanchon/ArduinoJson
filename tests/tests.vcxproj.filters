@@ -54,5 +54,8 @@
     <ClCompile Include="JsonObject_PrettyPrintTo_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Issue10.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
