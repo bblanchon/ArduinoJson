@@ -10,22 +10,54 @@ protected:
         array = json.createArray();
     }
 
+    void nodeCountMustBe(int expected)
+    {
+        EXPECT_EQ(expected, json.size());
+    }
+
+    template<typename T>
+    void firstElementMustBe(T expected)
+    {
+        elementAtIndexMustBe(0, expected);
+    }
+
+    template<typename T>
+    void secondElementMustBe(T expected)
+    {
+        elementAtIndexMustBe(1, expected);
+    }
+
+    void sizeMustBe(int expected)
+    {
+        EXPECT_EQ(expected, array.size());
+    }
+
     StaticJsonBuffer<42> json;
     JsonArray array;
+
+private:
+    template<typename T>
+    void elementAtIndexMustBe(int index, T expected)
+    {
+        EXPECT_EQ(expected, static_cast<T>(array[index]));
+    }
 };
 
 TEST_F(JsonArray_Container_Tests, InitialSizeIsZero)
 {
-    EXPECT_EQ(0, array.size());
+    sizeMustBe(0);
+    nodeCountMustBe(1);
 }
 
 TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded)
-{
+{    
     array.add("hello");
-    EXPECT_EQ(1, array.size());
+    sizeMustBe(1);
+    nodeCountMustBe(2);
 
     array.add("world");
-    EXPECT_EQ(2, array.size());
+    sizeMustBe(2);
+    nodeCountMustBe(3);    
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreIntegers)
@@ -33,8 +65,9 @@ TEST_F(JsonArray_Container_Tests, CanStoreIntegers)
     array.add(123);
     array.add(456);
 
-    EXPECT_EQ(123, (int) array[0]);
-    EXPECT_EQ(456, (int) array[1]);
+    firstElementMustBe(123);
+    secondElementMustBe(456);
+    nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreDoubles)
@@ -42,17 +75,19 @@ TEST_F(JsonArray_Container_Tests, CanStoreDoubles)
     array.add(123.45);
     array.add(456.78);
 
-    EXPECT_EQ(123.45, (double) array[0]);
-    EXPECT_EQ(456.78, (double) array[1]);
+    firstElementMustBe(123.45);
+    secondElementMustBe(456.78);
+    nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreBooleans)
 {
     array.add(true);
     array.add(false);
-
-    EXPECT_TRUE((bool) array[0]);
-    EXPECT_FALSE((bool) array[1]);
+    
+    firstElementMustBe(true);
+    secondElementMustBe(false);
+    nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreStrings)
@@ -60,11 +95,12 @@ TEST_F(JsonArray_Container_Tests, CanStoreStrings)
     array.add("h3110");
     array.add("w0r1d");
 
-    EXPECT_STREQ("h3110", (const char*) array[0]);
-    EXPECT_STREQ("w0r1d", (const char*) array[1]);
+    firstElementMustBe("h3110");
+    secondElementMustBe("w0r1d");
+    nodeCountMustBe(3);
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreInnerArrays)
+TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays)
 {
     JsonArray innerarray1 = json.createArray();
     JsonArray innerarray2 = json.createArray();
@@ -72,11 +108,12 @@ TEST_F(JsonArray_Container_Tests, CanStoreInnerArrays)
     array.add(innerarray1);
     array.add(innerarray2);
 
-    EXPECT_EQ(innerarray1, (JsonArray) array[0]);
-    EXPECT_EQ(innerarray2, (JsonArray) array[1]);
+    firstElementMustBe(innerarray1);
+    secondElementMustBe(innerarray1);
+    nodeCountMustBe(1 + 3 + 3);
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreInnerObjects)
+TEST_F(JsonArray_Container_Tests, CanStoreNestedObjects)
 {
     JsonObject innerObject1 = json.createObject();
     JsonObject innerObject2 = json.createObject();
@@ -84,6 +121,27 @@ TEST_F(JsonArray_Container_Tests, CanStoreInnerObjects)
     array.add(innerObject1);
     array.add(innerObject2);
 
-    EXPECT_EQ(innerObject1, (JsonObject) array[0]);
-    EXPECT_EQ(innerObject2, (JsonObject) array[1]);
+    firstElementMustBe(innerObject1);
+    secondElementMustBe(innerObject2);
+    nodeCountMustBe(1 + 3 + 3);
+}
+
+TEST_F(JsonArray_Container_Tests, CanCreateNestedArrays)
+{
+    JsonArray innerarray1 = array.createNestedArray();
+    JsonArray innerarray2 = array.createNestedArray();
+
+    firstElementMustBe(innerarray1);
+    secondElementMustBe(innerarray1);
+    nodeCountMustBe(1 + 1 + 1);
+}
+
+TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects)
+{
+    JsonObject innerObject1 = json.createObject();
+    JsonObject innerObject2 = json.createObject();
+
+    firstElementMustBe(innerObject1);
+    secondElementMustBe(innerObject2);
+    nodeCountMustBe(3);
 }
