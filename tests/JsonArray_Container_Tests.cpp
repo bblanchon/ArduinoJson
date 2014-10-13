@@ -109,7 +109,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays)
     array.add(innerarray2);
 
     firstElementMustBe(innerarray1);
-    secondElementMustBe(innerarray1);
+    secondElementMustBe(innerarray2);
     nodeCountMustBe(1 + 3 + 3);
 }
 
@@ -135,13 +135,13 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedArrays)
     secondElementMustBe(innerarray2);
     nodeCountMustBe(1 + 1 + 1);
 }
-/*
+
 TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects)
 {
-    JsonObject innerObject1 = json.createObject();
-    JsonObject innerObject2 = json.createObject();
+    JsonObject innerObject1 = array.createNestedObject();
+    JsonObject innerObject2 = array.createNestedObject();
 
     firstElementMustBe(innerObject1);
     secondElementMustBe(innerObject2);
     nodeCountMustBe(3);
-}*/
+}
