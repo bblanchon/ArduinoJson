@@ -6,6 +6,7 @@ TAG=$(git describe)
 OUTPUT="ArduinoJson-$TAG.zip"
 
 cd ..
+cd ..
 
 INPUT=$(find ArduinoJson -regex ".*\.\(cpp\|h\|md\|txt\|ino\)$" -not -regex ".*Tests/.*")
 
