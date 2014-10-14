@@ -1,7 +1,10 @@
+/cmake
+Debug
+ipch
 *.sdf
 *.user
 *.suo
-Debug
-ipch
 *.opensdf
-/cmake
+*.vcxproj
+*.vcxproj.filters
+*.sln
