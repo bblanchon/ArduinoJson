@@ -13,3 +13,5 @@ ipch
 /cmake
 /CMakeCache.txt
 /CMakeFiles
+/.idea
+/st2
