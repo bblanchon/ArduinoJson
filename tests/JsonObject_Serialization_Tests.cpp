@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <JsonArray.h>
 #include <JsonObject.h>
 #include <JsonValue.h>
 #include <StaticJsonBuffer.h>
@@ -126,7 +127,7 @@ TEST_F(JsonObject_Serialization_Tests, OneFalse)
 
 TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArrayViaProxy)
 {
-    auto nestedArray = json.createArray();
+    JsonArray nestedArray = json.createArray();
 
     object["key"] = nestedArray;
 
@@ -135,7 +136,7 @@ TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArrayViaProxy)
 
 TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedObjectViaProxy)
 {
-    auto nestedArray = json.createObject();
+    JsonObject nestedArray = json.createObject();
 
     object["key"] = nestedArray;
 

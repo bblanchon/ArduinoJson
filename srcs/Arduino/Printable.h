@@ -7,6 +7,8 @@
 
 #ifndef ARDUINO
 
+#include <stddef.h>
+
 class Print;
 
 class Printable
