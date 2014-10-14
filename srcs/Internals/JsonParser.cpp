@@ -67,12 +67,14 @@ JsonNode* JsonParser::parseNode()
 
 JsonNode* JsonParser::parseArray()
 {
-    skipOneChar();
+    skipOneChar(); // skip the '['
+    skipSpaces();
 
     JsonNode* node = _buffer->createNode();
     node->setAsArray(_buffer);
 
-    skipSpaces();
+    if (isEnd())
+        return 0;
 
     if (isArrayStop())
         return node;

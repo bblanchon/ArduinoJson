@@ -16,6 +16,14 @@ TEST_F(JsonArray_Parser_Tests, EmptyArray)
     EXPECT_EQ(0, array.size());
 }
 
+TEST_F(JsonArray_Parser_Tests, ArrayWithNoEnd)
+{
+    JsonArray array = json.parseArray("[");
+
+    EXPECT_FALSE(array.success());
+    EXPECT_EQ(0, array.size());
+}
+
 TEST_F(JsonArray_Parser_Tests, EmptyArrayWithLeadingSpaces)
 {
     JsonArray array = json.parseArray("  []");
