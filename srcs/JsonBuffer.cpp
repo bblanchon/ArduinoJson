@@ -22,6 +22,8 @@ JsonArray JsonBuffer::parseArray(const char* json)
 {
     JsonNode* root;
 
+    while(*json == ' ') json++;
+
     if (json[0] == '[')
     {
         root = createNode();
