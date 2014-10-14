@@ -22,5 +22,5 @@ JsonNode* JsonBuffer::createNode()
 JsonArray JsonBuffer::parseArray(char* json)
 {
     JsonParser parser(this, json);
-    return JsonArray(parser.parseNode());
+    return JsonArray(parser.parseAnything());
 }

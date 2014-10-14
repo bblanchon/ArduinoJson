@@ -12,9 +12,8 @@ public:
 
 	}
 
-	JsonNode* parseNode();
-    JsonNode* parseArray();
-    JsonNode* parseLong();
+	JsonNode* parseAnything();
+
 private:
 	JsonBuffer* _buffer;
 	char* _ptr;
@@ -24,6 +23,11 @@ private:
 	inline bool isArrayStop();
 	inline bool isLong();
 	inline bool isSpace();
+    inline bool isComma();
+
 	inline void skipOneChar();
 	inline void skipSpaces();
+
+    inline JsonNode* parseArray();
+    inline JsonNode* parseLong();
 };

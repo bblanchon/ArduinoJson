@@ -48,3 +48,14 @@ TEST_F(JsonArray_Parser_Tests, OneInteger)
     EXPECT_EQ(1, array.size());
     EXPECT_EQ(42, static_cast<int>(array[0])); 
 }
+
+TEST_F(JsonArray_Parser_Tests, TwoIntegers)
+{
+    JsonArray array = json.parseArray("[42,84]");
+
+    EXPECT_TRUE(array.success());
+
+    EXPECT_EQ(2, array.size());
+    EXPECT_EQ(42, static_cast<int>(array[0])); 
+    EXPECT_EQ(84, static_cast<int>(array[1])); 
+}

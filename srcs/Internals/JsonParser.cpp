@@ -42,6 +42,11 @@ bool JsonParser::isSpace()
     return *_ptr == ' ' || *_ptr == '\t' || *_ptr == '\n' || *_ptr == '\r';
 }
 
+bool JsonParser::isComma()
+{
+    return *_ptr == ',';
+}
+
 void JsonParser::skipOneChar()
 {
     _ptr++;
@@ -52,7 +57,7 @@ void JsonParser::skipSpaces()
     while(isSpace()) skipOneChar();
 }
 
-JsonNode* JsonParser::parseNode()
+JsonNode* JsonParser::parseAnything()
 {
     skipSpaces();
 
@@ -67,11 +72,11 @@ JsonNode* JsonParser::parseNode()
 
 JsonNode* JsonParser::parseArray()
 {
-    skipOneChar(); // skip the '['
-    skipSpaces();
-
     JsonNode* node = _buffer->createNode();
     node->setAsArray(_buffer);
+
+    skipOneChar(); // skip the '['
+    skipSpaces();
 
     if (isEnd())
         return 0;
@@ -79,7 +84,20 @@ JsonNode* JsonParser::parseArray()
     if (isArrayStop())
         return node;
 
-    node->addChild(parseNode());
+    for(;;)
+    {
+        node->addChild(parseAnything());
+
+        skipSpaces();
+
+        if (isArrayStop())
+            return node;
+
+        if (!isComma())
+            return 0;
+
+        skipOneChar(); // skip the ','
+    }
 
     return node;
 }
