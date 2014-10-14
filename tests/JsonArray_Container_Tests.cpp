@@ -92,11 +92,14 @@ TEST_F(JsonArray_Container_Tests, CanStoreBooleans)
 
 TEST_F(JsonArray_Container_Tests, CanStoreStrings)
 {
-    array.add("h3110");
-    array.add("w0r1d");
+    const char* firstString = "h3110";
+    const char* secondString = "w0r1d";
 
-    firstElementMustBe("h3110");
-    secondElementMustBe("w0r1d");
+    array.add(firstString);
+    array.add(secondString);
+
+    firstElementMustBe(firstString);
+    secondElementMustBe(secondString);
     nodeCountMustBe(3);
 }
 

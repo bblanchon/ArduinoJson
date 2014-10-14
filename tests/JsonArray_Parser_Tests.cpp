@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <StaticJsonBuffer.h>
+#include <JsonValue.h>
 
 class JsonArray_Parser_Tests : public testing::Test
 {
@@ -29,4 +30,13 @@ TEST_F(JsonArray_Parser_Tests, Garbage)
 
     EXPECT_FALSE(array.success());
     EXPECT_EQ(0, array.size());
+}
+
+TEST_F(JsonArray_Parser_Tests, OneInteger)
+{
+    JsonArray array = json.parseArray("[42]");
+
+    EXPECT_TRUE(array.success());
+    EXPECT_EQ(1, array.size());
+    EXPECT_EQ(42, static_cast<int>(array[0])); 
 }

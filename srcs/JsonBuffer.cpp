@@ -3,6 +3,7 @@
 #include <new>
 
 #include "JsonValue.h"
+#include "Internals/JsonParser.h"
 #include "Internals/JsonNode.h"
 
 JsonValue JsonBuffer::createValue()
@@ -18,21 +19,8 @@ JsonNode* JsonBuffer::createNode()
     return new (node) JsonNode();
 }
 
-JsonArray JsonBuffer::parseArray(const char* json)
+JsonArray JsonBuffer::parseArray(char* json)
 {
-    JsonNode* root;
-
-    while(*json == ' ') json++;
-
-    if (json[0] == '[')
-    {
-        root = createNode();
-        root->setAsArray(this);
-    }
-    else
-    {
-        root = 0;
-    }
-
-    return JsonArray(root);
+    JsonParser parser(this, json);
+    return JsonArray(parser.parseNode());
 }

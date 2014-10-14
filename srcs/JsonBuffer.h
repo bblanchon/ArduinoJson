@@ -3,10 +3,13 @@
 #include "JsonArray.h"
 #include "JsonObject.h"
 
+class JsonParser;
+
 class JsonBuffer
 {
     friend class JsonContainer;
     friend class JsonNode;
+    friend class JsonParser;
 
 public:
     virtual ~JsonBuffer() {};
@@ -27,7 +30,7 @@ public:
 
     JsonValue createValue();
 
-    JsonArray parseArray(char const *string);
+    JsonArray parseArray(char* string);
 
 protected:
     virtual void* allocateNode() = 0;
