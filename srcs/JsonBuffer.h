@@ -27,6 +27,8 @@ public:
 
     JsonValue createValue();
 
+    JsonArray parseArray(char const *string);
+
 protected:
     virtual void* allocateNode() = 0;
 

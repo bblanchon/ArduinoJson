@@ -19,3 +19,8 @@ JsonNode* JsonBuffer::createNode()
         
     return new (node) JsonNode();
 }
+
+JsonArray JsonBuffer::parseArray(char const *string)
+{
+    return JsonArray();
+}

@@ -39,3 +39,4 @@ private:
     JsonNode _buffer[CAPACITY];
     int _size;
 };
+
