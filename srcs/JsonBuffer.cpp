@@ -1,9 +1,7 @@
 #include "JsonBuffer.h"
 
 #include <new>
-#include <string.h> // for memset
 
-#include "JsonObject.h"
 #include "JsonValue.h"
 #include "Internals/JsonNode.h"
 
@@ -20,7 +18,19 @@ JsonNode* JsonBuffer::createNode()
     return new (node) JsonNode();
 }
 
-JsonArray JsonBuffer::parseArray(char const *string)
+JsonArray JsonBuffer::parseArray(const char* json)
 {
-    return JsonArray();
+    JsonNode* root;
+
+    if (json[0] == '[')
+    {
+        root = createNode();
+        root->setAsArray(this);
+    }
+    else
+    {
+        root = 0;
+    }
+
+    return JsonArray(root);
 }

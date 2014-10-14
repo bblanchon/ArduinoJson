@@ -25,5 +25,10 @@ public:
 
     JsonArray createNestedArray();
     JsonObject createNestedObject();
+
+    bool success()
+    {
+        return _node && _node->isArray();
+    }
 };
 

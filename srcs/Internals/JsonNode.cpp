@@ -147,3 +147,20 @@ void JsonNode::setAsProxyOfSelf()
 
     setAsProxyOf(newNode);
 }
+
+void JsonNode::duplicate(JsonNode* other)
+{
+    if (!other)
+    {
+        type = JSON_UNDEFINED;
+    }
+    else  if (other->type == JSON_ARRAY || other->type==JSON_OBJECT)
+    {
+        other->setAsProxyOfSelf();
+        setAsProxyOf(other->content.asProxy.target);
+    }
+    else
+    {
+        *this = *other;
+    }
+}

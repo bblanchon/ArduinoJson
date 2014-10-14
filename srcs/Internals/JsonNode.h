@@ -152,26 +152,16 @@ public:
         return type == JSON_PROXY ? content.asProxy.target : this;
     }
 
+    bool isArray()
+    {
+        return type == JSON_ARRAY;
+    }
+
     void addChild(JsonNode* childToAdd);
 
     void removeChild(JsonNode* childToRemove);
 
-    void duplicate(JsonNode* other)
-    {
-        if (!other)
-        {
-            type = JSON_UNDEFINED;
-        } 
-        else  if (other->type == JSON_ARRAY || other->type==JSON_OBJECT)
-        {
-            other->setAsProxyOfSelf();
-            setAsProxyOf(other->content.asProxy.target);
-        } 
-        else
-        {
-            *this = *other;
-        }
-    }
+    void duplicate(JsonNode* other);
 
 private:
     JsonNode* next;
