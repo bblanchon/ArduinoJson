@@ -5,10 +5,44 @@
 class JsonArray_Parser_Tests : public testing::Test
 {
 protected:
-    void parse(const char* json)
+    void whenInputIs(const char *json)
     {
         strcpy(_jsonString, json);
         _array = _jsonBuffer.parseArray(_jsonString);
+    }
+
+    void parseMustSucceed()
+    {
+        EXPECT_TRUE(_array.success());
+    }
+
+    void parseMustFail()
+    {
+        EXPECT_FALSE(_array.success());
+        EXPECT_EQ(0, _array.size());
+    }
+
+    void sizeMustBe(int expected)
+    {
+        EXPECT_EQ(expected, _array.size());
+    }
+
+    template<typename T>
+    void firstElementMustBe(T expected)
+    {
+        elementAtIndexMustBe(0, expected);
+    }
+
+    template<typename T>
+    void secondElementMustBe(T expected)
+    {
+        elementAtIndexMustBe(1, expected);
+    }
+
+    template<typename T>
+    void elementAtIndexMustBe(int index, T expected)
+    {
+        EXPECT_EQ(expected, static_cast<T>(_array[index]));
     }
 
     StaticJsonBuffer<42> _jsonBuffer;
@@ -18,70 +52,67 @@ protected:
 
 TEST_F(JsonArray_Parser_Tests, EmptyArray)
 {
-    parse("[]");
+    whenInputIs("[]");
 
-    EXPECT_TRUE(_array.success());
-    EXPECT_EQ(0, _array.size());
+    parseMustSucceed();
+    sizeMustBe(0);
 }
 
 TEST_F(JsonArray_Parser_Tests, ArrayWithNoEnd)
 {
-    parse("[");
+    whenInputIs("[");
 
-    EXPECT_FALSE(_array.success());
-    EXPECT_EQ(0, _array.size());
+    parseMustFail();
 }
 
 TEST_F(JsonArray_Parser_Tests, EmptyArrayWithLeadingSpaces)
 {
-    parse("  []");
+    whenInputIs("  []");
 
-    EXPECT_TRUE(_array.success());
-    EXPECT_EQ(0, _array.size());
+    parseMustSucceed();
+    sizeMustBe(0);
 }
 
 TEST_F(JsonArray_Parser_Tests, Garbage)
 {
-    parse("%*$£¤");
+    whenInputIs("%*$£¤");
 
-    EXPECT_FALSE(_array.success());
-    EXPECT_EQ(0, _array.size());
+    parseMustFail();
 }
 
 TEST_F(JsonArray_Parser_Tests, OneInteger)
 {
-    parse("[42]");
+    whenInputIs("[42]");
 
-    EXPECT_TRUE(_array.success());
-    EXPECT_EQ(1, _array.size());
-    EXPECT_EQ(42, static_cast<int>(_array[0]));
+    parseMustSucceed();
+    sizeMustBe(1);
+    firstElementMustBe(42);
 }
 
 TEST_F(JsonArray_Parser_Tests, OneIntegerWithSpacesBefore)
 {
-    parse("[ \t\r\n42]");
+    whenInputIs("[ \t\r\n42]");
 
-    EXPECT_TRUE(_array.success());
-    EXPECT_EQ(1, _array.size());
-    EXPECT_EQ(42, static_cast<int>(_array[0]));
+    parseMustSucceed();
+    sizeMustBe(1);
+    firstElementMustBe(42);
 }
 
 TEST_F(JsonArray_Parser_Tests, OneIntegerWithSpaceAfter)
 {
-    parse("[42 \t\r\n]");
+    whenInputIs("[42 \t\r\n]");
 
-    EXPECT_TRUE(_array.success());
-    EXPECT_EQ(1, _array.size());
-    EXPECT_EQ(42, static_cast<int>(_array[0]));
+    parseMustSucceed();
+    sizeMustBe(1);
+    firstElementMustBe(42);
 }
 
 TEST_F(JsonArray_Parser_Tests, TwoIntegers)
 {
-    parse("[42,84]");
+    whenInputIs("[42,84]");
 
-    EXPECT_TRUE(_array.success());
-
-    EXPECT_EQ(2, _array.size());
-    EXPECT_EQ(42, static_cast<int>(_array[0]));
-    EXPECT_EQ(84, static_cast<int>(_array[1]));
+    parseMustSucceed();
+    sizeMustBe(2);
+    firstElementMustBe(42);
+    secondElementMustBe(84);
 }
