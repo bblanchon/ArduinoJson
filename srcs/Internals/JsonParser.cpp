@@ -70,6 +70,11 @@ bool JsonParser::isSpace()
     return *_ptr == ' ' || *_ptr == '\t' || *_ptr == '\n' || *_ptr == '\r';
 }
 
+bool JsonParser::isString()
+{
+    return *_ptr == '\"';
+}
+
 void JsonParser::skipOneChar()
 {
     _ptr++;
@@ -98,6 +103,9 @@ JsonNode* JsonParser::parseAnything()
 
     if (isNull())
         return parseNull();
+
+    if (isString())
+        return parseString();
 
     return 0;
 }
@@ -167,4 +175,16 @@ JsonNode* JsonParser::parseNull()
     // 4 = strlen("null")
 
     return _buffer->createStringNode(0);
+}
+
+JsonNode* JsonParser::parseString()
+{
+    const char* s = ++_ptr;
+
+    while (*_ptr != '\"')
+        _ptr++;
+    *_ptr = 0;
+    _ptr++;
+    
+    return _buffer->createStringNode(s);
 }

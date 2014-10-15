@@ -45,6 +45,11 @@ protected:
         EXPECT_EQ(expected, static_cast<T>(_array[index]));
     }
 
+    void elementAtIndexMustBe(int index, const char* expected)
+    {
+        EXPECT_STREQ(expected, static_cast<const char*>(_array[index]));
+    }
+
     StaticJsonBuffer<42> _jsonBuffer;
     JsonArray _array;
     char _jsonString[256];
@@ -147,4 +152,14 @@ TEST_F(JsonArray_Parser_Tests, TwoNulls)
     sizeMustBe(2);
     firstElementMustBe(nullCharPtr);
     secondElementMustBe(nullCharPtr);
+}
+
+TEST_F(JsonArray_Parser_Tests, TwoStrings)
+{
+    whenInputIs("[\"hello\",\"world\"]");
+
+    parseMustSucceed();
+    sizeMustBe(2);
+    firstElementMustBe("hello");
+    secondElementMustBe("world");
 }

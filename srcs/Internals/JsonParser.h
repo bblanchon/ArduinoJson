@@ -29,6 +29,7 @@ private:
     inline bool isLong();
     inline bool isNull();
     inline bool isSpace();
+    inline bool isString();
 
     inline void skipOneChar();
     inline void skipSpaces();
@@ -37,6 +38,7 @@ private:
     inline JsonNode* parseBoolean();
     inline JsonNode* parseLong();
     inline JsonNode* parseNull();
+    inline JsonNode* parseString();
 
     JsonNode *parseDouble();
 };
