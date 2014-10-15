@@ -66,7 +66,7 @@ To extract data from the JSON string, you need to create a `JsonParser`, and spe
 > #### How to choose the number of tokens ?
 
 > A token is an element of the JSON object: either a key, a value, an object or an array.
-> As an example the `char json[]` on the top of this page contains 12 tokens (don't forget to count 1 for the whole object and 1 more for the array itself).
+> As an example the `char json[]` on the top of this page contains 9 tokens (don't forget to count 1 for the whole object and 1 more for the array itself).
 
 > The more tokens you allocate, the more complex the JSON can be, but also the more memory is occupied.
 > Each token takes 8 bytes, so `sizeof(JsonParser<32>)` is 256 bytes which is quite big in an Arduino with only 2KB of RAM.
