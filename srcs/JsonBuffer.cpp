@@ -25,7 +25,7 @@ JsonArray JsonBuffer::parseArray(char* json)
     return JsonArray(parser.parseAnything());
 }
 
-JsonNode *JsonBuffer::createArrayNode()
+JsonNode* JsonBuffer::createArrayNode()
 {
     JsonNode* node = createNode();
 
@@ -35,27 +35,17 @@ JsonNode *JsonBuffer::createArrayNode()
     return node;
 }
 
-JsonNode *JsonBuffer::createObjectNode()
+JsonNode* JsonBuffer::createBoolNode(bool value)
 {
     JsonNode* node = createNode();
 
     if (node)
-        node->setAsObject(this);
+        node->setAsBoolean(value);
 
     return node;
 }
 
-JsonNode *JsonBuffer::createLongNode(long value)
-{
-    JsonNode* node = createNode();
-
-    if (node)
-        node->setAsLong(value);
-
-    return node;
-}
-
-JsonNode *JsonBuffer::createDoubleNode(double value, int decimals)
+JsonNode* JsonBuffer::createDoubleNode(double value, int decimals)
 {
     JsonNode* node = createNode();
 
@@ -65,12 +55,32 @@ JsonNode *JsonBuffer::createDoubleNode(double value, int decimals)
     return node;
 }
 
-JsonNode *JsonBuffer::createBoolNode(bool value)
+JsonNode* JsonBuffer::createLongNode(long value)
 {
     JsonNode* node = createNode();
 
     if (node)
-        node->setAsBoolean(value);
+        node->setAsLong(value);
+
+    return node;
+}
+
+JsonNode* JsonBuffer::createObjectNode()
+{
+    JsonNode* node = createNode();
+
+    if (node)
+        node->setAsObject(this);
+
+    return node;
+}
+
+JsonNode* JsonBuffer::createStringNode(const char* value)
+{
+    JsonNode* node = createNode();
+
+    if (node)
+        node->setAsString(value);
 
     return node;
 }

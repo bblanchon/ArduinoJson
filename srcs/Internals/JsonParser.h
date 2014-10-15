@@ -8,33 +8,35 @@ class JsonBuffer;
 class JsonParser
 {
 public:
-	JsonParser(JsonBuffer* buffer, char* json)
-	 	: _buffer(buffer), _ptr(json)
-	{
+    JsonParser(JsonBuffer* buffer, char* json)
+        : _buffer(buffer), _ptr(json)
+    {
 
-	}
+    }
 
-	JsonNode* parseAnything();
+    JsonNode* parseAnything();
 
 private:
-	JsonBuffer* _buffer;
-	char* _ptr;
+    JsonBuffer* _buffer;
+    char* _ptr;
 
-	inline bool isEnd();
-	inline bool isArrayStart();
-	inline bool isArrayStop();
-	inline bool isLong();
-    inline bool isDouble();
-	inline bool isSpace();
-    inline bool isComma();
+    inline bool isArrayStart();
+    inline bool isArrayStop();
     inline bool isBoolean();
+    inline bool isComma();
+    inline bool isDouble();
+    inline bool isEnd();
+    inline bool isLong();
+    inline bool isNull();
+    inline bool isSpace();
 
-	inline void skipOneChar();
-	inline void skipSpaces();
+    inline void skipOneChar();
+    inline void skipSpaces();
 
     inline JsonNode* parseArray();
-    inline JsonNode* parseLong();
     inline JsonNode* parseBoolean();
+    inline JsonNode* parseLong();
+    inline JsonNode* parseNull();
 
     JsonNode *parseDouble();
 };

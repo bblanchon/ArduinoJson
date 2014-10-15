@@ -136,3 +136,15 @@ TEST_F(JsonArray_Parser_Tests, TwoBooleans)
     firstElementMustBe(true);
     secondElementMustBe(false);
 }
+
+TEST_F(JsonArray_Parser_Tests, TwoNulls)
+{
+    const char* const nullCharPtr = 0;
+
+    whenInputIs("[null,null]");
+
+    parseMustSucceed();
+    sizeMustBe(2);
+    firstElementMustBe(nullCharPtr);
+    secondElementMustBe(nullCharPtr);
+}

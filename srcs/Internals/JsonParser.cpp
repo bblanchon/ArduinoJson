@@ -3,11 +3,6 @@
 #include <stdlib.h> // for strtol, strtod
 #include <ctype.h>
 
-bool JsonParser::isEnd()
-{
-    return *_ptr == 0;
-}
-
 bool JsonParser::isArrayStart()
 {
     return *_ptr == '[';
@@ -18,20 +13,14 @@ bool JsonParser::isArrayStop()
     return *_ptr == ']';
 }
 
-bool JsonParser::isLong()
+bool JsonParser::isBoolean()
 {
-    char* ptr = _ptr;
+    return *_ptr == 't' || *_ptr == 'f';
+}
 
-    // skip all digits
-    while (isdigit(*ptr))
-        ptr++;
-
-    // same position => 0 digits => not a number
-    if (ptr == _ptr) 
-        return false;
-
-    // stopped on a decimal separator => not a long but a double
-    return *ptr != '.';
+bool JsonParser::isComma()
+{
+    return *_ptr == ',';
 }
 
 bool JsonParser::isDouble()
@@ -50,19 +39,35 @@ bool JsonParser::isDouble()
     return *ptr == '.';
 }
 
+bool JsonParser::isEnd()
+{
+    return *_ptr == 0;
+}
+
+bool JsonParser::isLong()
+{
+    char* ptr = _ptr;
+
+    // skip all digits
+    while (isdigit(*ptr))
+        ptr++;
+
+    // same position => 0 digits => not a number
+    if (ptr == _ptr) 
+        return false;
+
+    // stopped on a decimal separator => not a long but a double
+    return *ptr != '.';
+}
+
+bool JsonParser::isNull()
+{
+    return *_ptr == 'n';
+}
+
 bool JsonParser::isSpace()
 {
     return *_ptr == ' ' || *_ptr == '\t' || *_ptr == '\n' || *_ptr == '\r';
-}
-
-bool JsonParser::isComma()
-{
-    return *_ptr == ',';
-}
-
-bool JsonParser::isBoolean()
-{
-    return *_ptr == 't' || *_ptr == 'f';
 }
 
 void JsonParser::skipOneChar()
@@ -81,15 +86,18 @@ JsonNode* JsonParser::parseAnything()
 
     if (isArrayStart())
         return parseArray();
-        
-    if (isLong())    
-        return parseLong();
-
-    if (isDouble())
-        return parseDouble();
 
     if (isBoolean())
         return parseBoolean();
+        
+    if (isDouble())
+        return parseDouble();
+
+    if (isLong())    
+        return parseLong();
+
+    if (isNull())
+        return parseNull();
 
     return 0;
 }
@@ -124,11 +132,15 @@ JsonNode* JsonParser::parseArray()
     }
 }
 
-JsonNode* JsonParser::parseLong()
+JsonNode *JsonParser::parseBoolean()
 {
-    long value = strtol(_ptr, &_ptr, 10);
+    bool value = *_ptr == 't';
 
-    return _buffer->createLongNode(value);
+    _ptr += value ? 4 : 5;
+    // 4 = strlen("true")
+    // 5 = strlen("false");
+
+    return _buffer->createBoolNode(value);
 }
 
 JsonNode *JsonParser::parseDouble()
@@ -142,13 +154,17 @@ JsonNode *JsonParser::parseDouble()
     return _buffer->createDoubleNode(value, decimals);
 }
 
-JsonNode *JsonParser::parseBoolean()
+JsonNode* JsonParser::parseLong()
 {
-    bool value = *_ptr == 't';
+    long value = strtol(_ptr, &_ptr, 10);
 
-    _ptr += value ? 4 : 5;
-    // 4 = strlen("true")
-    // 5 = strlen("false");
+    return _buffer->createLongNode(value);
+}
 
-    return _buffer->createBoolNode(value);
+JsonNode* JsonParser::parseNull()
+{
+    _ptr += 4;
+    // 4 = strlen("null")
+
+    return _buffer->createStringNode(0);
 }

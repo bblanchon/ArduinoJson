@@ -35,10 +35,10 @@ private:
     JsonNode* createNode();
 
     JsonNode* createArrayNode();
-    JsonNode* createObjectNode();
+    JsonNode* createBoolNode(bool value);
+    JsonNode* createDoubleNode(double value, int decimals);
     JsonNode* createLongNode(long value);
-    JsonNode *createDoubleNode(double value, int decimals);
-
-    JsonNode *createBoolNode(bool value);
+    JsonNode* createObjectNode();
+    JsonNode* createStringNode(const char* value);
 };
 
