@@ -4,10 +4,10 @@
 */
 
 #include <gtest/gtest.h>
-#include <JsonArray.h>
-#include <JsonObject.h>
-#include <JsonValue.h>
-#include <StaticJsonBuffer.h>
+#include <ArduinoJson/JsonArray.h>
+#include <ArduinoJson/JsonObject.h>
+#include <ArduinoJson/JsonValue.h>
+#include <ArduinoJson/StaticJsonBuffer.h>
 
 class JsonArray_PrettyPrintTo_Tests : public testing::Test
 {

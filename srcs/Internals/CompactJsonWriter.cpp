@@ -1,1 +1,1 @@
-#include "CompactJsonWriter.h"
+#include "ArduinoJson/Internals/CompactJsonWriter.h"

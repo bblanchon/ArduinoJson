@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <StaticJsonBuffer.h>
-#include <JsonValue.h>
+#include <ArduinoJson/StaticJsonBuffer.h>
+#include <ArduinoJson/JsonValue.h>
 
 class JsonObject_Container_Tests : public ::testing::Test
 {

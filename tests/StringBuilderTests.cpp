@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <Internals/StringBuilder.h>
+#include <ArduinoJson/Internals/StringBuilder.h>
 
 using namespace ArduinoJson::Internals;
 

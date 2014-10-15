@@ -3,7 +3,7 @@
  * Benoit Blanchon 2014 - MIT License
  */
 
-#include "StringBuilder.h"
+#include "ArduinoJson/Internals/StringBuilder.h"
 
 using namespace ArduinoJson::Internals;
 

@@ -1,9 +1,9 @@
-#include "JsonNode.h"
+#include "ArduinoJson/Internals/JsonNode.h"
 
-#include "JsonWriter.h"
-#include "../JsonArray.h"
-#include "../JsonObject.h"
-#include "../JsonBuffer.h"
+#include "ArduinoJson/Internals/JsonWriter.h"
+#include "ArduinoJson/JsonArray.h"
+#include "ArduinoJson/JsonObject.h"
+#include "ArduinoJson/JsonBuffer.h"
 
 void JsonNode::writeTo(JsonWriter& writer)
 {

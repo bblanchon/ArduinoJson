@@ -1,7 +1,6 @@
-#include "JsonArray.h"
-
-#include "JsonObject.h"
-#include "JsonValue.h"
+#include "ArduinoJson/JsonArray.h"
+#include "ArduinoJson/JsonObject.h"
+#include "ArduinoJson/JsonValue.h"
 
 JsonValue JsonArray::operator[](int index) const
 {

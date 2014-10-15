@@ -1,3 +1,6 @@
-file(GLOB_RECURSE SRCS_FILES *.cpp *.h)
+file(GLOB_RECURSE INC_FILES ../include/*.h)
+file(GLOB_RECURSE SRC_FILES *.cpp)
 
-add_library(ArduinoJson ${SRCS_FILES})
+include_directories(../include)
+
+add_library(ArduinoJson ${SRC_FILES} ${INC_FILES})

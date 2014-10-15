@@ -4,9 +4,9 @@
 */
 
 #include <gtest/gtest.h>
-#include <JsonObject.h>
-#include <JsonValue.h>
-#include <StaticJsonBuffer.h>
+#include <ArduinoJson/JsonObject.h>
+#include <ArduinoJson/JsonValue.h>
+#include <ArduinoJson/StaticJsonBuffer.h>
 
 class JsonObject_PrettyPrintTo_Tests : public testing::Test
 {

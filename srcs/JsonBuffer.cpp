@@ -1,10 +1,10 @@
-#include "JsonBuffer.h"
+#include "ArduinoJson/JsonBuffer.h"
 
 #include <new>
 
-#include "JsonValue.h"
-#include "Internals/JsonParser.h"
-#include "Internals/JsonNode.h"
+#include "ArduinoJson/JsonValue.h"
+#include "ArduinoJson/Internals/JsonParser.h"
+#include "ArduinoJson/Internals/JsonNode.h"
 
 JsonValue JsonBuffer::createValue()
 {

@@ -1,5 +1,5 @@
-#include "JsonWriter.h"
-#include "EscapedString.h"
+#include "ArduinoJson/Internals/JsonWriter.h"
+#include "ArduinoJson/Internals/EscapedString.h"
 
 using namespace ArduinoJson::Internals;
 

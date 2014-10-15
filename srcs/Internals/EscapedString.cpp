@@ -3,7 +3,7 @@
  * Benoit Blanchon 2014 - MIT License
  */
 
-#include "EscapedString.h"
+#include "ArduinoJson/Internals/EscapedString.h"
 
 using namespace ArduinoJson::Internals;
 

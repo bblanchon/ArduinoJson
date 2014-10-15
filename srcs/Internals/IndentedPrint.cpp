@@ -1,4 +1,4 @@
-#include "IndentedPrint.h"
+#include "ArduinoJson/Internals/IndentedPrint.h"
 
 using namespace ArduinoJson::Generator;
 
