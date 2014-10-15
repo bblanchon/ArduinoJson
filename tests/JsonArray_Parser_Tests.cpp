@@ -117,15 +117,6 @@ TEST_F(JsonArray_Parser_Tests, TwoIntegers)
     secondElementMustBe(84);
 }
 
-TEST_F(JsonArray_Parser_Tests, OneDouble)
-{
-    whenInputIs("[4.2]");
-
-    parseMustSucceed();
-    sizeMustBe(1);
-    firstElementMustBe(4.2);
-}
-
 TEST_F(JsonArray_Parser_Tests, TwoDoubles)
 {
     whenInputIs("[4.2,8.4]");
@@ -134,4 +125,14 @@ TEST_F(JsonArray_Parser_Tests, TwoDoubles)
     sizeMustBe(2);
     firstElementMustBe(4.2);
     secondElementMustBe(8.4);
+}
+
+TEST_F(JsonArray_Parser_Tests, TwoBooleans)
+{
+    whenInputIs("[true,false]");
+
+    parseMustSucceed();
+    sizeMustBe(2);
+    firstElementMustBe(true);
+    secondElementMustBe(false);
 }

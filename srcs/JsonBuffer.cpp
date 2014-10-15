@@ -64,3 +64,13 @@ JsonNode *JsonBuffer::createDoubleNode(double value, int decimals)
 
     return node;
 }
+
+JsonNode *JsonBuffer::createBoolNode(bool value)
+{
+    JsonNode* node = createNode();
+
+    if (node)
+        node->setAsBoolean(value);
+
+    return node;
+}

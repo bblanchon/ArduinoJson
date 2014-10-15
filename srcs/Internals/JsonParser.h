@@ -27,12 +27,14 @@ private:
     inline bool isDouble();
 	inline bool isSpace();
     inline bool isComma();
+    inline bool isBoolean();
 
 	inline void skipOneChar();
 	inline void skipSpaces();
 
     inline JsonNode* parseArray();
     inline JsonNode* parseLong();
+    inline JsonNode* parseBoolean();
 
     JsonNode *parseDouble();
 };

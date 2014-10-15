@@ -38,5 +38,7 @@ private:
     JsonNode* createObjectNode();
     JsonNode* createLongNode(long value);
     JsonNode *createDoubleNode(double value, int decimals);
+
+    JsonNode *createBoolNode(bool value);
 };
 

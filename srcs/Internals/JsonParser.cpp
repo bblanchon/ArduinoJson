@@ -60,6 +60,11 @@ bool JsonParser::isComma()
     return *_ptr == ',';
 }
 
+bool JsonParser::isBoolean()
+{
+    return *_ptr == 't' || *_ptr == 'f';
+}
+
 void JsonParser::skipOneChar()
 {
     _ptr++;
@@ -82,6 +87,9 @@ JsonNode* JsonParser::parseAnything()
 
     if (isDouble())
         return parseDouble();
+
+    if (isBoolean())
+        return parseBoolean();
 
     return 0;
 }
@@ -132,4 +140,15 @@ JsonNode *JsonParser::parseDouble()
         decimals++;
 
     return _buffer->createDoubleNode(value, decimals);
+}
+
+JsonNode *JsonParser::parseBoolean()
+{
+    bool value = *_ptr == 't';
+
+    _ptr += value ? 4 : 5;
+    // 4 = strlen("true")
+    // 5 = strlen("false");
+
+    return _buffer->createBoolNode(value);
 }
