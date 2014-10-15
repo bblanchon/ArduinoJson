@@ -1,3 +1,5 @@
+#include "JsonNode.h"
+
 #pragma once
 
 class JsonNode;
@@ -22,6 +24,7 @@ private:
 	inline bool isArrayStart();
 	inline bool isArrayStop();
 	inline bool isLong();
+    inline bool isDouble();
 	inline bool isSpace();
     inline bool isComma();
 
@@ -30,4 +33,6 @@ private:
 
     inline JsonNode* parseArray();
     inline JsonNode* parseLong();
+
+    JsonNode *parseDouble();
 };

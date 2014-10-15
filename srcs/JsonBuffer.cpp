@@ -24,3 +24,43 @@ JsonArray JsonBuffer::parseArray(char* json)
     JsonParser parser(this, json);
     return JsonArray(parser.parseAnything());
 }
+
+JsonNode *JsonBuffer::createArrayNode()
+{
+    JsonNode* node = createNode();
+
+    if (node)
+        node->setAsArray(this);
+
+    return node;
+}
+
+JsonNode *JsonBuffer::createObjectNode()
+{
+    JsonNode* node = createNode();
+
+    if (node)
+        node->setAsObject(this);
+
+    return node;
+}
+
+JsonNode *JsonBuffer::createLongNode(long value)
+{
+    JsonNode* node = createNode();
+
+    if (node)
+        node->setAsLong(value);
+
+    return node;
+}
+
+JsonNode *JsonBuffer::createDoubleNode(double value, int decimals)
+{
+    JsonNode* node = createNode();
+
+    if (node)
+        node->setAsDouble(value, decimals);
+
+    return node;
+}

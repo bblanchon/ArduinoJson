@@ -1,6 +1,6 @@
 #include "JsonParser.h"
 #include "../JsonBuffer.h"
-#include <stdlib.h>
+#include <stdlib.h> // for strtol, strtod
 #include <ctype.h>
 
 bool JsonParser::isEnd()
@@ -26,15 +26,28 @@ bool JsonParser::isLong()
     while (isdigit(*ptr))
         ptr++;
 
-    // same position => 0 digits => not a long
+    // same position => 0 digits => not a number
     if (ptr == _ptr) 
         return false;
 
     // stopped on a decimal separator => not a long but a double
-    if (*ptr == '.')
+    return *ptr != '.';
+}
+
+bool JsonParser::isDouble()
+{
+    char* ptr = _ptr;
+
+    // skip all digits
+    while (isdigit(*ptr))
+        ptr++;
+
+    // same position => 0 digits => not a number
+    if (ptr == _ptr)
         return false;
 
-    return true;
+    // stopped on a decimal separator => ok it's a double
+    return *ptr == '.';
 }
 
 bool JsonParser::isSpace()
@@ -65,7 +78,10 @@ JsonNode* JsonParser::parseAnything()
         return parseArray();
         
     if (isLong())    
-        return parseLong();    
+        return parseLong();
+
+    if (isDouble())
+        return parseDouble();
 
     return 0;
 }
@@ -98,15 +114,22 @@ JsonNode* JsonParser::parseArray()
 
         skipOneChar(); // skip the ','
     }
-
-    return node;
 }
 
 JsonNode* JsonParser::parseLong()
 {
     long value = strtol(_ptr, &_ptr, 10);
 
-    JsonNode* node = _buffer->createNode();
-    node->setAsLong(value);
-    return node;
+    return _buffer->createLongNode(value);
+}
+
+JsonNode *JsonParser::parseDouble()
+{
+    double value = strtod(_ptr, &_ptr);
+
+    int decimals = 0;
+    while(_ptr[1-decimals] != '.')
+        decimals++;
+
+    return _buffer->createDoubleNode(value, decimals);
 }

@@ -16,16 +16,12 @@ public:
 
     JsonArray createArray()
     {
-        JsonNode* node = createNode();
-        if (node) node->setAsArray(this);
-        return JsonArray(node);
+        return JsonArray(createArrayNode());
     }
 
     JsonObject createObject()
     {
-        JsonNode* node = createNode();
-        if (node) node->setAsObject(this);
-        return JsonObject(node);
+        return JsonObject(createObjectNode());
     }
 
     JsonValue createValue();
@@ -37,5 +33,10 @@ protected:
 
 private:
     JsonNode* createNode();
+
+    JsonNode* createArrayNode();
+    JsonNode* createObjectNode();
+    JsonNode* createLongNode(long value);
+    JsonNode *createDoubleNode(double value, int decimals);
 };
 
