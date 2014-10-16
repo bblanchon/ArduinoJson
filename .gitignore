@@ -8,11 +8,8 @@
 *.cmake
 *.stamp
 *.stamp.depend
+.DS_Store
 Debug
 ipch
-/cmake
-/CMakeCache.txt
-/CMakeFiles
 /.idea
-/st2
-/msvc
+/build
