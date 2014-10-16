@@ -17,6 +17,13 @@ build-env()
 	cmake "$ROOT" -G "$2"
 }
 
-build-env "Xcode" "Xcode"
-build-env "Sublime" "Sublime Text 2 - Unix Makefiles"
-build-env "Make" "Unix Makefiles"
+if [[ $(uname) == MINGW* ]]
+then
+	build-env "Make" "MinGW Makefiles"
+	build-env "SublimeText" "Sublime Text 2 - MinGW Makefiles"
+	build-env "VisualStudio" "Visual Studio 12 2013"
+else
+	build-env "SublimeText" "Sublime Text 2 - Unix Makefiles"
+	build-env "Make" "Unix Makefiles"
+	build-env "Xcode" "Xcode"
+fi
