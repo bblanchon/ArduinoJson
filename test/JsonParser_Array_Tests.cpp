@@ -2,7 +2,7 @@
 #include <ArduinoJson/StaticJsonBuffer.h>
 #include <ArduinoJson/JsonValue.h>
 
-class JsonArray_Parser_Tests : public testing::Test
+class JsonParser_Array_Tests : public testing::Test
 {
 protected:
     void whenInputIs(const char *json)
@@ -55,7 +55,7 @@ protected:
     char _jsonString[256];
 };
 
-TEST_F(JsonArray_Parser_Tests, EmptyArray)
+TEST_F(JsonParser_Array_Tests, EmptyArray)
 {
     whenInputIs("[]");
 
@@ -63,14 +63,14 @@ TEST_F(JsonArray_Parser_Tests, EmptyArray)
     sizeMustBe(0);
 }
 
-TEST_F(JsonArray_Parser_Tests, ArrayWithNoEnd)
+TEST_F(JsonParser_Array_Tests, ArrayWithNoEnd)
 {
     whenInputIs("[");
 
     parseMustFail();
 }
 
-TEST_F(JsonArray_Parser_Tests, EmptyArrayWithLeadingSpaces)
+TEST_F(JsonParser_Array_Tests, EmptyArrayWithLeadingSpaces)
 {
     whenInputIs("  []");
 
@@ -78,14 +78,14 @@ TEST_F(JsonArray_Parser_Tests, EmptyArrayWithLeadingSpaces)
     sizeMustBe(0);
 }
 
-TEST_F(JsonArray_Parser_Tests, Garbage)
+TEST_F(JsonParser_Array_Tests, Garbage)
 {
     whenInputIs("%*$£¤");
 
     parseMustFail();
 }
 
-TEST_F(JsonArray_Parser_Tests, OneInteger)
+TEST_F(JsonParser_Array_Tests, OneInteger)
 {
     whenInputIs("[42]");
 
@@ -94,7 +94,7 @@ TEST_F(JsonArray_Parser_Tests, OneInteger)
     firstElementMustBe(42);
 }
 
-TEST_F(JsonArray_Parser_Tests, OneIntegerWithSpacesBefore)
+TEST_F(JsonParser_Array_Tests, OneIntegerWithSpacesBefore)
 {
     whenInputIs("[ \t\r\n42]");
 
@@ -103,7 +103,7 @@ TEST_F(JsonArray_Parser_Tests, OneIntegerWithSpacesBefore)
     firstElementMustBe(42);
 }
 
-TEST_F(JsonArray_Parser_Tests, OneIntegerWithSpaceAfter)
+TEST_F(JsonParser_Array_Tests, OneIntegerWithSpaceAfter)
 {
     whenInputIs("[42 \t\r\n]");
 
@@ -112,7 +112,7 @@ TEST_F(JsonArray_Parser_Tests, OneIntegerWithSpaceAfter)
     firstElementMustBe(42);
 }
 
-TEST_F(JsonArray_Parser_Tests, TwoIntegers)
+TEST_F(JsonParser_Array_Tests, TwoIntegers)
 {
     whenInputIs("[42,84]");
 
@@ -122,7 +122,7 @@ TEST_F(JsonArray_Parser_Tests, TwoIntegers)
     secondElementMustBe(84);
 }
 
-TEST_F(JsonArray_Parser_Tests, TwoDoubles)
+TEST_F(JsonParser_Array_Tests, TwoDoubles)
 {
     whenInputIs("[4.2,8.4]");
 
@@ -132,7 +132,7 @@ TEST_F(JsonArray_Parser_Tests, TwoDoubles)
     secondElementMustBe(8.4);
 }
 
-TEST_F(JsonArray_Parser_Tests, TwoBooleans)
+TEST_F(JsonParser_Array_Tests, TwoBooleans)
 {
     whenInputIs("[true,false]");
 
@@ -142,7 +142,7 @@ TEST_F(JsonArray_Parser_Tests, TwoBooleans)
     secondElementMustBe(false);
 }
 
-TEST_F(JsonArray_Parser_Tests, TwoNulls)
+TEST_F(JsonParser_Array_Tests, TwoNulls)
 {
     const char* const nullCharPtr = 0;
 
@@ -154,7 +154,7 @@ TEST_F(JsonArray_Parser_Tests, TwoNulls)
     secondElementMustBe(nullCharPtr);
 }
 
-TEST_F(JsonArray_Parser_Tests, TwoStrings)
+TEST_F(JsonParser_Array_Tests, TwoStrings)
 {
     whenInputIs("[\"hello\",\"world\"]");
 
