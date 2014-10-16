@@ -1,15 +1,5 @@
-*.sdf
-*.user
-*.suo
-*.opensdf
-*.vcxproj
-*.vcxproj.filters
-*.sln
-*.cmake
-*.stamp
-*.stamp.depend
 .DS_Store
-Debug
-ipch
 /.idea
 /build
+/bin
+/lib
