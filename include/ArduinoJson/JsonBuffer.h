@@ -26,7 +26,9 @@ public:
 
     JsonValue createValue();
 
-    JsonArray parseArray(char* string);
+    JsonArray parseArray(char* json);
+
+    JsonValue parseValue(char* json);
 
 protected:
     virtual void* allocateNode() = 0;
@@ -41,4 +43,3 @@ private:
     JsonNode* createObjectNode();
     JsonNode* createStringNode(const char* value);
 };
-
