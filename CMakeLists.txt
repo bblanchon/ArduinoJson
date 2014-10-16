@@ -4,4 +4,4 @@ project(ArduinoJson)
 enable_testing()
 
 add_subdirectory(srcs)
-add_subdirectory(tests)
+add_subdirectory(test)
