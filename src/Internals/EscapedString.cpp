@@ -43,3 +43,46 @@ size_t EscapedString::printTo(const char* s, Print* p)
 
     return n + p->write('\"');
 }
+
+static char unescapeChar(char c)
+{
+    // Optimized for code size on a 8-bit AVR
+
+    const char* p = "b\bf\fn\nr\rt\t";
+
+    while (true)
+    {
+        if (p[0] == 0) return c;
+        if (p[0] == c) return p[1];
+        p += 2;
+    }
+}
+
+char* EscapedString::extractFrom(char* input, char** end)
+{
+    char* start = input + 1; // skip quote
+    char* readPtr = start;
+    char* writePtr = start;
+    char c;
+
+    do
+    {
+        c = *readPtr++;
+
+        if (c == '\"')
+            break;
+
+        if (c == '\\')
+        {
+            c = unescapeChar(*readPtr++);
+        }
+
+        *writePtr++ = c;
+    } while (c != 0);
+
+    *writePtr = 0;
+
+    *end = readPtr;
+
+    return start;
+}

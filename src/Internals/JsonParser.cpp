@@ -1,7 +1,12 @@
 #include "ArduinoJson/Internals/JsonParser.h"
-#include "ArduinoJson/JsonBuffer.h"
+
 #include <stdlib.h> // for strtol, strtod
 #include <ctype.h>
+
+#include "ArduinoJson/JsonBuffer.h"
+#include "ArduinoJson/Internals/EscapedString.h"
+
+using namespace ArduinoJson::Internals;
 
 bool JsonParser::isArrayStart()
 {
@@ -179,12 +184,6 @@ JsonNode* JsonParser::parseNull()
 
 JsonNode* JsonParser::parseString()
 {
-    const char* s = ++_ptr;
-
-    while (*_ptr != '\"')
-        _ptr++;
-    *_ptr = 0;
-    _ptr++;
-    
+    const char* s = EscapedString::extractFrom(_ptr, &_ptr);
     return _buffer->createStringNode(s);
 }

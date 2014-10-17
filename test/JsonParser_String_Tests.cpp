@@ -21,6 +21,13 @@ protected:
     const char* _result;
 };
 
+
+TEST_F(JsonParser_String_Tests, EmptyString)
+{
+    whenInputIs("\"\"");
+    outputMustBe("");
+}
+
 TEST_F(JsonParser_String_Tests, SimpleString)
 {
     whenInputIs("\"hello world\"");
@@ -39,8 +46,14 @@ TEST_F(JsonParser_String_Tests, SquareBraquets)
     outputMustBe("[hello,world]");
 }
 
-TEST_F(JsonParser_String_Tests, EscapedQuote)
+TEST_F(JsonParser_String_Tests, EscapedDoubleQuote)
 {
     whenInputIs("\"hello \\\"world\\\"\"");
     outputMustBe("hello \"world\"");
+}
+
+TEST_F(JsonParser_String_Tests, EscapedSingleQuote)
+{
+    whenInputIs("\"hello \\\'world\\\'\"");
+    outputMustBe("hello 'world'");
 }
