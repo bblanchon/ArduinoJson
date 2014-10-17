@@ -5,7 +5,7 @@ class JsonValue;
 
 class JsonNodeWrapper
 {
-    friend JsonValue;
+    friend class JsonValue;
 
 public:
     JsonNodeWrapper()

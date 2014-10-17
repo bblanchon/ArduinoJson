@@ -13,7 +13,7 @@ class JsonValue;
 class JsonContainer : public Printable, public JsonNodeWrapper
 {
   // friend JsonValue;
-    friend JsonArray;
+    friend class JsonArray;
 
 public:
 

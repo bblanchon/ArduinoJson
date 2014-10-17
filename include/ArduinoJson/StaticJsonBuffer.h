@@ -6,7 +6,7 @@
 template<int CAPACITY>
 class StaticJsonBuffer : public JsonBuffer
 {
-    friend JsonObject;
+    friend class JsonObject;
 
 public:
     
