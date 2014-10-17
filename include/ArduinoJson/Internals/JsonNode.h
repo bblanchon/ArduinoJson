@@ -164,9 +164,9 @@ public:
     void duplicate(JsonNode* other);
 
 private:
+    JsonNodeType type;
     JsonNode* next;
     JsonNodeContent content;
-    JsonNodeType type;
 
     inline void writeArrayTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
     inline void writeObjectTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
