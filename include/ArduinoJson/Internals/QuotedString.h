@@ -11,7 +11,7 @@ namespace ArduinoJson
 {
     namespace Internals
     {
-        class EscapedString
+        class QuotedString
         {
         public:
             static size_t printTo(const char*, Print*);

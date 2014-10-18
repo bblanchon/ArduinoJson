@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 #include "ArduinoJson/JsonBuffer.h"
-#include "ArduinoJson/Internals/EscapedString.h"
+#include "ArduinoJson/Internals/QuotedString.h"
 
 using namespace ArduinoJson::Internals;
 
@@ -176,6 +176,6 @@ JsonNode* JsonParser::parseNull()
 
 JsonNode* JsonParser::parseString()
 {
-    const char* s = EscapedString::extractFrom(_ptr, &_ptr);
+    const char* s = QuotedString::extractFrom(_ptr, &_ptr);
     return _buffer->createStringNode(s);
 }

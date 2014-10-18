@@ -4,7 +4,6 @@
 
 #include "ArduinoJson/JsonBuffer.h"
 #include "ArduinoJson/JsonValue.h"
-#include "ArduinoJson/Internals/EscapedString.h"
 #include "ArduinoJson/Internals/JsonNode.h"
 #include "ArduinoJson/Internals/StringBuilder.h"
 

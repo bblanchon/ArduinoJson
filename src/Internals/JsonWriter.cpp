@@ -1,11 +1,11 @@
 #include "ArduinoJson/Internals/JsonWriter.h"
-#include "ArduinoJson/Internals/EscapedString.h"
+#include "ArduinoJson/Internals/QuotedString.h"
 
 using namespace ArduinoJson::Internals;
 
 void JsonWriter::writeString(char const* value)
 {
-    _length += EscapedString::printTo(value, _sink);
+    _length += QuotedString::printTo(value, _sink);
 }
 
 void JsonWriter::writeInteger(long value)

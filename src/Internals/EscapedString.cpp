@@ -3,7 +3,7 @@
  * Benoit Blanchon 2014 - MIT License
  */
 
-#include "ArduinoJson/Internals/EscapedString.h"
+#include "ArduinoJson/Internals/QuotedString.h"
 
 using namespace ArduinoJson::Internals;
 
@@ -30,7 +30,7 @@ static inline size_t printCharTo(char c, Print* p)
         : p->write(c);
 }
 
-size_t EscapedString::printTo(const char* s, Print* p)
+size_t QuotedString::printTo(const char* s, Print* p)
 {
     if (!s) return p->print("null");
     
@@ -63,7 +63,7 @@ static inline bool isQuote(char c)
     return c == '\"' || c == '\'';
 }
 
-char* EscapedString::extractFrom(char* input, char** endPtr)
+char* QuotedString::extractFrom(char* input, char** endPtr)
 {
     char firstChar = *input;
     char stopChar;
