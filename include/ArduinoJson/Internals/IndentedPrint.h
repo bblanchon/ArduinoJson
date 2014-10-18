@@ -9,7 +9,7 @@
 
 namespace ArduinoJson
 {
-    namespace Generator
+    namespace Internals
     {
         // Decorator on top of Print to allow indented output.
         // This class is used by JsonPrintable::prettyPrintTo() but can also be used

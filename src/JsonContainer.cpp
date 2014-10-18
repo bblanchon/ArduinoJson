@@ -5,6 +5,7 @@
 #include "ArduinoJson/Internals/CompactJsonWriter.h"
 #include "ArduinoJson/Internals/PrettyJsonWriter.h"
 
+using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 size_t JsonContainer::printTo(char* buffer, size_t bufferSize) const

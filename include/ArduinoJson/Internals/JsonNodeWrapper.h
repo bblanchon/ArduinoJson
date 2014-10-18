@@ -1,37 +1,43 @@
 #pragma once
 
 #include "JsonNode.h"
-class JsonValue;
 
-class JsonNodeWrapper
+namespace ArduinoJson
 {
-    friend class JsonValue;
-
-public:
-    JsonNodeWrapper()
-        : _node(0)
+    class JsonValue ;
+    
+    namespace Internals
     {
-    }
-
-    explicit JsonNodeWrapper(JsonNode* node)
-        : _node(node)
-    {
-    }
-
-protected:
-
-    void duplicate(const JsonNodeWrapper& other)
-    {
-        if (!_node)
+        class JsonNodeWrapper
         {
-            _node = other._node;
-        }
-        else
-        {
-            _node->duplicate(other._node);
-        }
+            friend class JsonValue;
+
+        public:
+            JsonNodeWrapper()
+            : _node(0)
+            {
+            }
+
+            explicit JsonNodeWrapper(JsonNode* node)
+            : _node(node)
+            {
+            }
+
+        protected:
+
+            void duplicate(const JsonNodeWrapper& other)
+            {
+                if (!_node)
+                {
+                    _node = other._node;
+                }
+                else
+                {
+                    _node->duplicate(other._node);
+                }
+            }
+
+            JsonNode* _node;
+        };
     }
-
-    JsonNode* _node;
-};
-
+}

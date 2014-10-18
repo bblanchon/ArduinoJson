@@ -2,6 +2,8 @@
 #include <ArduinoJson/StaticJsonBuffer.h>
 #include <ArduinoJson/JsonValue.h>
 
+using namespace ArduinoJson;
+
 TEST(StaticJsonBuffer, CapacityMatchTemplateParameter)
 {
     StaticJsonBuffer<42> json;   

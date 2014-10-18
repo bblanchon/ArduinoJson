@@ -2,6 +2,9 @@
 #include "ArduinoJson/JsonObject.h"
 #include "ArduinoJson/JsonValue.h"
 
+using namespace ArduinoJson;
+using namespace ArduinoJson::Internals;
+
 JsonValue JsonArray::operator[](int index) const
 {
     for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it)

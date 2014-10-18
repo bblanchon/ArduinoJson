@@ -3,63 +3,67 @@
 #include "JsonWriter.h"
 #include "IndentedPrint.h"
 
-using namespace ArduinoJson::Generator;
-
-class PrettyJsonWriter : public JsonWriter
+namespace ArduinoJson
 {
-public:
-    explicit PrettyJsonWriter(IndentedPrint* sink)
-        : JsonWriter(sink), _indenter(sink)
+    namespace Internals
     {
-    }
+        class PrettyJsonWriter : public JsonWriter
+        {
+        public:
+            explicit PrettyJsonWriter(IndentedPrint* sink)
+            : JsonWriter(sink), _indenter(sink)
+            {
+            }
 
-    virtual void beginArray()
-    {
-        _length += _sink->write('[');
-        indent();
-    }
+            virtual void beginArray()
+            {
+                _length += _sink->write('[');
+                indent();
+            }
 
-    virtual void endArray()
-    {
-        unindent();
-        _length += _sink->write(']');
-    }
+            virtual void endArray()
+            {
+                unindent();
+                _length += _sink->write(']');
+            }
 
-    virtual void writeColon()
-    {
-        _length += _sink->print(": ");
-    }
+            virtual void writeColon()
+            {
+                _length += _sink->print(": ");
+            }
 
-    virtual void writeComma()
-    {
-        _length += _sink->write(',');
-        _length += _indenter->println();
-    }
+            virtual void writeComma()
+            {
+                _length += _sink->write(',');
+                _length += _indenter->println();
+            }
 
-    virtual void beginObject()
-    {
-        _length += _sink->write('{');
-        indent();
-    }
+            virtual void beginObject()
+            {
+                _length += _sink->write('{');
+                indent();
+            }
 
-    virtual void endObject()
-    {
-        unindent();
-        _length += _sink->write('}');
-    }
+            virtual void endObject()
+            {
+                unindent();
+                _length += _sink->write('}');
+            }
 
-private:
-    IndentedPrint* _indenter;
+        private:
+            IndentedPrint* _indenter;
 
-    void indent()
-    {
-        _indenter->indent();
-        _length += _indenter->println();
-    }
+            void indent()
+            {
+                _indenter->indent();
+                _length += _indenter->println();
+            }
 
-    void unindent()
-    {
-        _length += _indenter->println();
-        _indenter->unindent();
+            void unindent()
+            {
+                _length += _indenter->println();
+                _indenter->unindent();
+            }
+        };
     }
-};
+}

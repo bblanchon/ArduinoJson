@@ -4,6 +4,8 @@
 #include "ArduinoJson/JsonObject.h"
 #include "ArduinoJson/Internals/JsonNode.h"
 
+using namespace ArduinoJson;
+
 void JsonValue::operator=(bool value)
 {
     if (_node)

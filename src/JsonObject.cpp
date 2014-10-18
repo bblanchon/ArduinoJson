@@ -7,6 +7,7 @@
 #include "ArduinoJson/Internals/JsonNode.h"
 #include "ArduinoJson/Internals/StringBuilder.h"
 
+using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 JsonValue JsonObject::operator[](char const* key)

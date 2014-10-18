@@ -8,6 +8,8 @@
 #include <ArduinoJson/JsonValue.h>
 #include <ArduinoJson/StaticJsonBuffer.h>
 
+using namespace ArduinoJson;
+
 class JsonObject_PrettyPrintTo_Tests : public testing::Test
 {
 protected:

@@ -1,55 +1,54 @@
 #pragma once
 
-#include "ArduinoJson/Arduino/Printable.h"
-#include "ArduinoJson/Internals/JsonNodeIterator.h"
-#include "ArduinoJson/Internals/JsonNode.h"
-#include "ArduinoJson/Internals/IndentedPrint.h"
-#include "ArduinoJson/Internals/JsonNodeWrapper.h"
+#include "Arduino/Printable.h"
+#include "Internals/JsonNodeIterator.h"
+#include "Internals/JsonNode.h"
+#include "Internals/IndentedPrint.h"
+#include "Internals/JsonNodeWrapper.h"
 
-class JsonArray;
-class JsonObject;
-class JsonValue;
-
-class JsonContainer : public Printable, public JsonNodeWrapper
+namespace ArduinoJson
 {
-  // friend JsonValue;
-    friend class JsonArray;
+    class JsonArray;
+    class JsonObject;
+    class JsonValue;
 
-public:
+    class JsonContainer : public Printable, public Internals::JsonNodeWrapper
+    {
+        friend class JsonArray;
 
+    public:
+        JsonContainer() {}
 
-    JsonContainer() {}
-
-    explicit JsonContainer(JsonNode* node)
+        explicit JsonContainer(Internals::JsonNode* node)
         : JsonNodeWrapper(node)
-    {
-    }
+        {
+        }
 
-    size_t size() const;
-    
-    bool operator==(JsonContainer const& other) const;
+        size_t size() const;
 
-    size_t printTo(char* buffer, size_t bufferSize) const;
-    virtual size_t printTo(Print& print) const;
+        bool operator==(JsonContainer const& other) const;
 
-    size_t prettyPrintTo(char* buffer, size_t bufferSize) const;
-    size_t prettyPrintTo(ArduinoJson::Generator::IndentedPrint& print) const;
-    size_t prettyPrintTo(Print& print) const;
+        size_t printTo(char* buffer, size_t bufferSize) const;
+        virtual size_t printTo(Print& print) const;
 
-protected:
+        size_t prettyPrintTo(char* buffer, size_t bufferSize) const;
+        size_t prettyPrintTo(ArduinoJson::Internals::IndentedPrint& print) const;
+        size_t prettyPrintTo(Print& print) const;
 
-    JsonNodeIterator beginChildren() const
-    {
-        return JsonNodeIterator(_node ? _node->getContainerChild() : 0);
-    }
+    protected:
 
-    JsonNodeIterator endChildren() const
-    {
-        return JsonNodeIterator(0);
-    }
+        Internals::JsonNodeIterator beginChildren() const
+        {
+            return Internals::JsonNodeIterator(_node ? _node->getContainerChild() : 0);
+        }
 
-    void addChild(JsonNode*);
-    void removeChild(JsonNode*);
-    JsonNode* createNode();
-};
+        Internals::JsonNodeIterator endChildren() const
+        {
+            return Internals::JsonNodeIterator(0);
+        }
 
+        void addChild(Internals::JsonNode*);
+        void removeChild(Internals::JsonNode*);
+        Internals::JsonNode* createNode();
+    };
+}

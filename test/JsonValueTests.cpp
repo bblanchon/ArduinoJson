@@ -2,6 +2,8 @@
 #include <ArduinoJson/StaticJsonBuffer.h>
 #include <ArduinoJson/JsonValue.h>
 
+using namespace ArduinoJson;
+
 class JsonValueTests : public ::testing::Test
 {
 protected:

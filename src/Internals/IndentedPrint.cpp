@@ -1,6 +1,6 @@
 #include "ArduinoJson/Internals/IndentedPrint.h"
 
-using namespace ArduinoJson::Generator;
+using namespace ArduinoJson::Internals;
 
 void IndentedPrint::indent()
 {

@@ -2,25 +2,28 @@
 
 #include "JsonContainer.h"
 
-class JsonObject : public JsonContainer
+namespace ArduinoJson
 {
-public:
-
-    JsonObject()
+    class JsonObject : public JsonContainer
     {
-    }
+    public:
 
-    explicit JsonObject(JsonNode* node)
-        : JsonContainer(node)
-    {
-    }
+        JsonObject()
+        {
+        }
 
-    JsonValue operator[](const char* key);
-    void remove(const char* key);
+        explicit JsonObject(Internals::JsonNode* node)
+            : JsonContainer(node)
+        {
+        }
 
-    JsonArray createNestedArray(const char* key);
-    JsonObject createNestedObject(const char* key);
+        JsonValue operator[](const char* key);
+        void remove(const char* key);
 
-private:
-    JsonNode* getOrCreateNodeAt(const char* key);
-};
+        JsonArray createNestedArray(const char* key);
+        JsonObject createNestedObject(const char* key);
+
+    private:
+        Internals::JsonNode* getOrCreateNodeAt(const char* key);
+    };
+}

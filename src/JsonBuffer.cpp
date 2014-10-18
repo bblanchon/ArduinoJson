@@ -6,6 +6,9 @@
 #include "ArduinoJson/Internals/JsonParser.h"
 #include "ArduinoJson/Internals/JsonNode.h"
 
+using namespace ArduinoJson;
+using namespace ArduinoJson::Internals;
+
 JsonValue JsonBuffer::createValue()
 {
     return JsonValue(createNode());

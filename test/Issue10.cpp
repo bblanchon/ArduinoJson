@@ -4,7 +4,7 @@
 #include <ArduinoJson/JsonValue.h>
 #include <ArduinoJson/StaticJsonBuffer.h>
 
-using namespace ArduinoJson::Generator;
+using namespace ArduinoJson;
 
 struct Person 
 {

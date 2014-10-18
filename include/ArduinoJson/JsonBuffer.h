@@ -3,43 +3,49 @@
 #include "JsonArray.h"
 #include "JsonObject.h"
 
-class JsonParser;
-
-class JsonBuffer
+namespace ArduinoJson
 {
-    friend class JsonContainer;
-    friend class JsonNode;
-    friend class JsonParser;
-
-public:
-    virtual ~JsonBuffer() {};
-
-    JsonArray createArray()
+    namespace Internals
     {
-        return JsonArray(createArrayNode());
+        class JsonParser;
     }
 
-    JsonObject createObject()
+    class JsonBuffer
     {
-        return JsonObject(createObjectNode());
-    }
+        friend class JsonContainer;
+        friend class Internals::JsonNode;
+        friend class Internals::JsonParser;
 
-    JsonValue createValue();
+    public:
+        virtual ~JsonBuffer() {};
 
-    JsonArray parseArray(char* json);
+        JsonArray createArray()
+        {
+            return JsonArray(createArrayNode());
+        }
 
-    JsonValue parseValue(char* json);
+        JsonObject createObject()
+        {
+            return JsonObject(createObjectNode());
+        }
 
-protected:
-    virtual void* allocateNode() = 0;
+        JsonValue createValue();
 
-private:
-    JsonNode* createNode();
+        JsonArray parseArray(char* json);
 
-    JsonNode* createArrayNode();
-    JsonNode* createBoolNode(bool value);
-    JsonNode* createDoubleNode(double value, int decimals);
-    JsonNode* createLongNode(long value);
-    JsonNode* createObjectNode();
-    JsonNode* createStringNode(const char* value);
-};
+        JsonValue parseValue(char* json);
+
+    protected:
+        virtual void* allocateNode() = 0;
+
+    private:
+        Internals::JsonNode* createNode();
+
+        Internals::JsonNode* createArrayNode();
+        Internals::JsonNode* createBoolNode(bool value);
+        Internals::JsonNode* createDoubleNode(double value, int decimals);
+        Internals::JsonNode* createLongNode(long value);
+        Internals::JsonNode* createObjectNode();
+        Internals::JsonNode* createStringNode(const char* value);
+    };
+}

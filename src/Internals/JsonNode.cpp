@@ -5,6 +5,8 @@
 #include "ArduinoJson/JsonObject.h"
 #include "ArduinoJson/JsonBuffer.h"
 
+using namespace ArduinoJson::Internals;
+
 void JsonNode::writeTo(JsonWriter& writer)
 {
     switch (type)
