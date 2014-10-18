@@ -29,7 +29,6 @@ private:
     inline bool isLong();
     inline bool isNull();
     inline bool isSpace();
-    inline bool isString();
 
     inline void skipOneChar();
     inline void skipSpaces();

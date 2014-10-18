@@ -16,19 +16,26 @@ protected:
         EXPECT_STREQ(expected, _result);
     }
 
+private:
     char _jsonString[256];
     StaticJsonBuffer<42> _jsonBuffer;
     const char* _result;
 };
 
 
-TEST_F(JsonParser_String_Tests, EmptyString)
+TEST_F(JsonParser_String_Tests, EmptyDoubleQuotedString)
 {
     whenInputIs("\"\"");
     outputMustBe("");
 }
 
-TEST_F(JsonParser_String_Tests, SimpleString)
+TEST_F(JsonParser_String_Tests, EmptySingleQuotedString)
+{
+    whenInputIs("''");
+    outputMustBe("");
+}
+
+TEST_F(JsonParser_String_Tests, SimpleDoubleQuotedString)
 {
     whenInputIs("\"hello world\"");
     outputMustBe("hello world");
@@ -72,31 +79,31 @@ TEST_F(JsonParser_String_Tests, EscapedReverseSolidus)
 
 TEST_F(JsonParser_String_Tests, EscapedBackspace)
 {
-    whenInputIs("\"hello \\bworld\\b");
+    whenInputIs("\"hello \\bworld\\b\"");
     outputMustBe("hello \bworld\b");
 }
 
 TEST_F(JsonParser_String_Tests, EscapedFormfeed)
 {
-    whenInputIs("\"hello \\fworld\\f");
+    whenInputIs("\"hello \\fworld\\f\"");
     outputMustBe("hello \fworld\f");
 }
 
 TEST_F(JsonParser_String_Tests, EscapedNewline)
 {
-    whenInputIs("\"hello \\nworld\\n");
+    whenInputIs("\"hello \\nworld\\n\"");
     outputMustBe("hello \nworld\n");
 }
 
 TEST_F(JsonParser_String_Tests, EscapedCarriageReturn)
 {
-    whenInputIs("\"hello \\rworld\\r");
+    whenInputIs("\"hello \\rworld\\r\"");
     outputMustBe("hello \rworld\r");
 }
 
 TEST_F(JsonParser_String_Tests, EscapedTab)
 {
-    whenInputIs("\"hello \\tworld\\t");
+    whenInputIs("\"hello \\tworld\\t\"");
     outputMustBe("hello \tworld\t");
 }
 

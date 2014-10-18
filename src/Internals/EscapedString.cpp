@@ -58,31 +58,63 @@ static char unescapeChar(char c)
     }
 }
 
-char* EscapedString::extractFrom(char* input, char** end)
+static inline bool isQuote(char c)
 {
-    char* start = input + 1; // skip quote
-    char* readPtr = start;
-    char* writePtr = start;
+    return c == '\"' || c == '\'';
+}
+
+char* EscapedString::extractFrom(char* input, char** endPtr)
+{
+    char firstChar = *input;
+    char stopChar;
+    char* startPtr;
+
+    if (isQuote(firstChar))
+    {
+        stopChar = firstChar; // closing quote is the same as opening quote
+        startPtr = input + 1; // skip the quote
+    }
+    else
+    {
+        stopChar = ':'; // assume we're parsing a key in an object
+        startPtr = input; // no quote to skip
+    }
+
+    char* readPtr = startPtr;
+    char* writePtr = startPtr;
     char c;
 
-    do
+    for (;;)
     {
         c = *readPtr++;
 
-        if (c == '\"')
+        if (c == 0)
+        {
+            // premature ending
+            *endPtr = 0; 
+            return 0;
+        }
+
+        if (c == stopChar)
+        {
+            // closing quote
             break;
+        }
 
         if (c == '\\')
         {
+            // replace char
             c = unescapeChar(*readPtr++);
         }
 
         *writePtr++ = c;
-    } while (c != 0);
+    } 
 
+    // end the string here
     *writePtr = 0;
 
-    *end = readPtr;
+    // update end ptr
+    *endPtr = readPtr;
 
-    return start;
+    return startPtr;
 }

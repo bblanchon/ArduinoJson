@@ -75,11 +75,6 @@ bool JsonParser::isSpace()
     return *_ptr == ' ' || *_ptr == '\t' || *_ptr == '\n' || *_ptr == '\r';
 }
 
-bool JsonParser::isString()
-{
-    return *_ptr == '\"';
-}
-
 void JsonParser::skipOneChar()
 {
     _ptr++;
@@ -109,10 +104,7 @@ JsonNode* JsonParser::parseAnything()
     if (isNull())
         return parseNull();
 
-    if (isString())
-        return parseString();
-
-    return 0;
+    return parseString();
 }
 
 JsonNode* JsonParser::parseArray()
