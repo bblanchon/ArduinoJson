@@ -9,108 +9,134 @@ protected:
     void whenInputIs(const char* json)
     {
         strcpy(_jsonString, json);
-        _result = QuotedString::extractFrom(_jsonString, &_endp);
+        _result = QuotedString::extractFrom(_jsonString, &_trailing);
     }
 
-    void outputMustBe(const char* expected)
+    void resultMustBe(const char* expected)
     {
         EXPECT_STREQ(expected, _result);
-        EXPECT_EQ(_endp, _result + )
+    }
+
+    void trailingMustBe(const char* expected)
+    {
+        EXPECT_STREQ(expected, _trailing);
     }
 
 private:
     char _jsonString[256];
     char* _result;
-    char* _endp;
+    char* _trailing;
 };
 
 
 TEST_F(QuotedString_ExtractFrom_Tests, EmptyDoubleQuotedString)
 {
     whenInputIs("\"\"");
-    outputMustBe("");
+
+    resultMustBe("");
+    trailingMustBe("");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EmptySingleQuotedString)
 {
     whenInputIs("''");
-    outputMustBe("");
+
+    resultMustBe("");
+    trailingMustBe("");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, SimpleDoubleQuotedString)
 {
     whenInputIs("\"hello world\"");
-    outputMustBe("hello world");
+
+    resultMustBe("hello world");
+    trailingMustBe("");
+}
+
+TEST_F(QuotedString_ExtractFrom_Tests, DoubleQuotedStringWithTrailing)
+{
+    whenInputIs("\"hello\" world");
+
+    resultMustBe("hello");
+    trailingMustBe(" world");
+}
+
+TEST_F(QuotedString_ExtractFrom_Tests, SingleQuotedStringWithTrailing)
+{
+    whenInputIs("'hello' world");
+
+    resultMustBe("hello");
+    trailingMustBe(" world");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, CurlyBraces)
 {
     whenInputIs("\"{hello:world}\"");
-    outputMustBe("{hello:world}");
+    resultMustBe("{hello:world}");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, SquareBraquets)
 {
     whenInputIs("\"[hello,world]\"");
-    outputMustBe("[hello,world]");
+    resultMustBe("[hello,world]");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedDoubleQuote)
 {
     whenInputIs("\"hello \\\"world\\\"\"");
-    outputMustBe("hello \"world\"");
+    resultMustBe("hello \"world\"");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedSingleQuote)
 {
     whenInputIs("\"hello \\\'world\\\'\"");
-    outputMustBe("hello 'world'");
+    resultMustBe("hello 'world'");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedSolidus)
 {
     whenInputIs("\"hello \\/world\\/\"");
-    outputMustBe("hello /world/");
+    resultMustBe("hello /world/");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedReverseSolidus)
 {
     whenInputIs("\"hello \\\\world\\\\\"");
-    outputMustBe("hello \\world\\");
+    resultMustBe("hello \\world\\");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedBackspace)
 {
     whenInputIs("\"hello \\bworld\\b\"");
-    outputMustBe("hello \bworld\b");
+    resultMustBe("hello \bworld\b");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedFormfeed)
 {
     whenInputIs("\"hello \\fworld\\f\"");
-    outputMustBe("hello \fworld\f");
+    resultMustBe("hello \fworld\f");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedNewline)
 {
     whenInputIs("\"hello \\nworld\\n\"");
-    outputMustBe("hello \nworld\n");
+    resultMustBe("hello \nworld\n");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedCarriageReturn)
 {
     whenInputIs("\"hello \\rworld\\r\"");
-    outputMustBe("hello \rworld\r");
+    resultMustBe("hello \rworld\r");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, EscapedTab)
 {
     whenInputIs("\"hello \\tworld\\t\"");
-    outputMustBe("hello \tworld\t");
+    resultMustBe("hello \tworld\t");
 }
 
 TEST_F(QuotedString_ExtractFrom_Tests, AllEscapedCharsTogether)
 {
     whenInputIs("\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"");
-    outputMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
+    resultMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
 }
