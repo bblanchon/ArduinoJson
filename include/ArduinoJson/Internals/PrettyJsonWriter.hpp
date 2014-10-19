@@ -1,7 +1,7 @@
 #pragma once
 
-#include "JsonWriter.h"
-#include "IndentedPrint.h"
+#include "JsonWriter.hpp"
+#include "IndentedPrint.hpp"
 
 namespace ArduinoJson
 {

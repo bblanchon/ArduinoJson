@@ -1,6 +1,6 @@
-#include "ArduinoJson/JsonArray.h"
-#include "ArduinoJson/JsonObject.h"
-#include "ArduinoJson/JsonValue.h"
+#include "ArduinoJson/JsonArray.hpp"
+#include "ArduinoJson/JsonObject.hpp"
+#include "ArduinoJson/JsonValue.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;

@@ -1,5 +1,5 @@
-#include "ArduinoJson/Internals/JsonWriter.h"
-#include "ArduinoJson/Internals/QuotedString.h"
+#include "ArduinoJson/Internals/JsonWriter.hpp"
+#include "ArduinoJson/Internals/QuotedString.hpp"
 
 using namespace ArduinoJson::Internals;
 

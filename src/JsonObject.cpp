@@ -1,11 +1,11 @@
-#include "ArduinoJson/JsonObject.h"
+#include "ArduinoJson/JsonObject.hpp"
 
 #include <string.h> // for strcmp
 
-#include "ArduinoJson/JsonBuffer.h"
-#include "ArduinoJson/JsonValue.h"
-#include "ArduinoJson/Internals/JsonNode.h"
-#include "ArduinoJson/Internals/StringBuilder.h"
+#include "ArduinoJson/JsonBuffer.hpp"
+#include "ArduinoJson/JsonValue.hpp"
+#include "ArduinoJson/Internals/JsonNode.hpp"
+#include "ArduinoJson/Internals/StringBuilder.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;

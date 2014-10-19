@@ -1,7 +1,7 @@
 #pragma once
 
-#include "JsonArray.h"
-#include "JsonObject.h"
+#include "JsonArray.hpp"
+#include "JsonObject.hpp"
 
 namespace ArduinoJson
 {

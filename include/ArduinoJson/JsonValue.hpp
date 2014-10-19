@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Internals/JsonNodeWrapper.h"
+#include "Internals/JsonNodeWrapper.hpp"
 
 namespace ArduinoJson
 {

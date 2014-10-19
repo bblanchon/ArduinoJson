@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Arduino/Printable.h"
-#include "Internals/JsonNodeIterator.h"
-#include "Internals/JsonNode.h"
-#include "Internals/IndentedPrint.h"
-#include "Internals/JsonNodeWrapper.h"
+#include "Arduino/Printable.hpp"
+#include "Internals/JsonNodeIterator.hpp"
+#include "Internals/JsonNode.hpp"
+#include "Internals/IndentedPrint.hpp"
+#include "Internals/JsonNodeWrapper.hpp"
 
 namespace ArduinoJson
 {

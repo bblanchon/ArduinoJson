@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JsonContainer.h"
+#include "JsonContainer.hpp"
 
 namespace ArduinoJson
 {

@@ -1,9 +1,9 @@
-#include "ArduinoJson/JsonContainer.h"
+#include "ArduinoJson/JsonContainer.hpp"
 
-#include "ArduinoJson/JsonBuffer.h"
-#include "ArduinoJson/Internals/StringBuilder.h"
-#include "ArduinoJson/Internals/CompactJsonWriter.h"
-#include "ArduinoJson/Internals/PrettyJsonWriter.h"
+#include "ArduinoJson/JsonBuffer.hpp"
+#include "ArduinoJson/Internals/StringBuilder.hpp"
+#include "ArduinoJson/Internals/CompactJsonWriter.hpp"
+#include "ArduinoJson/Internals/PrettyJsonWriter.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;

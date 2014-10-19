@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <ArduinoJson/Internals/QuotedString.h>
-#include <ArduinoJson/Internals/StringBuilder.h>
+#include <ArduinoJson/Internals/QuotedString.hpp>
+#include <ArduinoJson/Internals/StringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 

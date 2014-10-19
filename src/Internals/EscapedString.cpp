@@ -3,7 +3,7 @@
  * Benoit Blanchon 2014 - MIT License
  */
 
-#include "ArduinoJson/Internals/QuotedString.h"
+#include "ArduinoJson/Internals/QuotedString.hpp"
 
 using namespace ArduinoJson::Internals;
 

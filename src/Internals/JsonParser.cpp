@@ -1,10 +1,10 @@
-#include "ArduinoJson/Internals/JsonParser.h"
+#include "ArduinoJson/Internals/JsonParser.hpp"
 
 #include <stdlib.h> // for strtol, strtod
 #include <ctype.h>
 
-#include "ArduinoJson/JsonBuffer.h"
-#include "ArduinoJson/Internals/QuotedString.h"
+#include "ArduinoJson/JsonBuffer.hpp"
+#include "ArduinoJson/Internals/QuotedString.hpp"
 
 using namespace ArduinoJson::Internals;
 

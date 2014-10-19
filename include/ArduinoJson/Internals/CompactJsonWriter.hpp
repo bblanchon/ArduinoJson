@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ArduinoJson/Internals/JsonWriter.h"
+#include "ArduinoJson/Internals/JsonWriter.hpp"
 
 namespace ArduinoJson
 {
