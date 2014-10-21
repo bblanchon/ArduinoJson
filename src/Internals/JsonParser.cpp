@@ -151,8 +151,13 @@ JsonNode* JsonParser::parseArray()
 
 JsonNode* JsonParser::parseObject()
 {
-    _ptr+=2;
-    return _buffer->createObjectNode();
+    JsonNode* node = _buffer->createObjectNode();
+
+    skipOneChar(); // skip the '['
+    skipSpaces();
+
+    if (isObjectStop())
+        return node;
 }
 
 JsonNode *JsonParser::parseBoolean()

@@ -7,14 +7,43 @@ class JsonParser_Object_Test : public testing::Test
 {
 protected:
 
+	void whenInputIs(const char* jsonString)
+	{
+		strcpy(_jsonString, jsonString);
+		_object = _jsonBuffer.parseObject(_jsonString);
+	}
 
+	void parseMustSucceed()
+	{
+		EXPECT_TRUE(_object.success());
+	}
+
+	void parseMustFail()
+	{
+		EXPECT_FALSE(_object.success());
+	}
+
+	void sizeMustBe(int expected)
+	{
+		EXPECT_EQ(expected, _object.size());
+	}
+
+private:
+	StaticJsonBuffer<10> _jsonBuffer;
+	JsonObject _object;
+	char _jsonString[256];
 };
 
 TEST_F(JsonParser_Object_Test, EmptyObject)
 {
-    StaticJsonBuffer<10> jsonBuffer;
-    char jsonString[] = "{}";
-    JsonObject object = jsonBuffer.parseObject(jsonString);
+    whenInputIs("{}");
+    parseMustSucceed();
+    sizeMustBe(0);
+}
 
-    EXPECT_TRUE(object.success());
+TEST_F(JsonParser_Object_Test, MissingClosingBrace)
+{
+	whenInputIs("{");
+	parseMustFail();
+	sizeMustBe(0);
 }
