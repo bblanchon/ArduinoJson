@@ -32,8 +32,8 @@ namespace ArduinoJson
         JsonValue createValue();
 
         JsonArray parseArray(char* json);
-
-        JsonValue parseValue(char* json);
+        JsonObject parseObject(char* json);
+        JsonValue parseValue(char* json); // TODO: remove
 
     protected:
         virtual void* allocateNode() = 0;

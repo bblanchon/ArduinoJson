@@ -23,6 +23,11 @@ namespace ArduinoJson
         JsonArray createNestedArray(const char* key);
         JsonObject createNestedObject(const char* key);
 
+        bool success()
+        {
+            return _node && _node->isObject();
+        }
+
     private:
         Internals::JsonNode* getOrCreateNodeAt(const char* key);
     };

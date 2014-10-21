@@ -162,6 +162,11 @@ namespace ArduinoJson
                 return type == JSON_ARRAY;
             }
 
+            bool isObject()
+            {
+                return type == JSON_OBJECT;
+            }
+
             void addChild(JsonNode* childToAdd);
 
             void removeChild(JsonNode* childToRemove);

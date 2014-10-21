@@ -33,6 +33,8 @@ namespace ArduinoJson
             inline bool isEnd();
             inline bool isLong();
             inline bool isNull();
+            inline bool isObjectStop();
+            inline bool isObjectStart();
             inline bool isSpace();
 
             inline void skipOneChar();
@@ -42,6 +44,7 @@ namespace ArduinoJson
             inline JsonNode* parseBoolean();
             inline JsonNode* parseLong();
             inline JsonNode* parseNull();
+            inline JsonNode* parseObject();
             inline JsonNode* parseString();
 
             JsonNode *parseDouble();

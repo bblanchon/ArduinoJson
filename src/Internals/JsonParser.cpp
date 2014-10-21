@@ -18,6 +18,16 @@ bool JsonParser::isArrayStop()
     return *_ptr == ']';
 }
 
+bool JsonParser::isObjectStart()
+{
+    return *_ptr == '{';
+}
+
+bool JsonParser::isObjectStop()
+{
+    return *_ptr == '}';
+}
+
 bool JsonParser::isBoolean()
 {
     return *_ptr == 't' || *_ptr == 'f';
@@ -104,13 +114,15 @@ JsonNode* JsonParser::parseAnything()
     if (isNull())
         return parseNull();
 
+    if (isObjectStart())
+        return parseObject();
+
     return parseString();
 }
 
 JsonNode* JsonParser::parseArray()
 {
-    JsonNode* node = _buffer->createNode();
-    node->setAsArray(_buffer);
+    JsonNode* node = _buffer->createArrayNode();
 
     skipOneChar(); // skip the '['
     skipSpaces();
@@ -135,6 +147,12 @@ JsonNode* JsonParser::parseArray()
 
         skipOneChar(); // skip the ','
     }
+}
+
+JsonNode* JsonParser::parseObject()
+{
+    _ptr+=2;
+    return _buffer->createObjectNode();
 }
 
 JsonNode *JsonParser::parseBoolean()
@@ -168,8 +186,7 @@ JsonNode* JsonParser::parseLong()
 
 JsonNode* JsonParser::parseNull()
 {
-    _ptr += 4;
-    // 4 = strlen("null")
+    _ptr += 4; // strlen("null")
 
     return _buffer->createStringNode(0);
 }

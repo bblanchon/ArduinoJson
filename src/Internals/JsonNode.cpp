@@ -166,3 +166,4 @@ void JsonNode::duplicate(JsonNode* other)
         *this = *other;
     }
 }
+

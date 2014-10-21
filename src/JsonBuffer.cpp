@@ -28,6 +28,12 @@ JsonArray JsonBuffer::parseArray(char* json)
     return JsonArray(parser.parseAnything());
 }
 
+JsonObject JsonBuffer::parseObject(char* json)
+{
+    JsonParser parser(this, json);
+    return JsonObject(parser.parseAnything());
+}
+
 JsonValue JsonBuffer::parseValue(char* json)
 {
     JsonParser parser(this, json);
