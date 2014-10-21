@@ -54,9 +54,41 @@ TEST_F(JsonParser_Object_Test, MissingClosingBrace)
 	sizeMustBe(0);
 }
 
-TEST_F(JsonParser_Object_Test, OneString)
+TEST_F(JsonParser_Object_Test, OneStringNoSpace)
 {
 	whenInputIs("{\"key\":\"value\"}");
+	parseMustSucceed();
+	sizeMustBe(1);
+	keyMustHaveValue("key", "value");
+}
+
+TEST_F(JsonParser_Object_Test, OneStringSpaceBeforeKey)
+{
+	whenInputIs("{ \"key\":\"value\"}");
+	parseMustSucceed();
+	sizeMustBe(1);
+	keyMustHaveValue("key", "value");
+}
+
+TEST_F(JsonParser_Object_Test, OneStringSpaceAfterKey)
+{
+	whenInputIs("{\"key\" :\"value\"}");
+	parseMustSucceed();
+	sizeMustBe(1);
+	keyMustHaveValue("key", "value");
+}
+
+TEST_F(JsonParser_Object_Test, OneStringSpaceBeforeValue)
+{
+	whenInputIs("{\"key\": \"value\"}");
+	parseMustSucceed();
+	sizeMustBe(1);
+	keyMustHaveValue("key", "value");
+}
+
+TEST_F(JsonParser_Object_Test, OneStringSpaceAfterValue)
+{
+	whenInputIs("{\"key\":\"value\" }");
 	parseMustSucceed();
 	sizeMustBe(1);
 	keyMustHaveValue("key", "value");
