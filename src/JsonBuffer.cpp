@@ -90,6 +90,16 @@ JsonNode* JsonBuffer::createObjectNode()
     return node;
 }
 
+Internals::JsonNode* JsonBuffer::createObjectKeyValueNode(const char* key, JsonNode* value)
+{
+     JsonNode* node = createNode();
+
+    if (node)
+        node->setAsObjectKeyValue(key, value);
+
+    return node;
+}
+
 JsonNode* JsonBuffer::createStringNode(const char* value)
 {
     JsonNode* node = createNode();

@@ -119,9 +119,9 @@ void JsonNode::writeObjectTo(JsonWriter& writer)
 
         for (;;)
         {
-            writer.writeString(child->content.asKey.key);
+            writer.writeString(child->content.asKeyValue.key);
             writer.writeColon();
-            child->content.asKey.value->writeTo(writer);
+            child->content.asKeyValue.value->writeTo(writer);
 
             child = child->next;
             if (!child) break;

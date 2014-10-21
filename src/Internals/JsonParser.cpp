@@ -18,16 +18,6 @@ bool JsonParser::isArrayStop()
     return *_ptr == ']';
 }
 
-bool JsonParser::isObjectStart()
-{
-    return *_ptr == '{';
-}
-
-bool JsonParser::isObjectStop()
-{
-    return *_ptr == '}';
-}
-
 bool JsonParser::isBoolean()
 {
     return *_ptr == 't' || *_ptr == 'f';
@@ -36,6 +26,11 @@ bool JsonParser::isBoolean()
 bool JsonParser::isComma()
 {
     return *_ptr == ',';
+}
+
+bool JsonParser::isColon()
+{
+    return *_ptr == ':';
 }
 
 bool JsonParser::isDouble()
@@ -78,6 +73,16 @@ bool JsonParser::isLong()
 bool JsonParser::isNull()
 {
     return *_ptr == 'n';
+}
+
+bool JsonParser::isObjectStart()
+{
+    return *_ptr == '{';
+}
+
+bool JsonParser::isObjectStop()
+{
+    return *_ptr == '}';
 }
 
 bool JsonParser::isSpace()
@@ -131,7 +136,10 @@ JsonNode* JsonParser::parseArray()
         return 0;
 
     if (isArrayStop())
+    {
+        skipOneChar(); // skip the ']'
         return node;
+    }
 
     for(;;)
     {
@@ -147,17 +155,6 @@ JsonNode* JsonParser::parseArray()
 
         skipOneChar(); // skip the ','
     }
-}
-
-JsonNode* JsonParser::parseObject()
-{
-    JsonNode* node = _buffer->createObjectNode();
-
-    skipOneChar(); // skip the '['
-    skipSpaces();
-
-    if (isObjectStop())
-        return node;
 }
 
 JsonNode *JsonParser::parseBoolean()
@@ -194,6 +191,55 @@ JsonNode* JsonParser::parseNull()
     _ptr += 4; // strlen("null")
 
     return _buffer->createStringNode(0);
+}
+
+JsonNode* JsonParser::parseObject()
+{
+    JsonNode* node = _buffer->createObjectNode();
+
+    skipOneChar(); // skip the '{'
+    skipSpaces();
+
+    if (isEnd())
+        return 0;
+
+    if (isObjectStop())
+    {
+        skipOneChar(); // skip the '}'
+        return node;
+    }
+
+    for(;;)
+    {
+        node->addChild(parseObjectKeyValue());
+
+        skipSpaces();
+
+        if (isObjectStop())
+            return node;
+
+        if (!isComma())
+            return 0;
+
+        skipOneChar(); // skip the ','
+    }
+}
+
+JsonNode* JsonParser::parseObjectKeyValue()
+{
+    const char* key = QuotedString::extractFrom(_ptr, &_ptr);
+
+    skipSpaces();
+
+    if (!isColon())
+        return 0;
+
+    skipOneChar(); // skip the :
+    skipSpaces();
+
+    JsonNode* value = parseAnything();
+
+    return _buffer->createObjectKeyValueNode(key, value);
 }
 
 JsonNode* JsonParser::parseString()

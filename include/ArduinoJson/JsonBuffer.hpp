@@ -46,6 +46,7 @@ namespace ArduinoJson
         Internals::JsonNode* createDoubleNode(double value, int decimals);
         Internals::JsonNode* createLongNode(long value);
         Internals::JsonNode* createObjectNode();
+        Internals::JsonNode* createObjectKeyValueNode(const char* key, Internals::JsonNode* value);
         Internals::JsonNode* createStringNode(const char* value);
     };
 }

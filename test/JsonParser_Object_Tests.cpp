@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson/StaticJsonBuffer.hpp>
+#include <ArduinoJson/JsonValue.hpp>
 
 using namespace ArduinoJson;
 
@@ -28,6 +29,11 @@ protected:
 		EXPECT_EQ(expected, _object.size());
 	}
 
+	void keyMustHaveValue(const char* key, const char* expected)
+	{
+		EXPECT_STREQ(expected, static_cast<const char*>(_object[key]));
+	}
+
 private:
 	StaticJsonBuffer<10> _jsonBuffer;
 	JsonObject _object;
@@ -46,4 +52,12 @@ TEST_F(JsonParser_Object_Test, MissingClosingBrace)
 	whenInputIs("{");
 	parseMustFail();
 	sizeMustBe(0);
+}
+
+TEST_F(JsonParser_Object_Test, OneString)
+{
+	whenInputIs("{\"key\":\"value\"}");
+	parseMustSucceed();
+	sizeMustBe(1);
+	keyMustHaveValue("key", "value");
 }

@@ -41,7 +41,7 @@ namespace ArduinoJson
                 {
                     const char* key;
                     JsonNode* value;
-                } asKey;
+                } asKeyValue;
 
                 struct
                 {
@@ -106,8 +106,8 @@ namespace ArduinoJson
             void setAsObjectKeyValue(const char* key, JsonNode* value)
             {
                 type = JSON_KEY_VALUE;
-                content.asKey.key = key;
-                content.asKey.value = value;
+                content.asKeyValue.key = key;
+                content.asKeyValue.value = value;
             }
 
             bool getAsBoolean()
@@ -144,12 +144,12 @@ namespace ArduinoJson
 
             const char* getAsObjectKey()
             {
-                return type == JSON_KEY_VALUE ? content.asKey.key : 0;
+                return type == JSON_KEY_VALUE ? content.asKeyValue.key : 0;
             }
 
             JsonNode* getAsObjectValue()
             {
-                return type == JSON_KEY_VALUE ? content.asKey.value : 0;
+                return type == JSON_KEY_VALUE ? content.asKeyValue.value : 0;
             }
 
             JsonNode* getProxyTarget()
