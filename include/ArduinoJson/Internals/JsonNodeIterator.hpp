@@ -12,32 +12,32 @@ namespace ArduinoJson
         public:
 
             explicit JsonNodeIterator(JsonNode* node)
-            : node(node)
+                : _node(node)
             {
             }
 
             bool operator!= (const JsonNodeIterator& other) const
             {
-                return node != other.node;
+                return _node != other._node;
             }
 
             void operator++()
             {
-                node = node->next;
+                _node = _node->next;
             }
 
             JsonNode* operator*() const
             {
-                return node;
+                return _node;
             }
 
             JsonNode* operator->() const
             {
-                return node;
+                return _node;
             }
 
         private:
-            JsonNode* node;
+            JsonNode* _node;
         };
     }
 }

@@ -21,7 +21,7 @@ size_t Print::print(const char s[])
 size_t Print::print(double value, int digits)
 {
     char tmp[32];
-    sprintf(tmp, "%.*lg", digits+1, value);
+    sprintf(tmp, "%.*g", digits+1, value);
     return print(tmp);
 }
 

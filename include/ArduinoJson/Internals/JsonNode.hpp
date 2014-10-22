@@ -23,7 +23,7 @@ namespace ArduinoJson
                 JSON_PROXY,
                 JSON_DOUBLE_0_DECIMALS,
                 JSON_DOUBLE_1_DECIMAL,
-                JSON_DOUBLE_2_DECIMALS,
+                JSON_DOUBLE_2_DECIMALS
                 // etc.
             };
 

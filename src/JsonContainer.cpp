@@ -71,13 +71,13 @@ void JsonContainer::removeChild(JsonNode* childToRemove)
 
 size_t JsonContainer::size() const
 {
-    int size = 0;
+    int n = 0;
 
     for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it)
     {
-        size++;
+        n++;
     }
 
-    return size;
+    return n;
 }
 
