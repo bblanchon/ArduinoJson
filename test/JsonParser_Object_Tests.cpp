@@ -173,3 +173,29 @@ TEST_F(JsonParser_Object_Test, TwoDoubles)
     keyMustHaveValue("key1", 12.345);
     keyMustHaveValue("key2", -7.89);
 }
+
+TEST_F(JsonParser_Object_Test, TwoBooleans)
+{
+    whenInputIs("{\"key1\":true,\"key2\":false}");
+    parseMustSucceed();
+    sizeMustBe(2);
+    keyMustHaveValue("key1", true);
+    keyMustHaveValue("key2", false);
+}
+
+TEST_F(JsonParser_Object_Test, TwoNulls)
+{
+	const char* const nullstr = 0;
+
+    whenInputIs("{\"key1\":null,\"key2\":null}");
+    parseMustSucceed();
+    sizeMustBe(2);
+    keyMustHaveValue("key1", nullstr);
+    keyMustHaveValue("key2", nullstr);
+}
+
+TEST_F(JsonParser_Object_Test, NullForKey)
+{
+    whenInputIs("null:\"value\"}");
+    parseMustFail();
+}
