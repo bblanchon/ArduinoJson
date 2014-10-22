@@ -71,3 +71,8 @@ JsonNode* JsonObject::getOrCreateNodeAt(const char* key)
 
     return newValueNode;
 }
+
+JsonObjectIterator JsonObject::begin()
+{
+    return JsonObjectIterator(_node->getContainerChild());
+}

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "JsonContainer.hpp"
+#include "ArduinoJson/JsonContainer.hpp"
+#include "ArduinoJson/JsonObjectIterator.hpp"
 
 namespace ArduinoJson
 {
@@ -26,6 +27,13 @@ namespace ArduinoJson
         bool success()
         {
             return _node && _node->isObject();
+        }
+
+        JsonObjectIterator begin();
+
+        JsonObjectIterator end()
+        {
+            return JsonObjectIterator(0);
         }
 
     private:
