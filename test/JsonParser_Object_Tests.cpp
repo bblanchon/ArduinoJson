@@ -124,3 +124,28 @@ TEST_F(JsonParser_Object_Test, TwoStrings)
     keyMustHaveValue("key1", "value1");
     keyMustHaveValue("key2", "value2");
 }
+
+TEST_F(JsonParser_Object_Test, TwoStringsSpaceBeforeComma)
+{
+    whenInputIs("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
+    parseMustSucceed();
+    sizeMustBe(2);
+    keyMustHaveValue("key1", "value1");
+    keyMustHaveValue("key2", "value2");
+}
+
+TEST_F(JsonParser_Object_Test, TwoStringsSpaceAfterComma)
+{
+    whenInputIs("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
+    parseMustSucceed();
+    sizeMustBe(2);
+    keyMustHaveValue("key1", "value1");
+    keyMustHaveValue("key2", "value2");
+}
+
+TEST_F(JsonParser_Object_Test, EndingWithAComma)
+{
+    whenInputIs("{\"key1\":\"value1\",}");
+    parseMustFail();
+    sizeMustBe(0);
+}
