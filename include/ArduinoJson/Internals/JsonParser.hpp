@@ -25,24 +25,20 @@ namespace ArduinoJson
             JsonBuffer* _buffer;
             char* _ptr;
 
-            inline bool isArrayStart();
-            inline bool isBoolean();
-            inline bool isDouble();
-            inline bool isEnd();
-            inline bool isLong();
-            inline bool isNull();
-            inline bool isObjectStart();
+            bool isEnd()
+            {
+                return *_ptr == 0;
+            }
 
             bool skip(char charToSkip);
             void skipSpaces();
 
             inline JsonNode* parseArray();
             inline JsonNode* parseBoolean();
-            inline JsonNode *parseDouble();
-            inline JsonNode* parseObjectKeyValue();
-            inline JsonNode* parseLong();
             inline JsonNode* parseNull();
+            inline JsonNode* parseNumber();
             inline JsonNode* parseObject();
+            inline JsonNode* parseObjectKeyValue();
             inline JsonNode* parseString();
         };
     }

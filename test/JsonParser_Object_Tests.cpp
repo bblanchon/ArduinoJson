@@ -34,6 +34,12 @@ protected:
 		EXPECT_STREQ(expected, static_cast<const char*>(_object[key]));
 	}
 
+	template<typename T>
+	void keyMustHaveValue(const char* key, T expected)
+	{
+		EXPECT_EQ(expected, static_cast<T>(_object[key]));
+	}
+
 private:
 	StaticJsonBuffer<10> _jsonBuffer;
 	JsonObject _object;
@@ -148,4 +154,22 @@ TEST_F(JsonParser_Object_Test, EndingWithAComma)
     whenInputIs("{\"key1\":\"value1\",}");
     parseMustFail();
     sizeMustBe(0);
+}
+
+TEST_F(JsonParser_Object_Test, TwoIntergers)
+{
+    whenInputIs("{\"key1\":42,\"key2\":-42}");
+    parseMustSucceed();
+    sizeMustBe(2);
+    keyMustHaveValue("key1", 42);
+    keyMustHaveValue("key2", -42);
+}
+
+TEST_F(JsonParser_Object_Test, TwoDoubles)
+{
+    whenInputIs("{\"key1\":12.345,\"key2\":-7.89}");
+    parseMustSucceed();
+    sizeMustBe(2);
+    keyMustHaveValue("key1", 12.345);
+    keyMustHaveValue("key2", -7.89);
 }

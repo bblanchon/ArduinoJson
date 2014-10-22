@@ -8,63 +8,6 @@
 
 using namespace ArduinoJson::Internals;
 
-bool JsonParser::isArrayStart()
-{
-    return *_ptr == '[';
-}
-
-bool JsonParser::isBoolean()
-{
-    return *_ptr == 't' || *_ptr == 'f';
-}
-
-bool JsonParser::isDouble()
-{
-    char* ptr = _ptr;
-
-    // skip all digits
-    while (isdigit(*ptr))
-        ptr++;
-
-    // same position => 0 digits => not a number
-    if (ptr == _ptr)
-        return false;
-
-    // stopped on a decimal separator => ok it's a double
-    return *ptr == '.';
-}
-
-bool JsonParser::isEnd()
-{
-    return *_ptr == 0;
-}
-
-bool JsonParser::isLong()
-{
-    char* ptr = _ptr;
-
-    // skip all digits
-    while (isdigit(*ptr))
-        ptr++;
-
-    // same position => 0 digits => not a number
-    if (ptr == _ptr) 
-        return false;
-
-    // stopped on a decimal separator => not a long but a double
-    return *ptr != '.';
-}
-
-bool JsonParser::isNull()
-{
-    return *_ptr == 'n';
-}
-
-bool JsonParser::isObjectStart()
-{
-    return *_ptr == '{';
-}
-
 void JsonParser::skipSpaces()
 {
     while(isspace(*_ptr)) _ptr++;
@@ -83,25 +26,42 @@ JsonNode* JsonParser::parseAnything()
 {
     skipSpaces();
 
-    if (isArrayStart())
-        return parseArray();
+    switch(*_ptr)
+    {
+        case '[':
+            return parseArray();
 
-    if (isBoolean())
-        return parseBoolean();
-        
-    if (isDouble())
-        return parseDouble();
+        case 't':
+        case 'f':
+            return parseBoolean();
 
-    if (isLong())    
-        return parseLong();
+        case '-':
+        case '.':
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            return parseNumber();
 
-    if (isNull())
-        return parseNull();
+        case 'n':
+            return parseNull();
 
-    if (isObjectStart())
-        return parseObject();
+        case '{':
+            return parseObject();
 
-    return parseString();
+        case '\'':
+        case '\"':
+            return parseString();
+
+        default:
+            return NULL; // invalid JSON
+    }
 }
 
 JsonNode* JsonParser::parseArray()
@@ -144,22 +104,22 @@ JsonNode *JsonParser::parseBoolean()
     return _buffer->createBoolNode(value);
 }
 
-JsonNode *JsonParser::parseDouble()
+JsonNode* JsonParser::parseNumber()
 {
-    double value = strtod(_ptr, &_ptr);
+    char* endOfLong;
+    long longValue = strtol(_ptr, &endOfLong, 10);
 
-    int decimals = 0;
-    while(_ptr[1-decimals] != '.')
-        decimals++;
-
-    return _buffer->createDoubleNode(value, decimals);
-}
-
-JsonNode* JsonParser::parseLong()
-{
-    long value = strtol(_ptr, &_ptr, 10);
-
-    return _buffer->createLongNode(value);
+    if (*endOfLong == '.') // stopped on a decimal separator
+    {
+        double value = strtod(_ptr, &_ptr);
+        int decimals = _ptr - endOfLong - 1;
+        return _buffer->createDoubleNode(value, decimals);
+    }
+    else
+    {
+        _ptr = endOfLong;
+        return _buffer->createLongNode(longValue);
+    }
 }
 
 JsonNode* JsonParser::parseNull()
