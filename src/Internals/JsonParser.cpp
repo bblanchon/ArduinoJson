@@ -13,24 +13,9 @@ bool JsonParser::isArrayStart()
     return *_ptr == '[';
 }
 
-bool JsonParser::isArrayStop()
-{
-    return *_ptr == ']';
-}
-
 bool JsonParser::isBoolean()
 {
     return *_ptr == 't' || *_ptr == 'f';
-}
-
-bool JsonParser::isComma()
-{
-    return *_ptr == ',';
-}
-
-bool JsonParser::isColon()
-{
-    return *_ptr == ':';
 }
 
 bool JsonParser::isDouble()
@@ -80,24 +65,18 @@ bool JsonParser::isObjectStart()
     return *_ptr == '{';
 }
 
-bool JsonParser::isObjectStop()
-{
-    return *_ptr == '}';
-}
-
-bool JsonParser::isSpace()
-{
-    return *_ptr == ' ' || *_ptr == '\t' || *_ptr == '\n' || *_ptr == '\r';
-}
-
-void JsonParser::skipOneChar()
-{
-    _ptr++;
-}
-
 void JsonParser::skipSpaces()
 {
-    while(isSpace()) skipOneChar();
+    while(isspace(*_ptr)) _ptr++;
+}
+
+bool JsonParser::skip(char charToSkip)
+{
+    skipSpaces();
+    if (*_ptr != charToSkip) return false;
+    _ptr++;
+    skipSpaces();
+    return true;
 }
 
 JsonNode* JsonParser::parseAnything()
@@ -129,31 +108,28 @@ JsonNode* JsonParser::parseArray()
 {
     JsonNode* node = _buffer->createArrayNode();
 
-    skipOneChar(); // skip the '['
-    skipSpaces();
+    skip('[');
 
     if (isEnd())
         return 0;
 
-    if (isArrayStop())
-    {
-        skipOneChar(); // skip the ']'
-        return node;
-    }
+    if (skip(']'))
+        return node; // empty array
 
     for(;;)
     {
-        node->addChild(parseAnything());
+        JsonNode* child = parseAnything();
 
-        skipSpaces();
+        if (!child)
+            return 0; // child parsing failed
 
-        if (isArrayStop())
-            return node;
+        node->addChild(child);
 
-        if (!isComma())
-            return 0;
+        if (skip(']'))
+            return node; // end of the array
 
-        skipOneChar(); // skip the ','
+        if (!skip(','))
+            return 0; // comma is missing
     }
 }
 
@@ -197,36 +173,28 @@ JsonNode* JsonParser::parseObject()
 {
     JsonNode* node = _buffer->createObjectNode();
 
-    skipOneChar(); // skip the '{'
-    skipSpaces();
+    skip('{');
 
     if (isEnd())
-        return 0;
+        return 0; // premature ending
 
-    if (isObjectStop())
-    {
-        skipOneChar(); // skip the '}'
-        return node;
-    }
+    if (skip('}'))
+        return node; // empty object
 
     for(;;)
     {
-        JsonNode* keyValueNode = parseObjectKeyValue();
+        JsonNode* child = parseObjectKeyValue();
 
-        if (!keyValueNode)
-            return 0;
+        if (!child)
+            return 0; // child parsing failed
 
-        node->addChild(keyValueNode);
+        node->addChild(child);
 
-        skipSpaces();
+        if (skip('}'))
+            return node; // end of the object
 
-        if (isObjectStop())
-            return node;
-
-        if (!isComma())
-            return 0;
-
-        skipOneChar(); // skip the ','
+        if (!skip(','))
+            return 0; // comma is missing
     }
 }
 
@@ -235,17 +203,15 @@ JsonNode* JsonParser::parseObjectKeyValue()
     const char* key = QuotedString::extractFrom(_ptr, &_ptr);
 
     if (!key)
-        return 0;
+        return 0; // failed to extract key
 
-    skipSpaces();
-
-    if (!isColon())
-        return 0;
-
-    skipOneChar(); // skip the :
-    skipSpaces();
+    if (!skip(':'))
+        return 0; // colon is missing
 
     JsonNode* value = parseAnything();
+
+    if (!value)
+        return 0; // value parsing failed
 
     return _buffer->createObjectKeyValueNode(key, value);
 }
