@@ -66,20 +66,16 @@ static inline bool isQuote(char c)
 char* QuotedString::extractFrom(char* input, char** endPtr)
 {
     char firstChar = *input;
-    char stopChar;
-    char* startPtr;
 
-    if (isQuote(firstChar))
+    if (!isQuote(firstChar))
     {
-        stopChar = firstChar; // closing quote is the same as opening quote
-        startPtr = input + 1; // skip the quote
-    }
-    else
-    {
-        stopChar = ':'; // assume we're parsing a key in an object
-        startPtr = input; // no quote to skip
+        // must start with a quote
+        return 0;
     }
 
+    char stopChar = firstChar; // closing quote is the same as opening quote
+
+    char* startPtr = input + 1; // skip the quote
     char* readPtr = startPtr;
     char* writePtr = startPtr;
     char c;

@@ -37,6 +37,13 @@ TEST_F(QuotedString_ExtractFrom_Tests, EmptyDoubleQuotedString)
     trailingMustBe("");
 }
 
+TEST_F(QuotedString_ExtractFrom_Tests, NoQuotes)
+{
+    whenInputIs("hello world");
+
+    resultMustBe(0);
+}
+
 TEST_F(QuotedString_ExtractFrom_Tests, EmptySingleQuotedString)
 {
     whenInputIs("''");

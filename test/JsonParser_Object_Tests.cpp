@@ -68,13 +68,20 @@ TEST_F(JsonParser_Object_Test, MissingQuotesAndColonAndValue)
 	sizeMustBe(0);
 }
 
-
-TEST_F(JsonParser_Object_Test, OneStringNoSpace)
+TEST_F(JsonParser_Object_Test, OneString)
 {
 	whenInputIs("{\"key\":\"value\"}");
 	parseMustSucceed();
 	sizeMustBe(1);
 	keyMustHaveValue("key", "value");
+}
+
+TEST_F(JsonParser_Object_Test, OneStringSingleQuotes)
+{
+    whenInputIs("{'key':'value'}");
+    parseMustSucceed();
+    sizeMustBe(1);
+    keyMustHaveValue("key", "value");
 }
 
 TEST_F(JsonParser_Object_Test, OneStringSpaceBeforeKey)
@@ -103,8 +110,17 @@ TEST_F(JsonParser_Object_Test, OneStringSpaceBeforeValue)
 
 TEST_F(JsonParser_Object_Test, OneStringSpaceAfterValue)
 {
-	whenInputIs("{\"key\":\"value\" }");
-	parseMustSucceed();
-	sizeMustBe(1);
-	keyMustHaveValue("key", "value");
+    whenInputIs("{\"key\":\"value\" }");
+    parseMustSucceed();
+    sizeMustBe(1);
+    keyMustHaveValue("key", "value");
+}
+
+TEST_F(JsonParser_Object_Test, TwoStrings)
+{
+    whenInputIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
+    parseMustSucceed();
+    sizeMustBe(2);
+    keyMustHaveValue("key1", "value1");
+    keyMustHaveValue("key2", "value2");
 }
