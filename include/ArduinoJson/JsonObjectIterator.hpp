@@ -12,41 +12,36 @@ namespace ArduinoJson
 
 	public:
 		explicit JsonObjectIterator(Internals::JsonNode* node)
-			: _node(node)
+			: _objectKeyValue(node)
 		{
 		}
 
-        const char* key() const
-        {
-            return operator*().key();
-        }
-
-        JsonValue value() const
-        {
-            return operator*().value();
-        }
-
 		void operator++()
 		{
-			_node = _node->next;
+			++_objectKeyValue;
 		}
 
 		JsonObjectKeyValue operator*() const
 		{
-			return JsonObjectKeyValue(_node);
+			return _objectKeyValue;
+		}
+
+        JsonObjectKeyValue* operator->()
+		{
+			return &_objectKeyValue;
 		}
 
 		bool operator==(const JsonObjectIterator& other) const
 		{
-			return _node == other._node;
+			return _objectKeyValue == other._objectKeyValue;
 		}
 
 		bool operator!=(const JsonObjectIterator& other) const
 		{
-			return _node != other._node;
-		}		
+			return _objectKeyValue != other._objectKeyValue;
+		}
 
 	private:
-		Internals::JsonNode* _node;
+		JsonObjectKeyValue _objectKeyValue;
 	};
 }
