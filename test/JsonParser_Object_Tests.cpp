@@ -54,6 +54,21 @@ TEST_F(JsonParser_Object_Test, MissingClosingBrace)
 	sizeMustBe(0);
 }
 
+TEST_F(JsonParser_Object_Test, MissingColonAndValue)
+{
+	whenInputIs("{\"key\"}");
+	parseMustFail();
+	sizeMustBe(0);
+}
+
+TEST_F(JsonParser_Object_Test, MissingQuotesAndColonAndValue)
+{
+	whenInputIs("{key}");
+	parseMustFail();
+	sizeMustBe(0);
+}
+
+
 TEST_F(JsonParser_Object_Test, OneStringNoSpace)
 {
 	whenInputIs("{\"key\":\"value\"}");

@@ -211,7 +211,12 @@ JsonNode* JsonParser::parseObject()
 
     for(;;)
     {
-        node->addChild(parseObjectKeyValue());
+        JsonNode* keyValueNode = parseObjectKeyValue();
+
+        if (!keyValueNode)
+            return 0;
+
+        node->addChild(keyValueNode);
 
         skipSpaces();
 
@@ -228,6 +233,9 @@ JsonNode* JsonParser::parseObject()
 JsonNode* JsonParser::parseObjectKeyValue()
 {
     const char* key = QuotedString::extractFrom(_ptr, &_ptr);
+
+    if (!key)
+        return 0;
 
     skipSpaces();
 

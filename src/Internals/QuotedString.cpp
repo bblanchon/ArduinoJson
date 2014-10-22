@@ -91,7 +91,6 @@ char* QuotedString::extractFrom(char* input, char** endPtr)
         if (c == 0)
         {
             // premature ending
-            *endPtr = 0; 
             return 0;
         }
 
@@ -108,7 +107,7 @@ char* QuotedString::extractFrom(char* input, char** endPtr)
         }
 
         *writePtr++ = c;
-    } 
+    }
 
     // end the string here
     *writePtr = 0;
