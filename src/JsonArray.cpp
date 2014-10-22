@@ -87,3 +87,11 @@ JsonObject JsonArray::createNestedObject()
     
     return JsonObject(node);
 }
+
+JsonArrayIterator JsonArray::begin()
+{
+    if (!_node)
+        return end();
+
+    return JsonArrayIterator(_node->getContainerChild());
+}

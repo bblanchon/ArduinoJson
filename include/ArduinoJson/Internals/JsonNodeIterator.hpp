@@ -6,6 +6,7 @@ namespace ArduinoJson
 {
     namespace Internals
     {
+        // TODO: replace by JsonArrayIterator and JsonObjectIterator
         class JsonNodeIterator
         {
         public:

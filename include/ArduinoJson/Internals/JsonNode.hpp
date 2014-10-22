@@ -3,16 +3,13 @@
 namespace ArduinoJson
 {
     class JsonBuffer;
-    
+
     namespace Internals
     {
         class JsonWriter;
-        class JsonNodeIterator;
 
         class JsonNode
         {
-            friend class JsonNodeIterator;
-
             enum JsonNodeType
             {
                 JSON_UNDEFINED,
@@ -62,6 +59,8 @@ namespace ArduinoJson
             {
 
             }
+
+            JsonNode* next;
 
             void writeTo(JsonWriter&); // TODO: <- move in JsonNodeSerializer
 
@@ -175,7 +174,6 @@ namespace ArduinoJson
 
         private:
             JsonNodeType type;
-            JsonNode* next;
             JsonNodeContent content;
 
             inline void writeArrayTo(JsonWriter&);// TODO: <- move in JsonNodeSerializer
