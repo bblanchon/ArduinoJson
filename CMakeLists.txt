@@ -9,6 +9,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS -W4)
+else()
+	add_definitions(-Wall)
 endif()
 
 add_subdirectory(src)

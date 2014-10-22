@@ -55,7 +55,7 @@ namespace ArduinoJson
 
         public:
             JsonNode()
-            : type(JSON_UNDEFINED), next(0)
+                : next(0), type(JSON_UNDEFINED)
             {
 
             }
