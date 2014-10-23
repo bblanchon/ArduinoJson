@@ -41,7 +41,7 @@ private:
     template<typename T>
     void elementAtIndexMustBe(int index, T expected)
     {
-        EXPECT_EQ(expected, static_cast<T>(array[index]));
+        EXPECT_EQ(expected, array[index].as<T>());
     }
 };
 

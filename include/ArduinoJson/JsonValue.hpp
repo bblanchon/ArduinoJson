@@ -25,7 +25,7 @@ namespace ArduinoJson
         void operator=(int);
         void operator=(const JsonValue& value) { duplicate(value); }
         void operator=(const Internals::JsonNodeWrapper& object) { duplicate(object); }
-        
+
         operator bool() const;
         operator const char*() const;
         operator double() const;
@@ -35,5 +35,11 @@ namespace ArduinoJson
         operator JsonObject() const;
 
         void set(double value, int decimals);
+
+        template<typename T>
+        T as()
+        {
+            return static_cast<T>(*this);
+        }
     };
 }

@@ -31,13 +31,13 @@ protected:
 
 	void keyMustHaveValue(const char* key, const char* expected)
 	{
-		EXPECT_STREQ(expected, static_cast<const char*>(_object[key]));
+		EXPECT_STREQ(expected, _object[key].as<const char*>());
 	}
 
 	template<typename T>
 	void keyMustHaveValue(const char* key, T expected)
 	{
-		EXPECT_EQ(expected, static_cast<T>(_object[key]));
+		EXPECT_EQ(expected, _object[key].as<T>());
 	}
 
 private:

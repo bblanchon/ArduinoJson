@@ -17,11 +17,10 @@ TEST(JsonObject_Iterator_Test, SimpleTest)
 
 	EXPECT_NE(end, it);
 	EXPECT_STREQ("ab", it->key());
-	EXPECT_EQ(12, static_cast<int>(it->value()));
-	++it;
+	EXPECT_EQ(12, it->value().as<int>());	++it;
 	EXPECT_NE(end, it);
 	EXPECT_STREQ("cd", it->key());
-	EXPECT_EQ(34, static_cast<int>(it->value()));
+	EXPECT_EQ(34, it->value().as<int>());
 	++it;
 	EXPECT_EQ(object.end(), it);
 }
