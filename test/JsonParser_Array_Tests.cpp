@@ -5,7 +5,7 @@
 using namespace ArduinoJson;
 
 class JsonParser_Array_Tests : public testing::Test {
-protected:
+ protected:
   void whenInputIs(const char *json) {
     strcpy(_jsonString, json);
     _array = _jsonBuffer.parseArray(_jsonString);
@@ -20,15 +20,18 @@ protected:
 
   void sizeMustBe(int expected) { EXPECT_EQ(expected, _array.size()); }
 
-  template <typename T> void firstElementMustBe(T expected) {
+  template <typename T>
+  void firstElementMustBe(T expected) {
     elementAtIndexMustBe(0, expected);
   }
 
-  template <typename T> void secondElementMustBe(T expected) {
+  template <typename T>
+  void secondElementMustBe(T expected) {
     elementAtIndexMustBe(1, expected);
   }
 
-  template <typename T> void elementAtIndexMustBe(int index, T expected) {
+  template <typename T>
+  void elementAtIndexMustBe(int index, T expected) {
     EXPECT_EQ(expected, _array[index].as<T>());
   }
 

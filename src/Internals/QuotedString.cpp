@@ -27,8 +27,7 @@ static inline size_t printCharTo(char c, Print *p) {
 }
 
 size_t QuotedString::printTo(const char *s, Print *p) {
-  if (!s)
-    return p->print("null");
+  if (!s) return p->print("null");
 
   size_t n = p->write('\"');
 
@@ -45,10 +44,8 @@ static char unescapeChar(char c) {
   const char *p = "b\bf\fn\nr\rt\t";
 
   for (;;) {
-    if (p[0] == 0)
-      return c;
-    if (p[0] == c)
-      return p[1];
+    if (p[0] == 0) return c;
+    if (p[0] == c) return p[1];
     p += 2;
   }
 }
@@ -63,9 +60,9 @@ char *QuotedString::extractFrom(char *input, char **endPtr) {
     return 0;
   }
 
-  char stopChar = firstChar; // closing quote is the same as opening quote
+  char stopChar = firstChar;  // closing quote is the same as opening quote
 
-  char *startPtr = input + 1; // skip the quote
+  char *startPtr = input + 1;  // skip the quote
   char *readPtr = startPtr;
   char *writePtr = startPtr;
   char c;

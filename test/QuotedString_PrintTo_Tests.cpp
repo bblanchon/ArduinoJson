@@ -6,7 +6,7 @@
 using namespace ArduinoJson::Internals;
 
 class QuotedString_PrintTo_Tests : public testing::Test {
-protected:
+ protected:
   void whenInputIs(const char *input) {
     StringBuilder sb(buffer, sizeof(buffer));
     returnValue = QuotedString::printTo(input, &sb);
@@ -17,7 +17,7 @@ protected:
     EXPECT_EQ(strlen(expected), returnValue);
   }
 
-private:
+ private:
   char buffer[1024];
   size_t returnValue;
 };
@@ -44,7 +44,7 @@ TEST_F(QuotedString_PrintTo_Tests, ReverseSolidus) {
 
 TEST_F(QuotedString_PrintTo_Tests, Solidus) {
   whenInputIs("/");
-  outputMustBe("\"/\""); // but the JSON format allows \/
+  outputMustBe("\"/\"");  // but the JSON format allows \/
 }
 
 TEST_F(QuotedString_PrintTo_Tests, Backspace) {

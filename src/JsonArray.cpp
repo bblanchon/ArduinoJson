@@ -7,8 +7,7 @@ using namespace ArduinoJson::Internals;
 
 JsonValue JsonArray::operator[](int index) const {
   for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it) {
-    if (!index)
-      return JsonValue(*it);
+    if (!index) return JsonValue(*it);
     index--;
   }
 
@@ -17,8 +16,7 @@ JsonValue JsonArray::operator[](int index) const {
 
 void JsonArray::add(bool value) {
   JsonNode *node = createNode();
-  if (!node)
-    return;
+  if (!node) return;
 
   node->setAsBoolean(value);
   addChild(node);
@@ -26,8 +24,7 @@ void JsonArray::add(bool value) {
 
 void JsonArray::add(char const *value) {
   JsonNode *node = createNode();
-  if (!node)
-    return;
+  if (!node) return;
 
   node->setAsString(value);
   addChild(node);
@@ -35,8 +32,7 @@ void JsonArray::add(char const *value) {
 
 void JsonArray::add(double value, int decimals) {
   JsonNode *node = createNode();
-  if (!node)
-    return;
+  if (!node) return;
 
   node->setAsDouble(value, decimals);
   addChild(node);
@@ -44,8 +40,7 @@ void JsonArray::add(double value, int decimals) {
 
 void JsonArray::add(long value) {
   JsonNode *node = createNode();
-  if (!node)
-    return;
+  if (!node) return;
 
   node->setAsLong(value);
   addChild(node);
@@ -54,8 +49,7 @@ void JsonArray::add(long value) {
 // TODO: we should have the same issue as in JsonValue
 void JsonArray::add(JsonContainer nestedContainer) {
   JsonNode *node = createNode();
-  if (!node)
-    return;
+  if (!node) return;
 
   node->duplicate(nestedContainer._node);
   addChild(node);
@@ -84,8 +78,7 @@ JsonObject JsonArray::createNestedObject() {
 }
 
 JsonArrayIterator JsonArray::begin() {
-  if (!_node)
-    return end();
+  if (!_node) return end();
 
   return JsonArrayIterator(_node->getContainerChild());
 }

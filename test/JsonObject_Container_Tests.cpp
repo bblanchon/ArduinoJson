@@ -5,7 +5,7 @@
 using namespace ArduinoJson;
 
 class JsonObject_Container_Tests : public ::testing::Test {
-protected:
+ protected:
   virtual void SetUp() { object = json.createObject(); }
 
   StaticJsonBuffer<42> json;

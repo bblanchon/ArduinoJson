@@ -13,7 +13,7 @@ class JsonBuffer {
   friend class Internals::JsonNode;
   friend class Internals::JsonParser;
 
-public:
+ public:
   virtual ~JsonBuffer(){};
 
   JsonArray createArray() { return JsonArray(createArrayNode()); }
@@ -24,12 +24,12 @@ public:
 
   JsonArray parseArray(char *json);
   JsonObject parseObject(char *json);
-  JsonValue parseValue(char *json); // TODO: remove
+  JsonValue parseValue(char *json);  // TODO: remove
 
-protected:
+ protected:
   virtual void *allocateNode() = 0;
 
-private:
+ private:
   Internals::JsonNode *createNode();
 
   Internals::JsonNode *createArrayNode();

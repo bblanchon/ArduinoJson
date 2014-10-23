@@ -9,12 +9,12 @@ namespace Internals {
 class JsonNode;
 
 class JsonParser {
-public:
+ public:
   JsonParser(JsonBuffer *buffer, char *json) : _buffer(buffer), _ptr(json) {}
 
   JsonNode *parseAnything();
 
-private:
+ private:
   JsonBuffer *_buffer;
   char *_ptr;
 

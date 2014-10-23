@@ -13,8 +13,7 @@ JsonValue JsonBuffer::createValue() { return JsonValue(createNode()); }
 
 JsonNode *JsonBuffer::createNode() {
   void *node = allocateNode();
-  if (!node)
-    return 0;
+  if (!node) return 0;
 
   return new (node) JsonNode();
 }
@@ -37,8 +36,7 @@ JsonValue JsonBuffer::parseValue(char *json) {
 JsonNode *JsonBuffer::createArrayNode() {
   JsonNode *node = createNode();
 
-  if (node)
-    node->setAsArray(this);
+  if (node) node->setAsArray(this);
 
   return node;
 }
@@ -46,8 +44,7 @@ JsonNode *JsonBuffer::createArrayNode() {
 JsonNode *JsonBuffer::createBoolNode(bool value) {
   JsonNode *node = createNode();
 
-  if (node)
-    node->setAsBoolean(value);
+  if (node) node->setAsBoolean(value);
 
   return node;
 }
@@ -55,8 +52,7 @@ JsonNode *JsonBuffer::createBoolNode(bool value) {
 JsonNode *JsonBuffer::createDoubleNode(double value, int decimals) {
   JsonNode *node = createNode();
 
-  if (node)
-    node->setAsDouble(value, decimals);
+  if (node) node->setAsDouble(value, decimals);
 
   return node;
 }
@@ -64,8 +60,7 @@ JsonNode *JsonBuffer::createDoubleNode(double value, int decimals) {
 JsonNode *JsonBuffer::createLongNode(long value) {
   JsonNode *node = createNode();
 
-  if (node)
-    node->setAsLong(value);
+  if (node) node->setAsLong(value);
 
   return node;
 }
@@ -73,8 +68,7 @@ JsonNode *JsonBuffer::createLongNode(long value) {
 JsonNode *JsonBuffer::createObjectNode() {
   JsonNode *node = createNode();
 
-  if (node)
-    node->setAsObject(this);
+  if (node) node->setAsObject(this);
 
   return node;
 }
@@ -83,8 +77,7 @@ Internals::JsonNode *JsonBuffer::createObjectKeyValueNode(const char *key,
                                                           JsonNode *value) {
   JsonNode *node = createNode();
 
-  if (node)
-    node->setAsObjectKeyValue(key, value);
+  if (node) node->setAsObjectKeyValue(key, value);
 
   return node;
 }
@@ -92,8 +85,7 @@ Internals::JsonNode *JsonBuffer::createObjectKeyValueNode(const char *key,
 JsonNode *JsonBuffer::createStringNode(const char *value) {
   JsonNode *node = createNode();
 
-  if (node)
-    node->setAsString(value);
+  if (node) node->setAsString(value);
 
   return node;
 }

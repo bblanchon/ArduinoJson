@@ -10,7 +10,7 @@
 namespace ArduinoJson {
 namespace Internals {
 class QuotedString {
-public:
+ public:
   static size_t printTo(const char *, Print *);
 
   static char *extractFrom(char *input, char **end);

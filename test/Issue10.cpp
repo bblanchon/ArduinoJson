@@ -12,7 +12,7 @@ struct Person {
 };
 
 class Issue10 : public testing::Test {
-protected:
+ protected:
   virtual void SetUp() {
     Person boss;
     boss.id = 1;
@@ -47,8 +47,8 @@ TEST_F(Issue10, PopulateArrayByAddingAnObject) {
     object["id"] = persons[i].id;
     object["name"] = persons[i].name;
 
-    array.add(object); // <- adds a reference to an existing objet (creates 2
-                       // extra proxy nodes)
+    array.add(object);  // <- adds a reference to an existing objet (creates 2
+                        // extra proxy nodes)
   }
 
   checkJsonString(array);

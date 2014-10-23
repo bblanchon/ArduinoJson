@@ -6,7 +6,7 @@ namespace ArduinoJson {
 namespace Internals {
 // TODO: replace by JsonArrayIterator and JsonObjectIterator
 class JsonNodeIterator {
-public:
+ public:
   explicit JsonNodeIterator(JsonNode *node) : _node(node) {}
 
   bool operator!=(const JsonNodeIterator &other) const {
@@ -19,7 +19,7 @@ public:
 
   JsonNode *operator->() const { return _node; }
 
-private:
+ private:
   JsonNode *_node;
 };
 }

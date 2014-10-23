@@ -1,6 +1,6 @@
 #include "ArduinoJson/JsonObject.hpp"
 
-#include <string.h> // for strcmp
+#include <string.h>  // for strcmp
 
 #include "ArduinoJson/JsonBuffer.hpp"
 #include "ArduinoJson/JsonValue.hpp"
@@ -28,8 +28,7 @@ void JsonObject::remove(char const *key) {
 JsonArray JsonObject::createNestedArray(char const *key) {
   JsonNode *node = getOrCreateNodeAt(key);
 
-  if (node)
-    node->setAsArray(_node->getContainerBuffer());
+  if (node) node->setAsArray(_node->getContainerBuffer());
 
   return JsonArray(node);
 }
@@ -37,8 +36,7 @@ JsonArray JsonObject::createNestedArray(char const *key) {
 JsonObject JsonObject::createNestedObject(char const *key) {
   JsonNode *node = getOrCreateNodeAt(key);
 
-  if (node)
-    node->setAsObject(_node->getContainerBuffer());
+  if (node) node->setAsObject(_node->getContainerBuffer());
 
   return JsonObject(node);
 }
@@ -47,17 +45,14 @@ JsonNode *JsonObject::getOrCreateNodeAt(const char *key) {
   for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it) {
     const char *childKey = it->getAsObjectKey();
 
-    if (!strcmp(childKey, key))
-      return it->getAsObjectValue();
+    if (!strcmp(childKey, key)) return it->getAsObjectValue();
   }
 
   JsonNode *newValueNode = createNode();
-  if (!newValueNode)
-    return 0;
+  if (!newValueNode) return 0;
 
   JsonNode *newKeyNode = createNode();
-  if (!newKeyNode)
-    return 0;
+  if (!newKeyNode) return 0;
 
   newKeyNode->setAsObjectKeyValue(key, newValueNode);
 

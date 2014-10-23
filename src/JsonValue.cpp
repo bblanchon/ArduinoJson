@@ -7,23 +7,19 @@
 using namespace ArduinoJson;
 
 void JsonValue::operator=(bool value) {
-  if (_node)
-    _node->setAsBoolean(value);
+  if (_node) _node->setAsBoolean(value);
 }
 
 void JsonValue::operator=(char const *value) {
-  if (_node)
-    _node->setAsString(value);
+  if (_node) _node->setAsString(value);
 }
 
 void JsonValue::set(double value, int decimals) {
-  if (_node)
-    _node->setAsDouble(value, decimals);
+  if (_node) _node->setAsDouble(value, decimals);
 }
 
 void JsonValue::operator=(int value) {
-  if (_node)
-    _node->setAsLong(value);
+  if (_node) _node->setAsLong(value);
 }
 
 JsonValue::operator bool() const {

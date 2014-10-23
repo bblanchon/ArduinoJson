@@ -7,7 +7,7 @@
 using namespace ArduinoJson;
 
 class JsonObject_Serialization_Tests : public testing::Test {
-protected:
+ protected:
   virtual void SetUp() { object = json.createObject(); }
 
   void outputMustBe(const char *expected) {

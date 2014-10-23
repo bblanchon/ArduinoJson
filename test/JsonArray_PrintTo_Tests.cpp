@@ -11,7 +11,7 @@
 using namespace ArduinoJson;
 
 class JsonArray_PrintTo_Tests : public testing::Test {
-protected:
+ protected:
   JsonArray array;
   StaticJsonBuffer<3> json;
 
@@ -23,7 +23,7 @@ protected:
     EXPECT_EQ(strlen(expected), n);
   }
 
-private:
+ private:
   char buffer[256];
 };
 

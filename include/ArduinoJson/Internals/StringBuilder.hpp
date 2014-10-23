@@ -10,7 +10,7 @@
 namespace ArduinoJson {
 namespace Internals {
 class StringBuilder : public Print {
-public:
+ public:
   StringBuilder(char *buf, int size)
       : buffer(buf), capacity(size - 1), length(0) {
     buffer[0] = 0;
@@ -18,7 +18,7 @@ public:
 
   virtual size_t write(uint8_t c);
 
-private:
+ private:
   char *buffer;
   int capacity;
   int length;

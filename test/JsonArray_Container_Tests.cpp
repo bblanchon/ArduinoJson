@@ -5,16 +5,18 @@
 using namespace ArduinoJson;
 
 class JsonArray_Container_Tests : public ::testing::Test {
-protected:
+ protected:
   virtual void SetUp() { array = json.createArray(); }
 
   void nodeCountMustBe(int expected) { EXPECT_EQ(expected, json.size()); }
 
-  template <typename T> void firstElementMustBe(T expected) {
+  template <typename T>
+  void firstElementMustBe(T expected) {
     elementAtIndexMustBe(0, expected);
   }
 
-  template <typename T> void secondElementMustBe(T expected) {
+  template <typename T>
+  void secondElementMustBe(T expected) {
     elementAtIndexMustBe(1, expected);
   }
 
@@ -23,8 +25,9 @@ protected:
   StaticJsonBuffer<42> json;
   JsonArray array;
 
-private:
-  template <typename T> void elementAtIndexMustBe(int index, T expected) {
+ private:
+  template <typename T>
+  void elementAtIndexMustBe(int index, T expected) {
     EXPECT_EQ(expected, array[index].as<T>());
   }
 };

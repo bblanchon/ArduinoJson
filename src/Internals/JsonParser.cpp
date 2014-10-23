@@ -1,6 +1,6 @@
 #include "ArduinoJson/Internals/JsonParser.hpp"
 
-#include <stdlib.h> // for strtol, strtod
+#include <stdlib.h>  // for strtol, strtod
 #include <ctype.h>
 
 #include "ArduinoJson/JsonBuffer.hpp"
@@ -9,14 +9,12 @@
 using namespace ArduinoJson::Internals;
 
 void JsonParser::skipSpaces() {
-  while (isspace(*_ptr))
-    _ptr++;
+  while (isspace(*_ptr)) _ptr++;
 }
 
 bool JsonParser::skip(char charToSkip) {
   skipSpaces();
-  if (*_ptr != charToSkip)
-    return false;
+  if (*_ptr != charToSkip) return false;
   _ptr++;
   skipSpaces();
   return true;
@@ -26,39 +24,39 @@ JsonNode *JsonParser::parseAnything() {
   skipSpaces();
 
   switch (*_ptr) {
-  case '[':
-    return parseArray();
+    case '[':
+      return parseArray();
 
-  case 't':
-  case 'f':
-    return parseBoolean();
+    case 't':
+    case 'f':
+      return parseBoolean();
 
-  case '-':
-  case '.':
-  case '0':
-  case '1':
-  case '2':
-  case '3':
-  case '4':
-  case '5':
-  case '6':
-  case '7':
-  case '8':
-  case '9':
-    return parseNumber();
+    case '-':
+    case '.':
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      return parseNumber();
 
-  case 'n':
-    return parseNull();
+    case 'n':
+      return parseNull();
 
-  case '{':
-    return parseObject();
+    case '{':
+      return parseObject();
 
-  case '\'':
-  case '\"':
-    return parseString();
+    case '\'':
+    case '\"':
+      return parseString();
 
-  default:
-    return NULL; // invalid JSON
+    default:
+      return NULL;  // invalid JSON
   }
 }
 
@@ -67,25 +65,20 @@ JsonNode *JsonParser::parseArray() {
 
   skip('[');
 
-  if (isEnd())
-    return 0;
+  if (isEnd()) return 0;
 
-  if (skip(']'))
-    return node; // empty array
+  if (skip(']')) return node;  // empty array
 
   for (;;) {
     JsonNode *child = parseAnything();
 
-    if (!child)
-      return 0; // child parsing failed
+    if (!child) return 0;  // child parsing failed
 
     node->addChild(child);
 
-    if (skip(']'))
-      return node; // end of the array
+    if (skip(']')) return node;  // end of the array
 
-    if (!skip(','))
-      return 0; // comma is missing
+    if (!skip(',')) return 0;  // comma is missing
   }
 }
 
@@ -103,7 +96,7 @@ JsonNode *JsonParser::parseNumber() {
   char *endOfLong;
   long longValue = strtol(_ptr, &endOfLong, 10);
 
-  if (*endOfLong == '.') // stopped on a decimal separator
+  if (*endOfLong == '.')  // stopped on a decimal separator
   {
     double value = strtod(_ptr, &_ptr);
     int decimals = _ptr - endOfLong - 1;
@@ -115,7 +108,7 @@ JsonNode *JsonParser::parseNumber() {
 }
 
 JsonNode *JsonParser::parseNull() {
-  _ptr += 4; // strlen("null")
+  _ptr += 4;  // strlen("null")
 
   return _buffer->createStringNode(0);
 }
@@ -125,41 +118,33 @@ JsonNode *JsonParser::parseObject() {
 
   skip('{');
 
-  if (isEnd())
-    return 0; // premature ending
+  if (isEnd()) return 0;  // premature ending
 
-  if (skip('}'))
-    return node; // empty object
+  if (skip('}')) return node;  // empty object
 
   for (;;) {
     JsonNode *child = parseObjectKeyValue();
 
-    if (!child)
-      return 0; // child parsing failed
+    if (!child) return 0;  // child parsing failed
 
     node->addChild(child);
 
-    if (skip('}'))
-      return node; // end of the object
+    if (skip('}')) return node;  // end of the object
 
-    if (!skip(','))
-      return 0; // comma is missing
+    if (!skip(',')) return 0;  // comma is missing
   }
 }
 
 JsonNode *JsonParser::parseObjectKeyValue() {
   const char *key = QuotedString::extractFrom(_ptr, &_ptr);
 
-  if (!key)
-    return 0; // failed to extract key
+  if (!key) return 0;  // failed to extract key
 
-  if (!skip(':'))
-    return 0; // colon is missing
+  if (!skip(':')) return 0;  // colon is missing
 
   JsonNode *value = parseAnything();
 
-  if (!value)
-    return 0; // value parsing failed
+  if (!value) return 0;  // value parsing failed
 
   return _buffer->createObjectKeyValueNode(key, value);
 }

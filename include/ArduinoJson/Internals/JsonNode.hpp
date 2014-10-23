@@ -44,12 +44,12 @@ class JsonNode {
     } asProxy;
   };
 
-public:
+ public:
   JsonNode() : next(0), type(JSON_UNDEFINED) {}
 
   JsonNode *next;
 
-  void writeTo(JsonWriter &); // TODO: <- move in JsonNodeSerializer
+  void writeTo(JsonWriter &);  // TODO: <- move in JsonNodeSerializer
 
   void setAsArray(JsonBuffer *buffer) {
     type = JSON_ARRAY;
@@ -104,16 +104,14 @@ public:
   }
 
   JsonBuffer *getContainerBuffer() {
-    if (type == JSON_PROXY)
-      return content.asProxy.target->getContainerBuffer();
+    if (type == JSON_PROXY) return content.asProxy.target->getContainerBuffer();
     return type == JSON_ARRAY || type == JSON_OBJECT
                ? content.asContainer.buffer
                : 0;
   }
 
   JsonNode *getContainerChild() {
-    if (type == JSON_PROXY)
-      return content.asProxy.target->getContainerChild();
+    if (type == JSON_PROXY) return content.asProxy.target->getContainerChild();
     return type == JSON_ARRAY || type == JSON_OBJECT ? content.asContainer.child
                                                      : 0;
   }
@@ -140,13 +138,14 @@ public:
 
   void duplicate(JsonNode *other);
 
-private:
+ private:
   JsonNodeType type;
   JsonNodeContent content;
 
-  inline void writeArrayTo(JsonWriter &); // TODO: <- move in JsonNodeSerializer
-  inline void
-  writeObjectTo(JsonWriter &); // TODO: <- move in JsonNodeSerializer
+  inline void writeArrayTo(
+      JsonWriter &);  // TODO: <- move in JsonNodeSerializer
+  inline void writeObjectTo(
+      JsonWriter &);  // TODO: <- move in JsonNodeSerializer
 
   void setAsProxyOfSelf();
 

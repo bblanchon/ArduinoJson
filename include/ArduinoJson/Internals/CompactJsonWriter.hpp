@@ -5,7 +5,7 @@
 namespace ArduinoJson {
 namespace Internals {
 class CompactJsonWriter : public JsonWriter {
-public:
+ public:
   explicit CompactJsonWriter(Print *sink) : JsonWriter(sink) {}
 
   virtual void beginArray() { _length += _sink->write('['); }

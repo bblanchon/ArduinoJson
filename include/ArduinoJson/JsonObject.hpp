@@ -5,7 +5,7 @@
 
 namespace ArduinoJson {
 class JsonObject : public JsonContainer {
-public:
+ public:
   JsonObject() {}
 
   explicit JsonObject(Internals::JsonNode *node) : JsonContainer(node) {}
@@ -22,7 +22,7 @@ public:
 
   JsonObjectIterator end() { return JsonObjectIterator(0); }
 
-private:
+ private:
   Internals::JsonNode *getOrCreateNodeAt(const char *key);
 };
 }

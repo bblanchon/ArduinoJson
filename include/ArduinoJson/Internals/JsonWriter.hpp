@@ -5,7 +5,7 @@
 namespace ArduinoJson {
 namespace Internals {
 class JsonWriter {
-public:
+ public:
   explicit JsonWriter(Print *sink) : _sink(sink), _length(0) {}
 
   size_t bytesWritten() { return _length; }
@@ -31,7 +31,7 @@ public:
 
   void writeEmptyObject() { _length += _sink->print("{}"); }
 
-protected:
+ protected:
   Print *_sink;
   size_t _length;
 };

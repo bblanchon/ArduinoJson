@@ -4,7 +4,7 @@
 using namespace ArduinoJson::Internals;
 
 class StringBuilderTests : public testing::Test {
-protected:
+ protected:
   virtual void SetUp() { sb = new StringBuilder(buffer, sizeof(buffer)); }
 
   void print(const char *value) { returnValue = sb->print(value); }
@@ -13,7 +13,7 @@ protected:
 
   void resultMustBe(size_t expected) { EXPECT_EQ(expected, returnValue); }
 
-private:
+ private:
   char buffer[20];
   Print *sb;
   size_t returnValue;

@@ -15,10 +15,10 @@ TEST(JsonArray_Iterator_Test, SimpleTest) {
   JsonArrayIterator end = array.end();
 
   EXPECT_NE(end, it);
-  EXPECT_EQ(12, (*it).as<int>()); // TODO: use ->
+  EXPECT_EQ(12, (*it).as<int>());  // TODO: use ->
   ++it;
   EXPECT_NE(end, it);
-  EXPECT_EQ(34, (*it).as<int>()); // TODO: use ->
+  EXPECT_EQ(34, (*it).as<int>());  // TODO: use ->
   ++it;
   EXPECT_EQ(array.end(), it);
 }

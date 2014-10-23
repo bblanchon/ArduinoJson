@@ -5,7 +5,7 @@
 using namespace ArduinoJson;
 
 class JsonValueTests : public ::testing::Test {
-protected:
+ protected:
   virtual void SetUp() {
     jsonValue1 = json.createValue();
     jsonValue2 = json.createValue();

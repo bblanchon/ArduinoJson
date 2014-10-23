@@ -8,7 +8,7 @@ class JsonArray;
 class JsonArrayIterator {
   friend class JsonArray;
 
-public:
+ public:
   explicit JsonArrayIterator(Internals::JsonNode *node) : _node(node) {}
 
   void operator++() { _node = _node->next; }
@@ -23,7 +23,7 @@ public:
     return _node != other._node;
   }
 
-private:
+ private:
   Internals::JsonNode *_node;
 };
 }

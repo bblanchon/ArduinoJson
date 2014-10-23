@@ -4,7 +4,7 @@
 using namespace ArduinoJson::Internals;
 
 class QuotedString_ExtractFrom_Tests : public testing::Test {
-protected:
+ protected:
   void whenInputIs(const char *json) {
     strcpy(_jsonString, json);
     _result = QuotedString::extractFrom(_jsonString, &_trailing);
@@ -16,7 +16,7 @@ protected:
     EXPECT_STREQ(expected, _trailing);
   }
 
-private:
+ private:
   char _jsonString[256];
   char *_result;
   char *_trailing;

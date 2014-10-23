@@ -8,7 +8,7 @@ class JsonObject;
 class JsonObjectIterator {
   friend class JsonObject;
 
-public:
+ public:
   explicit JsonObjectIterator(Internals::JsonNode *node)
       : _objectKeyValue(node) {}
 
@@ -29,7 +29,7 @@ public:
     return _objectKeyValue != other._objectKeyValue;
   }
 
-private:
+ private:
   JsonObjectKeyValue _objectKeyValue;
 };
 }

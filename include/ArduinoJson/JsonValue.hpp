@@ -8,7 +8,7 @@ class JsonContainer;
 class JsonObject;
 
 class JsonValue : public Internals::JsonNodeWrapper {
-public:
+ public:
   JsonValue() {}
 
   explicit JsonValue(Internals::JsonNode *node) : JsonNodeWrapper(node) {}
@@ -32,6 +32,9 @@ public:
 
   void set(double value, int decimals);
 
-  template <typename T> T as() { return static_cast<T>(*this); }
+  template <typename T>
+  T as() {
+    return static_cast<T>(*this);
+  }
 };
 }

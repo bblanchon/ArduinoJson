@@ -5,7 +5,7 @@
 
 namespace ArduinoJson {
 class JsonArray : public JsonContainer {
-public:
+ public:
   JsonArray() {}
 
   explicit JsonArray(Internals::JsonNode *node) : JsonContainer(node) {}
@@ -17,7 +17,7 @@ public:
   void add(double value, int decimals = 2);
   void add(int value) { add(static_cast<long>(value)); }
   void add(long value);
-  void add(JsonContainer nestedArray); // TODO: should allow JsonValue too
+  void add(JsonContainer nestedArray);  // TODO: should allow JsonValue too
 
   JsonArray createNestedArray();
   JsonObject createNestedObject();

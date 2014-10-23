@@ -14,7 +14,7 @@ class JsonValue;
 class JsonContainer : public Printable, public Internals::JsonNodeWrapper {
   friend class JsonArray;
 
-public:
+ public:
   JsonContainer() {}
 
   explicit JsonContainer(Internals::JsonNode *node) : JsonNodeWrapper(node) {}
@@ -30,7 +30,7 @@ public:
   size_t prettyPrintTo(ArduinoJson::Internals::IndentedPrint &print) const;
   size_t prettyPrintTo(Print &print) const;
 
-protected:
+ protected:
   Internals::JsonNodeIterator beginChildren() const {
     return Internals::JsonNodeIterator(_node ? _node->getContainerChild() : 0);
   }

@@ -36,32 +36,26 @@ size_t JsonContainer::prettyPrintTo(Print &print) const {
 }
 
 JsonNode *JsonContainer::createNode() {
-  if (!_node)
-    return 0;
+  if (!_node) return 0;
 
   JsonBuffer *buffer = _node->getContainerBuffer();
-  if (!buffer)
-    return 0;
+  if (!buffer) return 0;
 
   return buffer->createNode();
 }
 
 bool JsonContainer::operator==(const JsonContainer &other) const {
-  if (_node == other._node)
-    return true;
-  if (!_node || !other._node)
-    return false;
+  if (_node == other._node) return true;
+  if (!_node || !other._node) return false;
   return _node->getProxyTarget() == other._node->getProxyTarget();
 }
 
 void JsonContainer::addChild(JsonNode *childToAdd) {
-  if (_node)
-    _node->addChild(childToAdd);
+  if (_node) _node->addChild(childToAdd);
 }
 
 void JsonContainer::removeChild(JsonNode *childToRemove) {
-  if (_node)
-    _node->removeChild(childToRemove);
+  if (_node) _node->removeChild(childToRemove);
 }
 
 size_t JsonContainer::size() const {

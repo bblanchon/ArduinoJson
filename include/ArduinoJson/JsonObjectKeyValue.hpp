@@ -4,7 +4,7 @@
 
 namespace ArduinoJson {
 class JsonObjectKeyValue {
-public:
+ public:
   explicit JsonObjectKeyValue(Internals::JsonNode *node) : _node(node) {}
 
   const char *key() const { return _node->getAsObjectKey(); }
@@ -21,7 +21,7 @@ public:
 
   Internals::JsonNode *next() { return _node->next; }
 
-private:
+ private:
   Internals::JsonNode *_node;
 };
 }

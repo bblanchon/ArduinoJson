@@ -12,7 +12,7 @@
 
 // This class reproduces Arduino's Print
 class Print {
-public:
+ public:
   virtual size_t write(uint8_t) = 0;
 
   size_t print(const char[]);

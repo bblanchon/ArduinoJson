@@ -4,10 +4,11 @@
 #include "JsonObject.hpp"
 
 namespace ArduinoJson {
-template <int CAPACITY> class StaticJsonBuffer : public JsonBuffer {
+template <int CAPACITY>
+class StaticJsonBuffer : public JsonBuffer {
   friend class JsonObject;
 
-public:
+ public:
   explicit StaticJsonBuffer() : _size(0) {}
 
   virtual ~StaticJsonBuffer() {}
@@ -16,15 +17,14 @@ public:
 
   int size() { return _size; }
 
-protected:
+ protected:
   virtual void *allocateNode() {
-    if (_size >= CAPACITY)
-      return 0;
+    if (_size >= CAPACITY) return 0;
 
     return &_buffer[_size++];
   }
 
-private:
+ private:
   Internals::JsonNode _buffer[CAPACITY];
   int _size;
 };
