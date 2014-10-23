@@ -3,73 +3,52 @@
 
 using namespace ArduinoJson::Internals;
 
-class StringBuilderTests : public testing::Test
-{
+class StringBuilderTests : public testing::Test {
 protected:
-    
-    virtual void SetUp()
-    {
-        sb = new StringBuilder(buffer, sizeof(buffer));
-    }
+  virtual void SetUp() { sb = new StringBuilder(buffer, sizeof(buffer)); }
 
-    void print(const char* value)
-    {
-        returnValue = sb->print(value);
-    }
+  void print(const char *value) { returnValue = sb->print(value); }
 
-    void outputMustBe(const char* expected)
-    {
-        EXPECT_STREQ(expected, buffer);
-    }
+  void outputMustBe(const char *expected) { EXPECT_STREQ(expected, buffer); }
 
-    void resultMustBe(size_t expected)
-    {
-        EXPECT_EQ(expected, returnValue);
-    }
+  void resultMustBe(size_t expected) { EXPECT_EQ(expected, returnValue); }
 
 private:
-    char buffer[20];
-    Print* sb;
-    size_t returnValue;
+  char buffer[20];
+  Print *sb;
+  size_t returnValue;
 };
 
-TEST_F(StringBuilderTests, InitialState)
-{
-    outputMustBe("");
+TEST_F(StringBuilderTests, InitialState) { outputMustBe(""); }
+
+TEST_F(StringBuilderTests, OverCapacity) {
+  print("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  resultMustBe(19);
+
+  print("ABC");
+  resultMustBe(0);
+
+  outputMustBe("ABCDEFGHIJKLMNOPQRS");
 }
 
-TEST_F(StringBuilderTests, OverCapacity)
-{
-    print("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    resultMustBe(19);
-
-    print("ABC");
-    resultMustBe(0);
-
-    outputMustBe("ABCDEFGHIJKLMNOPQRS");
+TEST_F(StringBuilderTests, EmptyString) {
+  print("");
+  resultMustBe(0);
+  outputMustBe("");
 }
 
-TEST_F(StringBuilderTests, EmptyString)
-{
-    print("");
-    resultMustBe(0);
-    outputMustBe("");
+TEST_F(StringBuilderTests, OneString) {
+  print("ABCD");
+  resultMustBe(4);
+  outputMustBe("ABCD");
 }
 
-TEST_F(StringBuilderTests, OneString)
-{
-    print("ABCD");
-    resultMustBe(4);
-    outputMustBe("ABCD");
-}
+TEST_F(StringBuilderTests, TwoStrings) {
+  print("ABCD");
+  resultMustBe(4);
 
-TEST_F(StringBuilderTests, TwoStrings)
-{
-    print("ABCD");
-    resultMustBe(4);
+  print("EFGH");
+  resultMustBe(4);
 
-    print("EFGH");
-    resultMustBe(4);
-
-    outputMustBe("ABCDEFGH");
+  outputMustBe("ABCDEFGH");
 }

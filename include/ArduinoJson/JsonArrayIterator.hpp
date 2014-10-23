@@ -2,41 +2,28 @@
 
 #include "ArduinoJson/JsonValue.hpp"
 
-namespace ArduinoJson
-{
-	class JsonArray;
+namespace ArduinoJson {
+class JsonArray;
 
-	class JsonArrayIterator
-	{
-		friend class JsonArray;
+class JsonArrayIterator {
+  friend class JsonArray;
 
-	public:
-		explicit JsonArrayIterator(Internals::JsonNode* node)
-			: _node(node)
-		{
-		}
+public:
+  explicit JsonArrayIterator(Internals::JsonNode *node) : _node(node) {}
 
-		void operator++()
-		{
-			_node = _node->next;
-		}
+  void operator++() { _node = _node->next; }
 
-		JsonValue operator*() const
-		{
-			return JsonValue(_node);
-		}
+  JsonValue operator*() const { return JsonValue(_node); }
 
-		bool operator==(const JsonArrayIterator& other) const
-		{
-			return _node == other._node;
-		}
+  bool operator==(const JsonArrayIterator &other) const {
+    return _node == other._node;
+  }
 
-		bool operator!=(const JsonArrayIterator& other) const
-		{
-			return _node != other._node;
-		}
+  bool operator!=(const JsonArrayIterator &other) const {
+    return _node != other._node;
+  }
 
-	private:
-		Internals::JsonNode* _node;
-	};
+private:
+  Internals::JsonNode *_node;
+};
 }

@@ -3,42 +3,29 @@
 #include "JsonBuffer.hpp"
 #include "JsonObject.hpp"
 
-namespace ArduinoJson
-{
-    template<int CAPACITY>
-    class StaticJsonBuffer : public JsonBuffer
-    {
-        friend class JsonObject;
+namespace ArduinoJson {
+template <int CAPACITY> class StaticJsonBuffer : public JsonBuffer {
+  friend class JsonObject;
 
-    public:
+public:
+  explicit StaticJsonBuffer() : _size(0) {}
 
-        explicit StaticJsonBuffer()
-        : _size(0)
-        {
-        }
+  virtual ~StaticJsonBuffer() {}
 
-        virtual ~StaticJsonBuffer() {}
+  int capacity() { return CAPACITY; }
 
-        int capacity()
-        {
-            return CAPACITY;
-        }
+  int size() { return _size; }
 
-        int size()
-        {
-            return _size;
-        }
+protected:
+  virtual void *allocateNode() {
+    if (_size >= CAPACITY)
+      return 0;
 
-    protected:
-        virtual void* allocateNode()
-        {
-            if (_size >= CAPACITY) return 0;
+    return &_buffer[_size++];
+  }
 
-            return &_buffer[_size++];
-        }
-
-    private:
-        Internals::JsonNode _buffer[CAPACITY];
-        int _size;
-    };
+private:
+  Internals::JsonNode _buffer[CAPACITY];
+  int _size;
+};
 }

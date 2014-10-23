@@ -2,42 +2,28 @@
 
 #include "JsonNode.hpp"
 
-namespace ArduinoJson
-{
-    class JsonValue ;
-    
-    namespace Internals
-    {
-        class JsonNodeWrapper
-        {
-            friend class JsonValue;
+namespace ArduinoJson {
+class JsonValue;
 
-        public:
-            JsonNodeWrapper()
-            : _node(0)
-            {
-            }
+namespace Internals {
+class JsonNodeWrapper {
+  friend class JsonValue;
 
-            explicit JsonNodeWrapper(JsonNode* node)
-            : _node(node)
-            {
-            }
+public:
+  JsonNodeWrapper() : _node(0) {}
 
-        protected:
+  explicit JsonNodeWrapper(JsonNode *node) : _node(node) {}
 
-            void duplicate(const JsonNodeWrapper& other)
-            {
-                if (!_node)
-                {
-                    _node = other._node;
-                }
-                else
-                {
-                    _node->duplicate(other._node);
-                }
-            }
-
-            JsonNode* _node;
-        };
+protected:
+  void duplicate(const JsonNodeWrapper &other) {
+    if (!_node) {
+      _node = other._node;
+    } else {
+      _node->duplicate(other._node);
     }
+  }
+
+  JsonNode *_node;
+};
+}
 }

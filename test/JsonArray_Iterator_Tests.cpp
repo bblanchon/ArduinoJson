@@ -4,22 +4,21 @@
 
 using namespace ArduinoJson;
 
-TEST(JsonArray_Iterator_Test, SimpleTest)
-{
-	StaticJsonBuffer<42> jsonBuffer;
+TEST(JsonArray_Iterator_Test, SimpleTest) {
+  StaticJsonBuffer<42> jsonBuffer;
 
-	JsonArray array = jsonBuffer.createArray();
-	array.add(12);
-	array.add(34);
+  JsonArray array = jsonBuffer.createArray();
+  array.add(12);
+  array.add(34);
 
-	JsonArrayIterator it = array.begin();
-	JsonArrayIterator end = array.end();
+  JsonArrayIterator it = array.begin();
+  JsonArrayIterator end = array.end();
 
-	EXPECT_NE(end, it);
-	EXPECT_EQ(12, (*it).as<int>()); // TODO: use ->
-	++it;
-	EXPECT_NE(end, it);
-	EXPECT_EQ(34, (*it).as<int>()); // TODO: use ->
-	++it;
-	EXPECT_EQ(array.end(), it);
+  EXPECT_NE(end, it);
+  EXPECT_EQ(12, (*it).as<int>()); // TODO: use ->
+  ++it;
+  EXPECT_NE(end, it);
+  EXPECT_EQ(34, (*it).as<int>()); // TODO: use ->
+  ++it;
+  EXPECT_EQ(array.end(), it);
 }

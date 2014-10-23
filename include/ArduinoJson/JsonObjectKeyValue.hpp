@@ -2,42 +2,26 @@
 
 #include "ArduinoJson/JsonValue.hpp"
 
-namespace ArduinoJson
-{
-    class JsonObjectKeyValue
-    {
-    public:
-        explicit JsonObjectKeyValue(Internals::JsonNode* node)
-            : _node(node)
-        {
-        }
+namespace ArduinoJson {
+class JsonObjectKeyValue {
+public:
+  explicit JsonObjectKeyValue(Internals::JsonNode *node) : _node(node) {}
 
-        const char* key() const
-        {
-            return _node->getAsObjectKey();
-        }
+  const char *key() const { return _node->getAsObjectKey(); }
 
-        JsonValue value()
-        {
-            return JsonValue(_node->getAsObjectValue());
-        }
+  JsonValue value() { return JsonValue(_node->getAsObjectValue()); }
 
-        bool operator==(const JsonObjectKeyValue& other) const
-        {
-            return _node == other._node;
-        }
+  bool operator==(const JsonObjectKeyValue &other) const {
+    return _node == other._node;
+  }
 
-        bool operator!=(const JsonObjectKeyValue& other) const
-        {
-            return _node != other._node;
-        }
+  bool operator!=(const JsonObjectKeyValue &other) const {
+    return _node != other._node;
+  }
 
-        Internals::JsonNode* next()
-        {
-            return _node->next;
-        }
+  Internals::JsonNode *next() { return _node->next; }
 
-    private:
-        Internals::JsonNode* _node;
-    };
+private:
+  Internals::JsonNode *_node;
+};
 }
