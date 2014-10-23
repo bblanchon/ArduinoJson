@@ -102,8 +102,8 @@ JsonNode *JsonParser::parseNumber() {
   char *endOfLong;
   long longValue = strtol(_ptr, &endOfLong, 10);
 
-  if (*endOfLong == '.')  // stopped on a decimal separator
-  {
+  if (*endOfLong == '.') {
+    // stopped on a decimal separator
     double value = strtod(_ptr, &_ptr);
     int decimals = _ptr - endOfLong - 1;
     return _buffer->createDoubleNode(value, decimals);

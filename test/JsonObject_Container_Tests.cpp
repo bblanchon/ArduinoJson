@@ -63,32 +63,32 @@ TEST_F(JsonObject_Container_Tests, CanStoreIntegers) {
   object["hello"] = 123;
   object["world"] = 456;
 
-  EXPECT_EQ(123, (int)object["hello"]);
-  EXPECT_EQ(456, (int)object["world"]);
+  EXPECT_EQ(123, object["hello"].as<int>());
+  EXPECT_EQ(456, object["world"].as<int>());
 }
 
 TEST_F(JsonObject_Container_Tests, CanStoreDoubles) {
   object["hello"] = 123.45;
   object["world"] = 456.78;
 
-  EXPECT_EQ(123.45, (double)object["hello"]);
-  EXPECT_EQ(456.78, (double)object["world"]);
+  EXPECT_EQ(123.45, object["hello"].as<double>());
+  EXPECT_EQ(456.78, object["world"].as<double>());
 }
 
 TEST_F(JsonObject_Container_Tests, CanStoreBooleans) {
   object["hello"] = true;
   object["world"] = false;
 
-  EXPECT_TRUE((bool)object["hello"]);
-  EXPECT_FALSE((bool)object["world"]);
+  EXPECT_TRUE(object["hello"].as<bool>());
+  EXPECT_FALSE(object["world"].as<bool>());
 }
 
 TEST_F(JsonObject_Container_Tests, CanStoreStrings) {
   object["hello"] = "h3110";
   object["world"] = "w0r1d";
 
-  EXPECT_STREQ("h3110", (const char *)object["hello"]);
-  EXPECT_STREQ("w0r1d", (const char *)object["world"]);
+  EXPECT_STREQ("h3110", object["hello"].as<const char*>());
+  EXPECT_STREQ("w0r1d", object["world"].as<const char*>());
 }
 
 TEST_F(JsonObject_Container_Tests, CanStoreInnerArrays) {
@@ -98,8 +98,8 @@ TEST_F(JsonObject_Container_Tests, CanStoreInnerArrays) {
   object["hello"] = innerarray1;
   object["world"] = innerarray2;
 
-  EXPECT_EQ(innerarray1, (JsonArray)object["hello"]);
-  EXPECT_EQ(innerarray2, (JsonArray)object["world"]);
+  EXPECT_EQ(innerarray1, object["hello"].as<JsonArray>());
+  EXPECT_EQ(innerarray2, object["world"].as<JsonArray>());
 }
 
 TEST_F(JsonObject_Container_Tests, CanStoreInnerObjects) {
@@ -109,6 +109,6 @@ TEST_F(JsonObject_Container_Tests, CanStoreInnerObjects) {
   object["hello"] = innerObject1;
   object["world"] = innerObject2;
 
-  EXPECT_EQ(innerObject1, (JsonObject)object["hello"]);
-  EXPECT_EQ(innerObject2, (JsonObject)object["world"]);
+  EXPECT_EQ(innerObject1, object["hello"].as<JsonObject>());
+  EXPECT_EQ(innerObject2, object["world"].as<JsonObject>());
 }

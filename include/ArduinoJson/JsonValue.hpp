@@ -19,10 +19,10 @@ class JsonValue : public Internals::JsonNodeWrapper {
 
   explicit JsonValue(Internals::JsonNode *node) : JsonNodeWrapper(node) {}
 
-  void operator=(bool);
-  void operator=(const char *);
-  void operator=(double x) { set(x, 2); }
-  void operator=(int);
+  void operator=(bool value);
+  void operator=(const char *value);
+  void operator=(double value) { set(value, 2); }
+  void operator=(int value);
   void operator=(const JsonValue &value) { duplicate(value); }
   void operator=(const Internals::JsonNodeWrapper &object) {
     duplicate(object);

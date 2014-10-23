@@ -98,7 +98,7 @@ TEST_F(JsonObject_Serialization_Tests, OneDoubleDefaultDigits) {
 }
 
 TEST_F(JsonObject_Serialization_Tests, OneNull) {
-  object["key"] = (char *)0;
+  object["key"] = static_cast<char *>(0);
   outputMustBe("{\"key\":null}");
 }
 

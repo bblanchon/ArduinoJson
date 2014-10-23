@@ -25,29 +25,29 @@ class JsonValueTests : public ::testing::Test {
 TEST_F(JsonValueTests, CanStoreInteger) {
   jsonValue1 = 123;
 
-  EXPECT_EQ(123, (int)jsonValue1);
+  EXPECT_EQ(123, jsonValue1.as<int>());
 }
 
 TEST_F(JsonValueTests, CanStoreDouble) {
   jsonValue1 = 123.45;
 
-  EXPECT_EQ(123.45, (double)jsonValue1);
+  EXPECT_EQ(123.45, jsonValue1.as<double>());
 }
 
 TEST_F(JsonValueTests, CanStoreTrue) {
   jsonValue1 = true;
-  EXPECT_TRUE((bool)jsonValue1);
+  EXPECT_TRUE(jsonValue1.as<bool>());
 }
 
 TEST_F(JsonValueTests, CanStoreFalse) {
   jsonValue1 = false;
-  EXPECT_FALSE((bool)jsonValue1);
+  EXPECT_FALSE(jsonValue1.as<bool>());
 }
 
 TEST_F(JsonValueTests, CanStoreString) {
   jsonValue1 = "hello";
 
-  EXPECT_STREQ("hello", (const char *)jsonValue1);
+  EXPECT_STREQ("hello", jsonValue1.as<const char *>());
 }
 
 TEST_F(JsonValueTests, CanStoreObject) {
@@ -55,7 +55,7 @@ TEST_F(JsonValueTests, CanStoreObject) {
 
   jsonValue1 = innerObject1;
 
-  EXPECT_EQ(innerObject1, (JsonObject)jsonValue1);
+  EXPECT_EQ(innerObject1, jsonValue1.as<JsonObject>());
 }
 
 TEST_F(JsonValueTests, IntegersAreCopiedByValue) {
@@ -63,7 +63,7 @@ TEST_F(JsonValueTests, IntegersAreCopiedByValue) {
   jsonValue2 = jsonValue1;
   jsonValue1 = 456;
 
-  EXPECT_EQ(123, (int)jsonValue2);
+  EXPECT_EQ(123, jsonValue2.as<int>());
 }
 
 TEST_F(JsonValueTests, DoublesAreCopiedByValue) {
@@ -71,7 +71,7 @@ TEST_F(JsonValueTests, DoublesAreCopiedByValue) {
   jsonValue2 = jsonValue1;
   jsonValue1 = 456.78;
 
-  EXPECT_EQ(123.45, (double)jsonValue2);
+  EXPECT_EQ(123.45, jsonValue2.as<double>());
 }
 
 TEST_F(JsonValueTests, BooleansAreCopiedByValue) {
@@ -79,7 +79,7 @@ TEST_F(JsonValueTests, BooleansAreCopiedByValue) {
   jsonValue2 = jsonValue1;
   jsonValue1 = false;
 
-  EXPECT_TRUE((bool)jsonValue2);
+  EXPECT_TRUE(jsonValue2.as<bool>());
 }
 
 TEST_F(JsonValueTests, StringsAreCopiedByValue) {
@@ -87,7 +87,7 @@ TEST_F(JsonValueTests, StringsAreCopiedByValue) {
   jsonValue2 = jsonValue1;
   jsonValue1 = "world";
 
-  EXPECT_STREQ("hello", (const char *)jsonValue2);
+  EXPECT_STREQ("hello", jsonValue2.as<const char *>());
 }
 
 TEST_F(JsonValueTests, ObjectsAreCopiedByReference) {
@@ -97,7 +97,7 @@ TEST_F(JsonValueTests, ObjectsAreCopiedByReference) {
 
   object["hello"] = "world";
 
-  EXPECT_EQ(1, ((JsonObject)jsonValue1).size());
+  EXPECT_EQ(1, jsonValue1.as<JsonObject>().size());
 }
 
 TEST_F(JsonValueTests, ArraysAreCopiedByReference) {
@@ -107,5 +107,5 @@ TEST_F(JsonValueTests, ArraysAreCopiedByReference) {
 
   array.add("world");
 
-  EXPECT_EQ(1, ((JsonObject)jsonValue1).size());
+  EXPECT_EQ(1, jsonValue1.as<JsonArray>().size());
 }

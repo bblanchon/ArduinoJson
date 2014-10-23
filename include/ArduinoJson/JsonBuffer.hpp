@@ -20,7 +20,7 @@ class JsonBuffer {
   friend class Internals::JsonParser;
 
  public:
-  virtual ~JsonBuffer(){};
+  virtual ~JsonBuffer() {}
 
   JsonArray createArray() { return JsonArray(createArrayNode()); }
 

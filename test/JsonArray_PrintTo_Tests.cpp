@@ -31,7 +31,7 @@ class JsonArray_PrintTo_Tests : public testing::Test {
 TEST_F(JsonArray_PrintTo_Tests, Empty) { outputMustBe("[]"); }
 
 TEST_F(JsonArray_PrintTo_Tests, Null) {
-  array.add((char *)0);
+  array.add(static_cast<char *>(0));
 
   outputMustBe("[null]");
 }
