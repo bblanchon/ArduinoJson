@@ -16,4 +16,4 @@ add_executable(ArduinoJsonTests
 
 target_link_libraries(ArduinoJsonTests ArduinoJson)
 
-add_test(ArduinoJsonTests ArduinoJsonTests)
+add_test(ArduinoJsonTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ArduinoJsonTests)
