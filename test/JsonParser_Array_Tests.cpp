@@ -44,12 +44,12 @@ protected:
     template<typename T>
     void elementAtIndexMustBe(int index, T expected)
     {
-        EXPECT_EQ(expected, static_cast<T>(_array[index]));
+        EXPECT_EQ(expected, _array[index].as<T>());
     }
 
     void elementAtIndexMustBe(int index, const char* expected)
     {
-        EXPECT_STREQ(expected, static_cast<const char*>(_array[index]));
+        EXPECT_STREQ(expected, _array[index].as<const char*>());
     }
 
     StaticJsonBuffer<42> _jsonBuffer;

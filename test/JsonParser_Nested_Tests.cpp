@@ -20,11 +20,11 @@ TEST(JsonParser_Nested_Tests, ArrayNestedInObject)
     ASSERT_EQ(2, array1.size());
     ASSERT_EQ(2, array2.size());
     
-    EXPECT_EQ(1, static_cast<int>(array1[0]));
-    EXPECT_EQ(2, static_cast<int>(array1[1]));
+    EXPECT_EQ(1, array1[0].as<int>());
+    EXPECT_EQ(2, array1[1].as<int>());
 
-    EXPECT_EQ(3, static_cast<int>(array2[0]));
-    EXPECT_EQ(4, static_cast<int>(array2[1]));
+    EXPECT_EQ(3, array2[0].as<int>());
+    EXPECT_EQ(4, array2[1].as<int>());
 }
 
 TEST(JsonParser_Nested_Tests, ObjectNestedInArray)
@@ -44,8 +44,8 @@ TEST(JsonParser_Nested_Tests, ObjectNestedInArray)
     ASSERT_EQ(2, object1.size());
     ASSERT_EQ(2, object2.size());
     
-    EXPECT_EQ(1, static_cast<int>(object1["a"]));
-    EXPECT_EQ(2, static_cast<int>(object1["b"]));
-    EXPECT_EQ(3, static_cast<int>(object2["c"]));
-    EXPECT_EQ(4, static_cast<int>(object2["d"]));
+    EXPECT_EQ(1, object1["a"].as<int>());
+    EXPECT_EQ(2, object1["b"].as<int>());
+    EXPECT_EQ(3, object2["c"].as<int>());
+    EXPECT_EQ(4, object2["d"].as<int>());
 }
