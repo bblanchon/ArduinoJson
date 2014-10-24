@@ -6,7 +6,7 @@
 
 #include "Printers.hpp"
 
-std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonValue& v) {
+std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonValue&) {
   os << "JsonValue";  // TODO
   return os;
 }
