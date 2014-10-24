@@ -36,4 +36,30 @@ class JsonArrayIterator {
  private:
   JsonValue _value;
 };
+
+class JsonArrayConstIterator {
+  friend class JsonArray;
+
+ public:
+  explicit JsonArrayConstIterator(Internals::JsonNode *node) : _value(node) {}
+
+  const JsonValue operator*() const { return _value; }
+  const JsonValue *operator->() { return &_value; }
+
+  bool operator==(const JsonArrayConstIterator &other) const {
+    return _value._node == other._value._node;
+  }
+
+  bool operator!=(const JsonArrayConstIterator &other) const {
+    return _value._node != other._value._node;
+  }
+
+  JsonArrayConstIterator &operator++() {
+    _value._node = _value._node->next;
+    return *this;
+  }
+
+ private:
+  JsonValue _value;
+};
 }

@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson/StaticJsonBuffer.hpp>
 #include <ArduinoJson/JsonValue.hpp>
+#include "Printers.hpp"
 
 using namespace ArduinoJson;
 
@@ -81,8 +82,8 @@ TEST_F(JsonArray_Container_Tests, CanStoreBooleans) {
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreStrings) {
-  const char *firstString = "h3110";
-  const char *secondString = "w0r1d";
+  const char* firstString = "h3110";
+  const char* secondString = "w0r1d";
 
   array.add(firstString);
   array.add(secondString);

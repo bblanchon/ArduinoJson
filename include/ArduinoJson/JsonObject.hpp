@@ -24,7 +24,7 @@ class JsonObject : public JsonContainer {
 
   bool success() { return _node && _node->isObject(); }
 
-  JsonObjectIterator begin();
+  JsonObjectIterator begin() { return JsonObjectIterator(firstChild()); }
 
   JsonObjectIterator end() { return JsonObjectIterator(0); }
 

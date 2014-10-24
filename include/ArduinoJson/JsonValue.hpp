@@ -14,6 +14,7 @@ namespace ArduinoJson {
 class JsonValue : public Internals::JsonNodeWrapper {
   friend class JsonArray;
   friend class JsonArrayIterator;
+  friend class JsonArrayConstIterator;
   friend class JsonBuffer;
   friend class JsonObject;
   friend class JsonObjectKeyValue;

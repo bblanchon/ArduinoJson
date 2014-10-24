@@ -9,6 +9,7 @@
 namespace ArduinoJson {
 class JsonArray;
 class JsonArrayIterator;
+class JsonArrayConstIterator;
 class JsonBuffer;
 class JsonObject;
 class JsonObjectIterator;

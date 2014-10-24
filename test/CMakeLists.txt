@@ -1,7 +1,7 @@
 set(GTEST_DIR ../third-party/gtest-1.7.0)
 
 file(GLOB_RECURSE INC_FILES ../include/*.h)
-file(GLOB TESTS_FILES *.cpp)
+file(GLOB TESTS_FILES *.hpp *.cpp)
 
 include_directories(
 	../include

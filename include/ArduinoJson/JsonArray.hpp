@@ -12,9 +12,13 @@
 namespace ArduinoJson {
 class JsonArray : public JsonContainer {
  public:
+  typedef JsonArrayIterator iterator;
+  typedef JsonArrayConstIterator const_iterator;
+
   JsonArray() {}
 
-  explicit JsonArray(Internals::JsonNode *node) : JsonContainer(node) {}
+  explicit JsonArray(Internals::JsonNode *node)
+      : JsonContainer(node) {}  // TODO: hide
 
   JsonValue operator[](int index) const;
 
@@ -30,8 +34,10 @@ class JsonArray : public JsonContainer {
 
   bool success() { return _node && _node->isArray(); }
 
-  JsonArrayIterator begin();
+  iterator begin() { return iterator(firstChild()); }
+  iterator end() { return iterator(0); }
 
-  JsonArrayIterator end() { return JsonArrayIterator(0); }
+  const_iterator begin() const { return const_iterator(firstChild()); }
+  const_iterator end() const { return const_iterator(0); }
 };
 }

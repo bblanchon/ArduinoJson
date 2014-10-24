@@ -19,11 +19,11 @@ class JsonObjectIterator {
   JsonObjectKeyValue *operator->() { return &_keyValue; }
 
   bool operator==(const JsonObjectIterator &other) const {
-    return _keyValue == other._keyValue;
+      return _keyValue._node == other._keyValue._node;
   }
 
   bool operator!=(const JsonObjectIterator &other) const {
-    return _keyValue != other._keyValue;
+    return _keyValue._node != other._keyValue._node;
   }
 
   JsonObjectIterator &operator++() {

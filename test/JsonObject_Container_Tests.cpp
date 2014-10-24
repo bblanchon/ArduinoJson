@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson/StaticJsonBuffer.hpp>
 #include <ArduinoJson/JsonValue.hpp>
+#include "Printers.hpp"
 
 using namespace ArduinoJson;
 

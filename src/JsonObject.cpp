@@ -22,11 +22,9 @@ JsonValue JsonObject::operator[](char const *key) {
 }
 
 void JsonObject::remove(char const *key) {
-  for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it) {
-    const char *childKey = it->getAsObjectKey();
-
-    if (!strcmp(childKey, key)) {
-      removeChild(*it);
+  for (JsonObjectIterator it = begin(); it != end(); ++it) {
+    if (!strcmp(it->key(), key)) {
+      removeChild(it->_node);
     }
   }
 }
@@ -48,10 +46,8 @@ JsonObject JsonObject::createNestedObject(char const *key) {
 }
 
 JsonNode *JsonObject::getOrCreateNodeAt(const char *key) {
-  for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it) {
-    const char *childKey = it->getAsObjectKey();
-
-    if (!strcmp(childKey, key)) return it->getAsObjectValue();
+  for (JsonObjectIterator it = begin(); it != end(); ++it) {
+    if (!strcmp(it->key(), key)) return it->value()._node;
   }
 
   JsonNode *newValueNode = createNode();
@@ -65,8 +61,4 @@ JsonNode *JsonObject::getOrCreateNodeAt(const char *key) {
   addChild(newKeyNode);
 
   return newValueNode;
-}
-
-JsonObjectIterator JsonObject::begin() {
-  return JsonObjectIterator(_node->getContainerChild());
 }

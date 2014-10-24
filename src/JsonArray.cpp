@@ -12,8 +12,8 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 JsonValue JsonArray::operator[](int index) const {
-  for (JsonNodeIterator it = beginChildren(); it != endChildren(); ++it) {
-    if (!index) return JsonValue(*it);
+  for (const_iterator it = begin(); it != end(); ++it) {
+    if (!index) return *it;
     index--;
   }
 
@@ -81,10 +81,4 @@ JsonObject JsonArray::createNestedObject() {
   }
 
   return JsonObject(node);
-}
-
-JsonArrayIterator JsonArray::begin() {
-  if (!_node) return end();
-
-  return JsonArrayIterator(_node->getContainerChild());
 }

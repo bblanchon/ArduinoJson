@@ -11,20 +11,12 @@
 
 namespace ArduinoJson {
 class JsonObjectKeyValue {
+  friend class JsonObject;
   friend class JsonObjectIterator;
 
  public:
   const char *key() const { return _node->getAsObjectKey(); }
-
   JsonValue value() { return JsonValue(_node->getAsObjectValue()); }
-
-  bool operator==(const JsonObjectKeyValue &other) const {
-    return _node == other._node;
-  }
-
-  bool operator!=(const JsonObjectKeyValue &other) const {
-    return _node != other._node;
-  }
 
  private:
   explicit JsonObjectKeyValue(Internals::JsonNode *node) : _node(node) {}

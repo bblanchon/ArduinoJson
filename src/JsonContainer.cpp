@@ -73,3 +73,8 @@ size_t JsonContainer::size() const {
 
   return n;
 }
+
+JsonNode* JsonContainer::firstChild() const
+{
+    return _node ? _node->getContainerChild() : 0;
+}

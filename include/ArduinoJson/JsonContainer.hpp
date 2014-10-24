@@ -44,5 +44,6 @@ class JsonContainer : public Printable, public Internals::JsonNodeWrapper {
   void addChild(Internals::JsonNode *);
   void removeChild(Internals::JsonNode *);
   Internals::JsonNode *createNode();
+  Internals::JsonNode* firstChild() const;
 };
 }
