@@ -6,13 +6,11 @@
 
 #pragma once
 
+#include "ForwardDeclarations.hpp"
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
 
 namespace ArduinoJson {
-namespace Internals {
-class JsonParser;
-}
 
 class JsonBuffer {
   friend class JsonContainer;

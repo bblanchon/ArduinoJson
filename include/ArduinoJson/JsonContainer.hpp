@@ -7,15 +7,11 @@
 #pragma once
 
 #include "Arduino/Printable.hpp"
+#include "ForwardDeclarations.hpp"
 #include "Internals/JsonNodeIterator.hpp"
-#include "Internals/JsonNode.hpp"
-#include "Internals/IndentedPrint.hpp"
 #include "Internals/JsonNodeWrapper.hpp"
 
 namespace ArduinoJson {
-class JsonArray;
-class JsonObject;
-class JsonValue;
 
 class JsonContainer : public Printable, public Internals::JsonNodeWrapper {
   friend class JsonArray;

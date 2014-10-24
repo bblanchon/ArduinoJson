@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "ArduinoJson/JsonContainer.hpp"
-#include "ArduinoJson/JsonObjectIterator.hpp"
+#include "JsonContainer.hpp"
+#include "JsonObjectIterator.hpp"
 
 namespace ArduinoJson {
 class JsonObject : public JsonContainer {

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "ArduinoJson/Internals/JsonWriter.hpp"
+#include "JsonWriter.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

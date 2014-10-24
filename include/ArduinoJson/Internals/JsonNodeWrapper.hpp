@@ -6,12 +6,12 @@
 
 #pragma once
 
+#include "../ForwardDeclarations.hpp"
 #include "JsonNode.hpp"
 
 namespace ArduinoJson {
-class JsonValue;
-
 namespace Internals {
+
 class JsonNodeWrapper {
   friend class JsonValue;
 

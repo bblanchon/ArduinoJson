@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include "ForwardDeclarations.hpp"
 #include "JsonBuffer.hpp"
-#include "JsonObject.hpp"
 
 namespace ArduinoJson {
 template <int CAPACITY>

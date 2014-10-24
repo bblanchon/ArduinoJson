@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include "ArduinoJson/JsonObjectKeyValue.hpp"
+#include "ForwardDeclarations.hpp"
+#include "JsonObjectKeyValue.hpp"
 
 namespace ArduinoJson {
-class JsonObject;
 
 class JsonObjectIterator {
   friend class JsonObject;
