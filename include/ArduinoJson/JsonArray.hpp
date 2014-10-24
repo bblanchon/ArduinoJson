@@ -7,13 +7,13 @@
 #pragma once
 
 #include "JsonContainer.hpp"
-#include "JsonArrayIterator.hpp"
+#include "JsonIterator.hpp"
 
 namespace ArduinoJson {
 class JsonArray : public JsonContainer {
  public:
-  typedef JsonArrayIterator iterator;
-  typedef JsonArrayConstIterator const_iterator;
+  typedef JsonIterator<JsonValue> iterator;
+  typedef JsonConstIterator<JsonValue> const_iterator;
 
   JsonArray() {}
 

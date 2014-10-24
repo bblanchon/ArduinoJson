@@ -11,50 +11,52 @@
 
 namespace ArduinoJson {
 
-class JsonArrayIterator {
+template <typename T>
+class JsonIterator {
   friend class JsonArray;
 
  public:
-  explicit JsonArrayIterator(Internals::JsonNode *node) : _value(node) {}
+  explicit JsonIterator(Internals::JsonNode *node) : _value(node) {}
 
-  JsonValue operator*() const { return _value; }
-  JsonValue *operator->() { return &_value; }
+  T operator*() const { return _value; }
+  T *operator->() { return &_value; }
 
-  bool operator==(const JsonArrayIterator &other) const {
+  bool operator==(const JsonIterator &other) const {
     return _value._node == other._value._node;
   }
 
-  bool operator!=(const JsonArrayIterator &other) const {
+  bool operator!=(const JsonIterator &other) const {
     return _value._node != other._value._node;
   }
 
-  JsonArrayIterator &operator++() {
+  JsonIterator &operator++() {
     _value._node = _value._node->next;
     return *this;
   }
 
  private:
-  JsonValue _value;
+  T _value;
 };
 
-class JsonArrayConstIterator {
+template <typename T>
+class JsonConstIterator {
   friend class JsonArray;
 
  public:
-  explicit JsonArrayConstIterator(Internals::JsonNode *node) : _value(node) {}
+  explicit JsonConstIterator(Internals::JsonNode *node) : _value(node) {}
 
   const JsonValue operator*() const { return _value; }
   const JsonValue *operator->() { return &_value; }
 
-  bool operator==(const JsonArrayConstIterator &other) const {
+  bool operator==(const JsonConstIterator &other) const {
     return _value._node == other._value._node;
   }
 
-  bool operator!=(const JsonArrayConstIterator &other) const {
+  bool operator!=(const JsonConstIterator &other) const {
     return _value._node != other._value._node;
   }
 
-  JsonArrayConstIterator &operator++() {
+  JsonConstIterator &operator++() {
     _value._node = _value._node->next;
     return *this;
   }

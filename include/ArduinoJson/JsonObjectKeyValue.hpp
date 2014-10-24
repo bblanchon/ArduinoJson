@@ -12,7 +12,8 @@
 namespace ArduinoJson {
 class JsonObjectKeyValue {
   friend class JsonObject;
-  friend class JsonObjectIterator;
+  template <typename T>
+  friend class JsonIterator;
 
  public:
   const char *key() const { return _node->getAsObjectKey(); }

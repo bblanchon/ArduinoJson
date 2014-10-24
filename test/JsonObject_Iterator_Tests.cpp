@@ -17,8 +17,8 @@ TEST(JsonObject_Iterator_Test, SimpleTest) {
   object["ab"] = 12;
   object["cd"] = 34;
 
-  JsonObjectIterator it = object.begin();
-  JsonObjectIterator end = object.end();
+  JsonObject::iterator it = object.begin();
+  JsonObject::iterator end = object.end();
 
   EXPECT_NE(end, it);
   EXPECT_STREQ("ab", it->key());

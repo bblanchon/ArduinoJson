@@ -7,11 +7,15 @@
 #pragma once
 
 #include "JsonContainer.hpp"
-#include "JsonObjectIterator.hpp"
+#include "JsonIterator.hpp"
+#include "JsonObjectKeyValue.hpp"
 
 namespace ArduinoJson {
 class JsonObject : public JsonContainer {
  public:
+  typedef JsonIterator<JsonObjectKeyValue> iterator;
+  typedef JsonConstIterator<JsonObjectKeyValue> const_iterator;
+
   JsonObject() {}
 
   explicit JsonObject(Internals::JsonNode *node) : JsonContainer(node) {}
@@ -24,9 +28,11 @@ class JsonObject : public JsonContainer {
 
   bool success() { return _node && _node->isObject(); }
 
-  JsonObjectIterator begin() { return JsonObjectIterator(firstChild()); }
+  iterator begin() { return iterator(firstChild()); }
+  iterator end() { return iterator(0); }
 
-  JsonObjectIterator end() { return JsonObjectIterator(0); }
+  const_iterator begin() const { return const_iterator(firstChild()); }
+  const_iterator end() const { return const_iterator(0); }
 
  private:
   Internals::JsonNode *getOrCreateNodeAt(const char *key);

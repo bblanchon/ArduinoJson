@@ -17,8 +17,8 @@ TEST(JsonArray_Iterator_Test, SimpleTest) {
   array.add(12);
   array.add(34);
 
-  JsonArrayIterator it = array.begin();
-  JsonArrayIterator end = array.end();
+  JsonArray::iterator it = array.begin();
+  JsonArray::iterator end = array.end();
 
   EXPECT_NE(end, it);
   EXPECT_EQ(12, it->as<int>());
