@@ -9,10 +9,12 @@
 #include "ArduinoJson/JsonValue.hpp"
 
 namespace ArduinoJson {
-class JsonObjectKeyValue {
- public:
-  explicit JsonObjectKeyValue(Internals::JsonNode *node) : _node(node) {}
+class JsonObjectIterator;
 
+class JsonObjectKeyValue {
+  friend class JsonObjectIterator;
+
+ public:
   const char *key() const { return _node->getAsObjectKey(); }
 
   JsonValue value() { return JsonValue(_node->getAsObjectValue()); }
@@ -25,9 +27,9 @@ class JsonObjectKeyValue {
     return _node != other._node;
   }
 
-  Internals::JsonNode *next() { return _node->next; }
-
  private:
+  explicit JsonObjectKeyValue(Internals::JsonNode *node) : _node(node) {}
+
   Internals::JsonNode *_node;
 };
 }

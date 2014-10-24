@@ -15,27 +15,25 @@ class JsonObjectIterator {
   friend class JsonObject;
 
  public:
-  explicit JsonObjectIterator(Internals::JsonNode *node)
-      : _objectKeyValue(node) {}
-
-  JsonObjectIterator &operator++() {
-    _objectKeyValue = JsonObjectKeyValue(_objectKeyValue.next());
-    return *this;
-  }
-
-  JsonObjectKeyValue operator*() const { return _objectKeyValue; }
-
-  JsonObjectKeyValue *operator->() { return &_objectKeyValue; }
+  JsonObjectKeyValue operator*() const { return _keyValue; }
+  JsonObjectKeyValue *operator->() { return &_keyValue; }
 
   bool operator==(const JsonObjectIterator &other) const {
-    return _objectKeyValue == other._objectKeyValue;
+    return _keyValue == other._keyValue;
   }
 
   bool operator!=(const JsonObjectIterator &other) const {
-    return _objectKeyValue != other._objectKeyValue;
+    return _keyValue != other._keyValue;
+  }
+
+  JsonObjectIterator &operator++() {
+    _keyValue._node = _keyValue._node->next;
+    return *this;
   }
 
  private:
-  JsonObjectKeyValue _objectKeyValue;
+  explicit JsonObjectIterator(Internals::JsonNode *node) : _keyValue(node) {}
+
+  JsonObjectKeyValue _keyValue;
 };
 }
