@@ -24,12 +24,14 @@ class JsonArray : public JsonContainer {
 
   JsonValue operator[](int index) const;
 
-  void add(bool value);
-  void add(const char *value);
-  void add(double value, int decimals = 2);
-  void add(int value) { add(static_cast<long>(value)); }
-  void add(long value);
-  void add(JsonContainer nestedArray);  // TODO: should allow JsonValue too
+  template <typename T>
+  void add(T value) {
+    addNewValue() = value;
+  }
+
+  void add(double value, int decimals = 2) {
+    addNewValue().set(value, decimals);
+  }
 
   JsonArray createNestedArray();
   JsonObject createNestedObject();
@@ -41,5 +43,8 @@ class JsonArray : public JsonContainer {
 
   const_iterator begin() const { return const_iterator(firstChild()); }
   const_iterator end() const { return const_iterator(0); }
+
+private:
+  JsonValue addNewValue();
 };
 }

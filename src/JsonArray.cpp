@@ -20,45 +20,10 @@ JsonValue JsonArray::operator[](int index) const {
   return JsonValue();
 }
 
-void JsonArray::add(bool value) {
+JsonValue JsonArray::addNewValue() {
   JsonNode *node = createNode();
-  if (!node) return;
-
-  node->setAsBoolean(value);
-  addChild(node);
-}
-
-void JsonArray::add(char const *value) {
-  JsonNode *node = createNode();
-  if (!node) return;
-
-  node->setAsString(value);
-  addChild(node);
-}
-
-void JsonArray::add(double value, int decimals) {
-  JsonNode *node = createNode();
-  if (!node) return;
-
-  node->setAsDouble(value, decimals);
-  addChild(node);
-}
-
-void JsonArray::add(long value) {
-  JsonNode *node = createNode();
-  if (!node) return;
-
-  node->setAsLong(value);
-  addChild(node);
-}
-
-// TODO: we should have the same issue as in JsonValue
-void JsonArray::add(JsonContainer nestedContainer) {
-  JsonNode *node = createNode();
-  if (!node) return;
-
-  node->duplicate(nestedContainer._node);
-  addChild(node);
+  if (node) addChild(node);
+  return JsonValueInternal(node);
 }
 
 JsonArray JsonArray::createNestedArray() {

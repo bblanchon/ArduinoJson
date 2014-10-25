@@ -7,15 +7,12 @@
 #pragma once
 
 #include "Arduino/Printable.hpp"
-#include "ForwardDeclarations.hpp"
 #include "Internals/JsonNodeIterator.hpp"
 #include "Internals/JsonNodeWrapper.hpp"
 
 namespace ArduinoJson {
 
 class JsonContainer : public Printable, public Internals::JsonNodeWrapper {
-  friend class JsonArray;
-
  public:
   JsonContainer() {}
 
@@ -44,6 +41,6 @@ class JsonContainer : public Printable, public Internals::JsonNodeWrapper {
   void addChild(Internals::JsonNode *);
   void removeChild(Internals::JsonNode *);
   Internals::JsonNode *createNode();
-  Internals::JsonNode* firstChild() const;
+  Internals::JsonNode *firstChild() const;
 };
 }
