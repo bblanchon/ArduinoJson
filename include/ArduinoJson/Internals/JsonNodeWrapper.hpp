@@ -6,21 +6,17 @@
 
 #pragma once
 
-#include "../ForwardDeclarations.hpp"
 #include "JsonNode.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
 class JsonNodeWrapper {
-  friend class JsonValue;
-
- public:
+ protected:
   JsonNodeWrapper() : _node(0) {}
 
   explicit JsonNodeWrapper(JsonNode *node) : _node(node) {}
 
- protected:
   void duplicate(const JsonNodeWrapper &other) {
     if (!_node) {
       _node = other._node;
