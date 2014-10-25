@@ -12,8 +12,6 @@
 namespace ArduinoJson {
 template <int CAPACITY>
 class StaticJsonBuffer : public JsonBuffer {
-  friend class JsonObject;
-
  public:
   explicit StaticJsonBuffer() : _size(0) {}
 
