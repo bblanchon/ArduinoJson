@@ -6,14 +6,16 @@
 
 #pragma once
 
+#include "Internals/JsonArrayConstIterator.hpp"
+#include "Internals/JsonArrayIterator.hpp"
 #include "JsonContainer.hpp"
-#include "JsonIterator.hpp"
 
 namespace ArduinoJson {
 class JsonArray : public JsonContainer {
  public:
-  typedef JsonIterator<JsonValue> iterator;
-  typedef JsonConstIterator<JsonValue> const_iterator;
+  typedef JsonValue value_type;
+  typedef Internals::JsonArrayIterator iterator;
+  typedef Internals::JsonArrayConstIterator const_iterator;
 
   JsonArray() {}
 

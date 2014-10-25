@@ -8,14 +8,14 @@
 
 #include <new>
 
-#include "ArduinoJson/JsonValue.hpp"
+#include "ArduinoJson/Internals/JsonValueInternal.hpp"
 #include "ArduinoJson/Internals/JsonParser.hpp"
 #include "ArduinoJson/Internals/JsonNode.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-JsonValue JsonBuffer::createValue() { return JsonValue(createNode()); }
+JsonValue JsonBuffer::createValue() { return JsonValueInternal(createNode()); }
 
 JsonNode *JsonBuffer::createNode() {
   void *node = allocateNode();
@@ -36,7 +36,7 @@ JsonObject JsonBuffer::parseObject(char *json) {
 
 JsonValue JsonBuffer::parseValue(char *json) {
   JsonParser parser(this, json);
-  return JsonValue(parser.parseAnything());
+  return JsonValueInternal(parser.parseAnything());
 }
 
 JsonNode *JsonBuffer::createArrayNode() {

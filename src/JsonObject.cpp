@@ -17,20 +17,17 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 JsonValue JsonObject::operator[](char const *key) {
-  JsonNode *node = getOrCreateNodeAt(key);
-  return JsonValue(node);
+  JsonNode *node = getOrCreateValueAt(key);
+  return JsonValueInternal(node);
 }
 
 void JsonObject::remove(char const *key) {
-  for (iterator it = begin(); it != end(); ++it) {
-    if (!strcmp(it->key(), key)) {
-      removeChild(it->_node);
-    }
-  }
+  JsonNode *nodeToRemove = getPairAt(key);
+  if (nodeToRemove) removeChild(nodeToRemove);
 }
 
 JsonArray JsonObject::createNestedArray(char const *key) {
-  JsonNode *node = getOrCreateNodeAt(key);
+  JsonNode *node = getOrCreateValueAt(key);
 
   if (node) node->setAsArray(_node->getContainerBuffer());
 
@@ -38,17 +35,23 @@ JsonArray JsonObject::createNestedArray(char const *key) {
 }
 
 JsonObject JsonObject::createNestedObject(char const *key) {
-  JsonNode *node = getOrCreateNodeAt(key);
+  JsonNode *node = getOrCreateValueAt(key);
 
   if (node) node->setAsObject(_node->getContainerBuffer());
 
   return JsonObject(node);
 }
 
-JsonNode *JsonObject::getOrCreateNodeAt(const char *key) {
-  for (iterator it = begin(); it != end(); ++it) {
-    if (!strcmp(it->key(), key)) return it->value()._node;
+JsonNode *JsonObject::getPairAt(const char *key) {
+  for (JsonNode *node = firstChild(); node; node = node->next) {
+    if (!strcmp(node->getAsObjectKey(), key)) return node;
   }
+  return NULL;
+}
+
+JsonNode *JsonObject::getOrCreateValueAt(const char *key) {
+  JsonNode *existingNode = getPairAt(key);
+  if (existingNode) return existingNode->getAsObjectValue();
 
   JsonNode *newValueNode = createNode();
   if (!newValueNode) return 0;

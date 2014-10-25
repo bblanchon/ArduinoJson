@@ -6,15 +6,16 @@
 
 #pragma once
 
+#include "Internals/JsonObjectConstIterator.hpp"
+#include "Internals/JsonObjectIterator.hpp"
 #include "JsonContainer.hpp"
-#include "JsonIterator.hpp"
-#include "JsonObjectKeyValue.hpp"
 
 namespace ArduinoJson {
 class JsonObject : public JsonContainer {
  public:
-  typedef JsonIterator<JsonObjectKeyValue> iterator;
-  typedef JsonConstIterator<JsonObjectKeyValue> const_iterator;
+  typedef JsonPair value_type;
+  typedef Internals::JsonObjectIterator iterator;
+  typedef Internals::JsonObjectConstIterator const_iterator;
 
   JsonObject() {}
 
@@ -35,6 +36,7 @@ class JsonObject : public JsonContainer {
   const_iterator end() const { return const_iterator(0); }
 
  private:
-  Internals::JsonNode *getOrCreateNodeAt(const char *key);
+  Internals::JsonNode *getPairAt(const char *key);
+  Internals::JsonNode *getOrCreateValueAt(const char *key);
 };
 }

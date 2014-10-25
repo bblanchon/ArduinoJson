@@ -12,15 +12,6 @@
 namespace ArduinoJson {
 
 class JsonValue : public Internals::JsonNodeWrapper {
-  friend class JsonArray;
-  template <typename T>
-  friend class JsonIterator;
-  template <typename T>
-  friend class JsonConstIterator;
-  friend class JsonBuffer;
-  friend class JsonObject;
-  friend class JsonObjectKeyValue;
-
  public:
   JsonValue() {}
 
@@ -48,7 +39,7 @@ class JsonValue : public Internals::JsonNodeWrapper {
     return static_cast<T>(*this);
   }
 
- private:
-  explicit JsonValue(Internals::JsonNode *node) : JsonNodeWrapper(node) {}
+ protected:
+  JsonValue(Internals::JsonNode *node) : Internals::JsonNodeWrapper(node) {}
 };
 }
