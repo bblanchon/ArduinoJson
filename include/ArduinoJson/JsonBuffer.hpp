@@ -6,43 +6,39 @@
 
 #pragma once
 
+#include <new>
+
 #include "ForwardDeclarations.hpp"
-#include "JsonArray.hpp"
-#include "JsonObject.hpp"
+#include "JsonValue.hpp"
 
 namespace ArduinoJson {
 
 class JsonBuffer {
-  friend class JsonContainer;
-  friend class Internals::JsonNode;
-  friend class Internals::JsonParser;
-
  public:
   virtual ~JsonBuffer() {}
 
-  JsonArray createArray() { return JsonArray(createArrayNode()); }
-
-  JsonObject createObject() { return JsonObject(createObjectNode()); }
-
+  JsonArray createArray();
+  JsonObject createObject();
   JsonValue createValue();
 
-  JsonArray parseArray(char *json);
-  JsonObject parseObject(char *json);
-  JsonValue parseValue(char *json);  // TODO: remove
+  template <typename T>
+  JsonValue createValue(T x) {
+    JsonValue value;
+    value = x;
+    return value;
+  }
 
- protected:
-  virtual void *allocateNode() = 0;
+  JsonArray parseArray(char* json);
+  JsonObject parseObject(char* json);
+  JsonValue parseValue(char* json);
 
- private:
-  Internals::JsonNode *createNode();
+  template <typename T>
+  T* create() {
+    void* p = alloc(sizeof(T));
+    if (!p) return NULL;
+    return new (p) T();
+  }
 
-  Internals::JsonNode *createArrayNode();
-  Internals::JsonNode *createBoolNode(bool value);
-  Internals::JsonNode *createDoubleNode(double value, int decimals);
-  Internals::JsonNode *createLongNode(long value);
-  Internals::JsonNode *createObjectNode();
-  Internals::JsonNode *createObjectKeyValueNode(const char *key,
-                                                Internals::JsonNode *value);
-  Internals::JsonNode *createStringNode(const char *value);
+  virtual void* alloc(size_t size) = 0;
 };
 }

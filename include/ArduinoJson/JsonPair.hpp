@@ -6,20 +6,18 @@
 
 #pragma once
 
-#include "Internals/JsonValueInternal.hpp"
+#include "JsonValue.hpp"
 
 namespace ArduinoJson {
 class JsonPair {
  public:
-  const char *key() const { return _node->getAsObjectKey(); }
+  JsonPair(const char *k) : _key(k) {}
 
-  JsonValue value() {
-    return Internals::JsonValueInternal(_node->getAsObjectValue());
-  }
+  const char *key() const { return _key; }
+  JsonValue &value() { return _value; }
 
- protected:
-  explicit JsonPair(Internals::JsonNode *node) : _node(node) {}
-
-  Internals::JsonNode *_node;
+ private:
+  const char *_key;
+  JsonValue _value;
 };
 }

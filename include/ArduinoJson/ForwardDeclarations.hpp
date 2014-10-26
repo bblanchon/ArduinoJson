@@ -6,22 +6,26 @@
 
 #pragma once
 
+// TODO: cleanup
+
 namespace ArduinoJson {
 class JsonArray;
 class JsonBuffer;
-class JsonObject;
-class JsonObjectIterator;
-class JsonObjectKeyValue;
+class JsonPair;
 class JsonValue;
-template <typename T>
-class JsonIterator;
-template <typename T>
-class JsonConstIterator;
+class JsonObject;
 
 namespace Internals {
 class IndentedPrint;
+class JsonArrayConstIterator;
+class JsonArrayImpl;
+class JsonArrayIterator;
 class JsonNode;
+class JsonObjectImpl;
+class JsonObjectIterator;
 class JsonParser;
+class JsonValueImpl;
 class JsonWriter;
+struct JsonArrayNode;
 }
 }

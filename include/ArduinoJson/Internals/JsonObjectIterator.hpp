@@ -6,33 +6,31 @@
 
 #pragma once
 
-#include "JsonPairInternal.hpp"
-
 namespace ArduinoJson {
 namespace Internals {
 
 class JsonObjectIterator {
  public:
-  explicit JsonObjectIterator(Internals::JsonNode *node) : _pair(node) {}
+  explicit JsonObjectIterator(Internals::JsonObjectNode *node) : _node(node) {}
 
-  JsonPair operator*() const { return _pair; }
-  JsonPair *operator->() { return &_pair; }
+  JsonPair &operator*() const { return _node->pair; }
+  JsonPair *operator->() { return &_node->pair; }
 
   bool operator==(const JsonObjectIterator &other) const {
-    return _pair.isSameAs(other._pair);
+    return _node == other._node;
   }
 
   bool operator!=(const JsonObjectIterator &other) const {
-    return !_pair.isSameAs(other._pair);
+    return _node != other._node;
   }
 
   JsonObjectIterator &operator++() {
-    _pair.moveToNext();
+    _node = _node->next;
     return *this;
   }
 
  private:
-  JsonPairInternal _pair;
+  JsonObjectNode *_node;
 };
 }
 }

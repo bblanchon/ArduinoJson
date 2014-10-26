@@ -9,9 +9,13 @@
 #include <stdlib.h>  // for strtol, strtod
 #include <ctype.h>
 
+#include "ArduinoJson/JsonArray.hpp"
 #include "ArduinoJson/JsonBuffer.hpp"
+#include "ArduinoJson/JsonValue.hpp"
+#include "ArduinoJson/JsonObject.hpp"
 #include "ArduinoJson/Internals/QuotedString.hpp"
 
+using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 void JsonParser::skipSpaces() {
@@ -26,16 +30,18 @@ bool JsonParser::skip(char charToSkip) {
   return true;
 }
 
-JsonNode *JsonParser::parseAnything() {
+void JsonParser::parseValueTo(JsonValue destination) {
   skipSpaces();
 
   switch (*_ptr) {
     case '[':
-      return parseArray();
+      destination = parseArray();
+      break;
 
     case 't':
     case 'f':
-      return parseBoolean();
+      parseBooleanTo(destination);
+      break;
 
     case '-':
     case '.':
@@ -49,113 +55,106 @@ JsonNode *JsonParser::parseAnything() {
     case '7':
     case '8':
     case '9':
-      return parseNumber();
+      parseNumberTo(destination);
+      break;
 
     case 'n':
-      return parseNull();
+      parseNullTo(destination);
+      break;
 
     case '{':
-      return parseObject();
+      destination = parseObject();
+      break;
 
     case '\'':
     case '\"':
-      return parseString();
+      destination = parseString();
+      break;
 
     default:
-      return NULL;  // invalid JSON
+      destination = NULL;  // invalid JSON
   }
 }
 
-JsonNode *JsonParser::parseArray() {
-  JsonNode *node = _buffer->createArrayNode();
-
+JsonArray JsonParser::parseArray() {
   skip('[');
 
-  if (isEnd()) return 0;
+  if (isEnd()) return NULL;
 
-  if (skip(']')) return node;  // empty array
+  JsonArray array = _buffer->createArray();
+  if (skip(']')) return array;  // empty array
 
   for (;;) {
-    JsonNode *child = parseAnything();
+    JsonValue child = array.add();
 
-    if (!child) return 0;  // child parsing failed
+    parseValueTo(child);
+    if (!child.success()) return NULL;
 
-    node->addChild(child);
+    if (skip(']')) return array;  // end of the array
 
-    if (skip(']')) return node;  // end of the array
-
-    if (!skip(',')) return 0;  // comma is missing
+    if (!skip(',')) return NULL;  // comma is missing
   }
 }
 
-JsonNode *JsonParser::parseBoolean() {
+void JsonParser::parseBooleanTo(JsonValue &destination) {
   bool value = *_ptr == 't';
+
+  // TODO: bug if string ends here !!!
 
   _ptr += value ? 4 : 5;
   // 4 = strlen("true")
   // 5 = strlen("false");
 
-  return _buffer->createBoolNode(value);
+  destination = value;
 }
 
-JsonNode *JsonParser::parseNumber() {
+void JsonParser::parseNumberTo(JsonValue &destination) {
   char *endOfLong;
   long longValue = strtol(_ptr, &endOfLong, 10);
 
   if (*endOfLong == '.') {
     // stopped on a decimal separator
-    double value = strtod(_ptr, &_ptr);
+    double douleValue = strtod(_ptr, &_ptr);
     int decimals = _ptr - endOfLong - 1;
-    return _buffer->createDoubleNode(value, decimals);
+    destination.set(douleValue, decimals);
   } else {
     _ptr = endOfLong;
-    return _buffer->createLongNode(longValue);
+    destination = longValue;
   }
 }
 
-JsonNode *JsonParser::parseNull() {
+void JsonParser::parseNullTo(JsonValue &destination) {
   _ptr += 4;  // strlen("null")
 
-  return _buffer->createStringNode(0);
+  destination = static_cast<const char *>(NULL);
 }
 
-JsonNode *JsonParser::parseObject() {
-  JsonNode *node = _buffer->createObjectNode();
-
+JsonObject JsonParser::parseObject() {
   skip('{');
 
-  if (isEnd()) return 0;  // premature ending
+  if (isEnd()) return NULL;  // premature ending
 
-  if (skip('}')) return node;  // empty object
+  JsonObject object = _buffer->createObject();
+
+  if (skip('}')) return object;  // empty object
 
   for (;;) {
-    JsonNode *child = parseObjectKeyValue();
+    const char *key = parseString();
+    if (!key) return NULL;
 
-    if (!child) return 0;  // child parsing failed
+    skip(':')
 
-    node->addChild(child);
+        JsonValue value = object[key];
 
-    if (skip('}')) return node;  // end of the object
+    parseValueTo(value);
+    if (!value.success()) return NULL;
+
+    if (skip('}')) return object;  // end of the object
 
     if (!skip(',')) return 0;  // comma is missing
   }
 }
 
-JsonNode *JsonParser::parseObjectKeyValue() {
-  const char *key = QuotedString::extractFrom(_ptr, &_ptr);
-
-  if (!key) return 0;  // failed to extract key
-
-  if (!skip(':')) return 0;  // colon is missing
-
-  JsonNode *value = parseAnything();
-
-  if (!value) return 0;  // value parsing failed
-
-  return _buffer->createObjectKeyValueNode(key, value);
-}
-
-JsonNode *JsonParser::parseString() {
-  const char *s = QuotedString::extractFrom(_ptr, &_ptr);
-  return _buffer->createStringNode(s);
+const char *JsonParser::parseString() {
+  return QuotedString::extractFrom(_ptr, &_ptr);
 }

@@ -6,40 +6,46 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #include "ForwardDeclarations.hpp"
-#include "Internals/JsonNodeWrapper.hpp"
+#include "Internals/JsonValueImpl.hpp"
 
 namespace ArduinoJson {
 
-class JsonValue : public Internals::JsonNodeWrapper {
+class JsonValue {
  public:
-  JsonValue() {}
+  JsonValue() : _impl(NULL) {}
+  JsonValue(Internals::JsonValueImpl *impl) : _impl(impl) {}
 
-  void operator=(bool value);
-  void operator=(const char *value);
-  void operator=(double value) { set(value, 2); }
-  void operator=(int value);
-  void operator=(const JsonValue &value) { duplicate(value); }
-  void operator=(const Internals::JsonNodeWrapper &object) {
-    duplicate(object);
+  template <typename T>
+  void operator=(T value) {
+    if (_impl) _impl->set(value);
   }
 
-  operator bool() const;
-  operator const char *() const;
-  operator double() const;
-  operator long() const;
-  operator int() const { return operator long(); }
-  operator JsonArray() const;
-  operator JsonObject() const;
-
-  void set(double value, int decimals);
+  void set(double value, int decimals) {
+    if (_impl) _impl->set(value, decimals);
+  }
 
   template <typename T>
   T as() {
     return static_cast<T>(*this);
   }
 
- protected:
-  JsonValue(Internals::JsonNode *node) : Internals::JsonNodeWrapper(node) {}
+  operator bool() const { return _impl ? *_impl : false; }
+  operator int() const { return _impl ? *_impl : 0; }
+  operator long() const { return _impl ? *_impl : 0; }
+  operator double() const { return _impl ? *_impl : 0.0; }
+  operator const char *() const {
+    return _impl ? *_impl : static_cast<char *>(NULL);
+  }
+  operator JsonArray() const;
+
+  bool success() { return _impl; }
+
+  static JsonValue null() { return JsonValue(NULL); }
+
+ private:
+  Internals::JsonValueImpl *_impl;
 };
 }

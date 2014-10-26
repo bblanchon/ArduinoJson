@@ -7,7 +7,7 @@
 #pragma once
 
 #include "../ForwardDeclarations.hpp"
-#include "JsonNode.hpp"
+#include "../JsonBuffer.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -16,24 +16,23 @@ class JsonParser {
  public:
   JsonParser(JsonBuffer *buffer, char *json) : _buffer(buffer), _ptr(json) {}
 
-  JsonNode *parseAnything();
+  JsonArray parseArray();
+  JsonObject parseObject();
 
  private:
-  JsonBuffer *_buffer;
-  char *_ptr;
-
   bool isEnd() { return *_ptr == 0; }
 
   bool skip(char charToSkip);
   void skipSpaces();
 
-  inline JsonNode *parseArray();
-  inline JsonNode *parseBoolean();
-  inline JsonNode *parseNull();
-  inline JsonNode *parseNumber();
-  inline JsonNode *parseObject();
-  inline JsonNode *parseObjectKeyValue();
-  inline JsonNode *parseString();
+  void parseValueTo(JsonValue);
+  inline void parseBooleanTo(JsonValue &destination);
+  inline void parseNullTo(JsonValue &destination);
+  inline void parseNumberTo(JsonValue &destination);
+  inline const char *parseString();
+
+  JsonBuffer *_buffer;
+  char *_ptr;
 };
 }
 }

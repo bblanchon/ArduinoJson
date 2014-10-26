@@ -6,9 +6,8 @@
 
 #pragma once
 
-#include "Internals/JsonArrayConstIterator.hpp"
-#include "Internals/JsonArrayIterator.hpp"
 #include "JsonContainer.hpp"
+#include "Internals/JsonArrayImpl.hpp"
 
 namespace ArduinoJson {
 class JsonArray : public JsonContainer {
@@ -18,33 +17,37 @@ class JsonArray : public JsonContainer {
   typedef Internals::JsonArrayConstIterator const_iterator;
 
   JsonArray() {}
+  JsonArray(Internals::JsonArrayImpl* impl) : _impl(impl) {}
 
-  explicit JsonArray(Internals::JsonNode *node)
-      : JsonContainer(node) {}  // TODO: hide
+  value_type operator[](int index) const;
 
-  JsonValue operator[](int index) const;
+  value_type add();
 
   template <typename T>
   void add(T value) {
-    addNewValue() = value;
+    add().set(value);
   }
 
-  void add(double value, int decimals = 2) {
-    addNewValue().set(value, decimals);
-  }
+  void add(double value, int decimals = 2) { add().set(value, decimals); }
 
   JsonArray createNestedArray();
   JsonObject createNestedObject();
 
-  bool success() { return _node && _node->isArray(); }
-
-  iterator begin() { return iterator(firstChild()); }
+  iterator begin() {
+    if (!_impl) return end();
+    return _impl->begin();
+  }
   iterator end() { return iterator(0); }
 
-  const_iterator begin() const { return const_iterator(firstChild()); }
+  const_iterator begin() const {
+    if (!_impl) return end();
+    return const_cast<const Internals::JsonArrayImpl*>(_impl)->begin();
+  }
   const_iterator end() const { return const_iterator(0); }
 
-private:
-  JsonValue addNewValue();
+  static JsonArray null() { return JsonArray(NULL); }
+
+ private:
+  Internals::JsonArrayImpl* _impl;
 };
 }
