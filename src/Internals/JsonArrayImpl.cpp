@@ -4,49 +4,68 @@
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 
-#include "ArduinoJson/JsonArray.hpp"
-#include "ArduinoJson/JsonObject.hpp"
-#include "ArduinoJson/JsonValue.hpp"
+#include "ArduinoJson/Internals/JsonArrayImpl.hpp"
+
+#include "ArduinoJson/JsonBuffer.hpp"
+#include "ArduinoJson/Internals/JsonObjectImpl.hpp"
+#include "ArduinoJson/Internals/JsonWriter.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-JsonValueImpl *JsonArray::operator[](int index) const {
-  for (const_iterator it = begin(); it != end(); ++it) {
-    if (!index) return *it;
-    index--;
-  }
+JsonValueImpl *JsonArrayImpl::operator[](int index) const {
+  JsonArrayNode *node = _firstChild;
+  while (node && index--) node = node->next;
 
   return NULL;
 }
 
-JsonValueImpl *JsonArray::add() {
+JsonValueImpl *JsonArrayImpl::add() {
   if (_buffer) return NULL;
 
-  JsonArrayNode *node = _buffer->create<JsonArrayNode>();
+  JsonArrayNode *node = new (_buffer) JsonArrayNode();
   if (!node) return NULL;
 
-  return &node.value;
+  return &node->value;
 }
 
-JsonArrayImpl *JsonArray::createNestedArray() {
-  JsonNode *node = createNode();
+JsonArrayImpl *JsonArrayImpl::createNestedArray() {
+  JsonValueImpl *value = add();
+  if (!value) return NULL;
 
-  if (node) {
-    node->setAsArray(_node->getContainerBuffer());
-    addChild(node);
-  }
+  JsonArrayImpl *array = new (_buffer) JsonArrayImpl(_buffer);
+  value->set(array);
 
-  return JsonArray(node);
+  return array;
 }
 
-JsonObject JsonArray::createNestedObject() {
-  JsonNode *node = createNode();
+JsonObjectImpl *JsonArrayImpl::createNestedObject() {
+  JsonValueImpl *value = add();
+  if (!value) return NULL;
 
-  if (node) {
-    node->setAsObject(_node->getContainerBuffer());
-    addChild(node);
+  JsonObjectImpl *array = new (_buffer) JsonObjectImpl(_buffer);
+  value->set(array);
+
+  return array;
+}
+
+void JsonArrayImpl::writeTo(JsonWriter &writer) const {
+  JsonArrayNode *child = _firstChild;
+
+  if (child) {
+    writer.beginArray();
+
+    for (;;) {
+      child->value.writeTo(writer);
+
+      child = child->next;
+      if (!child) break;
+
+      writer.writeComma();
+    }
+
+    writer.endArray();
+  } else {
+    writer.writeEmptyArray();
   }
-
-  return JsonObject(node);
 }

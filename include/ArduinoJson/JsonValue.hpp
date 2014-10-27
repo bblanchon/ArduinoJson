@@ -23,6 +23,9 @@ class JsonValue {
     if (_impl) _impl->set(value);
   }
 
+  void operator=(JsonArray array);
+  void operator=(JsonObject object);
+
   void set(double value, int decimals) {
     if (_impl) _impl->set(value, decimals);
   }

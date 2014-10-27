@@ -20,7 +20,6 @@ class IndentedPrint;
 class JsonArrayConstIterator;
 class JsonArrayImpl;
 class JsonArrayIterator;
-class JsonNode;
 class JsonObjectImpl;
 class JsonObjectIterator;
 class JsonParser;

@@ -32,13 +32,8 @@ class JsonBuffer {
   JsonObject parseObject(char* json);
   JsonValue parseValue(char* json);
 
-  template <typename T>
-  T* create() {
-    void* p = alloc(sizeof(T));
-    if (!p) return NULL;
-    return new (p) T();
-  }
-
   virtual void* alloc(size_t size) = 0;
 };
 }
+
+void* operator new(size_t size, ArduinoJson::JsonBuffer* buffer);

@@ -142,7 +142,8 @@ JsonObject JsonParser::parseObject() {
     const char *key = parseString();
     if (!key) return NULL;
 
-    skip(':')
+    if (!skip(':'))
+      return NULL;
 
         JsonValue value = object[key];
 

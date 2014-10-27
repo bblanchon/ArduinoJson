@@ -6,37 +6,40 @@
 
 #pragma once
 
-#include "Internals/JsonObjectConstIterator.hpp"
-#include "Internals/JsonObjectIterator.hpp"
 #include "JsonContainer.hpp"
-#include "Internals/JsonObjectNode.hpp"
+#include "Internals/JsonObjectImpl.hpp"
 
 namespace ArduinoJson {
 class JsonObject : public JsonContainer {
+  friend class JsonValue;
+
  public:
+  typedef const char* key_type;
   typedef JsonPair value_type;
   typedef Internals::JsonObjectIterator iterator;
   typedef Internals::JsonObjectConstIterator const_iterator;
 
-  JsonObject(JsonBuffer *buffer) : _buffer(buffer) {}
+  JsonObject(Internals::JsonObjectImpl* impl) : _impl(impl) {}
 
-  JsonValue operator[](const char *key);
-  void remove(const char *key);
+  JsonValue operator[](key_type key);
+  void remove(key_type key);
 
-  JsonArray createNestedArray(const char *key);
-  JsonObject createNestedObject(const char *key);
+  JsonArray createNestedArray(key_type key);
+  JsonObject createNestedObject(key_type key);
 
-  iterator begin() { return iterator(_firstChild); }
+  iterator begin() {
+    if (!_impl) return end();
+    return _impl->begin();
+  }
   iterator end() { return iterator(0); }
 
-  const_iterator begin() const { return const_iterator(_firstChild); }
+  const_iterator begin() const {
+    if (!_impl) return end();
+    return const_cast<const Internals::JsonObjectImpl*>(_impl)->begin();
+  }
   const_iterator end() const { return const_iterator(0); }
 
  private:
-  Internals::JsonNode *getPairAt(const char *key);
-  Internals::JsonNode *getOrCreateValueAt(const char *key);
-
-  JsonBuffer *_buffer;
-  Internals::JsonObjectNode *_firstChild;
+  Internals::JsonObjectImpl* _impl;
 };
 }

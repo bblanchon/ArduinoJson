@@ -13,11 +13,14 @@ namespace Internals {
 
 class JsonSerializer {
  public:
-  static writeTo(JsonValue& value, JsonWriter&);
+  JsonSerializer(JsonWriter &writer) : _writer(writer) {}
+
+  void serialize(JsonValueImpl *value);
+  void serialize(JsonArrayImpl *value);
+  void serialize(JsonObjectImpl *value);
 
  private:
-  inline void writeArrayTo(JsonValue& value, JsonWriter&);
-  inline void writeObjectTo(JsonValue& value, JsonWriter&);
+  JsonWriter &_writer;
 };
 }
 }

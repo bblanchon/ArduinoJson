@@ -11,6 +11,8 @@
 
 namespace ArduinoJson {
 class JsonArray : public JsonContainer {
+  friend class JsonValue;
+
  public:
   typedef JsonValue value_type;
   typedef Internals::JsonArrayIterator iterator;

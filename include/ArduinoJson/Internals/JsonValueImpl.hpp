@@ -71,6 +71,8 @@ class JsonValueImpl {
     return _type == JSON_OBJECT ? _content.asObject : NULL;
   }
 
+  void writeTo(JsonWriter &writer) const;
+
  private:
   Internals::JsonValueType _type;
   Internals::JsonValueContent _content;

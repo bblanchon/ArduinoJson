@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "../JsonBuffer.hpp"
+#include "../ForwardDeclarations.hpp"
 #include "JsonArrayIterator.hpp"
 #include "JsonArrayConstIterator.hpp"
 
@@ -20,12 +20,14 @@ class JsonArrayImpl {
 
   JsonArrayImpl(JsonBuffer *buffer) : _buffer(buffer) {}
 
-  value_type *operator[](int index) const;
+  value_type operator[](int index) const;
 
-  value_type *add();
+  value_type add();
 
   JsonArrayImpl *createNestedArray();
   JsonObjectImpl *createNestedObject();
+
+  void writeTo(JsonWriter &writer) const;
 
   iterator begin() { return iterator(_firstChild); }
   iterator end() { return iterator(0); }
