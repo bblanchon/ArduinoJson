@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "JsonContainer.hpp"
+#include "JsonPrintable.hpp"
 #include "Internals/JsonObjectImpl.hpp"
 
 namespace ArduinoJson {
-class JsonObject : public JsonContainer {
+class JsonObject : public JsonPrintable {
   friend class JsonValue;
 
  public:
@@ -19,10 +19,17 @@ class JsonObject : public JsonContainer {
   typedef Internals::JsonObjectIterator iterator;
   typedef Internals::JsonObjectConstIterator const_iterator;
 
+  JsonObject() : _impl(NULL) {}
   JsonObject(Internals::JsonObjectImpl* impl) : _impl(impl) {}
 
+  bool success() const { return _impl; }
+
+  int size() const { return _impl ? _impl->size() : 0; }
+
   JsonValue operator[](key_type key);
-  void remove(key_type key);
+  void remove(key_type key) {
+    if (_impl) _impl->remove(key);
+  }
 
   JsonArray createNestedArray(key_type key);
   JsonObject createNestedObject(key_type key);
@@ -38,6 +45,15 @@ class JsonObject : public JsonContainer {
     return const_cast<const Internals::JsonObjectImpl*>(_impl)->begin();
   }
   const_iterator end() const { return const_iterator(0); }
+
+  bool operator==(const JsonObject& other) const {
+    return _impl == other._impl;
+  }
+
+ protected:
+  virtual void writeTo(Internals::JsonWriter& writer) const {
+    if (_impl) _impl->writeTo(writer);
+  }
 
  private:
   Internals::JsonObjectImpl* _impl;

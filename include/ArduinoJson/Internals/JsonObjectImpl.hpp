@@ -19,27 +19,33 @@ class JsonObjectImpl {
   typedef JsonObjectIterator iterator;
   typedef JsonObjectConstIterator const_iterator;
 
-  JsonObjectImpl(JsonBuffer *buffer) : _buffer(buffer) {}
+  JsonObjectImpl(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
-  JsonValueImpl *operator[](const char *key) { return getOrCreateValueAt(key); }
+  int size() const;
+
+  JsonValueImpl *operator[](const char *key);
   void remove(key_type key);
 
   JsonArrayImpl *createNestedArray(key_type key);
   JsonObjectImpl *createNestedObject(key_type key);
 
-  iterator begin() { return iterator(_firstChild); }
+  iterator begin() { return iterator(_firstNode); }
   iterator end() { return iterator(0); }
 
-  const_iterator begin() const { return const_iterator(_firstChild); }
+  const_iterator begin() const { return const_iterator(_firstNode); }
   const_iterator end() const { return const_iterator(0); }
 
+  void writeTo(JsonWriter &writer) const;
+
  private:
-  JsonObjectNode *getNodeAt(key_type key);
+  void addNode(JsonObjectNode *nodeToAdd);
   void removeNode(JsonObjectNode *nodeToRemove);
-  JsonValueImpl *getOrCreateValueAt(key_type key);
+
+  JsonObjectNode *getNodeAt(key_type key);
+  JsonObjectNode *getOrCreateNodeAt(key_type key);
 
   JsonBuffer *_buffer;
-  JsonObjectNode *_firstChild;
+  JsonObjectNode *_firstNode;
 };
 }
 }

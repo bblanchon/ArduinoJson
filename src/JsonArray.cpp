@@ -11,17 +11,16 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+JsonValue JsonArray::add() { return JsonValue(_impl ? _impl->add() : NULL); }
+
 JsonValue JsonArray::operator[](int index) const {
-  if (!_impl) return JsonValue::null();
-  return JsonValue((*_impl)[index]);
+  return JsonValue(_impl ? (*_impl)[index] : NULL);
 }
 
 JsonArray JsonArray::createNestedArray() {
-  if (!_impl) return JsonArray::null();
-  return JsonArray(_impl->createNestedArray());
+  return JsonArray(_impl ? _impl->createNestedArray() : NULL);
 }
 
 JsonObject JsonArray::createNestedObject() {
-  if (!_impl) return JsonObject::null();
-  return JsonObject(_impl->createNestedObject()));
+  return JsonObject(_impl ? _impl->createNestedObject() : NULL);
 }

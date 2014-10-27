@@ -6,6 +6,8 @@
 
 #include <gtest/gtest.h>
 #include <ArduinoJson/StaticJsonBuffer.hpp>
+#include <ArduinoJson/JsonArray.hpp>
+#include <ArduinoJson/JsonObject.hpp>
 #include <ArduinoJson/JsonValue.hpp>
 #include "Printers.hpp"
 

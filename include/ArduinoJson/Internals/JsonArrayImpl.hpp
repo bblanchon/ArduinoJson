@@ -20,8 +20,9 @@ class JsonArrayImpl {
 
   JsonArrayImpl(JsonBuffer *buffer) : _buffer(buffer) {}
 
-  value_type operator[](int index) const;
+  int size() const;
 
+  value_type operator[](int index) const;
   value_type add();
 
   JsonArrayImpl *createNestedArray();
@@ -29,15 +30,15 @@ class JsonArrayImpl {
 
   void writeTo(JsonWriter &writer) const;
 
-  iterator begin() { return iterator(_firstChild); }
+  iterator begin() { return iterator(_firstNode); }
   iterator end() { return iterator(0); }
 
-  const_iterator begin() const { return const_iterator(_firstChild); }
+  const_iterator begin() const { return const_iterator(_firstNode); }
   const_iterator end() const { return const_iterator(0); }
 
  private:
   JsonBuffer *_buffer;
-  Internals::JsonArrayNode *_firstChild;
+  Internals::JsonArrayNode *_firstNode;
 };
 }
 }

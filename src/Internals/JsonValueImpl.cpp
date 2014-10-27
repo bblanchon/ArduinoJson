@@ -5,6 +5,11 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include "ArduinoJson/Internals/JsonValueImpl.hpp"
+#include "ArduinoJson/Internals/JsonArrayImpl.hpp"
+#include "ArduinoJson/Internals/JsonObjectImpl.hpp"
+#include "ArduinoJson/Internals/JsonWriter.hpp"
+
+using namespace ArduinoJson::Internals;
 
 void JsonValueImpl::writeTo(JsonWriter &writer) const {
   switch (_type) {
@@ -17,19 +22,19 @@ void JsonValueImpl::writeTo(JsonWriter &writer) const {
       break;
 
     case JSON_STRING:
-      writer.writeString(content.asString);
+      writer.writeString(_content.asString);
       break;
 
     case JSON_LONG:
-      writer.writeInteger(content.asInteger);
+      writer.writeInteger(_content.asInteger);
       break;
 
     case JSON_BOOLEAN:
-      writer.writeBoolean(content.asBoolean);
+      writer.writeBoolean(_content.asBoolean);
       break;
 
     default:  // >= JSON_DOUBLE_0_DECIMALS
-      writer.writeDouble(content.asDouble, type - JSON_DOUBLE_0_DECIMALS);
+      writer.writeDouble(_content.asDouble, _type - JSON_DOUBLE_0_DECIMALS);
       break;
   }
 }

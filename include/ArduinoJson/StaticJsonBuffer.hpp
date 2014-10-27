@@ -22,14 +22,15 @@ class StaticJsonBuffer : public JsonBuffer {
   int size() { return _size; }
 
  protected:
-  virtual void *allocateNode() {
-    if (_size >= CAPACITY) return 0;
-
-    return &_buffer[_size++];
+  virtual void* alloc(size_t size) {
+    if (_size + size > CAPACITY) return NULL;
+    void* p = &_buffer[_size];
+    _size += size;
+    return p;
   }
 
  private:
-  Internals::JsonNode _buffer[CAPACITY];
+  char _buffer[CAPACITY];
   int _size;
 };
 }

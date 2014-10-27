@@ -30,7 +30,7 @@ class Issue10 : public testing::Test {
     persons[1] = employee;
   }
 
-  void checkJsonString(JsonContainer &p) {
+  void checkJsonString(JsonPrintable &p) {
     char buffer[256];
     p.printTo(buffer, sizeof(buffer));
 

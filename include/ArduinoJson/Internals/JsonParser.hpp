@@ -18,6 +18,7 @@ class JsonParser {
 
   JsonArray parseArray();
   JsonObject parseObject();
+  JsonValue parseValue();
 
  private:
   bool isEnd() { return *_ptr == 0; }

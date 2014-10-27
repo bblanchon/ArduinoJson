@@ -22,6 +22,7 @@ class JsonArrayImpl;
 class JsonArrayIterator;
 class JsonObjectImpl;
 class JsonObjectIterator;
+class JsonObjectConstIterator;
 class JsonParser;
 class JsonValueImpl;
 class JsonWriter;

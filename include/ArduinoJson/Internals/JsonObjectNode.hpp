@@ -6,14 +6,17 @@
 
 #pragma once
 
-#include "../JsonPair.hpp"
+#include "JsonValueImpl.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
 struct JsonObjectNode {
-  JsonObjectNode *next;
-  JsonPair pair;
+  JsonObjectNode(const char* k) : key(k) {}
+
+  const char* const key;
+  JsonValueImpl value;
+  JsonObjectNode* next;
 };
 }
 }

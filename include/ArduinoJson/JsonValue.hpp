@@ -18,16 +18,40 @@ class JsonValue {
   JsonValue() : _impl(NULL) {}
   JsonValue(Internals::JsonValueImpl *impl) : _impl(impl) {}
 
-  template <typename T>
-  void operator=(T value) {
+  void set(const char *value) {
     if (_impl) _impl->set(value);
   }
-
-  void operator=(JsonArray array);
-  void operator=(JsonObject object);
-
-  void set(double value, int decimals) {
+  void set(bool value) {
+    if (_impl) _impl->set(value);
+  }
+  void set(double value, int decimals = 2) {
     if (_impl) _impl->set(value, decimals);
+  }
+  void set(int value) {
+    if (_impl) _impl->set(static_cast<long>(value));
+  }
+  void set(long value) {
+    if (_impl) _impl->set(value);
+  }
+  void set(JsonObject object);
+  void set(JsonArray array);
+
+  operator bool() const { return _impl ? _impl->asBool() : false; }
+  operator int() const { return _impl ? _impl->asLong() : 0; }
+  operator long() const { return _impl ? _impl->asLong() : 0; }
+  operator double() const { return _impl ? _impl->asDouble() : 0.0; }
+  operator const char *() const {
+    return _impl ? _impl->asString() : static_cast<char *>(NULL);
+  }
+  operator JsonArray();
+  operator JsonObject();
+
+  bool success() { return _impl; }
+
+  template <typename T>
+  JsonValue operator=(T value) {
+    set(value);
+    return *this;
   }
 
   template <typename T>
@@ -35,18 +59,10 @@ class JsonValue {
     return static_cast<T>(*this);
   }
 
-  operator bool() const { return _impl ? *_impl : false; }
-  operator int() const { return _impl ? *_impl : 0; }
-  operator long() const { return _impl ? *_impl : 0; }
-  operator double() const { return _impl ? *_impl : 0.0; }
-  operator const char *() const {
-    return _impl ? *_impl : static_cast<char *>(NULL);
+ protected:
+  virtual void writeTo(Internals::JsonWriter &writer) const {
+    if (_impl) _impl->writeTo(writer);
   }
-  operator JsonArray() const;
-
-  bool success() { return _impl; }
-
-  static JsonValue null() { return JsonValue(NULL); }
 
  private:
   Internals::JsonValueImpl *_impl;

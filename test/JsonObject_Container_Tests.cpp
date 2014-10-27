@@ -5,8 +5,10 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/StaticJsonBuffer.hpp>
+#include <ArduinoJson/JsonArray.hpp>
+#include <ArduinoJson/JsonObject.hpp>
 #include <ArduinoJson/JsonValue.hpp>
+#include <ArduinoJson/StaticJsonBuffer.hpp>
 #include "Printers.hpp"
 
 using namespace ArduinoJson;

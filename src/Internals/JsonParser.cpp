@@ -70,9 +70,6 @@ void JsonParser::parseValueTo(JsonValue destination) {
     case '\"':
       destination = parseString();
       break;
-
-    default:
-      destination = NULL;  // invalid JSON
   }
 }
 
@@ -142,10 +139,9 @@ JsonObject JsonParser::parseObject() {
     const char *key = parseString();
     if (!key) return NULL;
 
-    if (!skip(':'))
-      return NULL;
+    if (!skip(':')) return NULL;
 
-        JsonValue value = object[key];
+    JsonValue value = object[key];
 
     parseValueTo(value);
     if (!value.success()) return NULL;
@@ -158,4 +154,10 @@ JsonObject JsonParser::parseObject() {
 
 const char *JsonParser::parseString() {
   return QuotedString::extractFrom(_ptr, &_ptr);
+}
+
+JsonValue JsonParser::parseValue() {
+  JsonValue value = _buffer->createValue();
+  parseValueTo(value);
+  return value;
 }

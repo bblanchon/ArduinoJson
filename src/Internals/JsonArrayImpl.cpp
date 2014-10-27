@@ -13,8 +13,14 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+int JsonArrayImpl::size() const {
+  int nodeCount = 0;
+  for (JsonArrayNode *node = _firstNode; node; node = node->next) nodeCount++;
+  return nodeCount;
+}
+
 JsonValueImpl *JsonArrayImpl::operator[](int index) const {
-  JsonArrayNode *node = _firstChild;
+  JsonArrayNode *node = _firstNode;
   while (node && index--) node = node->next;
 
   return NULL;
@@ -50,7 +56,7 @@ JsonObjectImpl *JsonArrayImpl::createNestedObject() {
 }
 
 void JsonArrayImpl::writeTo(JsonWriter &writer) const {
-  JsonArrayNode *child = _firstChild;
+  JsonArrayNode *child = _firstNode;
 
   if (child) {
     writer.beginArray();

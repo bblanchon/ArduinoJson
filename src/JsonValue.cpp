@@ -4,25 +4,24 @@
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 
-#include "ArduinoJson/JsonValue.hpp"
-
 #include "ArduinoJson/JsonArray.hpp"
 #include "ArduinoJson/JsonObject.hpp"
+#include "ArduinoJson/JsonValue.hpp"
 
 using namespace ArduinoJson;
 
-JsonValue::operator JsonArray() const {
-  return _impl ? JsonArray(*_impl) : JsonArray();
+JsonValue::operator JsonArray() {
+  return JsonArray(_impl ? _impl->asArray() : NULL);
 }
 
-JsonValue::operator JsonObject() const {
-  return _impl ? JsonObject(*_impl) : JsonObject();
+JsonValue::operator JsonObject() {
+  return JsonObject(_impl ? _impl->asObject() : NULL);
 }
 
-void JsonValue::operator=(JsonArray array) {
+void JsonValue::set(JsonArray array) {
   if (_impl) _impl->set(array._impl);
 }
 
-void JsonValue::operator=(JsonObject object) {
+void JsonValue::set(JsonObject object) {
   if (_impl) _impl->set(object._impl);
 }

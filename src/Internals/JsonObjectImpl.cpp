@@ -11,102 +11,95 @@
 #include "ArduinoJson/JsonBuffer.hpp"
 #include "ArduinoJson/Internals/JsonArrayImpl.hpp"
 #include "ArduinoJson/Internals/JsonValueImpl.hpp"
+#include "ArduinoJson/Internals/JsonWriter.hpp"
 #include "ArduinoJson/Internals/StringBuilder.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+int JsonObjectImpl::size() const {
+  int nodeCount = 0;
+  for (JsonObjectNode *node = _firstNode; node; node = node->next) nodeCount++;
+  return nodeCount;
+}
+
+JsonValueImpl *JsonObjectImpl::operator[](const char *key) {
+  JsonObjectNode *node = getOrCreateNodeAt(key);
+  return node ? &node->value : NULL;
+}
+
 void JsonObjectImpl::remove(char const *key) { removeNode(getNodeAt(key)); }
 
 JsonArrayImpl *JsonObjectImpl::createNestedArray(char const *key) {
-  JsonValueImpl *node = getOrCreateValueAt(key);
+  JsonObjectNode *node = getOrCreateNodeAt(key);
   if (!node) return NULL;
 
   JsonArrayImpl *array = new (_buffer) JsonArrayImpl(_buffer);
-  node->set(array);
+  node->value.set(array);
 
   return array;
 }
 
-JsonObject JsonObject::createNestedObject(char const *key) {
-  JsonNode *node = getOrCreateValueAt(key);
+JsonObjectImpl *JsonObjectImpl::createNestedObject(const char *key) {
+  JsonObjectNode *node = getOrCreateNodeAt(key);
+  if (!node) return NULL;
 
-  if (node) node->setAsObject(_node->getContainerBuffer());
+  JsonObjectImpl *object = new (_buffer) JsonObjectImpl(_buffer);
+  node->value.set(object);
 
-  return JsonObject(node);
+  return object;
 }
 
-JsonNode *JsonObject::getPairAt(const char *key) {
-  for (JsonNode *node = firstChild(); node; node = node->next) {
-    if (!strcmp(node->getAsObjectKey(), key)) return node;
+JsonObjectNode *JsonObjectImpl::getNodeAt(const char *key) {
+  for (JsonObjectNode *node = _firstNode; node; node = node->next) {
+    if (!strcmp(node->key, key)) return node;
   }
   return NULL;
 }
 
-JsonNode *JsonObject::getOrCreateValueAt(const char *key) {
-  JsonNode *existingNode = getPairAt(key);
-  if (existingNode) return existingNode->getAsObjectValue();
+JsonObjectNode *JsonObjectImpl::getOrCreateNodeAt(const char *key) {
+  JsonObjectNode *existingNode = getNodeAt(key);
+  if (existingNode) return existingNode;
 
-  JsonNode *newValueNode = createNode();
-  if (!newValueNode) return 0;
+  JsonObjectNode *newNode = new (_buffer) JsonObjectNode(key);
 
-  JsonNode *newKeyNode = createNode();
-  if (!newKeyNode) return 0;
+  if (newNode) addNode(newNode);
 
-  newKeyNode->setAsObjectKeyValue(key, newValueNode);
-
-  addChild(newKeyNode);
-
-  return newValueNode;
+  return newNode;
 }
 
-void JsonNode::addChild(JsonNode *childToAdd) {
-  if (type == JSON_PROXY) return content.asProxy.target->addChild(childToAdd);
-
-  if (type != JSON_ARRAY && type != JSON_OBJECT) return;
-
-  JsonNode *lastChild = content.asContainer.child;
-
-  if (!lastChild) {
-    content.asContainer.child = childToAdd;
-    return;
-  }
-
-  while (lastChild->next) lastChild = lastChild->next;
-
-  lastChild->next = childToAdd;
-}
-
-void JsonNode::removeChild(JsonNode *childToRemove) {
-  if (type == JSON_PROXY)
-    return content.asProxy.target->removeChild(childToRemove);
-
-  if (type != JSON_ARRAY && type != JSON_OBJECT) return;
-
-  if (content.asContainer.child == childToRemove) {
-    content.asContainer.child = childToRemove->next;
-    return;
-  }
-
-  for (JsonNode *child = content.asContainer.child; child;
-       child = child->next) {
-    if (child->next == childToRemove) child->next = childToRemove->next;
+void JsonObjectImpl::addNode(JsonObjectNode *nodeToAdd) {
+  if (!_firstNode) {
+    _firstNode = nodeToAdd;
+  } else {
+    JsonObjectNode *lastNode = _firstNode;
+    while (lastNode->next) lastNode = lastNode->next;
+    lastNode->next = nodeToAdd;
   }
 }
 
-void JsonObjectImpl::writeObjectTo(JsonWriter &writer) {
-  JsonObjectNode *child = _firstChild;
+void JsonObjectImpl::removeNode(JsonObjectNode *nodeToRemove) {
+  if (nodeToRemove == _firstNode) {
+    _firstNode = nodeToRemove->next;
+  } else {
+    for (JsonObjectNode *node = _firstNode; node; node = node->next)
+      if (node->next == nodeToRemove) node->next = nodeToRemove->next;
+  }
+}
 
-  if (child) {
+void JsonObjectImpl::writeTo(JsonWriter &writer) const {
+  JsonObjectNode *node = _firstNode;
+
+  if (node) {
     writer.beginObject();
 
     for (;;) {
-      writer.writeString(child->content.asKeyValue.key);
+      writer.writeString(node->key);
       writer.writeColon();
-      child->value->writeTo(writer);
+      node->value.writeTo(writer);
 
-      child = child->next;
-      if (!child) break;
+      node = node->next;
+      if (!node) break;
 
       writer.writeComma();
     }

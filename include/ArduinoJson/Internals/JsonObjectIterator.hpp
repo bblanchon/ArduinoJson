@@ -11,26 +11,26 @@ namespace Internals {
 
 class JsonObjectIterator {
  public:
-  explicit JsonObjectIterator(Internals::JsonObjectNode *node) : _node(node) {}
+  explicit JsonObjectIterator(Internals::JsonObjectNode *node) : _pair(node) {}
 
-  JsonPair &operator*() const { return _node->pair; }
-  JsonPair *operator->() { return &_node->pair; }
+  JsonPair &operator*() { return _pair; }
+  JsonPair *operator->() { return &_pair; }
 
   bool operator==(const JsonObjectIterator &other) const {
-    return _node == other._node;
+    return _pair._node == other._pair._node;
   }
 
   bool operator!=(const JsonObjectIterator &other) const {
-    return _node != other._node;
+    return _pair._node != other._pair._node;
   }
 
   JsonObjectIterator &operator++() {
-    _node = _node->next;
+    _pair._node = _pair._node->next;
     return *this;
   }
 
  private:
-  JsonObjectNode *_node;
+  JsonPair _pair;
 };
 }
 }

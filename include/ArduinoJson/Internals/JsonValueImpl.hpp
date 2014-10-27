@@ -49,27 +49,27 @@ class JsonValueImpl {
     _content.asObject = object;
   }
 
-  operator bool() const {
-    return _type == JSON_BOOLEAN ? _content.asBoolean : false;
-  }
-
-  operator char const *() const {
-    return _type == JSON_STRING ? _content.asString : NULL;
-  }
-
-  operator double() const {
-    return _type >= JSON_DOUBLE_0_DECIMALS ? _content.asDouble : 0;
-  }
-
-  operator long() const { return _type == JSON_LONG ? _content.asInteger : 0; }
-
-  operator JsonArrayImpl *() const {
+  JsonArrayImpl *asArray() {
     return _type == JSON_ARRAY ? _content.asArray : NULL;
   }
 
-  operator JsonObjectImpl *() const {
+  JsonObjectImpl *asObject() {
     return _type == JSON_OBJECT ? _content.asObject : NULL;
   }
+
+  bool asBool() const {
+    return _type == JSON_BOOLEAN ? _content.asBoolean : false;
+  }
+
+  const char *asString() const {
+    return _type == JSON_STRING ? _content.asString : NULL;
+  }
+
+  double asDouble() const {
+    return _type >= JSON_DOUBLE_0_DECIMALS ? _content.asDouble : 0;
+  }
+
+  long asLong() const { return _type == JSON_LONG ? _content.asInteger : 0; }
 
   void writeTo(JsonWriter &writer) const;
 
