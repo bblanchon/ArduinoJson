@@ -20,12 +20,13 @@ class IndentedPrint;
 class JsonArrayConstIterator;
 class JsonArrayImpl;
 class JsonArrayIterator;
+class JsonArrayNode;
+class JsonObjectConstIterator;
 class JsonObjectImpl;
 class JsonObjectIterator;
-class JsonObjectConstIterator;
+class JsonObjectNode;
 class JsonParser;
 class JsonValueImpl;
 class JsonWriter;
-struct JsonArrayNode;
 }
 }

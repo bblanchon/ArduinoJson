@@ -19,7 +19,7 @@ class JsonObjectImpl {
   typedef JsonObjectIterator iterator;
   typedef JsonObjectConstIterator const_iterator;
 
-  JsonObjectImpl(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
+  static JsonObjectImpl *createFrom(JsonBuffer *buffer);
 
   int size() const;
 
@@ -38,6 +38,8 @@ class JsonObjectImpl {
   void writeTo(JsonWriter &writer) const;
 
  private:
+  JsonObjectImpl(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
+
   void addNode(JsonObjectNode *nodeToAdd);
   void removeNode(JsonObjectNode *nodeToRemove);
 

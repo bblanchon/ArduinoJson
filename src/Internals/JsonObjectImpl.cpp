@@ -17,6 +17,11 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+JsonObjectImpl *JsonObjectImpl::createFrom(JsonBuffer *buffer) {
+  void *ptr = buffer->alloc(sizeof(JsonObjectImpl));
+  return ptr ? new (ptr) JsonObjectImpl(buffer) : NULL;
+}
+
 int JsonObjectImpl::size() const {
   int nodeCount = 0;
   for (JsonObjectNode *node = _firstNode; node; node = node->next) nodeCount++;
@@ -34,7 +39,7 @@ JsonArrayImpl *JsonObjectImpl::createNestedArray(char const *key) {
   JsonObjectNode *node = getOrCreateNodeAt(key);
   if (!node) return NULL;
 
-  JsonArrayImpl *array = new (_buffer) JsonArrayImpl(_buffer);
+  JsonArrayImpl *array = JsonArrayImpl::createFrom(_buffer);
   node->value.set(array);
 
   return array;
@@ -44,7 +49,7 @@ JsonObjectImpl *JsonObjectImpl::createNestedObject(const char *key) {
   JsonObjectNode *node = getOrCreateNodeAt(key);
   if (!node) return NULL;
 
-  JsonObjectImpl *object = new (_buffer) JsonObjectImpl(_buffer);
+  JsonObjectImpl *object = JsonObjectImpl::createFrom(_buffer);
   node->value.set(object);
 
   return object;
@@ -61,7 +66,7 @@ JsonObjectNode *JsonObjectImpl::getOrCreateNodeAt(const char *key) {
   JsonObjectNode *existingNode = getNodeAt(key);
   if (existingNode) return existingNode;
 
-  JsonObjectNode *newNode = new (_buffer) JsonObjectNode(key);
+  JsonObjectNode *newNode = JsonObjectNode::createFrom(_buffer, key);
 
   if (newNode) addNode(newNode);
 

@@ -18,7 +18,7 @@ class JsonArrayImpl {
   typedef JsonArrayIterator iterator;
   typedef JsonArrayConstIterator const_iterator;
 
-  JsonArrayImpl(JsonBuffer *buffer) : _buffer(buffer) {}
+  static JsonArrayImpl *createFrom(JsonBuffer *buffer);
 
   int size() const;
 
@@ -37,6 +37,8 @@ class JsonArrayImpl {
   const_iterator end() const { return const_iterator(0); }
 
  private:
+  JsonArrayImpl(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
+
   JsonBuffer *_buffer;
   Internals::JsonArrayNode *_firstNode;
 };

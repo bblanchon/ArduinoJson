@@ -7,16 +7,24 @@
 #pragma once
 
 #include "JsonValueImpl.hpp"
+#include "../JsonBuffer.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-struct JsonObjectNode {
-  JsonObjectNode(const char* k) : key(k) {}
+class JsonObjectNode {
+ public:
+  static JsonObjectNode* createFrom(JsonBuffer* buffer, const char* key) {
+    void* ptr = buffer->alloc(sizeof(JsonObjectNode));
+    return ptr ? new (ptr) JsonObjectNode(key) : NULL;
+  }
 
   const char* const key;
   JsonValueImpl value;
   JsonObjectNode* next;
+
+ private:
+  JsonObjectNode(const char* k) : key(k) {}
 };
 }
 }

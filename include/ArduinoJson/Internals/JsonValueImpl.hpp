@@ -19,6 +19,8 @@ class JsonValueImpl {
  public:
   JsonValueImpl() : _type(JSON_UNDEFINED) {}
 
+  static JsonValueImpl *createFrom(JsonBuffer *buffer);
+
   void set(bool value) {
     _type = JSON_BOOLEAN;
     _content.asBoolean = value;

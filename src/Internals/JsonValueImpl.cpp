@@ -9,9 +9,15 @@
 #include "ArduinoJson/Internals/JsonObjectImpl.hpp"
 #include "ArduinoJson/Internals/JsonWriter.hpp"
 
+using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-void JsonValueImpl::writeTo(JsonWriter &writer) const {
+JsonValueImpl* JsonValueImpl::createFrom(JsonBuffer* buffer) {
+  void* ptr = buffer->alloc(sizeof(JsonValueImpl));
+  return ptr ? new (ptr) JsonValueImpl() : NULL;
+}
+
+void JsonValueImpl::writeTo(JsonWriter& writer) const {
   switch (_type) {
     case JSON_ARRAY:
       _content.asArray->writeTo(writer);

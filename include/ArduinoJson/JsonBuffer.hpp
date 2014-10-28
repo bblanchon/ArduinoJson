@@ -35,5 +35,3 @@ class JsonBuffer {
   virtual void* alloc(size_t size) = 0;
 };
 }
-
-void* operator new(size_t size, ArduinoJson::JsonBuffer* buffer);

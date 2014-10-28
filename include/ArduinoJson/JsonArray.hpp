@@ -18,7 +18,7 @@ class JsonArray : public JsonPrintable {
   typedef Internals::JsonArrayIterator iterator;
   typedef Internals::JsonArrayConstIterator const_iterator;
 
-  JsonArray() {}
+  JsonArray() : _impl(NULL) {}
   JsonArray(Internals::JsonArrayImpl* impl) : _impl(impl) {}
 
   bool success() const { return _impl; }

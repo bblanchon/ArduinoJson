@@ -17,21 +17,16 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-// TODO: what happens if alloc returns NULL
-void* operator new(size_t size, ArduinoJson::JsonBuffer* buffer) {
-  return buffer->alloc(size);
-}
-
 JsonArray JsonBuffer::createArray() {
-  return JsonArray(new (this) JsonArrayImpl(this));
+  return JsonArray(JsonArrayImpl::createFrom(this));
 }
 
 JsonObject JsonBuffer::createObject() {
-  return JsonObject(new (this) JsonObjectImpl(this));
+  return JsonObject(JsonObjectImpl::createFrom(this));
 }
 
 JsonValue JsonBuffer::createValue() {
-  return JsonValue(new (this) JsonValueImpl());
+  return JsonValue(JsonValueImpl::createFrom(this));
 }
 
 JsonArray JsonBuffer::parseArray(char* json) {

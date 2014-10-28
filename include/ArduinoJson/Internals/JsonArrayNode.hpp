@@ -6,14 +6,24 @@
 
 #pragma once
 
-#include "../JsonValue.hpp"
+#include "JsonValueImpl.hpp"
+#include "../JsonBuffer.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-struct JsonArrayNode {
-  JsonArrayNode *next;
+class JsonArrayNode {
+ public:
+  static JsonArrayNode* createFrom(JsonBuffer* buffer) {
+    void* ptr = buffer->alloc(sizeof(JsonArrayNode));
+    return ptr ? new (ptr) JsonArrayNode() : NULL;
+  }
+
+  JsonArrayNode* next;
   JsonValueImpl value;
+
+ private:
+  JsonArrayNode() : next(0) {}
 };
 }
 }

@@ -38,13 +38,11 @@ class Issue10 : public testing::Test {
                  buffer);
   }
 
-  void nodeCountMustBe(int expected) { EXPECT_EQ(expected, json.size()); }
-
   Person persons[2];
-  StaticJsonBuffer<20> json;
 };
 
 TEST_F(Issue10, PopulateArrayByAddingAnObject) {
+  StaticJsonBuffer<20> json;
   JsonArray array = json.createArray();
 
   for (int i = 0; i < 2; i++) {
@@ -58,10 +56,10 @@ TEST_F(Issue10, PopulateArrayByAddingAnObject) {
   }
 
   checkJsonString(array);
-  nodeCountMustBe(15);
 }
 
 TEST_F(Issue10, PopulateArrayByCreatingNestedObjects) {
+  StaticJsonBuffer<20> json;
   JsonArray array = json.createArray();
 
   for (int i = 0; i < 2; i++) {
@@ -72,5 +70,4 @@ TEST_F(Issue10, PopulateArrayByCreatingNestedObjects) {
   }
 
   checkJsonString(array);
-  nodeCountMustBe(11);
 }
