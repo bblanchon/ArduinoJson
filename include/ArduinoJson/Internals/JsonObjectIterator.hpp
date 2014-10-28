@@ -25,7 +25,7 @@ class JsonObjectIterator {
   }
 
   JsonObjectIterator &operator++() {
-    _pair._node = _pair._node->next;
+    if (_pair._node) _pair._node = _pair._node->next;
     return *this;
   }
 

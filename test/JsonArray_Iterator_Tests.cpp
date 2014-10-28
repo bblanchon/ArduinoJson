@@ -11,7 +11,7 @@
 using namespace ArduinoJson;
 
 TEST(JsonArray_Iterator_Test, SimpleTest) {
-  StaticJsonBuffer<42> jsonBuffer;
+  StaticJsonBuffer<100> jsonBuffer;
 
   JsonArray array = jsonBuffer.createArray();
   array.add(12);

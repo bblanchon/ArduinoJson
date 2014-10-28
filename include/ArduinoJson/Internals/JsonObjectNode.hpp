@@ -24,7 +24,7 @@ class JsonObjectNode {
   JsonObjectNode* next;
 
  private:
-  JsonObjectNode(const char* k) : key(k) {}
+  JsonObjectNode(const char* k) : key(k), next(NULL) {}
 };
 }
 }

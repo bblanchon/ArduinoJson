@@ -39,6 +39,8 @@ class JsonArrayImpl {
  private:
   JsonArrayImpl(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
+  inline void addNode(JsonArrayNode *node);
+
   JsonBuffer *_buffer;
   Internals::JsonArrayNode *_firstNode;
 };

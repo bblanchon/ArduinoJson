@@ -11,6 +11,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
+// TODO: copy from JsonArrayIterator
 class JsonArrayConstIterator {
  public:
   explicit JsonArrayConstIterator(JsonArrayNode *node) : _node(node) {}

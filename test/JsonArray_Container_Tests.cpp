@@ -15,9 +15,10 @@ using namespace ArduinoJson;
 
 class JsonArray_Container_Tests : public ::testing::Test {
  protected:
-  virtual void SetUp() { array = json.createArray(); }
-
-  void nodeCountMustBe(int expected) { EXPECT_EQ(expected, json.size()); }
+  virtual void SetUp() {
+    json.clear();
+    array = json.createArray();
+  }
 
   template <typename T>
   void firstElementMustBe(T expected) {
@@ -31,7 +32,7 @@ class JsonArray_Container_Tests : public ::testing::Test {
 
   void sizeMustBe(int expected) { EXPECT_EQ(expected, array.size()); }
 
-  StaticJsonBuffer<42> json;
+  StaticJsonBuffer<256> json;
   JsonArray array;
 
  private:
@@ -41,19 +42,18 @@ class JsonArray_Container_Tests : public ::testing::Test {
   }
 };
 
-TEST_F(JsonArray_Container_Tests, InitialSizeIsZero) {
-  sizeMustBe(0);
-  nodeCountMustBe(1);
+TEST_F(JsonArray_Container_Tests, SuccessIsTrue) {
+  EXPECT_TRUE(array.success());
 }
+
+TEST_F(JsonArray_Container_Tests, InitialSizeIsZero) { sizeMustBe(0); }
 
 TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded) {
   array.add("hello");
   sizeMustBe(1);
-  nodeCountMustBe(2);
 
   array.add("world");
   sizeMustBe(2);
-  nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreIntegers) {
@@ -62,7 +62,6 @@ TEST_F(JsonArray_Container_Tests, CanStoreIntegers) {
 
   firstElementMustBe(123);
   secondElementMustBe(456);
-  nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreDoubles) {
@@ -71,7 +70,6 @@ TEST_F(JsonArray_Container_Tests, CanStoreDoubles) {
 
   firstElementMustBe(123.45);
   secondElementMustBe(456.78);
-  nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreBooleans) {
@@ -80,7 +78,6 @@ TEST_F(JsonArray_Container_Tests, CanStoreBooleans) {
 
   firstElementMustBe(true);
   secondElementMustBe(false);
-  nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreStrings) {
@@ -92,7 +89,6 @@ TEST_F(JsonArray_Container_Tests, CanStoreStrings) {
 
   firstElementMustBe(firstString);
   secondElementMustBe(secondString);
-  nodeCountMustBe(3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays) {
@@ -104,7 +100,6 @@ TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays) {
 
   firstElementMustBe(innerarray1);
   secondElementMustBe(innerarray2);
-  nodeCountMustBe(1 + 3 + 3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreNestedObjects) {
@@ -116,7 +111,6 @@ TEST_F(JsonArray_Container_Tests, CanStoreNestedObjects) {
 
   firstElementMustBe(innerObject1);
   secondElementMustBe(innerObject2);
-  nodeCountMustBe(1 + 3 + 3);
 }
 
 TEST_F(JsonArray_Container_Tests, CanCreateNestedArrays) {
@@ -125,7 +119,6 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedArrays) {
 
   firstElementMustBe(innerarray1);
   secondElementMustBe(innerarray2);
-  nodeCountMustBe(1 + 1 + 1);
 }
 
 TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects) {
@@ -134,5 +127,4 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects) {
 
   firstElementMustBe(innerObject1);
   secondElementMustBe(innerObject2);
-  nodeCountMustBe(3);
 }

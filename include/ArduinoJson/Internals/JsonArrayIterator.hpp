@@ -29,8 +29,10 @@ class JsonArrayIterator {
   }
 
   JsonArrayIterator &operator++() {
-    _node = _node->next;
-    updateValue();
+    if (_node) {
+      _node = _node->next;
+      updateValue();
+    }
     return *this;
   }
 

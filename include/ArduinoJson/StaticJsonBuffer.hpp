@@ -17,9 +17,11 @@ class StaticJsonBuffer : public JsonBuffer {
 
   virtual ~StaticJsonBuffer() {}
 
-  int capacity() { return CAPACITY; }
+  int capacity() const { return CAPACITY; }
 
-  int size() { return _size; }
+  int size() const { return _size; }
+
+  void clear() { _size = 0; }
 
  protected:
   virtual void* alloc(size_t size) {

@@ -27,17 +27,26 @@ int JsonArrayImpl::size() const {
 JsonValueImpl *JsonArrayImpl::operator[](int index) const {
   JsonArrayNode *node = _firstNode;
   while (node && index--) node = node->next;
-
-  return NULL;
+  return node ? &node->value : NULL;
 }
 
 JsonValueImpl *JsonArrayImpl::add() {
-  if (_buffer) return NULL;
-
   JsonArrayNode *node = JsonArrayNode::createFrom(_buffer);
   if (!node) return NULL;
 
+  addNode(node);
+
   return &node->value;
+}
+
+void JsonArrayImpl::addNode(JsonArrayNode *newNode) {
+  if (_firstNode) {
+    JsonArrayNode *lastNode = _firstNode;
+    while (lastNode->next) lastNode = lastNode->next;
+    lastNode->next = newNode;
+  } else {
+    _firstNode = newNode;
+  }
 }
 
 JsonArrayImpl *JsonArrayImpl::createNestedArray() {

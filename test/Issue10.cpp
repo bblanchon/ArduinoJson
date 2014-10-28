@@ -42,7 +42,7 @@ class Issue10 : public testing::Test {
 };
 
 TEST_F(Issue10, PopulateArrayByAddingAnObject) {
-  StaticJsonBuffer<20> json;
+  StaticJsonBuffer<200> json;
   JsonArray array = json.createArray();
 
   for (int i = 0; i < 2; i++) {
@@ -59,7 +59,7 @@ TEST_F(Issue10, PopulateArrayByAddingAnObject) {
 }
 
 TEST_F(Issue10, PopulateArrayByCreatingNestedObjects) {
-  StaticJsonBuffer<20> json;
+  StaticJsonBuffer<200> json;
   JsonArray array = json.createArray();
 
   for (int i = 0; i < 2; i++) {
