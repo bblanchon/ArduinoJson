@@ -6,35 +6,33 @@
 
 #pragma once
 
-#include "../JsonPair.hpp"
-#include "JsonObjectNode.hpp"
+#include "ForwardDeclarations.hpp"
+#include "Internals/JsonObjectNode.hpp"
 
 namespace ArduinoJson {
-namespace Internals {
 
 class JsonObjectConstIterator {
  public:
   explicit JsonObjectConstIterator(Internals::JsonObjectNode *node)
-      : _pair(node) {}
+      : _node(node) {}
 
-  const JsonPair operator*() const { return _pair; }
-  const JsonPair *operator->() { return &_pair; }
+  const JsonPair &operator*() { return _node->pair; }
+  const JsonPair *operator->() { return &_node->pair; }
 
   bool operator==(const JsonObjectConstIterator &other) const {
-    return _pair._node == other._pair._node;
+    return _node == other._node;
   }
 
   bool operator!=(const JsonObjectConstIterator &other) const {
-    return _pair._node != other._pair._node;
+    return _node != other._node;
   }
 
   JsonObjectConstIterator &operator++() {
-    _pair._node = _pair._node->next;
+    if (_node) _node = _node->next;
     return *this;
   }
 
  private:
-  JsonPair _pair;
+  Internals::JsonObjectNode *_node;
 };
-}
 }

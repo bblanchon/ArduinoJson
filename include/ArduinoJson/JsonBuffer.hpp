@@ -17,21 +17,12 @@ class JsonBuffer {
  public:
   virtual ~JsonBuffer() {}
 
-  JsonArray createArray();
-  JsonObject createObject();
-  JsonValue createValue();
+  JsonArray &createArray();
+  JsonObject &createObject();
 
-  template <typename T>
-  JsonValue createValue(T x) {
-    JsonValue value;
-    value = x;
-    return value;
-  }
+  JsonArray &parseArray(char *json);
+  JsonObject &parseObject(char *json);
 
-  JsonArray parseArray(char* json);
-  JsonObject parseObject(char* json);
-  JsonValue parseValue(char* json);
-
-  virtual void* alloc(size_t size) = 0;
+  virtual void *alloc(size_t size) = 0;
 };
 }

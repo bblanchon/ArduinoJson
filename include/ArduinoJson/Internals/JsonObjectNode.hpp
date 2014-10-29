@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "JsonValueImpl.hpp"
+#include "../JsonPair.hpp"
 #include "../JsonBuffer.hpp"
 
 namespace ArduinoJson {
@@ -19,12 +19,11 @@ class JsonObjectNode {
     return ptr ? new (ptr) JsonObjectNode(key) : NULL;
   }
 
-  const char* const key;
-  JsonValueImpl value;
+  JsonPair pair;
   JsonObjectNode* next;
 
  private:
-  JsonObjectNode(const char* k) : key(k), next(NULL) {}
+  JsonObjectNode(const char* k) : pair(k), next(NULL) {}
 };
 }
 }

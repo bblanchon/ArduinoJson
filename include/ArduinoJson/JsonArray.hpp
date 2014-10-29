@@ -6,58 +6,48 @@
 
 #pragma once
 
+#include "ForwardDeclarations.hpp"
+#include "JsonArrayIterator.hpp"
+#include "JsonArrayConstIterator.hpp"
 #include "JsonPrintable.hpp"
-#include "Internals/JsonArrayImpl.hpp"
 
 namespace ArduinoJson {
 class JsonArray : public JsonPrintable {
-  friend class JsonValue;
-
  public:
   typedef JsonValue value_type;
-  typedef Internals::JsonArrayIterator iterator;
-  typedef Internals::JsonArrayConstIterator const_iterator;
+  typedef JsonArrayIterator iterator;
+  typedef JsonArrayConstIterator const_iterator;
 
-  JsonArray() : _impl(NULL) {}
-  JsonArray(Internals::JsonArrayImpl* impl) : _impl(impl) {}
+  JsonArray(JsonBuffer *buffer = NULL) : _buffer(buffer), _firstNode(NULL) {}
 
-  bool success() const { return _impl; }
+  int size() const;
 
-  int size() const { return _impl ? _impl->size() : 0; }
-
-  value_type operator[](int index) const;
-  value_type add();
+  value_type &operator[](int index) const;
+  value_type &add();
 
   template <typename T>
   void add(T value) {
     add().set(value);
   }
 
-  void add(double value, int decimals = 2) { add().set(value, decimals); }
+  JsonArray &createNestedArray();
+  JsonObject &createNestedObject();
 
-  JsonArray createNestedArray();
-  JsonObject createNestedObject();
-
-  iterator begin() {
-    if (!_impl) return end();
-    return _impl->begin();
-  }
+  iterator begin() { return iterator(_firstNode); }
   iterator end() { return iterator(0); }
 
-  const_iterator begin() const {
-    if (!_impl) return end();
-    return const_cast<const Internals::JsonArrayImpl*>(_impl)->begin();
-  }
+  const_iterator begin() const { return const_iterator(_firstNode); }
   const_iterator end() const { return const_iterator(0); }
 
-  bool operator==(const JsonArray& other) const { return _impl == other._impl; }
+  static JsonArray &invalid() { return _invalid; }
 
- protected:
-  virtual void writeTo(Internals::JsonWriter& writer) const {
-    if (_impl) _impl->writeTo(writer);
-  }
+  virtual void writeTo(Internals::JsonWriter &writer) const;
 
  private:
-  Internals::JsonArrayImpl* _impl;
+  inline void addNode(Internals::JsonArrayNode *node);
+
+  JsonBuffer *_buffer;
+  Internals::JsonArrayNode *_firstNode;
+  static JsonArray _invalid;
 };
 }

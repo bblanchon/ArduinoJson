@@ -30,7 +30,7 @@ bool JsonParser::skip(char charToSkip) {
   return true;
 }
 
-void JsonParser::parseValueTo(JsonValue destination) {
+void JsonParser::parseAnythingTo(JsonValue &destination) {
   skipSpaces();
 
   switch (*_ptr) {
@@ -73,23 +73,23 @@ void JsonParser::parseValueTo(JsonValue destination) {
   }
 }
 
-JsonArray JsonParser::parseArray() {
+JsonArray &JsonParser::parseArray() {
   skip('[');
 
-  if (isEnd()) return NULL;
+  if (isEnd()) return JsonArray::invalid();
 
-  JsonArray array = _buffer->createArray();
+  JsonArray &array = _buffer->createArray();
   if (skip(']')) return array;  // empty array
 
   for (;;) {
-    JsonValue child = array.add();
+    JsonValue &child = array.add();
 
-    parseValueTo(child);
-    if (!child.success()) return NULL;
+    parseAnythingTo(child);
+    if (!child.success()) return JsonArray::invalid();  // child parsing failed
 
     if (skip(']')) return array;  // end of the array
 
-    if (!skip(',')) return NULL;  // comma is missing
+    if (!skip(',')) return JsonArray::invalid();  // comma is missing
   }
 }
 
@@ -126,38 +126,34 @@ void JsonParser::parseNullTo(JsonValue &destination) {
   destination = static_cast<const char *>(NULL);
 }
 
-JsonObject JsonParser::parseObject() {
+JsonObject &JsonParser::parseObject() {
   skip('{');
 
-  if (isEnd()) return NULL;  // premature ending
+  if (isEnd()) return JsonObject::invalid();  // premature ending
 
-  JsonObject object = _buffer->createObject();
+  JsonObject &object = _buffer->createObject();
 
   if (skip('}')) return object;  // empty object
 
   for (;;) {
     const char *key = parseString();
-    if (!key) return NULL;
+    if (!key) break;  // key parsing failed
 
-    if (!skip(':')) return NULL;
+    if (!skip(':')) break;  // colon is missing
 
-    JsonValue value = object[key];
+    JsonValue &value = object[key];
 
-    parseValueTo(value);
-    if (!value.success()) return NULL;
+    parseAnythingTo(value);
+    if (!value.success()) break;  // value parsing failed
 
     if (skip('}')) return object;  // end of the object
 
-    if (!skip(',')) return 0;  // comma is missing
+    if (!skip(',')) break;  // comma is missing
   }
+
+  return JsonObject::invalid();
 }
 
 const char *JsonParser::parseString() {
   return QuotedString::extractFrom(_ptr, &_ptr);
-}
-
-JsonValue JsonParser::parseValue() {
-  JsonValue value = _buffer->createValue();
-  parseValueTo(value);
-  return value;
 }

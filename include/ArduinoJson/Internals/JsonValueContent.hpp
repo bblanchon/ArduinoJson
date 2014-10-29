@@ -16,8 +16,8 @@ union JsonValueContent {
   double asDouble;
   long asInteger;
   const char* asString;
-  JsonArrayImpl* asArray;
-  JsonObjectImpl* asObject;
+  JsonArray* asArray;
+  JsonObject* asObject;
 };
 }
 }

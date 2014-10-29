@@ -6,18 +6,17 @@
 
 #pragma once
 
-#include "JsonArrayNode.hpp"
+#include "Internals/JsonArrayNode.hpp"
 
 namespace ArduinoJson {
-namespace Internals {
 
-// TODO: copy from JsonArrayIterator
 class JsonArrayConstIterator {
  public:
-  explicit JsonArrayConstIterator(JsonArrayNode *node) : _node(node) {}
+  explicit JsonArrayConstIterator(Internals::JsonArrayNode *node)
+      : _node(node) {}
 
-  const JsonValueImpl &operator*() const { return _node->value; }
-  const JsonValueImpl *operator->() { return &_node->value; }
+  const JsonValue &operator*() const { return _node->value; }
+  const JsonValue *operator->() { return &_node->value; }
 
   bool operator==(const JsonArrayConstIterator &other) const {
     return _node == other._node;
@@ -28,12 +27,11 @@ class JsonArrayConstIterator {
   }
 
   JsonArrayConstIterator &operator++() {
-    _node = _node->next;
+    if (_node) _node = _node->next;
     return *this;
   }
 
  private:
-  JsonArrayNode *_node;
+  Internals::JsonArrayNode *_node;
 };
-}
 }

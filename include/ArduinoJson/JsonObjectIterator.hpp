@@ -1,33 +1,37 @@
+// Copyright Benoit Blanchon 2014
+// MIT License
+//
+// Arduino JSON library
+// https://github.com/bblanchon/ArduinoJson
+
 #pragma once
 
-#include "ArduinoJson/JsonObjectKeyValue.hpp"
+#include "ForwardDeclarations.hpp"
+#include "Internals/JsonObjectNode.hpp"
 
 namespace ArduinoJson {
-class JsonObject;
 
 class JsonObjectIterator {
-  friend class JsonObject;
-
  public:
-  explicit JsonObjectIterator(Internals::JsonNode* node) : _node(node) {}
+  explicit JsonObjectIterator(Internals::JsonObjectNode *node) : _node(node) {}
 
-  const char* key() const { return operator*().key(); }
+  JsonPair &operator*() { return _node->pair; }
+  JsonPair *operator->() { return &_node->pair; }
 
-  JsonValue value() const { return operator*().value(); }
-
-  void operator++() { _node = _node->next; }
-
-  JsonObjectKeyValue operator*() const { return JsonObjectKeyValue(_node); }
-
-  bool operator==(const JsonObjectIterator& other) const {
+  bool operator==(const JsonObjectIterator &other) const {
     return _node == other._node;
   }
 
-  bool operator!=(const JsonObjectIterator& other) const {
+  bool operator!=(const JsonObjectIterator &other) const {
     return _node != other._node;
   }
 
+  JsonObjectIterator &operator++() {
+    if (_node) _node = _node->next;
+    return *this;
+  }
+
  private:
-  Internals::JsonNode* _node;
+  Internals::JsonObjectNode *_node;
 };
 }

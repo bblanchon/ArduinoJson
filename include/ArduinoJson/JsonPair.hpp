@@ -10,17 +10,10 @@
 #include "Internals/JsonObjectNode.hpp"
 
 namespace ArduinoJson {
-class JsonPair {
-  friend class Internals::JsonObjectIterator;
-  friend class Internals::JsonObjectConstIterator;
+struct JsonPair {
+  JsonPair(const char* k) : key(k) {}
 
- public:
-  JsonPair(Internals::JsonObjectNode *node) : _node(node) {}
-
-  const char *key() const { return _node->key; }
-  JsonValue value() { return JsonValue(&_node->value); }
-
- private:
-  Internals::JsonObjectNode *_node;
+  const char* const key;
+  JsonValue value;
 };
 }

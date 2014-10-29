@@ -5,22 +5,76 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include "ArduinoJson/JsonArray.hpp"
+
+#include "ArduinoJson/JsonBuffer.hpp"
 #include "ArduinoJson/JsonObject.hpp"
-#include "ArduinoJson/JsonValue.hpp"
+#include "ArduinoJson/Internals/JsonWriter.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-JsonValue JsonArray::add() { return JsonValue(_impl ? _impl->add() : NULL); }
-
-JsonValue JsonArray::operator[](int index) const {
-  return JsonValue(_impl ? (*_impl)[index] : NULL);
+int JsonArray::size() const {
+  int nodeCount = 0;
+  for (JsonArrayNode *node = _firstNode; node; node = node->next) nodeCount++;
+  return nodeCount;
 }
 
-JsonArray JsonArray::createNestedArray() {
-  return JsonArray(_impl ? _impl->createNestedArray() : NULL);
+JsonValue &JsonArray::operator[](int index) const {
+  JsonArrayNode *node = _firstNode;
+  while (node && index--) node = node->next;
+  return node ? node->value : JsonValue::invalid();
 }
 
-JsonObject JsonArray::createNestedObject() {
-  return JsonObject(_impl ? _impl->createNestedObject() : NULL);
+JsonValue &JsonArray::add() {
+  JsonArrayNode *node = JsonArrayNode::createFrom(_buffer);
+  if (!node) return JsonValue::invalid();
+
+  addNode(node);
+
+  return node->value;
+}
+
+void JsonArray::addNode(JsonArrayNode *newNode) {
+  if (_firstNode) {
+    JsonArrayNode *lastNode = _firstNode;
+    while (lastNode->next) lastNode = lastNode->next;
+    lastNode->next = newNode;
+  } else {
+    _firstNode = newNode;
+  }
+}
+
+JsonArray &JsonArray::createNestedArray() {
+  if (!_buffer) return JsonArray::invalid();
+  JsonArray &array = _buffer->createArray();
+  add(array);
+  return array;
+}
+
+JsonObject &JsonArray::createNestedObject() {
+  if (!_buffer) return JsonObject::invalid();
+  JsonObject &object = _buffer->createObject();
+  add(object);
+  return object;
+}
+
+void JsonArray::writeTo(JsonWriter &writer) const {
+  JsonArrayNode *child = _firstNode;
+
+  if (child) {
+    writer.beginArray();
+
+    for (;;) {
+      child->value.writeTo(writer);
+
+      child = child->next;
+      if (!child) break;
+
+      writer.writeComma();
+    }
+
+    writer.endArray();
+  } else {
+    writer.writeEmptyArray();
+  }
 }

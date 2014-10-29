@@ -10,23 +10,20 @@
 
 namespace ArduinoJson {
 class JsonArray;
+class JsonArrayConstIterator;
+class JsonArrayIterator;
 class JsonBuffer;
-class JsonPair;
-class JsonValue;
 class JsonObject;
+class JsonObjectConstIterator;
+class JsonObjectIterator;
+struct JsonPair;
+class JsonValue;
 
 namespace Internals {
 class IndentedPrint;
-class JsonArrayConstIterator;
-class JsonArrayImpl;
-class JsonArrayIterator;
 class JsonArrayNode;
-class JsonObjectConstIterator;
-class JsonObjectImpl;
-class JsonObjectIterator;
 class JsonObjectNode;
 class JsonParser;
-class JsonValueImpl;
 class JsonWriter;
 }
 }

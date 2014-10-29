@@ -16,9 +16,8 @@ class JsonParser {
  public:
   JsonParser(JsonBuffer *buffer, char *json) : _buffer(buffer), _ptr(json) {}
 
-  JsonArray parseArray();
-  JsonObject parseObject();
-  JsonValue parseValue();
+  JsonArray &parseArray();
+  JsonObject &parseObject();
 
  private:
   bool isEnd() { return *_ptr == 0; }
@@ -26,7 +25,7 @@ class JsonParser {
   bool skip(char charToSkip);
   void skipSpaces();
 
-  void parseValueTo(JsonValue);
+  void parseAnythingTo(JsonValue &destination);
   inline void parseBooleanTo(JsonValue &destination);
   inline void parseNullTo(JsonValue &destination);
   inline void parseNumberTo(JsonValue &destination);

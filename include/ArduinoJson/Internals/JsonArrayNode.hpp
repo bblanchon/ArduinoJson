@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "JsonValueImpl.hpp"
+#include "../JsonValue.hpp"
 #include "../JsonBuffer.hpp"
 
 namespace ArduinoJson {
@@ -20,7 +20,7 @@ class JsonArrayNode {
   }
 
   JsonArrayNode* next;
-  JsonValueImpl value;
+  JsonValue value;
 
  private:
   JsonArrayNode() : next(0) {}

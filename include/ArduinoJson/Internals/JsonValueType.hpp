@@ -11,6 +11,7 @@ namespace Internals {
 
 enum JsonValueType {
   JSON_UNDEFINED,
+  JSON_INVALID,
   JSON_ARRAY,
   JSON_OBJECT,
   JSON_BOOLEAN,

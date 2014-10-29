@@ -6,56 +6,53 @@
 
 #pragma once
 
+#include "JsonObjectConstIterator.hpp"
+#include "JsonObjectIterator.hpp"
 #include "JsonPrintable.hpp"
-#include "Internals/JsonObjectImpl.hpp"
+#include "Internals/JsonObjectNode.hpp"
 
 namespace ArduinoJson {
 class JsonObject : public JsonPrintable {
-  friend class JsonValue;
-
  public:
-  typedef const char* key_type;
+  typedef const char *key_type;
   typedef JsonPair value_type;
-  typedef Internals::JsonObjectIterator iterator;
-  typedef Internals::JsonObjectConstIterator const_iterator;
+  typedef JsonObjectIterator iterator;
+  typedef JsonObjectConstIterator const_iterator;
 
-  JsonObject() : _impl(NULL) {}
-  JsonObject(Internals::JsonObjectImpl* impl) : _impl(impl) {}
+  JsonObject(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
-  bool success() const { return _impl; }
+  int size() const;
 
-  int size() const { return _impl ? _impl->size() : 0; }
+  JsonValue &operator[](key_type key);
+  void remove(key_type key);
 
-  JsonValue operator[](key_type key);
-  void remove(key_type key) {
-    if (_impl) _impl->remove(key);
+  template <typename T>
+  void add(key_type key, T value) {
+    (*this)[key] = value;
   }
 
-  JsonArray createNestedArray(key_type key);
-  JsonObject createNestedObject(key_type key);
+  JsonArray &createNestedArray(key_type key);
+  JsonObject &createNestedObject(key_type key);
 
-  iterator begin() {
-    if (!_impl) return end();
-    return _impl->begin();
-  }
+  iterator begin() { return iterator(_firstNode); }
   iterator end() { return iterator(0); }
 
-  const_iterator begin() const {
-    if (!_impl) return end();
-    return const_cast<const Internals::JsonObjectImpl*>(_impl)->begin();
-  }
+  const_iterator begin() const { return const_iterator(_firstNode); }
   const_iterator end() const { return const_iterator(0); }
 
-  bool operator==(const JsonObject& other) const {
-    return _impl == other._impl;
-  }
+  static JsonObject &invalid() { return _invalid; }
 
- protected:
-  virtual void writeTo(Internals::JsonWriter& writer) const {
-    if (_impl) _impl->writeTo(writer);
-  }
+  virtual void writeTo(Internals::JsonWriter &writer) const;
 
  private:
-  Internals::JsonObjectImpl* _impl;
+  void addNode(Internals::JsonObjectNode *nodeToAdd);
+  void removeNode(Internals::JsonObjectNode *nodeToRemove);
+
+  Internals::JsonObjectNode *getNodeAt(key_type key);
+  Internals::JsonObjectNode *getOrCreateNodeAt(key_type key);
+
+  JsonBuffer *_buffer;
+  Internals::JsonObjectNode *_firstNode;
+  static JsonObject _invalid;
 };
 }
