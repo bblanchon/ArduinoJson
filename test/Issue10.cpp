@@ -43,10 +43,10 @@ class Issue10 : public testing::Test {
 
 TEST_F(Issue10, PopulateArrayByAddingAnObject) {
   StaticJsonBuffer<200> json;
-  JsonArray array = json.createArray();
+  JsonArray &array = json.createArray();
 
   for (int i = 0; i < 2; i++) {
-    JsonObject object = json.createObject();
+    JsonObject &object = json.createObject();
 
     object["id"] = persons[i].id;
     object["name"] = persons[i].name;
@@ -60,10 +60,10 @@ TEST_F(Issue10, PopulateArrayByAddingAnObject) {
 
 TEST_F(Issue10, PopulateArrayByCreatingNestedObjects) {
   StaticJsonBuffer<200> json;
-  JsonArray array = json.createArray();
+  JsonArray &array = json.createArray();
 
   for (int i = 0; i < 2; i++) {
-    JsonObject object = array.createNestedObject();
+    JsonObject &object = array.createNestedObject();
 
     object["id"] = persons[i].id;
     object["name"] = persons[i].name;

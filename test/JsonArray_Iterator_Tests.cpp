@@ -13,7 +13,7 @@ using namespace ArduinoJson;
 TEST(JsonArray_Iterator_Test, SimpleTest) {
   StaticJsonBuffer<100> jsonBuffer;
 
-  JsonArray array = jsonBuffer.createArray();
+  JsonArray &array = jsonBuffer.createArray();
   array.add(12);
   array.add(34);
 
@@ -26,5 +26,5 @@ TEST(JsonArray_Iterator_Test, SimpleTest) {
   EXPECT_NE(end, it);
   EXPECT_EQ(34, it->as<int>());
   ++it;
-  EXPECT_EQ(array.end(), it);
+  EXPECT_EQ(end, it);
 }

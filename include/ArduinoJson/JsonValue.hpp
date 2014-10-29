@@ -26,6 +26,22 @@ class JsonValue {
   void set(JsonArray &array);
   void set(JsonObject &object);
 
+  template <typename T>
+  JsonValue &operator=(T value) {
+    set(value);
+    return *this;
+  }
+
+  JsonValue &operator=(JsonArray& array) {
+    set(array);
+    return *this;
+  }
+
+  JsonValue &operator=(JsonObject& object) {
+    set(object);
+    return *this;
+  }
+
   JsonArray &asArray();
   JsonObject &asObject();
   bool asBool() const;
@@ -34,10 +50,7 @@ class JsonValue {
   long asLong() const;
 
   template <typename T>
-  JsonValue &operator=(T value) {
-    set(value);
-    return *this;
-  }
+  T as(){}
 
   static JsonValue &invalid() { return _invalid; }
 
@@ -50,4 +63,8 @@ class JsonValue {
   Internals::JsonValueContent _content;
   static JsonValue _invalid;
 };
+
+template <>
+int JsonValue::as<int>() { return asLong(); }
+
 }

@@ -10,6 +10,7 @@
 #include "JsonObjectIterator.hpp"
 #include "JsonPrintable.hpp"
 #include "Internals/JsonObjectNode.hpp"
+#include "JsonArray.hpp"
 
 namespace ArduinoJson {
 class JsonObject : public JsonPrintable {
@@ -31,6 +32,14 @@ class JsonObject : public JsonPrintable {
     (*this)[key] = value;
   }
 
+  void add(key_type key, JsonArray &nestedArray) {
+    (*this)[key] = nestedArray;
+  }
+
+  void add(key_type key, JsonObject &nestedObject) {
+    (*this)[key] = nestedObject;
+  }
+
   JsonArray &createNestedArray(key_type key);
   JsonObject &createNestedObject(key_type key);
 
@@ -45,6 +54,9 @@ class JsonObject : public JsonPrintable {
   virtual void writeTo(Internals::JsonWriter &writer) const;
 
  private:
+  JsonObject(const JsonObject&); // copy is forbidden, use a reference instead
+  JsonObject& operator=(const JsonObject&); // copy is forbidden, use a reference instead
+
   void addNode(Internals::JsonObjectNode *nodeToAdd);
   void removeNode(Internals::JsonObjectNode *nodeToRemove);
 

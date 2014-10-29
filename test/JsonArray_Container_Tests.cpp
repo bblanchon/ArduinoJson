@@ -15,9 +15,8 @@ using namespace ArduinoJson;
 
 class JsonArray_Container_Tests : public ::testing::Test {
  protected:
-  virtual void SetUp() {
-    json.clear();
-    array = json.createArray();
+  JsonArray_Container_Tests()
+    : array(json.createArray()) {
   }
 
   template <typename T>
@@ -33,7 +32,7 @@ class JsonArray_Container_Tests : public ::testing::Test {
   void sizeMustBe(int expected) { EXPECT_EQ(expected, array.size()); }
 
   StaticJsonBuffer<256> json;
-  JsonArray array;
+  JsonArray &array;
 
  private:
   template <typename T>
@@ -92,8 +91,8 @@ TEST_F(JsonArray_Container_Tests, CanStoreStrings) {
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays) {
-  JsonArray innerarray1 = json.createArray();
-  JsonArray innerarray2 = json.createArray();
+  JsonArray &innerarray1 = json.createArray();
+  JsonArray &innerarray2 = json.createArray();
 
   array.add(innerarray1);
   array.add(innerarray2);
