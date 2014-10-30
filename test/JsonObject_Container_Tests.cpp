@@ -14,11 +14,12 @@
 using namespace ArduinoJson;
 
 class JsonObject_Container_Tests : public ::testing::Test {
- protected:
-  virtual void SetUp() { object = json.createObject(); }
+ public:
+  JsonObject_Container_Tests() : object(json.createObject()) {}
 
+ protected:
   StaticJsonBuffer<42> json;
-  JsonObject object;
+  JsonObject& object;
 };
 
 TEST_F(JsonObject_Container_Tests, InitialSizeIsZero) {
@@ -95,23 +96,23 @@ TEST_F(JsonObject_Container_Tests, CanStoreStrings) {
 }
 
 TEST_F(JsonObject_Container_Tests, CanStoreInnerArrays) {
-  JsonArray innerarray1 = json.createArray();
-  JsonArray innerarray2 = json.createArray();
+  JsonArray& innerarray1 = json.createArray();
+  JsonArray& innerarray2 = json.createArray();
 
   object["hello"] = innerarray1;
   object["world"] = innerarray2;
 
-  EXPECT_EQ(innerarray1, object["hello"].as<JsonArray>());
-  EXPECT_EQ(innerarray2, object["world"].as<JsonArray>());
+  EXPECT_EQ(&innerarray1, &object["hello"].asArray());
+  EXPECT_EQ(&innerarray2, &object["world"].asArray());
 }
 
 TEST_F(JsonObject_Container_Tests, CanStoreInnerObjects) {
-  JsonObject innerObject1 = json.createObject();
-  JsonObject innerObject2 = json.createObject();
+  JsonObject& innerObject1 = json.createObject();
+  JsonObject& innerObject2 = json.createObject();
 
   object["hello"] = innerObject1;
   object["world"] = innerObject2;
 
-  EXPECT_EQ(innerObject1, object["hello"].as<JsonObject>());
-  EXPECT_EQ(innerObject2, object["world"].as<JsonObject>());
+  EXPECT_EQ(&innerObject1, &object["hello"].asObject());
+  EXPECT_EQ(&innerObject2, &object["world"].asObject());
 }

@@ -13,13 +13,14 @@
 using namespace ArduinoJson;
 
 class JsonArray_PrettyPrintTo_Tests : public testing::Test {
+ public:
+  JsonArray_PrettyPrintTo_Tests() : array(json.createArray()) {}
+
  protected:
-  JsonArray array;
+  JsonArray& array;
   StaticJsonBuffer<30> json;
 
-  virtual void SetUp() { array = json.createArray(); }
-
-  void outputMustBe(const char *expected) {
+  void outputMustBe(const char* expected) {
     size_t n = array.prettyPrintTo(buffer, sizeof(buffer));
     EXPECT_STREQ(expected, buffer);
     EXPECT_EQ(strlen(expected), n);
@@ -63,11 +64,11 @@ TEST_F(JsonArray_PrettyPrintTo_Tests, EmptyNestedArrays) {
 }
 
 TEST_F(JsonArray_PrettyPrintTo_Tests, NestedArrays) {
-  JsonArray nested1 = array.createNestedArray();
+  JsonArray& nested1 = array.createNestedArray();
   nested1.add(1);
   nested1.add(2);
 
-  JsonObject nested2 = array.createNestedObject();
+  JsonObject& nested2 = array.createNestedObject();
   nested2["key"] = 3;
 
   outputMustBe(

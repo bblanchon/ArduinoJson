@@ -14,13 +14,13 @@
 
 namespace ArduinoJson {
 class JsonObject : public JsonPrintable {
+  friend class JsonBuffer;
+
  public:
   typedef const char *key_type;
   typedef JsonPair value_type;
   typedef JsonObjectIterator iterator;
   typedef JsonObjectConstIterator const_iterator;
-
-  JsonObject(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
   int size() const;
 
@@ -29,16 +29,11 @@ class JsonObject : public JsonPrintable {
 
   template <typename T>
   void add(key_type key, T value) {
-    (*this)[key] = value;
+    add(key).set(value);
   }
 
-  void add(key_type key, JsonArray &nestedArray) {
-    (*this)[key] = nestedArray;
-  }
-
-  void add(key_type key, JsonObject &nestedObject) {
-    (*this)[key] = nestedObject;
-  }
+  void add(key_type key, JsonArray &array) { add(key).set(array); }
+  void add(key_type key, JsonObject &object) { add(key).set(object); }
 
   JsonArray &createNestedArray(key_type key);
   JsonObject &createNestedObject(key_type key);
@@ -54,9 +49,14 @@ class JsonObject : public JsonPrintable {
   virtual void writeTo(Internals::JsonWriter &writer) const;
 
  private:
-  JsonObject(const JsonObject&); // copy is forbidden, use a reference instead
-  JsonObject& operator=(const JsonObject&); // copy is forbidden, use a reference instead
+  // constructor is private, instance must be created via JsonBuffer
+  JsonObject(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
+  JsonObject(const JsonObject &);  // copy is forbidden, use a reference instead
+  JsonObject &operator=(
+      const JsonObject &);  // copy is forbidden, use a reference instead
+
+  JsonValue &add(key_type key) { return (*this)[key]; }
   void addNode(Internals::JsonObjectNode *nodeToAdd);
   void removeNode(Internals::JsonObjectNode *nodeToRemove);
 

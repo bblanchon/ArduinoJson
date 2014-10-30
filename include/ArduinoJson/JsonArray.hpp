@@ -14,16 +14,16 @@
 
 namespace ArduinoJson {
 class JsonArray : public JsonPrintable {
+  friend class JsonBuffer;
+
  public:
   typedef JsonValue value_type;
   typedef JsonArrayIterator iterator;
   typedef JsonArrayConstIterator const_iterator;
 
-  JsonArray(JsonBuffer *buffer = NULL) : _buffer(buffer), _firstNode(NULL) {}
-
   int size() const;
 
-  bool success() {return _buffer != NULL;}
+  bool success() { return _buffer != NULL; }
 
   value_type &operator[](int index) const;
   value_type &add();
@@ -33,13 +33,9 @@ class JsonArray : public JsonPrintable {
     add().set(value);
   }
 
-  void add(JsonArray &nestedArray) {
-    add().set(nestedArray);
-  }
-
-  void add(JsonObject&nestedObject){
-    add().set(nestedObject);
-  }
+  void add(double value, int decimals) { add().set(value, decimals); }
+  void add(JsonArray &nestedArray) { add().set(nestedArray); }
+  void add(JsonObject &nestedObject) { add().set(nestedObject); }
 
   JsonArray &createNestedArray();
   JsonObject &createNestedObject();
@@ -55,8 +51,12 @@ class JsonArray : public JsonPrintable {
   virtual void writeTo(Internals::JsonWriter &writer) const;
 
  private:
-  JsonArray(const JsonArray&); // copy is forbidden, use a reference instead
-  JsonArray& operator=(const JsonArray&); // copy is forbidden, use a reference instead
+  // constructor is private: instance must be created via a JsonBuffer
+  JsonArray(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
+
+  JsonArray(const JsonArray &);  // copy is forbidden, use a reference instead
+  JsonArray &operator=(
+      const JsonArray &);  // copy is forbidden, use a reference instead
 
   inline void addNode(Internals::JsonArrayNode *node);
 

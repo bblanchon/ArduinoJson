@@ -12,11 +12,12 @@
 using namespace ArduinoJson;
 
 class JsonArray_PrintTo_Tests : public testing::Test {
- protected:
-  JsonArray array;
-  StaticJsonBuffer<3> json;
+ public:
+  JsonArray_PrintTo_Tests() : array(json.createArray()) {}
 
-  virtual void SetUp() { array = json.createArray(); }
+ protected:
+  JsonArray &array;
+  StaticJsonBuffer<3> json;
 
   void outputMustBe(const char *expected) {
     size_t n = array.printTo(buffer, sizeof(buffer));

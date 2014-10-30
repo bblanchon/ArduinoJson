@@ -12,27 +12,27 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-JsonArray &JsonValue::asArray() {
+JsonValue::operator JsonArray &() const {
   return _type == JSON_ARRAY ? *_content.asArray : JsonArray::invalid();
 }
 
-JsonObject &JsonValue::asObject() {
+JsonValue::operator JsonObject &() const {
   return _type == JSON_OBJECT ? *_content.asObject : JsonObject::invalid();
 }
 
-bool JsonValue::asBool() const {
+JsonValue::operator bool() const {
   return _type == JSON_BOOLEAN ? _content.asBoolean : false;
 }
 
-const char *JsonValue::asString() const {
+JsonValue::operator const char *() const {
   return _type == JSON_STRING ? _content.asString : NULL;
 }
 
-double JsonValue::asDouble() const {
+JsonValue::operator double() const {
   return _type >= JSON_DOUBLE_0_DECIMALS ? _content.asDouble : 0;
 }
 
-long JsonValue::asLong() const {
+JsonValue::operator long() const {
   return _type == JSON_LONG ? _content.asInteger : 0;
 }
 
