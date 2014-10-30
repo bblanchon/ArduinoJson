@@ -17,8 +17,8 @@ class JsonObject_PrettyPrintTo_Tests : public testing::Test {
   JsonObject_PrettyPrintTo_Tests() : object(json.createObject()) {}
 
  protected:
+  StaticJsonBuffer<300> json;
   JsonObject &object;
-  StaticJsonBuffer<30> json;
 
   void outputMustBe(const char *expected) {
     size_t n = object.prettyPrintTo(buffer, sizeof(buffer));

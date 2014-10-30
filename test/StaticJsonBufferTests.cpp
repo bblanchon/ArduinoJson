@@ -21,25 +21,25 @@ TEST(StaticJsonBuffer, InitialSizeIsZero) {
   EXPECT_EQ(0, json.size());
 }
 
-TEST(StaticJsonBuffer, WhenCreateObjectIsCalled_ThenSizeIsIncreasedByOne) {
+TEST(StaticJsonBuffer, WhenCreateObjectIsCalled_ThenSizeIsIncreasedSizeOfJsonObject) {
   StaticJsonBuffer<42> json;
 
   json.createObject();
-  EXPECT_EQ(1, json.size());
+  EXPECT_EQ(sizeof(JsonObject), json.size());
 
   json.createObject();
-  EXPECT_EQ(2, json.size());
+  EXPECT_EQ(sizeof(JsonObject)*2, json.size());
 }
 
 TEST(StaticJsonBuffer,
      GivenBufferIsFull_WhenCreateObjectIsCalled_ThenSizeDoesNotChange) {
-  StaticJsonBuffer<1> json;
+  StaticJsonBuffer<sizeof(JsonObject)> json;
 
   json.createObject();
-  EXPECT_EQ(1, json.size());
+  EXPECT_EQ(sizeof(JsonObject), json.size());
 
   json.createObject();
-  EXPECT_EQ(1, json.size());
+  EXPECT_EQ(sizeof(JsonObject), json.size());
 }
 
 TEST(StaticJsonBuffer,
@@ -51,15 +51,15 @@ TEST(StaticJsonBuffer,
 }
 
 TEST(StaticJsonBuffer,
-     GivenAJsonObject_WhenValuesAreAdded_ThenSizeIsIncreasedByTwo) {
-  StaticJsonBuffer<42> json;
+     GivenAJsonObject_WhenValuesAreAdded_ThenSizeIsIncreasedAccordingly) {
+  StaticJsonBuffer<200> json;
   JsonObject &obj = json.createObject();
 
   obj["hello"];
-  EXPECT_EQ(3, json.size());
+  EXPECT_EQ(sizeof(JsonObject)+sizeof(Internals::JsonObjectNode), json.size());
 
   obj["world"];
-  EXPECT_EQ(5, json.size());
+  EXPECT_EQ(sizeof(JsonObject) + sizeof(Internals::JsonObjectNode)*2, json.size());
 }
 
 TEST(
@@ -69,8 +69,10 @@ TEST(
   JsonObject &obj = json.createObject();
 
   obj["hello"];
-  EXPECT_EQ(3, json.size());
 
+  size_t sizeBefore = json.size();
   obj["hello"];
-  EXPECT_EQ(3, json.size());
+  size_t sizeAfter = json.size();
+
+  EXPECT_EQ(sizeBefore, sizeAfter);
 }

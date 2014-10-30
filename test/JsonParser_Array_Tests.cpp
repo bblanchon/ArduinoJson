@@ -25,7 +25,7 @@ class JsonParser_Array_Tests : public testing::Test {
     EXPECT_EQ(0, _array->size());
   }
 
-  void sizeMustBe(int expected) { EXPECT_EQ(expected, _array->size()); }
+  void sizeMustBe(int expected) { ASSERT_EQ(expected, _array->size()); }
 
   template <typename T>
   void firstElementMustBe(T expected) {
@@ -46,7 +46,7 @@ class JsonParser_Array_Tests : public testing::Test {
     EXPECT_STREQ(expected, _array->at(index).as<const char *>());
   }
 
-  StaticJsonBuffer<42> _jsonBuffer;
+  StaticJsonBuffer<256> _jsonBuffer;
   JsonArray *_array;
   char _jsonString[256];
 };

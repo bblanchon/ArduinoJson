@@ -11,7 +11,7 @@
 using namespace ArduinoJson;
 
 TEST(JsonObject_Iterator_Test, SimpleTest) {
-  StaticJsonBuffer<42> jsonBuffer;
+  StaticJsonBuffer<256> jsonBuffer;
 
   JsonObject &object = jsonBuffer.createObject();
   object["ab"] = 12;
@@ -20,11 +20,11 @@ TEST(JsonObject_Iterator_Test, SimpleTest) {
   JsonObject::iterator it = object.begin();
   JsonObject::iterator end = object.end();
 
-  EXPECT_NE(end, it);
+  ASSERT_NE(end, it);
   EXPECT_STREQ("ab", it->key);
   EXPECT_EQ(12, it->value.as<int>());
   ++it;
-  EXPECT_NE(end, it);
+  ASSERT_NE(end, it);
   EXPECT_STREQ("cd", it->key);
   EXPECT_EQ(34, it->value.as<int>());
   ++it;

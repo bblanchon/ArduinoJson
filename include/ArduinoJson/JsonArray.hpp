@@ -11,10 +11,14 @@
 #include "JsonArrayConstIterator.hpp"
 #include "JsonPrintable.hpp"
 #include "JsonObject.hpp"
+#include "Internals/NonCopyable.hpp"
+
+#define JSON_ARRAY_SIZE(NUMBER_OF_ELEMENTS) \
+  (sizeof(JsonArray) + (NUMBER_OF_ELEMENTS) * sizeof(Internals::JsonArrayNode))
 
 namespace ArduinoJson {
 
-class JsonArray : public JsonPrintable {
+class JsonArray : public JsonPrintable, Internals::NonCopyable {
   friend class JsonBuffer;
 
  public:
@@ -55,10 +59,6 @@ class JsonArray : public JsonPrintable {
  private:
   // constructor is private: instance must be created via a JsonBuffer
   JsonArray(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
-
-  // copy is forbidden, use a reference instead
-  JsonArray(const JsonArray &);
-  JsonArray &operator=(const JsonArray &);
 
   Internals::JsonArrayNode *createNode();
   inline void addNode(Internals::JsonArrayNode *node);

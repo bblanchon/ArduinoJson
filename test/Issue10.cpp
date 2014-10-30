@@ -38,11 +38,11 @@ class Issue10 : public testing::Test {
                  buffer);
   }
 
+  StaticJsonBuffer<JSON_ARRAY_SIZE(2)+2*JSON_OBJECT_SIZE(2)> json;
   Person persons[2];
 };
 
 TEST_F(Issue10, PopulateArrayByAddingAnObject) {
-  StaticJsonBuffer<200> json;
   JsonArray &array = json.createArray();
 
   for (int i = 0; i < 2; i++) {
@@ -51,15 +51,13 @@ TEST_F(Issue10, PopulateArrayByAddingAnObject) {
     object["id"] = persons[i].id;
     object["name"] = persons[i].name;
 
-    array.add(object);  // <- adds a reference to an existing objet (creates 2
-                        // extra proxy nodes)
+    array.add(object); 
   }
 
   checkJsonString(array);
 }
 
 TEST_F(Issue10, PopulateArrayByCreatingNestedObjects) {
-  StaticJsonBuffer<200> json;
   JsonArray &array = json.createArray();
 
   for (int i = 0; i < 2; i++) {

@@ -15,7 +15,7 @@ using namespace ArduinoJson;
 
 class JsonValueTests : public ::testing::Test {
  protected:
-  StaticJsonBuffer<42> json;
+  StaticJsonBuffer<200> json;
   JsonValue jsonValue1;
   JsonValue jsonValue2;
 };

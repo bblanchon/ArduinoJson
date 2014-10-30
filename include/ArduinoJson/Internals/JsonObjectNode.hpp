@@ -18,9 +18,6 @@ class JsonObjectNode {
 
   JsonPair pair;
   JsonObjectNode* next;
-
-  // warning C4512: assignment operator could not be generated
-  #pragma warning( suppress : 4512 ) 
 };
 }
 }

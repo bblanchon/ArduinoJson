@@ -82,6 +82,7 @@ void JsonObject::addNode(JsonObjectNode *nodeToAdd) {
 }
 
 void JsonObject::removeNode(JsonObjectNode *nodeToRemove) {
+  if (!nodeToRemove) return;
   if (nodeToRemove == _firstNode) {
     _firstNode = nodeToRemove->next;
   } else {

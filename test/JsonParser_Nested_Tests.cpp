@@ -12,7 +12,7 @@
 using namespace ArduinoJson;
 
 TEST(JsonParser_Nested_Tests, ArrayNestedInObject) {
-  StaticJsonBuffer<42> jsonBuffer;
+  StaticJsonBuffer<256> jsonBuffer;
   char jsonString[] = " { \"ab\" : [ 1 , 2 ] , \"cd\" : [ 3 , 4 ] } ";
 
   JsonObject &object = jsonBuffer.parseObject(jsonString);
@@ -35,7 +35,7 @@ TEST(JsonParser_Nested_Tests, ArrayNestedInObject) {
 }
 
 TEST(JsonParser_Nested_Tests, ObjectNestedInArray) {
-  StaticJsonBuffer<42> jsonBuffer;
+  StaticJsonBuffer<256> jsonBuffer;
   char jsonString[] =
       " [ { \"a\" : 1 , \"b\" : 2 } , { \"c\" : 3 , \"d\" : 4 } ] ";
 

@@ -6,15 +6,20 @@
 
 #pragma once
 
+#include "Internals/JsonObjectNode.hpp"
+#include "Internals/NonCopyable.hpp"
+#include "JsonArray.hpp"
 #include "JsonObjectConstIterator.hpp"
 #include "JsonObjectIterator.hpp"
 #include "JsonPrintable.hpp"
-#include "Internals/JsonObjectNode.hpp"
-#include "JsonArray.hpp"
+
+#define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
+  (sizeof(JsonObject) +                      \
+   (NUMBER_OF_ELEMENTS) * sizeof(Internals::JsonObjectNode))
 
 namespace ArduinoJson {
 
-class JsonObject : public JsonPrintable {
+class JsonObject : public JsonPrintable, Internals::NonCopyable {
   friend class JsonBuffer;
 
  public:
@@ -54,10 +59,6 @@ class JsonObject : public JsonPrintable {
  private:
   // constructor is private, instance must be created via JsonBuffer
   JsonObject(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
-
-  JsonObject(const JsonObject &);  // copy is forbidden, use a reference instead
-  JsonObject &operator=(
-      const JsonObject &);  // copy is forbidden, use a reference instead
 
   JsonValue &add(key_type key) { return (*this)[key]; }
   Internals::JsonObjectNode *createNode(key_type key);

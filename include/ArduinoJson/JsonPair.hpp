@@ -14,10 +14,7 @@ namespace ArduinoJson {
 struct JsonPair {
   JsonPair(const char* k) : key(k) {}
 
-  const char* const key;
+  const char* key;
   JsonValue value;
-
-  // warning C4512: assignment operator could not be generated
-  #pragma warning( suppress : 4512 ) 
 };
 }

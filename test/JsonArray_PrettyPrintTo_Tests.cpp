@@ -17,8 +17,8 @@ class JsonArray_PrettyPrintTo_Tests : public testing::Test {
   JsonArray_PrettyPrintTo_Tests() : array(json.createArray()) {}
 
  protected:
+  StaticJsonBuffer<200> json;
   JsonArray& array;
-  StaticJsonBuffer<30> json;
 
   void outputMustBe(const char* expected) {
     size_t n = array.prettyPrintTo(buffer, sizeof(buffer));
