@@ -45,6 +45,7 @@ class JsonValue {
   operator const char *() const;
   operator double() const;
   operator long() const;
+  operator int() const { return operator long(); }
   operator JsonArray &() const;
   operator JsonObject &() const;
 

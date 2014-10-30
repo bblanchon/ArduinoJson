@@ -18,7 +18,7 @@ class JsonObject_Container_Tests : public ::testing::Test {
   JsonObject_Container_Tests() : object(json.createObject()) {}
 
  protected:
-  StaticJsonBuffer<42> json;
+  StaticJsonBuffer<256> json;
   JsonObject& object;
 };
 

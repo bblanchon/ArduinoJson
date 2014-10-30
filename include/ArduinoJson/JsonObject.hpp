@@ -72,7 +72,7 @@ class JsonObject : public JsonPrintable {
   static JsonObject _invalid;
 };
 
-bool operator==(const JsonObject &left, const JsonObject &right) {
+inline bool operator==(const JsonObject &left, const JsonObject &right) {
   // two JsonObject are equal if they are the same instance
   // (we don't compare the content)
   return &left == &right;

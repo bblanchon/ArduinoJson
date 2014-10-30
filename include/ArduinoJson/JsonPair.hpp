@@ -16,5 +16,8 @@ struct JsonPair {
 
   const char* const key;
   JsonValue value;
+
+  // warning C4512: assignment operator could not be generated
+  #pragma warning( suppress : 4512 ) 
 };
 }

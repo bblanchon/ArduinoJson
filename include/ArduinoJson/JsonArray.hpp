@@ -68,7 +68,7 @@ class JsonArray : public JsonPrintable {
   static JsonArray _invalid;
 };
 
-bool operator==(const JsonArray &left, const JsonArray &right) {
+inline bool operator==(const JsonArray &left, const JsonArray &right) {
   // two JsonArray are equal if they are the same instance
   // (we don't compare the content)
   return &left == &right;

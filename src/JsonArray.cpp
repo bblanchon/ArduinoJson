@@ -39,7 +39,7 @@ JsonValue &JsonArray::add() {
 }
 
 JsonArrayNode *JsonArray::createNode() {
-  if (_buffer) return NULL;
+  if (!_buffer) return NULL;
   void *ptr = _buffer->alloc(sizeof(JsonArrayNode));
   return ptr ? new (ptr) JsonArrayNode() : NULL;
 }
