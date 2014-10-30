@@ -13,7 +13,6 @@
 #include "Internals/JsonValueType.hpp"
 
 namespace ArduinoJson {
-
 class JsonValue {
  public:
   JsonValue() : _type(Internals::JSON_UNDEFINED) {}
@@ -64,7 +63,10 @@ class JsonValue {
   void writeTo(Internals::JsonWriter &writer) const;
 
  private:
+  JsonValue(Internals::JsonValueType type) : _type(type) {}
+
   Internals::JsonValueType _type;
   Internals::JsonValueContent _content;
   static JsonValue _invalid;
 };
+}

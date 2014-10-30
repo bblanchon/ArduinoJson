@@ -12,6 +12,8 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+JsonValue JsonValue::_invalid(JSON_INVALID);
+
 JsonValue::operator JsonArray &() const {
   return _type == JSON_ARRAY ? *_content.asArray : JsonArray::invalid();
 }

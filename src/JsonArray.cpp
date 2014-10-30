@@ -6,6 +6,8 @@
 
 #include "ArduinoJson/JsonArray.hpp"
 
+#include <new>  // required for placement new
+
 #include "ArduinoJson/JsonBuffer.hpp"
 #include "ArduinoJson/JsonObject.hpp"
 #include "ArduinoJson/Internals/JsonWriter.hpp"
@@ -13,25 +15,33 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+JsonArray JsonArray::_invalid(NULL);
+
 int JsonArray::size() const {
   int nodeCount = 0;
   for (JsonArrayNode *node = _firstNode; node; node = node->next) nodeCount++;
   return nodeCount;
 }
 
-JsonValue &JsonArray::operator[](int index) const {
+JsonValue &JsonArray::at(int index) const {
   JsonArrayNode *node = _firstNode;
   while (node && index--) node = node->next;
   return node ? node->value : JsonValue::invalid();
 }
 
 JsonValue &JsonArray::add() {
-  JsonArrayNode *node = JsonArrayNode::createFrom(_buffer);
+  JsonArrayNode *node = createNode();
   if (!node) return JsonValue::invalid();
 
   addNode(node);
 
   return node->value;
+}
+
+JsonArrayNode *JsonArray::createNode() {
+  if (_buffer) return NULL;
+  void *ptr = _buffer->alloc(sizeof(JsonArrayNode));
+  return ptr ? new (ptr) JsonArrayNode() : NULL;
 }
 
 void JsonArray::addNode(JsonArrayNode *newNode) {

@@ -14,16 +14,10 @@ namespace Internals {
 
 class JsonArrayNode {
  public:
-  static JsonArrayNode* createFrom(JsonBuffer* buffer) {
-    void* ptr = buffer->alloc(sizeof(JsonArrayNode));
-    return ptr ? new (ptr) JsonArrayNode() : NULL;
-  }
+  JsonArrayNode() : next(0) {}
 
   JsonArrayNode* next;
   JsonValue value;
-
- private:
-  JsonArrayNode() : next(0) {}
 };
 }
 }

@@ -15,11 +15,6 @@ using namespace ArduinoJson;
 
 class JsonValueTests : public ::testing::Test {
  protected:
-  virtual void SetUp() {
-    jsonValue1 = json.createValue();
-    jsonValue2 = json.createValue();
-  }
-
   StaticJsonBuffer<42> json;
   JsonValue jsonValue1;
   JsonValue jsonValue2;
@@ -54,11 +49,11 @@ TEST_F(JsonValueTests, CanStoreString) {
 }
 
 TEST_F(JsonValueTests, CanStoreObject) {
-  JsonObject innerObject1 = json.createObject();
+  JsonObject &innerObject1 = json.createObject();
 
   jsonValue1 = innerObject1;
 
-  EXPECT_EQ(innerObject1, jsonValue1.as<JsonObject>());
+  EXPECT_EQ(innerObject1, jsonValue1.asObject());
 }
 
 TEST_F(JsonValueTests, IntegersAreCopiedByValue) {
@@ -94,21 +89,21 @@ TEST_F(JsonValueTests, StringsAreCopiedByValue) {
 }
 
 TEST_F(JsonValueTests, ObjectsAreCopiedByReference) {
-  JsonObject object = json.createObject();
+  JsonObject &object = json.createObject();
 
   jsonValue1 = object;
 
   object["hello"] = "world";
 
-  EXPECT_EQ(1, jsonValue1.as<JsonObject>().size());
+  EXPECT_EQ(1, jsonValue1.asObject().size());
 }
 
 TEST_F(JsonValueTests, ArraysAreCopiedByReference) {
-  JsonArray array = json.createArray();
+  JsonArray &array = json.createArray();
 
   jsonValue1 = array;
 
   array.add("world");
 
-  EXPECT_EQ(1, jsonValue1.as<JsonArray>().size());
+  EXPECT_EQ(1, jsonValue1.asArray().size());
 }

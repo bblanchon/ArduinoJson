@@ -13,6 +13,7 @@
 #include "JsonObject.hpp"
 
 namespace ArduinoJson {
+
 class JsonArray : public JsonPrintable {
   friend class JsonBuffer;
 
@@ -25,14 +26,15 @@ class JsonArray : public JsonPrintable {
 
   bool success() { return _buffer != NULL; }
 
-  value_type &operator[](int index) const;
-  value_type &add();
+  value_type &operator[](int index) const { return at(index); }
+  value_type &at(int index) const;
 
   template <typename T>
   void add(T value) {
     add().set(value);
   }
 
+  value_type &add();
   void add(double value, int decimals) { add().set(value, decimals); }
   void add(JsonArray &nestedArray) { add().set(nestedArray); }
   void add(JsonObject &nestedObject) { add().set(nestedObject); }
@@ -54,14 +56,21 @@ class JsonArray : public JsonPrintable {
   // constructor is private: instance must be created via a JsonBuffer
   JsonArray(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
-  JsonArray(const JsonArray &);  // copy is forbidden, use a reference instead
-  JsonArray &operator=(
-      const JsonArray &);  // copy is forbidden, use a reference instead
+  // copy is forbidden, use a reference instead
+  JsonArray(const JsonArray &);
+  JsonArray &operator=(const JsonArray &);
 
+  Internals::JsonArrayNode *createNode();
   inline void addNode(Internals::JsonArrayNode *node);
 
   JsonBuffer *_buffer;
   Internals::JsonArrayNode *_firstNode;
   static JsonArray _invalid;
 };
+
+bool operator==(const JsonArray &left, const JsonArray &right) {
+  // two JsonArray are equal if they are the same instance
+  // (we don't compare the content)
+  return &left == &right;
+}
 }

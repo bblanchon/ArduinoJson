@@ -46,14 +46,14 @@ TEST(StaticJsonBuffer,
      WhenCreateObjectIsCalled_ThenAnEmptyJsonObjectIsReturned) {
   StaticJsonBuffer<42> json;
 
-  JsonObject obj = json.createObject();
+  JsonObject &obj = json.createObject();
   EXPECT_EQ(0, obj.size());
 }
 
 TEST(StaticJsonBuffer,
      GivenAJsonObject_WhenValuesAreAdded_ThenSizeIsIncreasedByTwo) {
   StaticJsonBuffer<42> json;
-  JsonObject obj = json.createObject();
+  JsonObject &obj = json.createObject();
 
   obj["hello"];
   EXPECT_EQ(3, json.size());
@@ -66,7 +66,7 @@ TEST(
     StaticJsonBuffer,
     GivenAJsonObject_WhenSameValuesAreAddedTwice_ThenSizeIsOnlyIncreasedByTwo) {
   StaticJsonBuffer<42> json;
-  JsonObject obj = json.createObject();
+  JsonObject &obj = json.createObject();
 
   obj["hello"];
   EXPECT_EQ(3, json.size());

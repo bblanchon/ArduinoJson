@@ -13,9 +13,10 @@
 using namespace ArduinoJson;
 
 class JsonObject_Serialization_Tests : public testing::Test {
- protected:
-  virtual void SetUp() { object = json.createObject(); }
+ public:
+  JsonObject_Serialization_Tests() : object(json.createObject()) {}
 
+ protected:
   void outputMustBe(const char *expected) {
     char actual[256];
     int result = object.printTo(actual, sizeof(actual));
@@ -24,7 +25,7 @@ class JsonObject_Serialization_Tests : public testing::Test {
     EXPECT_EQ(strlen(expected), result);
   }
 
-  JsonObject object;
+  JsonObject &object;
   StaticJsonBuffer<5> json;
 };
 
@@ -113,7 +114,7 @@ TEST_F(JsonObject_Serialization_Tests, OneFalse) {
 }
 
 TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArrayViaProxy) {
-  JsonArray nestedArray = json.createArray();
+  JsonArray &nestedArray = json.createArray();
 
   object["key"] = nestedArray;
 
@@ -121,7 +122,7 @@ TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedArrayViaProxy) {
 }
 
 TEST_F(JsonObject_Serialization_Tests, OneEmptyNestedObjectViaProxy) {
-  JsonObject nestedArray = json.createObject();
+  JsonObject &nestedArray = json.createObject();
 
   object["key"] = nestedArray;
 

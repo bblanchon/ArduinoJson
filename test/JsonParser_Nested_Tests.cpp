@@ -15,9 +15,9 @@ TEST(JsonParser_Nested_Tests, ArrayNestedInObject) {
   StaticJsonBuffer<42> jsonBuffer;
   char jsonString[] = " { \"ab\" : [ 1 , 2 ] , \"cd\" : [ 3 , 4 ] } ";
 
-  JsonObject object = jsonBuffer.parseObject(jsonString);
-  JsonArray array1 = object["ab"];
-  JsonArray array2 = object["cd"];
+  JsonObject &object = jsonBuffer.parseObject(jsonString);
+  JsonArray &array1 = object["ab"];
+  JsonArray &array2 = object["cd"];
 
   ASSERT_TRUE(object.success());
 
@@ -39,9 +39,9 @@ TEST(JsonParser_Nested_Tests, ObjectNestedInArray) {
   char jsonString[] =
       " [ { \"a\" : 1 , \"b\" : 2 } , { \"c\" : 3 , \"d\" : 4 } ] ";
 
-  JsonArray array = jsonBuffer.parseArray(jsonString);
-  JsonObject object1 = array[0];
-  JsonObject object2 = array[1];
+  JsonArray &array = jsonBuffer.parseArray(jsonString);
+  JsonObject &object1 = array[0];
+  JsonObject &object2 = array[1];
 
   ASSERT_TRUE(array.success());
 

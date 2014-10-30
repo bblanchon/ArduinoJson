@@ -13,6 +13,7 @@
 #include "JsonArray.hpp"
 
 namespace ArduinoJson {
+
 class JsonObject : public JsonPrintable {
   friend class JsonBuffer;
 
@@ -22,16 +23,18 @@ class JsonObject : public JsonPrintable {
   typedef JsonObjectIterator iterator;
   typedef JsonObjectConstIterator const_iterator;
 
+  bool success() const { return _buffer != NULL; }
   int size() const;
 
-  JsonValue &operator[](key_type key);
+  JsonValue &at(key_type key);
+  JsonValue &operator[](key_type key) { return at(key); }
+
   void remove(key_type key);
 
   template <typename T>
   void add(key_type key, T value) {
     add(key).set(value);
   }
-
   void add(key_type key, JsonArray &array) { add(key).set(array); }
   void add(key_type key, JsonObject &object) { add(key).set(object); }
 
@@ -57,6 +60,7 @@ class JsonObject : public JsonPrintable {
       const JsonObject &);  // copy is forbidden, use a reference instead
 
   JsonValue &add(key_type key) { return (*this)[key]; }
+  Internals::JsonObjectNode *createNode(key_type key);
   void addNode(Internals::JsonObjectNode *nodeToAdd);
   void removeNode(Internals::JsonObjectNode *nodeToRemove);
 
@@ -67,4 +71,10 @@ class JsonObject : public JsonPrintable {
   Internals::JsonObjectNode *_firstNode;
   static JsonObject _invalid;
 };
+
+bool operator==(const JsonObject &left, const JsonObject &right) {
+  // two JsonObject are equal if they are the same instance
+  // (we don't compare the content)
+  return &left == &right;
+}
 }

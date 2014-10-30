@@ -6,6 +6,7 @@
 
 #include "ArduinoJson/JsonObject.hpp"
 
+#include <new>       // required for placement new
 #include <string.h>  // for strcmp
 
 #include "ArduinoJson/JsonBuffer.hpp"
@@ -17,13 +18,15 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+JsonObject JsonObject::_invalid(NULL);
+
 int JsonObject::size() const {
   int nodeCount = 0;
   for (JsonObjectNode *node = _firstNode; node; node = node->next) nodeCount++;
   return nodeCount;
 }
 
-JsonValue &JsonObject::operator[](const char *key) {
+JsonValue &JsonObject::at(const char *key) {
   JsonObjectNode *node = getOrCreateNodeAt(key);
   return node ? node->pair.value : JsonValue::invalid();
 }
@@ -55,11 +58,17 @@ JsonObjectNode *JsonObject::getOrCreateNodeAt(const char *key) {
   JsonObjectNode *existingNode = getNodeAt(key);
   if (existingNode) return existingNode;
 
-  JsonObjectNode *newNode = JsonObjectNode::createFrom(_buffer, key);
+  JsonObjectNode *newNode = createNode(key);
 
   if (newNode) addNode(newNode);
 
   return newNode;
+}
+
+JsonObjectNode *JsonObject::createNode(const char *key) {
+  if (!_buffer) return NULL;
+  void *ptr = _buffer->alloc(sizeof(JsonObjectNode));
+  return ptr ? new (ptr) JsonObjectNode(key) : NULL;
 }
 
 void JsonObject::addNode(JsonObjectNode *nodeToAdd) {

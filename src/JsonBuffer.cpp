@@ -6,6 +6,8 @@
 
 #include "ArduinoJson/JsonBuffer.hpp"
 
+#include <new>  // required for the placement new
+
 #include "ArduinoJson/JsonArray.hpp"
 #include "ArduinoJson/JsonObject.hpp"
 #include "ArduinoJson/JsonValue.hpp"

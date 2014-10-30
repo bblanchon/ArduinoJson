@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <new>
-
 #include "ForwardDeclarations.hpp"
 #include "JsonValue.hpp"
 

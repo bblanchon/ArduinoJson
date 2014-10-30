@@ -15,17 +15,17 @@ class JsonParser_Array_Tests : public testing::Test {
  protected:
   void whenInputIs(const char *json) {
     strcpy(_jsonString, json);
-    _array = _jsonBuffer.parseArray(_jsonString);
+    _array = &_jsonBuffer.parseArray(_jsonString);
   }
 
-  void parseMustSucceed() { EXPECT_TRUE(_array.success()); }
+  void parseMustSucceed() { EXPECT_TRUE(_array->success()); }
 
   void parseMustFail() {
-    EXPECT_FALSE(_array.success());
-    EXPECT_EQ(0, _array.size());
+    EXPECT_FALSE(_array->success());
+    EXPECT_EQ(0, _array->size());
   }
 
-  void sizeMustBe(int expected) { EXPECT_EQ(expected, _array.size()); }
+  void sizeMustBe(int expected) { EXPECT_EQ(expected, _array->size()); }
 
   template <typename T>
   void firstElementMustBe(T expected) {
@@ -39,15 +39,15 @@ class JsonParser_Array_Tests : public testing::Test {
 
   template <typename T>
   void elementAtIndexMustBe(int index, T expected) {
-    EXPECT_EQ(expected, _array[index].as<T>());
+    EXPECT_EQ(expected, _array->at(index).as<T>());
   }
 
   void elementAtIndexMustBe(int index, const char *expected) {
-    EXPECT_STREQ(expected, _array[index].as<const char *>());
+    EXPECT_STREQ(expected, _array->at(index).as<const char *>());
   }
 
   StaticJsonBuffer<42> _jsonBuffer;
-  JsonArray _array;
+  JsonArray *_array;
   char _jsonString[256];
 };
 

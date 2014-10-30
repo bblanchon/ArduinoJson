@@ -10,6 +10,7 @@
 #include "Internals/JsonObjectNode.hpp"
 
 namespace ArduinoJson {
+
 struct JsonPair {
   JsonPair(const char* k) : key(k) {}
 

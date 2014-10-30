@@ -15,27 +15,27 @@ class JsonParser_Object_Test : public testing::Test {
  protected:
   void whenInputIs(const char *jsonString) {
     strcpy(_jsonString, jsonString);
-    _object = _jsonBuffer.parseObject(_jsonString);
+    _object = &_jsonBuffer.parseObject(_jsonString);
   }
 
-  void parseMustSucceed() { EXPECT_TRUE(_object.success()); }
+  void parseMustSucceed() { EXPECT_TRUE(_object->success()); }
 
-  void parseMustFail() { EXPECT_FALSE(_object.success()); }
+  void parseMustFail() { EXPECT_FALSE(_object->success()); }
 
-  void sizeMustBe(int expected) { EXPECT_EQ(expected, _object.size()); }
+  void sizeMustBe(int expected) { EXPECT_EQ(expected, _object->size()); }
 
   void keyMustHaveValue(const char *key, const char *expected) {
-    EXPECT_STREQ(expected, _object[key].as<const char *>());
+    EXPECT_STREQ(expected, _object->at(key).as<const char *>());
   }
 
   template <typename T>
   void keyMustHaveValue(const char *key, T expected) {
-    EXPECT_EQ(expected, _object[key].as<T>());
+    EXPECT_EQ(expected, _object->at(key).as<T>());
   }
 
  private:
   StaticJsonBuffer<10> _jsonBuffer;
-  JsonObject _object;
+  JsonObject *_object;
   char _jsonString[256];
 };
 

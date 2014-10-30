@@ -11,6 +11,7 @@
 
 namespace ArduinoJson {
 namespace Internals {
+
 class PrettyJsonWriter : public JsonWriter {
  public:
   explicit PrettyJsonWriter(IndentedPrint *sink)

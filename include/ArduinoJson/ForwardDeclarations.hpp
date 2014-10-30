@@ -6,8 +6,6 @@
 
 #pragma once
 
-// TODO: cleanup
-
 namespace ArduinoJson {
 class JsonArray;
 class JsonArrayConstIterator;
