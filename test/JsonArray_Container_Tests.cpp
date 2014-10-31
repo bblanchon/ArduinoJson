@@ -9,7 +9,6 @@
 #include <ArduinoJson/JsonValue.hpp>
 #include <ArduinoJson/JsonArray.hpp>
 #include <ArduinoJson/JsonObject.hpp>
-#include "Printers.hpp"
 
 using namespace ArduinoJson;
 

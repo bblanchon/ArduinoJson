@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "ForwardDeclarations.hpp"
 #include "JsonBuffer.hpp"
 
 namespace ArduinoJson {

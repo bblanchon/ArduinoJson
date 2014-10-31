@@ -7,13 +7,11 @@
 #pragma once
 
 #include "../JsonValue.hpp"
-#include "../JsonBuffer.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-class JsonArrayNode {
- public:
+struct JsonArrayNode {
   JsonArrayNode() : next(NULL) {}
 
   JsonArrayNode* next;
