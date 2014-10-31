@@ -10,17 +10,15 @@
 #include "JsonBuffer.hpp"
 
 namespace ArduinoJson {
-template <int CAPACITY>
+
+template <size_t CAPACITY>
 class StaticJsonBuffer : public JsonBuffer {
  public:
   explicit StaticJsonBuffer() : _size(0) {}
-
   virtual ~StaticJsonBuffer() {}
 
-  int capacity() const { return CAPACITY; }
-
-  int size() const { return _size; }
-
+  size_t capacity() const { return CAPACITY; }
+  size_t size() const { return _size; }
   void clear() { _size = 0; }
 
  protected:
@@ -33,6 +31,6 @@ class StaticJsonBuffer : public JsonBuffer {
 
  private:
   char _buffer[CAPACITY];
-  int _size;
+  size_t _size;
 };
 }

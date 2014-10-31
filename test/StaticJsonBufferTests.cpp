@@ -11,68 +11,69 @@
 
 using namespace ArduinoJson;
 
+const size_t SIZEOF_ONE_OBJECT = JSON_OBJECT_SIZE(0);
+const size_t SIZEOF_TWO_OBJECTS = 2 * SIZEOF_ONE_OBJECT;
+const size_t SIZEOF_OBJECT_WITH_ONE_VALUE = JSON_OBJECT_SIZE(1);
+const size_t SIZEOF_OBJECT_WITH_TWO_VALUES = JSON_OBJECT_SIZE(2);
+
 TEST(StaticJsonBuffer, CapacityMatchTemplateParameter) {
   StaticJsonBuffer<42> json;
+
   EXPECT_EQ(42, json.capacity());
 }
 
 TEST(StaticJsonBuffer, InitialSizeIsZero) {
   StaticJsonBuffer<42> json;
+
   EXPECT_EQ(0, json.size());
 }
 
-TEST(StaticJsonBuffer, WhenCreateObjectIsCalled_ThenSizeIsIncreasedSizeOfJsonObject) {
-  StaticJsonBuffer<42> json;
+TEST(StaticJsonBuffer,
+     WhenCreateObjectIsCalled_ThenSizeIsIncreasedSizeOfJsonObject) {
+  StaticJsonBuffer<SIZEOF_TWO_OBJECTS> json;
 
   json.createObject();
-  EXPECT_EQ(sizeof(JsonObject), json.size());
-
   json.createObject();
-  EXPECT_EQ(sizeof(JsonObject)*2, json.size());
+  EXPECT_EQ(SIZEOF_TWO_OBJECTS, json.size());
 }
 
 TEST(StaticJsonBuffer,
      GivenBufferIsFull_WhenCreateObjectIsCalled_ThenSizeDoesNotChange) {
-  StaticJsonBuffer<sizeof(JsonObject)> json;
+  StaticJsonBuffer<SIZEOF_ONE_OBJECT> json;
 
   json.createObject();
-  EXPECT_EQ(sizeof(JsonObject), json.size());
-
   json.createObject();
-  EXPECT_EQ(sizeof(JsonObject), json.size());
+  EXPECT_EQ(SIZEOF_ONE_OBJECT, json.size());
 }
 
 TEST(StaticJsonBuffer,
      WhenCreateObjectIsCalled_ThenAnEmptyJsonObjectIsReturned) {
-  StaticJsonBuffer<42> json;
+  StaticJsonBuffer<SIZEOF_ONE_OBJECT> json;
 
   JsonObject &obj = json.createObject();
+
   EXPECT_EQ(0, obj.size());
 }
 
 TEST(StaticJsonBuffer,
      GivenAJsonObject_WhenValuesAreAdded_ThenSizeIsIncreasedAccordingly) {
-  StaticJsonBuffer<200> json;
+  StaticJsonBuffer<SIZEOF_OBJECT_WITH_TWO_VALUES> json;
+
   JsonObject &obj = json.createObject();
-
   obj["hello"];
-  EXPECT_EQ(sizeof(JsonObject)+sizeof(Internals::JsonObjectNode), json.size());
-
   obj["world"];
-  EXPECT_EQ(sizeof(JsonObject) + sizeof(Internals::JsonObjectNode)*2, json.size());
+
+  EXPECT_EQ(SIZEOF_OBJECT_WITH_TWO_VALUES, json.size());
 }
 
 TEST(
     StaticJsonBuffer,
     GivenAJsonObject_WhenSameValuesAreAddedTwice_ThenSizeIsOnlyIncreasedByTwo) {
-  StaticJsonBuffer<42> json;
+  StaticJsonBuffer<SIZEOF_OBJECT_WITH_TWO_VALUES> json;
+
   JsonObject &obj = json.createObject();
-
+  obj["hello"];
   obj["hello"];
 
-  size_t sizeBefore = json.size();
-  obj["hello"];
-  size_t sizeAfter = json.size();
-
-  EXPECT_EQ(sizeBefore, sizeAfter);
+  EXPECT_EQ(SIZEOF_OBJECT_WITH_ONE_VALUE, json.size());
 }
