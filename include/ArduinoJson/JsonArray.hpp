@@ -11,14 +11,14 @@
 #include "JsonArrayConstIterator.hpp"
 #include "JsonPrintable.hpp"
 #include "JsonObject.hpp"
-#include "Internals/NonCopyable.hpp"
+#include "Internals/ReferenceType.hpp"
 
 #define JSON_ARRAY_SIZE(NUMBER_OF_ELEMENTS) \
   (sizeof(JsonArray) + (NUMBER_OF_ELEMENTS) * sizeof(Internals::JsonArrayNode))
 
 namespace ArduinoJson {
 
-class JsonArray : public JsonPrintable, Internals::NonCopyable {
+class JsonArray : public JsonPrintable, public Internals::ReferenceType {
   friend class JsonBuffer;
 
  public:
@@ -67,10 +67,4 @@ class JsonArray : public JsonPrintable, Internals::NonCopyable {
   Internals::JsonArrayNode *_firstNode;
   static JsonArray _invalid;
 };
-
-inline bool operator==(const JsonArray &left, const JsonArray &right) {
-  // two JsonArray are equal if they are the same instance
-  // (we don't compare the content)
-  return &left == &right;
-}
 }

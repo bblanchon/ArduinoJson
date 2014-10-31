@@ -35,7 +35,7 @@ JsonValue::operator double() const {
 }
 
 JsonValue::operator long() const {
-  return _type == JSON_LONG ? _content.asInteger : 0;
+  return _type == JSON_LONG ? _content.asLong : 0;
 }
 
 void JsonValue::set(bool value) {
@@ -59,7 +59,7 @@ void JsonValue::set(double value, int decimals) {
 void JsonValue::set(long value) {
   if (_type == JSON_INVALID) return;
   _type = JSON_LONG;
-  _content.asInteger = value;
+  _content.asLong = value;
 }
 
 void JsonValue::set(JsonArray &array) {
@@ -89,7 +89,7 @@ void JsonValue::writeTo(JsonWriter &writer) const {
       break;
 
     case JSON_LONG:
-      writer.writeInteger(_content.asInteger);
+      writer.writeInteger(_content.asLong);
       break;
 
     case JSON_BOOLEAN:

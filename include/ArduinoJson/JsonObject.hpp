@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Internals/JsonObjectNode.hpp"
-#include "Internals/NonCopyable.hpp"
+#include "Internals/ReferenceType.hpp"
 #include "JsonArray.hpp"
 #include "JsonObjectConstIterator.hpp"
 #include "JsonObjectIterator.hpp"
@@ -19,7 +19,7 @@
 
 namespace ArduinoJson {
 
-class JsonObject : public JsonPrintable, Internals::NonCopyable {
+class JsonObject : public JsonPrintable, public Internals::ReferenceType {
   friend class JsonBuffer;
 
  public:
@@ -72,10 +72,4 @@ class JsonObject : public JsonPrintable, Internals::NonCopyable {
   Internals::JsonObjectNode *_firstNode;
   static JsonObject _invalid;
 };
-
-inline bool operator==(const JsonObject &left, const JsonObject &right) {
-  // two JsonObject are equal if they are the same instance
-  // (we don't compare the content)
-  return &left == &right;
-}
 }

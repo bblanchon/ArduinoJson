@@ -14,7 +14,7 @@ namespace Internals {
 union JsonValueContent {
   bool asBoolean;
   double asDouble;
-  long asInteger;
+  long asLong;
   const char* asString;
   JsonArray* asArray;
   JsonObject* asObject;

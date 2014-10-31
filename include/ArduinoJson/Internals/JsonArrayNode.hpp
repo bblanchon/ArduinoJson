@@ -14,7 +14,7 @@ namespace Internals {
 
 class JsonArrayNode {
  public:
-  JsonArrayNode() : next(0) {}
+  JsonArrayNode() : next(NULL) {}
 
   JsonArrayNode* next;
   JsonValue value;
