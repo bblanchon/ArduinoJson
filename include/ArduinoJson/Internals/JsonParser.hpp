@@ -22,6 +22,7 @@ class JsonParser {
   bool isEnd() { return *_ptr == '\0'; }
 
   bool skip(char charToSkip);
+  bool skip(const char *wordToSkip);
   void skipSpaces();
 
   void parseAnythingTo(JsonValue &destination);
