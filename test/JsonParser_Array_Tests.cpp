@@ -58,9 +58,13 @@ TEST_F(JsonParser_Array_Tests, EmptyArray) {
   sizeMustBe(0);
 }
 
+TEST_F(JsonParser_Array_Tests, MissingOpeningBracket) {
+  whenInputIs("]");
+  parseMustFail();
+}
+
 TEST_F(JsonParser_Array_Tests, ArrayWithNoEnd) {
   whenInputIs("[");
-
   parseMustFail();
 }
 

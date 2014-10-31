@@ -74,9 +74,9 @@ void JsonParser::parseAnythingTo(JsonValue &destination) {
 }
 
 JsonArray &JsonParser::parseArray() {
-  skip('[');
+  if (!skip('[')) return JsonArray::invalid();  // missing opening bracket
 
-  if (isEnd()) return JsonArray::invalid();
+  if (isEnd()) return JsonArray::invalid();  // end of stream
 
   JsonArray &array = _buffer->createArray();
   if (skip(']')) return array;  // empty array
@@ -127,7 +127,7 @@ void JsonParser::parseNullTo(JsonValue &destination) {
 }
 
 JsonObject &JsonParser::parseObject() {
-  skip('{');
+  if (!skip('{')) return JsonObject::invalid();  // missing opening brace
 
   if (isEnd()) return JsonObject::invalid();  // premature ending
 
