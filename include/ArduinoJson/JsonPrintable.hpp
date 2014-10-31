@@ -6,10 +6,14 @@
 
 #pragma once
 
-#include "ForwardDeclarations.hpp"
 #include "Arduino/Printable.hpp"
 
 namespace ArduinoJson {
+
+namespace Internals {
+class IndentedPrint;
+class JsonWriter;
+}
 
 class JsonPrintable : public Printable {
  public:

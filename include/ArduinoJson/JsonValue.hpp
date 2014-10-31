@@ -8,11 +8,18 @@
 
 #include <stddef.h>
 
-#include "ForwardDeclarations.hpp"
 #include "Internals/JsonValueContent.hpp"
 #include "Internals/JsonValueType.hpp"
 
 namespace ArduinoJson {
+
+class JsonArray;
+class JsonObject;
+
+namespace Internals {
+class JsonWriter;
+}
+
 class JsonValue {
  public:
   JsonValue() : _type(Internals::JSON_UNDEFINED) {}

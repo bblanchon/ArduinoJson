@@ -6,9 +6,11 @@
 
 #pragma once
 
-#include "../ForwardDeclarations.hpp"
-
 namespace ArduinoJson {
+
+class JsonArray;
+class JsonObject;
+
 namespace Internals {
 
 union JsonValueContent {

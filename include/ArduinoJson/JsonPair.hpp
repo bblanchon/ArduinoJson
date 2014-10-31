@@ -7,7 +7,6 @@
 #pragma once
 
 #include "JsonValue.hpp"
-#include "Internals/JsonObjectNode.hpp"
 
 namespace ArduinoJson {
 
