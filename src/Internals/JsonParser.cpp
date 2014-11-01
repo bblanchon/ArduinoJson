@@ -117,9 +117,9 @@ void JsonParser::parseNumberTo(JsonValue &destination) {
 
   if (*endOfLong == '.') {
     // stopped on a decimal separator
-    double douleValue = strtod(_ptr, &_ptr);
+    double doubleValue = strtod(_ptr, &_ptr);
     int decimals = _ptr - endOfLong - 1;
-    destination.set(douleValue, decimals);
+    destination.set(doubleValue, decimals);
   } else {
     _ptr = endOfLong;
     destination = longValue;

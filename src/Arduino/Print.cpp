@@ -19,7 +19,7 @@ size_t Print::print(const char s[]) {
 
 size_t Print::print(double value, int digits) {
   char tmp[32];
-  sprintf(tmp, "%.*g", digits + 1, value);
+  sprintf(tmp, "%.*f", digits, value);
   return print(tmp);
 }
 
