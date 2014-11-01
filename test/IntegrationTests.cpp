@@ -19,10 +19,10 @@ class IntegrationTests : public testing::TestWithParam<const char*> {
   }
 
   const char* _input;
-  char inputBuffer[2048];
-  char outputBuffer[2048];
-  char intermediateBuffer[2048];
-  StaticJsonBuffer<2048> json;
+  char inputBuffer[10000];
+  char outputBuffer[10000];
+  char intermediateBuffer[10000];
+  StaticJsonBuffer<10000> json;
 };
 
 TEST_P(IntegrationTests, ParseThenPrint) {
@@ -33,6 +33,7 @@ TEST_P(IntegrationTests, ParseThenPrint) {
 TEST_P(IntegrationTests, ParseThenPrettyPrintThenParseThenPrint) {
   json.parseObject(inputBuffer)
       .prettyPrintTo(intermediateBuffer, sizeof(intermediateBuffer));
+  json.clear();
   json.parseObject(intermediateBuffer)
       .printTo(outputBuffer, sizeof(outputBuffer));
   ASSERT_STREQ(_input, outputBuffer);
@@ -41,12 +42,59 @@ TEST_P(IntegrationTests, ParseThenPrettyPrintThenParseThenPrint) {
 INSTANTIATE_TEST_CASE_P(
     OpenWeatherMap, IntegrationTests,
     testing::Values(
-        "{\"coord\":{\"lon\":-0.13,\"lat\":51.51},\"sys\":{\"type\":1,\"id\":"
-        "5093,\"message\":0.1177,\"country\":\"GB\",\"sunrise\":1414824893,"
-        "\"sunset\":1414859596},\"weather\":[{\"id\":802,\"main\":\"Clouds\","
-        "\"description\":\"scattered "
-        "clouds\",\"icon\":\"03d\"}],\"base\":\"cmc "
-        "stations\",\"main\":{\"temp\":288.62,\"pressure\":1015,\"humidity\":"
-        "87,\"temp_min\":287.15,\"temp_max\":290.15},\"wind\":{\"speed\":4.6,"
-        "\"deg\":240},\"clouds\":{\"all\":40},\"dt\":1414825810,\"id\":2643743,"
-        "\"name\":\"London\",\"cod\":200}"));
+        "{\"coord\":{\"lon\":145.77,\"lat\":-16.92},\"sys\":{\"type\":1,\"id\":"
+        "8166,\"message\":0.1222,\"country\":\"AU\",\"sunrise\":1414784325,"
+        "\"sunset\":1414830137},\"weather\":[{\"id\":801,\"main\":\"Clouds\","
+        "\"description\":\"few clouds\",\"icon\":\"02n\"}],\"base\":\"cmc "
+        "stations\",\"main\":{\"temp\":296.15,\"pressure\":1014,\"humidity\":"
+        "83,\"temp_min\":296.15,\"temp_max\":296.15},\"wind\":{\"speed\":2.22,"
+        "\"deg\":114.501},\"clouds\":{\"all\":20},\"dt\":1414846800,\"id\":"
+        "2172797,\"name\":\"Cairns\",\"cod\":200}"));
+
+INSTANTIATE_TEST_CASE_P(
+    YahooQueryLanguage, IntegrationTests,
+    testing::Values(
+        "{\"query\":{\"count\":40,\"created\":\"2014-11-01T14:16:49Z\","
+        "\"lang\":\"fr-FR\",\"results\":{\"item\":[{\"title\":\"Burkina army "
+        "backs Zida as interim leader\"},{\"title\":\"British jets intercept "
+        "Russian bombers\"},{\"title\":\"Doubts chip away at nation's most "
+        "trusted agencies\"},{\"title\":\"Cruise ship stuck off Norway, no "
+        "damage\"},{\"title\":\"U.S. military launches 10 air strikes in "
+        "Syria, Iraq\"},{\"title\":\"Blackout hits Bangladesh as line from "
+        "India fails\"},{\"title\":\"Burkina Faso president in Ivory Coast "
+        "after ouster\"},{\"title\":\"Kurds in Turkey rally to back city "
+        "besieged by IS\"},{\"title\":\"A majority of Scots would vote for "
+        "independence now:poll\"},{\"title\":\"Tunisia elections possible "
+        "model for region\"},{\"title\":\"Islamic State kills 85 more members "
+        "of Iraqi tribe\"},{\"title\":\"Iraqi officials:IS extremists line "
+        "up, kill 50\"},{\"title\":\"Burkina Faso army backs presidential "
+        "guard official to lead transition\"},{\"title\":\"Kurdish peshmerga "
+        "arrive with weapons in Syria's Kobani\"},{\"title\":\"Driver sought "
+        "in crash that killed 3 on Halloween\"},{\"title\":\"Ex-Marine arrives "
+        "in US after release from Mexico jail\"},{\"title\":\"UN panel "
+        "scrambling to finish climate report\"},{\"title\":\"Investigators, "
+        "Branson go to spacecraft crash site\"},{\"title\":\"Soldiers vie for "
+        "power after Burkina Faso president quits\"},{\"title\":\"For a man "
+        "without a party, turnout is big test\"},{\"title\":\"'We just had a "
+        "hunch':US marshals nab Eric Frein\"},{\"title\":\"Boko Haram leader "
+        "threatens to kill German hostage\"},{\"title\":\"Nurse free to move "
+        "about as restrictions eased\"},{\"title\":\"Former Burkina president "
+        "Compaore arrives in Ivory Coast:sources\"},{\"title\":\"Libyan port "
+        "rebel leader refuses to hand over oil ports to rival "
+        "group\"},{\"title\":\"Iraqi peshmerga fighters prepare for Syria "
+        "battle\"},{\"title\":\"1 Dem Senate candidate welcoming Obama's "
+        "help\"},{\"title\":\"Bikers cancel party after police recover "
+        "bar\"},{\"title\":\"New question in Texas:Can Davis survive "
+        "defeat?\"},{\"title\":\"Ukraine rebels to hold election, despite "
+        "criticism\"},{\"title\":\"Iraqi officials say Islamic State group "
+        "lines up, kills 50 tribesmen, women in Anbar "
+        "province\"},{\"title\":\"James rebounds, leads Cavaliers past "
+        "Bulls\"},{\"title\":\"UK warns travelers they could be terror "
+        "targets\"},{\"title\":\"Hello Kitty celebrates 40th "
+        "birthday\"},{\"title\":\"A look at people killed during space "
+        "missions\"},{\"title\":\"Nigeria's purported Boko Haram leader says "
+        "has 'married off' girls:AFP\"},{\"title\":\"Mexico orders immediate "
+        "release of Marine veteran\"},{\"title\":\"As election closes in, "
+        "Obama on center stage\"},{\"title\":\"Body of Zambian president "
+        "arrives home\"},{\"title\":\"South Africa arrests 2 Vietnamese for "
+        "poaching\"}]}}}"));
