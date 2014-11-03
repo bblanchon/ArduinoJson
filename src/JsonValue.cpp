@@ -7,7 +7,6 @@
 #include "ArduinoJson/JsonValue.hpp"
 #include "ArduinoJson/JsonArray.hpp"
 #include "ArduinoJson/JsonObject.hpp"
-#include "ArduinoJson/Internals/CompactJsonWriter.hpp"
 #include "ArduinoJson/Internals/PrettyJsonWriter.hpp"
 
 using namespace ArduinoJson;
@@ -104,5 +103,5 @@ void JsonValue::writeTo(T &writer) const {
   }
 }
 
-template void JsonValue::writeTo<CompactJsonWriter>(CompactJsonWriter &) const;
-template void JsonValue::writeTo<PrettyJsonWriter>(PrettyJsonWriter &) const;
+template void JsonValue::writeTo(JsonWriter &) const;
+template void JsonValue::writeTo(PrettyJsonWriter &) const;

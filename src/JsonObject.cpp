@@ -12,7 +12,6 @@
 #include "ArduinoJson/JsonBuffer.hpp"
 #include "ArduinoJson/JsonArray.hpp"
 #include "ArduinoJson/JsonValue.hpp"
-#include "ArduinoJson/Internals/CompactJsonWriter.hpp"
 #include "ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "ArduinoJson/Internals/StringBuilder.hpp"
 
@@ -116,5 +115,5 @@ void JsonObject::writeTo(T &writer) const {
   }
 }
 
-template void JsonObject::writeTo(CompactJsonWriter &writer) const;
+template void JsonObject::writeTo(JsonWriter &writer) const;
 template void JsonObject::writeTo(PrettyJsonWriter &writer) const;

@@ -6,19 +6,17 @@
 
 #pragma once
 
-#include "Arduino/Printable.hpp"
 #include "Internals/StringBuilder.hpp"
 #include "Internals/IndentedPrint.hpp"
-#include "Internals/CompactJsonWriter.hpp"
 #include "Internals/PrettyJsonWriter.hpp"
 
 namespace ArduinoJson {
 
 template <typename T>
-class JsonPrintable : public Printable {
+class JsonPrintable {
  public:
   size_t printTo(Print &print) const {
-    Internals::CompactJsonWriter writer(&print);
+    Internals::JsonWriter writer(&print);
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }

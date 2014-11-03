@@ -17,14 +17,21 @@ class JsonWriter {
 
   size_t bytesWritten() { return _length; }
 
+  void beginArray() { _length += _sink->write('['); }
+  void endArray() { _length += _sink->write(']'); }
   void writeEmptyArray() { _length += _sink->print("[]"); }
 
+  void beginObject() { _length += _sink->write('{'); }
+  void endObject() { _length += _sink->write('}'); }
   void writeEmptyObject() { _length += _sink->print("{}"); }
 
   void writeString(const char *value);
   void writeInteger(long value);
   void writeBoolean(bool value);
   void writeDouble(double value, int decimals);
+
+  void writeColon() { _length += _sink->write(':'); }
+  void writeComma() { _length += _sink->write(','); }
 
  protected:
   Print *_sink;
