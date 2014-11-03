@@ -6,11 +6,10 @@
 
 #include "../include/ArduinoJson/JsonArray.hpp"
 
-#include <new>  // required for placement new
-
+#include "../include/ArduinoJson/Internals/PlacementNew.hpp"
+#include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "../include/ArduinoJson/JsonBuffer.hpp"
 #include "../include/ArduinoJson/JsonObject.hpp"
-#include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
