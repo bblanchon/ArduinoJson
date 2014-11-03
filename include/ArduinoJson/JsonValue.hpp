@@ -25,10 +25,16 @@ class JsonValue {
   JsonValue() : _type(Internals::JSON_UNDEFINED) {}
 
   void set(bool value);
-  void set(const char *value);
   void set(double value, int decimals = 2);
-  void set(int value) { set(static_cast<long>(value)); }
-  void set(long value);
+  void set(signed char value) { set(static_cast<long>(value)); }
+  void set(signed int value) { set(static_cast<long>(value)); }
+  void set(signed long value);
+  void set(signed short value) { set(static_cast<long>(value)); }
+  void set(unsigned char value) { set(static_cast<long>(value)); }
+  void set(unsigned int value) { set(static_cast<long>(value)); }
+  void set(unsigned long value) { set(static_cast<long>(value)); }
+  void set(unsigned short value) { set(static_cast<long>(value)); }
+  void set(const char *value);
   void set(JsonArray &array);
   void set(JsonObject &object);
 
@@ -49,10 +55,17 @@ class JsonValue {
   }
 
   operator bool() const;
-  operator const char *() const;
   operator double() const;
-  operator long() const;
-  operator int() const { return operator long(); }
+  operator float() const { return as<double>(); }
+  operator signed char() const { return as<long>(); }
+  operator signed int() const { return as<long>(); }
+  operator signed long() const;
+  operator signed short() const { return as<long>(); }
+  operator unsigned char() const { return as<long>(); }
+  operator unsigned int() const { return as<long>(); }
+  operator unsigned long() const { return as<long>(); }
+  operator unsigned short() const { return as<long>(); }
+  operator const char *() const;
   operator JsonArray &() const;
   operator JsonObject &() const;
 
