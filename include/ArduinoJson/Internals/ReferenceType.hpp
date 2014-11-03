@@ -18,6 +18,8 @@ class ReferenceType {
     return this == &other;
   }
 
+  bool operator!=(const ReferenceType& other) const { return this != &other; }
+
  protected:
   ReferenceType() {}
 
