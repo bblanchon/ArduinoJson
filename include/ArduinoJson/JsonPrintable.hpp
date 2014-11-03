@@ -9,18 +9,16 @@
 #include "Arduino/Printable.hpp"
 #include "Internals/StringBuilder.hpp"
 #include "Internals/IndentedPrint.hpp"
+#include "Internals/CompactJsonWriter.hpp"
+#include "Internals/PrettyJsonWriter.hpp"
 
 namespace ArduinoJson {
-
-namespace Internals {
-class IndentedPrint;
-}
 
 template <typename T>
 class JsonPrintable : public Printable {
  public:
   size_t printTo(Print &print) const {
-    CompactJsonWriter writer(&p);
+    Internals::CompactJsonWriter writer(&print);
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }
@@ -30,7 +28,7 @@ class JsonPrintable : public Printable {
   }
 
   size_t prettyPrintTo(Internals::IndentedPrint &print) const {
-    PrettyJsonWriter writer(&p);
+    Internals::PrettyJsonWriter writer(&print);
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }
@@ -45,6 +43,6 @@ class JsonPrintable : public Printable {
   }
 
  private:
-  const T &downcast() { return *static_cast<const T *>(this); }
+  const T &downcast() const { return *static_cast<const T *>(this); }
 };
 }

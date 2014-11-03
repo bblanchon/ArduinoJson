@@ -15,14 +15,14 @@ class CompactJsonWriter : public JsonWriter {
  public:
   explicit CompactJsonWriter(Print *sink) : JsonWriter(sink) {}
 
-  virtual void beginArray() { _length += _sink->write('['); }
-  virtual void endArray() { _length += _sink->write(']'); }
+  void beginArray() { _length += _sink->write('['); }
+  void endArray() { _length += _sink->write(']'); }
 
-  virtual void beginObject() { _length += _sink->write('{'); }
-  virtual void endObject() { _length += _sink->write('}'); }
+  void beginObject() { _length += _sink->write('{'); }
+  void endObject() { _length += _sink->write('}'); }
 
-  virtual void writeColon() { _length += _sink->write(':'); }
-  virtual void writeComma() { _length += _sink->write(','); }
+  void writeColon() { _length += _sink->write(':'); }
+  void writeComma() { _length += _sink->write(','); }
 };
 }
 }

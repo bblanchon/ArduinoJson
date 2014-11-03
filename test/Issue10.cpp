@@ -30,7 +30,8 @@ class Issue10 : public testing::Test {
     persons[1] = employee;
   }
 
-  void checkJsonString(JsonPrintable &p) {
+  template <typename T>
+  void checkJsonString(const T &p) {
     char buffer[256];
     p.printTo(buffer, sizeof(buffer));
 
@@ -38,7 +39,7 @@ class Issue10 : public testing::Test {
                  buffer);
   }
 
-  StaticJsonBuffer<JSON_ARRAY_SIZE(2)+2*JSON_OBJECT_SIZE(2)> json;
+  StaticJsonBuffer<JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(2)> json;
   Person persons[2];
 };
 
@@ -51,7 +52,7 @@ TEST_F(Issue10, PopulateArrayByAddingAnObject) {
     object["id"] = persons[i].id;
     object["name"] = persons[i].name;
 
-    array.add(object); 
+    array.add(object);
   }
 
   checkJsonString(array);

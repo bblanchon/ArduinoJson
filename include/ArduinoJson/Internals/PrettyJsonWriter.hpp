@@ -17,29 +17,29 @@ class PrettyJsonWriter : public JsonWriter {
   explicit PrettyJsonWriter(IndentedPrint *sink)
       : JsonWriter(sink), _indenter(sink) {}
 
-  virtual void beginArray() {
+  void beginArray() {
     _length += _sink->write('[');
     indent();
   }
 
-  virtual void endArray() {
+  void endArray() {
     unindent();
     _length += _sink->write(']');
   }
 
-  virtual void writeColon() { _length += _sink->print(": "); }
+  void writeColon() { _length += _sink->print(": "); }
 
-  virtual void writeComma() {
+  void writeComma() {
     _length += _sink->write(',');
     _length += _indenter->println();
   }
 
-  virtual void beginObject() {
+  void beginObject() {
     _length += _sink->write('{');
     indent();
   }
 
-  virtual void endObject() {
+  void endObject() {
     unindent();
     _length += _sink->write('}');
   }
