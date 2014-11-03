@@ -56,11 +56,12 @@ class JsonValue {
   operator JsonArray &() const;
   operator JsonObject &() const;
 
-  JsonArray &asArray() { return static_cast<JsonArray &>(*this); };
-  JsonObject &asObject() { return static_cast<JsonObject &>(*this); };
+  const char *asString() const { return this->as<const char *>(); }
+  JsonArray &asArray() const { return this->as<JsonArray &>(); };
+  JsonObject &asObject() const { return this->as<JsonObject &>(); };
 
   template <typename T>
-  T as() {
+  T as() const {
     return static_cast<T>(*this);
   }
 
@@ -78,4 +79,14 @@ class JsonValue {
   Internals::JsonValueContent _content;
   static JsonValue _invalid;
 };
+
+template <typename T>
+inline bool operator==(const JsonValue &left, T right) {
+  return left.as<T>() == right;
+}
+
+template <typename T>
+inline bool operator==(T left, const JsonValue &right) {
+  return left == right.as<T>();
+}
 }
