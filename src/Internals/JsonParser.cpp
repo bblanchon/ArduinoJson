@@ -30,6 +30,15 @@ bool JsonParser::skip(char charToSkip) {
   return true;
 }
 
+bool JsonParser::skip(const char *wordToSkip) {
+  const char *charToSkip = wordToSkip;
+  while (*charToSkip && *_ptr == *charToSkip) {
+    charToSkip++;
+    _ptr++;
+  }
+  return *charToSkip == '\0';
+}
+
 void JsonParser::parseAnythingTo(JsonValue &destination) {
   skipSpaces();
 
@@ -74,9 +83,9 @@ void JsonParser::parseAnythingTo(JsonValue &destination) {
 }
 
 JsonArray &JsonParser::parseArray() {
-  skip('[');
+  if (!skip('[')) return JsonArray::invalid();  // missing opening bracket
 
-  if (isEnd()) return JsonArray::invalid();
+  if (isEnd()) return JsonArray::invalid();  // end of stream
 
   JsonArray &array = _buffer->createArray();
   if (skip(']')) return array;  // empty array
@@ -96,13 +105,10 @@ JsonArray &JsonParser::parseArray() {
 void JsonParser::parseBooleanTo(JsonValue &destination) {
   bool value = *_ptr == 't';
 
-  // TODO: bug if string ends here !!!
-
-  _ptr += value ? 4 : 5;
-  // 4 = strlen("true")
-  // 5 = strlen("false");
-
-  destination = value;
+  if (skip(value ? "true" : "false"))
+    destination = value;
+  else
+    destination = JsonValue::invalid();
 }
 
 void JsonParser::parseNumberTo(JsonValue &destination) {
@@ -111,9 +117,9 @@ void JsonParser::parseNumberTo(JsonValue &destination) {
 
   if (*endOfLong == '.') {
     // stopped on a decimal separator
-    double douleValue = strtod(_ptr, &_ptr);
+    double doubleValue = strtod(_ptr, &_ptr);
     int decimals = _ptr - endOfLong - 1;
-    destination.set(douleValue, decimals);
+    destination.set(doubleValue, decimals);
   } else {
     _ptr = endOfLong;
     destination = longValue;
@@ -121,13 +127,14 @@ void JsonParser::parseNumberTo(JsonValue &destination) {
 }
 
 void JsonParser::parseNullTo(JsonValue &destination) {
-  _ptr += 4;  // strlen("null")
-
-  destination = static_cast<const char *>(NULL);
+  if (skip("null"))
+    destination = static_cast<const char *>(NULL);
+  else
+    destination = JsonValue::invalid();
 }
 
 JsonObject &JsonParser::parseObject() {
-  skip('{');
+  if (!skip('{')) return JsonObject::invalid();  // missing opening brace
 
   if (isEnd()) return JsonObject::invalid();  // premature ending
 

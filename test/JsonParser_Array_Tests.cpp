@@ -58,9 +58,13 @@ TEST_F(JsonParser_Array_Tests, EmptyArray) {
   sizeMustBe(0);
 }
 
+TEST_F(JsonParser_Array_Tests, MissingOpeningBracket) {
+  whenInputIs("]");
+  parseMustFail();
+}
+
 TEST_F(JsonParser_Array_Tests, ArrayWithNoEnd) {
   whenInputIs("[");
-
   parseMustFail();
 }
 
@@ -137,6 +141,21 @@ TEST_F(JsonParser_Array_Tests, TwoNulls) {
   sizeMustBe(2);
   firstElementMustBe(nullCharPtr);
   secondElementMustBe(nullCharPtr);
+}
+
+TEST_F(JsonParser_Array_Tests, IncompleteNull) {
+  whenInputIs("[nul!]");
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, IncompleteTrue) {
+  whenInputIs("[tru!]");
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, IncompleteFalse) {
+  whenInputIs("[fals!]");
+  parseMustFail();
 }
 
 TEST_F(JsonParser_Array_Tests, TwoStrings) {
