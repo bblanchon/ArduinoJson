@@ -1,8 +1,6 @@
 file(GLOB_RECURSE INC_FILES ../include/*.hpp)
 file(GLOB_RECURSE SRC_FILES *.cpp)
 
-include_directories(../include)
-
 if(CMAKE_COMPILER_IS_GNUCXX)
 	add_definitions(
 		-Wall

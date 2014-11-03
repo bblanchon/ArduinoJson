@@ -6,7 +6,7 @@
 
 #ifndef ARDUINO
 
-#include "ArduinoJson/Arduino/Print.hpp"
+#include "../../include/ArduinoJson/Arduino/Print.hpp"
 #include <cstdio>
 
 size_t Print::print(const char s[]) {
