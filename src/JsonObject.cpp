@@ -12,7 +12,8 @@
 #include "ArduinoJson/JsonBuffer.hpp"
 #include "ArduinoJson/JsonArray.hpp"
 #include "ArduinoJson/JsonValue.hpp"
-#include "ArduinoJson/Internals/JsonWriter.hpp"
+#include "ArduinoJson/Internals/CompactJsonWriter.hpp"
+#include "ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "ArduinoJson/Internals/StringBuilder.hpp"
 
 using namespace ArduinoJson;
@@ -91,7 +92,8 @@ void JsonObject::removeNode(JsonObjectNode *nodeToRemove) {
   }
 }
 
-void JsonObject::writeTo(JsonWriter &writer) const {
+template <typename T>
+void JsonObject::writeTo(T &writer) const {
   JsonObjectNode *node = _firstNode;
 
   if (node) {
@@ -113,3 +115,6 @@ void JsonObject::writeTo(JsonWriter &writer) const {
     writer.writeEmptyObject();
   }
 }
+
+template void JsonObject::writeTo(CompactJsonWriter &writer) const;
+template void JsonObject::writeTo(PrettyJsonWriter &writer) const;

@@ -10,7 +10,8 @@
 
 #include "ArduinoJson/JsonBuffer.hpp"
 #include "ArduinoJson/JsonObject.hpp"
-#include "ArduinoJson/Internals/JsonWriter.hpp"
+#include "ArduinoJson/Internals/CompactJsonWriter.hpp"
+#include "ArduinoJson/Internals/PrettyJsonWriter.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
@@ -68,7 +69,8 @@ JsonObject &JsonArray::createNestedObject() {
   return object;
 }
 
-void JsonArray::writeTo(JsonWriter &writer) const {
+template <typename T>
+void JsonArray::writeTo(T &writer) const {
   JsonArrayNode *child = _firstNode;
 
   if (child) {
@@ -88,3 +90,6 @@ void JsonArray::writeTo(JsonWriter &writer) const {
     writer.writeEmptyArray();
   }
 }
+
+template void JsonArray::writeTo<CompactJsonWriter>(CompactJsonWriter &) const;
+template void JsonArray::writeTo<PrettyJsonWriter>(PrettyJsonWriter &) const;

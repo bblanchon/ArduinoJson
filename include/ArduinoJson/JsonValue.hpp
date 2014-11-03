@@ -68,7 +68,8 @@ class JsonValue {
 
   bool success() { return _type != Internals::JSON_INVALID; }
 
-  void writeTo(Internals::JsonWriter &writer) const;
+  template <typename T>
+  void writeTo(T &writer) const;
 
  private:
   JsonValue(Internals::JsonValueType type) : _type(type) {}

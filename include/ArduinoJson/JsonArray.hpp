@@ -19,7 +19,8 @@ namespace ArduinoJson {
 class JsonObject;
 class JsonBuffer;
 
-class JsonArray : public JsonPrintable, public Internals::ReferenceType {
+class JsonArray : public JsonPrintable<JsonArray>,
+                  public Internals::ReferenceType {
   friend class JsonBuffer;
 
  public:
@@ -55,7 +56,8 @@ class JsonArray : public JsonPrintable, public Internals::ReferenceType {
 
   static JsonArray &invalid() { return _invalid; }
 
-  virtual void writeTo(Internals::JsonWriter &writer) const;
+  template <typename T>
+  void writeTo(T &writer) const;
 
  private:
   // constructor is private: instance must be created via a JsonBuffer
