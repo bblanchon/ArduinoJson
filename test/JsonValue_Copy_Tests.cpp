@@ -12,14 +12,14 @@
 
 using namespace ArduinoJson;
 
-class JsonValueTests : public ::testing::Test {
+class JsonValue_Copy_Tests : public ::testing::Test {
  protected:
   StaticJsonBuffer<200> json;
   JsonValue jsonValue1;
   JsonValue jsonValue2;
 };
 
-TEST_F(JsonValueTests, IntegersAreCopiedByValue) {
+TEST_F(JsonValue_Copy_Tests, IntegersAreCopiedByValue) {
   jsonValue1 = 123;
   jsonValue2 = jsonValue1;
   jsonValue1 = 456;
@@ -27,7 +27,7 @@ TEST_F(JsonValueTests, IntegersAreCopiedByValue) {
   EXPECT_EQ(123, jsonValue2.as<int>());
 }
 
-TEST_F(JsonValueTests, DoublesAreCopiedByValue) {
+TEST_F(JsonValue_Copy_Tests, DoublesAreCopiedByValue) {
   jsonValue1 = 123.45;
   jsonValue2 = jsonValue1;
   jsonValue1 = 456.78;
@@ -35,7 +35,7 @@ TEST_F(JsonValueTests, DoublesAreCopiedByValue) {
   EXPECT_EQ(123.45, jsonValue2.as<double>());
 }
 
-TEST_F(JsonValueTests, BooleansAreCopiedByValue) {
+TEST_F(JsonValue_Copy_Tests, BooleansAreCopiedByValue) {
   jsonValue1 = true;
   jsonValue2 = jsonValue1;
   jsonValue1 = false;
@@ -43,7 +43,7 @@ TEST_F(JsonValueTests, BooleansAreCopiedByValue) {
   EXPECT_TRUE(jsonValue2.as<bool>());
 }
 
-TEST_F(JsonValueTests, StringsAreCopiedByValue) {
+TEST_F(JsonValue_Copy_Tests, StringsAreCopiedByValue) {
   jsonValue1 = "hello";
   jsonValue2 = jsonValue1;
   jsonValue1 = "world";
@@ -51,7 +51,7 @@ TEST_F(JsonValueTests, StringsAreCopiedByValue) {
   EXPECT_STREQ("hello", jsonValue2.as<const char *>());
 }
 
-TEST_F(JsonValueTests, ObjectsAreCopiedByReference) {
+TEST_F(JsonValue_Copy_Tests, ObjectsAreCopiedByReference) {
   JsonObject &object = json.createObject();
 
   jsonValue1 = object;
@@ -61,7 +61,7 @@ TEST_F(JsonValueTests, ObjectsAreCopiedByReference) {
   EXPECT_EQ(1, jsonValue1.asObject().size());
 }
 
-TEST_F(JsonValueTests, ArraysAreCopiedByReference) {
+TEST_F(JsonValue_Copy_Tests, ArraysAreCopiedByReference) {
   JsonArray &array = json.createArray();
 
   jsonValue1 = array;
