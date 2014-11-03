@@ -29,7 +29,7 @@ class StaticJsonBuffer : public JsonBuffer {
   }
 
  private:
-  char _buffer[CAPACITY];
+  uint8_t _buffer[CAPACITY];
   size_t _size;
 };
 }
