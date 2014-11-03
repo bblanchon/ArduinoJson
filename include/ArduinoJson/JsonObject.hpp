@@ -51,10 +51,10 @@ class JsonObject : public JsonPrintable<JsonObject>,
   JsonObject &createNestedObject(key_type key);
 
   iterator begin() { return iterator(_firstNode); }
-  iterator end() { return iterator(0); }
+  iterator end() { return iterator(NULL); }
 
   const_iterator begin() const { return const_iterator(_firstNode); }
-  const_iterator end() const { return const_iterator(0); }
+  const_iterator end() const { return const_iterator(NULL); }
 
   static JsonObject &invalid() { return _invalid; }
 

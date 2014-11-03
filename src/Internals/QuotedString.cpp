@@ -23,8 +23,7 @@ static inline char getSpecialChar(char c) {
 static inline size_t printCharTo(char c, Print *p) {
   char specialChar = getSpecialChar(c);
 
-  return specialChar != 0 ? p->write('\\') + p->write(specialChar)
-                          : p->write(c);
+  return specialChar ? p->write('\\') + p->write(specialChar) : p->write(c);
 }
 
 size_t QuotedString::printTo(const char *s, Print *p) {
@@ -45,7 +44,7 @@ static char unescapeChar(char c) {
   const char *p = "b\bf\fn\nr\rt\t";
 
   for (;;) {
-    if (p[0] == 0) return c;
+    if (p[0] == '\0') return c;
     if (p[0] == c) return p[1];
     p += 2;
   }
@@ -58,7 +57,7 @@ char *QuotedString::extractFrom(char *input, char **endPtr) {
 
   if (!isQuote(firstChar)) {
     // must start with a quote
-    return 0;
+    return NULL;
   }
 
   char stopChar = firstChar;  // closing quote is the same as opening quote
@@ -71,9 +70,9 @@ char *QuotedString::extractFrom(char *input, char **endPtr) {
   for (;;) {
     c = *readPtr++;
 
-    if (c == 0) {
+    if (c == '\0') {
       // premature ending
-      return 0;
+      return NULL;
     }
 
     if (c == stopChar) {
@@ -90,7 +89,7 @@ char *QuotedString::extractFrom(char *input, char **endPtr) {
   }
 
   // end the string here
-  *writePtr = 0;
+  *writePtr = '\0';
 
   // update end ptr
   *endPtr = readPtr;
