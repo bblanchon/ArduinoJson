@@ -28,7 +28,7 @@ class JsonWriter {
   void writeString(const char *value);
   void writeInteger(long value);
   void writeBoolean(bool value);
-  void writeDouble(double value, int decimals);
+  void writeDouble(double value, uint8_t decimals);
 
   void writeColon() { _length += _sink->write(':'); }
   void writeComma() { _length += _sink->write(','); }

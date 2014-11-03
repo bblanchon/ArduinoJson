@@ -19,6 +19,6 @@ void JsonWriter::writeBoolean(bool value) {
   _length += _sink->print(value ? "true" : "false");
 }
 
-void JsonWriter::writeDouble(double value, int decimals) {
+void JsonWriter::writeDouble(double value, uint8_t decimals) {
   _length += _sink->print(value, decimals);
 }

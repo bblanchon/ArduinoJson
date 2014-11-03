@@ -7,6 +7,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>  // for uint8_t
 
 #include "Internals/JsonValueContent.hpp"
 #include "Internals/JsonValueType.hpp"
@@ -25,7 +26,7 @@ class JsonValue {
   JsonValue() : _type(Internals::JSON_UNDEFINED) {}
 
   void set(bool value);
-  void set(double value, int decimals = 2);
+  void set(double value, uint8_t decimals = 2);
   void set(signed char value) { set(static_cast<long>(value)); }
   void set(signed int value) { set(static_cast<long>(value)); }
   void set(signed long value);

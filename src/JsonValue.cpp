@@ -50,7 +50,7 @@ void JsonValue::set(const char *value) {
   _content.asString = value;
 }
 
-void JsonValue::set(double value, int decimals) {
+void JsonValue::set(double value, uint8_t decimals) {
   if (_type == JSON_INVALID) return;
   _type = static_cast<JsonValueType>(JSON_DOUBLE_0_DECIMALS + decimals);
   _content.asDouble = value;

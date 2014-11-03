@@ -41,7 +41,7 @@ class JsonArray : public JsonPrintable<JsonArray>,
   }
 
   value_type &add();
-  void add(double value, int decimals) { add().set(value, decimals); }
+  void add(double value, uint8_t decimals) { add().set(value, decimals); }
   void add(JsonArray &nestedArray) { add().set(nestedArray); }
   void add(JsonObject &nestedObject) { add().set(nestedObject); }
 
