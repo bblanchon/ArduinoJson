@@ -78,6 +78,11 @@ class JsonValue {
     return static_cast<T>(*this);
   }
 
+  template <typename T>
+  bool is() const {
+    return false;
+  }
+
   static JsonValue &invalid() { return _invalid; }
 
   bool success() { return _type != Internals::JSON_INVALID; }
@@ -93,6 +98,16 @@ class JsonValue {
   static JsonValue _invalid;
 };
 
+template <>
+inline bool JsonValue::is<long>() const {
+  return _type == Internals::JSON_LONG;
+}
+
+template <>
+inline bool JsonValue::is<double>() const {
+  return _type >= Internals::JSON_DOUBLE_0_DECIMALS;
+}
+
 template <typename T>
 inline bool operator==(const JsonValue &left, T right) {
   return left.as<T>() == right;
@@ -101,5 +116,55 @@ inline bool operator==(const JsonValue &left, T right) {
 template <typename T>
 inline bool operator==(T left, const JsonValue &right) {
   return left == right.as<T>();
+}
+
+template <typename T>
+inline bool operator!=(const JsonValue &left, T right) {
+  return left.as<T>() != right;
+}
+
+template <typename T>
+inline bool operator!=(T left, const JsonValue &right) {
+  return left != right.as<T>();
+}
+
+template <typename T>
+inline bool operator<=(const JsonValue &left, T right) {
+  return left.as<T>() <= right;
+}
+
+template <typename T>
+inline bool operator<=(T left, const JsonValue &right) {
+  return left <= right.as<T>();
+}
+
+template <typename T>
+inline bool operator>=(const JsonValue &left, T right) {
+  return left.as<T>() >= right;
+}
+
+template <typename T>
+inline bool operator>=(T left, const JsonValue &right) {
+  return left >= right.as<T>();
+}
+
+template <typename T>
+inline bool operator<(const JsonValue &left, T right) {
+  return left.as<T>() < right;
+}
+
+template <typename T>
+inline bool operator<(T left, const JsonValue &right) {
+  return left < right.as<T>();
+}
+
+template <typename T>
+inline bool operator>(const JsonValue &left, T right) {
+  return left.as<T>() > right;
+}
+
+template <typename T>
+inline bool operator>(T left, const JsonValue &right) {
+  return left > right.as<T>();
 }
 }
