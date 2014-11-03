@@ -34,7 +34,9 @@ class JsonObject : public JsonPrintable<JsonObject>,
   int size() const;
 
   JsonValue &at(key_type key);
-  JsonValue &operator[](key_type key) { return at(key); }
+  const JsonValue &at(key_type key) const;
+  JsonValue &operator[](key_type key);
+  const JsonValue &operator[](key_type key) const { return at(key); }
 
   void remove(key_type key);
 
@@ -68,7 +70,7 @@ class JsonObject : public JsonPrintable<JsonObject>,
   void addNode(Internals::JsonObjectNode *nodeToAdd);
   void removeNode(Internals::JsonObjectNode *nodeToRemove);
 
-  Internals::JsonObjectNode *getNodeAt(key_type key);
+  Internals::JsonObjectNode *getNodeAt(key_type key) const;
   Internals::JsonObjectNode *getOrCreateNodeAt(key_type key);
 
   JsonBuffer *_buffer;

@@ -27,6 +27,16 @@ int JsonObject::size() const {
 }
 
 JsonValue &JsonObject::at(const char *key) {
+  JsonObjectNode *node = getNodeAt(key);
+  return node ? node->pair.value : JsonValue::invalid();
+}
+
+const JsonValue &JsonObject::at(const char *key) const {
+  JsonObjectNode *node = getNodeAt(key);
+  return node ? node->pair.value : JsonValue::invalid();
+}
+
+JsonValue &JsonObject::operator[](const char *key) {
   JsonObjectNode *node = getOrCreateNodeAt(key);
   return node ? node->pair.value : JsonValue::invalid();
 }
@@ -47,7 +57,7 @@ JsonObject &JsonObject::createNestedObject(const char *key) {
   return object;
 }
 
-JsonObjectNode *JsonObject::getNodeAt(const char *key) {
+JsonObjectNode *JsonObject::getNodeAt(const char *key) const {
   for (JsonObjectNode *node = _firstNode; node; node = node->next) {
     if (!strcmp(node->pair.key, key)) return node;
   }
