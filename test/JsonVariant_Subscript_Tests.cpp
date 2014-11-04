@@ -45,3 +45,24 @@ TEST_F(JsonVariant_Subscript_Tests, Object) {
   EXPECT_FALSE(variant["c"].success());
   EXPECT_FALSE(variant[0].success());
 }
+
+TEST_F(JsonVariant_Subscript_Tests, Undefined) {
+  variant = JsonVariant();
+  EXPECT_EQ(0, variant.size());
+  EXPECT_FALSE(variant["0"].success());
+  EXPECT_FALSE(variant[0].success());
+}
+
+TEST_F(JsonVariant_Subscript_Tests, Invalid) {
+  variant = JsonVariant::invalid();
+  EXPECT_EQ(0, variant.size());
+  EXPECT_FALSE(variant["0"].success());
+  EXPECT_FALSE(variant[0].success());
+}
+
+TEST_F(JsonVariant_Subscript_Tests, String) {
+  variant = "hello world";
+  EXPECT_EQ(0, variant.size());
+  EXPECT_FALSE(variant["0"].success());
+  EXPECT_FALSE(variant[0].success());
+}
