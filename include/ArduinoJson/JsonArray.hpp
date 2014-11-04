@@ -24,7 +24,7 @@ class JsonArray : public JsonPrintable<JsonArray>,
   friend class JsonBuffer;
 
  public:
-  typedef JsonValue value_type;
+  typedef JsonVariant value_type;
   typedef JsonArrayIterator iterator;
   typedef JsonArrayConstIterator const_iterator;
 

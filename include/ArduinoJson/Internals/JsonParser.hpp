@@ -25,10 +25,10 @@ class JsonParser {
   bool skip(const char *wordToSkip);
   void skipSpaces();
 
-  void parseAnythingTo(JsonValue &destination);
-  inline void parseBooleanTo(JsonValue &destination);
-  inline void parseNullTo(JsonValue &destination);
-  inline void parseNumberTo(JsonValue &destination);
+  void parseAnythingTo(JsonVariant &destination);
+  inline void parseBooleanTo(JsonVariant &destination);
+  inline void parseNullTo(JsonVariant &destination);
+  inline void parseNumberTo(JsonVariant &destination);
   inline const char *parseString();
 
   JsonBuffer *_buffer;

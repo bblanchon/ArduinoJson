@@ -15,8 +15,8 @@ class JsonArrayConstIterator {
   explicit JsonArrayConstIterator(Internals::JsonArrayNode *node)
       : _node(node) {}
 
-  const JsonValue &operator*() const { return _node->value; }
-  const JsonValue *operator->() { return &_node->value; }
+  const JsonVariant &operator*() const { return _node->value; }
+  const JsonVariant *operator->() { return &_node->value; }
 
   bool operator==(const JsonArrayConstIterator &other) const {
     return _node == other._node;

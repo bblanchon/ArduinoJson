@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <ArduinoJson/JsonValue.hpp>
+#include <ArduinoJson/JsonVariant.hpp>
 #include <ostream>
 
 namespace ArduinoJson {
-std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonValue& v);
+std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonVariant& v);
 }

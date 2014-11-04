@@ -10,7 +10,7 @@
 
 #include "../include/ArduinoJson/JsonBuffer.hpp"
 #include "../include/ArduinoJson/JsonArray.hpp"
-#include "../include/ArduinoJson/JsonValue.hpp"
+#include "../include/ArduinoJson/JsonVariant.hpp"
 #include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "../include/ArduinoJson/Internals/StringBuilder.hpp"
 #include "../include/ArduinoJson/Internals/PlacementNew.hpp"
@@ -26,19 +26,19 @@ int JsonObject::size() const {
   return nodeCount;
 }
 
-JsonValue &JsonObject::at(const char *key) {
+JsonVariant &JsonObject::at(const char *key) {
   JsonObjectNode *node = getNodeAt(key);
-  return node ? node->pair.value : JsonValue::invalid();
+  return node ? node->pair.value : JsonVariant::invalid();
 }
 
-const JsonValue &JsonObject::at(const char *key) const {
+const JsonVariant &JsonObject::at(const char *key) const {
   JsonObjectNode *node = getNodeAt(key);
-  return node ? node->pair.value : JsonValue::invalid();
+  return node ? node->pair.value : JsonVariant::invalid();
 }
 
-JsonValue &JsonObject::operator[](const char *key) {
+JsonVariant &JsonObject::operator[](const char *key) {
   JsonObjectNode *node = getOrCreateNodeAt(key);
-  return node ? node->pair.value : JsonValue::invalid();
+  return node ? node->pair.value : JsonVariant::invalid();
 }
 
 void JsonObject::remove(char const *key) { removeNode(getNodeAt(key)); }

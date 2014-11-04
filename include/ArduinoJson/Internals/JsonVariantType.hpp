@@ -9,7 +9,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
-enum JsonValueType {
+enum JsonVariantType {
   JSON_UNDEFINED,
   JSON_INVALID,
   JSON_ARRAY,

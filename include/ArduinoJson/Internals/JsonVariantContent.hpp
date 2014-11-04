@@ -13,7 +13,7 @@ class JsonObject;
 
 namespace Internals {
 
-union JsonValueContent {
+union JsonVariantContent {
   bool asBoolean;
   double asDouble;
   long asLong;

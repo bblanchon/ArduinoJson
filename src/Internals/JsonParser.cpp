@@ -11,7 +11,7 @@
 
 #include "../../include/ArduinoJson/JsonArray.hpp"
 #include "../../include/ArduinoJson/JsonBuffer.hpp"
-#include "../../include/ArduinoJson/JsonValue.hpp"
+#include "../../include/ArduinoJson/JsonVariant.hpp"
 #include "../../include/ArduinoJson/JsonObject.hpp"
 #include "../../include/ArduinoJson/Internals/QuotedString.hpp"
 
@@ -39,7 +39,7 @@ bool JsonParser::skip(const char *wordToSkip) {
   return *charToSkip == '\0';
 }
 
-void JsonParser::parseAnythingTo(JsonValue &destination) {
+void JsonParser::parseAnythingTo(JsonVariant &destination) {
   skipSpaces();
 
   switch (*_ptr) {
@@ -91,7 +91,7 @@ JsonArray &JsonParser::parseArray() {
   if (skip(']')) return array;  // empty array
 
   for (;;) {
-    JsonValue &child = array.add();
+    JsonVariant &child = array.add();
 
     parseAnythingTo(child);
     if (!child.success()) return JsonArray::invalid();  // child parsing failed
@@ -102,16 +102,16 @@ JsonArray &JsonParser::parseArray() {
   }
 }
 
-void JsonParser::parseBooleanTo(JsonValue &destination) {
+void JsonParser::parseBooleanTo(JsonVariant &destination) {
   bool value = *_ptr == 't';
 
   if (skip(value ? "true" : "false"))
     destination = value;
   else
-    destination = JsonValue::invalid();
+    destination = JsonVariant::invalid();
 }
 
-void JsonParser::parseNumberTo(JsonValue &destination) {
+void JsonParser::parseNumberTo(JsonVariant &destination) {
   char *endOfLong;
   long longValue = strtol(_ptr, &endOfLong, 10);
 
@@ -126,11 +126,11 @@ void JsonParser::parseNumberTo(JsonValue &destination) {
   }
 }
 
-void JsonParser::parseNullTo(JsonValue &destination) {
+void JsonParser::parseNullTo(JsonVariant &destination) {
   if (skip("null"))
     destination = static_cast<const char *>(NULL);
   else
-    destination = JsonValue::invalid();
+    destination = JsonVariant::invalid();
 }
 
 JsonObject &JsonParser::parseObject() {
@@ -148,7 +148,7 @@ JsonObject &JsonParser::parseObject() {
 
     if (!skip(':')) break;  // colon is missing
 
-    JsonValue &value = object[key];
+    JsonVariant &value = object[key];
 
     parseAnythingTo(value);
     if (!value.success()) break;  // value parsing failed

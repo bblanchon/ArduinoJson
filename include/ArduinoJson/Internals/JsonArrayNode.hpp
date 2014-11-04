@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "../JsonValue.hpp"
+#include "../JsonVariant.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -15,7 +15,7 @@ struct JsonArrayNode {
   JsonArrayNode() : next(NULL) {}
 
   JsonArrayNode* next;
-  JsonValue value;
+  JsonVariant value;
 };
 }
 }

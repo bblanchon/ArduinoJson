@@ -8,7 +8,7 @@
 
 #include "../include/ArduinoJson/JsonArray.hpp"
 #include "../include/ArduinoJson/JsonObject.hpp"
-#include "../include/ArduinoJson/JsonValue.hpp"
+#include "../include/ArduinoJson/JsonVariant.hpp"
 #include "../include/ArduinoJson/Internals/PlacementNew.hpp"
 #include "../include/ArduinoJson/Internals/JsonParser.hpp"
 

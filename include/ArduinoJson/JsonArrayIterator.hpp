@@ -14,8 +14,8 @@ class JsonArrayIterator {
  public:
   explicit JsonArrayIterator(Internals::JsonArrayNode *node) : _node(node) {}
 
-  JsonValue &operator*() const { return _node->value; }
-  JsonValue *operator->() { return &_node->value; }
+  JsonVariant &operator*() const { return _node->value; }
+  JsonVariant *operator->() { return &_node->value; }
 
   bool operator==(const JsonArrayIterator &other) const {
     return _node == other._node;

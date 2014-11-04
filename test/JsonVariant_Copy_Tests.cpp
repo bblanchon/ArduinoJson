@@ -8,18 +8,18 @@
 #include <ArduinoJson/StaticJsonBuffer.hpp>
 #include <ArduinoJson/JsonArray.hpp>
 #include <ArduinoJson/JsonObject.hpp>
-#include <ArduinoJson/JsonValue.hpp>
+#include <ArduinoJson/JsonVariant.hpp>
 
 using namespace ArduinoJson;
 
-class JsonValue_Copy_Tests : public ::testing::Test {
+class JsonVariant_Copy_Tests : public ::testing::Test {
  protected:
   StaticJsonBuffer<200> json;
-  JsonValue jsonValue1;
-  JsonValue jsonValue2;
+  JsonVariant jsonValue1;
+  JsonVariant jsonValue2;
 };
 
-TEST_F(JsonValue_Copy_Tests, IntegersAreCopiedByValue) {
+TEST_F(JsonVariant_Copy_Tests, IntegersAreCopiedByValue) {
   jsonValue1 = 123;
   jsonValue2 = jsonValue1;
   jsonValue1 = 456;
@@ -27,7 +27,7 @@ TEST_F(JsonValue_Copy_Tests, IntegersAreCopiedByValue) {
   EXPECT_EQ(123, jsonValue2.as<int>());
 }
 
-TEST_F(JsonValue_Copy_Tests, DoublesAreCopiedByValue) {
+TEST_F(JsonVariant_Copy_Tests, DoublesAreCopiedByValue) {
   jsonValue1 = 123.45;
   jsonValue2 = jsonValue1;
   jsonValue1 = 456.78;
@@ -35,7 +35,7 @@ TEST_F(JsonValue_Copy_Tests, DoublesAreCopiedByValue) {
   EXPECT_EQ(123.45, jsonValue2.as<double>());
 }
 
-TEST_F(JsonValue_Copy_Tests, BooleansAreCopiedByValue) {
+TEST_F(JsonVariant_Copy_Tests, BooleansAreCopiedByValue) {
   jsonValue1 = true;
   jsonValue2 = jsonValue1;
   jsonValue1 = false;
@@ -43,7 +43,7 @@ TEST_F(JsonValue_Copy_Tests, BooleansAreCopiedByValue) {
   EXPECT_TRUE(jsonValue2.as<bool>());
 }
 
-TEST_F(JsonValue_Copy_Tests, StringsAreCopiedByValue) {
+TEST_F(JsonVariant_Copy_Tests, StringsAreCopiedByValue) {
   jsonValue1 = "hello";
   jsonValue2 = jsonValue1;
   jsonValue1 = "world";
@@ -51,7 +51,7 @@ TEST_F(JsonValue_Copy_Tests, StringsAreCopiedByValue) {
   EXPECT_STREQ("hello", jsonValue2.as<const char *>());
 }
 
-TEST_F(JsonValue_Copy_Tests, ObjectsAreCopiedByReference) {
+TEST_F(JsonVariant_Copy_Tests, ObjectsAreCopiedByReference) {
   JsonObject &object = json.createObject();
 
   jsonValue1 = object;
@@ -61,7 +61,7 @@ TEST_F(JsonValue_Copy_Tests, ObjectsAreCopiedByReference) {
   EXPECT_EQ(1, jsonValue1.asObject().size());
 }
 
-TEST_F(JsonValue_Copy_Tests, ArraysAreCopiedByReference) {
+TEST_F(JsonVariant_Copy_Tests, ArraysAreCopiedByReference) {
   JsonArray &array = json.createArray();
 
   jsonValue1 = array;

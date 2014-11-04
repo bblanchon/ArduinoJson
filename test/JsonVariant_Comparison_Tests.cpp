@@ -5,12 +5,12 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/JsonValue.hpp>
+#include <ArduinoJson/JsonVariant.hpp>
 #include "Printers.hpp"
 
 using namespace ArduinoJson;
 
-class JsonValue_Comparison_Tests : public ::testing::Test {
+class JsonVariant_Comparison_Tests : public ::testing::Test {
  protected:
   template <typename T>
   void testValue(T low, T mid, T high) {
@@ -52,45 +52,45 @@ class JsonValue_Comparison_Tests : public ::testing::Test {
     EXPECT_NE(expected, jsonValue);  // operator!=
   }
 
-  JsonValue jsonValue;
+  JsonVariant jsonValue;
 };
 
-TEST_F(JsonValue_Comparison_Tests, Double) {
+TEST_F(JsonVariant_Comparison_Tests, Double) {
   testValue<double>(123.44, 123.45, 123.46);
 }
 
-TEST_F(JsonValue_Comparison_Tests, Float) {
+TEST_F(JsonVariant_Comparison_Tests, Float) {
   testValue<float>(123.44f, 123.45f, 123.46f);
 }
 
-TEST_F(JsonValue_Comparison_Tests, SChar) {
+TEST_F(JsonVariant_Comparison_Tests, SChar) {
   testValue<signed char>(122, 123, 124);
 }
 
-TEST_F(JsonValue_Comparison_Tests, SInt) {
+TEST_F(JsonVariant_Comparison_Tests, SInt) {
   testValue<signed int>(122, 123, 124);
 }
 
-TEST_F(JsonValue_Comparison_Tests, SLong) {
+TEST_F(JsonVariant_Comparison_Tests, SLong) {
   testValue<signed long>(122L, 123L, 124L);
 }
 
-TEST_F(JsonValue_Comparison_Tests, SShort) {
+TEST_F(JsonVariant_Comparison_Tests, SShort) {
   testValue<signed short>(122, 123, 124);
 }
 
-TEST_F(JsonValue_Comparison_Tests, UChar) {
+TEST_F(JsonVariant_Comparison_Tests, UChar) {
   testValue<unsigned char>(122, 123, 124);
 }
 
-TEST_F(JsonValue_Comparison_Tests, UInt) {
+TEST_F(JsonVariant_Comparison_Tests, UInt) {
   testValue<unsigned int>(122, 123, 124);
 }
 
-TEST_F(JsonValue_Comparison_Tests, ULong) {
+TEST_F(JsonVariant_Comparison_Tests, ULong) {
   testValue<unsigned long>(122L, 123L, 124L);
 }
 
-TEST_F(JsonValue_Comparison_Tests, UShort) {
+TEST_F(JsonVariant_Comparison_Tests, UShort) {
   testValue<unsigned short>(122, 123, 124);
 }

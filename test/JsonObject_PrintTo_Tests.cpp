@@ -7,10 +7,10 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson/JsonArray.hpp>
 #include <ArduinoJson/JsonObject.hpp>
-#include <ArduinoJson/JsonValue.hpp>
+#include <ArduinoJson/JsonVariant.hpp>
 #include <ArduinoJson/StaticJsonBuffer.hpp>
 
-using namespace ArduinoJson; 
+using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 class JsonObject_PrintTo_Tests : public testing::Test {

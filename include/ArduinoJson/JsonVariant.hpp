@@ -9,8 +9,8 @@
 #include <stddef.h>
 #include <stdint.h>  // for uint8_t
 
-#include "Internals/JsonValueContent.hpp"
-#include "Internals/JsonValueType.hpp"
+#include "Internals/JsonVariantContent.hpp"
+#include "Internals/JsonVariantType.hpp"
 
 namespace ArduinoJson {
 
@@ -21,9 +21,9 @@ namespace Internals {
 class JsonWriter;
 }
 
-class JsonValue {
+class JsonVariant {
  public:
-  JsonValue() : _type(Internals::JSON_UNDEFINED) {}
+  JsonVariant() : _type(Internals::JSON_UNDEFINED) {}
 
   void set(bool value);
   void set(double value, uint8_t decimals = 2);
@@ -40,17 +40,17 @@ class JsonValue {
   void set(JsonObject &object);
 
   template <typename T>
-  JsonValue &operator=(T value) {
+  JsonVariant &operator=(T value) {
     set(value);
     return *this;
   }
 
-  JsonValue &operator=(JsonArray &array) {
+  JsonVariant &operator=(JsonArray &array) {
     set(array);
     return *this;
   }
 
-  JsonValue &operator=(JsonObject &object) {
+  JsonVariant &operator=(JsonObject &object) {
     set(object);
     return *this;
   }
@@ -84,7 +84,7 @@ class JsonValue {
     return false;
   }
 
-  static JsonValue &invalid() { return _invalid; }
+  static JsonVariant &invalid() { return _invalid; }
 
   bool success() { return _type != Internals::JSON_INVALID; }
 
@@ -92,80 +92,80 @@ class JsonValue {
   void writeTo(T &writer) const;
 
  private:
-  JsonValue(Internals::JsonValueType type) : _type(type) {}
+  JsonVariant(Internals::JsonVariantType type) : _type(type) {}
 
-  Internals::JsonValueType _type;
-  Internals::JsonValueContent _content;
-  static JsonValue _invalid;
+  Internals::JsonVariantType _type;
+  Internals::JsonVariantContent _content;
+  static JsonVariant _invalid;
 };
 
 template <>
-inline bool JsonValue::is<long>() const {
+inline bool JsonVariant::is<long>() const {
   return _type == Internals::JSON_LONG;
 }
 
 template <>
-inline bool JsonValue::is<double>() const {
+inline bool JsonVariant::is<double>() const {
   return _type >= Internals::JSON_DOUBLE_0_DECIMALS;
 }
 
 template <typename T>
-inline bool operator==(const JsonValue &left, T right) {
+inline bool operator==(const JsonVariant &left, T right) {
   return left.as<T>() == right;
 }
 
 template <typename T>
-inline bool operator==(T left, const JsonValue &right) {
+inline bool operator==(T left, const JsonVariant &right) {
   return left == right.as<T>();
 }
 
 template <typename T>
-inline bool operator!=(const JsonValue &left, T right) {
+inline bool operator!=(const JsonVariant &left, T right) {
   return left.as<T>() != right;
 }
 
 template <typename T>
-inline bool operator!=(T left, const JsonValue &right) {
+inline bool operator!=(T left, const JsonVariant &right) {
   return left != right.as<T>();
 }
 
 template <typename T>
-inline bool operator<=(const JsonValue &left, T right) {
+inline bool operator<=(const JsonVariant &left, T right) {
   return left.as<T>() <= right;
 }
 
 template <typename T>
-inline bool operator<=(T left, const JsonValue &right) {
+inline bool operator<=(T left, const JsonVariant &right) {
   return left <= right.as<T>();
 }
 
 template <typename T>
-inline bool operator>=(const JsonValue &left, T right) {
+inline bool operator>=(const JsonVariant &left, T right) {
   return left.as<T>() >= right;
 }
 
 template <typename T>
-inline bool operator>=(T left, const JsonValue &right) {
+inline bool operator>=(T left, const JsonVariant &right) {
   return left >= right.as<T>();
 }
 
 template <typename T>
-inline bool operator<(const JsonValue &left, T right) {
+inline bool operator<(const JsonVariant &left, T right) {
   return left.as<T>() < right;
 }
 
 template <typename T>
-inline bool operator<(T left, const JsonValue &right) {
+inline bool operator<(T left, const JsonVariant &right) {
   return left < right.as<T>();
 }
 
 template <typename T>
-inline bool operator>(const JsonValue &left, T right) {
+inline bool operator>(const JsonVariant &left, T right) {
   return left.as<T>() > right;
 }
 
 template <typename T>
-inline bool operator>(T left, const JsonValue &right) {
+inline bool operator>(T left, const JsonVariant &right) {
   return left > right.as<T>();
 }
 }

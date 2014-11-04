@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "JsonValue.hpp"
+#include "JsonVariant.hpp"
 
 namespace ArduinoJson {
 class JsonArray;

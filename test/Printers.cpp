@@ -7,12 +7,12 @@
 #include "Printers.hpp"
 
 std::ostream& ArduinoJson::operator<<(std::ostream& os,
-                                      const ArduinoJson::JsonValue& v) {
+                                      const ArduinoJson::JsonVariant& v) {
   if (v.is<long>())
     os << v.as<long>();
   else if (v.is<double>())
     os << v.as<double>();
   else
-    os << "JsonValue";  // TODO
+    os << "JsonVariant";  // TODO
   return os;
 }

@@ -33,10 +33,10 @@ class JsonObject : public JsonPrintable<JsonObject>,
   bool success() const { return _buffer != NULL; }
   int size() const;
 
-  JsonValue &at(key_type key);
-  const JsonValue &at(key_type key) const;
-  JsonValue &operator[](key_type key);
-  const JsonValue &operator[](key_type key) const { return at(key); }
+  JsonVariant &at(key_type key);
+  const JsonVariant &at(key_type key) const;
+  JsonVariant &operator[](key_type key);
+  const JsonVariant &operator[](key_type key) const { return at(key); }
 
   void remove(key_type key);
 
@@ -65,7 +65,7 @@ class JsonObject : public JsonPrintable<JsonObject>,
   // constructor is private, instance must be created via JsonBuffer
   JsonObject(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
-  JsonValue &add(key_type key) { return (*this)[key]; }
+  JsonVariant &add(key_type key) { return (*this)[key]; }
   Internals::JsonObjectNode *createNode(key_type key);
   void addNode(Internals::JsonObjectNode *nodeToAdd);
   void removeNode(Internals::JsonObjectNode *nodeToRemove);

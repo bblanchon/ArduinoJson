@@ -22,15 +22,15 @@ int JsonArray::size() const {
   return nodeCount;
 }
 
-JsonValue &JsonArray::at(int index) const {
+JsonVariant &JsonArray::at(int index) const {
   JsonArrayNode *node = _firstNode;
   while (node && index--) node = node->next;
-  return node ? node->value : JsonValue::invalid();
+  return node ? node->value : JsonVariant::invalid();
 }
 
-JsonValue &JsonArray::add() {
+JsonVariant &JsonArray::add() {
   JsonArrayNode *node = createNode();
-  if (!node) return JsonValue::invalid();
+  if (!node) return JsonVariant::invalid();
 
   addNode(node);
 
