@@ -86,6 +86,11 @@ JsonVariant &JsonVariant::operator[](int index) {
   return _content.asArray->operator[](index);
 }
 
+JsonVariant &JsonVariant::operator[](const char *key) {
+  if (_type != JSON_OBJECT) return JsonVariant::invalid();
+  return _content.asObject->operator[](key);
+}
+
 template <typename T>
 void JsonVariant::writeTo(T &writer) const {
   switch (_type) {

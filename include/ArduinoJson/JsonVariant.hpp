@@ -91,13 +91,17 @@ class JsonVariant {
 
   static JsonVariant &invalid() { return _invalid; }
 
-  bool success() { return _type != Internals::JSON_INVALID; }
+  bool success() {
+    return _type != Internals::JSON_INVALID &&
+           _type != Internals::JSON_UNDEFINED;
+  }
 
   template <typename T>
   void writeTo(T &writer) const;
 
   size_t size() const;
   JsonVariant &operator[](int index);
+  JsonVariant &operator[](const char *key);
 
  private:
   JsonVariant(Internals::JsonVariantType type) : _type(type) {}
