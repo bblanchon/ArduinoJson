@@ -11,4 +11,5 @@
 
 namespace ArduinoJson {
 std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonVariant& v);
+std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonArray& v);
 }

@@ -11,17 +11,14 @@
 
 #include "Internals/JsonVariantContent.hpp"
 #include "Internals/JsonVariantType.hpp"
+#include "JsonPrintable.hpp"
 
 namespace ArduinoJson {
 
 class JsonArray;
 class JsonObject;
 
-namespace Internals {
-class JsonWriter;
-}
-
-class JsonVariant {
+class JsonVariant : public JsonPrintable<JsonVariant> {
  public:
   JsonVariant() : _type(Internals::JSON_UNDEFINED) {}
 
