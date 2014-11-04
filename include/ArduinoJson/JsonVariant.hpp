@@ -59,15 +59,15 @@ class JsonVariant : public JsonPrintable<JsonVariant> {
 
   operator bool() const;
   operator double() const;
-  operator float() const { return as<double>(); }
-  operator signed char() const { return as<long>(); }
-  operator signed int() const { return as<long>(); }
+  operator float() const { return static_cast<float>(as<double>()); }
+  operator signed char() const { return static_cast<signed char>(as<long>()); }
+  operator signed int() const { return static_cast<signed int>(as<long>()); }
   operator signed long() const;
-  operator signed short() const { return as<long>(); }
-  operator unsigned char() const { return as<long>(); }
-  operator unsigned int() const { return as<long>(); }
-  operator unsigned long() const { return as<long>(); }
-  operator unsigned short() const { return as<long>(); }
+  operator signed short() const { return static_cast<signed short>(as<long>()); }
+  operator unsigned char() const { return static_cast<unsigned char>(as<long>()); }
+  operator unsigned int() const { return static_cast<unsigned int>(as<long>()); }
+  operator unsigned long() const { return static_cast<unsigned long>(as<long>()); }
+  operator unsigned short() const { return static_cast<unsigned short>(as<long>()); }
   operator const char *() const;
   operator JsonArray &() const;
   operator JsonObject &() const;
