@@ -7,7 +7,8 @@
 #ifndef ARDUINO
 
 #include "../../include/ArduinoJson/Arduino/Print.hpp"
-#include <cstdio>
+
+#include <stdio.h>  // for sprintf
 
 size_t Print::print(const char s[]) {
   size_t n = 0;

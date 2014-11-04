@@ -9,11 +9,10 @@
 #include <stdlib.h>  // for strtol, strtod
 #include <ctype.h>
 
+#include "../../include/ArduinoJson/Internals/QuotedString.hpp"
 #include "../../include/ArduinoJson/JsonArray.hpp"
 #include "../../include/ArduinoJson/JsonBuffer.hpp"
-#include "../../include/ArduinoJson/JsonVariant.hpp"
 #include "../../include/ArduinoJson/JsonObject.hpp"
-#include "../../include/ArduinoJson/Internals/QuotedString.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;

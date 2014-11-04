@@ -5,6 +5,7 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include "../../include/ArduinoJson/Internals/JsonWriter.hpp"
+
 #include "../../include/ArduinoJson/Internals/QuotedString.hpp"
 
 using namespace ArduinoJson::Internals;

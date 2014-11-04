@@ -8,7 +8,6 @@
 #include <ArduinoJson/StaticJsonBuffer.hpp>
 #include <ArduinoJson/JsonArray.hpp>
 #include <ArduinoJson/JsonObject.hpp>
-#include <ArduinoJson/JsonVariant.hpp>
 
 using namespace ArduinoJson;
 

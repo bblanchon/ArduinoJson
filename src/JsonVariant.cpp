@@ -5,9 +5,10 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include "../include/ArduinoJson/JsonVariant.hpp"
+
+#include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "../include/ArduinoJson/JsonArray.hpp"
 #include "../include/ArduinoJson/JsonObject.hpp"
-#include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;

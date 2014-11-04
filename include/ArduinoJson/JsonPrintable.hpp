@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Internals/StringBuilder.hpp"
 #include "Internals/IndentedPrint.hpp"
 #include "Internals/PrettyJsonWriter.hpp"
+#include "Internals/StringBuilder.hpp"
 
 namespace ArduinoJson {
 
