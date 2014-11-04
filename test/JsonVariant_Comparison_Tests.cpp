@@ -23,36 +23,36 @@ class JsonVariant_Comparison_Tests : public ::testing::Test {
  private:
   template <typename T>
   void setValueTo(T expected) {
-    jsonValue = expected;
+    actual = expected;
   }
 
   template <typename T>
   void mustBeEqualTo(T expected) {
-    EXPECT_EQ(expected, jsonValue);  // operator==
-    EXPECT_EQ(jsonValue, expected);  // operator==
-    EXPECT_LE(expected, jsonValue);  // operator<=
-    EXPECT_LE(jsonValue, expected);  // operator<=
-    EXPECT_GE(expected, jsonValue);  // operator>=
-    EXPECT_GE(jsonValue, expected);  // operator>=
+    EXPECT_EQ(expected, actual);  // operator==
+    EXPECT_EQ(actual, expected);  // operator==
+    EXPECT_LE(expected, actual);  // operator<=
+    EXPECT_LE(actual, expected);  // operator<=
+    EXPECT_GE(expected, actual);  // operator>=
+    EXPECT_GE(actual, expected);  // operator>=
   }
 
   template <typename T>
   void mustBeGreaterThan(T expected) {
-    EXPECT_GT(jsonValue, expected);  // operator>
-    EXPECT_LT(expected, jsonValue);  // operator<
-    EXPECT_NE(jsonValue, expected);  // operator!=
-    EXPECT_NE(expected, jsonValue);  // operator!=
+    EXPECT_GT(actual, expected);  // operator>
+    EXPECT_LT(expected, actual);  // operator<
+    EXPECT_NE(actual, expected);  // operator!=
+    EXPECT_NE(expected, actual);  // operator!=
   }
 
   template <typename T>
   void mustBeLessThan(T expected) {
-    EXPECT_LT(jsonValue, expected);  // operator<
-    EXPECT_GT(expected, jsonValue);  // operator<
-    EXPECT_NE(jsonValue, expected);  // operator!=
-    EXPECT_NE(expected, jsonValue);  // operator!=
+    EXPECT_LT(actual, expected);  // operator<
+    EXPECT_GT(expected, actual);  // operator<
+    EXPECT_NE(actual, expected);  // operator!=
+    EXPECT_NE(expected, actual);  // operator!=
   }
 
-  JsonVariant jsonValue;
+  JsonVariant actual;
 };
 
 TEST_F(JsonVariant_Comparison_Tests, Double) {

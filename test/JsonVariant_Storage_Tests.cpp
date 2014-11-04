@@ -15,17 +15,18 @@ class JsonVariant_Storage_Tests : public ::testing::Test {
  protected:
   template <typename T>
   void testValue(T expected) {
-    jsonValue.set(expected);
-    EXPECT_EQ(expected, jsonValue.as<T>());
+    actual.set(expected);
+    EXPECT_EQ(expected, actual.as<T>());
   }
 
   template <typename T>
   void testReference(T &expected) {
-    jsonValue.set(expected);
-    EXPECT_EQ(expected, jsonValue.as<T &>());
+    actual.set(expected);
+    EXPECT_EQ(expected, actual.as<T &>());
   }
 
-  JsonVariant jsonValue;
+ private:
+  JsonVariant actual;
 };
 
 TEST_F(JsonVariant_Storage_Tests, Double) { testValue<double>(123.45); }

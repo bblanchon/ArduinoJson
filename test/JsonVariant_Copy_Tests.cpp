@@ -14,58 +14,58 @@ using namespace ArduinoJson;
 class JsonVariant_Copy_Tests : public ::testing::Test {
  protected:
   StaticJsonBuffer<200> json;
-  JsonVariant jsonValue1;
-  JsonVariant jsonValue2;
+  JsonVariant variant1;
+  JsonVariant variant2;
 };
 
 TEST_F(JsonVariant_Copy_Tests, IntegersAreCopiedByValue) {
-  jsonValue1 = 123;
-  jsonValue2 = jsonValue1;
-  jsonValue1 = 456;
+  variant1 = 123;
+  variant2 = variant1;
+  variant1 = 456;
 
-  EXPECT_EQ(123, jsonValue2.as<int>());
+  EXPECT_EQ(123, variant2.as<int>());
 }
 
 TEST_F(JsonVariant_Copy_Tests, DoublesAreCopiedByValue) {
-  jsonValue1 = 123.45;
-  jsonValue2 = jsonValue1;
-  jsonValue1 = 456.78;
+  variant1 = 123.45;
+  variant2 = variant1;
+  variant1 = 456.78;
 
-  EXPECT_EQ(123.45, jsonValue2.as<double>());
+  EXPECT_EQ(123.45, variant2.as<double>());
 }
 
 TEST_F(JsonVariant_Copy_Tests, BooleansAreCopiedByValue) {
-  jsonValue1 = true;
-  jsonValue2 = jsonValue1;
-  jsonValue1 = false;
+  variant1 = true;
+  variant2 = variant1;
+  variant1 = false;
 
-  EXPECT_TRUE(jsonValue2.as<bool>());
+  EXPECT_TRUE(variant2.as<bool>());
 }
 
 TEST_F(JsonVariant_Copy_Tests, StringsAreCopiedByValue) {
-  jsonValue1 = "hello";
-  jsonValue2 = jsonValue1;
-  jsonValue1 = "world";
+  variant1 = "hello";
+  variant2 = variant1;
+  variant1 = "world";
 
-  EXPECT_STREQ("hello", jsonValue2.as<const char *>());
+  EXPECT_STREQ("hello", variant2.as<const char *>());
 }
 
 TEST_F(JsonVariant_Copy_Tests, ObjectsAreCopiedByReference) {
   JsonObject &object = json.createObject();
 
-  jsonValue1 = object;
+  variant1 = object;
 
   object["hello"] = "world";
 
-  EXPECT_EQ(1, jsonValue1.asObject().size());
+  EXPECT_EQ(1, variant1.asObject().size());
 }
 
 TEST_F(JsonVariant_Copy_Tests, ArraysAreCopiedByReference) {
   JsonArray &array = json.createArray();
 
-  jsonValue1 = array;
+  variant1 = array;
 
   array.add("world");
 
-  EXPECT_EQ(1, jsonValue1.asArray().size());
+  EXPECT_EQ(1, variant1.asArray().size());
 }
