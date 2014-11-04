@@ -75,6 +75,17 @@ void JsonVariant::set(JsonObject &object) {
   _content.asObject = &object;
 }
 
+size_t JsonVariant::size() const {
+  if (_type == JSON_ARRAY) return _content.asArray->size();
+  if (_type == JSON_OBJECT) return _content.asObject->size();
+  return 0;
+}
+
+JsonVariant &JsonVariant::operator[](int index) {
+  if (_type != JSON_ARRAY) return JsonVariant::invalid();
+  return _content.asArray->operator[](index);
+}
+
 template <typename T>
 void JsonVariant::writeTo(T &writer) const {
   switch (_type) {

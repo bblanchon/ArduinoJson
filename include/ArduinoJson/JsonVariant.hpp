@@ -25,6 +25,11 @@ class JsonVariant {
  public:
   JsonVariant() : _type(Internals::JSON_UNDEFINED) {}
 
+  template <typename T>
+  explicit JsonVariant(T value) {
+    set(value);
+  }
+
   void set(bool value);
   void set(double value, uint8_t decimals = 2);
   void set(signed char value) { set(static_cast<long>(value)); }
@@ -90,6 +95,9 @@ class JsonVariant {
 
   template <typename T>
   void writeTo(T &writer) const;
+
+  size_t size() const;
+  JsonVariant &operator[](int index);
 
  private:
   JsonVariant(Internals::JsonVariantType type) : _type(type) {}
