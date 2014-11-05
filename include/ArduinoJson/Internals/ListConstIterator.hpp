@@ -10,22 +10,22 @@ namespace ArduinoJson {
 namespace Internals {
 
 template <typename T>
-class NodeConstIterator {
+class ListConstIterator {
  public:
-  explicit NodeConstIterator(const Node<T> *node = NULL) : _node(node) {}
+  explicit ListConstIterator(const Node<T> *node = NULL) : _node(node) {}
 
   const T &operator*() const { return _node->content; }
   const T *operator->() { return &_node->content; }
 
-  bool operator==(const NodeConstIterator<T> &other) const {
+  bool operator==(const ListConstIterator<T> &other) const {
     return _node == other._node;
   }
 
-  bool operator!=(const NodeConstIterator<T> &other) const {
+  bool operator!=(const ListConstIterator<T> &other) const {
     return _node != other._node;
   }
 
-  NodeConstIterator<T> &operator++() {
+  ListConstIterator<T> &operator++() {
     if (_node) _node = _node->next;
     return *this;
   }

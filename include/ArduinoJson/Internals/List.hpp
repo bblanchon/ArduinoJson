@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "NodeIterator.hpp"
-#include "NodeConstIterator.hpp"
+#include "ListIterator.hpp"
+#include "ListConstIterator.hpp"
 #include "../JsonBuffer.hpp"
 
 namespace ArduinoJson {
@@ -18,8 +18,8 @@ class List {
  public:
   typedef T value_type;
   typedef Node<T> node_type;
-  typedef NodeIterator<T> iterator;
-  typedef NodeConstIterator<T> const_iterator;
+  typedef ListIterator<T> iterator;
+  typedef ListConstIterator<T> const_iterator;
 
   List(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
