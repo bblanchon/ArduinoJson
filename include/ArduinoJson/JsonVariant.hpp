@@ -9,16 +9,16 @@
 #include <stddef.h>
 #include <stdint.h>  // for uint8_t
 
+#include "Internals/JsonPrintable.hpp"
 #include "Internals/JsonVariantContent.hpp"
 #include "Internals/JsonVariantType.hpp"
-#include "JsonPrintable.hpp"
 
 namespace ArduinoJson {
 
 class JsonArray;
 class JsonObject;
 
-class JsonVariant : public JsonPrintable<JsonVariant> {
+class JsonVariant : public Internals::JsonPrintable<JsonVariant> {
  public:
   JsonVariant() : _type(Internals::JSON_UNDEFINED) {}
 
@@ -63,11 +63,21 @@ class JsonVariant : public JsonPrintable<JsonVariant> {
   operator signed char() const { return static_cast<signed char>(as<long>()); }
   operator signed int() const { return static_cast<signed int>(as<long>()); }
   operator signed long() const;
-  operator signed short() const { return static_cast<signed short>(as<long>()); }
-  operator unsigned char() const { return static_cast<unsigned char>(as<long>()); }
-  operator unsigned int() const { return static_cast<unsigned int>(as<long>()); }
-  operator unsigned long() const { return static_cast<unsigned long>(as<long>()); }
-  operator unsigned short() const { return static_cast<unsigned short>(as<long>()); }
+  operator signed short() const {
+    return static_cast<signed short>(as<long>());
+  }
+  operator unsigned char() const {
+    return static_cast<unsigned char>(as<long>());
+  }
+  operator unsigned int() const {
+    return static_cast<unsigned int>(as<long>());
+  }
+  operator unsigned long() const {
+    return static_cast<unsigned long>(as<long>());
+  }
+  operator unsigned short() const {
+    return static_cast<unsigned short>(as<long>());
+  }
   operator const char *() const;
   operator JsonArray &() const;
   operator JsonObject &() const;

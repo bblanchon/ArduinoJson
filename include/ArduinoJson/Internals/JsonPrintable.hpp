@@ -6,41 +6,43 @@
 
 #pragma once
 
-#include "Internals/IndentedPrint.hpp"
-#include "Internals/PrettyJsonWriter.hpp"
-#include "Internals/StringBuilder.hpp"
+#include "IndentedPrint.hpp"
+#include "PrettyJsonWriter.hpp"
+#include "StringBuilder.hpp"
 
 namespace ArduinoJson {
+namespace Internals {
 
 template <typename T>
 class JsonPrintable {
  public:
   size_t printTo(Print &print) const {
-    Internals::JsonWriter writer(&print);
+    JsonWriter writer(&print);
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }
   size_t printTo(char *buffer, size_t bufferSize) const {
-    Internals::StringBuilder sb(buffer, bufferSize);
+    StringBuilder sb(buffer, bufferSize);
     return printTo(sb);
   }
 
-  size_t prettyPrintTo(Internals::IndentedPrint &print) const {
-    Internals::PrettyJsonWriter writer(&print);
+  size_t prettyPrintTo(IndentedPrint &print) const {
+    PrettyJsonWriter writer(&print);
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }
 
   size_t prettyPrintTo(char *buffer, size_t bufferSize) const {
-    Internals::StringBuilder sb(buffer, bufferSize);
+    StringBuilder sb(buffer, bufferSize);
     return prettyPrintTo(sb);
   }
   size_t prettyPrintTo(Print &print) const {
-    Internals::IndentedPrint indentedPrint = Internals::IndentedPrint(print);
+    IndentedPrint indentedPrint = IndentedPrint(print);
     return prettyPrintTo(indentedPrint);
   }
 
  private:
   const T &downcast() const { return *static_cast<const T *>(this); }
 };
+}
 }

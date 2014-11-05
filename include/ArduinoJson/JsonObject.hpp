@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include "Internals/JsonPrintable.hpp"
 #include "Internals/ReferenceType.hpp"
 #include "JsonObjectConstIterator.hpp"
 #include "JsonObjectIterator.hpp"
-#include "JsonPrintable.hpp"
 
 #define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
   (sizeof(JsonObject) +                      \
@@ -20,7 +20,7 @@ namespace ArduinoJson {
 class JsonArray;
 class JsonBuffer;
 
-class JsonObject : public JsonPrintable<JsonObject>,
+class JsonObject : public Internals::JsonPrintable<JsonObject>,
                    public Internals::ReferenceType {
   friend class JsonBuffer;
 
