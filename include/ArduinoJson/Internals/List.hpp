@@ -33,6 +33,8 @@ class List {
   const_iterator end() const { return const_iterator(NULL); }
 
  protected:
+  node_type *createNode();
+
   JsonBuffer *_buffer;
   node_type *_firstNode;
 };

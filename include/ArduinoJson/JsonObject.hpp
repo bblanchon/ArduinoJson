@@ -55,7 +55,6 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   JsonObject(JsonBuffer *buffer) : List(buffer) {}
 
   JsonVariant &add(key_type key) { return (*this)[key]; }
-  node_type *createNode();
   void addNode(node_type *nodeToAdd);
   void removeNode(node_type *nodeToRemove);
 

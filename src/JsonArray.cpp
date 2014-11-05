@@ -6,7 +6,6 @@
 
 #include "../include/ArduinoJson/JsonArray.hpp"
 
-#include "../include/ArduinoJson/Internals/PlacementNew.hpp"
 #include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "../include/ArduinoJson/JsonBuffer.hpp"
 #include "../include/ArduinoJson/JsonObject.hpp"
@@ -29,12 +28,6 @@ JsonVariant &JsonArray::add() {
   addNode(node);
 
   return node->content;
-}
-
-JsonArray::node_type *JsonArray::createNode() {
-  if (!_buffer) return NULL;
-  void *ptr = _buffer->alloc(sizeof(node_type));
-  return ptr ? new (ptr) node_type() : NULL;
 }
 
 void JsonArray::addNode(node_type *newNode) {

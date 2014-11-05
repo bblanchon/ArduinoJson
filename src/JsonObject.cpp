@@ -69,12 +69,6 @@ JsonObject::node_type *JsonObject::getOrCreateNodeAt(const char *key) {
   return newNode;
 }
 
-JsonObject::node_type *JsonObject::createNode() {
-  if (!_buffer) return NULL;
-  void *ptr = _buffer->alloc(sizeof(node_type));
-  return ptr ? new (ptr) node_type() : NULL;
-}
-
 void JsonObject::addNode(node_type *nodeToAdd) {
   if (!_firstNode) {
     _firstNode = nodeToAdd;
