@@ -12,7 +12,7 @@ namespace Internals {
 template <typename T>
 class NodeConstIterator {
  public:
-  explicit NodeConstIterator(const Node<T> *node) : _node(node) {}
+  explicit NodeConstIterator(const Node<T> *node = NULL) : _node(node) {}
 
   const T &operator*() const { return _node->content; }
   const T *operator->() { return &_node->content; }

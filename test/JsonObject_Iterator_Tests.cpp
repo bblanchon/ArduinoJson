@@ -7,26 +7,54 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson/JsonObject.hpp>
 #include <ArduinoJson/StaticJsonBuffer.hpp>
+#include "Printers.hpp"
 
 using namespace ArduinoJson;
 
-TEST(JsonObject_Iterator_Test, SimpleTest) {
-  StaticJsonBuffer<256> jsonBuffer;
+class JsonObject_Iterator_Test : public testing::Test {
+ public:
+  JsonObject_Iterator_Test() : object(_buffer.createObject()) {
+    object["ab"] = 12;
+    object["cd"] = 34;
+  }
 
-  JsonObject &object = jsonBuffer.createObject();
-  object["ab"] = 12;
-  object["cd"] = 34;
+ protected:
+  StaticJsonBuffer<256> _buffer;
+  JsonObject& object;
+};
 
+TEST_F(JsonObject_Iterator_Test, NonConstIterator) {
   JsonObject::iterator it = object.begin();
-  JsonObject::iterator end = object.end();
-
-  ASSERT_NE(end, it);
+  ASSERT_NE(object.end(), it);
   EXPECT_STREQ("ab", it->key);
-  EXPECT_EQ(12, it->value.as<int>());
+  EXPECT_EQ(12, it->value);
+  it->key = "a.b";
+  it->value = 1.2;
   ++it;
-  ASSERT_NE(end, it);
+  ASSERT_NE(object.end(), it);
   EXPECT_STREQ("cd", it->key);
-  EXPECT_EQ(34, it->value.as<int>());
+  EXPECT_EQ(34, it->value);
+  it->key = "c.d";
+  it->value = 3.4;
   ++it;
-  EXPECT_EQ(object.end(), it);
+  ASSERT_EQ(object.end(), it);
+
+  ASSERT_EQ(2, object.size());
+  EXPECT_EQ(1.2, object["a.b"]);
+  EXPECT_EQ(3.4, object["c.d"]);
+}
+
+TEST_F(JsonObject_Iterator_Test, ConstIterator) {
+  const JsonObject& const_object = object;
+  JsonObject::const_iterator it = const_object.begin();
+
+  ASSERT_NE(const_object.end(), it);
+  EXPECT_STREQ("ab", it->key);
+  EXPECT_EQ(12, it->value);
+  ++it;
+  ASSERT_NE(const_object.end(), it);
+  EXPECT_STREQ("cd", it->key);
+  EXPECT_EQ(34, it->value);
+  ++it;
+  ASSERT_EQ(const_object.end(), it);
 }
