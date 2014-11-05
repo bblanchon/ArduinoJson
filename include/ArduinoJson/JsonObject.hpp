@@ -6,9 +6,8 @@
 
 #pragma once
 
-#include "Internals/NodeIterator.hpp"
-#include "Internals/NodeConstIterator.hpp"
 #include "Internals/JsonPrintable.hpp"
+#include "Internals/List.hpp"
 #include "Internals/Node.hpp"
 #include "Internals/ReferenceType.hpp"
 #include "JsonPair.hpp"
@@ -22,17 +21,14 @@ class JsonArray;
 class JsonBuffer;
 
 class JsonObject : public Internals::JsonPrintable<JsonObject>,
-                   public Internals::ReferenceType {
+                   public Internals::ReferenceType,
+                   public Internals::List<JsonPair> {
   friend class JsonBuffer;
 
  public:
   typedef const char *key_type;
   typedef JsonPair value_type;
-  typedef Internals::Node<JsonPair> node_type;
-  typedef Internals::NodeIterator<JsonPair> iterator;
-  typedef Internals::NodeConstIterator<JsonPair> const_iterator;
 
-  bool success() const { return _buffer != NULL; }
   int size() const;
 
   JsonVariant &at(key_type key);
@@ -52,12 +48,6 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   JsonArray &createNestedArray(key_type key);
   JsonObject &createNestedObject(key_type key);
 
-  iterator begin() { return iterator(_firstNode); }
-  iterator end() { return iterator(NULL); }
-
-  const_iterator begin() const { return const_iterator(_firstNode); }
-  const_iterator end() const { return const_iterator(NULL); }
-
   static JsonObject &invalid() { return _invalid; }
 
   template <typename T>
@@ -65,7 +55,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
  private:
   // constructor is private, instance must be created via JsonBuffer
-  JsonObject(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
+  JsonObject(JsonBuffer *buffer) : List(buffer) {}
 
   JsonVariant &add(key_type key) { return (*this)[key]; }
   node_type *createNode();
@@ -75,8 +65,6 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   node_type *getNodeAt(key_type key) const;
   node_type *getOrCreateNodeAt(key_type key);
 
-  JsonBuffer *_buffer;
-  node_type *_firstNode;
   static JsonObject _invalid;
 };
 }
