@@ -19,12 +19,6 @@ using namespace ArduinoJson::Internals;
 
 JsonObject JsonObject::_invalid(NULL);
 
-int JsonObject::size() const {
-  int nodeCount = 0;
-  for (node_type *node = _firstNode; node; node = node->next) nodeCount++;
-  return nodeCount;
-}
-
 JsonVariant &JsonObject::at(const char *key) {
   node_type *node = getNodeAt(key);
   return node ? node->content.value : JsonVariant::invalid();

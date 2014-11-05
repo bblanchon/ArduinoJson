@@ -16,12 +16,6 @@ using namespace ArduinoJson::Internals;
 
 JsonArray JsonArray::_invalid(NULL);
 
-int JsonArray::size() const {
-  int nodeCount = 0;
-  for (node_type *node = _firstNode; node; node = node->next) nodeCount++;
-  return nodeCount;
-}
-
 JsonVariant &JsonArray::at(int index) const {
   node_type *node = _firstNode;
   while (node && index--) node = node->next;

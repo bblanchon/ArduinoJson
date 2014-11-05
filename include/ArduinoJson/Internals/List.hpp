@@ -16,6 +16,7 @@ namespace Internals {
 template <typename T>
 class List {
  public:
+  typedef T value_type;
   typedef Node<T> node_type;
   typedef NodeIterator<T> iterator;
   typedef NodeConstIterator<T> const_iterator;
@@ -23,6 +24,7 @@ class List {
   List(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
   bool success() const { return _buffer != NULL; }
+  int size() const;
 
   iterator begin() { return iterator(_firstNode); }
   iterator end() { return iterator(NULL); }

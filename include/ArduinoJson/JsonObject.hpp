@@ -8,7 +8,6 @@
 
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/List.hpp"
-#include "Internals/Node.hpp"
 #include "Internals/ReferenceType.hpp"
 #include "JsonPair.hpp"
 
@@ -28,8 +27,6 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
  public:
   typedef const char *key_type;
   typedef JsonPair value_type;
-
-  int size() const;
 
   JsonVariant &at(key_type key);
   const JsonVariant &at(key_type key) const;

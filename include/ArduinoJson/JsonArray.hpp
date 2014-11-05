@@ -7,9 +7,7 @@
 #pragma once
 
 #include "Internals/JsonPrintable.hpp"
-#include "Internals/Node.hpp"
-#include "Internals/NodeConstIterator.hpp"
-#include "Internals/NodeIterator.hpp"
+#include "Internals/List.hpp"
 #include "Internals/ReferenceType.hpp"
 #include "JsonVariant.hpp"
 
@@ -22,19 +20,11 @@ class JsonObject;
 class JsonBuffer;
 
 class JsonArray : public Internals::JsonPrintable<JsonArray>,
-                  public Internals::ReferenceType {
+                  public Internals::ReferenceType,
+                  public Internals::List<JsonVariant> {
   friend class JsonBuffer;
 
  public:
-  typedef JsonVariant value_type;
-  typedef Internals::Node<JsonVariant> node_type;
-  typedef Internals::NodeIterator<JsonVariant> iterator;
-  typedef Internals::NodeConstIterator<JsonVariant> const_iterator;
-
-  int size() const;
-
-  bool success() { return _buffer != NULL; }
-
   value_type &operator[](int index) const { return at(index); }
   value_type &at(int index) const;
 
@@ -51,12 +41,6 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   JsonArray &createNestedArray();
   JsonObject &createNestedObject();
 
-  iterator begin() { return iterator(_firstNode); }
-  iterator end() { return iterator(NULL); }
-
-  const_iterator begin() const { return const_iterator(_firstNode); }
-  const_iterator end() const { return const_iterator(NULL); }
-
   static JsonArray &invalid() { return _invalid; }
 
   template <typename T>
@@ -64,13 +48,11 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
 
  private:
   // constructor is private: instance must be created via a JsonBuffer
-  JsonArray(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
+  JsonArray(JsonBuffer *buffer) : List(buffer) {}
 
   node_type *createNode();
   inline void addNode(node_type *node);
 
-  JsonBuffer *_buffer;
-  node_type *_firstNode;
   static JsonArray _invalid;
 };
 }
