@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include "Internals/JsonIterator.hpp"
+#include "Internals/JsonObjectNode.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/ReferenceType.hpp"
-#include "JsonObjectConstIterator.hpp"
-#include "JsonObjectIterator.hpp"
 
 #define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
   (sizeof(JsonObject) +                      \
@@ -27,8 +27,9 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
  public:
   typedef const char *key_type;
   typedef JsonPair value_type;
-  typedef JsonObjectIterator iterator;
-  typedef JsonObjectConstIterator const_iterator;
+  typedef Internals::JsonIterator<Internals::JsonObjectNode, JsonPair> iterator;
+  typedef Internals::JsonIterator<Internals::JsonObjectNode, const JsonPair>
+      const_iterator;
 
   bool success() const { return _buffer != NULL; }
   int size() const;
