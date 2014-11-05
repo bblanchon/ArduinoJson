@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include "Internals/JsonIterator.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/Node.hpp"
+#include "Internals/NodeConstIterator.hpp"
+#include "Internals/NodeIterator.hpp"
 #include "Internals/ReferenceType.hpp"
 #include "JsonVariant.hpp"
 
@@ -27,8 +28,8 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
  public:
   typedef JsonVariant value_type;
   typedef Internals::Node<JsonVariant> node_type;
-  typedef Internals::JsonIterator<node_type, JsonVariant> iterator;
-  typedef Internals::JsonIterator<node_type, const JsonVariant> const_iterator;
+  typedef Internals::NodeIterator<JsonVariant> iterator;
+  typedef Internals::NodeConstIterator<JsonVariant> const_iterator;
 
   int size() const;
 

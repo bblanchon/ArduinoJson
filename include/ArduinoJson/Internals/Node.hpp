@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <stddef.h>  // for NULL
+
 namespace ArduinoJson {
 namespace Internals {
 

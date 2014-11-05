@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "Internals/JsonIterator.hpp"
+#include "Internals/NodeIterator.hpp"
+#include "Internals/NodeConstIterator.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/Node.hpp"
 #include "Internals/ReferenceType.hpp"
@@ -28,8 +29,8 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   typedef const char *key_type;
   typedef JsonPair value_type;
   typedef Internals::Node<JsonPair> node_type;
-  typedef Internals::JsonIterator<node_type, JsonPair> iterator;
-  typedef Internals::JsonIterator<node_type, const JsonPair> const_iterator;
+  typedef Internals::NodeIterator<JsonPair> iterator;
+  typedef Internals::NodeConstIterator<JsonPair> const_iterator;
 
   bool success() const { return _buffer != NULL; }
   int size() const;
