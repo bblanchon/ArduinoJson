@@ -30,16 +30,6 @@ JsonVariant &JsonArray::add() {
   return node->content;
 }
 
-void JsonArray::addNode(node_type *newNode) {
-  if (_firstNode) {
-    node_type *lastNode = _firstNode;
-    while (lastNode->next) lastNode = lastNode->next;
-    lastNode->next = newNode;
-  } else {
-    _firstNode = newNode;
-  }
-}
-
 JsonArray &JsonArray::createNestedArray() {
   if (!_buffer) return JsonArray::invalid();
   JsonArray &array = _buffer->createArray();

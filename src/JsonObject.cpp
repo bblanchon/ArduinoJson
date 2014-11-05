@@ -69,26 +69,6 @@ JsonObject::node_type *JsonObject::getOrCreateNodeAt(const char *key) {
   return newNode;
 }
 
-void JsonObject::addNode(node_type *nodeToAdd) {
-  if (!_firstNode) {
-    _firstNode = nodeToAdd;
-  } else {
-    node_type *lastNode = _firstNode;
-    while (lastNode->next) lastNode = lastNode->next;
-    lastNode->next = nodeToAdd;
-  }
-}
-
-void JsonObject::removeNode(node_type *nodeToRemove) {
-  if (!nodeToRemove) return;
-  if (nodeToRemove == _firstNode) {
-    _firstNode = nodeToRemove->next;
-  } else {
-    for (node_type *node = _firstNode; node; node = node->next)
-      if (node->next == nodeToRemove) node->next = nodeToRemove->next;
-  }
-}
-
 template <typename T>
 void JsonObject::writeTo(T &writer) const {
   node_type *node = _firstNode;

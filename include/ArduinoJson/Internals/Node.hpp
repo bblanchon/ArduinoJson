@@ -15,8 +15,8 @@ template <typename T>
 struct Node {
   Node() : next(NULL) {}
 
-  T content;
   Node<T>* next;
+  T content;
 };
 }
 }

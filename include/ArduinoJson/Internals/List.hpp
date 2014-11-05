@@ -34,6 +34,8 @@ class List {
 
  protected:
   node_type *createNode();
+  void addNode(node_type *node);
+  void removeNode(node_type *nodeToRemove);
 
   JsonBuffer *_buffer;
   node_type *_firstNode;
