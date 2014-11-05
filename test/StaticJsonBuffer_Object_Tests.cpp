@@ -15,18 +15,6 @@ const size_t SIZEOF_TWO_OBJECTS = 2 * SIZEOF_ONE_OBJECT;
 const size_t SIZEOF_OBJECT_WITH_ONE_VALUE = JSON_OBJECT_SIZE(1);
 const size_t SIZEOF_OBJECT_WITH_TWO_VALUES = JSON_OBJECT_SIZE(2);
 
-TEST(StaticJsonBuffer_Object_Tests, CapacityMatchTemplateParameter) {
-  StaticJsonBuffer<42> json;
-
-  EXPECT_EQ(42, json.capacity());
-}
-
-TEST(StaticJsonBuffer_Object_Tests, InitialSizeIsZero) {
-  StaticJsonBuffer<42> json;
-
-  EXPECT_EQ(0, json.size());
-}
-
 TEST(StaticJsonBuffer_Object_Tests,
      WhenCreateObjectIsCalled_ThenSizeIsIncreasedSizeOfJsonObject) {
   StaticJsonBuffer<SIZEOF_TWO_OBJECTS> json;
