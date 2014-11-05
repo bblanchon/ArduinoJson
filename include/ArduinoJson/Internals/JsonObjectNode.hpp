@@ -12,7 +12,7 @@ namespace ArduinoJson {
 namespace Internals {
 
 struct JsonObjectNode {
-  JsonObjectNode(const char* key) : content(key), next(NULL) {}
+  JsonObjectNode() : next(NULL) {}
 
   JsonPair content;
   JsonObjectNode* next;

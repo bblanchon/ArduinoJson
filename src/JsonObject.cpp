@@ -67,17 +67,18 @@ JsonObjectNode *JsonObject::getOrCreateNodeAt(const char *key) {
   JsonObjectNode *existingNode = getNodeAt(key);
   if (existingNode) return existingNode;
 
-  JsonObjectNode *newNode = createNode(key);
+  JsonObjectNode *newNode = createNode();
+  if (!newNode) return NULL;
 
-  if (newNode) addNode(newNode);
-
+  newNode->content.key = key;
+  addNode(newNode);
   return newNode;
 }
 
-JsonObjectNode *JsonObject::createNode(const char *key) {
+JsonObjectNode *JsonObject::createNode() {
   if (!_buffer) return NULL;
   void *ptr = _buffer->alloc(sizeof(JsonObjectNode));
-  return ptr ? new (ptr) JsonObjectNode(key) : NULL;
+  return ptr ? new (ptr) JsonObjectNode() : NULL;
 }
 
 void JsonObject::addNode(JsonObjectNode *nodeToAdd) {
