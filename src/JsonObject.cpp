@@ -21,22 +21,22 @@ JsonObject JsonObject::_invalid(NULL);
 
 int JsonObject::size() const {
   int nodeCount = 0;
-  for (JsonObjectNode *node = _firstNode; node; node = node->next) nodeCount++;
+  for (node_type *node = _firstNode; node; node = node->next) nodeCount++;
   return nodeCount;
 }
 
 JsonVariant &JsonObject::at(const char *key) {
-  JsonObjectNode *node = getNodeAt(key);
+  node_type *node = getNodeAt(key);
   return node ? node->content.value : JsonVariant::invalid();
 }
 
 const JsonVariant &JsonObject::at(const char *key) const {
-  JsonObjectNode *node = getNodeAt(key);
+  node_type *node = getNodeAt(key);
   return node ? node->content.value : JsonVariant::invalid();
 }
 
 JsonVariant &JsonObject::operator[](const char *key) {
-  JsonObjectNode *node = getOrCreateNodeAt(key);
+  node_type *node = getOrCreateNodeAt(key);
   return node ? node->content.value : JsonVariant::invalid();
 }
 
@@ -56,18 +56,18 @@ JsonObject &JsonObject::createNestedObject(const char *key) {
   return object;
 }
 
-JsonObjectNode *JsonObject::getNodeAt(const char *key) const {
-  for (JsonObjectNode *node = _firstNode; node; node = node->next) {
+JsonObject::node_type *JsonObject::getNodeAt(const char *key) const {
+  for (node_type *node = _firstNode; node; node = node->next) {
     if (!strcmp(node->content.key, key)) return node;
   }
   return NULL;
 }
 
-JsonObjectNode *JsonObject::getOrCreateNodeAt(const char *key) {
-  JsonObjectNode *existingNode = getNodeAt(key);
+JsonObject::node_type *JsonObject::getOrCreateNodeAt(const char *key) {
+  node_type *existingNode = getNodeAt(key);
   if (existingNode) return existingNode;
 
-  JsonObjectNode *newNode = createNode();
+  node_type *newNode = createNode();
   if (!newNode) return NULL;
 
   newNode->content.key = key;
@@ -75,35 +75,35 @@ JsonObjectNode *JsonObject::getOrCreateNodeAt(const char *key) {
   return newNode;
 }
 
-JsonObjectNode *JsonObject::createNode() {
+JsonObject::node_type *JsonObject::createNode() {
   if (!_buffer) return NULL;
-  void *ptr = _buffer->alloc(sizeof(JsonObjectNode));
-  return ptr ? new (ptr) JsonObjectNode() : NULL;
+  void *ptr = _buffer->alloc(sizeof(node_type));
+  return ptr ? new (ptr) node_type() : NULL;
 }
 
-void JsonObject::addNode(JsonObjectNode *nodeToAdd) {
+void JsonObject::addNode(node_type *nodeToAdd) {
   if (!_firstNode) {
     _firstNode = nodeToAdd;
   } else {
-    JsonObjectNode *lastNode = _firstNode;
+    node_type *lastNode = _firstNode;
     while (lastNode->next) lastNode = lastNode->next;
     lastNode->next = nodeToAdd;
   }
 }
 
-void JsonObject::removeNode(JsonObjectNode *nodeToRemove) {
+void JsonObject::removeNode(node_type *nodeToRemove) {
   if (!nodeToRemove) return;
   if (nodeToRemove == _firstNode) {
     _firstNode = nodeToRemove->next;
   } else {
-    for (JsonObjectNode *node = _firstNode; node; node = node->next)
+    for (node_type *node = _firstNode; node; node = node->next)
       if (node->next == nodeToRemove) node->next = nodeToRemove->next;
   }
 }
 
 template <typename T>
 void JsonObject::writeTo(T &writer) const {
-  JsonObjectNode *node = _firstNode;
+  node_type *node = _firstNode;
 
   if (node) {
     writer.beginObject();

@@ -7,13 +7,13 @@
 #pragma once
 
 #include "Internals/JsonIterator.hpp"
-#include "Internals/JsonObjectNode.hpp"
 #include "Internals/JsonPrintable.hpp"
+#include "Internals/Node.hpp"
 #include "Internals/ReferenceType.hpp"
+#include "JsonPair.hpp"
 
 #define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
-  (sizeof(JsonObject) +                      \
-   (NUMBER_OF_ELEMENTS) * sizeof(Internals::JsonObjectNode))
+  (sizeof(JsonObject) + (NUMBER_OF_ELEMENTS) * sizeof(JsonObject::node_type))
 
 namespace ArduinoJson {
 
@@ -27,9 +27,9 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
  public:
   typedef const char *key_type;
   typedef JsonPair value_type;
-  typedef Internals::JsonIterator<Internals::JsonObjectNode, JsonPair> iterator;
-  typedef Internals::JsonIterator<Internals::JsonObjectNode, const JsonPair>
-      const_iterator;
+  typedef Internals::Node<JsonPair> node_type;
+  typedef Internals::JsonIterator<node_type, JsonPair> iterator;
+  typedef Internals::JsonIterator<node_type, const JsonPair> const_iterator;
 
   bool success() const { return _buffer != NULL; }
   int size() const;
@@ -67,15 +67,15 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   JsonObject(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
   JsonVariant &add(key_type key) { return (*this)[key]; }
-  Internals::JsonObjectNode *createNode();
-  void addNode(Internals::JsonObjectNode *nodeToAdd);
-  void removeNode(Internals::JsonObjectNode *nodeToRemove);
+  node_type *createNode();
+  void addNode(node_type *nodeToAdd);
+  void removeNode(node_type *nodeToRemove);
 
-  Internals::JsonObjectNode *getNodeAt(key_type key) const;
-  Internals::JsonObjectNode *getOrCreateNodeAt(key_type key);
+  node_type *getNodeAt(key_type key) const;
+  node_type *getOrCreateNodeAt(key_type key);
 
   JsonBuffer *_buffer;
-  Internals::JsonObjectNode *_firstNode;
+  node_type *_firstNode;
   static JsonObject _invalid;
 };
 }

@@ -18,18 +18,18 @@ JsonArray JsonArray::_invalid(NULL);
 
 int JsonArray::size() const {
   int nodeCount = 0;
-  for (JsonArrayNode *node = _firstNode; node; node = node->next) nodeCount++;
+  for (node_type *node = _firstNode; node; node = node->next) nodeCount++;
   return nodeCount;
 }
 
 JsonVariant &JsonArray::at(int index) const {
-  JsonArrayNode *node = _firstNode;
+  node_type *node = _firstNode;
   while (node && index--) node = node->next;
   return node ? node->content : JsonVariant::invalid();
 }
 
 JsonVariant &JsonArray::add() {
-  JsonArrayNode *node = createNode();
+  node_type *node = createNode();
   if (!node) return JsonVariant::invalid();
 
   addNode(node);
@@ -37,15 +37,15 @@ JsonVariant &JsonArray::add() {
   return node->content;
 }
 
-JsonArrayNode *JsonArray::createNode() {
+JsonArray::node_type *JsonArray::createNode() {
   if (!_buffer) return NULL;
-  void *ptr = _buffer->alloc(sizeof(JsonArrayNode));
-  return ptr ? new (ptr) JsonArrayNode() : NULL;
+  void *ptr = _buffer->alloc(sizeof(node_type));
+  return ptr ? new (ptr) node_type() : NULL;
 }
 
-void JsonArray::addNode(JsonArrayNode *newNode) {
+void JsonArray::addNode(node_type *newNode) {
   if (_firstNode) {
-    JsonArrayNode *lastNode = _firstNode;
+    node_type *lastNode = _firstNode;
     while (lastNode->next) lastNode = lastNode->next;
     lastNode->next = newNode;
   } else {
@@ -69,7 +69,7 @@ JsonObject &JsonArray::createNestedObject() {
 
 template <typename T>
 void JsonArray::writeTo(T &writer) const {
-  JsonArrayNode *child = _firstNode;
+  node_type *child = _firstNode;
 
   if (child) {
     writer.beginArray();
