@@ -39,3 +39,13 @@ TEST(StaticJsonBuffer_Object_Tests, FailsWhenTooSmall) {
   JsonObject &object = json.createObject();
   ASSERT_FALSE(object.success());
 }
+
+TEST(StaticJsonBuffer_Object_Tests, ObjectDoesntGrowWhenFull) {
+  StaticJsonBuffer<JSON_OBJECT_SIZE(1)> json;
+
+  JsonObject &obj = json.createObject();
+  obj["hello"];
+  obj["world"];
+
+  ASSERT_EQ(JSON_OBJECT_SIZE(1), json.size());
+}
