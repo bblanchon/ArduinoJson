@@ -12,10 +12,10 @@ namespace ArduinoJson {
 namespace Internals {
 
 template <typename T>
-struct Node {
-  Node() : next(NULL) {}
+struct ListNode {
+  ListNode() : next(NULL) {}
 
-  Node<T>* next;
+  ListNode<T>* next;
   T content;
 };
 }

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Node.hpp"
+#include "ListNode.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -14,7 +14,7 @@ namespace Internals {
 template <typename T>
 class ListIterator {
  public:
-  explicit ListIterator(Node<T> *node = NULL) : _node(node) {}
+  explicit ListIterator(ListNode<T> *node = NULL) : _node(node) {}
 
   T &operator*() const { return _node->content; }
   T *operator->() { return &_node->content; }
@@ -33,7 +33,7 @@ class ListIterator {
   }
 
  private:
-  Node<T> *_node;
+  ListNode<T> *_node;
 };
 }
 }

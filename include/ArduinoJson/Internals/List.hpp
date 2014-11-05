@@ -17,7 +17,7 @@ template <typename T>
 class List {
  public:
   typedef T value_type;
-  typedef Node<T> node_type;
+  typedef ListNode<T> node_type;
   typedef ListIterator<T> iterator;
   typedef ListConstIterator<T> const_iterator;
 
