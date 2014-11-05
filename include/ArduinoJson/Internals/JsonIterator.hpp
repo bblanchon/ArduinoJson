@@ -14,8 +14,8 @@ class JsonIterator {
  public:
   explicit JsonIterator(TNode *node) : _node(node) {}
 
-  TValue &operator*() const { return _node->value; }
-  TValue *operator->() { return &_node->value; }
+  TValue &operator*() const { return _node->content; }
+  TValue *operator->() { return &_node->content; }
 
   bool operator==(const JsonIterator<TNode, TValue> &other) const {
     return _node == other._node;

@@ -27,17 +27,17 @@ int JsonObject::size() const {
 
 JsonVariant &JsonObject::at(const char *key) {
   JsonObjectNode *node = getNodeAt(key);
-  return node ? node->pair.value : JsonVariant::invalid();
+  return node ? node->content.value : JsonVariant::invalid();
 }
 
 const JsonVariant &JsonObject::at(const char *key) const {
   JsonObjectNode *node = getNodeAt(key);
-  return node ? node->pair.value : JsonVariant::invalid();
+  return node ? node->content.value : JsonVariant::invalid();
 }
 
 JsonVariant &JsonObject::operator[](const char *key) {
   JsonObjectNode *node = getOrCreateNodeAt(key);
-  return node ? node->pair.value : JsonVariant::invalid();
+  return node ? node->content.value : JsonVariant::invalid();
 }
 
 void JsonObject::remove(char const *key) { removeNode(getNodeAt(key)); }
@@ -58,7 +58,7 @@ JsonObject &JsonObject::createNestedObject(const char *key) {
 
 JsonObjectNode *JsonObject::getNodeAt(const char *key) const {
   for (JsonObjectNode *node = _firstNode; node; node = node->next) {
-    if (!strcmp(node->pair.key, key)) return node;
+    if (!strcmp(node->content.key, key)) return node;
   }
   return NULL;
 }
@@ -108,9 +108,9 @@ void JsonObject::writeTo(T &writer) const {
     writer.beginObject();
 
     for (;;) {
-      writer.writeString(node->pair.key);
+      writer.writeString(node->content.key);
       writer.writeColon();
-      node->pair.value.writeTo(writer);
+      node->content.value.writeTo(writer);
 
       node = node->next;
       if (!node) break;

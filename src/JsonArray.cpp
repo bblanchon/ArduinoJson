@@ -25,7 +25,7 @@ int JsonArray::size() const {
 JsonVariant &JsonArray::at(int index) const {
   JsonArrayNode *node = _firstNode;
   while (node && index--) node = node->next;
-  return node ? node->value : JsonVariant::invalid();
+  return node ? node->content : JsonVariant::invalid();
 }
 
 JsonVariant &JsonArray::add() {
@@ -34,7 +34,7 @@ JsonVariant &JsonArray::add() {
 
   addNode(node);
 
-  return node->value;
+  return node->content;
 }
 
 JsonArrayNode *JsonArray::createNode() {
@@ -75,7 +75,7 @@ void JsonArray::writeTo(T &writer) const {
     writer.beginArray();
 
     for (;;) {
-      child->value.writeTo(writer);
+      child->content.writeTo(writer);
 
       child = child->next;
       if (!child) break;

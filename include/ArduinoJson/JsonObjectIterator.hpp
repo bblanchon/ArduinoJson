@@ -14,8 +14,8 @@ class JsonObjectIterator {
  public:
   explicit JsonObjectIterator(Internals::JsonObjectNode *node) : _node(node) {}
 
-  JsonPair &operator*() { return _node->pair; }
-  JsonPair *operator->() { return &_node->pair; }
+  JsonPair &operator*() { return _node->content; }
+  JsonPair *operator->() { return &_node->content; }
 
   bool operator==(const JsonObjectIterator &other) const {
     return _node == other._node;

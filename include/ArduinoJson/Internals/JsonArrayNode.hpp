@@ -14,8 +14,8 @@ namespace Internals {
 struct JsonArrayNode {
   JsonArrayNode() : next(NULL) {}
 
+  JsonVariant content;
   JsonArrayNode* next;
-  JsonVariant value;
 };
 }
 }
