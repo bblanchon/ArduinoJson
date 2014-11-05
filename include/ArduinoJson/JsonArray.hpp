@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include "Internals/JsonArrayNode.hpp"
+#include "Internals/JsonIterator.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/ReferenceType.hpp"
-#include "JsonArrayConstIterator.hpp"
-#include "JsonArrayIterator.hpp"
 
 #define JSON_ARRAY_SIZE(NUMBER_OF_ELEMENTS) \
   (sizeof(JsonArray) + (NUMBER_OF_ELEMENTS) * sizeof(Internals::JsonArrayNode))
@@ -25,8 +25,10 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
 
  public:
   typedef JsonVariant value_type;
-  typedef JsonArrayIterator iterator;
-  typedef JsonArrayConstIterator const_iterator;
+  typedef Internals::JsonIterator<Internals::JsonArrayNode, JsonVariant>
+      iterator;
+  typedef Internals::JsonIterator<Internals::JsonArrayNode, const JsonVariant>
+      const_iterator;
 
   int size() const;
 
