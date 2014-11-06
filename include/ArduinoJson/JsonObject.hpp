@@ -86,6 +86,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // This is used when memory allocation or JSON parsing fail.
   static JsonObject &invalid() { return _invalid; }
 
+  // Serialize the object to the specified JsonWriter
   template <typename T>
   void writeTo(T &writer) const;
 
