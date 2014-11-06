@@ -18,29 +18,32 @@
 
 namespace ArduinoJson {
 
-// Forward declaration
+// Forward declarations
 class JsonObject;
 class JsonBuffer;
 
 // An array of JsonVariant.
-// Can be converted to a JSON string via JsonArray::printTo().
-// Can be extracted from a JSON string JsonBuffer::parseArray().
+//
+// The constructor is private, instances must be created via
+// JsonBuffer::createArray() or JsonBuffer::parseArray().
+// A JsonArray can be serialized to a JSON string via JsonArray::printTo().
+// It can also be deserialized from a JSON string via JsonBuffer::parseArray().
 class JsonArray : public Internals::JsonPrintable<JsonArray>,
                   public Internals::ReferenceType,
                   public Internals::List<JsonVariant> {
-  // JsonBuffer is a friend because it needs to call the private constructor of
-  // JsonArray from createArray() and parseArray().
+  // JsonBuffer is a friend because it needs to call the private constructor.
   friend class JsonBuffer;
 
  public:
-  // Returns the JsonVariant at the specified index (synonym for at())
-  value_type &operator[](int index) const { return at(index); }
-
   // Returns the JsonVariant at the specified index (synonym for operator[])
-  value_type &at(int index) const;
+  JsonVariant &at(int index) const;
+
+  // Returns the JsonVariant at the specified index (synonym for at())
+  JsonVariant &operator[](int index) const { return at(index); }
 
   // Adds an uninitialized JsonVariant at the end of the array.
-  value_type &add();
+  // Return a reference or JsonVariant::invalid() if allocation fails.
+  JsonVariant &add();
 
   // Adds the specified value at the end of the array.
   template <typename T>
@@ -67,16 +70,16 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   JsonObject &createNestedObject();
 
   // Returns a reference an invalid JsonArray.
+  // This object is meant to replace a NULL pointer.
   // This is used when memory allocation or JSON parsing fail.
   static JsonArray &invalid() { return _invalid; }
 
-  // Writes the array to a JsonWriter.
+  // Serialize the array to the specified JsonWriter.
   template <typename T>
   void writeTo(T &writer) const;
 
  private:
   // Create an empty JsonArray attached to the specified JsonBuffer.
-  // Constructor is private: instance must be created via a JsonBuffer
   explicit JsonArray(JsonBuffer *buffer) : List(buffer) {}
 
   // The instance returned by JsonArray::invalid()

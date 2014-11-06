@@ -152,7 +152,7 @@ JsonObject &JsonParser::parseObject() {
 
     if (!skip(':')) break;  // colon is missing
 
-    JsonVariant &value = object[key];
+    JsonVariant &value = object.add(key);
 
     parseAnythingTo(value);
     if (!value.success()) break;  // value parsing failed
