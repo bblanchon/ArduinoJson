@@ -15,7 +15,7 @@ class QuotedString_PrintTo_Tests : public testing::Test {
  protected:
   void whenInputIs(const char *input) {
     StringBuilder sb(buffer, sizeof(buffer));
-    returnValue = QuotedString::printTo(input, &sb);
+    returnValue = QuotedString::printTo(input, sb);
   }
 
   void outputMustBe(const char *expected) {
