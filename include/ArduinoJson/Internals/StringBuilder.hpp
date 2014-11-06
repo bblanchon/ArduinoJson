@@ -10,6 +10,8 @@
 
 namespace ArduinoJson {
 namespace Internals {
+
+// A Print implementation that allows to write in a char[]
 class StringBuilder : public Print {
  public:
   StringBuilder(char *buf, int size)
