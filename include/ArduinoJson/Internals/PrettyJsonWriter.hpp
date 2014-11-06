@@ -12,6 +12,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
+// An indented version of JsonWriter.
 class PrettyJsonWriter : public JsonWriter {
  public:
   explicit PrettyJsonWriter(IndentedPrint *sink)

@@ -11,6 +11,8 @@
 namespace ArduinoJson {
 namespace Internals {
 
+// A node for a singly-linked list.
+// Used by List<T> and its iterators.
 template <typename T>
 struct ListNode {
   ListNode() : next(NULL) {}

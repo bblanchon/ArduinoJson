@@ -11,6 +11,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
+// A read-write forward iterator for List<T>
 template <typename T>
 class ListIterator {
  public:

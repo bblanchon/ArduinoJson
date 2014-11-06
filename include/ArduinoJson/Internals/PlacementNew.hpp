@@ -6,6 +6,8 @@
 
 #ifdef ARDUINO
 
+// Declares the placement new as in <new>.
+// This is required for Arduino IDE because it doesn't include the <new> header.
 inline void *operator new(size_t, void *p) throw() { return p; }
 
 #else

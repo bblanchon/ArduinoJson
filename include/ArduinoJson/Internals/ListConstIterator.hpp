@@ -9,6 +9,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
+// A read-only forward itertor for List<T>
 template <typename T>
 class ListConstIterator {
  public:
