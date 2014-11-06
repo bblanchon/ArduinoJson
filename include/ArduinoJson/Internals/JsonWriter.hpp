@@ -27,23 +27,26 @@ class JsonWriter {
   // number of bytes written.
   size_t bytesWritten() { return _length; }
 
-  void beginArray() { _length += _sink->write('['); }
-  void endArray() { _length += _sink->write(']'); }
-  void writeEmptyArray() { _length += _sink->print("[]"); }
+  void beginArray() { write('['); }
+  void endArray() { write(']'); }
+  void writeEmptyArray() { write("[]"); }
 
-  void beginObject() { _length += _sink->write('{'); }
-  void endObject() { _length += _sink->write('}'); }
-  void writeEmptyObject() { _length += _sink->print("{}"); }
+  void beginObject() { write('{'); }
+  void endObject() { write('}'); }
+  void writeEmptyObject() { write("{}"); }
 
   void writeString(const char *value);
   void writeInteger(long value);
   void writeBoolean(bool value);
   void writeDouble(double value, uint8_t decimals);
 
-  void writeColon() { _length += _sink->write(':'); }
-  void writeComma() { _length += _sink->write(','); }
+  void writeColon() { write(':'); }
+  void writeComma() { write(','); }
 
  protected:
+  void write(char c) { _length += _sink->write(c); }
+  void write(const char *s) { _length += _sink->print(s); }
+
   Print *_sink;
   size_t _length;
 };

@@ -18,44 +18,46 @@ class PrettyJsonWriter : public JsonWriter {
       : JsonWriter(sink), _indenter(sink) {}
 
   void beginArray() {
-    _length += _sink->write('[');
+    JsonWriter::beginArray();
     indent();
   }
 
   void endArray() {
     unindent();
-    _length += _sink->write(']');
+    JsonWriter::endArray();
   }
 
-  void writeColon() { _length += _sink->print(": "); }
+  void writeColon() { write(": "); }
 
   void writeComma() {
-    _length += _sink->write(',');
-    _length += _indenter->println();
+    JsonWriter::writeComma();
+    newline();
   }
 
   void beginObject() {
-    _length += _sink->write('{');
+    JsonWriter::beginObject();
     indent();
   }
 
   void endObject() {
     unindent();
-    _length += _sink->write('}');
+    JsonWriter::endObject();
   }
 
  private:
-  IndentedPrint *_indenter;
-
   void indent() {
     _indenter->indent();
-    _length += _indenter->println();
+    newline();
   }
 
   void unindent() {
-    _length += _indenter->println();
+    newline();
     _indenter->unindent();
   }
+
+  void newline() { _length += _indenter->println(); }
+
+  IndentedPrint *_indenter;
 };
 }
 }
