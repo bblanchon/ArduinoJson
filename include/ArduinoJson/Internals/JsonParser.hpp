@@ -11,6 +11,9 @@
 namespace ArduinoJson {
 namespace Internals {
 
+// Parse JSON string to create JsonArrays and JsonObjects
+// This internal class is not indended to be used directly.
+// Instead, use JsonBuffer.parseArray() or .parseObject()
 class JsonParser {
  public:
   JsonParser(JsonBuffer *buffer, char *json, uint8_t nestingLimit)

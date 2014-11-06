@@ -11,10 +11,20 @@
 namespace ArduinoJson {
 namespace Internals {
 
+// Writes the JSON tokens to a Print implementation
+// This class is used by:
+// - JsonArray::writeTo()
+// - JsonObject::writeTo()
+// - JsonVariant::writeTo()
+// Its derived by PrettyJsonWriter that overrides some members to add
+// indentation.
 class JsonWriter {
  public:
   explicit JsonWriter(Print *sink) : _sink(sink), _length(0) {}
 
+  // Returns the number of bytes sent to the Print implementation.
+  // This is very handy for implementations of printTo() that must return the
+  // number of bytes written.
   size_t bytesWritten() { return _length; }
 
   void beginArray() { _length += _sink->write('['); }
