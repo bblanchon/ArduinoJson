@@ -48,7 +48,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
 
  private:
   // constructor is private: instance must be created via a JsonBuffer
-  JsonArray(JsonBuffer *buffer) : List(buffer) {}
+  explicit JsonArray(JsonBuffer *buffer) : List(buffer) {}
 
   static JsonArray _invalid;
 };

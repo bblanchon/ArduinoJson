@@ -52,7 +52,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
  private:
   // constructor is private, instance must be created via JsonBuffer
-  JsonObject(JsonBuffer *buffer) : List(buffer) {}
+  explicit JsonObject(JsonBuffer *buffer) : List(buffer) {}
 
   JsonVariant &add(key_type key) { return (*this)[key]; }
 

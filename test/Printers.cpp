@@ -9,10 +9,10 @@
 
 class StreamPrintAdapter : public Print {
  public:
-  StreamPrintAdapter(std::ostream& os) : _os(os) {}
+  explicit StreamPrintAdapter(std::ostream& os) : _os(os) {}
 
   virtual size_t write(uint8_t c) {
-    _os << (char)c;
+    _os << static_cast<char>(c);
     return 1;
   }
 

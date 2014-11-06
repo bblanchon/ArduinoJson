@@ -83,8 +83,8 @@ class JsonVariant : public Internals::JsonPrintable<JsonVariant> {
   operator JsonObject &() const;
 
   const char *asString() const { return this->as<const char *>(); }
-  JsonArray &asArray() const { return this->as<JsonArray &>(); };
-  JsonObject &asObject() const { return this->as<JsonObject &>(); };
+  JsonArray &asArray() const { return this->as<JsonArray &>(); }
+  JsonObject &asObject() const { return this->as<JsonObject &>(); }
 
   template <typename T>
   T as() const {
@@ -111,7 +111,7 @@ class JsonVariant : public Internals::JsonPrintable<JsonVariant> {
   JsonVariant &operator[](const char *key);
 
  private:
-  JsonVariant(Internals::JsonVariantType type) : _type(type) {}
+  explicit JsonVariant(Internals::JsonVariantType type) : _type(type) {}
 
   Internals::JsonVariantType _type;
   Internals::JsonVariantContent _content;

@@ -21,7 +21,7 @@ class List {
   typedef ListIterator<T> iterator;
   typedef ListConstIterator<T> const_iterator;
 
-  List(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
+  explicit List(JsonBuffer *buffer) : _buffer(buffer), _firstNode(NULL) {}
 
   bool success() const { return _buffer != NULL; }
   int size() const;

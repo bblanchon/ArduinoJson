@@ -16,7 +16,7 @@ namespace Internals {
 // for your own purpose, like logging.
 class IndentedPrint : public Print {
  public:
-  IndentedPrint(Print &p) : sink(&p) {
+  explicit IndentedPrint(Print &p) : sink(&p) {
     level = 0;
     tabSize = 2;
     isNewLine = true;
