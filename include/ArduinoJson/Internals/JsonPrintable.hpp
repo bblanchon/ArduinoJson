@@ -21,7 +21,7 @@ template <typename T>
 class JsonPrintable {
  public:
   size_t printTo(Print &print) const {
-    JsonWriter writer(&print);
+    JsonWriter writer(print);
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }
@@ -32,7 +32,7 @@ class JsonPrintable {
   }
 
   size_t prettyPrintTo(IndentedPrint &print) const {
-    PrettyJsonWriter writer(&print);
+    PrettyJsonWriter writer(print);
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }

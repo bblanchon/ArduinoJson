@@ -17,7 +17,7 @@ class QuotedString {
   // Writes a doubly-quote string to a Print implementation.
   // It adds the double quotes (") at the beginning and the end of the string.
   // It escapes the special characters as required by the JSON specifications.
-  static size_t printTo(const char *, Print *);
+  static size_t printTo(const char *, Print &);
 
   // Reads a doubly-quoted string from a buffer.
   // It removes the double quotes (").

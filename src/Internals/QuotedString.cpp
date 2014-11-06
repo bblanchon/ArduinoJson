@@ -20,22 +20,22 @@ static inline char getSpecialChar(char c) {
   return p[1];
 }
 
-static inline size_t printCharTo(char c, Print *p) {
+static inline size_t printCharTo(char c, Print &p) {
   char specialChar = getSpecialChar(c);
 
-  return specialChar ? p->write('\\') + p->write(specialChar) : p->write(c);
+  return specialChar ? p.write('\\') + p.write(specialChar) : p.write(c);
 }
 
-size_t QuotedString::printTo(const char *s, Print *p) {
-  if (!s) return p->print("null");
+size_t QuotedString::printTo(const char *s, Print &p) {
+  if (!s) return p.print("null");
 
-  size_t n = p->write('\"');
+  size_t n = p.write('\"');
 
   while (*s) {
     n += printCharTo(*s++, p);
   }
 
-  return n + p->write('\"');
+  return n + p.write('\"');
 }
 
 static char unescapeChar(char c) {

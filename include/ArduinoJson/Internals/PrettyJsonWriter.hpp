@@ -15,7 +15,7 @@ namespace Internals {
 // An indented version of JsonWriter.
 class PrettyJsonWriter : public JsonWriter {
  public:
-  explicit PrettyJsonWriter(IndentedPrint *sink)
+  explicit PrettyJsonWriter(IndentedPrint &sink)
       : JsonWriter(sink), _indenter(sink) {}
 
   void beginArray() {
@@ -47,18 +47,18 @@ class PrettyJsonWriter : public JsonWriter {
 
  private:
   void indent() {
-    _indenter->indent();
+    _indenter.indent();
     newline();
   }
 
   void unindent() {
     newline();
-    _indenter->unindent();
+    _indenter.unindent();
   }
 
-  void newline() { _length += _indenter->println(); }
+  void newline() { _length += _indenter.println(); }
 
-  IndentedPrint *_indenter;
+  IndentedPrint &_indenter;
 };
 }
 }

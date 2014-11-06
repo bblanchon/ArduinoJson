@@ -20,7 +20,7 @@ namespace Internals {
 // indentation.
 class JsonWriter {
  public:
-  explicit JsonWriter(Print *sink) : _sink(sink), _length(0) {}
+  explicit JsonWriter(Print &sink) : _sink(sink), _length(0) {}
 
   // Returns the number of bytes sent to the Print implementation.
   // This is very handy for implementations of printTo() that must return the
@@ -44,10 +44,10 @@ class JsonWriter {
   void writeComma() { write(','); }
 
  protected:
-  void write(char c) { _length += _sink->write(c); }
-  void write(const char *s) { _length += _sink->print(s); }
+  void write(char c) { _length += _sink.write(c); }
+  void write(const char *s) { _length += _sink.print(s); }
 
-  Print *_sink;
+  Print &_sink;
   size_t _length;
 };
 }
