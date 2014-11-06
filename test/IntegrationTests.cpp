@@ -12,30 +12,38 @@
 using namespace ArduinoJson;
 
 class IntegrationTests : public testing::TestWithParam<const char*> {
+  const static size_t MAX_JSON_SIZE = 10000;
+
  protected:
   virtual void SetUp() {
     _input = GetParam();
     strcpy(inputBuffer, _input);
   }
 
+  void parseThenPrint(char* input, char* output) {
+    StaticJsonBuffer<10000> json;
+    json.parseObject(input).printTo(output, MAX_JSON_SIZE);
+  }
+
+  void parseThenPrettyPrint(char* input, char* output) {
+    StaticJsonBuffer<10000> json;
+    json.parseObject(input).prettyPrintTo(output, MAX_JSON_SIZE);
+  }
+
   const char* _input;
-  char inputBuffer[10000];
-  char outputBuffer[10000];
-  char intermediateBuffer[10000];
-  StaticJsonBuffer<10000> json;
+  char inputBuffer[MAX_JSON_SIZE];
+  char outputBuffer[MAX_JSON_SIZE];
+  char intermediateBuffer[MAX_JSON_SIZE];
 };
 
 TEST_P(IntegrationTests, ParseThenPrint) {
-  json.parseObject(inputBuffer).printTo(outputBuffer, sizeof(outputBuffer));
+  parseThenPrint(inputBuffer, outputBuffer);
   ASSERT_STREQ(_input, outputBuffer);
 }
 
 TEST_P(IntegrationTests, ParseThenPrettyPrintThenParseThenPrint) {
-  json.parseObject(inputBuffer)
-      .prettyPrintTo(intermediateBuffer, sizeof(intermediateBuffer));
-  json.clear();
-  json.parseObject(intermediateBuffer)
-      .printTo(outputBuffer, sizeof(outputBuffer));
+  parseThenPrettyPrint(inputBuffer, intermediateBuffer);
+  parseThenPrint(intermediateBuffer, outputBuffer);
   ASSERT_STREQ(_input, outputBuffer);
 }
 
