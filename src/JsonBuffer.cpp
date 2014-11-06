@@ -26,12 +26,12 @@ JsonObject &JsonBuffer::createObject() {
   return JsonObject::invalid();
 }
 
-JsonArray &JsonBuffer::parseArray(char *json) {
-  JsonParser parser(this, json);
+JsonArray &JsonBuffer::parseArray(char *json, uint8_t nestingLimit) {
+  JsonParser parser(this, json, nestingLimit);
   return parser.parseArray();
 }
 
-JsonObject &JsonBuffer::parseObject(char *json) {
-  JsonParser parser(this, json);
+JsonObject &JsonBuffer::parseObject(char *json, uint8_t nestingLimit) {
+  JsonParser parser(this, json, nestingLimit);
   return parser.parseObject();
 }

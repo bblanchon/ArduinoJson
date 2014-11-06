@@ -19,9 +19,11 @@ class JsonBuffer {
   JsonArray &createArray();
   JsonObject &createObject();
 
-  JsonArray &parseArray(char *json);
-  JsonObject &parseObject(char *json);
+  JsonArray &parseArray(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
+  JsonObject &parseObject(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
 
   virtual void *alloc(size_t size) = 0;
+
+  static const uint8_t DEFAULT_LIMIT = 10;
 };
 }

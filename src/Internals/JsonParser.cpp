@@ -39,6 +39,9 @@ bool JsonParser::skip(const char *wordToSkip) {
 }
 
 void JsonParser::parseAnythingTo(JsonVariant &destination) {
+  if (_nestingLimit == 0) return;
+  _nestingLimit--;
+
   skipSpaces();
 
   switch (*_ptr) {
@@ -79,6 +82,8 @@ void JsonParser::parseAnythingTo(JsonVariant &destination) {
       destination = parseString();
       break;
   }
+
+  _nestingLimit++;
 }
 
 JsonArray &JsonParser::parseArray() {
