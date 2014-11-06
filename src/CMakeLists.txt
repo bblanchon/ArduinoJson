@@ -9,29 +9,36 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wall
 		-Wcast-align
 		-Wcast-qual
+		-Wconversion
 		-Wctor-dtor-privacy
 		-Wdisabled-optimization
-		-Werrors
+		-Werror
 		-Wextra
-		-Wfatal-errors
 		-Wformat=2
 		-Winit-self
-		-Wlogical-op
 		-Wmissing-include-dirs
 		-Wno-parentheses
+		-Wno-sign-conversion
 		-Wno-unused
 		-Wno-variadic-macros
-		-Wnoexcept
 		-Wold-style-cast
 		-Woverloaded-virtual
 		-Wpedantic
 		-Wredundant-decls
 		-Wshadow
 		-Wsign-promo
-		-Wstrict-null-sentinel
 		-Wstrict-overflow=5
 		-Wundef
 	)
 endif()
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU)")
+	add_definitions(
+		-Wlogical-op
+		-Wnoexcept
+		-Wstrict-null-sentinel
+	)
+endif()
+
 
 add_library(ArduinoJson ${SRC_FILES} ${INC_FILES})
