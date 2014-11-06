@@ -1,14 +1,19 @@
 file(GLOB_RECURSE INC_FILES ../include/*.hpp)
 file(GLOB_RECURSE SRC_FILES *.cpp)
 
-if(CMAKE_COMPILER_IS_GNUCXX)
+message(">    ${CMAKE_CXX_COMPILER}")
+message(">    ${CMAKE_CXX_COMPILER_ID}")
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_definitions(
 		-Wall
 		-Wcast-align
 		-Wcast-qual
 		-Wctor-dtor-privacy
 		-Wdisabled-optimization
+		-Werrors
 		-Wextra
+		-Wfatal-errors
 		-Wformat=2
 		-Winit-self
 		-Wlogical-op
