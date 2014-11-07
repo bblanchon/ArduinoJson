@@ -154,10 +154,10 @@ ERROR_MISSING_COMMA:
 }
 
 void JsonParser::parseBooleanTo(JsonVariant &destination) {
-  bool value = *_ptr == 't';
-
-  if (skip(value ? "true" : "false"))
-    destination = value;
+  if (skip("true"))
+    destination = true;
+  else if (skip("false"))
+    destination = false;
   else
     destination = JsonVariant::invalid();
 }
@@ -166,20 +166,25 @@ void JsonParser::parseNumberTo(JsonVariant &destination) {
   char *endOfLong;
   long longValue = strtol(_ptr, &endOfLong, 10);
 
+  // Could it be a floating point value?
   if (*endOfLong == '.') {
-    // stopped on a decimal separator
+    // Yes => parse it as a double
     double doubleValue = strtod(_ptr, &_ptr);
+    // Count the decimal digits
     uint8_t decimals = static_cast<uint8_t>(_ptr - endOfLong - 1);
+    // Set the variant as a double
     destination.set(doubleValue, decimals);
   } else {
+    // No => set the variant as a long
     _ptr = endOfLong;
     destination = longValue;
   }
 }
 
 void JsonParser::parseNullTo(JsonVariant &destination) {
+  const char *NULL_STRING = NULL;
   if (skip("null"))
-    destination = static_cast<const char *>(NULL);
+    destination = NULL_STRING;
   else
     destination = JsonVariant::invalid();
 }
