@@ -7,6 +7,7 @@
 #pragma once
 
 #include "../Arduino/Print.hpp"
+#include "QuotedString.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -35,13 +36,21 @@ class JsonWriter {
   void endObject() { write('}'); }
   void writeEmptyObject() { write("{}"); }
 
-  void writeString(const char *value);
-  void writeInteger(long value);
-  void writeBoolean(bool value);
-  void writeDouble(double value, uint8_t decimals);
-
   void writeColon() { write(':'); }
   void writeComma() { write(','); }
+
+  void writeString(const char *value) {
+    _length += QuotedString::printTo(value, _sink);
+  }
+
+  void writeInteger(long value) { _length += _sink.print(value); }
+
+  void writeBoolean(bool value) {
+    _length += _sink.print(value ? "true" : "false");
+  }
+  void writeDouble(double value, uint8_t decimals) {
+    _length += _sink.print(value, decimals);
+  }
 
  protected:
   void write(char c) { _length += _sink.write(c); }
