@@ -92,7 +92,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
  private:
   // Create an empty JsonArray attached to the specified JsonBuffer.
-  explicit JsonObject(JsonBuffer *buffer) : List(buffer) {}
+  explicit JsonObject(JsonBuffer *buffer) : Internals::List<JsonPair>(buffer) {}
 
   // Returns the list node that matches the specified key.
   node_type *getNodeAt(key_type key) const;

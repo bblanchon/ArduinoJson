@@ -80,7 +80,8 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
 
  private:
   // Create an empty JsonArray attached to the specified JsonBuffer.
-  explicit JsonArray(JsonBuffer *buffer) : List(buffer) {}
+  explicit JsonArray(JsonBuffer *buffer)
+      : Internals::List<JsonVariant>(buffer) {}
 
   // The instance returned by JsonArray::invalid()
   static JsonArray _invalid;
