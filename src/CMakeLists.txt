@@ -1,9 +1,6 @@
 file(GLOB_RECURSE INC_FILES ../include/*.hpp)
 file(GLOB_RECURSE SRC_FILES *.cpp)
 
-message(">    ${CMAKE_CXX_COMPILER}")
-message(">    ${CMAKE_CXX_COMPILER_ID}")
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_definitions(
 		-Wall
