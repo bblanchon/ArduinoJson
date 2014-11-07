@@ -17,7 +17,7 @@ void IndentedPrint::unindent() {
 }
 
 void IndentedPrint::setTabSize(uint8_t n) {
-  if (n < MAX_TAB_SIZE) tabSize = n;
+  if (n < MAX_TAB_SIZE) tabSize = n & MAX_TAB_SIZE;
 }
 
 size_t IndentedPrint::write(uint8_t c) {
