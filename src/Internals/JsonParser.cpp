@@ -49,6 +49,10 @@ void JsonParser::parseAnythingTo(JsonVariant &destination) {
       destination = parseArray();
       break;
 
+    case '{':
+      destination = parseObject();
+      break;
+
     case 't':
     case 'f':
       parseBooleanTo(destination);
@@ -73,10 +77,6 @@ void JsonParser::parseAnythingTo(JsonVariant &destination) {
       parseNullTo(destination);
       break;
 
-    case '{':
-      destination = parseObject();
-      break;
-
     case '\'':
     case '\"':
       destination = parseString();
@@ -87,23 +87,70 @@ void JsonParser::parseAnythingTo(JsonVariant &destination) {
 }
 
 JsonArray &JsonParser::parseArray() {
-  if (!skip('[')) return JsonArray::invalid();  // missing opening bracket
-
-  if (isEnd()) return JsonArray::invalid();  // end of stream
-
+  // Create an empty array
   JsonArray &array = _buffer->createArray();
-  if (skip(']')) return array;  // empty array
 
+  // Check opening braket
+  if (!skip('[')) goto ERROR_MISSING_BRACKET;
+  if (skip(']')) goto SUCCESS_EMPTY_ARRAY;
+
+  // Read each value
   for (;;) {
-    JsonVariant &child = array.add();
+    // 1 - Parse value
+    JsonVariant &value = array.add();
+    parseAnythingTo(value);
+    if (!value.success()) goto ERROR_INVALID_VALUE;
 
-    parseAnythingTo(child);
-    if (!child.success()) return JsonArray::invalid();  // child parsing failed
-
-    if (skip(']')) return array;  // end of the array
-
-    if (!skip(',')) return JsonArray::invalid();  // comma is missing
+    // 2 - More values?
+    if (skip(']')) goto SUCCES_NON_EMPTY_ARRAY;
+    if (!skip(',')) goto ERROR_MISSING_COMMA;
   }
+
+SUCCESS_EMPTY_ARRAY:
+SUCCES_NON_EMPTY_ARRAY:
+  return array;
+
+ERROR_INVALID_VALUE:
+ERROR_MISSING_BRACKET:
+ERROR_MISSING_COMMA:
+  return JsonArray::invalid();
+}
+
+JsonObject &JsonParser::parseObject() {
+  // Create an empty object
+  JsonObject &object = _buffer->createObject();
+
+  // Check opening brace
+  if (!skip('{')) goto ERROR_MISSING_BRACE;
+  if (skip('}')) goto SUCCESS_EMPTY_OBJECT;
+
+  // Read each key value pair
+  for (;;) {
+    // 1 - Parse key
+    const char *key = parseString();
+    if (!key) goto ERROR_INVALID_KEY;
+    if (!skip(':')) goto ERROR_MISSING_COLON;
+
+    // 2 - Parse value
+    JsonVariant &value = object.add(key);
+    parseAnythingTo(value);
+    if (!value.success()) goto ERROR_INVALID_VALUE;
+
+    // 3 - More keys/values?
+    if (skip('}')) goto SUCCESS_NON_EMPTY_OBJECT;
+    if (!skip(',')) goto ERROR_MISSING_COMMA;
+  }
+
+SUCCESS_EMPTY_OBJECT:
+SUCCESS_NON_EMPTY_OBJECT:
+  return object;
+
+ERROR_INVALID_KEY:
+ERROR_INVALID_VALUE:
+ERROR_MISSING_BRACE:
+ERROR_MISSING_COLON:
+ERROR_MISSING_COMMA:
+  return JsonObject::invalid();
 }
 
 void JsonParser::parseBooleanTo(JsonVariant &destination) {
@@ -135,41 +182,6 @@ void JsonParser::parseNullTo(JsonVariant &destination) {
     destination = static_cast<const char *>(NULL);
   else
     destination = JsonVariant::invalid();
-}
-
-JsonObject &JsonParser::parseObject() {
-  JsonObject &object = _buffer->createObject();
-
-  if (!skip('{')) goto ERROR_MISSING_OPENING_BRACE;
-  if (skip('}')) goto SUCCESS_EMPTY_OBJECT;
-
-  // Read each key value pair
-  for (;;) {
-    // 1 - Parse key
-    const char *key = parseString();
-    if (!key) goto ERROR_INVALID_KEY;
-    if (!skip(':')) goto ERROR_MISSING_COLON;
-
-    // 2 - Parse value
-    JsonVariant &value = object.add(key);
-    parseAnythingTo(value);
-    if (!value.success()) goto ERROR_INVALID_VALUE;
-
-    // 3 - More elements?
-    if (skip('}')) goto SUCCESS_NON_EMPTY_OBJECT;
-    if (!skip(',')) goto ERROR_MISSING_COMMA;
-  }
-
-SUCCESS_EMPTY_OBJECT:
-SUCCESS_NON_EMPTY_OBJECT:
-  return object;
-
-ERROR_INVALID_KEY:
-ERROR_INVALID_VALUE:
-ERROR_MISSING_COLON:
-ERROR_MISSING_COMMA:
-ERROR_MISSING_OPENING_BRACE:
-  return JsonObject::invalid();
 }
 
 const char *JsonParser::parseString() {
