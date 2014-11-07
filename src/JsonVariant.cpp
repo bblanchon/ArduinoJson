@@ -107,7 +107,7 @@ void JsonVariant::writeTo(T &writer) const {
       break;
 
     case JSON_LONG:
-      writer.writeInteger(_content.asLong);
+      writer.writeLong(_content.asLong);
       break;
 
     case JSON_BOOLEAN:

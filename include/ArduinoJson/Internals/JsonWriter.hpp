@@ -43,7 +43,7 @@ class JsonWriter {
     _length += QuotedString::printTo(value, _sink);
   }
 
-  void writeInteger(long value) { _length += _sink.print(value); }
+  void writeLong(long value) { _length += _sink.print(value); }
 
   void writeBoolean(bool value) {
     _length += _sink.print(value ? "true" : "false");
