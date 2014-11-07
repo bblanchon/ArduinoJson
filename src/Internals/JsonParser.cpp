@@ -138,30 +138,37 @@ void JsonParser::parseNullTo(JsonVariant &destination) {
 }
 
 JsonObject &JsonParser::parseObject() {
-  if (!skip('{')) return JsonObject::invalid();  // missing opening brace
-
-  if (isEnd()) return JsonObject::invalid();  // premature ending
-
   JsonObject &object = _buffer->createObject();
 
-  if (skip('}')) return object;  // empty object
+  if (!skip('{')) goto ERROR_MISSING_OPENING_BRACE;
+  if (skip('}')) goto SUCCESS_EMPTY_OBJECT;
 
+  // Read each key value pair
   for (;;) {
+    // 1 - Parse key
     const char *key = parseString();
-    if (!key) break;  // key parsing failed
+    if (!key) goto ERROR_INVALID_KEY;
+    if (!skip(':')) goto ERROR_MISSING_COLON;
 
-    if (!skip(':')) break;  // colon is missing
-
+    // 2 - Parse value
     JsonVariant &value = object.add(key);
-
     parseAnythingTo(value);
-    if (!value.success()) break;  // value parsing failed
+    if (!value.success()) goto ERROR_INVALID_VALUE;
 
-    if (skip('}')) return object;  // end of the object
-
-    if (!skip(',')) break;  // comma is missing
+    // 3 - More elements?
+    if (skip('}')) goto SUCCESS_NON_EMPTY_OBJECT;
+    if (!skip(',')) goto ERROR_MISSING_COMMA;
   }
 
+SUCCESS_EMPTY_OBJECT:
+SUCCESS_NON_EMPTY_OBJECT:
+  return object;
+
+ERROR_INVALID_KEY:
+ERROR_INVALID_VALUE:
+ERROR_MISSING_COLON:
+ERROR_MISSING_COMMA:
+ERROR_MISSING_OPENING_BRACE:
   return JsonObject::invalid();
 }
 
