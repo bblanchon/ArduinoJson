@@ -114,3 +114,17 @@ TEST_F(JsonObject_Container_Tests, CanStoreInnerObjects) {
   EXPECT_EQ(&innerObject1, &object["hello"].asObject());
   EXPECT_EQ(&innerObject2, &object["world"].asObject());
 }
+
+TEST_F(JsonObject_Container_Tests, ContainsKeyReturnFalseForNonExistingKey) {
+  EXPECT_FALSE(object.containsKey("hello"));
+}
+
+TEST_F(JsonObject_Container_Tests, ContainsKeyReturnTrueForDefinedValue) {
+  object.add("hello", 42);
+  EXPECT_TRUE(object.containsKey("hello"));
+}
+
+TEST_F(JsonObject_Container_Tests, ContainsKeyReturnFalseForUndefinedValue) {
+  object.add("hello");
+  EXPECT_FALSE(object.containsKey("hello"));
+}

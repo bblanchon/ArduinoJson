@@ -38,7 +38,7 @@ class JsonVariant : public Internals::JsonPrintable<JsonVariant> {
   }
 
   // Tells weither the variant is valid.
-  bool success() {
+  bool success() const {
     return _type != Internals::JSON_INVALID &&
            _type != Internals::JSON_UNDEFINED;
   }

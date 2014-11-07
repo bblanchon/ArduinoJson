@@ -78,6 +78,9 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // This is a shortcut for JsonBuffer::createObject() and JsonObject::add().
   JsonObject &createNestedObject(key_type key);
 
+  // Tells weither the specified key is present and associated with a value.
+  bool containsKey(key_type key) const { return at(key).success(); }
+
   // Removes the specified key and the associated value.
   void remove(key_type key);
 
