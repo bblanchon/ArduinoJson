@@ -115,7 +115,8 @@ void JsonVariant::writeTo(T &writer) const {
       break;
 
     default:  // >= JSON_DOUBLE_0_DECIMALS
-      writer.writeDouble(_content.asDouble, _type - JSON_DOUBLE_0_DECIMALS);
+      uint8_t decimals = static_cast<uint8_t>(_type - JSON_DOUBLE_0_DECIMALS);
+      writer.writeDouble(_content.asDouble, decimals);
       break;
   }
 }
