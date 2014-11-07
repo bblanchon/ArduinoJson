@@ -3,6 +3,7 @@ file(GLOB_RECURSE SRC_FILES *.cpp)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_definitions(
+		-fno-exceptions
 		-Wall
 		-Wcast-align
 		-Wcast-qual
