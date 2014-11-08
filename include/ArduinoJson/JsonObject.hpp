@@ -99,10 +99,6 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // Returns the list node that matches the specified key.
   node_type *getNodeAt(key_type key) const;
 
-  // Returns the list node that matches the specified key, creating it if
-  // needed.
-  node_type *getOrCreateNodeAt(key_type key);
-
   // The instance returned by JsonObject::invalid()
   static JsonObject _invalid;
 };

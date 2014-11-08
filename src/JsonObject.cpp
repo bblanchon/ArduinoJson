@@ -29,8 +29,16 @@ const JsonVariant &JsonObject::at(const char *key) const {
 }
 
 JsonVariant &JsonObject::operator[](const char *key) {
-  node_type *node = getOrCreateNodeAt(key);
-  return node ? node->content.value : JsonVariant::invalid();
+  node_type *existingNode = getNodeAt(key);
+  if (existingNode) return existingNode->content.value;
+
+  node_type *newNode = createNode();
+  if (!newNode) return JsonVariant::invalid();
+
+  newNode->content.key = key;
+  addNode(newNode);
+
+  return newNode->content.value;
 }
 
 void JsonObject::remove(char const *key) { removeNode(getNodeAt(key)); }
@@ -54,18 +62,6 @@ JsonObject::node_type *JsonObject::getNodeAt(const char *key) const {
     if (!strcmp(node->content.key, key)) return node;
   }
   return NULL;
-}
-
-JsonObject::node_type *JsonObject::getOrCreateNodeAt(const char *key) {
-  node_type *existingNode = getNodeAt(key);
-  if (existingNode) return existingNode;
-
-  node_type *newNode = createNode();
-  if (!newNode) return NULL;
-
-  newNode->content.key = key;
-  addNode(newNode);
-  return newNode;
 }
 
 void JsonObject::writeTo(JsonWriter &writer) const {
