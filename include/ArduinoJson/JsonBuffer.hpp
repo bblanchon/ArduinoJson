@@ -20,7 +20,10 @@ class JsonObject;
 // fixed memory allocation.
 class JsonBuffer {
  public:
-  virtual ~JsonBuffer() {}
+  // CAUTION: NO VIRTUAL DESTRUCTOR!
+  // If we add a virtual constructor the Arduino compiler will add malloc() and
+  // free() to the binary, adding 706 useless bytes.
+  // virtual ~JsonBuffer() {}
 
   // Allocates an empty JsonArray.
   //

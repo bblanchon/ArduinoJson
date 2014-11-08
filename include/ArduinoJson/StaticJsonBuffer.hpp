@@ -17,7 +17,6 @@ template <size_t CAPACITY>
 class StaticJsonBuffer : public JsonBuffer {
  public:
   explicit StaticJsonBuffer() : _size(0) {}
-  virtual ~StaticJsonBuffer() {}
 
   size_t capacity() const { return CAPACITY; }
   size_t size() const { return _size; }
