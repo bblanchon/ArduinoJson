@@ -1,5 +1,11 @@
 Generating JSON with Arduino JSON
-==============================
+=================================
+
+Before writing any code, don't forget to include the header:
+
+    #include <ArduinoJson.h>
+
+If your not using the Arduino IDE, please read [Using the library without Arduino](Using the library without Arduino.md).
 
 ## Example
 
