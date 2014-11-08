@@ -21,13 +21,6 @@ int List<T>::size() const {
 }
 
 template <typename T>
-typename List<T>::node_type *List<T>::createNode() {
-  if (!_buffer) return NULL;
-  void *ptr = _buffer->alloc(sizeof(node_type));
-  return ptr ? new (ptr) node_type() : NULL;
-}
-
-template <typename T>
 void List<T>::addNode(node_type *nodeToAdd) {
   if (_firstNode) {
     node_type *lastNode = _firstNode;

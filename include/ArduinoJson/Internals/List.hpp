@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include "ListIterator.hpp"
-#include "ListConstIterator.hpp"
 #include "../JsonBuffer.hpp"
+#include "ListConstIterator.hpp"
+#include "ListIterator.hpp"
+#include "PlacementNew.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -48,7 +49,12 @@ class List {
   const_iterator end() const { return const_iterator(NULL); }
 
  protected:
-  node_type *createNode();
+  node_type *createNode() {
+    if (!_buffer) return NULL;
+    void *ptr = _buffer->alloc(sizeof(node_type));
+    return ptr ? new (ptr) node_type() : NULL;
+  }
+
   void addNode(node_type *node);
   void removeNode(node_type *nodeToRemove);
 
