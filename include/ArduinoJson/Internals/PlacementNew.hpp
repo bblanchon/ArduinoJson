@@ -4,6 +4,8 @@
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 
+#pragma once
+
 #ifdef ARDUINO
 
 // Declares the placement new as in <new>.
