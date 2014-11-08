@@ -21,17 +21,6 @@ int List<T>::size() const {
 }
 
 template <typename T>
-void List<T>::addNode(node_type *nodeToAdd) {
-  if (_firstNode) {
-    node_type *lastNode = _firstNode;
-    while (lastNode->next) lastNode = lastNode->next;
-    lastNode->next = nodeToAdd;
-  } else {
-    _firstNode = nodeToAdd;
-  }
-}
-
-template <typename T>
 void List<T>::removeNode(node_type *nodeToRemove) {
   if (!nodeToRemove) return;
   if (nodeToRemove == _firstNode) {

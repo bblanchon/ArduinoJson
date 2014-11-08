@@ -55,7 +55,16 @@ class List {
     return ptr ? new (ptr) node_type() : NULL;
   }
 
-  void addNode(node_type *node);
+  void addNode(node_type *nodeToAdd) {
+    if (_firstNode) {
+      node_type *lastNode = _firstNode;
+      while (lastNode->next) lastNode = lastNode->next;
+      lastNode->next = nodeToAdd;
+    } else {
+      _firstNode = nodeToAdd;
+    }
+  }
+
   void removeNode(node_type *nodeToRemove);
 
   JsonBuffer *_buffer;
