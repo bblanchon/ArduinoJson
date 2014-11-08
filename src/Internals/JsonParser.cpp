@@ -165,9 +165,12 @@ void JsonParser::parseBooleanTo(JsonVariant &destination) {
 void JsonParser::parseNumberTo(JsonVariant &destination) {
   char *endOfLong;
   long longValue = strtol(_ptr, &endOfLong, 10);
+  char stopChar = *endOfLong;
 
   // Could it be a floating point value?
-  if (*endOfLong == '.') {
+  bool couldBeFloat = stopChar == '.' || stopChar == 'e' || stopChar == 'E';
+
+  if (couldBeFloat) {
     // Yes => parse it as a double
     double doubleValue = strtod(_ptr, &_ptr);
     // Count the decimal digits

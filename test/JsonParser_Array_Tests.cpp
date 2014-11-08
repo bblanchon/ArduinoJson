@@ -114,12 +114,12 @@ TEST_F(JsonParser_Array_Tests, TwoIntegers) {
 }
 
 TEST_F(JsonParser_Array_Tests, TwoDoubles) {
-  whenInputIs("[4.2,8.4]");
+  whenInputIs("[4.2,1e2]");
 
   parseMustSucceed();
   sizeMustBe(2);
   firstElementMustBe(4.2);
-  secondElementMustBe(8.4);
+  secondElementMustBe(1e2);
 }
 
 TEST_F(JsonParser_Array_Tests, TwoBooleans) {

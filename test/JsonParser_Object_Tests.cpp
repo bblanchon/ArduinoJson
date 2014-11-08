@@ -145,11 +145,11 @@ TEST_F(JsonParser_Object_Test, TwoIntergers) {
 }
 
 TEST_F(JsonParser_Object_Test, TwoDoubles) {
-  whenInputIs("{\"key1\":12.345,\"key2\":-7.89}");
+  whenInputIs("{\"key1\":12.345,\"key2\":-7E89}");
   parseMustSucceed();
   sizeMustBe(2);
   keyMustHaveValue("key1", 12.345);
-  keyMustHaveValue("key2", -7.89);
+  keyMustHaveValue("key2", -7E89);
 }
 
 TEST_F(JsonParser_Object_Test, TwoBooleans) {
