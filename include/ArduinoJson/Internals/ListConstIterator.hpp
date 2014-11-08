@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "ListNode.hpp"
+
 namespace ArduinoJson {
 namespace Internals {
 
