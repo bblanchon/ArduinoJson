@@ -29,16 +29,19 @@ const JsonVariant &JsonObject::at(const char *key) const {
 }
 
 JsonVariant &JsonObject::operator[](const char *key) {
-  node_type *existingNode = getNodeAt(key);
-  if (existingNode) return existingNode->content.value;
+  // try to find an existing node
+  node_type *node = getNodeAt(key);
 
-  node_type *newNode = createNode();
-  if (!newNode) return JsonVariant::invalid();
+  // not fount => create a new one
+  if (!node) {
+    node = createNode();
+    if (!node) return JsonVariant::invalid();
 
-  newNode->content.key = key;
-  addNode(newNode);
+    node->content.key = key;
+    addNode(node);
+  }
 
-  return newNode->content.value;
+  return node->content.value;
 }
 
 void JsonObject::remove(char const *key) { removeNode(getNodeAt(key)); }
