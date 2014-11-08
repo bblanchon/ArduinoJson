@@ -9,7 +9,6 @@
 #include <string.h>  // for strcmp
 
 #include "../include/ArduinoJson/Internals/PlacementNew.hpp"
-#include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "../include/ArduinoJson/Internals/StringBuilder.hpp"
 #include "../include/ArduinoJson/JsonArray.hpp"
 #include "../include/ArduinoJson/JsonBuffer.hpp"
@@ -69,8 +68,7 @@ JsonObject::node_type *JsonObject::getOrCreateNodeAt(const char *key) {
   return newNode;
 }
 
-template <typename T>
-void JsonObject::writeTo(T &writer) const {
+void JsonObject::writeTo(JsonWriter &writer) const {
   node_type *node = _firstNode;
 
   if (node) {
@@ -92,6 +90,3 @@ void JsonObject::writeTo(T &writer) const {
     writer.writeEmptyObject();
   }
 }
-
-template void JsonObject::writeTo(JsonWriter &writer) const;
-template void JsonObject::writeTo(PrettyJsonWriter &writer) const;

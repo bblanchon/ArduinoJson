@@ -6,7 +6,6 @@
 
 #include "../include/ArduinoJson/JsonArray.hpp"
 
-#include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "../include/ArduinoJson/JsonBuffer.hpp"
 #include "../include/ArduinoJson/JsonObject.hpp"
 
@@ -44,8 +43,7 @@ JsonObject &JsonArray::createNestedObject() {
   return object;
 }
 
-template <typename T>
-void JsonArray::writeTo(T &writer) const {
+void JsonArray::writeTo(JsonWriter &writer) const {
   node_type *child = _firstNode;
 
   if (child) {
@@ -65,6 +63,3 @@ void JsonArray::writeTo(T &writer) const {
     writer.writeEmptyArray();
   }
 }
-
-template void JsonArray::writeTo(JsonWriter &) const;
-template void JsonArray::writeTo(PrettyJsonWriter &) const;

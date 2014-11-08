@@ -75,8 +75,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   static JsonArray &invalid() { return _invalid; }
 
   // Serialize the array to the specified JsonWriter.
-  template <typename T>
-  void writeTo(T &writer) const;
+  void writeTo(Internals::JsonWriter &writer) const;
 
  private:
   // Create an empty JsonArray attached to the specified JsonBuffer.

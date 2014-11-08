@@ -6,7 +6,6 @@
 
 #include "../include/ArduinoJson/JsonVariant.hpp"
 
-#include "../include/ArduinoJson/Internals/PrettyJsonWriter.hpp"
 #include "../include/ArduinoJson/JsonArray.hpp"
 #include "../include/ArduinoJson/JsonObject.hpp"
 
@@ -91,8 +90,7 @@ JsonVariant &JsonVariant::operator[](const char *key) {
   return _content.asObject->operator[](key);
 }
 
-template <typename T>
-void JsonVariant::writeTo(T &writer) const {
+void JsonVariant::writeTo(JsonWriter &writer) const {
   switch (_type) {
     case JSON_ARRAY:
       _content.asArray->writeTo(writer);
@@ -120,6 +118,3 @@ void JsonVariant::writeTo(T &writer) const {
       break;
   }
 }
-
-template void JsonVariant::writeTo(JsonWriter &) const;
-template void JsonVariant::writeTo(PrettyJsonWriter &) const;

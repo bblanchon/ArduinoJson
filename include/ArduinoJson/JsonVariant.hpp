@@ -146,8 +146,7 @@ class JsonVariant : public Internals::JsonPrintable<JsonVariant> {
   static JsonVariant &invalid() { return _invalid; }
 
   // Serialize the variant to a JsonWriter
-  template <typename T>
-  void writeTo(T &writer) const;
+  void writeTo(Internals::JsonWriter &writer) const;
 
   // Mimics an array or an object.
   // Returns the size of the array or object if the variant has that type.

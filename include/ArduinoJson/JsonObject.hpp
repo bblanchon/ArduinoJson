@@ -90,8 +90,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   static JsonObject &invalid() { return _invalid; }
 
   // Serialize the object to the specified JsonWriter
-  template <typename T>
-  void writeTo(T &writer) const;
+  void writeTo(Internals::JsonWriter &writer) const;
 
  private:
   // Create an empty JsonArray attached to the specified JsonBuffer.

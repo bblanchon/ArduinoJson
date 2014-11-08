@@ -7,7 +7,8 @@
 #pragma once
 
 #include "IndentedPrint.hpp"
-#include "PrettyJsonWriter.hpp"
+#include "JsonWriter.hpp"
+#include "Prettyfier.hpp"
 #include "StringBuilder.hpp"
 
 namespace ArduinoJson {
@@ -32,9 +33,8 @@ class JsonPrintable {
   }
 
   size_t prettyPrintTo(IndentedPrint &print) const {
-    PrettyJsonWriter writer(print);
-    downcast().writeTo(writer);
-    return writer.bytesWritten();
+    Prettyfier p(print);
+    return printTo(p);
   }
 
   size_t prettyPrintTo(char *buffer, size_t bufferSize) const {
