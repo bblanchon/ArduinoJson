@@ -8,18 +8,6 @@
 
 using namespace ArduinoJson::Internals;
 
-void IndentedPrint::indent() {
-  if (level < MAX_LEVEL) level++;
-}
-
-void IndentedPrint::unindent() {
-  if (level > 0) level--;
-}
-
-void IndentedPrint::setTabSize(uint8_t n) {
-  if (n < MAX_TAB_SIZE) tabSize = n & MAX_TAB_SIZE;
-}
-
 size_t IndentedPrint::write(uint8_t c) {
   size_t n = 0;
 

@@ -25,13 +25,19 @@ class IndentedPrint : public Print {
   virtual size_t write(uint8_t);
 
   // Adds one level of indentation
-  void indent();
+  void indent() {
+    if (level < MAX_LEVEL) level++;
+  }
 
   // Removes one level of indentation
-  void unindent();
+  void unindent() {
+    if (level > 0) level--;
+  }
 
   // Set the number of space printed for each level of indentation
-  void setTabSize(uint8_t n);
+  void setTabSize(uint8_t n) {
+    if (n < MAX_TAB_SIZE) tabSize = n & MAX_TAB_SIZE;
+  }
 
  private:
   Print *sink;
