@@ -30,11 +30,9 @@ class JsonWriter {
 
   void beginArray() { write('['); }
   void endArray() { write(']'); }
-  void writeEmptyArray() { write("[]"); }
 
   void beginObject() { write('{'); }
   void endObject() { write('}'); }
-  void writeEmptyObject() { write("{}"); }
 
   void writeColon() { write(':'); }
   void writeComma() { write(','); }

@@ -44,22 +44,17 @@ JsonObject &JsonArray::createNestedObject() {
 }
 
 void JsonArray::writeTo(JsonWriter &writer) const {
-  node_type *child = _firstNode;
+  writer.beginArray();
 
-  if (child) {
-    writer.beginArray();
+  const node_type *child = _firstNode;
+  while (child) {
+    child->content.writeTo(writer);
 
-    for (;;) {
-      child->content.writeTo(writer);
+    child = child->next;
+    if (!child) break;
 
-      child = child->next;
-      if (!child) break;
-
-      writer.writeComma();
-    }
-
-    writer.endArray();
-  } else {
-    writer.writeEmptyArray();
+    writer.writeComma();
   }
+
+  writer.endArray();
 }

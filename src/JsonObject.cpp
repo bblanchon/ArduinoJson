@@ -68,24 +68,19 @@ JsonObject::node_type *JsonObject::getNodeAt(const char *key) const {
 }
 
 void JsonObject::writeTo(JsonWriter &writer) const {
-  node_type *node = _firstNode;
+  writer.beginObject();
 
-  if (node) {
-    writer.beginObject();
+  const node_type *node = _firstNode;
+  while (node) {
+    writer.writeString(node->content.key);
+    writer.writeColon();
+    node->content.value.writeTo(writer);
 
-    for (;;) {
-      writer.writeString(node->content.key);
-      writer.writeColon();
-      node->content.value.writeTo(writer);
+    node = node->next;
+    if (!node) break;
 
-      node = node->next;
-      if (!node) break;
-
-      writer.writeComma();
-    }
-
-    writer.endObject();
-  } else {
-    writer.writeEmptyObject();
+    writer.writeComma();
   }
+
+  writer.endObject();
 }
