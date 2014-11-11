@@ -12,7 +12,7 @@
 using namespace ArduinoJson;
 
 class IntegrationTests : public testing::TestWithParam<const char*> {
-  const static size_t MAX_JSON_SIZE = 10000;
+  static const size_t MAX_JSON_SIZE = 10000;
 
  protected:
   virtual void SetUp() {

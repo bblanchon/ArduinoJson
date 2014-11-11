@@ -166,7 +166,7 @@ class JsonVariant : public Internals::JsonPrintable<JsonVariant> {
 
  private:
   // Special constructor used only to create _invalid.
-  JsonVariant(Internals::JsonVariantType type) : _type(type) {}
+  explicit JsonVariant(Internals::JsonVariantType type) : _type(type) {}
 
   // Helper for interger cast operators
   template <typename T>
