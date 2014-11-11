@@ -10,31 +10,48 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 Features
 --------
 
-* JSON decoding: [see documentation here](/JsonParser/)
-* JSON encoding: [see documentation here](/JsonGenerator/)
+* JSON decoding
+* JSON encoding (with optional indentation)
 * Elegant API, very easy to use 
 * Fixed memory allocation (no malloc)
 * Small footprint
 * MIT License
 
-Feature comparison
-------------------
+Quick start
+-----------
 
-| Library      | Memory allocation | Nested objects | Parser size | Encoder size  |
-| ------------ | ----------------- | -------------- | ----------- | ------------- |
-| Arduino JSON | static            | yes            | 2760 Bytes  | 862 bytes     |
-| json-arduino | dynamic           | no             | 3348 (+21%) | not supported |
-| aJson        | dynamic           | yes            | 5088 (+84%) | 4678 (+540%)  |
+#### Decoding / Parsing
+   
+    char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
-"Parser size" was measured with a program parsing `{"sensor":"outdoor","value":25.6}`.
-For each library, I wrote a program that extracts a string and a float. I subtracted the size of a program doing the same without any JSON parsing involved. [Source files are here](https://gist.github.com/bblanchon/e8ba914a7109f3642c0f).
+    StaticJsonBuffer<200> jsonBuffer;
 
-"Encoder size" was measured with a program generating `{"sensor":"outdoor","value":25.6}`.
-[Source files are here](https://gist.github.com/bblanchon/60224e9dcfeab4ddc7e9).
+    JsonObject& root = jsonBuffer.parseObject(json);
 
-In each case the target platform was an Arduino Duemilanove and Arduino IDE 1.0.5 was used. 
+    const char* sensor = root["sensor"];
+    long time          = root["time"];
+    double latitude    = root["data"][0];
+    double longitude   = root["data"][1];
 
-Links: [json-arduino](https://github.com/not404/json-arduino), [aJson](https://github.com/interactive-matter/aJson) 
+[See complete guide](/doc/Decoding JSON.md)
+
+#### Encoding / Generating
+   
+    StaticJsonBuffer<200> jsonBuffer;
+
+    JsonObject& root = jsonBuffer.createObject();
+    root["sensor"] = "gps";
+    root["time"] = 1351824120;
+
+    JsonArray& data = root.createNestedArray("data");
+    data.add(48.756080, 6);  // 6 is the number of decimals to print
+    data.add(2.302038, 6);   // if not specified, 2 digits are printed
+
+    root.printTo(Serial);
+    // This prints:
+    // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
+
+[See complete guide](/doc/Encoding JSON.md)
 
 Testimonials
 ------------
@@ -48,11 +65,3 @@ From Arduino's Forum user `gbathree`:
 
 From StackOverflow user `thegreendroid`:
 > It has a really elegant, simple API and it works like a charm on embedded and Windows/Linux platforms. We recently started using this on an embedded project and I can vouch for its quality.
-
-Related blog posts
------
-
-* [The project I originally wrote this library for](http://blog.benoitblanchon.fr/rfid-payment-terminal/)
-* [Motivation for this library](http://blog.benoitblanchon.fr/arduino-json-parser/)
-* [Release of version 2](http://blog.benoitblanchon.fr/arduino-json-v2-0/)
-* [Release of version 3](http://blog.benoitblanchon.fr/arduino-json-v3-0/)
