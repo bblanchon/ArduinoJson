@@ -49,3 +49,12 @@ This fixed allocation approach may seem a bit strange, especially if your a desk
 Don't forget that, the memory is "freed" as soon as the `StaticJsonBuffer` is out of scope, like any other variable. It only hold the memory for a short amount of time.
 
 For that reason, you should never use a `StaticJsonBuffer` as a **global variable** because it would hold a lot of memory for the whole life of the program.
+
+## Memory usage
+
+#### Object size for 8-bit AVR
+
+| Type                    | Size       |
+|-------------------------|------------|
+| JsonArray of N element  | 4 + 8 * N  |
+| JsonObject of N element | 4 + 10 * N |
