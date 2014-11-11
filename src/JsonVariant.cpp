@@ -91,34 +91,18 @@ JsonVariant &JsonVariant::operator[](const char *key) {
 }
 
 void JsonVariant::writeTo(JsonWriter &writer) const {
-  switch (_type) {
-    case JSON_ARRAY:
-      _content.asArray->writeTo(writer);
-      break;
-
-    case JSON_OBJECT:
-      _content.asObject->writeTo(writer);
-      break;
-
-    case JSON_STRING:
-      writer.writeString(_content.asString);
-      break;
-
-    case JSON_LONG:
-      writer.writeLong(_content.asLong);
-      break;
-
-    case JSON_BOOLEAN:
-      writer.writeBoolean(_content.asBoolean);
-      break;
-
-    case JSON_INVALID:
-    case JSON_UNDEFINED:
-      break;
-
-    default:  // >= JSON_DOUBLE_0_DECIMALS
-      uint8_t decimals = static_cast<uint8_t>(_type - JSON_DOUBLE_0_DECIMALS);
-      writer.writeDouble(_content.asDouble, decimals);
-      break;
+  if (is<const JsonArray &>())
+    as<const JsonArray &>().writeTo(writer);
+  else if (is<const JsonObject &>())
+    as<const JsonObject &>().writeTo(writer);
+  else if (is<const char *>())
+    writer.writeString(as<const char *>());
+  else if (is<long>())
+    writer.writeLong(as<long>());
+  else if (is<bool>())
+    writer.writeBoolean(as<bool>());
+  else if (is<double>()) {
+    uint8_t decimals = static_cast<uint8_t>(_type - JSON_DOUBLE_0_DECIMALS);
+    writer.writeDouble(as<double>(), decimals);
   }
 }

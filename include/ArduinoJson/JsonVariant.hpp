@@ -194,6 +194,36 @@ inline bool JsonVariant::is<double>() const {
   return _type >= Internals::JSON_DOUBLE_0_DECIMALS;
 }
 
+template <>
+inline bool JsonVariant::is<bool>() const {
+  return _type == Internals::JSON_BOOLEAN;
+}
+
+template <>
+inline bool JsonVariant::is<const char *>() const {
+  return _type == Internals::JSON_STRING;
+}
+
+template <>
+inline bool JsonVariant::is<JsonArray &>() const {
+  return _type == Internals::JSON_ARRAY;
+}
+
+template <>
+inline bool JsonVariant::is<const JsonArray &>() const {
+  return _type == Internals::JSON_ARRAY;
+}
+
+template <>
+inline bool JsonVariant::is<JsonObject &>() const {
+  return _type == Internals::JSON_OBJECT;
+}
+
+template <>
+inline bool JsonVariant::is<const JsonObject &>() const {
+  return _type == Internals::JSON_OBJECT;
+}
+
 template <typename T>
 inline bool operator==(const JsonVariant &left, T right) {
   return left.as<T>() == right;
