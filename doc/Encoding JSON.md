@@ -1,5 +1,5 @@
-Generating JSON with Arduino JSON
-=================================
+Encoding JSON with Arduino JSON
+===============================
 
 Before writing any code, don't forget to include the header:
 

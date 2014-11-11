@@ -1,5 +1,5 @@
-Parsing JSON with Arduino JSON
-==============================
+Decoding JSON with Arduino JSON
+===============================
 
 ## Example
 
