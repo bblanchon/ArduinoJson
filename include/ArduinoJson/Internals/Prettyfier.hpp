@@ -22,9 +22,7 @@ class Prettyfier : public Print {
   virtual size_t write(uint8_t);
 
  private:
-  uint8_t _previousChar;
-  IndentedPrint& _sink;
-  bool _inString;
+  Prettyfier& operator=(const Prettyfier&);  // cannot be assigned
 
   bool inEmptyBlock() { return _previousChar == '{' || _previousChar == '['; }
 
@@ -39,6 +37,10 @@ class Prettyfier : public Print {
   size_t handleNormalChar(uint8_t);
   size_t indentIfNeeded();
   size_t unindentIfNeeded();
+
+  uint8_t _previousChar;
+  IndentedPrint& _sink;
+  bool _inString;
 };
 }
 }

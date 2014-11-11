@@ -56,6 +56,9 @@ class JsonWriter {
 
   Print &_sink;
   size_t _length;
+
+ private:
+  JsonWriter &operator=(const JsonWriter &);  // cannot be assigned
 };
 }
 }

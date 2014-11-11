@@ -17,6 +17,9 @@ class StreamPrintAdapter : public Print {
   }
 
  private:
+  // cannot be assigned
+  StreamPrintAdapter& operator=(const StreamPrintAdapter&);
+
   std::ostream& _os;
 };
 
