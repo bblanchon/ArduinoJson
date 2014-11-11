@@ -10,8 +10,4 @@
 // for the IDE to find it. Feel free to ignore this file if your working in
 // another environment
 
-#include "../include/ArduinoJson/JsonArray.hpp"
-#include "../include/ArduinoJson/JsonObject.hpp"
-#include "../include/ArduinoJson/StaticJsonBuffer.hpp"
-
-using namespace ArduinoJson;
+#include "../include/ArduinoJson.h"

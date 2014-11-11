@@ -5,10 +5,7 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/StaticJsonBuffer.hpp>
-#include <ArduinoJson/JsonObject.hpp>
-
-using namespace ArduinoJson;
+#include <ArduinoJson.h>
 
 class JsonParser_Object_Test : public testing::Test {
  protected:

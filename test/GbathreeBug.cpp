@@ -5,12 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/StaticJsonBuffer.hpp>
-#include <ArduinoJson/JsonArray.hpp>
-#include <ArduinoJson/JsonObject.hpp>
+#include <ArduinoJson.h>
 #include "Printers.hpp"
-
-using namespace ArduinoJson;
 
 class GbathreeBug : public testing::Test {
  public:

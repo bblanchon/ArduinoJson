@@ -5,10 +5,7 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/JsonArray.hpp>
-#include <ArduinoJson/StaticJsonBuffer.hpp>
-
-using namespace ArduinoJson;
+#include <ArduinoJson.h>
 
 TEST(StaticJsonBuffer_Array_Tests, GrowsWithArray) {
   StaticJsonBuffer<JSON_ARRAY_SIZE(2)> json;

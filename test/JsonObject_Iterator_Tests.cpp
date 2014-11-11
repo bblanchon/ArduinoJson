@@ -5,11 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/JsonObject.hpp>
-#include <ArduinoJson/StaticJsonBuffer.hpp>
+#include <ArduinoJson.h>
 #include "Printers.hpp"
-
-using namespace ArduinoJson;
 
 class JsonObject_Iterator_Test : public testing::Test {
  public:

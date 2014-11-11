@@ -5,11 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/JsonArray.hpp>
-#include <ArduinoJson/JsonObject.hpp>
+#include <ArduinoJson.h>
 #include "Printers.hpp"
-
-using namespace ArduinoJson;
 
 class JsonVariant_Invalid_Tests : public ::testing::Test {
  public:

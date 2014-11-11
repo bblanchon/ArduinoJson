@@ -5,11 +5,7 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/JsonArray.hpp>
-#include <ArduinoJson/JsonObject.hpp>
-#include <ArduinoJson/StaticJsonBuffer.hpp>
-
-using namespace ArduinoJson;
+#include <ArduinoJson.h>
 
 TEST(JsonParser_Nested_Tests, ArrayNestedInObject) {
   StaticJsonBuffer<256> jsonBuffer;

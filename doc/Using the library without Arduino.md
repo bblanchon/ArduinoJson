@@ -28,19 +28,6 @@ Assuming you installed the library into `<arduino-json>`, you need to add:
 1. `<arduino-json>/include` to your include path
 2. `<arduino-json>/lib` to your library path
 
-## Headers
-
-The following headers are required:
-
-    #include <ArduinoJson/JsonArray.hpp>
-    #include <ArduinoJson/JsonObject.hpp>
-    #include <ArduinoJson/StaticJsonBuffer.hpp>
-
-## Namespace
-
-Every class of the library is declared in the `ArduinoJson` namespace, so you may want to add the following line after the `#include` statements:
-
-    using namespace ArduinoJson;
 
 ----------
 
