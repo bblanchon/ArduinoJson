@@ -1,14 +1,22 @@
 #!/bin/bash
 
 ZIP="C:\Program Files\7-Zip\7z.exe"
-
 TAG=$(git describe)
 OUTPUT="ArduinoJson-$TAG.zip"
 
-cd ..
-cd ..
+cd ../..
 
-INPUT=$(find ArduinoJson -regex ".*\.\(cpp\|h\|md\|txt\|ino\)$" -not -regex ".*Tests/.*")
-
+# remove existing file
 rm -f $OUTPUT
-"$ZIP" a $OUTPUT $INPUT
+
+# create zip
+"$ZIP" a $OUTPUT \
+	ArduinoJson/CHANGELOG.md \
+	ArduinoJson/doc \
+	ArduinoJson/examples \
+	ArduinoJson/include \
+	ArduinoJson/keywords.txt \
+	ArduinoJson/library.properties \
+	ArduinoJson/LICENSE.md \
+	ArduinoJson/README.md \
+	ArduinoJson/src	
