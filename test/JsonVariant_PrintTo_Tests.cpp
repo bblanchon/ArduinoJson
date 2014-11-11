@@ -33,7 +33,7 @@ TEST_F(JsonVariant_PrintTo_Tests, String) {
 
 TEST_F(JsonVariant_PrintTo_Tests, DoubleZero) {
   variant = 0.0;
-  outputMustBe("0.0");
+  outputMustBe("0.00");
 }
 
 TEST_F(JsonVariant_PrintTo_Tests, DoubleDefaultDigits) {
