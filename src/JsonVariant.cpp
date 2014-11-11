@@ -112,6 +112,10 @@ void JsonVariant::writeTo(JsonWriter &writer) const {
       writer.writeBoolean(_content.asBoolean);
       break;
 
+    case JSON_INVALID:
+    case JSON_UNDEFINED:
+      break;
+
     default:  // >= JSON_DOUBLE_0_DECIMALS
       uint8_t decimals = static_cast<uint8_t>(_type - JSON_DOUBLE_0_DECIMALS);
       writer.writeDouble(_content.asDouble, decimals);
