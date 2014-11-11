@@ -57,7 +57,7 @@ Testimonials
 ------------
 
 From Arduino's Forum user `jflaplante`:
-> I tried the  [aJson and json-arduino] before trying your library. I always ran into memory problem after a while. 
+> I tried aJson json-arduino before trying your library. I always ran into memory problem after a while. 
 > I have no such problem so far with your library. It is working perfectly with my web services.
 
 From Arduino's Forum user `gbathree`:
@@ -65,3 +65,9 @@ From Arduino's Forum user `gbathree`:
 
 From StackOverflow user `thegreendroid`:
 > It has a really elegant, simple API and it works like a charm on embedded and Windows/Linux platforms. We recently started using this on an embedded project and I can vouch for its quality.
+
+From GitHub user `zacsketches`:
+
+> Thanks for a great library!!!
+> I've been watching you consistently develop this library over the past six months, and I used it today for a publish and subscribe architecture designed to help hobbyists move into more advanced robotics. Your library allowed me to implement remote subscription in order to facilitate multi-processor robots.
+> ArduinoJson saved me a week's worth of time!!
