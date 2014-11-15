@@ -2,4 +2,7 @@ language: c++
 compiler:
   - gcc
   - clang
-script: cmake && make && make test
+script:
+  - cmake .
+  - make
+  - make test
