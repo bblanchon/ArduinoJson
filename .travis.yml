@@ -1,0 +1,5 @@
+language: c++
+compiler:
+  - gcc
+  - clang
+script: cmake && make && make test
