@@ -1,6 +1,8 @@
 Arduino JSON library
 ====================
 
+[![Build Status](https://travis-ci.org/bblanchon/ArduinoJson.svg?branch=4.0)](https://travis-ci.org/bblanchon/ArduinoJson)
+
 *An elegant and efficient JSON library for embedded systems.*
 
 It's design to have the most intuitive API, the smallest footprint and works without any allocation on the heap (no malloc).
