@@ -8,6 +8,8 @@ include_directories(
     ${GTEST_DIR}
     ${GTEST_DIR}/include)
 
+add_definitions(-DGTEST_HAS_PTHREAD=0)
+
 add_executable(ArduinoJsonTests 
     ${TESTS_FILES}
 	${INC_FILES}
