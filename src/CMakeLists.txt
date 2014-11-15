@@ -4,6 +4,7 @@ file(GLOB_RECURSE SRC_FILES *.cpp)
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_definitions(
 		-fno-exceptions
+		-pedantic
 		-Wall
 		-Wcast-align
 		-Wcast-qual
@@ -21,7 +22,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wno-variadic-macros
 		-Wold-style-cast
 		-Woverloaded-virtual
-		-Wpedantic
 		-Wredundant-decls
 		-Wshadow
 		-Wsign-promo
