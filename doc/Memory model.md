@@ -17,7 +17,7 @@ The bigger the buffer is, the more complex the object tree can be, but also the 
 
 ### How to determine the buffer size?
 
-So the big question you should have in mind right now is *How can I determine the size?*. 
+So the big question you should have in mind right now is *How can I determine the size?*.
 
 There are basically two approaches here:
 
