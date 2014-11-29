@@ -77,4 +77,4 @@ But Arduino JSON v4 doesn't, instead you need to write this:
 
 	array.printTo(Serial);
 
-Note: there is a good reason for that: reducing the size of `JsonArray` and `JsonObject`.
+Note: there was a good reason for removing that feature, and it's reducing the size of `JsonArray` and `JsonObject`.
