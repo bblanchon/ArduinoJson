@@ -1,6 +1,12 @@
 Decoding JSON with Arduino JSON
 ===============================
 
+Before writing any code, don't forget to include the header:
+
+    #include <ArduinoJson.h>
+
+For instructions on how to install the library, please read [Using the library with Arduino](Using the library with Arduino.md) or [Using the library without Arduino](Using the library without Arduino.md).
+
 ## Example
 
 Here an example that parse the string `{"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}`:
@@ -17,7 +23,7 @@ Here an example that parse the string `{"sensor":"gps","time":1351824120,"data":
     //
     JsonObject& root = jsonBuffer.parseObject(json);
 
-    if (!root.success()) 
+    if (!root.success())
     {
       Serial.println("parseObject() failed");
       return;
@@ -39,14 +45,14 @@ Before continuing please read the page [Arduino JSON memory model](Memory model.
 
 ## Step 2: Parse the JSON string
 
-You call the JSON parser through the instance of `StaticJsonBuffer`.
-It exposes two function for parsing JSON:
+You invoke the JSON parser through the instance of `StaticJsonBuffer`.
+It exposes two functions for parsing JSON:
 
-1. parseArray() that returns a reference to a `JsonArray`
-2. parseObject() that returns a reference to a `JsonObject`
+1. `parseArray()` that returns a reference to a `JsonArray`
+2. `parseObject()` that returns a reference to a `JsonObject`
 
 Let's see an example.
-Say we want to parse `{"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}`, it's an object so we call `parseObject` as follows:
+Say we want to parse `{"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}`, it's an object so we call `parseObject()` as follows:
 
     char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
@@ -90,7 +96,7 @@ The simplest way is to use the subscript operator of `JsonObject`:
     
     const char* sensor = root["sensor"];
     long time = root["time"];
- 
+
 You can chain the subscript operator if you have nested arrays or objects:
 
     double latitude  = root["data"][0];
@@ -121,14 +127,14 @@ If the actual value doesn't match the target type, a default value will be retur
 
 If you want to know if some value is present, call `containsKey()`:
 
-    if (root.contains("extra")) 
+    if (root.contains("extra"))
     {
         // root["extra"] is valid
     }
 
 If you want to check the type value has a certain type, call `is<T>()`:
 
-    if (root["extra"].is<JsonArray&>()) 
+    if (root["extra"].is<JsonArray&>())
     {
         // root["extra"] is an array
     }

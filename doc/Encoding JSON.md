@@ -5,7 +5,7 @@ Before writing any code, don't forget to include the header:
 
     #include <ArduinoJson.h>
 
-If your not using the Arduino IDE, please read [Using the library without Arduino](Using the library without Arduino.md).
+For instructions on how to install the library, please read [Using the library with Arduino](Using the library with Arduino.md) or [Using the library without Arduino](Using the library without Arduino.md).
 
 ## Example
 
@@ -50,7 +50,7 @@ You create an array like this:
 
 Don't forget the `&` after `JsonArray`, it needs to be a reference to the array.
 
-Then you can add strings, integer, booleans, etc: 
+Then you can add strings, integer, booleans, etc:
 
     array.add("bazinga!");
     array.add(42);
@@ -58,14 +58,13 @@ Then you can add strings, integer, booleans, etc:
 
 There are two syntaxes for floating point values:
 
-	array.add<4>(3.1415);  // 4 digits: "3.1415" 
+	array.add(3.1415, 4);  // 4 digits: "3.1415"
     array.add(3.1415);	   // 2 digits: "3.14"
 
 > ##### About floating point precision
-> The overload of `add()` with 2 parameters allows you to specify the number of decimals to save in the JSON string. 
-> When you use the overload with one parameter, you use the default number of decimals which is two.
-> Note that this behavior is the exact same as Arduino's `Print::print(double,int);` which is implemented by `Serial`. 
-> So you may already be familiar with it.
+> The overload of `add()` with 2 parameters allows you to specify the number of decimals to save in the JSON string.
+> When you use the overload with one parameter, you use the default number of decimals which is 2.
+> Note that this behavior is the exact same as Arduino's `Print::print(double,int);` which is implemented by `Serial`, so you may already be familiar with this behavior.
 
 You can add a nested array or object if you have a reference to it.
 Or simpler, you can create nested array or nested objects from the array:
@@ -75,13 +74,13 @@ Or simpler, you can create nested array or nested objects from the array:
 
 #### Objects
 
-You create an array like this:
+You create an object like this:
 
     JsonObject& object = jsonBuffer.createObject();
 
 Again, don't forget the `&` after `JsonObject`, it needs to be a reference to the object.
 
-Then you can add strings, integer, booleans, etc: 
+Then you can add strings, integer, booleans, etc:
 
     object["key1"] = "bazinga!";
     object["key2"] = 42;
@@ -89,7 +88,7 @@ Then you can add strings, integer, booleans, etc:
 
 As for the arrays, there are two syntaxes for the floating point values:
 
-	object["key4"].set<4>(3.1415);  // 4 digits "3.1415" 
+	object["key4"].set(3.1415, 4);  // 4 digits "3.1415"
     object["key5"] = 3.1415;	    // default: 2 digits "3.14"
 
 You can add a nested array or object if you have a reference to it.
@@ -136,6 +135,6 @@ And, of course if you need an indented JSON string:
     array.prettyPrintTo(Serial);
 
 > ##### About the Print interface
-> The library is designed to send the JSON string to an implementation of the `Print` interface that is part of Arduino. 
-> In the example above we used `Serial`, but they are many other implementation that would work as well, including: `HardwareSerial`,  `SoftwareSerial`, `LiquidCrystal`, `EthernetClient`, `WiFiClient`, `Wire`...
+> The library is designed to send the JSON string to an implementation of the `Print` interface that is part of Arduino.
+> In the example above we used `Serial`, but they are many other implementations that would work as well, including: `HardwareSerial`,  `SoftwareSerial`, `LiquidCrystal`, `EthernetClient`, `WiFiClient`, `Wire`...
 > When you use this library out of the Arduino environment, it will use it's own implementation of `Print` and everything will be the same.

@@ -1,7 +1,7 @@
 Using the library without Arduino
 =================================
 
-This library is primarily design to be used with the Arduino IDE and therefore has a simplified setup procedure for that purpose.
+This library is primarily design to be used with the Arduino IDE and therefore has a simplified setup procedure for that environment.
 If you use the Arduino IDE, please read [Using the library with Arduino](Using the library with Arduino.md).
 
 However, it can be used without Arduino IDE with very little effort.

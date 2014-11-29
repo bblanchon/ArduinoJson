@@ -1,7 +1,7 @@
-Using the library without Arduino
-=================================
+Using the library with Arduino
+==============================
 
-This library is primarily design to be used with the Arduino IDE and therefore has a simplified setup procedure for that purpose.
+This library is primarily design to be used with the Arduino IDE and therefore has a simplified setup procedure for that environment.
 If you don't use the Arduino IDE, please read [Using the library without Arduino](Using the library without Arduino.md).
 
 ## Install the library
@@ -17,7 +17,6 @@ Then restart the Arduino IDE.
 Click `File` / `Example` / `ArduinoJson`.
 
 ![Screen capture of Arduino IDE](http://i.imgur.com/g5UwkVh.png)
-
 
 ## Use the library in your sketches
 
