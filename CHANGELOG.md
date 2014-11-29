@@ -7,7 +7,7 @@ v4.0
 * Unified parser and generator API (issue #23)
 * Updated library layout, now requires Arduino 1.0.6 or newer
 
-**BREAKING CHANGE**: API changed significantly, see `doc/Migrating to the new API.md`.
+**BREAKING CHANGE**: API changed significantly, see [Migrating code to the new API](https://github.com/bblanchon/ArduinoJson/wiki/Migrating-code-to-the-new-API).
 
 
 v3.4

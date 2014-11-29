@@ -12,7 +12,6 @@ rm -f $OUTPUT
 # create zip
 "$ZIP" a $OUTPUT \
 	ArduinoJson/CHANGELOG.md \
-	ArduinoJson/doc \
 	ArduinoJson/examples \
 	ArduinoJson/include \
 	ArduinoJson/keywords.txt \
