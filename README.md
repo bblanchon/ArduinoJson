@@ -35,8 +35,6 @@ Quick start
     double latitude    = root["data"][0];
     double longitude   = root["data"][1];
 
-[See complete guide](/doc/Decoding JSON.md)
-
 #### Encoding / Generating
    
     StaticJsonBuffer<200> jsonBuffer;
@@ -53,7 +51,11 @@ Quick start
     // This prints:
     // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 
-[See complete guide](/doc/Encoding JSON.md)
+
+Documentation
+-------------
+
+The documentation is available online in the [Arduino JSON wiki](https://github.com/bblanchon/ArduinoJson/wiki) 
 
 Testimonials
 ------------
