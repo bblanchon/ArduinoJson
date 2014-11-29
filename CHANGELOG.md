@@ -1,6 +1,15 @@
 Arduino JSON: change log
 ========================
 
+v4.0
+----
+
+* Unified parser and generator API (issue #23)
+* Updated library layout, now requires Arduino 1.0.6 or newer
+
+**BREAKING CHANGE**: API changed significantly, see `doc/Migrating to the new API.md`.
+
+
 v3.4
 ----
 

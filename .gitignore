@@ -1,6 +1,5 @@
-*.sdf
-*.user
-*.suo
-Debug
-ipch
-*.opensdf
+.DS_Store
+/.idea
+/build
+/bin
+/lib
