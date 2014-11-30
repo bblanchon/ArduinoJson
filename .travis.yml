@@ -2,5 +2,11 @@ language: c++
 compiler:
   - gcc
   - clang
-before_script: cmake .
-script: make && make test
+before_install:
+  - sudo pip install cpp-coveralls
+before_script:
+  - cmake -DCOVERAGE=true .
+script:
+  - make && make test
+after_success:
+  - coveralls --include include --include src --gcov-options '\-lp'
