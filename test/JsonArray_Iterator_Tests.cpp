@@ -7,23 +7,32 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson.h>
 
-TEST(JsonArray_Iterator_Test, SimpleTest) {
+template <typename TArray>
+static void run_iterator_test() {
   StaticJsonBuffer<100> jsonBuffer;
 
   JsonArray &array = jsonBuffer.createArray();
   array.add(12);
   array.add(34);
 
-  JsonArray::iterator it = array.begin();
-  JsonArray::iterator end = array.end();
+  typename TArray::iterator it = array.begin();
+  typename TArray::iterator end = array.end();
 
   EXPECT_NE(end, it);
-  EXPECT_EQ(12, it->as<int>());
-  EXPECT_EQ(12, (*it).as<int>());
+  EXPECT_EQ(12, it->template as<int>());
+  EXPECT_EQ(12, static_cast<int>(*it));
   ++it;
   EXPECT_NE(end, it);
-  EXPECT_EQ(34, it->as<int>());
-  EXPECT_EQ(34, (*it).as<int>());
+  EXPECT_EQ(34, it->template as<int>());
+  EXPECT_EQ(34, static_cast<int>(*it));
   ++it;
   EXPECT_EQ(end, it);
+}
+
+TEST(JsonArray_Iterator_Test, RunItertorToEnd) {
+  run_iterator_test<JsonArray>();
+}
+
+TEST(JsonArray_Iterator_Test, RunConstItertorToEnd) {
+  run_iterator_test<const JsonArray>();
 }
