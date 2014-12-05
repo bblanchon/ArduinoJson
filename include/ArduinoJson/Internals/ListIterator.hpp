@@ -7,6 +7,7 @@
 #pragma once
 
 #include "ListNode.hpp"
+#include "ListConstIterator.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -32,6 +33,8 @@ class ListIterator {
     if (_node) _node = _node->next;
     return *this;
   }
+
+  operator ListConstIterator<T>() const { return ListConstIterator<T>(_node); }
 
  private:
   ListNode<T> *_node;
