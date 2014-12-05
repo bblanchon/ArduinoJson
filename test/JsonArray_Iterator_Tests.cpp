@@ -19,9 +19,11 @@ TEST(JsonArray_Iterator_Test, SimpleTest) {
 
   EXPECT_NE(end, it);
   EXPECT_EQ(12, it->as<int>());
+  EXPECT_EQ(12, (*it).as<int>());
   ++it;
   EXPECT_NE(end, it);
   EXPECT_EQ(34, it->as<int>());
+  EXPECT_EQ(34, (*it).as<int>());
   ++it;
   EXPECT_EQ(end, it);
 }
