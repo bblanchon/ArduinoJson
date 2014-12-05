@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson.h>
 
-template <typename TArray>
+template <typename TIterator>
 static void run_iterator_test() {
   StaticJsonBuffer<100> jsonBuffer;
 
@@ -15,8 +15,8 @@ static void run_iterator_test() {
   array.add(12);
   array.add(34);
 
-  typename TArray::iterator it = array.begin();
-  typename TArray::iterator end = array.end();
+  TIterator it = array.begin();
+  TIterator end = array.end();
 
   EXPECT_NE(end, it);
   EXPECT_EQ(12, it->template as<int>());
@@ -30,9 +30,9 @@ static void run_iterator_test() {
 }
 
 TEST(JsonArray_Iterator_Test, RunItertorToEnd) {
-  run_iterator_test<JsonArray>();
+  run_iterator_test<JsonArray::iterator>();
 }
 
 TEST(JsonArray_Iterator_Test, RunConstItertorToEnd) {
-  run_iterator_test<const JsonArray>();
+  run_iterator_test<JsonArray::const_iterator>();
 }
