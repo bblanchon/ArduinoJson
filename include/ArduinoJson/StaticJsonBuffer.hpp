@@ -22,10 +22,10 @@ class StaticJsonBuffer : public JsonBuffer {
   size_t size() const { return _size; }
 
  protected:
-  virtual void* alloc(size_t size) {
-    if (_size + size > CAPACITY) return NULL;
+  virtual void* alloc(size_t bytes) {
+    if (_size + bytes > CAPACITY) return NULL;
     void* p = &_buffer[_size];
-    _size += size;
+    _size += bytes;
     return p;
   }
 
