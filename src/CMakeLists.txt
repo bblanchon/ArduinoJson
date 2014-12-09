@@ -2,7 +2,7 @@ file(GLOB_RECURSE INC_FILES ../include/*.hpp)
 file(GLOB_RECURSE SRC_FILES *.cpp)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-	add_compile_options(
+	add_definitions(
 		-fno-exceptions
 		-pedantic
 		-Wall
@@ -31,7 +31,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU)")
-	add_compile_options(
+	add_definitions(
 		-Wlogical-op
 		-Wnoexcept
 		-Wstrict-null-sentinel
@@ -39,7 +39,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU)")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	add_compile_options(
+	add_definitions(
 		-Wc++11-compat
 	)
 endif()
