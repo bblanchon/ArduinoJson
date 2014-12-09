@@ -2,7 +2,7 @@ file(GLOB_RECURSE INC_FILES ../include/*.hpp)
 file(GLOB_RECURSE SRC_FILES *.cpp)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-	add_definitions(
+	add_compile_options(
 		-fno-exceptions
 		-pedantic
 		-Wall
@@ -31,12 +31,17 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU)")
-	add_definitions(
+	add_compile_options(
 		-Wlogical-op
 		-Wnoexcept
 		-Wstrict-null-sentinel
 	)
 endif()
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	add_compile_options(
+		-Wc++11-compat
+	)
+endif()
 
 add_library(ArduinoJson ${SRC_FILES} ${INC_FILES})

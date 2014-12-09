@@ -31,5 +31,5 @@ void List<T>::removeNode(node_type *nodeToRemove) {
   }
 }
 
-template class List<JsonPair>;
-template class List<JsonVariant>;
+template class ArduinoJson::Internals::List<JsonPair>;
+template class ArduinoJson::Internals::List<JsonVariant>;
