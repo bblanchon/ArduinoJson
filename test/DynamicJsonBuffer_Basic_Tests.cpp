@@ -19,3 +19,10 @@ class DynamicJsonBuffer_Basic_Tests : public testing::Test {
 TEST_F(DynamicJsonBuffer_Basic_Tests, InitialSizeIsZero) {
   ASSERT_EQ(0, buffer.size());
 }
+
+TEST_F(DynamicJsonBuffer_Basic_Tests, GrowsAfterAlloc) {
+  buffer.alloc(100);
+  ASSERT_EQ(100, buffer.size());
+  buffer.alloc(100);
+  ASSERT_EQ(200, buffer.size());
+}
