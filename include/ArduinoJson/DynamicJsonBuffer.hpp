@@ -19,6 +19,8 @@ class DynamicJsonBuffer : public JsonBuffer {
 
   size_t size() const { return _size; }
 
+  size_t blockCount() const { return 1; }
+
   static const size_t BLOCK_CAPACITY = 32;
 
  protected:

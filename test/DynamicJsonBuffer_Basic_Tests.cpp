@@ -20,6 +20,10 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, InitialSizeIsZero) {
   ASSERT_EQ(0, buffer.size());
 }
 
+TEST_F(DynamicJsonBuffer_Basic_Tests, InitialBlockCountIsOne) {
+  ASSERT_EQ(1, buffer.blockCount());
+}
+
 TEST_F(DynamicJsonBuffer_Basic_Tests, GrowsAfterAlloc) {
   buffer.alloc(1);
   ASSERT_EQ(1, buffer.size());
