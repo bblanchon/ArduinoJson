@@ -24,11 +24,22 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, InitialBlockCountIsOne) {
   ASSERT_EQ(1, buffer.blockCount());
 }
 
-TEST_F(DynamicJsonBuffer_Basic_Tests, GrowsAfterAlloc) {
+TEST_F(DynamicJsonBuffer_Basic_Tests, SizeIncreasesAfterAlloc) {
   buffer.alloc(1);
   ASSERT_EQ(1, buffer.size());
   buffer.alloc(1);
   ASSERT_EQ(2, buffer.size());
+}
+
+TEST_F(DynamicJsonBuffer_Basic_Tests, BlockCountDoesntChangeWhenNotFull) {
+  buffer.alloc(DynamicJsonBuffer::BLOCK_CAPACITY);
+  ASSERT_EQ(1, buffer.blockCount());
+}
+
+TEST_F(DynamicJsonBuffer_Basic_Tests, BlockCountChangesWhenFull) {
+  buffer.alloc(DynamicJsonBuffer::BLOCK_CAPACITY);
+  buffer.alloc(1);
+  ASSERT_EQ(2, buffer.blockCount());
 }
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, CanAllocLessThanBlockCapacity) {
