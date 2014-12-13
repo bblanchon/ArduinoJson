@@ -15,11 +15,13 @@ namespace ArduinoJson {
 // more suitable for embedded systems.
 class DynamicJsonBuffer : public JsonBuffer {
  public:
-  explicit DynamicJsonBuffer() : _next(NULL), _size(0) {}
+  DynamicJsonBuffer() : _next(NULL), _size(0) {}
 
-  size_t size() const { return _size; }
+  ~DynamicJsonBuffer() { delete _next; }
 
-  size_t blockCount() const { return _next ? _next->blockCount() + 1 : 1; }
+  size_t size() const { return _size + (_next ? _next->size() : 0); }
+
+  size_t blockCount() const { return 1 + (_next ? _next->blockCount() : 0); }
 
   static const size_t BLOCK_CAPACITY = 32;
 
@@ -43,10 +45,11 @@ class DynamicJsonBuffer : public JsonBuffer {
     _size += bytes;
     return p;
   }
+
   bool canAllocInOtherBlocks(size_t bytes) const {
     // by design a DynamicJsonBuffer can't alloc a block bigger than
     // BLOCK_CAPACITY
-    return bytes < BLOCK_CAPACITY;
+    return bytes <= BLOCK_CAPACITY;
   }
 
   void* allocInOtherBlocks(size_t bytes) {
