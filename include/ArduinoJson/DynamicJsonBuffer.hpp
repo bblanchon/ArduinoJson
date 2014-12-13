@@ -19,14 +19,21 @@ class DynamicJsonBuffer : public JsonBuffer {
 
   size_t size() const { return _size; }
 
+  static const size_t BLOCK_CAPACITY = 32;
+
  protected:
   virtual void* alloc(size_t bytes) {
+    if (bytes > BLOCK_CAPACITY) return NULL;
     void* p = _buffer + _size;
     _size += bytes;
     return p;
   }
 
-  static const size_t BLOCK_CAPACITY = 32;
+  bool canStore(size_t bytes) {
+    // by design a DynamicJsonBuffer can't alloc a block bigger than
+    // BLOCK_CAPACITY
+    return bytes < BLOCK_CAPACITY;
+  }
 
   size_t _size;
   uint8_t _buffer[BLOCK_CAPACITY];
