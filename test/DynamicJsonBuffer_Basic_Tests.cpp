@@ -26,3 +26,9 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, GrowsAfterAlloc) {
   buffer.alloc(100);
   ASSERT_EQ(200, buffer.size());
 }
+
+TEST_F(DynamicJsonBuffer_Basic_Tests, ReturnDifferentPointer) {
+  void* p1 = buffer.alloc(100);
+  void* p2 = buffer.alloc(200);
+  ASSERT_NE(p1, p2);
+}

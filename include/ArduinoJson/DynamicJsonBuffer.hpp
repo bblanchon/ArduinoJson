@@ -21,10 +21,14 @@ class DynamicJsonBuffer : public JsonBuffer {
 
  protected:
   virtual void* alloc(size_t bytes) {
+    void* p = _buffer + _size;
     _size += bytes;
-    return NULL;
+    return p;
   }
 
+  static const size_t BLOCK_CAPACITY = 32;
+
   size_t _size;
+  uint8_t _buffer[BLOCK_CAPACITY];
 };
 }
