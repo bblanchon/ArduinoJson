@@ -1,6 +1,11 @@
 Arduino JSON: change log
 ========================
 
+v4.1
+----
+
+* Added DyamicJsonBuffer (issue #19)
+
 v4.0
 ----
 
@@ -14,7 +19,7 @@ v3.4
 ----
 
 * Fixed escaped char parsing (issue #16)
-  
+
 
 v3.3
 ----
