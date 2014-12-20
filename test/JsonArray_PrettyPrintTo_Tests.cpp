@@ -9,20 +9,20 @@
 
 class JsonArray_PrettyPrintTo_Tests : public testing::Test {
  public:
-  JsonArray_PrettyPrintTo_Tests() : array(json.createArray()) {}
+  JsonArray_PrettyPrintTo_Tests() : array(jsonBuffer.createArray()) {}
 
  protected:
-  StaticJsonBuffer<200> json;
+  DynamicJsonBuffer jsonBuffer;
   JsonArray& array;
 
   void outputMustBe(const char* expected) {
-    size_t n = array.prettyPrintTo(buffer, sizeof(buffer));
-    EXPECT_STREQ(expected, buffer);
+    size_t n = array.prettyPrintTo(_buffer, sizeof(_buffer));
+    EXPECT_STREQ(expected, _buffer);
     EXPECT_EQ(strlen(expected), n);
   }
 
  private:
-  char buffer[256];
+  char _buffer[256];
 };
 
 TEST_F(JsonArray_PrettyPrintTo_Tests, Empty) { outputMustBe("[]"); }

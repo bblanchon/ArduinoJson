@@ -30,7 +30,7 @@ class JsonParser_Object_Test : public testing::Test {
   }
 
  private:
-  StaticJsonBuffer<256> _jsonBuffer;
+  DynamicJsonBuffer _jsonBuffer;
   JsonObject *_object;
   char _jsonString[256];
 };

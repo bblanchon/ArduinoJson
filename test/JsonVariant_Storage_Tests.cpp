@@ -11,18 +11,18 @@ class JsonVariant_Storage_Tests : public ::testing::Test {
  protected:
   template <typename T>
   void testValue(T expected) {
-    actual.set(expected);
-    EXPECT_EQ(expected, actual.as<T>());
+    _actual.set(expected);
+    EXPECT_EQ(expected, _actual.as<T>());
   }
 
   template <typename T>
   void testReference(T &expected) {
-    actual.set(expected);
-    EXPECT_EQ(expected, actual.as<T &>());
+    _actual.set(expected);
+    EXPECT_EQ(expected, _actual.as<T &>());
   }
 
  private:
-  JsonVariant actual;
+  JsonVariant _actual;
 };
 
 TEST_F(JsonVariant_Storage_Tests, Double) { testValue<double>(123.45); }
@@ -41,8 +41,8 @@ TEST_F(JsonVariant_Storage_Tests, ULong) { testValue<unsigned long>(123UL); }
 TEST_F(JsonVariant_Storage_Tests, UShort) { testValue<unsigned short>(123); }
 
 TEST_F(JsonVariant_Storage_Tests, CanStoreObject) {
-  StaticJsonBuffer<200> json;
-  JsonObject &object = json.createObject();
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject &object = jsonBuffer.createObject();
 
   testReference(object);
 }

@@ -11,7 +11,7 @@ class Issue34 : public testing::Test {
  protected:
   template <typename T>
   void test_with_value(T expected) {
-    StaticJsonBuffer<200> jsonBuffer;
+    StaticJsonBuffer<JSON_OBJECT_SIZE(1)> jsonBuffer;
 
     JsonObject& jsonObject = jsonBuffer.createObject();
 

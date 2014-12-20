@@ -13,34 +13,34 @@ class IntegrationTests : public testing::TestWithParam<const char*> {
  protected:
   virtual void SetUp() {
     _input = GetParam();
-    strcpy(inputBuffer, _input);
+    strcpy(_inputBuffer, _input);
   }
 
   void parseThenPrint(char* input, char* output) {
-    StaticJsonBuffer<10000> json;
-    json.parseObject(input).printTo(output, MAX_JSON_SIZE);
+    DynamicJsonBuffer buffer;
+    buffer.parseObject(input).printTo(output, MAX_JSON_SIZE);
   }
 
   void parseThenPrettyPrint(char* input, char* output) {
-    StaticJsonBuffer<10000> json;
-    json.parseObject(input).prettyPrintTo(output, MAX_JSON_SIZE);
+    DynamicJsonBuffer buffer;
+    buffer.parseObject(input).prettyPrintTo(output, MAX_JSON_SIZE);
   }
 
   const char* _input;
-  char inputBuffer[MAX_JSON_SIZE];
-  char outputBuffer[MAX_JSON_SIZE];
-  char intermediateBuffer[MAX_JSON_SIZE];
+  char _inputBuffer[MAX_JSON_SIZE];
+  char _outputBuffer[MAX_JSON_SIZE];
+  char _intermediateBuffer[MAX_JSON_SIZE];
 };
 
 TEST_P(IntegrationTests, ParseThenPrint) {
-  parseThenPrint(inputBuffer, outputBuffer);
-  ASSERT_STREQ(_input, outputBuffer);
+  parseThenPrint(_inputBuffer, _outputBuffer);
+  ASSERT_STREQ(_input, _outputBuffer);
 }
 
 TEST_P(IntegrationTests, ParseThenPrettyPrintThenParseThenPrint) {
-  parseThenPrettyPrint(inputBuffer, intermediateBuffer);
-  parseThenPrint(intermediateBuffer, outputBuffer);
-  ASSERT_STREQ(_input, outputBuffer);
+  parseThenPrettyPrint(_inputBuffer, _intermediateBuffer);
+  parseThenPrint(_intermediateBuffer, _outputBuffer);
+  ASSERT_STREQ(_input, _outputBuffer);
 }
 
 INSTANTIATE_TEST_CASE_P(

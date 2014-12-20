@@ -9,14 +9,14 @@
 
 class JsonObject_PrettyPrintTo_Tests : public testing::Test {
  public:
-  JsonObject_PrettyPrintTo_Tests() : object(json.createObject()) {}
+  JsonObject_PrettyPrintTo_Tests() : _object(_jsonBuffer.createObject()) {}
 
  protected:
-  StaticJsonBuffer<300> json;
-  JsonObject &object;
+  DynamicJsonBuffer _jsonBuffer;
+  JsonObject &_object;
 
   void outputMustBe(const char *expected) {
-    size_t n = object.prettyPrintTo(buffer, sizeof(buffer));
+    size_t n = _object.prettyPrintTo(buffer, sizeof(buffer));
     EXPECT_STREQ(expected, buffer);
     EXPECT_EQ(strlen(expected), n);
   }
@@ -28,7 +28,7 @@ class JsonObject_PrettyPrintTo_Tests : public testing::Test {
 TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyObject) { outputMustBe("{}"); }
 
 TEST_F(JsonObject_PrettyPrintTo_Tests, OneMember) {
-  object["key"] = "value";
+  _object["key"] = "value";
 
   outputMustBe(
       "{\r\n"
@@ -37,8 +37,8 @@ TEST_F(JsonObject_PrettyPrintTo_Tests, OneMember) {
 }
 
 TEST_F(JsonObject_PrettyPrintTo_Tests, TwoMembers) {
-  object["key1"] = "value1";
-  object["key2"] = "value2";
+  _object["key1"] = "value1";
+  _object["key2"] = "value2";
 
   outputMustBe(
       "{\r\n"
@@ -48,8 +48,8 @@ TEST_F(JsonObject_PrettyPrintTo_Tests, TwoMembers) {
 }
 
 TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyNestedContainers) {
-  object.createNestedObject("key1");
-  object.createNestedArray("key2");
+  _object.createNestedObject("key1");
+  _object.createNestedArray("key2");
 
   outputMustBe(
       "{\r\n"
@@ -59,10 +59,10 @@ TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyNestedContainers) {
 }
 
 TEST_F(JsonObject_PrettyPrintTo_Tests, NestedContainers) {
-  JsonObject &nested1 = object.createNestedObject("key1");
+  JsonObject &nested1 = _object.createNestedObject("key1");
   nested1["a"] = 1;
 
-  JsonArray &nested2 = object.createNestedArray("key2");
+  JsonArray &nested2 = _object.createNestedArray("key2");
   nested2.add(2);
 
   outputMustBe(

@@ -42,7 +42,7 @@ class JsonParser_Array_Tests : public testing::Test {
     EXPECT_STREQ(expected, _array->at(index).as<const char *>());
   }
 
-  StaticJsonBuffer<256> _jsonBuffer;
+  DynamicJsonBuffer _jsonBuffer;
   JsonArray *_array;
   char _jsonString[256];
 };

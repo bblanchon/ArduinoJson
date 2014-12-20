@@ -31,14 +31,14 @@ class JsonParser_NestingLimit_Tests : public testing::Test {
 
  private:
   bool tryParseArray(const char *json) {
-    StaticJsonBuffer<256> buffer;
+    DynamicJsonBuffer buffer;
     char s[256];
     strcpy(s, json);
     return buffer.parseArray(s, _nestingLimit).success();
   }
 
   bool tryParseObject(const char *json) {
-    StaticJsonBuffer<256> buffer;
+    DynamicJsonBuffer buffer;
     char s[256];
     strcpy(s, json);
     return buffer.parseObject(s, _nestingLimit).success();
