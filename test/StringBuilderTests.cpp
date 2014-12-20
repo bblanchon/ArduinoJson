@@ -11,18 +11,22 @@ using namespace ArduinoJson::Internals;
 
 class StringBuilderTests : public testing::Test {
  protected:
-  virtual void SetUp() { sb = new StringBuilder(buffer, sizeof(buffer)); }
+  virtual void SetUp() {
+    _stringBuilder = new StringBuilder(_buffer, sizeof(_buffer));
+  }
 
-  void print(const char *value) { returnValue = sb->print(value); }
+  virtual void TearDown() { delete _stringBuilder; }
 
-  void outputMustBe(const char *expected) { EXPECT_STREQ(expected, buffer); }
+  void print(const char *value) { _returnValue = _stringBuilder->print(value); }
 
-  void resultMustBe(size_t expected) { EXPECT_EQ(expected, returnValue); }
+  void outputMustBe(const char *expected) { EXPECT_STREQ(expected, _buffer); }
+
+  void resultMustBe(size_t expected) { EXPECT_EQ(expected, _returnValue); }
 
  private:
-  char buffer[20];
-  Print *sb;
-  size_t returnValue;
+  char _buffer[20];
+  Print *_stringBuilder;
+  size_t _returnValue;
 };
 
 TEST_F(StringBuilderTests, InitialState) { outputMustBe(""); }
