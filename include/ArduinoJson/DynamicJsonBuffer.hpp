@@ -60,8 +60,8 @@ class DynamicJsonBuffer : public JsonBuffer {
     return _next->alloc(bytes);
   }
 
+  DynamicJsonBuffer* _next;
   size_t _size;
   uint8_t _buffer[BLOCK_CAPACITY];
-  DynamicJsonBuffer* _next;
 };
 }
