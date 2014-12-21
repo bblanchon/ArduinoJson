@@ -54,7 +54,7 @@ class DynamicJsonBuffer : public JsonBuffer {
 
   void* allocInOtherBlocks(size_t bytes) {
     if (!_next) {
-      _next = new (std::nothrow) DynamicJsonBuffer();
+      _next = new DynamicJsonBuffer();
       if (!_next) return NULL;
     }
     return _next->alloc(bytes);
