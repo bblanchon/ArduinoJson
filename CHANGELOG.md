@@ -4,7 +4,7 @@ Arduino JSON: change log
 v4.1
 ----
 
-* Added DyamicJsonBuffer (issue #19)
+* Added DynamicJsonBuffer (issue #19)
 
 v4.0
 ----
