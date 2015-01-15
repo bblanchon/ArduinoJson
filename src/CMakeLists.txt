@@ -20,6 +20,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wno-sign-conversion
 		-Wno-unused
 		-Wno-variadic-macros
+		-Wnon-virtual-dtor
 		-Wold-style-cast
 		-Woverloaded-virtual
 		-Wredundant-decls

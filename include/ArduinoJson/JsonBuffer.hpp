@@ -9,6 +9,12 @@
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uint8_t
 
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wnon-virtual-dtor"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
+
 namespace ArduinoJson {
 class JsonArray;
 class JsonObject;
