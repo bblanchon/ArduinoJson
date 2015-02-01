@@ -6,7 +6,6 @@
 
 #include "../../include/ArduinoJson/Internals/List.hpp"
 
-#include "../../include/ArduinoJson/Internals/PlacementNew.hpp"
 #include "../../include/ArduinoJson/JsonPair.hpp"
 #include "../../include/ArduinoJson/JsonVariant.hpp"
 

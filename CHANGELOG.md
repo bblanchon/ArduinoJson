@@ -1,6 +1,12 @@
 Arduino JSON: change log
 ========================
 
+HEAD
+----
+
+* Removed global new operator overload (issue #40, #45 and #46)
+* Added an example with EthernetServer
+
 v4.1
 ----
 

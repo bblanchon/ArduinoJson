@@ -8,16 +8,18 @@
 
 #include <stddef.h>  // for NULL
 
+#include "JsonBufferAllocated.hpp"
+
 namespace ArduinoJson {
 namespace Internals {
 
 // A node for a singly-linked list.
 // Used by List<T> and its iterators.
 template <typename T>
-struct ListNode {
+struct ListNode : public Internals::JsonBufferAllocated {
   ListNode() : next(NULL) {}
 
-  ListNode<T>* next;
+  ListNode<T> *next;
   T content;
 };
 }

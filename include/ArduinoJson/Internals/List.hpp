@@ -9,7 +9,6 @@
 #include "../JsonBuffer.hpp"
 #include "ListConstIterator.hpp"
 #include "ListIterator.hpp"
-#include "PlacementNew.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -51,8 +50,7 @@ class List {
  protected:
   node_type *createNode() {
     if (!_buffer) return NULL;
-    void *ptr = _buffer->alloc(sizeof(node_type));
-    return ptr ? new (ptr) node_type() : NULL;
+    return new (_buffer) node_type();
   }
 
   void addNode(node_type *nodeToAdd) {
