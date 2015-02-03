@@ -9,4 +9,4 @@ before_script:
 script:
   - make && make test
 after_success:
-  - coveralls --include include --include src --gcov-options '\-lp'
+  - coveralls --exclude test --exclude third-party --gcov-options '\-lp'
