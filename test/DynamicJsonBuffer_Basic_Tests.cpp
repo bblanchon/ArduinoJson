@@ -1,4 +1,4 @@
-// Copyright Benoit Blanchon 2014
+// Copyright Benoit Blanchon 2014-2015
 // MIT License
 //
 // Arduino JSON library
@@ -46,14 +46,14 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, BlockCountChangesWhenFull) {
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, CanAllocLessThanBlockCapacity) {
   void* p1 = buffer.alloc(DynamicJsonBuffer::BLOCK_CAPACITY);
-  ASSERT_FALSE(p1==NULL);
+  ASSERT_FALSE(p1 == NULL);
   void* p2 = buffer.alloc(DynamicJsonBuffer::BLOCK_CAPACITY);
-  ASSERT_FALSE(p2==NULL);
+  ASSERT_FALSE(p2 == NULL);
 }
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, CantAllocMoreThanBlockCapacity) {
   void* p = buffer.alloc(DynamicJsonBuffer::BLOCK_CAPACITY + 1);
-  ASSERT_TRUE(p==NULL);
+  ASSERT_TRUE(p == NULL);
 }
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, ReturnDifferentPointer) {
