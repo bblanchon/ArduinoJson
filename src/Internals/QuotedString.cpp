@@ -8,16 +8,21 @@
 
 using namespace ArduinoJson::Internals;
 
+// How to escape special chars:
+// specialChars[2*i+1] => the special char
+// specialChars[2*i] => the char to use instead
+static const char specialChars[] = "\"\"\\\\b\bf\fn\nr\rt\t";
+
 static inline char getSpecialChar(char c) {
   // Optimized for code size on a 8-bit AVR
 
-  const char *p = "\"\"\\\\\bb\ff\nn\rr\tt\0";
+  const char *p = specialChars;
 
-  while (p[0] && p[0] != c) {
+  while (p[0] && p[1] != c) {
     p += 2;
   }
 
-  return p[1];
+  return p[0];
 }
 
 static inline size_t printCharTo(char c, Print &p) {
@@ -41,7 +46,7 @@ size_t QuotedString::printTo(const char *s, Print &p) {
 static char unescapeChar(char c) {
   // Optimized for code size on a 8-bit AVR
 
-  const char *p = "b\bf\fn\nr\rt\t";
+  const char *p = specialChars + 4;
 
   for (;;) {
     if (p[0] == '\0') return c;
