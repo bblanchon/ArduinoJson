@@ -1,6 +1,13 @@
 Arduino JSON: change log
 ========================
 
+v4.2
+----
+
+* Switched back to old library layout (issues #39, #43 and #45)
+* Removed global new operator overload (issue #40, #45 and #46)
+* Added an example with EthernetServer
+
 v4.1
 ----
 

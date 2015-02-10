@@ -1,4 +1,4 @@
-// Copyright Benoit Blanchon 2014
+// Copyright Benoit Blanchon 2014-2015
 // MIT License
 //
 // Arduino JSON library
@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Internals/JsonBufferAllocated.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/List.hpp"
 #include "Internals/ReferenceType.hpp"
@@ -30,7 +31,8 @@ class JsonBuffer;
 // It can also be deserialized from a JSON string via JsonBuffer::parseArray().
 class JsonArray : public Internals::JsonPrintable<JsonArray>,
                   public Internals::ReferenceType,
-                  public Internals::List<JsonVariant> {
+                  public Internals::List<JsonVariant>,
+                  public Internals::JsonBufferAllocated {
   // JsonBuffer is a friend because it needs to call the private constructor.
   friend class JsonBuffer;
 

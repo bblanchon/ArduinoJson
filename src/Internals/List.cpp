@@ -1,4 +1,4 @@
-// Copyright Benoit Blanchon 2014
+// Copyright Benoit Blanchon 2014-2015
 // MIT License
 //
 // Arduino JSON library
@@ -6,7 +6,6 @@
 
 #include "../../include/ArduinoJson/Internals/List.hpp"
 
-#include "../../include/ArduinoJson/Internals/PlacementNew.hpp"
 #include "../../include/ArduinoJson/JsonPair.hpp"
 #include "../../include/ArduinoJson/JsonVariant.hpp"
 
