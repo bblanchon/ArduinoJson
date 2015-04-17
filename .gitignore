@@ -3,3 +3,8 @@
 /build
 /bin
 /lib
+*.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
+core
