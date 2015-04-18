@@ -1,6 +1,11 @@
 Arduino JSON: change log
 ========================
 
+HEAD
+----
+
+* Fixed stack-overflow in `DynamicJsonBuffer` when parsing huge JSON files (issue #65)
+
 v4.2
 ----
 

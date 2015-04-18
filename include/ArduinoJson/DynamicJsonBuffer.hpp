@@ -8,60 +8,39 @@
 
 #include "JsonBuffer.hpp"
 
+#include <stdlib.h>
+
 namespace ArduinoJson {
+
+// Forward declaration
+namespace Internals {
+struct DynamicJsonBufferBlock;
+}
 
 // Implements a JsonBuffer with dynamic memory allocation.
 // You are strongly encouraged to consider using StaticJsonBuffer which is much
 // more suitable for embedded systems.
 class DynamicJsonBuffer : public JsonBuffer {
  public:
-  DynamicJsonBuffer() : _next(NULL), _size(0) {}
+  DynamicJsonBuffer();
+  ~DynamicJsonBuffer();
 
-  ~DynamicJsonBuffer() { delete _next; }
-
-  size_t size() const { return _size + (_next ? _next->size() : 0); }
-
-  size_t blockCount() const { return 1 + (_next ? _next->blockCount() : 0); }
-
-  static const size_t BLOCK_CAPACITY = 32;
+  size_t size() const;
 
  protected:
-  virtual void* alloc(size_t bytes) {
-    if (canAllocInThisBlock(bytes))
-      return allocInThisBlock(bytes);
-    else if (canAllocInOtherBlocks(bytes))
-      return allocInOtherBlocks(bytes);
-    else
-      return NULL;
-  }
+  virtual void* alloc(size_t bytes);
 
  private:
-  bool canAllocInThisBlock(size_t bytes) const {
-    return _size + bytes <= BLOCK_CAPACITY;
-  }
+  typedef Internals::DynamicJsonBufferBlock Block;
 
-  void* allocInThisBlock(size_t bytes) {
-    void* p = _buffer + _size;
-    _size += bytes;
-    return p;
-  }
+  static const size_t FIRST_BLOCK_CAPACITY = 32;
 
-  bool canAllocInOtherBlocks(size_t bytes) const {
-    // by design a DynamicJsonBuffer can't alloc a block bigger than
-    // BLOCK_CAPACITY
-    return bytes <= BLOCK_CAPACITY;
-  }
+  static Block* createBlock(size_t capacity);
 
-  void* allocInOtherBlocks(size_t bytes) {
-    if (!_next) {
-      _next = new DynamicJsonBuffer();
-      if (!_next) return NULL;
-    }
-    return _next->alloc(bytes);
-  }
+  inline bool canAllocInHead(size_t bytes) const;
+  inline void* allocInHead(size_t bytes);
+  inline void addNewBlock();
 
-  DynamicJsonBuffer* _next;
-  size_t _size;
-  uint8_t _buffer[BLOCK_CAPACITY];
+  Block* _head;
 };
 }

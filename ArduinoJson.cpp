@@ -9,6 +9,7 @@
 // This file is here to help the Arduino IDE find the other files.
 
 #include "src/Arduino/Print.cpp"
+#include "src/DynamicJsonBuffer.cpp"
 #include "src/Internals/IndentedPrint.cpp"
 #include "src/Internals/JsonParser.cpp"
 #include "src/Internals/List.cpp"
