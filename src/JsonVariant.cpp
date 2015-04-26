@@ -31,6 +31,9 @@ JsonVariant::operator const char *() const {
 }
 
 JsonVariant::operator double() const {
+  if (_type == JSON_LONG) {
+  	return static_cast<double>(_content.asLong);
+  }
   return _type >= JSON_DOUBLE_0_DECIMALS ? _content.asDouble : 0;
 }
 

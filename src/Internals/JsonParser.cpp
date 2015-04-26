@@ -89,6 +89,9 @@ void JsonParser::parseAnythingTo(JsonVariant &destination) {
 JsonArray &JsonParser::parseArray() {
   // Create an empty array
   JsonArray &array = _buffer->createArray();
+  if (!array.success()) {
+  	goto ERROR_ARRAY_CREATE;
+  }
 
   // Check opening braket
   if (!skip('[')) goto ERROR_MISSING_BRACKET;
@@ -98,6 +101,9 @@ JsonArray &JsonParser::parseArray() {
   for (;;) {
     // 1 - Parse value
     JsonVariant &value = array.add();
+	if (&value == &JsonVariant::invalid()) {
+		goto ERROR_ARRAY_ADD;
+	}
     parseAnythingTo(value);
     if (!value.success()) goto ERROR_INVALID_VALUE;
 
@@ -110,6 +116,8 @@ SUCCESS_EMPTY_ARRAY:
 SUCCES_NON_EMPTY_ARRAY:
   return array;
 
+ERROR_ARRAY_CREATE:
+ERROR_ARRAY_ADD:
 ERROR_INVALID_VALUE:
 ERROR_MISSING_BRACKET:
 ERROR_MISSING_COMMA:
@@ -119,6 +127,9 @@ ERROR_MISSING_COMMA:
 JsonObject &JsonParser::parseObject() {
   // Create an empty object
   JsonObject &object = _buffer->createObject();
+  if (!object.success()) {
+  	goto ERROR_OBJECT_CREATE;
+  }
 
   // Check opening brace
   if (!skip('{')) goto ERROR_MISSING_BRACE;
@@ -133,6 +144,9 @@ JsonObject &JsonParser::parseObject() {
 
     // 2 - Parse value
     JsonVariant &value = object.add(key);
+	if (&value == &JsonVariant::invalid()) {
+		goto ERROR_OBJECT_ADD;
+	}
     parseAnythingTo(value);
     if (!value.success()) goto ERROR_INVALID_VALUE;
 
@@ -145,6 +159,8 @@ SUCCESS_EMPTY_OBJECT:
 SUCCESS_NON_EMPTY_OBJECT:
   return object;
 
+ERROR_OBJECT_CREATE:
+ERROR_OBJECT_ADD:
 ERROR_INVALID_KEY:
 ERROR_INVALID_VALUE:
 ERROR_MISSING_BRACE:
