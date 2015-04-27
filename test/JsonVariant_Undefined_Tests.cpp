@@ -62,11 +62,13 @@ TEST_F(JsonVariant_Undefined_Tests, CanBeSetToBool) {
 }
 
 TEST_F(JsonVariant_Undefined_Tests, CanBeSetToArray) {
-  variant = JsonArray::invalid();
+  DynamicJsonBuffer jsonBuffer;
+  variant = jsonBuffer.createArray();
   EXPECT_TRUE(variant.success());
 }
 
 TEST_F(JsonVariant_Undefined_Tests, CanBeSetToObject) {
-  variant = JsonObject::invalid();
+  DynamicJsonBuffer jsonBuffer;
+  variant = jsonBuffer.createObject();
   EXPECT_TRUE(variant.success());
 }

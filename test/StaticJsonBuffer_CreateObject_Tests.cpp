@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson.h>
 
-TEST(StaticJsonBuffer_Object_Tests, GrowsWithObject) {
+TEST(StaticJsonBuffer_CreateObject_Tests, GrowsWithObject) {
   StaticJsonBuffer<JSON_OBJECT_SIZE(3)> json;
 
   JsonObject &obj = json.createObject();
@@ -23,21 +23,21 @@ TEST(StaticJsonBuffer_Object_Tests, GrowsWithObject) {
   ASSERT_EQ(JSON_OBJECT_SIZE(2), json.size());
 }
 
-TEST(StaticJsonBuffer_Object_Tests, SucceedWhenBigEnough) {
+TEST(StaticJsonBuffer_CreateObject_Tests, SucceedWhenBigEnough) {
   StaticJsonBuffer<JSON_OBJECT_SIZE(0)> json;
 
   JsonObject &object = json.createObject();
   ASSERT_TRUE(object.success());
 }
 
-TEST(StaticJsonBuffer_Object_Tests, FailsWhenTooSmall) {
+TEST(StaticJsonBuffer_CreateObject_Tests, FailsWhenTooSmall) {
   StaticJsonBuffer<JSON_OBJECT_SIZE(0) - 1> json;
 
   JsonObject &object = json.createObject();
   ASSERT_FALSE(object.success());
 }
 
-TEST(StaticJsonBuffer_Object_Tests, ObjectDoesntGrowWhenFull) {
+TEST(StaticJsonBuffer_CreateObject_Tests, ObjectDoesntGrowWhenFull) {
   StaticJsonBuffer<JSON_OBJECT_SIZE(1)> json;
 
   JsonObject &obj = json.createObject();
