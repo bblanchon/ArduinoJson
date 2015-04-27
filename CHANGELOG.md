@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed stack-overflow in `DynamicJsonBuffer` when parsing huge JSON files (issue #65)
+* Fixed wrong return value of `parseArray()` and `parseObject()` when allocation fails (issue #68)
 
 v4.2
 ----
