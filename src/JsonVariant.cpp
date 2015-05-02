@@ -64,13 +64,13 @@ void JsonVariant::set(long value) {
 
 void JsonVariant::set(JsonArray &array) {
   if (_type == JSON_INVALID) return;
-  _type = JSON_ARRAY;
+  _type = array.success() ? JSON_ARRAY : JSON_INVALID;
   _content.asArray = &array;
 }
 
 void JsonVariant::set(JsonObject &object) {
   if (_type == JSON_INVALID) return;
-  _type = JSON_OBJECT;
+  _type = object.success() ? JSON_OBJECT : JSON_INVALID;
   _content.asObject = &object;
 }
 

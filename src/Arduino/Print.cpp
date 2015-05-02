@@ -8,7 +8,8 @@
 
 #include "../../include/ArduinoJson/Arduino/Print.hpp"
 
-#include <stdio.h>  // for sprintf
+#include <math.h>   // for isnan() and isinf()
+#include <stdio.h>  // for sprintf()
 
 size_t Print::print(const char s[]) {
   size_t n = 0;
@@ -19,8 +20,24 @@ size_t Print::print(const char s[]) {
 }
 
 size_t Print::print(double value, int digits) {
+  // https://github.com/arduino/Arduino/blob/db8cbf24c99dc930b9ccff1a43d018c81f178535/hardware/arduino/sam/cores/arduino/Print.cpp#L218
+  if (isnan(value)) return print("nan");
+  if (isinf(value)) return print("inf");
+
   char tmp[32];
-  sprintf(tmp, "%.*f", digits, value);
+
+  // https://github.com/arduino/Arduino/blob/db8cbf24c99dc930b9ccff1a43d018c81f178535/hardware/arduino/sam/cores/arduino/Print.cpp#L220
+  bool isBigDouble = value > 4294967040.0 || value < -4294967040.0;
+
+  if (isBigDouble) {
+    // Arduino's implementation prints "ovf"
+    // We prefer trying to use scientific notation, since we have sprintf
+    sprintf(tmp, "%g", value);
+  } else {
+    // Here we have the exact same output as Arduino's implementation
+    sprintf(tmp, "%.*f", digits, value);
+  }
+
   return print(tmp);
 }
 
