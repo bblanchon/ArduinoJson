@@ -1,7 +1,7 @@
 Arduino JSON: change log
 ========================
 
-HEAD
+v4.3
 ----
 
 * Added `JsonArray::removeAt()` to remove an element of an array (issue #58)
