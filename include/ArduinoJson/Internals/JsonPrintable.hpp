@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "DummyPrint.hpp"
 #include "IndentedPrint.hpp"
 #include "JsonWriter.hpp"
 #include "Prettyfier.hpp"
@@ -45,6 +46,16 @@ class JsonPrintable {
   size_t prettyPrintTo(Print &print) const {
     IndentedPrint indentedPrint = IndentedPrint(print);
     return prettyPrintTo(indentedPrint);
+  }
+
+  size_t measureLength() const {
+    DummyPrint dp;
+    return printTo(dp);
+  }
+
+  size_t measurePrettyLength() const {
+    DummyPrint dp;
+    return prettyPrintTo(dp);
   }
 
  private:

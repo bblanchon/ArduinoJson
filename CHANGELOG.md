@@ -1,6 +1,11 @@
 Arduino JSON: change log
 ========================
 
+v4.4
+----
+
+* Added `JsonArray::measureLength()` and `JsonObject::measureLength()` (issue #75)
+
 v4.3
 ----
 
