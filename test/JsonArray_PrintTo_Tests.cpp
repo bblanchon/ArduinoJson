@@ -63,7 +63,7 @@ TEST_F(JsonArray_PrintTo_Tests, OneDoubleDefaultDigits) {
 }
 
 TEST_F(JsonArray_PrintTo_Tests, OneDoubleFourDigits) {
-  array.add(3.14159265358979323846, 4);
+  array.add(double_with_n_digits(3.14159265358979323846, 4));
   outputMustBe("[3.1416]");
 }
 

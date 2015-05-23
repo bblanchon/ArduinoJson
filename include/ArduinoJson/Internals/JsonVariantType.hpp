@@ -7,12 +7,14 @@
 #pragma once
 
 namespace ArduinoJson {
+class JsonArray;
+class JsonObject;
+
 namespace Internals {
 
 // Enumerated type to know the current type of a JsonVariant.
 // The value determines which member of JsonVariantContent is used.
 enum JsonVariantType {
-  JSON_INVALID,    // a special state for JsonVariant::invalid()
   JSON_UNDEFINED,  // the JsonVariant has not been initialized
   JSON_ARRAY,      // the JsonVariant stores a pointer to a JsonArray
   JSON_OBJECT,     // the JsonVariant stores a pointer to a JsonObject

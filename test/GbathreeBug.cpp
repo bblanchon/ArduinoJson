@@ -37,7 +37,7 @@ class GbathreeBug : public testing::Test {
 TEST_F(GbathreeBug, Success) { EXPECT_TRUE(_object.success()); }
 
 TEST_F(GbathreeBug, ProtocolName) {
-  EXPECT_STREQ("fluorescence", _object.at("protocol_name").asString());
+  EXPECT_STREQ("fluorescence", _object["protocol_name"]);
 }
 
 TEST_F(GbathreeBug, Repeats) { EXPECT_EQ(1, _object["repeats"]); }
@@ -69,7 +69,7 @@ TEST_F(GbathreeBug, Calintensity) { EXPECT_EQ(255, _object["calintensity"]); }
 TEST_F(GbathreeBug, Pulses) {
   // "pulses":[50,50,50]
 
-  JsonArray& array = _object.at("pulses");
+  JsonArray& array = _object["pulses"];
   EXPECT_TRUE(array.success());
 
   EXPECT_EQ(3, array.size());
@@ -82,7 +82,7 @@ TEST_F(GbathreeBug, Pulses) {
 TEST_F(GbathreeBug, Act) {
   // "act":[2,1,2,2]
 
-  JsonArray& array = _object.at("act");
+  JsonArray& array = _object["act"];
   EXPECT_TRUE(array.success());
 
   EXPECT_EQ(4, array.size());
@@ -95,7 +95,7 @@ TEST_F(GbathreeBug, Act) {
 TEST_F(GbathreeBug, Detectors) {
   // "detectors":[[34,34,34,34],[34,34,34,34],[34,34,34,34],[34,34,34,34]]
 
-  JsonArray& array = _object.at("detectors");
+  JsonArray& array = _object["detectors"];
   EXPECT_TRUE(array.success());
   EXPECT_EQ(4, array.size());
 
@@ -110,7 +110,7 @@ TEST_F(GbathreeBug, Detectors) {
 TEST_F(GbathreeBug, Alta) {
   // alta:[2,2,2,2]
 
-  JsonArray& array = _object.at("alta");
+  JsonArray& array = _object["alta"];
   EXPECT_TRUE(array.success());
 
   EXPECT_EQ(4, array.size());
@@ -123,7 +123,7 @@ TEST_F(GbathreeBug, Alta) {
 TEST_F(GbathreeBug, Altb) {
   // altb:[2,2,2,2]
 
-  JsonArray& array = _object.at("altb");
+  JsonArray& array = _object["altb"];
   EXPECT_TRUE(array.success());
 
   EXPECT_EQ(4, array.size());
@@ -136,7 +136,7 @@ TEST_F(GbathreeBug, Altb) {
 TEST_F(GbathreeBug, Measlights) {
   // "measlights":[[15,15,15,15],[15,15,15,15],[15,15,15,15],[15,15,15,15]]
 
-  JsonArray& array = _object.at("measlights");
+  JsonArray& array = _object["measlights"];
   EXPECT_TRUE(array.success());
   EXPECT_EQ(4, array.size());
 
@@ -152,7 +152,7 @@ TEST_F(GbathreeBug, Measlights) {
 TEST_F(GbathreeBug, Measlights2) {
   // "measlights2":[[15,15,15,15],[15,15,15,15],[15,15,15,15],[15,15,15,15]]
 
-  JsonArray& array = _object.at("measlights2");
+  JsonArray& array = _object["measlights2"];
   EXPECT_TRUE(array.success());
   EXPECT_EQ(4, array.size());
 
@@ -167,7 +167,7 @@ TEST_F(GbathreeBug, Measlights2) {
 TEST_F(GbathreeBug, Altc) {
   // altc:[2,2,2,2]
 
-  JsonArray& array = _object.at("altc");
+  JsonArray& array = _object["altc"];
   EXPECT_TRUE(array.success());
 
   EXPECT_EQ(4, array.size());
@@ -180,7 +180,7 @@ TEST_F(GbathreeBug, Altc) {
 TEST_F(GbathreeBug, Altd) {
   // altd:[2,2,2,2]
 
-  JsonArray& array = _object.at("altd");
+  JsonArray& array = _object["altd"];
   EXPECT_TRUE(array.success());
 
   EXPECT_EQ(4, array.size());

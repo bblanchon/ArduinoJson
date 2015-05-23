@@ -17,45 +17,25 @@ using namespace ArduinoJson::Internals;
 
 JsonObject JsonObject::_invalid(NULL);
 
-JsonVariant &JsonObject::at(const char *key) {
-  node_type *node = getNodeAt(key);
-  return node ? node->content.value : JsonVariant::invalid();
+JsonObject::node_type *JsonObject::getOrCreateNodeAt(const char *key) {
+  node_type *existingNode = getNodeAt(key);
+  if (existingNode) return existingNode;
+
+  node_type *newNode = addNewNode();
+  return newNode;
 }
 
-const JsonVariant &JsonObject::at(const char *key) const {
-  node_type *node = getNodeAt(key);
-  return node ? node->content.value : JsonVariant::invalid();
-}
-
-JsonVariant &JsonObject::operator[](const char *key) {
-  // try to find an existing node
-  node_type *node = getNodeAt(key);
-
-  // not fount => create a new one
-  if (!node) {
-    node = createNode();
-    if (!node) return JsonVariant::invalid();
-
-    node->content.key = key;
-    addNode(node);
-  }
-
-  return node->content.value;
-}
-
-void JsonObject::remove(char const *key) { removeNode(getNodeAt(key)); }
-
-JsonArray &JsonObject::createNestedArray(char const *key) {
+JsonArray &JsonObject::createNestedArray(const char *key) {
   if (!_buffer) return JsonArray::invalid();
   JsonArray &array = _buffer->createArray();
-  add(key, array);
+  set(key, array);
   return array;
 }
 
 JsonObject &JsonObject::createNestedObject(const char *key) {
   if (!_buffer) return JsonObject::invalid();
   JsonObject &object = _buffer->createObject();
-  add(key, object);
+  set(key, object);
   return object;
 }
 

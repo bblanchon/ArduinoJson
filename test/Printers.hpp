@@ -6,10 +6,12 @@
 
 #pragma once
 
-#include <ArduinoJson/JsonVariant.hpp>
+#include <ArduinoJson.h>
 #include <ostream>
 
 namespace ArduinoJson {
-std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonVariant& v);
-std::ostream& operator<<(std::ostream& os, const ArduinoJson::JsonArray& v);
+std::ostream& operator<<(std::ostream& os, const JsonVariant& v);
+std::ostream& operator<<(std::ostream& os, const JsonArray& v);
+std::ostream& operator<<(std::ostream& os, const JsonObjectSubscript& v);
+std::ostream& operator<<(std::ostream& os, const JsonArraySubscript& v);
 }

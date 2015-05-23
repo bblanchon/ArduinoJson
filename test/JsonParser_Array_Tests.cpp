@@ -35,11 +35,11 @@ class JsonParser_Array_Tests : public testing::Test {
 
   template <typename T>
   void elementAtIndexMustBe(int index, T expected) {
-    EXPECT_EQ(expected, _array->at(index).as<T>());
+    EXPECT_EQ(expected, (*_array)[index].as<T>());
   }
 
   void elementAtIndexMustBe(int index, const char *expected) {
-    EXPECT_STREQ(expected, _array->at(index).as<const char *>());
+    EXPECT_STREQ(expected, (*_array)[index].as<const char *>());
   }
 
   DynamicJsonBuffer _jsonBuffer;

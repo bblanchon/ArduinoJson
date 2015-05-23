@@ -23,6 +23,11 @@ union JsonVariantContent {
   const char* asString;  // asString can be null
   JsonArray* asArray;    // asArray cannot be null
   JsonObject* asObject;  // asObject cannot be null
+
+  template <typename T>
+  T as() const;
 };
 }
 }
+
+#include "JsonVariantContent.ipp"

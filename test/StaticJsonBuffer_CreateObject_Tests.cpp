@@ -14,12 +14,15 @@ TEST(StaticJsonBuffer_CreateObject_Tests, GrowsWithObject) {
   ASSERT_EQ(JSON_OBJECT_SIZE(0), json.size());
 
   obj["hello"];
+  ASSERT_EQ(JSON_OBJECT_SIZE(0), json.size());
+
+  obj["hello"] = 1;
   ASSERT_EQ(JSON_OBJECT_SIZE(1), json.size());
 
-  obj["world"];
+  obj["world"] = 2;
   ASSERT_EQ(JSON_OBJECT_SIZE(2), json.size());
 
-  obj["world"];  // <- same value, should not grow
+  obj["world"] = 3;  // <- same key, should not grow
   ASSERT_EQ(JSON_OBJECT_SIZE(2), json.size());
 }
 
@@ -41,8 +44,8 @@ TEST(StaticJsonBuffer_CreateObject_Tests, ObjectDoesntGrowWhenFull) {
   StaticJsonBuffer<JSON_OBJECT_SIZE(1)> json;
 
   JsonObject &obj = json.createObject();
-  obj["hello"];
-  obj["world"];
+  obj["hello"] = 1;
+  obj["world"] = 2;
 
   ASSERT_EQ(JSON_OBJECT_SIZE(1), json.size());
 }

@@ -15,7 +15,9 @@ Features
 * JSON decoding
 * JSON encoding (with optional indentation)
 * Elegant API, very easy to use 
-* Fixed memory allocation (no malloc)
+* Efficient (no malloc, nor copy)
+* Portable (written in C++98)
+* Self-contained (no external dependency)
 * Small footprint
 * MIT License
 

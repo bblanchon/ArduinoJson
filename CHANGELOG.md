@@ -1,5 +1,15 @@
-Arduino JSON: change log
-========================
+ArduinoJson: change log
+=======================
+
+v5.0 (currently in development)
+----
+
+* Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators.
+
+**BREAKING CHANGES**:
+- `JsonObject::add()` was renamed to `set()`
+- `JsonArray::at()` and `JsonObject::at()` were renamed to `get()`
+- Number of digits of floating point value are now set with `double_with_n_digits()`
 
 v4.4
 ----

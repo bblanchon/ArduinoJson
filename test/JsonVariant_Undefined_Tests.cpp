@@ -13,10 +13,6 @@ class JsonVariant_Undefined_Tests : public ::testing::Test {
   JsonVariant variant;
 };
 
-TEST_F(JsonVariant_Undefined_Tests, SuccessReturnsFalse) {
-  EXPECT_FALSE(variant.success());
-}
-
 TEST_F(JsonVariant_Undefined_Tests, AsLongReturns0) {
   EXPECT_EQ(0, variant.as<long>());
 }
@@ -39,36 +35,4 @@ TEST_F(JsonVariant_Undefined_Tests, AsArrayReturnInvalid) {
 
 TEST_F(JsonVariant_Undefined_Tests, AsObjectReturnInvalid) {
   EXPECT_EQ(JsonObject::invalid(), variant.asObject());
-}
-
-TEST_F(JsonVariant_Undefined_Tests, CanBeSetToLong) {
-  variant = 0L;
-  EXPECT_TRUE(variant.success());
-}
-
-TEST_F(JsonVariant_Undefined_Tests, CanBeSetToDouble) {
-  variant = 0.0;
-  EXPECT_TRUE(variant.success());
-}
-
-TEST_F(JsonVariant_Undefined_Tests, CanBeSetToString) {
-  variant = static_cast<const char*>(NULL);
-  EXPECT_TRUE(variant.success());
-}
-
-TEST_F(JsonVariant_Undefined_Tests, CanBeSetToBool) {
-  variant = false;
-  EXPECT_TRUE(variant.success());
-}
-
-TEST_F(JsonVariant_Undefined_Tests, CanBeSetToArray) {
-  DynamicJsonBuffer jsonBuffer;
-  variant = jsonBuffer.createArray();
-  EXPECT_TRUE(variant.success());
-}
-
-TEST_F(JsonVariant_Undefined_Tests, CanBeSetToObject) {
-  DynamicJsonBuffer jsonBuffer;
-  variant = jsonBuffer.createObject();
-  EXPECT_TRUE(variant.success());
 }

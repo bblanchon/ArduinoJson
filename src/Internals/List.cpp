@@ -13,8 +13,8 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 template <typename T>
-int List<T>::size() const {
-  int nodeCount = 0;
+size_t List<T>::size() const {
+  size_t nodeCount = 0;
   for (node_type *node = _firstNode; node; node = node->next) nodeCount++;
   return nodeCount;
 }

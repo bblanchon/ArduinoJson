@@ -28,11 +28,17 @@ class JsonParser {
   bool skip(const char *wordToSkip);
   void skipSpaces();
 
-  void parseAnythingTo(JsonVariant &destination);
-  inline void parseBooleanTo(JsonVariant &destination);
-  inline void parseNullTo(JsonVariant &destination);
-  inline void parseNumberTo(JsonVariant &destination);
-  inline const char *parseString();
+  bool parseAnythingTo(JsonVariant *destination);
+  JSON_FORCE_INLINE bool parseAnythingToUnsafe(JsonVariant *destination);
+
+  const char *parseString();
+
+  inline bool parseArrayTo(JsonVariant *destination);
+  inline bool parseBooleanTo(JsonVariant *destination);
+  inline bool parseNullTo(JsonVariant *destination);
+  inline bool parseNumberTo(JsonVariant *destination);
+  inline bool parseObjectTo(JsonVariant *destination);
+  inline bool parseStringTo(JsonVariant *destination);
 
   JsonBuffer *_buffer;
   char *_ptr;

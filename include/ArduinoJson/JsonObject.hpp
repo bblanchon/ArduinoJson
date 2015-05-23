@@ -22,6 +22,7 @@ namespace ArduinoJson {
 // Forward declarations
 class JsonArray;
 class JsonBuffer;
+class JsonObjectSubscript;
 
 // A dictionary of JsonVariant indexed by string (char*)
 //
@@ -33,44 +34,35 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
                    public Internals::ReferenceType,
                    public Internals::List<JsonPair>,
                    public Internals::JsonBufferAllocated {
-  // JsonBuffer is a friend because it needs to call the private constructor.
-  friend class JsonBuffer;
-
  public:
   typedef const char *key_type;
   typedef JsonPair value_type;
 
-  // Gets the JsonVariant associated with the specified key.
-  // Returns a reference or JsonVariant::invalid() if not found.
-  JsonVariant &at(key_type key);
+  // Create an empty JsonArray attached to the specified JsonBuffer.
+  // You should not use this constructor directly.
+  // Instead, use JsonBuffer::createObject() or JsonBuffer.parseObject().
+  JSON_FORCE_INLINE explicit JsonObject(JsonBuffer *buffer)
+      : Internals::List<JsonPair>(buffer) {}
 
-  // Gets the JsonVariant associated with the specified key.
-  // Returns a constant reference or JsonVariant::invalid() if not found.
-  const JsonVariant &at(key_type key) const;
+  // Gets or sets the value associated with the specified key.
+  JSON_FORCE_INLINE JsonObjectSubscript operator[](key_type key);
 
-  // Gets or create the JsonVariant associated with the specified key.
-  // Returns a reference or JsonVariant::invalid() if allocation failed.
-  JsonVariant &operator[](key_type key);
+  // Gets the value associated with the specified key.
+  JSON_FORCE_INLINE const JsonObjectSubscript operator[](key_type key) const;
 
-  // Gets the JsonVariant associated with the specified key.
-  // Returns a constant reference or JsonVariant::invalid() if not found.
-  const JsonVariant &operator[](key_type key) const { return at(key); }
+  // Sets the specified key with the specified value.
+  JSON_FORCE_INLINE bool set(key_type key, const JsonVariant value);
 
-  // Adds an uninitialized JsonVariant associated with the specified key.
-  // Return a reference or JsonVariant::invalid() if allocation fails.
-  JsonVariant &add(key_type key) { return (*this)[key]; }
+  // Gets the value associated with the specified key.
+  JSON_FORCE_INLINE JsonVariant get(key_type key) const;
 
-  // Adds the specified key with the specified value.
+  // Gets the value associated with the specified key.
   template <typename T>
-  void add(key_type key, T value) {
-    add(key).set(value);
-  }
+  JSON_FORCE_INLINE T get(key_type key) const;
 
-  // Adds the specified key with a reference to the specified JsonArray.
-  void add(key_type key, JsonArray &array) { add(key).set(array); }
-
-  // Adds the specified key with a reference to the specified JsonObject.
-  void add(key_type key, JsonObject &object) { add(key).set(object); }
+  // Checks the type of the value associated with the specified key.
+  template <typename T>
+  JSON_FORCE_INLINE T is(key_type key) const;
 
   // Creates and adds a JsonArray.
   // This is a shortcut for JsonBuffer::createArray() and JsonObject::add().
@@ -81,7 +73,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   JsonObject &createNestedObject(key_type key);
 
   // Tells weither the specified key is present and associated with a value.
-  bool containsKey(key_type key) const { return at(key).success(); }
+  JSON_FORCE_INLINE bool containsKey(key_type key) const;
 
   // Removes the specified key and the associated value.
   void remove(key_type key);
@@ -95,13 +87,14 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   void writeTo(Internals::JsonWriter &writer) const;
 
  private:
-  // Create an empty JsonArray attached to the specified JsonBuffer.
-  explicit JsonObject(JsonBuffer *buffer) : Internals::List<JsonPair>(buffer) {}
-
   // Returns the list node that matches the specified key.
   node_type *getNodeAt(key_type key) const;
+
+  node_type *getOrCreateNodeAt(const char *key);
 
   // The instance returned by JsonObject::invalid()
   static JsonObject _invalid;
 };
 }
+
+#include "JsonObject.ipp"

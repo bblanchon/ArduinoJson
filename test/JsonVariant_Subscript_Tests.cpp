@@ -49,13 +49,6 @@ TEST_F(JsonVariant_Subscript_Tests, Undefined) {
   EXPECT_FALSE(_variant[0].success());
 }
 
-TEST_F(JsonVariant_Subscript_Tests, Invalid) {
-  _variant = JsonVariant::invalid();
-  EXPECT_EQ(0, _variant.size());
-  EXPECT_FALSE(_variant["0"].success());
-  EXPECT_FALSE(_variant[0].success());
-}
-
 TEST_F(JsonVariant_Subscript_Tests, String) {
   _variant = "hello world";
   EXPECT_EQ(0, _variant.size());

@@ -21,24 +21,24 @@ TEST_F(JsonObject_Container_Tests, InitialSizeIsZero) {
 }
 
 TEST_F(JsonObject_Container_Tests, Grow_WhenValuesAreAdded) {
-  _object["hello"];
+  _object["hello"] = 1;
   EXPECT_EQ(1, _object.size());
 
-  _object["world"];
+  _object.set("world", 2);
   EXPECT_EQ(2, _object.size());
 }
 
 TEST_F(JsonObject_Container_Tests, DoNotGrow_WhenSameValueIsAdded) {
-  _object["hello"];
+  _object["hello"] = 1;
   EXPECT_EQ(1, _object.size());
 
-  _object["hello"];
+  _object["hello"] = 2;
   EXPECT_EQ(1, _object.size());
 }
 
 TEST_F(JsonObject_Container_Tests, Shrink_WhenValuesAreRemoved) {
-  _object["hello"];
-  _object["world"];
+  _object["hello"] = 1;
+  _object["world"] = 2;
 
   _object.remove("hello");
   EXPECT_EQ(1, _object.size());
@@ -49,8 +49,8 @@ TEST_F(JsonObject_Container_Tests, Shrink_WhenValuesAreRemoved) {
 
 TEST_F(JsonObject_Container_Tests,
        DoNotShrink_WhenRemoveIsCalledWithAWrongKey) {
-  _object["hello"];
-  _object["world"];
+  _object["hello"] = 1;
+  _object["world"] = 2;
 
   _object.remove(":-P");
 
@@ -111,16 +111,11 @@ TEST_F(JsonObject_Container_Tests, CanStoreInnerObjects) {
   EXPECT_EQ(&innerObject2, &_object["world"].asObject());
 }
 
-TEST_F(JsonObject_Container_Tests, ContainsKeyReturnFalseForNonExistingKey) {
+TEST_F(JsonObject_Container_Tests, ContainsKeyReturnsFalseForNonExistingKey) {
   EXPECT_FALSE(_object.containsKey("hello"));
 }
 
-TEST_F(JsonObject_Container_Tests, ContainsKeyReturnTrueForDefinedValue) {
-  _object.add("hello", 42);
+TEST_F(JsonObject_Container_Tests, ContainsKeyReturnsTrueForDefinedValue) {
+  _object.set("hello", 42);
   EXPECT_TRUE(_object.containsKey("hello"));
-}
-
-TEST_F(JsonObject_Container_Tests, ContainsKeyReturnFalseForUndefinedValue) {
-  _object.add("hello");
-  EXPECT_FALSE(_object.containsKey("hello"));
 }
