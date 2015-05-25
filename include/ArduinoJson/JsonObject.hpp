@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Arduino/String.hpp"
 #include "Internals/JsonBufferAllocated.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/List.hpp"
@@ -35,62 +36,59 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
                    public Internals::List<JsonPair>,
                    public Internals::JsonBufferAllocated {
  public:
-  typedef const char *key_type;
-  typedef JsonPair value_type;
-
   // Create an empty JsonArray attached to the specified JsonBuffer.
   // You should not use this constructor directly.
   // Instead, use JsonBuffer::createObject() or JsonBuffer.parseObject().
-  JSON_FORCE_INLINE explicit JsonObject(JsonBuffer *buffer)
+  FORCE_INLINE explicit JsonObject(JsonBuffer* buffer)
       : Internals::List<JsonPair>(buffer) {}
 
   // Gets or sets the value associated with the specified key.
-  JSON_FORCE_INLINE JsonObjectSubscript operator[](key_type key);
+  FORCE_INLINE JsonObjectSubscript operator[](JsonObjectKey key);
 
   // Gets the value associated with the specified key.
-  JSON_FORCE_INLINE const JsonObjectSubscript operator[](key_type key) const;
+  FORCE_INLINE const JsonObjectSubscript operator[](JsonObjectKey key) const;
 
   // Sets the specified key with the specified value.
-  JSON_FORCE_INLINE bool set(key_type key, const JsonVariant value);
+  FORCE_INLINE bool set(JsonObjectKey key, JsonVariant value);
 
   // Gets the value associated with the specified key.
-  JSON_FORCE_INLINE JsonVariant get(key_type key) const;
+  FORCE_INLINE JsonVariant get(JsonObjectKey) const;
 
   // Gets the value associated with the specified key.
   template <typename T>
-  JSON_FORCE_INLINE T get(key_type key) const;
+  FORCE_INLINE T get(JsonObjectKey) const;
 
   // Checks the type of the value associated with the specified key.
   template <typename T>
-  JSON_FORCE_INLINE T is(key_type key) const;
+  FORCE_INLINE bool is(JsonObjectKey) const;
 
   // Creates and adds a JsonArray.
   // This is a shortcut for JsonBuffer::createArray() and JsonObject::add().
-  JsonArray &createNestedArray(key_type key);
+  JsonArray& createNestedArray(JsonObjectKey key);
 
   // Creates and adds a JsonObject.
   // This is a shortcut for JsonBuffer::createObject() and JsonObject::add().
-  JsonObject &createNestedObject(key_type key);
+  JsonObject& createNestedObject(JsonObjectKey key);
 
   // Tells weither the specified key is present and associated with a value.
-  JSON_FORCE_INLINE bool containsKey(key_type key) const;
+  FORCE_INLINE bool containsKey(JsonObjectKey key) const;
 
   // Removes the specified key and the associated value.
-  void remove(key_type key);
+  void remove(JsonObjectKey key);
 
   // Returns a reference an invalid JsonObject.
   // This object is meant to replace a NULL pointer.
   // This is used when memory allocation or JSON parsing fail.
-  static JsonObject &invalid() { return _invalid; }
+  static JsonObject& invalid() { return _invalid; }
 
   // Serialize the object to the specified JsonWriter
-  void writeTo(Internals::JsonWriter &writer) const;
+  void writeTo(Internals::JsonWriter& writer) const;
 
  private:
   // Returns the list node that matches the specified key.
-  node_type *getNodeAt(key_type key) const;
+  node_type* getNodeAt(JsonObjectKey key) const;
 
-  node_type *getOrCreateNodeAt(const char *key);
+  node_type* getOrCreateNodeAt(JsonObjectKey key);
 
   // The instance returned by JsonObject::invalid()
   static JsonObject _invalid;

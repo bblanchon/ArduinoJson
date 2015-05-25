@@ -9,6 +9,8 @@
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uint8_t
 
+#include "Arduino/String.hpp"
+
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wnon-virtual-dtor"
 #elif defined(__GNUC__)
@@ -55,6 +57,11 @@ class JsonBuffer {
   // allocation fails.
   JsonArray &parseArray(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
 
+  // Same as above with a String class
+  JsonArray &parseArray(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
+    return parseArray(const_cast<char *>(json.c_str()), nesting);
+  }
+
   // Allocates and populate a JsonObject from a JSON string.
   //
   // The First argument is a pointer to the JSON string, the memory must be
@@ -66,6 +73,12 @@ class JsonBuffer {
   // Returns a reference to the new JsonObject or JsonObject::invalid() if the
   // allocation fails.
   JsonObject &parseObject(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
+
+  // Same as above with a String class
+  JsonObject &parseObject(const String &json,
+                          uint8_t nestingLimit = DEFAULT_LIMIT) {
+    return parseObject(const_cast<char *>(json.c_str()), nestingLimit);
+  }
 
   // Allocates n bytes in the JsonBuffer.
   // Return a pointer to the allocated memory or NULL if allocation fails.

@@ -11,38 +11,41 @@
 
 namespace ArduinoJson {
 
-inline JsonVariant JsonObject::get(key_type key) const {
+inline JsonVariant JsonObject::get(JsonObjectKey key) const {
   node_type *node = getNodeAt(key);
   return node ? node->content.value : JsonVariant();
 }
 
 template <typename T>
-inline T JsonObject::get(key_type key) const {
+inline T JsonObject::get(JsonObjectKey key) const {
   node_type *node = getNodeAt(key);
   return node ? node->content.value.as<T>() : JsonVariant::invalid<T>();
 }
 
 template <typename T>
-inline T JsonObject::is(key_type key) const {
+inline bool JsonObject::is(JsonObjectKey key) const {
   node_type *node = getNodeAt(key);
   return node ? node->content.value.is<T>() : false;
 }
 
-inline JsonObjectSubscript JsonObject::operator[](key_type key) {
+inline JsonObjectSubscript JsonObject::operator[](JsonObjectKey key) {
   return JsonObjectSubscript(*this, key);
 }
 
-inline const JsonObjectSubscript JsonObject::operator[](key_type key) const {
+inline const JsonObjectSubscript JsonObject::operator[](
+    JsonObjectKey key) const {
   return JsonObjectSubscript(*const_cast<JsonObject *>(this), key);
 }
 
-inline bool JsonObject::containsKey(key_type key) const {
+inline bool JsonObject::containsKey(JsonObjectKey key) const {
   return getNodeAt(key) != NULL;
 }
 
-inline void JsonObject::remove(key_type key) { removeNode(getNodeAt(key)); }
+inline void JsonObject::remove(JsonObjectKey key) {
+  removeNode(getNodeAt(key));
+}
 
-inline bool JsonObject::set(const char *key, const JsonVariant value) {
+inline bool JsonObject::set(JsonObjectKey key, const JsonVariant value) {
   node_type *node = getOrCreateNodeAt(key);
   if (!node) return false;
 
@@ -54,6 +57,12 @@ inline bool JsonObject::set(const char *key, const JsonVariant value) {
 template <typename TImplem>
 inline const JsonObjectSubscript JsonVariantBase<TImplem>::operator[](
     const char *key) const {
+  return asObject()[key];
+}
+
+template <typename TImplem>
+inline const JsonObjectSubscript JsonVariantBase<TImplem>::operator[](
+    const String &key) const {
   return asObject()[key];
 }
 

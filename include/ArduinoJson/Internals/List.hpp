@@ -48,22 +48,7 @@ class List {
   const_iterator end() const { return const_iterator(NULL); }
 
  protected:
-  node_type *addNewNode() {
-    if (!_buffer) return NULL;
-
-    node_type *newNode = new (_buffer) node_type();
-
-    if (_firstNode) {
-      node_type *lastNode = _firstNode;
-      while (lastNode->next) lastNode = lastNode->next;
-      lastNode->next = newNode;
-    } else {
-      _firstNode = newNode;
-    }
-
-    return newNode;
-  }
-
+  node_type *addNewNode();
   void removeNode(node_type *nodeToRemove);
 
   JsonBuffer *_buffer;

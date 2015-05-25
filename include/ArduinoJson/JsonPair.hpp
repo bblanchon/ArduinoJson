@@ -6,13 +6,14 @@
 
 #pragma once
 
+#include "JsonObjectKey.hpp"
 #include "JsonVariant.hpp"
 
 namespace ArduinoJson {
 
 // A key value pair for JsonObject.
 struct JsonPair {
-  const char* key;
+  JsonObjectKey key;
   JsonVariant value;
 };
 }

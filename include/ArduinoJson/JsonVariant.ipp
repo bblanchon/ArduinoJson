@@ -20,6 +20,11 @@ inline JsonVariant::JsonVariant(const char *value) {
   _content.asString = value;
 }
 
+inline JsonVariant::JsonVariant(const String &value) {
+  _type = Internals::JSON_STRING;
+  _content.asString = value.c_str();
+}
+
 inline JsonVariant::JsonVariant(double value, uint8_t decimals) {
   _type = static_cast<Internals::JsonVariantType>(
       Internals::JSON_DOUBLE_0_DECIMALS + decimals);
@@ -104,6 +109,11 @@ inline bool JsonVariant::is<bool>() const {
 
 template <>
 inline bool JsonVariant::is<char const *>() const {
+  return _type == Internals::JSON_STRING;
+}
+
+template <>
+inline bool JsonVariant::is<String>() const {
   return _type == Internals::JSON_STRING;
 }
 

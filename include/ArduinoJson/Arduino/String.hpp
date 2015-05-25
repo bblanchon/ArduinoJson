@@ -6,8 +6,14 @@
 
 #pragma once
 
-#ifdef _MSC_VER
-#define FORCE_INLINE __forceinline
+#ifndef ARDUINO
+
+#include <string>
+
+typedef std::string String;
+
 #else
-#define FORCE_INLINE __attribute__((always_inline))
+
+#include <WString.h>
+
 #endif

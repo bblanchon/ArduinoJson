@@ -42,27 +42,27 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
       : Internals::List<JsonVariant>(buffer) {}
 
   // Gets the value at the specified index
-  JSON_FORCE_INLINE const JsonArraySubscript operator[](size_t index) const;
+  FORCE_INLINE const JsonArraySubscript operator[](size_t index) const;
 
   // Gets or sets the value at specified index
-  JSON_FORCE_INLINE JsonArraySubscript operator[](size_t index);
+  FORCE_INLINE JsonArraySubscript operator[](size_t index);
 
   // Adds the specified value at the end of the array.
-  JSON_FORCE_INLINE bool add(const JsonVariant value);
+  FORCE_INLINE bool add(const JsonVariant value);
 
   // Sets the value at specified index.
-  JSON_FORCE_INLINE void set(size_t index, const JsonVariant value);
+  FORCE_INLINE void set(size_t index, const JsonVariant value);
 
   // Gets the value at the specified index.
-  JSON_FORCE_INLINE JsonVariant get(size_t index) const;
+  FORCE_INLINE JsonVariant get(size_t index) const;
 
   // Gets the value at the specified index.
   template <typename T>
-  JSON_FORCE_INLINE T get(size_t index) const;
+  FORCE_INLINE T get(size_t index) const;
 
   // Check the type of the value at specified index.
   template <typename T>
-  JSON_FORCE_INLINE T is(size_t index) const;
+  FORCE_INLINE T is(size_t index) const;
 
   // Creates a JsonArray and adds a reference at the end of the array.
   // It's a shortcut for JsonBuffer::createArray() and JsonArray::add()

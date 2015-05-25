@@ -9,6 +9,7 @@
 #include <stddef.h>
 #include <stdint.h>  // for uint8_t
 
+#include "Arduino/String.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/JsonVariantContent.hpp"
 #include "Internals/JsonVariantType.hpp"
@@ -31,46 +32,47 @@ class JsonVariant : public Internals::JsonPrintable<JsonVariant>,
                     public JsonVariantBase<JsonVariant> {
  public:
   // Creates an uninitialized JsonVariant
-  JSON_FORCE_INLINE JsonVariant() : _type(Internals::JSON_UNDEFINED) {}
+  FORCE_INLINE JsonVariant() : _type(Internals::JSON_UNDEFINED) {}
 
   // Create a JsonVariant containing a boolean value.
   // It will be serialized as "true" or "false" in JSON.
-  JSON_FORCE_INLINE JsonVariant(bool value);
+  FORCE_INLINE JsonVariant(bool value);
 
   // Create a JsonVariant containing a floating point value.
   // The second argument specifies the number of decimal digits to write in
   // the JSON string.
-  JSON_FORCE_INLINE JsonVariant(float value, uint8_t decimals = 2);
-  JSON_FORCE_INLINE JsonVariant(double value, uint8_t decimals = 2);
+  FORCE_INLINE JsonVariant(float value, uint8_t decimals = 2);
+  FORCE_INLINE JsonVariant(double value, uint8_t decimals = 2);
 
   // Create a JsonVariant containing an integer value.
-  JSON_FORCE_INLINE JsonVariant(signed char value);
-  JSON_FORCE_INLINE JsonVariant(signed long value);
-  JSON_FORCE_INLINE JsonVariant(signed int value);
-  JSON_FORCE_INLINE JsonVariant(signed short value);
-  JSON_FORCE_INLINE JsonVariant(unsigned char value);
-  JSON_FORCE_INLINE JsonVariant(unsigned long value);
-  JSON_FORCE_INLINE JsonVariant(unsigned int value);
-  JSON_FORCE_INLINE JsonVariant(unsigned short value);
+  FORCE_INLINE JsonVariant(signed char value);
+  FORCE_INLINE JsonVariant(signed long value);
+  FORCE_INLINE JsonVariant(signed int value);
+  FORCE_INLINE JsonVariant(signed short value);
+  FORCE_INLINE JsonVariant(unsigned char value);
+  FORCE_INLINE JsonVariant(unsigned long value);
+  FORCE_INLINE JsonVariant(unsigned int value);
+  FORCE_INLINE JsonVariant(unsigned short value);
 
   // Create a JsonVariant containing a string.
-  JSON_FORCE_INLINE JsonVariant(const char *value);
+  FORCE_INLINE JsonVariant(const char *value);
+  FORCE_INLINE JsonVariant(const String &value);
 
   // Create a JsonVariant containing a reference to an array.
-  JSON_FORCE_INLINE JsonVariant(JsonArray &array);
+  FORCE_INLINE JsonVariant(JsonArray &array);
 
   // Create a JsonVariant containing a reference to an object.
-  JSON_FORCE_INLINE JsonVariant(JsonObject &object);
+  FORCE_INLINE JsonVariant(JsonObject &object);
 
   // Get the variant as the specified type.
   // See cast operators for details.
   template <typename T>
-  JSON_FORCE_INLINE T as() const;
+  FORCE_INLINE T as() const;
 
   // Tells weither the variant has the specified type.
   // Returns true if the variant has type type T, false otherwise.
   template <typename T>
-  JSON_FORCE_INLINE bool is() const;
+  FORCE_INLINE bool is() const;
 
   // Serialize the variant to a JsonWriter
   void writeTo(Internals::JsonWriter &writer) const;

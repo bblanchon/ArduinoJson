@@ -1,15 +1,23 @@
 ArduinoJson: change log
 =======================
 
-v5.0 (currently in development)
+v5.0 (currently under development)
 ----
 
+* Added support of `String` class (issue #55, #56, #70, #77)
 * Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators.
 
 **BREAKING CHANGES**:
 - `JsonObject::add()` was renamed to `set()`
 - `JsonArray::at()` and `JsonObject::at()` were renamed to `get()`
 - Number of digits of floating point value are now set with `double_with_n_digits()`
+
+**Personal note about the `String` class**:
+Support of the `String` class has been added to the library because many people use it in their programs.
+However, you should not see this as an invitation to use the `String` class.
+The `String` class is **bad** because it uses dynamic memory allocation.
+Compared to static allocation, it compiles to a bigger, slower program, and is less predicate.
+You certainly don't want that in an embedded environment!
 
 v4.4
 ----

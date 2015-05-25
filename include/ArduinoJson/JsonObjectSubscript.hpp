@@ -11,30 +11,38 @@
 namespace ArduinoJson {
 class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript> {
  public:
-  JSON_FORCE_INLINE JsonObjectSubscript(JsonObject& object, const char* key)
+  FORCE_INLINE JsonObjectSubscript(JsonObject& object, JsonObjectKey key)
       : _object(object), _key(key) {}
 
-  JSON_FORCE_INLINE JsonObjectSubscript& operator=(const JsonVariant& value) {
+  FORCE_INLINE JsonObjectSubscript& operator=(const JsonVariant& value) {
     _object.set(_key, value);
     return *this;
   }
 
-  JSON_FORCE_INLINE bool success() const { return _object.containsKey(_key); }
+  FORCE_INLINE JsonObjectSubscript& operator=(
+      const JsonObjectSubscript& other) {
+    // to prevent Visual Studio warning C4512: assignment operator could not be
+    // generated
+    _object.set(_key, other._object.get(other._key));
+    return *this;
+  }
 
-  JSON_FORCE_INLINE operator JsonVariant() const { return _object.get(_key); }
+  FORCE_INLINE bool success() const { return _object.containsKey(_key); }
+
+  FORCE_INLINE operator JsonVariant() const { return _object.get(_key); }
 
   template <typename T>
-  JSON_FORCE_INLINE T as() const {
+  FORCE_INLINE T as() const {
     return _object.get<T>(_key);
   }
 
   template <typename T>
-  JSON_FORCE_INLINE T is() const {
+  FORCE_INLINE T is() const {
     return _object.is<T>(_key);
   }
 
  private:
   JsonObject& _object;
-  const char* _key;
+  JsonObjectKey _key;
 };
 }

@@ -20,6 +20,23 @@ size_t List<T>::size() const {
 }
 
 template <typename T>
+typename List<T>::node_type *List<T>::addNewNode() {
+  if (!_buffer) return NULL;
+
+  node_type *newNode = new (_buffer) node_type();
+
+  if (_firstNode) {
+    node_type *lastNode = _firstNode;
+    while (lastNode->next) lastNode = lastNode->next;
+    lastNode->next = newNode;
+  } else {
+    _firstNode = newNode;
+  }
+
+  return newNode;
+}
+
+template <typename T>
 void List<T>::removeNode(node_type *nodeToRemove) {
   if (!nodeToRemove) return;
   if (nodeToRemove == _firstNode) {
