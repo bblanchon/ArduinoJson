@@ -48,6 +48,11 @@ class JsonArray_Container_Tests : public ::testing::Test {
   }
 };
 
+template <>
+void JsonArray_Container_Tests::itemMustEqual(int index, const char* expected) {
+  EXPECT_STREQ(expected, _array[index].asString());
+}
+
 TEST_F(JsonArray_Container_Tests, SuccessIsTrue) {
   EXPECT_TRUE(_array.success());
 }
@@ -87,14 +92,11 @@ TEST_F(JsonArray_Container_Tests, CanStoreBooleans) {
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreStrings) {
-  const char* firstString = "h3110";
-  const char* secondString = "w0r1d";
+  _array.add("hello");
+  _array.add("world");
 
-  _array.add(firstString);
-  _array.add(secondString);
-
-  firstMustEqual(firstString);
-  secondMustEqual(secondString);
+  firstMustEqual("hello");
+  secondMustEqual("world");
 }
 
 TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays) {
@@ -133,4 +135,40 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects) {
 
   firstMustReference(innerObject1);
   secondMustReference(innerObject2);
+}
+
+TEST_F(JsonArray_Container_Tests, RemoveFirstElement) {
+  _array.add("one");
+  _array.add("two");
+  _array.add("three");
+
+  _array.removeAt(0);
+
+  sizeMustBe(2);
+  firstMustEqual("two");
+  secondMustEqual("three");
+}
+
+TEST_F(JsonArray_Container_Tests, RemoveMiddleElement) {
+  _array.add("one");
+  _array.add("two");
+  _array.add("three");
+
+  _array.removeAt(1);
+
+  sizeMustBe(2);
+  firstMustEqual("one");
+  secondMustEqual("three");
+}
+
+TEST_F(JsonArray_Container_Tests, RemoveLastElement) {
+  _array.add("one");
+  _array.add("two");
+  _array.add("three");
+
+  _array.removeAt(2);
+
+  sizeMustBe(2);
+  firstMustEqual("one");
+  secondMustEqual("two");
 }

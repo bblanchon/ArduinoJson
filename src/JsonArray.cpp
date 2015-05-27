@@ -15,8 +15,7 @@ using namespace ArduinoJson::Internals;
 JsonArray JsonArray::_invalid(NULL);
 
 JsonVariant &JsonArray::at(int index) const {
-  node_type *node = _firstNode;
-  while (node && index--) node = node->next;
+  node_type *node = getNodeAt(index);
   return node ? node->content : JsonVariant::invalid();
 }
 
@@ -42,6 +41,14 @@ JsonObject &JsonArray::createNestedObject() {
   add(object);
   return object;
 }
+
+JsonArray::node_type *JsonArray::getNodeAt(int index) const {
+  node_type *node = _firstNode;
+  while (node && index--) node = node->next;
+  return node;
+}
+
+void JsonArray::removeAt(int index) { removeNode(getNodeAt(index)); }
 
 void JsonArray::writeTo(JsonWriter &writer) const {
   writer.beginArray();

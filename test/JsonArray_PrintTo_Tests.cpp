@@ -16,9 +16,12 @@ class JsonArray_PrintTo_Tests : public testing::Test {
   JsonArray &array;
 
   void outputMustBe(const char *expected) {
-    size_t n = array.printTo(buffer, sizeof(buffer));
+    size_t actualLen = array.printTo(buffer, sizeof(buffer));
+    size_t measuredLen = array.measureLength();
+
     EXPECT_STREQ(expected, buffer);
-    EXPECT_EQ(strlen(expected), n);
+    EXPECT_EQ(strlen(expected), actualLen);
+    EXPECT_EQ(strlen(expected), measuredLen);
   }
 
  private:

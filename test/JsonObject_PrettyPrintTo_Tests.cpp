@@ -16,13 +16,15 @@ class JsonObject_PrettyPrintTo_Tests : public testing::Test {
   JsonObject &_object;
 
   void outputMustBe(const char *expected) {
-    size_t n = _object.prettyPrintTo(buffer, sizeof(buffer));
-    EXPECT_STREQ(expected, buffer);
-    EXPECT_EQ(strlen(expected), n);
-  }
+    char buffer[256];
 
- private:
-  char buffer[256];
+    size_t actualLen = _object.prettyPrintTo(buffer, sizeof(buffer));
+    size_t measuredLen = _object.measurePrettyLength();
+
+    EXPECT_STREQ(expected, buffer);
+    EXPECT_EQ(strlen(expected), actualLen);
+    EXPECT_EQ(strlen(expected), measuredLen);
+  }
 };
 
 TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyObject) { outputMustBe("{}"); }

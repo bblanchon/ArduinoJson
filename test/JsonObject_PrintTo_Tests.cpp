@@ -16,10 +16,12 @@ class JsonObject_PrintTo_Tests : public testing::Test {
  protected:
   void outputMustBe(const char *expected) {
     char actual[256];
-    int result = object.printTo(actual, sizeof(actual));
+    size_t actualLen = object.printTo(actual, sizeof(actual));
+    size_t measuredLen = object.measureLength();
 
     EXPECT_STREQ(expected, actual);
-    EXPECT_EQ(strlen(expected), result);
+    EXPECT_EQ(strlen(expected), actualLen);
+    EXPECT_EQ(strlen(expected), measuredLen);
   }
 
   StaticJsonBuffer<JSON_OBJECT_SIZE(2)> json;

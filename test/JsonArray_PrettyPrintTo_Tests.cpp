@@ -16,13 +16,15 @@ class JsonArray_PrettyPrintTo_Tests : public testing::Test {
   JsonArray& array;
 
   void outputMustBe(const char* expected) {
-    size_t n = array.prettyPrintTo(_buffer, sizeof(_buffer));
-    EXPECT_STREQ(expected, _buffer);
-    EXPECT_EQ(strlen(expected), n);
-  }
+    char actual[256];
 
- private:
-  char _buffer[256];
+    size_t actualLen = array.prettyPrintTo(actual, sizeof(actual));
+    size_t measuredLen = array.measurePrettyLength();
+
+    EXPECT_STREQ(expected, actual);
+    EXPECT_EQ(strlen(expected), actualLen);
+    EXPECT_EQ(strlen(expected), measuredLen);
+  }
 };
 
 TEST_F(JsonArray_PrettyPrintTo_Tests, Empty) { outputMustBe("[]"); }

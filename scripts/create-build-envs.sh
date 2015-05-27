@@ -20,10 +20,10 @@ build-env()
 if [[ $(uname) == MINGW* ]]
 then
 	build-env "Make" "MinGW Makefiles"
-	build-env "SublimeText" "Sublime Text 2 - MinGW Makefiles"
+	build-env "SublimeText" "Sublime Text 2 - Ninja"
 	build-env "VisualStudio" "Visual Studio 12 2013"
 else
-	build-env "SublimeText" "Sublime Text 2 - Unix Makefiles"
+	build-env "SublimeText" "Sublime Text 2 - Ninja"
 	build-env "Make" "Unix Makefiles"
 	build-env "Xcode" "Xcode"
 fi
