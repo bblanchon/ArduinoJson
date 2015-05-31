@@ -21,8 +21,6 @@ size_t List<T>::size() const {
 
 template <typename T>
 typename List<T>::node_type *List<T>::addNewNode() {
-  if (!_buffer) return NULL;
-
   node_type *newNode = new (_buffer) node_type();
 
   if (_firstNode) {

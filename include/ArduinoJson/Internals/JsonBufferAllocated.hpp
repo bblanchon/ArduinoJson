@@ -14,6 +14,7 @@ namespace Internals {
 class JsonBufferAllocated {
  public:
   void *operator new(size_t n, JsonBuffer *jsonBuffer) throw() {
+    if (!jsonBuffer) return NULL;
     return jsonBuffer->alloc(n);
   }
 

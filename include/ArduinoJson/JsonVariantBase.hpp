@@ -79,9 +79,6 @@ class JsonVariantBase {
   FORCE_INLINE const JsonObjectSubscript operator[](const char *key) const;
   FORCE_INLINE const JsonObjectSubscript operator[](const String &key) const;
 
- protected:
-  JsonVariantBase() {}
-
  private:
   const TImpl *impl() const { return static_cast<const TImpl *>(this); }
 };
