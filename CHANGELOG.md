@@ -5,7 +5,8 @@ v5.0 (currently under development)
 ----
 
 * Added support of `String` class (issue #55, #56, #70, #77)
-* Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators.
+* Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators
+* Switched to new library layout (requires Arduino 1.0.6 or above)
 
 **BREAKING CHANGES**:
 - `JsonObject::add()` was renamed to `set()`
