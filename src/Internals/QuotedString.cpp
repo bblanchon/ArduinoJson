@@ -80,6 +80,11 @@ char *QuotedString::extractFrom(char *input, char **endPtr) {
       c = unescapeChar(*readPtr++);
       if (c == '\0') goto ERROR_ESCAPE_SEQUENCE_INTERRUPTED;
     }
+    
+    if (c == '\0') {
+      // premature ending
+      return NULL;
+    }
 
     *writePtr++ = c;
   }
