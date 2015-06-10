@@ -1,6 +1,13 @@
 Arduino JSON: change log
 ========================
 
+v4.5
+----
+
+* Fixed buffer overflow when input contains a backslash followed by a terminator (issue #81)
+
+**Upgrading is recommended** since previous versions contain a potential security risk.
+
 v4.4
 ----
 

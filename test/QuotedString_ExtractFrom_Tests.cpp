@@ -16,6 +16,11 @@ class QuotedString_ExtractFrom_Tests : public testing::Test {
     _result = QuotedString::extractFrom(_jsonString, &_trailing);
   }
 
+  void whenInputIs(const char *json, size_t len) {
+    memcpy(_jsonString, json, len);
+    _result = QuotedString::extractFrom(_jsonString, &_trailing);
+  }
+
   void resultMustBe(const char *expected) { EXPECT_STREQ(expected, _result); }
 
   void trailingMustBe(const char *expected) {
@@ -133,4 +138,9 @@ TEST_F(QuotedString_ExtractFrom_Tests, EscapedTab) {
 TEST_F(QuotedString_ExtractFrom_Tests, AllEscapedCharsTogether) {
   whenInputIs("\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"");
   resultMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
+}
+
+TEST_F(QuotedString_ExtractFrom_Tests, UnterminatedEscapeSequence) {
+  whenInputIs("\"\\\0\"", 4);
+  resultMustBe(0);
 }
