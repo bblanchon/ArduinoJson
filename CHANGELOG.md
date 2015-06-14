@@ -8,6 +8,8 @@ v4.5
 
 **Upgrading is recommended** since previous versions contain a potential security risk.
 
+Special thanks to [Giancarlo Canales Barreto](https://github.com/gcanalesb) for finding this nasty bug.
+
 v4.4
 ----
 
