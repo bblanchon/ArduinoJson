@@ -40,8 +40,19 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return _array.is<T>(_index);
   }
 
+  void writeTo(Internals::JsonWriter &writer) const {
+    _array.get(_index).writeTo(writer);
+  }
+
  private:
   JsonArray& _array;
   const size_t _index;
 };
+
+#ifdef ARDUINOJSON_ENABLE_STD_STREAM
+inline std::ostream& operator<<(std::ostream& os, const JsonArraySubscript& source) {
+  return source.printTo(os);
 }
+#endif
+
+} // namespace ArduinoJson

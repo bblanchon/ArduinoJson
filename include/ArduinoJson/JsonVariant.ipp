@@ -186,4 +186,11 @@ template <>
 inline bool JsonVariant::is<unsigned short>() const {
   return _type == Internals::JSON_LONG;
 }
+
+#ifdef ARDUINOJSON_ENABLE_STD_STREAM
+inline std::ostream& operator<<(std::ostream& os, const JsonVariant& source) {
+  return source.printTo(os);
 }
+#endif
+
+} // namespace ArduinoJson

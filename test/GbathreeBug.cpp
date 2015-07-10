@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
+#define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
-#include "Printers.hpp"
 
 class GbathreeBug : public testing::Test {
  public:

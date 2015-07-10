@@ -18,7 +18,10 @@ namespace Internals {
 class JsonParser {
  public:
   JsonParser(JsonBuffer *buffer, char *json, uint8_t nestingLimit)
-      : _buffer(buffer), _ptr(json), _nestingLimit(nestingLimit) {}
+      : _buffer(buffer),
+        _readPtr(json),
+        _writePtr(json),
+        _nestingLimit(nestingLimit) {}
 
   JsonArray &parseArray();
   JsonObject &parseObject();
@@ -26,12 +29,10 @@ class JsonParser {
  private:
   bool skip(char charToSkip);
   bool skip(const char *wordToSkip);
-  void skipSpaces();
-
-  bool parseAnythingTo(JsonVariant *destination);
-  FORCE_INLINE bool parseAnythingToUnsafe(JsonVariant *destination);
 
   const char *parseString();
+  bool parseAnythingTo(JsonVariant *destination);
+  FORCE_INLINE bool parseAnythingToUnsafe(JsonVariant *destination);
 
   inline bool parseArrayTo(JsonVariant *destination);
   inline bool parseBooleanTo(JsonVariant *destination);
@@ -41,7 +42,8 @@ class JsonParser {
   inline bool parseStringTo(JsonVariant *destination);
 
   JsonBuffer *_buffer;
-  char *_ptr;
+  const char *_readPtr;
+  char *_writePtr;
   uint8_t _nestingLimit;
 };
 }

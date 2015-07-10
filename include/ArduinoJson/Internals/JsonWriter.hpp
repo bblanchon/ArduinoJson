@@ -7,7 +7,7 @@
 #pragma once
 
 #include "../Arduino/Print.hpp"
-#include "QuotedString.hpp"
+#include "Encoding.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -26,7 +26,7 @@ class JsonWriter {
   // Returns the number of bytes sent to the Print implementation.
   // This is very handy for implementations of printTo() that must return the
   // number of bytes written.
-  size_t bytesWritten() { return _length; }
+  size_t bytesWritten() const { return _length; }
 
   void beginArray() { write('['); }
   void endArray() { write(']'); }
@@ -37,15 +37,32 @@ class JsonWriter {
   void writeColon() { write(':'); }
   void writeComma() { write(','); }
 
+  void writeBoolean(bool value) {
+    write(value ? "true" : "false");
+  }
+  
   void writeString(const char *value) {
-    _length += QuotedString::printTo(value, _sink);
+    if (!value) {
+      write("null");
+    } else {
+      write('\"');
+      while (*value) writeChar(*value++);
+      write('\"');
+    }
+  }
+
+  void writeChar(char c) {
+    char specialChar = Encoding::escapeChar(c);
+    if (specialChar) {
+      write('\\');
+      write(specialChar);
+    } else {
+      write(c);
+    }
   }
 
   void writeLong(long value) { _length += _sink.print(value); }
 
-  void writeBoolean(bool value) {
-    _length += _sink.print(value ? "true" : "false");
-  }
   void writeDouble(double value, uint8_t decimals) {
     _length += _sink.print(value, decimals);
   }

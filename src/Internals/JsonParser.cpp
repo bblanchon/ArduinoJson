@@ -9,7 +9,7 @@
 #include <stdlib.h>  // for strtol, strtod
 #include <ctype.h>
 
-#include "../../include/ArduinoJson/Internals/QuotedString.hpp"
+#include "../../include/ArduinoJson/Internals/Encoding.hpp"
 #include "../../include/ArduinoJson/JsonArray.hpp"
 #include "../../include/ArduinoJson/JsonBuffer.hpp"
 #include "../../include/ArduinoJson/JsonObject.hpp"
@@ -17,25 +17,28 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-void JsonParser::skipSpaces() {
-  while (isspace(*_ptr)) _ptr++;
+static const char *skipSpaces(const char *ptr) {
+  while (isspace(*ptr)) ptr++;
+  return ptr;
 }
 
 bool JsonParser::skip(char charToSkip) {
-  skipSpaces();
-  if (*_ptr != charToSkip) return false;
-  _ptr++;
-  skipSpaces();
+  register const char *ptr = skipSpaces(_readPtr);
+  if (*ptr != charToSkip) return false;
+  ptr++;
+  _readPtr = skipSpaces(ptr);
   return true;
 }
 
 bool JsonParser::skip(const char *wordToSkip) {
-  const char *charToSkip = wordToSkip;
-  while (*charToSkip && *_ptr == *charToSkip) {
-    charToSkip++;
-    _ptr++;
+  register const char *ptr = _readPtr;
+  while (*wordToSkip && *ptr == *wordToSkip) {
+    wordToSkip++;
+    ptr++;
   }
-  return *charToSkip == '\0';
+  if (*wordToSkip != '\0') return false;
+  _readPtr = ptr;
+  return true;
 }
 
 bool JsonParser::parseAnythingTo(JsonVariant *destination) {
@@ -47,9 +50,9 @@ bool JsonParser::parseAnythingTo(JsonVariant *destination) {
 }
 
 inline bool JsonParser::parseAnythingToUnsafe(JsonVariant *destination) {
-  skipSpaces();
+  _readPtr = skipSpaces(_readPtr);
 
-  switch (*_ptr) {
+  switch (*_readPtr) {
     case '[':
       return parseArrayTo(destination);
 
@@ -181,7 +184,7 @@ bool JsonParser::parseBooleanTo(JsonVariant *destination) {
 
 bool JsonParser::parseNumberTo(JsonVariant *destination) {
   char *endOfLong;
-  long longValue = strtol(_ptr, &endOfLong, 10);
+  long longValue = strtol(_readPtr, &endOfLong, 10);
   char stopChar = *endOfLong;
 
   // Could it be a floating point value?
@@ -189,14 +192,14 @@ bool JsonParser::parseNumberTo(JsonVariant *destination) {
 
   if (couldBeFloat) {
     // Yes => parse it as a double
-    double doubleValue = strtod(_ptr, &_ptr);
+    double doubleValue = strtod(_readPtr, const_cast<char **>(&_readPtr));
     // Count the decimal digits
-    uint8_t decimals = static_cast<uint8_t>(_ptr - endOfLong - 1);
+    uint8_t decimals = static_cast<uint8_t>(_readPtr - endOfLong - 1);
     // Set the variant as a double
     *destination = JsonVariant(doubleValue, decimals);
   } else {
     // No => set the variant as a long
-    _ptr = endOfLong;
+    _readPtr = endOfLong;
     *destination = longValue;
   }
   return true;
@@ -209,8 +212,53 @@ bool JsonParser::parseNullTo(JsonVariant *destination) {
   return true;
 }
 
+static bool isStopChar(char c) {
+  return c == '\0' || c == ':' || c == '}' || c == ']' || c == ',';
+}
+
 const char *JsonParser::parseString() {
-  return QuotedString::extractFrom(_ptr, &_ptr);
+  const char *readPtr = _readPtr;
+  char *writePtr = _writePtr;
+
+  char c = *readPtr;
+
+  if (c == '\'' || c == '\"') {
+    char stopChar = c;
+    for (;;) {
+      c = *++readPtr;
+      if (c == '\0') break;
+
+      if (c == stopChar) {
+        readPtr++;
+        break;
+      }
+
+      if (c == '\\') {
+        // replace char
+        c = Encoding::unescapeChar(*++readPtr);
+        if (c == '\0') break;
+      }
+
+      *writePtr++ = c;
+    }
+  } else {
+    for (;;) {
+      if (isStopChar(c)) break;
+      *writePtr++ = c;
+      c = *++readPtr;
+    }
+  }
+  // end the string here
+  *writePtr++ = '\0';
+
+  const char *startPtr = _writePtr;
+
+  // update end ptr
+  _readPtr = readPtr;
+  _writePtr = writePtr;
+
+  // return pointer to unquoted string
+  return startPtr;
 }
 
 bool JsonParser::parseStringTo(JsonVariant *destination) {

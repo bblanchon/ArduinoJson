@@ -5,6 +5,7 @@ v5.0 (currently in beta)
 ----
 
 * Added support of `String` class (issue #55, #56, #70, #77)
+* Added support of non standard JSON input (issue #44)
 * Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators
 * Switched to new the library layout (requires Arduino 1.0.6 or above)
 
@@ -19,6 +20,15 @@ However, you should not see this as an invitation to use the `String` class.
 The `String` class is **bad** because it uses dynamic memory allocation.
 Compared to static allocation, it compiles to a bigger, slower program, and is less predictable.
 You certainly don't want that in an embedded environment!
+
+v4.5
+----
+
+* Fixed buffer overflow when input contains a backslash followed by a terminator (issue #81)
+
+**Upgrading is recommended** since previous versions contain a potential security risk.
+
+Special thanks to [Giancarlo Canales Barreto](https://github.com/gcanalesb) for finding this nasty bug.
 
 v4.4
 ----

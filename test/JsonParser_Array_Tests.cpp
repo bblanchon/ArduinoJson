@@ -9,14 +9,19 @@
 
 class JsonParser_Array_Tests : public testing::Test {
  protected:
-  void whenInputIs(const char *json) {
-    strcpy(_jsonString, json);
-    _array = &_jsonBuffer.parseArray(_jsonString);
+  void whenInputIs(const char *json) { strcpy(_jsonString, json); }
+
+  void whenInputIs(const char *json, size_t len) {
+    memcpy(_jsonString, json, len);
   }
 
-  void parseMustSucceed() { EXPECT_TRUE(_array->success()); }
+  void parseMustSucceed() {
+    _array = &_jsonBuffer.parseArray(_jsonString);
+    EXPECT_TRUE(_array->success());
+  }
 
   void parseMustFail() {
+    _array = &_jsonBuffer.parseArray(_jsonString);
     EXPECT_FALSE(_array->success());
     EXPECT_EQ(0, _array->size());
   }
@@ -154,6 +159,11 @@ TEST_F(JsonParser_Array_Tests, IncompleteFalse) {
   parseMustFail();
 }
 
+TEST_F(JsonParser_Array_Tests, MixedTrueFalse) {
+  whenInputIs("[trufalse]");
+  parseMustFail();
+}
+
 TEST_F(JsonParser_Array_Tests, TwoStrings) {
   whenInputIs("[\"hello\",\"world\"]");
 
@@ -161,4 +171,56 @@ TEST_F(JsonParser_Array_Tests, TwoStrings) {
   sizeMustBe(2);
   firstElementMustBe("hello");
   secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, EmptyStringsDoubleQuotes) {
+  whenInputIs("[\"\",\"\"]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("");
+  secondElementMustBe("");
+}
+
+TEST_F(JsonParser_Array_Tests, EmptyStringSingleQuotes) {
+  whenInputIs("[\'\',\'\']");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("");
+  secondElementMustBe("");
+}
+
+TEST_F(JsonParser_Array_Tests, EmptyStringNoQuotes) {
+  whenInputIs("[,]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("");
+  secondElementMustBe("");
+}
+
+TEST_F(JsonParser_Array_Tests, ClosingDoubleQuoteMissing) {
+  whenInputIs("[\"]");
+
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, ClosingSignleQuoteMissing) {
+  whenInputIs("[\']");
+
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, StringWithEscapedChars) {
+  whenInputIs("[\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
+}
+
+TEST_F(JsonParser_Array_Tests, StringWithUnterminatedEscapeSequence) {
+  whenInputIs("\"\\\0\"", 4);
+  parseMustFail();
 }

@@ -12,6 +12,10 @@
 #include "Prettyfier.hpp"
 #include "StringBuilder.hpp"
 
+#ifdef ARDUINOJSON_ENABLE_STD_STREAM
+#include "StreamPrintAdapter.hpp"
+#endif
+
 namespace ArduinoJson {
 namespace Internals {
 
@@ -27,6 +31,14 @@ class JsonPrintable {
     downcast().writeTo(writer);
     return writer.bytesWritten();
   }
+
+#ifdef ARDUINOJSON_ENABLE_STD_STREAM
+  std::ostream& printTo(std::ostream &os) const {
+    StreamPrintAdapter adapter(os);
+    printTo(adapter);
+    return os;
+  }
+#endif 
 
   size_t printTo(char *buffer, size_t bufferSize) const {
     StringBuilder sb(buffer, bufferSize);
@@ -61,5 +73,13 @@ class JsonPrintable {
  private:
   const T &downcast() const { return *static_cast<const T *>(this); }
 };
+
+#ifdef ARDUINOJSON_ENABLE_STD_STREAM
+template<typename T>
+inline std::ostream& operator<<(std::ostream& os, const JsonPrintable<T>& v) {
+  return v.printTo(os);
+}
+#endif
+
 }
 }

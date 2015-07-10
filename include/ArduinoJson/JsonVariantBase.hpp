@@ -16,7 +16,7 @@ class JsonArraySubscript;
 class JsonObjectSubscript;
 
 template <typename TImpl>
-class JsonVariantBase {
+class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
  public:
   // Gets the variant as a boolean value.
   // Returns false if the variant is not a boolean value.
@@ -78,6 +78,9 @@ class JsonVariantBase {
   // Return JsonVariant::invalid() if the variant is not an object.
   FORCE_INLINE const JsonObjectSubscript operator[](const char *key) const;
   FORCE_INLINE const JsonObjectSubscript operator[](const String &key) const;
+
+  // Serialize the variant to a JsonWriter
+  void writeTo(Internals::JsonWriter &writer) const;
 
  private:
   const TImpl *impl() const { return static_cast<const TImpl *>(this); }

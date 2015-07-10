@@ -41,8 +41,18 @@ class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript> {
     return _object.is<T>(_key);
   }
 
+  void writeTo(Internals::JsonWriter &writer) const {
+    _object.get(_key).writeTo(writer);
+  }
+
  private:
   JsonObject& _object;
   JsonObjectKey _key;
 };
+
+#ifdef ARDUINOJSON_ENABLE_STD_STREAM
+inline std::ostream& operator<<(std::ostream& os, const JsonObjectSubscript& source) {
+  return source.printTo(os);
+}
+#endif
 }

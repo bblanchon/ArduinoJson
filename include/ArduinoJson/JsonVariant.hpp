@@ -28,8 +28,7 @@ class JsonObject;
 // - a char, short, int or a long (signed or unsigned)
 // - a string (const char*)
 // - a reference to a JsonArray or JsonObject
-class JsonVariant : public Internals::JsonPrintable<JsonVariant>,
-                    public JsonVariantBase<JsonVariant> {
+class JsonVariant : public JsonVariantBase<JsonVariant> {
  public:
   // Creates an uninitialized JsonVariant
   FORCE_INLINE JsonVariant() : _type(Internals::JSON_UNDEFINED) {}

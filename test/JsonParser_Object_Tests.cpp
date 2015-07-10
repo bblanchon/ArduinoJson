@@ -75,6 +75,13 @@ TEST_F(JsonParser_Object_Test, OneStringSingleQuotes) {
   keyMustHaveValue("key", "value");
 }
 
+TEST_F(JsonParser_Object_Test, OneStringNoQuotes) {
+  whenInputIs("{key:value}");
+  parseMustSucceed();
+  sizeMustBe(1);
+  keyMustHaveValue("key", "value");
+}
+
 TEST_F(JsonParser_Object_Test, OneStringSpaceBeforeKey) {
   whenInputIs("{ \"key\":\"value\"}");
   parseMustSucceed();
