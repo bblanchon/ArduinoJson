@@ -20,11 +20,6 @@ inline JsonVariant::JsonVariant(const char *value) {
   _content.asString = value;
 }
 
-inline JsonVariant::JsonVariant(const String &value) {
-  _type = Internals::JSON_STRING;
-  _content.asString = value.c_str();
-}
-
 inline JsonVariant::JsonVariant(double value, uint8_t decimals) {
   _type = static_cast<Internals::JsonVariantType>(
       Internals::JSON_DOUBLE_0_DECIMALS + decimals);
@@ -113,11 +108,6 @@ inline bool JsonVariant::is<char const *>() const {
 }
 
 template <>
-inline bool JsonVariant::is<String>() const {
-  return _type == Internals::JSON_STRING;
-}
-
-template <>
 inline bool JsonVariant::is<double>() const {
   return _type >= Internals::JSON_DOUBLE_0_DECIMALS;
 }
@@ -188,9 +178,9 @@ inline bool JsonVariant::is<unsigned short>() const {
 }
 
 #ifdef ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream& operator<<(std::ostream& os, const JsonVariant& source) {
+inline std::ostream &operator<<(std::ostream &os, const JsonVariant &source) {
   return source.printTo(os);
 }
 #endif
 
-} // namespace ArduinoJson
+}  // namespace ArduinoJson

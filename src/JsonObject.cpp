@@ -25,19 +25,25 @@ JsonObject::node_type *JsonObject::getOrCreateNodeAt(JsonObjectKey key) {
   return newNode;
 }
 
-JsonArray &JsonObject::createNestedArray(JsonObjectKey key) {
+template <typename TKey>
+JsonArray &JsonObject::createArrayAt(TKey key) {
   if (!_buffer) return JsonArray::invalid();
   JsonArray &array = _buffer->createArray();
-  set(key, array);
+  setNodeAt<TKey, const JsonVariant &>(key, array);
   return array;
 }
+template JsonArray &JsonObject::createArrayAt<const char *>(const char *);
+template JsonArray &JsonObject::createArrayAt<const String &>(const String &);
 
-JsonObject &JsonObject::createNestedObject(JsonObjectKey key) {
+template <typename TKey>
+JsonObject &JsonObject::createObjectAt(TKey key) {
   if (!_buffer) return JsonObject::invalid();
-  JsonObject &object = _buffer->createObject();
-  set(key, object);
-  return object;
+  JsonObject &array = _buffer->createObject();
+  setNodeAt<TKey, const JsonVariant &>(key, array);
+  return array;
 }
+template JsonObject &JsonObject::createObjectAt<const char *>(const char *);
+template JsonObject &JsonObject::createObjectAt<const String &>(const String &);
 
 JsonObject::node_type *JsonObject::getNodeAt(JsonObjectKey key) const {
   for (node_type *node = _firstNode; node; node = node->next) {

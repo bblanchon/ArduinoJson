@@ -6,52 +6,64 @@
 
 #pragma once
 
-#include "JsonVariantBase.hpp"
+#include "JsonSubscriptBase.hpp"
 
 namespace ArduinoJson {
-class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript> {
+
+template <typename TKey>
+class JsonObjectSubscript
+    : public JsonSubscriptBase<JsonObjectSubscript<TKey> > {
  public:
-  FORCE_INLINE JsonObjectSubscript(JsonObject& object, JsonObjectKey key)
+  FORCE_INLINE JsonObjectSubscript(JsonObject& object, TKey key)
       : _object(object), _key(key) {}
 
-  FORCE_INLINE JsonObjectSubscript& operator=(const JsonVariant& value) {
-    _object.set(_key, value);
-    return *this;
-  }
+  using JsonSubscriptBase<JsonObjectSubscript<TKey> >::operator=;
 
-  FORCE_INLINE JsonObjectSubscript& operator=(
-      const JsonObjectSubscript& other) {
+  FORCE_INLINE JsonObjectSubscript<TKey>& operator=(
+      const JsonObjectSubscript<TKey>& other) {
     // to prevent Visual Studio warning C4512: assignment operator could not be
     // generated
-    _object.set(_key, other._object.get(other._key));
-    return *this;
+    return set(other.get());
   }
 
   FORCE_INLINE bool success() const { return _object.containsKey(_key); }
 
   FORCE_INLINE operator JsonVariant() const { return _object.get(_key); }
 
-  template <typename T>
-  FORCE_INLINE T as() const {
-    return _object.get<T>(_key);
+  template <typename TValue>
+  FORCE_INLINE TValue as() const {
+    return _object.get<TValue>(_key);
   }
 
-  template <typename T>
-  FORCE_INLINE T is() const {
-    return _object.is<T>(_key);
+  template <typename TValue>
+  FORCE_INLINE TValue is() const {
+    return _object.is<TValue>(_key);
   }
 
-  void writeTo(Internals::JsonWriter &writer) const {
+  template <typename TValue>
+  FORCE_INLINE bool set(TValue value) {
+    return _object.set(_key, value);
+  }
+
+  FORCE_INLINE JsonVariant get() { return _object.get(_key); }
+
+  void writeTo(Internals::JsonWriter& writer) const {
     _object.get(_key).writeTo(writer);
   }
 
  private:
   JsonObject& _object;
-  JsonObjectKey _key;
+  TKey _key;
 };
 
 #ifdef ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream& operator<<(std::ostream& os, const JsonObjectSubscript& source) {
+inline std::ostream& operator<<(
+    std::ostream& os, const JsonObjectSubscript<const String&>& source) {
+  return source.printTo(os);
+}
+
+inline std::ostream& operator<<(
+    std::ostream& os, const JsonObjectSubscript<const char*>& source) {
   return source.printTo(os);
 }
 #endif

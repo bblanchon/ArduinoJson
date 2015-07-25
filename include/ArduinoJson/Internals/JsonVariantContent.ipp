@@ -24,11 +24,6 @@ inline char const* JsonVariantContent::as<char const*>() const {
 }
 
 template <>
-inline String JsonVariantContent::as<String>() const {
-  return asString;
-}
-
-template <>
 inline double JsonVariantContent::as<double>() const {
   return asDouble;
 }

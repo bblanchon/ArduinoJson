@@ -8,8 +8,10 @@
 
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uint8_t
+#include <string.h>
 
 #include "Arduino/String.hpp"
+#include "JsonVariant.hpp"
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wnon-virtual-dtor"
@@ -59,7 +61,7 @@ class JsonBuffer {
 
   // Same as above with a String class
   JsonArray &parseArray(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
-    return parseArray(const_cast<char *>(json.c_str()), nesting);
+    return parseArray(strdup(json), nesting);
   }
 
   // Allocates and populate a JsonObject from a JSON string.
@@ -75,10 +77,14 @@ class JsonBuffer {
   JsonObject &parseObject(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
 
   // Same as above with a String class
-  JsonObject &parseObject(const String &json,
-                          uint8_t nestingLimit = DEFAULT_LIMIT) {
-    return parseObject(const_cast<char *>(json.c_str()), nestingLimit);
+  JsonObject &parseObject(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
+    return parseObject(strdup(json), nesting);
   }
+
+  // Duplicate a string
+  char *strdup(const char *src) { return strdup(src, strlen(src)); }
+  char *strdup(const String &src) { return strdup(src.c_str(), src.length()); }
+  char *strdup(const char *, size_t);
 
   // Allocates n bytes in the JsonBuffer.
   // Return a pointer to the allocated memory or NULL if allocation fails.

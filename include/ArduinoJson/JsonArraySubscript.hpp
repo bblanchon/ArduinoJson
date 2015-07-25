@@ -6,18 +6,15 @@
 
 #pragma once
 
-#include "JsonVariantBase.hpp"
+#include "JsonSubscriptBase.hpp"
 
 namespace ArduinoJson {
-class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
+class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
  public:
   FORCE_INLINE JsonArraySubscript(JsonArray& array, size_t index)
       : _array(array), _index(index) {}
 
-  FORCE_INLINE JsonArraySubscript& operator=(const JsonVariant& value) {
-    _array.set(_index, value);
-    return *this;
-  }
+  using JsonSubscriptBase::operator=;
 
   FORCE_INLINE JsonArraySubscript& operator=(const JsonArraySubscript& other) {
     // to prevent Visual Studio warning C4512: assignment operator could not be
@@ -40,8 +37,13 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return _array.is<T>(_index);
   }
 
-  void writeTo(Internals::JsonWriter &writer) const {
+  void writeTo(Internals::JsonWriter& writer) const {
     _array.get(_index).writeTo(writer);
+  }
+
+  template <typename TValue>
+  void set(TValue value) {
+    _array.set(_index, value);
   }
 
  private:
@@ -50,9 +52,10 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
 };
 
 #ifdef ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream& operator<<(std::ostream& os, const JsonArraySubscript& source) {
+inline std::ostream& operator<<(std::ostream& os,
+                                const JsonArraySubscript& source) {
   return source.printTo(os);
 }
 #endif
 
-} // namespace ArduinoJson
+}  // namespace ArduinoJson

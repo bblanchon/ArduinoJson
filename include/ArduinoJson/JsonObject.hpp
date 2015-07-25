@@ -23,7 +23,6 @@ namespace ArduinoJson {
 // Forward declarations
 class JsonArray;
 class JsonBuffer;
-class JsonObjectSubscript;
 
 // A dictionary of JsonVariant indexed by string (char*)
 //
@@ -43,13 +42,45 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
       : Internals::List<JsonPair>(buffer) {}
 
   // Gets or sets the value associated with the specified key.
-  FORCE_INLINE JsonObjectSubscript operator[](JsonObjectKey key);
+  FORCE_INLINE JsonObjectSubscript<const char*> operator[](const char* key);
+  FORCE_INLINE JsonObjectSubscript<const String&> operator[](const String& key);
 
   // Gets the value associated with the specified key.
-  FORCE_INLINE const JsonObjectSubscript operator[](JsonObjectKey key) const;
+  FORCE_INLINE JsonVariant operator[](JsonObjectKey key) const;
 
   // Sets the specified key with the specified value.
-  FORCE_INLINE bool set(JsonObjectKey key, JsonVariant value);
+  FORCE_INLINE bool set(const char* key, bool value);
+  FORCE_INLINE bool set(const char* key, float value, uint8_t decimals = 2);
+  FORCE_INLINE bool set(const char* key, double value, uint8_t decimals = 2);
+  FORCE_INLINE bool set(const char* key, signed char value);
+  FORCE_INLINE bool set(const char* key, signed long value);
+  FORCE_INLINE bool set(const char* key, signed int value);
+  FORCE_INLINE bool set(const char* key, signed short value);
+  FORCE_INLINE bool set(const char* key, unsigned char value);
+  FORCE_INLINE bool set(const char* key, unsigned long value);
+  FORCE_INLINE bool set(const char* key, unsigned int value);
+  FORCE_INLINE bool set(const char* key, unsigned short value);
+  FORCE_INLINE bool set(const char* key, const char* value);
+  FORCE_INLINE bool set(const char* key, const String& value);
+  FORCE_INLINE bool set(const char* key, JsonArray& array);
+  FORCE_INLINE bool set(const char* key, JsonObject& object);
+  FORCE_INLINE bool set(const char* key, const JsonVariant& value);
+  FORCE_INLINE bool set(const String& key, bool value);
+  FORCE_INLINE bool set(const String& key, float value, uint8_t decimals = 2);
+  FORCE_INLINE bool set(const String& key, double value, uint8_t decimals = 2);
+  FORCE_INLINE bool set(const String& key, signed char value);
+  FORCE_INLINE bool set(const String& key, signed long value);
+  FORCE_INLINE bool set(const String& key, signed int value);
+  FORCE_INLINE bool set(const String& key, signed short value);
+  FORCE_INLINE bool set(const String& key, unsigned char value);
+  FORCE_INLINE bool set(const String& key, unsigned long value);
+  FORCE_INLINE bool set(const String& key, unsigned int value);
+  FORCE_INLINE bool set(const String& key, unsigned short value);
+  FORCE_INLINE bool set(const String& key, const char* value);
+  FORCE_INLINE bool set(const String& key, const String& value);
+  FORCE_INLINE bool set(const String& key, JsonArray& array);
+  FORCE_INLINE bool set(const String& key, JsonObject& object);
+  FORCE_INLINE bool set(const String& key, const JsonVariant& value);
 
   // Gets the value associated with the specified key.
   FORCE_INLINE JsonVariant get(JsonObjectKey) const;
@@ -64,11 +95,13 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
   // Creates and adds a JsonArray.
   // This is a shortcut for JsonBuffer::createArray() and JsonObject::add().
-  JsonArray& createNestedArray(JsonObjectKey key);
+  FORCE_INLINE JsonArray& createNestedArray(const char* key);
+  FORCE_INLINE JsonArray& createNestedArray(const String& key);
 
   // Creates and adds a JsonObject.
   // This is a shortcut for JsonBuffer::createObject() and JsonObject::add().
-  JsonObject& createNestedObject(JsonObjectKey key);
+  FORCE_INLINE JsonObject& createNestedObject(const char* key);
+  FORCE_INLINE JsonObject& createNestedObject(const String& key);
 
   // Tells weither the specified key is present and associated with a value.
   FORCE_INLINE bool containsKey(JsonObjectKey key) const;
@@ -89,6 +122,21 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   node_type* getNodeAt(JsonObjectKey key) const;
 
   node_type* getOrCreateNodeAt(JsonObjectKey key);
+
+  template <typename TKey, typename TValue>
+  FORCE_INLINE bool setNodeAt(TKey key, TValue value);
+
+  template <typename TKey>
+  JsonArray& createArrayAt(TKey key);
+
+  template <typename TKey>
+  JsonObject& createObjectAt(TKey key);
+
+  template <typename T>
+  FORCE_INLINE void setNodeKey(node_type*, T key);
+
+  template <typename T>
+  FORCE_INLINE void setNodeValue(node_type*, T value);
 
   // The instance returned by JsonObject::invalid()
   static JsonObject _invalid;

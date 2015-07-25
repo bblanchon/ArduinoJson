@@ -4,9 +4,11 @@ ArduinoJson: change log
 v5.0 (currently in beta)
 ----
 
-* Added support of `String` class (issue #55, #56, #70, #77)
+* Added support of `String` class (issues #55, #56, #70, #77)
+* Added `JsonBuffer::strdup()` to make a copy of a string (issues #10, #57)
+* Implicitly call `strdup()` for `String` but not for `char*` (issues #84, #87)
 * Added support of non standard JSON input (issue #44)
-* Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators
+* Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators (issue #66)
 * Switched to new the library layout (requires Arduino 1.0.6 or above)
 
 **BREAKING CHANGES**:

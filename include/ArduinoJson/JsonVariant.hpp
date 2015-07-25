@@ -9,7 +9,6 @@
 #include <stddef.h>
 #include <stdint.h>  // for uint8_t
 
-#include "Arduino/String.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/JsonVariantContent.hpp"
 #include "Internals/JsonVariantType.hpp"
@@ -55,7 +54,6 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
 
   // Create a JsonVariant containing a string.
   FORCE_INLINE JsonVariant(const char *value);
-  FORCE_INLINE JsonVariant(const String &value);
 
   // Create a JsonVariant containing a reference to an array.
   FORCE_INLINE JsonVariant(JsonArray &array);

@@ -49,7 +49,7 @@ size_t DynamicJsonBuffer::size() const {
 }
 
 void* DynamicJsonBuffer::alloc(size_t bytes) {
-  if (!canAllocInHead(bytes)) addNewBlock();
+  while (!canAllocInHead(bytes)) addNewBlock();
   return allocInHead(bytes);
 }
 
