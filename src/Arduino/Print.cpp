@@ -11,6 +11,12 @@
 #include <math.h>   // for isnan() and isinf()
 #include <stdio.h>  // for sprintf()
 
+// only for GCC 4.9+
+#if defined(__GNUC__) && \
+    (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 9))
+#pragma GCC diagnostic ignored "-Wfloat-conversion"
+#endif
+
 size_t Print::print(const char s[]) {
   size_t n = 0;
   while (*s) {

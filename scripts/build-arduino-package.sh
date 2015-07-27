@@ -1,16 +1,15 @@
 #!/bin/bash
 
-ZIP="C:\Program Files\7-Zip\7z.exe"
 TAG=$(git describe)
 OUTPUT="ArduinoJson-$TAG.zip"
 
-cd ../..
+cd $(dirname $0)/../..
 
 # remove existing file
 rm -f $OUTPUT
 
 # create zip
-"$ZIP" a $OUTPUT \
+7z a $OUTPUT \
 	ArduinoJson/CHANGELOG.md \
 	ArduinoJson/examples \
 	ArduinoJson/include \

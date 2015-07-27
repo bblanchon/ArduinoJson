@@ -9,6 +9,7 @@
 #include <stdlib.h>  // for strtol, strtod
 #include <ctype.h>
 
+#include "../../include/ArduinoJson/Internals/Comments.hpp"
 #include "../../include/ArduinoJson/Internals/Encoding.hpp"
 #include "../../include/ArduinoJson/JsonArray.hpp"
 #include "../../include/ArduinoJson/JsonBuffer.hpp"
@@ -17,16 +18,11 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
-static const char *skipSpaces(const char *ptr) {
-  while (isspace(*ptr)) ptr++;
-  return ptr;
-}
-
 bool JsonParser::skip(char charToSkip) {
-  register const char *ptr = skipSpaces(_readPtr);
+  register const char *ptr = skipSpacesAndComments(_readPtr);
   if (*ptr != charToSkip) return false;
   ptr++;
-  _readPtr = skipSpaces(ptr);
+  _readPtr = skipSpacesAndComments(ptr);
   return true;
 }
 
@@ -50,7 +46,7 @@ bool JsonParser::parseAnythingTo(JsonVariant *destination) {
 }
 
 inline bool JsonParser::parseAnythingToUnsafe(JsonVariant *destination) {
-  _readPtr = skipSpaces(_readPtr);
+  _readPtr = skipSpacesAndComments(_readPtr);
 
   switch (*_readPtr) {
     case '[':
@@ -212,8 +208,13 @@ bool JsonParser::parseNullTo(JsonVariant *destination) {
   return true;
 }
 
-static bool isStopChar(char c) {
-  return c == '\0' || c == ':' || c == '}' || c == ']' || c == ',';
+static inline bool isInRange(char c, char min, char max) {
+  return min <= c && c <= max;
+}
+
+static inline bool isLetterOrNumber(char c) {
+  return isInRange(c, '0', '9') || isInRange(c, 'a', 'z') ||
+         isInRange(c, 'A', 'Z');
 }
 
 const char *JsonParser::parseString() {
@@ -222,7 +223,7 @@ const char *JsonParser::parseString() {
 
   char c = *readPtr;
 
-  if (c == '\'' || c == '\"') {
+  if (c == '\'' || c == '\"') {  // quotes
     char stopChar = c;
     for (;;) {
       c = *++readPtr;
@@ -241,9 +242,9 @@ const char *JsonParser::parseString() {
 
       *writePtr++ = c;
     }
-  } else {
+  } else {  // no quotes
     for (;;) {
-      if (isStopChar(c)) break;
+      if (!isLetterOrNumber(c)) break;
       *writePtr++ = c;
       c = *++readPtr;
     }
