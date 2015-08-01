@@ -24,6 +24,11 @@ The `String` class is **bad** because it uses dynamic memory allocation.
 Compared to static allocation, it compiles to a bigger, slower program, and is less predictable.
 You certainly don't want that in an embedded environment!
 
+v4.6
+----
+
+* Fixed segmentation fault in `DynamicJsonBuffer` when memory allocation fails (issue #92)
+
 v4.5
 ----
 
