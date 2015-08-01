@@ -1,6 +1,11 @@
 Arduino JSON: change log
 ========================
 
+v4.6
+----
+
+* Fixed segmentation fault in `DynamicJsonBuffer` when memory allocation fails (issue #92)
+
 v4.5
 ----
 
