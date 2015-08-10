@@ -28,16 +28,12 @@ class JsonParser {
 
  private:
   bool skip(char charToSkip);
-  bool skip(const char *wordToSkip);
 
   const char *parseString();
   bool parseAnythingTo(JsonVariant *destination);
   FORCE_INLINE bool parseAnythingToUnsafe(JsonVariant *destination);
 
   inline bool parseArrayTo(JsonVariant *destination);
-  inline bool parseBooleanTo(JsonVariant *destination);
-  inline bool parseNullTo(JsonVariant *destination);
-  inline bool parseNumberTo(JsonVariant *destination);
   inline bool parseObjectTo(JsonVariant *destination);
   inline bool parseStringTo(JsonVariant *destination);
 

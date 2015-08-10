@@ -164,3 +164,37 @@ TEST_F(ArduinoStringTests, JsonArraySubscript) {
   eraseString(value);
   ASSERT_STREQ("world", array[0]);
 }
+
+TEST_F(ArduinoStringTests, JsonArray_PrintTo) {
+  JsonArray &array = _jsonBuffer.createArray();
+  array.add(4);
+  array.add(2);
+  String json;
+  array.printTo(json);
+  ASSERT_EQ(String("[4,2]"), json);
+}
+
+TEST_F(ArduinoStringTests, JsonArray_PrettyPrintTo) {
+  JsonArray &array = _jsonBuffer.createArray();
+  array.add(4);
+  array.add(2);
+  String json;
+  array.prettyPrintTo(json);
+  ASSERT_EQ(String("[\r\n  4,\r\n  2\r\n]"), json);
+}
+
+TEST_F(ArduinoStringTests, JsonObject_PrintTo) {
+  JsonObject &object = _jsonBuffer.createObject();
+  object["key"] = "value";
+  String json;
+  object.printTo(json);
+  ASSERT_EQ(String("{\"key\":\"value\"}"), json);
+}
+
+TEST_F(ArduinoStringTests, JsonObject_PrettyPrintTo) {
+  JsonObject &object = _jsonBuffer.createObject();
+  object["key"] = "value";
+  String json;
+  object.prettyPrintTo(json);
+  ASSERT_EQ(String("{\r\n  \"key\": \"value\"\r\n}"), json);
+}

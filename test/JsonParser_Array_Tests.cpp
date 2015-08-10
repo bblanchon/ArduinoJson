@@ -144,26 +144,6 @@ TEST_F(JsonParser_Array_Tests, TwoNulls) {
   secondElementMustBe(nullCharPtr);
 }
 
-TEST_F(JsonParser_Array_Tests, IncompleteNull) {
-  whenInputIs("[nul!]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, IncompleteTrue) {
-  whenInputIs("[tru!]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, IncompleteFalse) {
-  whenInputIs("[fals!]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, MixedTrueFalse) {
-  whenInputIs("[trufalse]");
-  parseMustFail();
-}
-
 TEST_F(JsonParser_Array_Tests, TwoStringsDoubleQuotes) {
   whenInputIs("[ \"hello\" , \"world\" ]");
 

@@ -16,11 +16,12 @@ namespace Internals {
 // The value determines which member of JsonVariantContent is used.
 enum JsonVariantType {
   JSON_UNDEFINED,  // the JsonVariant has not been initialized
+  JSON_UNPARSED,   // the JsonVariant contains an unparsed string
+  JSON_STRING,     // the JsonVariant stores a const char*
+  JSON_BOOLEAN,    // the JsonVariant stores a bool
+  JSON_LONG,       // the JsonVariant stores a long
   JSON_ARRAY,      // the JsonVariant stores a pointer to a JsonArray
   JSON_OBJECT,     // the JsonVariant stores a pointer to a JsonObject
-  JSON_BOOLEAN,    // the JsonVariant stores a bool
-  JSON_STRING,     // the JsonVariant stores a const char*
-  JSON_LONG,       // the JsonVariant stores a long
 
   // The following values are reserved for double values
   // Multiple values are used for double, depending on the number of decimal

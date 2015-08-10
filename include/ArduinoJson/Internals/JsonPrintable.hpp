@@ -10,7 +10,8 @@
 #include "IndentedPrint.hpp"
 #include "JsonWriter.hpp"
 #include "Prettyfier.hpp"
-#include "StringBuilder.hpp"
+#include "StaticStringBuilder.hpp"
+#include "DynamicStringBuilder.hpp"
 
 #ifdef ARDUINOJSON_ENABLE_STD_STREAM
 #include "StreamPrintAdapter.hpp"
@@ -33,15 +34,20 @@ class JsonPrintable {
   }
 
 #ifdef ARDUINOJSON_ENABLE_STD_STREAM
-  std::ostream& printTo(std::ostream &os) const {
+  std::ostream &printTo(std::ostream &os) const {
     StreamPrintAdapter adapter(os);
     printTo(adapter);
     return os;
   }
-#endif 
+#endif
 
   size_t printTo(char *buffer, size_t bufferSize) const {
-    StringBuilder sb(buffer, bufferSize);
+    StaticStringBuilder sb(buffer, bufferSize);
+    return printTo(sb);
+  }
+
+  size_t printTo(String &str) const {
+    DynamicStringBuilder sb(str);
     return printTo(sb);
   }
 
@@ -51,13 +57,18 @@ class JsonPrintable {
   }
 
   size_t prettyPrintTo(char *buffer, size_t bufferSize) const {
-    StringBuilder sb(buffer, bufferSize);
+    StaticStringBuilder sb(buffer, bufferSize);
     return prettyPrintTo(sb);
   }
 
   size_t prettyPrintTo(Print &print) const {
     IndentedPrint indentedPrint = IndentedPrint(print);
     return prettyPrintTo(indentedPrint);
+  }
+
+  size_t prettyPrintTo(String &str) const {
+    DynamicStringBuilder sb(str);
+    return prettyPrintTo(sb);
   }
 
   size_t measureLength() const {
@@ -75,11 +86,10 @@ class JsonPrintable {
 };
 
 #ifdef ARDUINOJSON_ENABLE_STD_STREAM
-template<typename T>
-inline std::ostream& operator<<(std::ostream& os, const JsonPrintable<T>& v) {
+template <typename T>
+inline std::ostream &operator<<(std::ostream &os, const JsonPrintable<T> &v) {
   return v.printTo(os);
 }
 #endif
-
 }
 }

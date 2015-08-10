@@ -9,6 +9,8 @@ v5.0 (currently in beta)
 * Implicitly call `strdup()` for `String` but not for `char*` (issues #84, #87)
 * Added support of non standard JSON input (issue #44)
 * Added support of comments in JSON input (issue #88)
+* Added implicit cast between numerical types (issues #64, #69, #93)
+* Added ability to read number values as string (issue #90)
 * Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators (issue #66)
 * Switched to new the library layout (requires Arduino 1.0.6 or above)
 

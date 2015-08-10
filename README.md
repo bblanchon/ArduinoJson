@@ -12,7 +12,7 @@ It has been written with Arduino in mind, but it isn't linked to Arduino librari
 Features
 --------
 
-* JSON decoding
+* JSON decoding (comments are supported)
 * JSON encoding (with optional indentation)
 * Elegant API, very easy to use 
 * Efficient (no malloc, nor copy)

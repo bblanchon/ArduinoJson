@@ -7,14 +7,14 @@
 #include <gtest/gtest.h>
 
 #include <ArduinoJson/Internals/JsonWriter.hpp>
-#include <ArduinoJson/Internals/StringBuilder.hpp>
+#include <ArduinoJson/Internals/StaticStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 
 class JsonWriter_WriteString_Tests : public testing::Test {
  protected:
   void whenInputIs(const char *input) {
-    StringBuilder sb(buffer, sizeof(buffer));
+    StaticStringBuilder sb(buffer, sizeof(buffer));
     JsonWriter writer(sb);
     writer.writeString(input);
     returnValue = writer.bytesWritten();

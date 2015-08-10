@@ -12,6 +12,7 @@
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/JsonVariantContent.hpp"
 #include "Internals/JsonVariantType.hpp"
+#include "Internals/Unparsed.hpp"
 #include "JsonVariantBase.hpp"
 
 namespace ArduinoJson {
@@ -55,6 +56,9 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   // Create a JsonVariant containing a string.
   FORCE_INLINE JsonVariant(const char *value);
 
+  // Create a JsonVariant containing an unparsed string
+  FORCE_INLINE JsonVariant(Internals::Unparsed value);
+
   // Create a JsonVariant containing a reference to an array.
   FORCE_INLINE JsonVariant(JsonArray &array);
 
@@ -64,12 +68,12 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   // Get the variant as the specified type.
   // See cast operators for details.
   template <typename T>
-  FORCE_INLINE T as() const;
+  T as() const;
 
   // Tells weither the variant has the specified type.
   // Returns true if the variant has type type T, false otherwise.
   template <typename T>
-  FORCE_INLINE bool is() const;
+  bool is() const;
 
   // Serialize the variant to a JsonWriter
   void writeTo(Internals::JsonWriter &writer) const;

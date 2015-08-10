@@ -37,10 +37,8 @@ class JsonWriter {
   void writeColon() { write(':'); }
   void writeComma() { write(','); }
 
-  void writeBoolean(bool value) {
-    write(value ? "true" : "false");
-  }
-  
+  void writeBoolean(bool value) { write(value ? "true" : "false"); }
+
   void writeString(const char *value) {
     if (!value) {
       write("null");
@@ -66,6 +64,8 @@ class JsonWriter {
   void writeDouble(double value, uint8_t decimals) {
     _length += _sink.print(value, decimals);
   }
+
+  void writeRaw(const char *s) { return write(s); }
 
  protected:
   void write(char c) { _length += _sink.write(c); }

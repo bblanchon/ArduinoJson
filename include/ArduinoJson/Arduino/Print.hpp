@@ -11,7 +11,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// This class reproduces Arduino's Print
+// This class reproduces Arduino's Print class
 class Print {
  public:
   virtual ~Print() {}

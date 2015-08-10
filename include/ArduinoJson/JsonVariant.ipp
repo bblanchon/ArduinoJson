@@ -12,11 +12,16 @@ namespace ArduinoJson {
 
 inline JsonVariant::JsonVariant(bool value) {
   _type = Internals::JSON_BOOLEAN;
-  _content.asBoolean = value;
+  _content.asLong = value;
 }
 
 inline JsonVariant::JsonVariant(const char *value) {
   _type = Internals::JSON_STRING;
+  _content.asString = value;
+}
+
+inline JsonVariant::JsonVariant(Internals::Unparsed value) {
+  _type = Internals::JSON_UNPARSED;
   _content.asString = value;
 }
 
@@ -82,9 +87,61 @@ inline JsonVariant::JsonVariant(unsigned short value) {
   _content.asLong = value;
 }
 
-template <typename T>
-inline T JsonVariant::as() const {
-  return is<T>() ? _content.as<T>() : invalid<T>();
+template <>
+double JsonVariant::as<double>() const;
+
+template <>
+long JsonVariant::as<long>() const;
+
+template <>
+String JsonVariant::as<String>() const;
+
+template <>
+const char *JsonVariant::as<const char *>() const;
+
+template <>
+inline bool JsonVariant::as<bool>() const {
+  return as<long>();
+}
+
+template <>
+inline signed char JsonVariant::as<signed char>() const {
+  return static_cast<signed char>(as<long>());
+}
+
+template <>
+inline unsigned char JsonVariant::as<unsigned char>() const {
+  return static_cast<unsigned char>(as<long>());
+}
+
+template <>
+inline signed short JsonVariant::as<signed short>() const {
+  return static_cast<signed short>(as<long>());
+}
+
+template <>
+inline unsigned short JsonVariant::as<unsigned short>() const {
+  return static_cast<unsigned short>(as<long>());
+}
+
+template <>
+inline signed int JsonVariant::as<signed int>() const {
+  return static_cast<signed int>(as<long>());
+}
+
+template <>
+inline unsigned int JsonVariant::as<unsigned int>() const {
+  return static_cast<unsigned int>(as<long>());
+}
+
+template <>
+inline unsigned long JsonVariant::as<unsigned long>() const {
+  return static_cast<unsigned long>(as<long>());
+}
+
+template <>
+inline float JsonVariant::as<float>() const {
+  return static_cast<float>(as<double>());
 }
 
 template <typename T>
@@ -97,6 +154,12 @@ inline bool JsonVariant::is() const {
   return false;
 }
 
+template <>  // in .cpp
+bool JsonVariant::is<signed long>() const;
+
+template <>  // in .cpp
+bool JsonVariant::is<double>() const;
+
 template <>
 inline bool JsonVariant::is<bool>() const {
   return _type == Internals::JSON_BOOLEAN;
@@ -108,13 +171,8 @@ inline bool JsonVariant::is<char const *>() const {
 }
 
 template <>
-inline bool JsonVariant::is<double>() const {
-  return _type >= Internals::JSON_DOUBLE_0_DECIMALS;
-}
-
-template <>
 inline bool JsonVariant::is<float>() const {
-  return _type >= Internals::JSON_DOUBLE_0_DECIMALS;
+  return is<double>();
 }
 
 template <>
@@ -139,42 +197,37 @@ inline bool JsonVariant::is<JsonObject const &>() const {
 
 template <>
 inline bool JsonVariant::is<signed char>() const {
-  return _type == Internals::JSON_LONG;
+  return is<signed long>();
 }
 
 template <>
 inline bool JsonVariant::is<signed int>() const {
-  return _type == Internals::JSON_LONG;
-}
-
-template <>
-inline bool JsonVariant::is<signed long>() const {
-  return _type == Internals::JSON_LONG;
+  return is<signed long>();
 }
 
 template <>
 inline bool JsonVariant::is<signed short>() const {
-  return _type == Internals::JSON_LONG;
+  return is<signed long>();
 }
 
 template <>
 inline bool JsonVariant::is<unsigned char>() const {
-  return _type == Internals::JSON_LONG;
+  return is<signed long>();
 }
 
 template <>
 inline bool JsonVariant::is<unsigned int>() const {
-  return _type == Internals::JSON_LONG;
+  return is<signed long>();
 }
 
 template <>
 inline bool JsonVariant::is<unsigned long>() const {
-  return _type == Internals::JSON_LONG;
+  return is<signed long>();
 }
 
 template <>
 inline bool JsonVariant::is<unsigned short>() const {
-  return _type == Internals::JSON_LONG;
+  return is<signed long>();
 }
 
 #ifdef ARDUINOJSON_ENABLE_STD_STREAM
