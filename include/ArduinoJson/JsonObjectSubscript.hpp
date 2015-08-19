@@ -19,13 +19,6 @@ class JsonObjectSubscript
 
   using JsonSubscriptBase<JsonObjectSubscript<TKey> >::operator=;
 
-  FORCE_INLINE JsonObjectSubscript<TKey>& operator=(
-      const JsonObjectSubscript<TKey>& other) {
-    // to prevent Visual Studio warning C4512: assignment operator could not be
-    // generated
-    return set(other.get());
-  }
-
   FORCE_INLINE bool success() const { return _object.containsKey(_key); }
 
   FORCE_INLINE operator JsonVariant() const { return _object.get(_key); }

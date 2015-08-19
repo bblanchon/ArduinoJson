@@ -23,6 +23,8 @@ class DynamicStringBuilder : public Print {
   }
 
  private:
+  DynamicStringBuilder &operator=(const DynamicStringBuilder &);
+
   String &_str;
 };
 }

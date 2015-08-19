@@ -16,12 +16,6 @@ String::String(double value, unsigned char digits) {
   *this = tmp;
 }
 
-String::String(int value) {
-  char tmp[32];
-  sprintf(tmp, "%d", value);
-  *this = tmp;
-}
-
 String::String(long value) {
   char tmp[32];
   sprintf(tmp, "%ld", value);

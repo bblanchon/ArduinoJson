@@ -16,13 +16,6 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
 
   using JsonSubscriptBase::operator=;
 
-  FORCE_INLINE JsonArraySubscript& operator=(const JsonArraySubscript& other) {
-    // to prevent Visual Studio warning C4512: assignment operator could not be
-    // generated
-    _array.set(_index, other._array.get(other._index));
-    return *this;
-  }
-
   FORCE_INLINE bool success() const { return _index < _array.size(); }
 
   FORCE_INLINE operator JsonVariant() const { return _array.get(_index); }

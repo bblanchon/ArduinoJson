@@ -99,19 +99,25 @@ bool JsonVariant::is<double>() const {
 }
 
 void JsonVariant::writeTo(JsonWriter &writer) const {
-  if (_type == JSON_ARRAY) _content.asArray->writeTo(writer);
+  if (_type == JSON_ARRAY)
+    _content.asArray->writeTo(writer);
 
-  if (_type == JSON_OBJECT) _content.asObject->writeTo(writer);
+  else if (_type == JSON_OBJECT)
+    _content.asObject->writeTo(writer);
 
-  if (_type == JSON_STRING) writer.writeString(_content.asString);
+  else if (_type == JSON_STRING)
+    writer.writeString(_content.asString);
 
-  if (_type == JSON_UNPARSED) writer.writeRaw(_content.asString);
+  else if (_type == JSON_UNPARSED)
+    writer.writeRaw(_content.asString);
 
-  if (_type == JSON_LONG) writer.writeLong(_content.asLong);
+  else if (_type == JSON_LONG)
+    writer.writeLong(_content.asLong);
 
-  if (_type == JSON_BOOLEAN) writer.writeBoolean(_content.asLong);
+  else if (_type == JSON_BOOLEAN)
+    writer.writeBoolean(_content.asLong != 0);
 
-  if (_type >= JSON_DOUBLE_0_DECIMALS) {
+  else if (_type >= JSON_DOUBLE_0_DECIMALS) {
     uint8_t decimals = static_cast<uint8_t>(_type - JSON_DOUBLE_0_DECIMALS);
     writer.writeDouble(_content.asDouble, decimals);
   }

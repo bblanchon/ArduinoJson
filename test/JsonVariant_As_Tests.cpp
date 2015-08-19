@@ -145,6 +145,11 @@ TEST(JsonVariant_As_Tests, RandomStringAsLong) {
   ASSERT_EQ(0L, variant.as<long>());
 }
 
+TEST(JsonVariant_As_Tests, RandomStringAsString) {
+  JsonVariant variant = "hello";
+  ASSERT_EQ(String("hello"), variant.as<String>());
+}
+
 TEST(JsonVariant_As_Tests, TrueStringAsBool) {
   JsonVariant variant = "true";
   ASSERT_TRUE(variant.as<bool>());

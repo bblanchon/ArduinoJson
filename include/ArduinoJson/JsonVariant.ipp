@@ -101,7 +101,7 @@ const char *JsonVariant::as<const char *>() const;
 
 template <>
 inline bool JsonVariant::as<bool>() const {
-  return as<long>();
+  return as<long>() != 0;
 }
 
 template <>

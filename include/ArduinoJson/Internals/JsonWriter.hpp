@@ -8,6 +8,7 @@
 
 #include "../Arduino/Print.hpp"
 #include "Encoding.hpp"
+#include "ForceInline.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -69,7 +70,7 @@ class JsonWriter {
 
  protected:
   void write(char c) { _length += _sink.write(c); }
-  void write(const char *s) { _length += _sink.print(s); }
+  FORCE_INLINE void write(const char *s) { _length += _sink.print(s); }
 
   Print &_sink;
   size_t _length;
