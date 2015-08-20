@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-v5.0 (currently in beta)
-----
+v5.0.0
+------
 
 * Added support of `String` class (issues #55, #56, #70, #77)
 * Added `JsonBuffer::strdup()` to make a copy of a string (issues #10, #57)
