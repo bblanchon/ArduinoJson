@@ -5,7 +5,7 @@ Arduino JSON library
 
 *An elegant and efficient JSON library for embedded systems.*
 
-It's design to have the most intuitive API, the smallest footprint and works without any allocation on the heap (no malloc).
+It's designed to have the most intuitive API, the smallest footprint and works without any allocation on the heap (no malloc).
 
 It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library in any other C++ project.
 
@@ -14,7 +14,7 @@ Features
 
 * JSON decoding (comments are supported)
 * JSON encoding (with optional indentation)
-* Elegant API, very easy to use 
+* Elegant API, very easy to use
 * Efficient (no malloc, nor copy)
 * Portable (written in C++98)
 * Self-contained (no external dependency)
@@ -25,7 +25,7 @@ Quick start
 -----------
 
 #### Decoding / Parsing
-   
+
     char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
     StaticJsonBuffer<200> jsonBuffer;
@@ -38,7 +38,7 @@ Quick start
     double longitude   = root["data"][1];
 
 #### Encoding / Generating
-   
+
     StaticJsonBuffer<200> jsonBuffer;
 
     JsonObject& root = jsonBuffer.createObject();
@@ -57,13 +57,13 @@ Quick start
 Documentation
 -------------
 
-The documentation is available online in the [Arduino JSON wiki](https://github.com/bblanchon/ArduinoJson/wiki) 
+The documentation is available online in the [Arduino JSON wiki](https://github.com/bblanchon/ArduinoJson/wiki)
 
 Testimonials
 ------------
 
 From Arduino's Forum user `jflaplante`:
-> I tried aJson json-arduino before trying your library. I always ran into memory problem after a while. 
+> I tried aJson json-arduino before trying your library. I always ran into memory problem after a while.
 > I have no such problem so far with your library. It is working perfectly with my web services.
 
 From Arduino's Forum user `gbathree`:
