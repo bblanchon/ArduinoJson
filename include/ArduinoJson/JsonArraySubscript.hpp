@@ -14,7 +14,7 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
   FORCE_INLINE JsonArraySubscript(JsonArray& array, size_t index)
       : _array(array), _index(index) {}
 
-  using JsonSubscriptBase::operator=;
+  using JsonSubscriptBase<JsonArraySubscript>::operator=;
 
   FORCE_INLINE bool success() const { return _index < _array.size(); }
 

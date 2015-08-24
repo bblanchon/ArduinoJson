@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+v5.0.1
+------
+
+* Fixed compilation with Arduino 1.0.6 (issue #99)
+
 v5.0.0
 ------
 
