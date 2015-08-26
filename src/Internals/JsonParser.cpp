@@ -16,7 +16,7 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 bool JsonParser::skip(char charToSkip) {
-  register const char *ptr = skipSpacesAndComments(_readPtr);
+  const char *ptr = skipSpacesAndComments(_readPtr);
   if (*ptr != charToSkip) return false;
   ptr++;
   _readPtr = skipSpacesAndComments(ptr);

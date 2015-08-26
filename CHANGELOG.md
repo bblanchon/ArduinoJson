@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+v5.0.2
+------
+
+* Fixed Clang warning "register specifier is deprecated" (issue #102)
+
 v5.0.1
 ------
 

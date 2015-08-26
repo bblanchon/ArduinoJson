@@ -11,6 +11,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wcast-qual
 		-Wconversion
 		-Wctor-dtor-privacy
+		-Wdeprecated-register
 		-Wdisabled-optimization
 		-Werror
 		-Wextra
