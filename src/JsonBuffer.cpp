@@ -6,6 +6,7 @@
 
 #include "../include/ArduinoJson/JsonBuffer.hpp"
 
+#include "../include/ArduinoJson/Internals/JsonDebug.hpp"
 #include "../include/ArduinoJson/Internals/JsonParser.hpp"
 #include "../include/ArduinoJson/JsonArray.hpp"
 #include "../include/ArduinoJson/JsonObject.hpp"
@@ -19,6 +20,8 @@ JsonArray &JsonBuffer::createArray() {
 }
 
 JsonObject &JsonBuffer::createObject() {
+  JSON_DEBUG_PRINTLN( "JsonBuffer::createObject" );
+
   JsonObject *ptr = new (this) JsonObject(this);
   return ptr ? *ptr : JsonObject::invalid();
 }
@@ -29,11 +32,15 @@ JsonArray &JsonBuffer::parseArray(char *json, uint8_t nestingLimit) {
 }
 
 JsonObject &JsonBuffer::parseObject(char *json, uint8_t nestingLimit) {
+  JSON_DEBUG_PRINTLN( "JsonBuffer::parseObject" );
+
   JsonParser parser(this, json, nestingLimit);
   return parser.parseObject();
 }
 
 char *JsonBuffer::strdup(const char *source, size_t length) {
+  JSON_DEBUG_PRINTLN( "JsonBuffer::strdup" );
+
   size_t size = length + 1;
   char *dest = static_cast<char *>(alloc(size));
   if (dest != NULL) memcpy(dest, source, size);

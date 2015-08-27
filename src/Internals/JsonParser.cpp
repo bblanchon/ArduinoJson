@@ -8,23 +8,16 @@
 
 #include "../../include/ArduinoJson/Internals/Comments.hpp"
 #include "../../include/ArduinoJson/Internals/Encoding.hpp"
+#include "../../include/ArduinoJson/Internals/JsonDebug.hpp"
 #include "../../include/ArduinoJson/JsonArray.hpp"
 #include "../../include/ArduinoJson/JsonBuffer.hpp"
 #include "../../include/ArduinoJson/JsonObject.hpp"
-
-#ifdef JSON_DEBUG
-#define JSON_DEBUG_PRINT(string) (Serial.print(string))
-#endif
-
-#ifndef JSON_DEBUG
-#define JSON_DEBUG_PRINT(string)
-#endif
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 bool JsonParser::skip(char charToSkip) {
-  JSON_DEBUG_PRINT( "JsonParser::skip" );
+  JSON_DEBUG_PRINTLN( "JsonParser::skip" );
 
   const char *ptr = skipSpacesAndComments(_readPtr);
   if (*ptr != charToSkip) return false;
@@ -34,7 +27,7 @@ bool JsonParser::skip(char charToSkip) {
 }
 
 bool JsonParser::parseAnythingTo(JsonVariant *destination) {
-  JSON_DEBUG_PRINT( "JsonParser::parseAnythingTo" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseAnythingTo" );
 
   if (_nestingLimit == 0) return false;
   _nestingLimit--;
@@ -44,7 +37,7 @@ bool JsonParser::parseAnythingTo(JsonVariant *destination) {
 }
 
 inline bool JsonParser::parseAnythingToUnsafe(JsonVariant *destination) {
-  JSON_DEBUG_PRINT( "JsonParser::parseAnythingToUnsafe" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseAnythingToUnsafe" );
 
   _readPtr = skipSpacesAndComments(_readPtr);
 
@@ -61,7 +54,7 @@ inline bool JsonParser::parseAnythingToUnsafe(JsonVariant *destination) {
 }
 
 JsonArray &JsonParser::parseArray() {
-  JSON_DEBUG_PRINT( "JsonParser::parseArray" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseArray" );
 
   // Create an empty array
   JsonArray &array = _buffer->createArray();
@@ -94,7 +87,7 @@ ERROR_NO_MEMORY:
 }
 
 bool JsonParser::parseArrayTo(JsonVariant *destination) {
-  JSON_DEBUG_PRINT( "JsonParser::parseArrayTo" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseArrayTo" );
 
   JsonArray &array = parseArray();
   if (!array.success()) return false;
@@ -104,7 +97,7 @@ bool JsonParser::parseArrayTo(JsonVariant *destination) {
 }
 
 JsonObject &JsonParser::parseObject() {
-  JSON_DEBUG_PRINT( "JsonParser::parseObject" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseObject" );
 
   // Create an empty object
   JsonObject &object = _buffer->createObject();
@@ -144,7 +137,7 @@ ERROR_NO_MEMORY:
 }
 
 bool JsonParser::parseObjectTo(JsonVariant *destination) {
-  JSON_DEBUG_PRINT( "JsonParser::parseObjectTo" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseObjectTo" );
 
   JsonObject &object = parseObject();
   if (!object.success()) return false;
@@ -165,7 +158,7 @@ static inline bool isLetterOrNumber(char c) {
 static inline bool isQuote(char c) { return c == '\'' || c == '\"'; }
 
 const char *JsonParser::parseString() {
-  JSON_DEBUG_PRINT( "JsonParser::parseString" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseString" );
 
   const char *readPtr = _readPtr;
   char *writePtr = _writePtr;
@@ -212,7 +205,7 @@ const char *JsonParser::parseString() {
 }
 
 bool JsonParser::parseStringTo(JsonVariant *destination) {
-  JSON_DEBUG_PRINT( "JsonParser::parseStringTo" );
+  JSON_DEBUG_PRINTLN( "JsonParser::parseStringTo" );
 
   bool hasQuotes = isQuote(_readPtr[0]);
   const char *value = parseString();

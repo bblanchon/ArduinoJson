@@ -8,6 +8,7 @@
 
 #include <string.h>  // for strcmp
 
+#include "../include/ArduinoJson/Internals/JsonDebug.hpp"
 #include "../include/ArduinoJson/Internals/StaticStringBuilder.hpp"
 #include "../include/ArduinoJson/JsonArray.hpp"
 #include "../include/ArduinoJson/JsonBuffer.hpp"
