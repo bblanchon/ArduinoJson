@@ -5,6 +5,7 @@ v5.0.2
 ------
 
 * Fixed Clang warning "register specifier is deprecated" (issue #102)
+* Fixed compilation on Visual Studio 2010 and 2012 (issue #107)
 
 v5.0.1
 ------
