@@ -103,24 +103,55 @@ JsonObject &JsonParser::parseObject() {
   JsonObject &object = _buffer->createObject();
 
   // Check opening brace
-  if (!skip('{')) goto ERROR_MISSING_BRACE;
-  if (skip('}')) goto SUCCESS_EMPTY_OBJECT;
+  if (!skip('{')) {
+	  JSON_DEBUG_PRINTLN( "JsonParser::parseObject - missing opening brace" );
+	  goto ERROR_MISSING_BRACE;
+  }
+  if (skip('}')) {
+	  JSON_DEBUG_PRINTLN( "JsonParser::parseObject - parsed empty object" );
+	  goto SUCCESS_EMPTY_OBJECT;
+  }
 
   // Read each key value pair
   for (;;) {
+
     // 1 - Parse key
     const char *key = parseString();
-    if (!key) goto ERROR_INVALID_KEY;
-    if (!skip(':')) goto ERROR_MISSING_COLON;
+    if (!key) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - invalid key" );
+    	goto ERROR_INVALID_KEY;
+    }
+    if (!skip(':')) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - missing colon" );
+    	goto ERROR_MISSING_COLON;
+    }
+
+    JSON_DEBUG_PRINT( "JsonParser::parseObject - parsed key " );
+    JSON_DEBUG_PRINTLN( key );
 
     // 2 - Parse value
     JsonVariant value;
-    if (!parseAnythingTo(&value)) goto ERROR_INVALID_VALUE;
-    if (!object.set(key, value)) goto ERROR_NO_MEMORY;
+    if (!parseAnythingTo(&value)) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - invalid value" );
+    	goto ERROR_INVALID_VALUE;
+    }
+    if (!object.set(key, value)) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - no memory" );
+    	goto ERROR_NO_MEMORY;
+    }
+
+    JSON_DEBUG_PRINT( "JsonParser::parseObject - parsed value " );
+    JSON_DEBUG_PRINTLN( value.as<String>() );
 
     // 3 - More keys/values?
-    if (skip('}')) goto SUCCESS_NON_EMPTY_OBJECT;
-    if (!skip(',')) goto ERROR_MISSING_COMMA;
+    if (skip('}')) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - parsed end of object" );
+    	goto SUCCESS_NON_EMPTY_OBJECT;
+    }
+    if (!skip(',')) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - invalid value" );
+    	goto ERROR_MISSING_COMMA;
+    }
   }
 
 SUCCESS_EMPTY_OBJECT:
