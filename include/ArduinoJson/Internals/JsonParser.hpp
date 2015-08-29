@@ -19,7 +19,7 @@ class JsonParser {
  public:
   JsonParser(JsonBuffer *buffer, char *json, uint8_t nestingLimit)
       : _buffer(buffer),
-        _readPtr(json),
+        _readPtr(json ? json : ""),
         _writePtr(json),
         _nestingLimit(nestingLimit) {}
 

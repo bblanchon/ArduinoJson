@@ -59,9 +59,15 @@ class JsonBuffer {
   // allocation fails.
   JsonArray &parseArray(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
 
+  // Same with a const char*.
+  // With this overload, the JsonBuffer will make a copy of the string
+  JsonArray &parseArray(const char *json, uint8_t nesting = DEFAULT_LIMIT) {
+    return parseArray(strdup(json), nesting);
+  }
+
   // Same as above with a String class
   JsonArray &parseArray(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
-    return parseArray(strdup(json), nesting);
+    return parseArray(json.c_str(), nesting);
   }
 
   // Allocates and populate a JsonObject from a JSON string.
@@ -76,19 +82,29 @@ class JsonBuffer {
   // allocation fails.
   JsonObject &parseObject(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
 
-  // Same as above with a String class
-  JsonObject &parseObject(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
+  // Same with a const char*.
+  // With this overload, the JsonBuffer will make a copy of the string
+  JsonObject &parseObject(const char *json, uint8_t nesting = DEFAULT_LIMIT) {
     return parseObject(strdup(json), nesting);
   }
 
+  // Same as above with a String class
+  JsonObject &parseObject(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
+    return parseObject(json.c_str(), nesting);
+  }
+
   // Duplicate a string
-  char *strdup(const char *src) { return strdup(src, strlen(src)); }
+  char *strdup(const char *src) {
+    return src ? strdup(src, strlen(src)) : NULL;
+  }
   char *strdup(const String &src) { return strdup(src.c_str(), src.length()); }
-  char *strdup(const char *, size_t);
 
   // Allocates n bytes in the JsonBuffer.
   // Return a pointer to the allocated memory or NULL if allocation fails.
   virtual void *alloc(size_t size) = 0;
+
+ private:
+  char *strdup(const char *, size_t);
 
   // Default value of nesting limit of parseArray() and parseObject().
   //

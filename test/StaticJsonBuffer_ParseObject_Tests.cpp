@@ -71,3 +71,11 @@ TEST_F(StaticJsonBuffer_ParseObject_Tests,
   whenInputIs("{\"a\":[]}");
   parseMustSucceed();
 }
+
+TEST_F(StaticJsonBuffer_ParseObject_Tests, CharPtrNull) {
+  ASSERT_FALSE(StaticJsonBuffer<100>().parseObject((char*)0).success());
+}
+
+TEST_F(StaticJsonBuffer_ParseObject_Tests, ConstCharPtrNull) {
+  ASSERT_FALSE(StaticJsonBuffer<100>().parseObject((const char*)0).success());
+}
