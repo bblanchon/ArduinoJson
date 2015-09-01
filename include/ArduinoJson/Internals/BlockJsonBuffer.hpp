@@ -63,7 +63,7 @@ class BlockJsonBuffer : public JsonBuffer {
 
   void* allocInHead(size_t bytes) {
     void* p = _head->data + _head->size;
-    _head->size += bytes;
+    _head->size += round_size_up(bytes);
     return p;
   }
 

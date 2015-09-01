@@ -4,9 +4,10 @@ ArduinoJson: change log
 v5.0.2
 ------
 
-* Fixed Clang warning "register specifier is deprecated" (issue #102)
 * Fixed segmentation fault in `parseObject(String)` and `parseArray(String)`, when the 
-  `StaticJsonBuffer` is too small to hold a copy of the string (issue #104)
+  `StaticJsonBuffer` is too small to hold a copy of the string
+* Fixed Clang warning "register specifier is deprecated" (issue #102)
+* Fixed memory alignment, which made ESP8266 crash (issue #104)
 * Fixed compilation on Visual Studio 2010 and 2012 (issue #107)
 
 v5.0.1

@@ -103,19 +103,33 @@ class JsonBuffer {
   // Return a pointer to the allocated memory or NULL if allocation fails.
   virtual void *alloc(size_t size) = 0;
 
+ protected:
+  // Preserve aligment if nessary
+  static FORCE_INLINE size_t round_size_up(size_t bytes) {
+#if defined ARDUINO_ARCH_AVR
+    // alignment isn't needed for 8-bit AVR
+    return bytes;
+#else
+    const size_t x = sizeof(void *) - 1;
+    return (bytes + x) & ~x;
+#endif
+  }
+
  private:
   char *strdup(const char *, size_t);
 
   // Default value of nesting limit of parseArray() and parseObject().
   //
-  // The nesting limit is a contain on the level of nesting allowed in the JSON
+  // The nesting limit is a contain on the level of nesting allowed in the
+  // JSON
   // string.
   // If set to 0, only a flat array or objects can be parsed.
   // If set to 1, the object can contain nested arrays or objects but only 1
   // level deep.
   // And bigger values will allow more level of nesting.
   //
-  // The purpose of this feature is to prevent stack overflow that could lead to
+  // The purpose of this feature is to prevent stack overflow that could
+  // lead to
   // a security risk.
   static const uint8_t DEFAULT_LIMIT = 10;
 };

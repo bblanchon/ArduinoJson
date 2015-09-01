@@ -22,13 +22,22 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, InitialSizeIsZero) {
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, SizeIncreasesAfterAlloc) {
   buffer.alloc(1);
-  ASSERT_EQ(1, buffer.size());
+  ASSERT_LE(1, buffer.size());
   buffer.alloc(1);
-  ASSERT_EQ(2, buffer.size());
+  ASSERT_LE(2, buffer.size());
 }
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, ReturnDifferentPointer) {
   void* p1 = buffer.alloc(1);
   void* p2 = buffer.alloc(2);
   ASSERT_NE(p1, p2);
+}
+
+TEST_F(DynamicJsonBuffer_Basic_Tests, Alignment) {
+  size_t mask = sizeof(void*) - 1;
+
+  for (size_t size = 1; size <= sizeof(void*); size++) {
+    size_t addr = reinterpret_cast<size_t>(buffer.alloc(1));
+    ASSERT_EQ(0, addr & mask);
+  }
 }
