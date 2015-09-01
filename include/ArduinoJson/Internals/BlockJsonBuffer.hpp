@@ -76,8 +76,8 @@ class BlockJsonBuffer : public JsonBuffer {
   }
 
   bool addNewBlock(size_t capacity) {
-    size_t size = sizeof(EmptyBlock) + capacity;
-    Block* block = static_cast<Block*>(_allocator.allocate(size));
+    size_t bytes = sizeof(EmptyBlock) + capacity;
+    Block* block = static_cast<Block*>(_allocator.allocate(bytes));
     if (block == NULL) return false;
     block->capacity = capacity;
     block->size = 0;

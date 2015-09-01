@@ -74,9 +74,9 @@ class JsonSubscriptBase : public JsonVariantBase<TImpl> {
  private:
   template <typename TValue>
   FORCE_INLINE TImpl& assign(TValue value) {
-    TImpl* impl = static_cast<TImpl*>(this);
-    impl->template set<TValue>(value);
-    return *impl;
+    TImpl* that = static_cast<TImpl*>(this);
+    that->template set<TValue>(value);
+    return *that;
   }
 };
 }

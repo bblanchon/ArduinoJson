@@ -7,6 +7,7 @@ v5.0.2
 * Fixed segmentation fault in `parseObject(String)` and `parseArray(String)`, when the 
   `StaticJsonBuffer` is too small to hold a copy of the string
 * Fixed Clang warning "register specifier is deprecated" (issue #102)
+* Fixed GCC warning "declaration shadows a member" (issue #103)
 * Fixed memory alignment, which made ESP8266 crash (issue #104)
 * Fixed compilation on Visual Studio 2010 and 2012 (issue #107)
 
