@@ -8,6 +8,7 @@
 
 #include "../../include/ArduinoJson/Internals/Comments.hpp"
 #include "../../include/ArduinoJson/Internals/Encoding.hpp"
+#include "../../include/ArduinoJson/Internals/JsonDebug.hpp"
 #include "../../include/ArduinoJson/JsonArray.hpp"
 #include "../../include/ArduinoJson/JsonBuffer.hpp"
 #include "../../include/ArduinoJson/JsonObject.hpp"
@@ -16,6 +17,8 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 bool JsonParser::skip(char charToSkip) {
+  JSON_DEBUG_PRINTLN( "JsonParser::skip" );
+
   const char *ptr = skipSpacesAndComments(_readPtr);
   if (*ptr != charToSkip) return false;
   ptr++;
@@ -24,6 +27,8 @@ bool JsonParser::skip(char charToSkip) {
 }
 
 bool JsonParser::parseAnythingTo(JsonVariant *destination) {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseAnythingTo" );
+
   if (_nestingLimit == 0) return false;
   _nestingLimit--;
   bool success = parseAnythingToUnsafe(destination);
@@ -32,6 +37,8 @@ bool JsonParser::parseAnythingTo(JsonVariant *destination) {
 }
 
 inline bool JsonParser::parseAnythingToUnsafe(JsonVariant *destination) {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseAnythingToUnsafe" );
+
   _readPtr = skipSpacesAndComments(_readPtr);
 
   switch (*_readPtr) {
@@ -47,6 +54,8 @@ inline bool JsonParser::parseAnythingToUnsafe(JsonVariant *destination) {
 }
 
 JsonArray &JsonParser::parseArray() {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseArray" );
+
   // Create an empty array
   JsonArray &array = _buffer->createArray();
 
@@ -78,6 +87,8 @@ ERROR_NO_MEMORY:
 }
 
 bool JsonParser::parseArrayTo(JsonVariant *destination) {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseArrayTo" );
+
   JsonArray &array = parseArray();
   if (!array.success()) return false;
 
@@ -86,28 +97,61 @@ bool JsonParser::parseArrayTo(JsonVariant *destination) {
 }
 
 JsonObject &JsonParser::parseObject() {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseObject" );
+
   // Create an empty object
   JsonObject &object = _buffer->createObject();
 
   // Check opening brace
-  if (!skip('{')) goto ERROR_MISSING_BRACE;
-  if (skip('}')) goto SUCCESS_EMPTY_OBJECT;
+  if (!skip('{')) {
+	  JSON_DEBUG_PRINTLN( "JsonParser::parseObject - missing opening brace" );
+	  goto ERROR_MISSING_BRACE;
+  }
+  if (skip('}')) {
+	  JSON_DEBUG_PRINTLN( "JsonParser::parseObject - parsed empty object" );
+	  goto SUCCESS_EMPTY_OBJECT;
+  }
 
   // Read each key value pair
   for (;;) {
+
     // 1 - Parse key
     const char *key = parseString();
-    if (!key) goto ERROR_INVALID_KEY;
-    if (!skip(':')) goto ERROR_MISSING_COLON;
+    if (!key) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - invalid key" );
+    	goto ERROR_INVALID_KEY;
+    }
+    if (!skip(':')) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - missing colon" );
+    	goto ERROR_MISSING_COLON;
+    }
+
+    JSON_DEBUG_PRINT( "JsonParser::parseObject - parsed key " );
+    JSON_DEBUG_PRINTLN( key );
 
     // 2 - Parse value
     JsonVariant value;
-    if (!parseAnythingTo(&value)) goto ERROR_INVALID_VALUE;
-    if (!object.set(key, value)) goto ERROR_NO_MEMORY;
+    if (!parseAnythingTo(&value)) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - invalid value" );
+    	goto ERROR_INVALID_VALUE;
+    }
+    if (!object.set(key, value)) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - no memory" );
+    	goto ERROR_NO_MEMORY;
+    }
+
+    JSON_DEBUG_PRINT( "JsonParser::parseObject - parsed value " );
+    JSON_DEBUG_PRINTLN( value.as<String>() );
 
     // 3 - More keys/values?
-    if (skip('}')) goto SUCCESS_NON_EMPTY_OBJECT;
-    if (!skip(',')) goto ERROR_MISSING_COMMA;
+    if (skip('}')) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - parsed end of object" );
+    	goto SUCCESS_NON_EMPTY_OBJECT;
+    }
+    if (!skip(',')) {
+    	JSON_DEBUG_PRINTLN( "JsonParser::parseObject - invalid value" );
+    	goto ERROR_MISSING_COMMA;
+    }
   }
 
 SUCCESS_EMPTY_OBJECT:
@@ -124,6 +168,8 @@ ERROR_NO_MEMORY:
 }
 
 bool JsonParser::parseObjectTo(JsonVariant *destination) {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseObjectTo" );
+
   JsonObject &object = parseObject();
   if (!object.success()) return false;
 
@@ -143,6 +189,8 @@ static inline bool isLetterOrNumber(char c) {
 static inline bool isQuote(char c) { return c == '\'' || c == '\"'; }
 
 const char *JsonParser::parseString() {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseString" );
+
   const char *readPtr = _readPtr;
   char *writePtr = _writePtr;
 
@@ -188,6 +236,8 @@ const char *JsonParser::parseString() {
 }
 
 bool JsonParser::parseStringTo(JsonVariant *destination) {
+  JSON_DEBUG_PRINTLN( "JsonParser::parseStringTo" );
+
   bool hasQuotes = isQuote(_readPtr[0]);
   const char *value = parseString();
   if (value == NULL) return false;
