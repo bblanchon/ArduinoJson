@@ -22,6 +22,7 @@ namespace ArduinoJson {
 // Forward declarations
 class JsonObject;
 class JsonBuffer;
+class JsonArraySubscript;
 
 // An array of JsonVariant.
 //
@@ -33,35 +34,65 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
                   public Internals::ReferenceType,
                   public Internals::List<JsonVariant>,
                   public Internals::JsonBufferAllocated {
-  // JsonBuffer is a friend because it needs to call the private constructor.
-  friend class JsonBuffer;
-
  public:
-  // Returns the JsonVariant at the specified index (synonym for operator[])
-  JsonVariant &at(int index) const;
+  // Create an empty JsonArray attached to the specified JsonBuffer.
+  // You should not call this constructor directly.
+  // Instead, use JsonBuffer::createArray() or JsonBuffer::parseArray().
+  explicit JsonArray(JsonBuffer *buffer)
+      : Internals::List<JsonVariant>(buffer) {}
 
-  // Returns the JsonVariant at the specified index (synonym for at())
-  JsonVariant &operator[](int index) const { return at(index); }
+  // Gets the value at the specified index
+  FORCE_INLINE JsonVariant operator[](size_t index) const;
 
-  // Adds an uninitialized JsonVariant at the end of the array.
-  // Return a reference or JsonVariant::invalid() if allocation fails.
-  JsonVariant &add();
+  // Gets or sets the value at specified index
+  FORCE_INLINE JsonArraySubscript operator[](size_t index);
 
   // Adds the specified value at the end of the array.
+  FORCE_INLINE bool add(bool value);
+  FORCE_INLINE bool add(float value, uint8_t decimals = 2);
+  FORCE_INLINE bool add(double value, uint8_t decimals = 2);
+  FORCE_INLINE bool add(signed char value);
+  FORCE_INLINE bool add(signed long value);
+  FORCE_INLINE bool add(signed int value);
+  FORCE_INLINE bool add(signed short value);
+  FORCE_INLINE bool add(unsigned char value);
+  FORCE_INLINE bool add(unsigned long value);
+  FORCE_INLINE bool add(unsigned int value);
+  FORCE_INLINE bool add(unsigned short value);
+  FORCE_INLINE bool add(const char *value);
+  FORCE_INLINE bool add(const String &value);
+  FORCE_INLINE bool add(JsonArray &array);
+  FORCE_INLINE bool add(JsonObject &object);
+  FORCE_INLINE bool add(const JsonVariant &object);
+
+  // Sets the value at specified index.
+  FORCE_INLINE void set(size_t index, bool value);
+  FORCE_INLINE void set(size_t index, float value, uint8_t decimals = 2);
+  FORCE_INLINE void set(size_t index, double value, uint8_t decimals = 2);
+  FORCE_INLINE void set(size_t index, signed char value);
+  FORCE_INLINE void set(size_t index, signed long value);
+  FORCE_INLINE void set(size_t index, signed int value);
+  FORCE_INLINE void set(size_t index, signed short value);
+  FORCE_INLINE void set(size_t index, unsigned char value);
+  FORCE_INLINE void set(size_t index, unsigned long value);
+  FORCE_INLINE void set(size_t index, unsigned int value);
+  FORCE_INLINE void set(size_t index, unsigned short value);
+  FORCE_INLINE void set(size_t index, const char *value);
+  FORCE_INLINE void set(size_t index, const String &value);
+  FORCE_INLINE void set(size_t index, JsonArray &array);
+  FORCE_INLINE void set(size_t index, JsonObject &object);
+  FORCE_INLINE void set(size_t index, const JsonVariant &object);
+
+  // Gets the value at the specified index.
+  FORCE_INLINE JsonVariant get(size_t index) const;
+
+  // Gets the value at the specified index.
   template <typename T>
-  void add(T value) {
-    add().set(value);
-  }
+  FORCE_INLINE T get(size_t index) const;
 
-  // Adds the specified double value at the end of the array.
-  // The value will be printed with the specified number of decimal digits.
-  void add(double value, uint8_t decimals) { add().set(value, decimals); }
-
-  // Adds a reference to the specified JsonArray at the end of the array.
-  void add(JsonArray &array) { add().set(array); }
-
-  // Adds a reference to the specified JsonObject at the end of the array.
-  void add(JsonObject &obejct) { add().set(obejct); }
+  // Check the type of the value at specified index.
+  template <typename T>
+  FORCE_INLINE T is(size_t index) const;
 
   // Creates a JsonArray and adds a reference at the end of the array.
   // It's a shortcut for JsonBuffer::createArray() and JsonArray::add()
@@ -72,7 +103,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   JsonObject &createNestedObject();
 
   // Removes element at specified index.
-  void removeAt(int index);
+  void removeAt(size_t index);
 
   // Returns a reference an invalid JsonArray.
   // This object is meant to replace a NULL pointer.
@@ -83,13 +114,20 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   void writeTo(Internals::JsonWriter &writer) const;
 
  private:
-  // Create an empty JsonArray attached to the specified JsonBuffer.
-  explicit JsonArray(JsonBuffer *buffer)
-      : Internals::List<JsonVariant>(buffer) {}
+  node_type *getNodeAt(size_t index) const;
 
-  node_type *getNodeAt(int index) const;
+  template <typename TValue>
+  void setNodeAt(size_t index, TValue value);
+
+  template <typename TValue>
+  bool addNode(TValue);
+
+  template <typename T>
+  FORCE_INLINE void setNodeValue(node_type *, T value);
 
   // The instance returned by JsonArray::invalid()
   static JsonArray _invalid;
 };
 }
+
+#include "JsonArray.ipp"

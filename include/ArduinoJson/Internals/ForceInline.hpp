@@ -4,10 +4,10 @@
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 
-#ifdef ARDUINO
+#pragma once
 
-// This file is here to help the Arduino IDE find the other files.
-
-#include "include/ArduinoJson.h"
-
+#ifdef _MSC_VER
+#define FORCE_INLINE __forceinline
+#else
+#define FORCE_INLINE __attribute__((always_inline))
 #endif

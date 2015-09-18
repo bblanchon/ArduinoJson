@@ -1,5 +1,6 @@
-file(GLOB_RECURSE INC_FILES ../include/*.hpp)
-file(GLOB_RECURSE SRC_FILES *.cpp)
+file(GLOB_RECURSE HPP_FILES ../include/*.hpp)
+file(GLOB_RECURSE IPP_FILES ../include/*.ipp)
+file(GLOB_RECURSE CPP_FILES *.cpp)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_definitions(
@@ -42,7 +43,8 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	add_definitions(
 		-Wc++11-compat
+		-Wdeprecated-register
 	)
 endif()
 
-add_library(ArduinoJson ${SRC_FILES} ${INC_FILES})
+add_library(ArduinoJson ${CPP_FILES} ${HPP_FILES} ${IPP_FILES})

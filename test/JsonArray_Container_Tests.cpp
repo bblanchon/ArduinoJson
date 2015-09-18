@@ -67,6 +67,12 @@ TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded) {
   sizeMustBe(2);
 }
 
+TEST_F(JsonArray_Container_Tests, DontGrow_WhenValuesAreReplaced) {
+  _array.add("hello");
+  _array[0] = "world";
+  sizeMustBe(1);
+}
+
 TEST_F(JsonArray_Container_Tests, CanStoreIntegers) {
   _array.add(123);
   _array.add(456);

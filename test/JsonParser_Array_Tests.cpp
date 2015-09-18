@@ -9,14 +9,19 @@
 
 class JsonParser_Array_Tests : public testing::Test {
  protected:
-  void whenInputIs(const char *json) {
-    strcpy(_jsonString, json);
-    _array = &_jsonBuffer.parseArray(_jsonString);
+  void whenInputIs(const char *json) { strcpy(_jsonString, json); }
+
+  void whenInputIs(const char *json, size_t len) {
+    memcpy(_jsonString, json, len);
   }
 
-  void parseMustSucceed() { EXPECT_TRUE(_array->success()); }
+  void parseMustSucceed() {
+    _array = &_jsonBuffer.parseArray(_jsonString);
+    EXPECT_TRUE(_array->success());
+  }
 
   void parseMustFail() {
+    _array = &_jsonBuffer.parseArray(_jsonString);
     EXPECT_FALSE(_array->success());
     EXPECT_EQ(0, _array->size());
   }
@@ -35,11 +40,11 @@ class JsonParser_Array_Tests : public testing::Test {
 
   template <typename T>
   void elementAtIndexMustBe(int index, T expected) {
-    EXPECT_EQ(expected, _array->at(index).as<T>());
+    EXPECT_EQ(expected, (*_array)[index].as<T>());
   }
 
   void elementAtIndexMustBe(int index, const char *expected) {
-    EXPECT_STREQ(expected, _array->at(index).as<const char *>());
+    EXPECT_STREQ(expected, (*_array)[index].as<const char *>());
   }
 
   DynamicJsonBuffer _jsonBuffer;
@@ -139,26 +144,196 @@ TEST_F(JsonParser_Array_Tests, TwoNulls) {
   secondElementMustBe(nullCharPtr);
 }
 
-TEST_F(JsonParser_Array_Tests, IncompleteNull) {
-  whenInputIs("[nul!]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, IncompleteTrue) {
-  whenInputIs("[tru!]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, IncompleteFalse) {
-  whenInputIs("[fals!]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, TwoStrings) {
-  whenInputIs("[\"hello\",\"world\"]");
+TEST_F(JsonParser_Array_Tests, TwoStringsDoubleQuotes) {
+  whenInputIs("[ \"hello\" , \"world\" ]");
 
   parseMustSucceed();
   sizeMustBe(2);
   firstElementMustBe("hello");
   secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, TwoStringsSingleQuotes) {
+  whenInputIs("[ 'hello' , 'world' ]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("hello");
+  secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, TwoStringsNoQuotes) {
+  whenInputIs("[ hello , world ]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("hello");
+  secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, EmptyStringsDoubleQuotes) {
+  whenInputIs("[\"\",\"\"]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("");
+  secondElementMustBe("");
+}
+
+TEST_F(JsonParser_Array_Tests, EmptyStringSingleQuotes) {
+  whenInputIs("[\'\',\'\']");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("");
+  secondElementMustBe("");
+}
+
+TEST_F(JsonParser_Array_Tests, EmptyStringNoQuotes) {
+  whenInputIs("[,]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("");
+  secondElementMustBe("");
+}
+
+TEST_F(JsonParser_Array_Tests, ClosingDoubleQuoteMissing) {
+  whenInputIs("[\"]");
+
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, ClosingSignleQuoteMissing) {
+  whenInputIs("[\']");
+
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, StringWithEscapedChars) {
+  whenInputIs("[\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
+}
+
+TEST_F(JsonParser_Array_Tests, StringWithUnterminatedEscapeSequence) {
+  whenInputIs("\"\\\0\"", 4);
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, CCommentBeforeOpeningBracket) {
+  whenInputIs("/*COMMENT*/[\"hello\"]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CCommentAfterOpeningBracket) {
+  whenInputIs("[/*COMMENT*/\"hello\"]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CCommentBeforeClosingBracket) {
+  whenInputIs("[\"hello\"/*COMMENT*/]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CCommentAfterClosingBracket) {
+  whenInputIs("[\"hello\"]/*COMMENT*/");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CCommentBeforeComma) {
+  whenInputIs("[\"hello\"/*COMMENT*/,\"world\"]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("hello");
+  secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, CCommentAfterComma) {
+  whenInputIs("[\"hello\",/*COMMENT*/\"world\"]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("hello");
+  secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, CppCommentBeforeOpeningBracket) {
+  whenInputIs("//COMMENT\n[\"hello\"]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CppCommentAfterOpeningBracket) {
+  whenInputIs("[//COMMENT\n\"hello\"]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CppCommentBeforeClosingBracket) {
+  whenInputIs("[\"hello\"//COMMENT\n]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CppCommentAfterClosingBracket) {
+  whenInputIs("[\"hello\"]//COMMENT\n");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe("hello");
+}
+
+TEST_F(JsonParser_Array_Tests, CppCommentBeforeComma) {
+  whenInputIs("[\"hello\"//COMMENT\n,\"world\"]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("hello");
+  secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, CppCommentAfterComma) {
+  whenInputIs("[\"hello\",//COMMENT\n\"world\"]");
+
+  parseMustSucceed();
+  sizeMustBe(2);
+  firstElementMustBe("hello");
+  secondElementMustBe("world");
+}
+
+TEST_F(JsonParser_Array_Tests, InvalidCppComment) {
+  whenInputIs("[/COMMENT\n]");
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, InvalidComment) {
+  whenInputIs("[/*/\n]");
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, UnfinishedCComment) {
+  whenInputIs("[/*COMMENT]");
+  parseMustFail();
 }

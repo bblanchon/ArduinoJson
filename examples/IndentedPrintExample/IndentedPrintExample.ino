@@ -1,7 +1,8 @@
-/*
- * Arduino JSON library - IndentedPrint example
- * Benoit Blanchon 2014 - MIT License
- */
+// Copyright Benoit Blanchon 2014-2015
+// MIT License
+//
+// Arduino JSON library
+// https://github.com/bblanchon/ArduinoJson
 
 #include <ArduinoJson.h>
 

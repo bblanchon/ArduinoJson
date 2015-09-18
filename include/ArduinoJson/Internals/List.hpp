@@ -39,7 +39,7 @@ class List {
 
   // Returns the numbers of elements in the list.
   // For a JsonObject, it would return the number of key-value pairs
-  int size() const;
+  size_t size() const;
 
   iterator begin() { return iterator(_firstNode); }
   iterator end() { return iterator(NULL); }
@@ -48,21 +48,7 @@ class List {
   const_iterator end() const { return const_iterator(NULL); }
 
  protected:
-  node_type *createNode() {
-    if (!_buffer) return NULL;
-    return new (_buffer) node_type();
-  }
-
-  void addNode(node_type *nodeToAdd) {
-    if (_firstNode) {
-      node_type *lastNode = _firstNode;
-      while (lastNode->next) lastNode = lastNode->next;
-      lastNode->next = nodeToAdd;
-    } else {
-      _firstNode = nodeToAdd;
-    }
-  }
-
+  node_type *addNewNode();
   void removeNode(node_type *nodeToRemove);
 
   JsonBuffer *_buffer;

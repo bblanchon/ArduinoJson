@@ -10,6 +10,11 @@ include_directories(
 
 add_definitions(-DGTEST_HAS_PTHREAD=0)
 
+# Workaround for Visual Studio 2012
+if (MSVC AND MSVC_VERSION EQUAL 1700)
+  add_definitions(-D_VARIADIC_MAX=10)
+endif()
+
 add_executable(ArduinoJsonTests 
     ${TESTS_FILES}
 	${INC_FILES}

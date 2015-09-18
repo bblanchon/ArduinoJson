@@ -32,3 +32,10 @@ JsonObject &JsonBuffer::parseObject(char *json, uint8_t nestingLimit) {
   JsonParser parser(this, json, nestingLimit);
   return parser.parseObject();
 }
+
+char *JsonBuffer::strdup(const char *source, size_t length) {
+  size_t size = length + 1;
+  char *dest = static_cast<char *>(alloc(size));
+  if (dest != NULL) memcpy(dest, source, size);
+  return dest;
+}

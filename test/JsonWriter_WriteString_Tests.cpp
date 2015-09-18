@@ -6,16 +6,18 @@
 
 #include <gtest/gtest.h>
 
-#include <ArduinoJson/Internals/QuotedString.hpp>
-#include <ArduinoJson/Internals/StringBuilder.hpp>
+#include <ArduinoJson/Internals/JsonWriter.hpp>
+#include <ArduinoJson/Internals/StaticStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 
-class QuotedString_PrintTo_Tests : public testing::Test {
+class JsonWriter_WriteString_Tests : public testing::Test {
  protected:
   void whenInputIs(const char *input) {
-    StringBuilder sb(buffer, sizeof(buffer));
-    returnValue = QuotedString::printTo(input, sb);
+    StaticStringBuilder sb(buffer, sizeof(buffer));
+    JsonWriter writer(sb);
+    writer.writeString(input);
+    returnValue = writer.bytesWritten();
   }
 
   void outputMustBe(const char *expected) {
@@ -28,52 +30,52 @@ class QuotedString_PrintTo_Tests : public testing::Test {
   size_t returnValue;
 };
 
-TEST_F(QuotedString_PrintTo_Tests, Null) {
+TEST_F(JsonWriter_WriteString_Tests, Null) {
   whenInputIs(0);
   outputMustBe("null");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, EmptyString) {
+TEST_F(JsonWriter_WriteString_Tests, EmptyString) {
   whenInputIs("");
   outputMustBe("\"\"");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, QuotationMark) {
+TEST_F(JsonWriter_WriteString_Tests, QuotationMark) {
   whenInputIs("\"");
   outputMustBe("\"\\\"\"");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, ReverseSolidus) {
+TEST_F(JsonWriter_WriteString_Tests, ReverseSolidus) {
   whenInputIs("\\");
   outputMustBe("\"\\\\\"");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, Solidus) {
+TEST_F(JsonWriter_WriteString_Tests, Solidus) {
   whenInputIs("/");
   outputMustBe("\"/\"");  // but the JSON format allows \/
 }
 
-TEST_F(QuotedString_PrintTo_Tests, Backspace) {
+TEST_F(JsonWriter_WriteString_Tests, Backspace) {
   whenInputIs("\b");
   outputMustBe("\"\\b\"");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, Formfeed) {
+TEST_F(JsonWriter_WriteString_Tests, Formfeed) {
   whenInputIs("\f");
   outputMustBe("\"\\f\"");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, Newline) {
+TEST_F(JsonWriter_WriteString_Tests, Newline) {
   whenInputIs("\n");
   outputMustBe("\"\\n\"");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, CarriageReturn) {
+TEST_F(JsonWriter_WriteString_Tests, CarriageReturn) {
   whenInputIs("\r");
   outputMustBe("\"\\r\"");
 }
 
-TEST_F(QuotedString_PrintTo_Tests, HorizontalTab) {
+TEST_F(JsonWriter_WriteString_Tests, HorizontalTab) {
   whenInputIs("\t");
   outputMustBe("\"\\t\"");
 }

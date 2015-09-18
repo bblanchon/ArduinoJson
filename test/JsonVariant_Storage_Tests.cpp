@@ -11,13 +11,13 @@ class JsonVariant_Storage_Tests : public ::testing::Test {
  protected:
   template <typename T>
   void testValue(T expected) {
-    _actual.set(expected);
+    _actual = expected;
     EXPECT_EQ(expected, _actual.as<T>());
   }
 
   template <typename T>
   void testReference(T &expected) {
-    _actual.set(expected);
+    _actual = expected;
     EXPECT_EQ(expected, _actual.as<T &>());
   }
 

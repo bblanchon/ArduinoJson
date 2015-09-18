@@ -31,7 +31,7 @@ class Prettyfier : public Print {
 
   size_t handleBlockClose(uint8_t);
   size_t handleBlockOpen(uint8_t);
-  size_t handleColumn();
+  size_t handleColon();
   size_t handleComma();
   size_t handleQuoteOpen();
   size_t handleNormalChar(uint8_t);
