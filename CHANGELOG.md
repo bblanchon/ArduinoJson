@@ -5,6 +5,7 @@ v5.0.3
 ------
 
 * Fixed `printTo(String)` which wrote numbers instead of strings (issue #120)
+* Fixed return type of `JsonArray::is<T>()` and some others (issue #121)
 
 v5.0.2
 ------

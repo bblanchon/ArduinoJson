@@ -39,11 +39,13 @@ class JsonArray_Container_Tests : public ::testing::Test {
  private:
   template <typename T>
   void itemMustEqual(int index, T expected) {
+    EXPECT_TRUE(_array[index].is<T>());
     EXPECT_EQ(expected, _array[index].as<T>());
   }
 
   template <typename T>
   void itemMustReference(int index, const T& expected) {
+    EXPECT_TRUE(_array[index].is<T&>());
     EXPECT_EQ(&expected, &_array[index].as<T&>());
   }
 };

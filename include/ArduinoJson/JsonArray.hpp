@@ -92,7 +92,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
 
   // Check the type of the value at specified index.
   template <typename T>
-  FORCE_INLINE T is(size_t index) const;
+  FORCE_INLINE bool is(size_t index) const;
 
   // Creates a JsonArray and adds a reference at the end of the array.
   // It's a shortcut for JsonBuffer::createArray() and JsonArray::add()

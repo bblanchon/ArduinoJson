@@ -26,7 +26,7 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
   }
 
   template <typename T>
-  FORCE_INLINE T is() const {
+  FORCE_INLINE bool is() const {
     return _array.is<T>(_index);
   }
 
