@@ -18,7 +18,8 @@ class DynamicStringBuilder : public Print {
   DynamicStringBuilder(String &str) : _str(str) {}
 
   virtual size_t write(uint8_t c) {
-    _str += c;
+    // Need to cast to char, otherwise String will print a number (issue #120)
+    _str += static_cast<char>(c);
     return 1;
   }
 

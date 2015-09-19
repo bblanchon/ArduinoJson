@@ -4,7 +4,7 @@ ArduinoJson: change log
 v5.0.3
 ------
 
-* Nothing yet.
+* Fixed `printTo(String)` which wrote numbers instead of strings (issue #120)
 
 v5.0.2
 ------
