@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+v5.0.3
+------
+
+* Nothing yet.
+
 v5.0.2
 ------
 
