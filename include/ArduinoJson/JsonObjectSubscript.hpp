@@ -29,7 +29,7 @@ class JsonObjectSubscript
   }
 
   template <typename TValue>
-  FORCE_INLINE TValue is() const {
+  FORCE_INLINE bool is() const {
     return _object.is<TValue>(_key);
   }
 
