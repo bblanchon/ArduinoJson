@@ -8,6 +8,7 @@
 
 void setup() {
   Serial.begin(9600);
+  // delay(1000); <--needed for some boards (like Teensy)
 
   StaticJsonBuffer<200> jsonBuffer;
 

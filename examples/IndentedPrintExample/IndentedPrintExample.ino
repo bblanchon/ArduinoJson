@@ -10,6 +10,7 @@ using namespace ArduinoJson::Internals;
 
 void setup() {
   Serial.begin(9600);
+  // delay(1000); <--needed for some boards (like Teensy)
 
   IndentedPrint serial(Serial);
   serial.setTabSize(4);
