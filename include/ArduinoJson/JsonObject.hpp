@@ -65,6 +65,9 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   FORCE_INLINE bool set(const char* key, JsonArray& array);
   FORCE_INLINE bool set(const char* key, JsonObject& object);
   FORCE_INLINE bool set(const char* key, const JsonVariant& value);
+  template <typename T>
+  FORCE_INLINE bool set(const char* key, const T& value);
+
   FORCE_INLINE bool set(const String& key, bool value);
   FORCE_INLINE bool set(const String& key, float value, uint8_t decimals = 2);
   FORCE_INLINE bool set(const String& key, double value, uint8_t decimals = 2);
@@ -81,6 +84,8 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   FORCE_INLINE bool set(const String& key, JsonArray& array);
   FORCE_INLINE bool set(const String& key, JsonObject& object);
   FORCE_INLINE bool set(const String& key, const JsonVariant& value);
+  template <typename T>
+  FORCE_INLINE bool set(const String& key, const T& value);
 
   // Gets the value associated with the specified key.
   FORCE_INLINE JsonVariant get(JsonObjectKey) const;

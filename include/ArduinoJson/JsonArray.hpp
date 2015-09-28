@@ -63,7 +63,8 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   FORCE_INLINE bool add(const String &value);
   FORCE_INLINE bool add(JsonArray &array);
   FORCE_INLINE bool add(JsonObject &object);
-  FORCE_INLINE bool add(const JsonVariant &object);
+  template <typename T>
+  FORCE_INLINE bool add(const T &value);
 
   // Sets the value at specified index.
   FORCE_INLINE void set(size_t index, bool value);
@@ -81,7 +82,8 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   FORCE_INLINE void set(size_t index, const String &value);
   FORCE_INLINE void set(size_t index, JsonArray &array);
   FORCE_INLINE void set(size_t index, JsonObject &object);
-  FORCE_INLINE void set(size_t index, const JsonVariant &object);
+  template <typename T>
+  FORCE_INLINE void set(size_t index, const T &value);
 
   // Gets the value at the specified index.
   FORCE_INLINE JsonVariant get(size_t index) const;

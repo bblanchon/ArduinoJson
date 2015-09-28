@@ -8,6 +8,11 @@
 
 #include "JsonSubscriptBase.hpp"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4522)
+#endif
+
 namespace ArduinoJson {
 class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
  public:
@@ -15,6 +20,15 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
       : _array(array), _index(index) {}
 
   using JsonSubscriptBase<JsonArraySubscript>::operator=;
+
+  JsonArraySubscript& operator=(const JsonArraySubscript& src) {
+    return assign<const JsonVariant&>(src);
+  }
+
+  template <typename T>
+  JsonArraySubscript& operator=(const T& src) {
+    return assign<const JsonVariant&>(src);
+  }
 
   FORCE_INLINE bool success() const { return _index < _array.size(); }
 
@@ -52,3 +66,7 @@ inline std::ostream& operator<<(std::ostream& os,
 #endif
 
 }  // namespace ArduinoJson
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif

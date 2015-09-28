@@ -77,8 +77,9 @@ inline bool JsonArray::add(JsonObject &object) {
   return addNode<JsonObject &>(object);
 }
 
-inline bool JsonArray::add(const JsonVariant &object) {
-  return addNode<const JsonVariant &>(object);
+template <typename T>
+inline bool JsonArray::add(const T &variant) {
+  return addNode<const JsonVariant &>(variant);
 }
 
 template <typename TValue>
@@ -149,8 +150,9 @@ inline void JsonArray::set(size_t index, JsonObject &object) {
   return setNodeAt<JsonObject &>(index, object);
 }
 
-inline void JsonArray::set(size_t index, const JsonVariant &object) {
-  return setNodeAt<const JsonVariant &>(index, object);
+template <typename T>
+inline void JsonArray::set(size_t index, const T &variant) {
+  return setNodeAt<const JsonVariant &>(index, variant);
 }
 
 template <typename TValue>

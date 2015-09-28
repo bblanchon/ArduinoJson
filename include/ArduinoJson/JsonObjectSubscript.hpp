@@ -8,6 +8,11 @@
 
 #include "JsonSubscriptBase.hpp"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4522)
+#endif
+
 namespace ArduinoJson {
 
 template <typename TKey>
@@ -18,6 +23,17 @@ class JsonObjectSubscript
       : _object(object), _key(key) {}
 
   using JsonSubscriptBase<JsonObjectSubscript<TKey> >::operator=;
+
+  JsonObjectSubscript<TKey>& operator=(const JsonObjectSubscript<TKey>& src) {
+    return JsonSubscriptBase<JsonObjectSubscript<TKey> >::template assign<
+        JsonVariant>(src);
+  }
+
+  template <typename T>
+  JsonObjectSubscript<TKey>& operator=(const T& src) {
+    return JsonSubscriptBase<JsonObjectSubscript<TKey> >::template assign<
+        JsonVariant>(src);
+  }
 
   FORCE_INLINE bool success() const { return _object.containsKey(_key); }
 
@@ -60,4 +76,8 @@ inline std::ostream& operator<<(
   return source.printTo(os);
 }
 #endif
-}
+}  // namespace ArduinoJson
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif

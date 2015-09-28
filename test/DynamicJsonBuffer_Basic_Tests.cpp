@@ -22,9 +22,9 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, InitialSizeIsZero) {
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, SizeIncreasesAfterAlloc) {
   buffer.alloc(1);
-  ASSERT_LE(1, buffer.size());
+  ASSERT_LE(1U, buffer.size());
   buffer.alloc(1);
-  ASSERT_LE(2, buffer.size());
+  ASSERT_LE(2U, buffer.size());
 }
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, ReturnDifferentPointer) {

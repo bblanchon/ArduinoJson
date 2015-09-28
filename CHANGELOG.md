@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+v5.0.4 (not released yet)
+------
+
+* Fixed ambiguous overload with `JsonArraySubscript` and `JsonObjectSubscript` (issue #122)
+
 v5.0.3
 ------
 

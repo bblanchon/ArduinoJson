@@ -68,10 +68,10 @@ class JsonSubscriptBase : public JsonVariantBase<TImpl> {
   }
 
   FORCE_INLINE TImpl& operator=(JsonVariant value) {
-    return assign<JsonVariant>(value);
+    return assign<const JsonVariant&>(value);
   }
 
- private:
+ protected:
   template <typename TValue>
   FORCE_INLINE TImpl& assign(TValue value) {
     TImpl* that = static_cast<TImpl*>(this);

@@ -116,6 +116,10 @@ inline bool JsonObject::set(const char *key, JsonObject &object) {
 inline bool JsonObject::set(const char *key, const JsonVariant &value) {
   return setNodeAt<const char *, const JsonVariant &>(key, value);
 }
+template <typename T>
+inline bool JsonObject::set(const char *key, const T &value) {
+  return setNodeAt<const char *, JsonVariant>(key, value);
+}
 inline bool JsonObject::set(const String &key, bool value) {
   return setNodeAt<const String &, bool>(key, value);
 }
@@ -165,6 +169,10 @@ inline bool JsonObject::set(const String &key, JsonObject &object) {
 }
 inline bool JsonObject::set(const String &key, const JsonVariant &value) {
   return setNodeAt<const String &, const JsonVariant &>(key, value);
+}
+template <typename T>
+inline bool JsonObject::set(const String &key, const T &value) {
+  return setNodeAt<const String &, JsonVariant>(key, value);
 }
 
 template <typename TKey, typename TValue>
