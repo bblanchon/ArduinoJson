@@ -5,6 +5,7 @@ file(GLOB_RECURSE CPP_FILES *.cpp)
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_definitions(
 		-fno-exceptions
+		-fno-rtti
 		-pedantic
 		-Wall
 		-Wcast-align
