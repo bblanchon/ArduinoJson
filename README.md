@@ -21,6 +21,14 @@ Features
 * Small footprint
 * MIT License
 
+Works on
+--------
+
+* All Arduino boards
+* ESP8266
+* Teensy
+* Computers (Windows, Linux, OSX...)
+
 Quick start
 -----------
 
