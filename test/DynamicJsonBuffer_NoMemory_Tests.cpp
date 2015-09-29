@@ -7,16 +7,21 @@
 #include <gtest/gtest.h>
 #include <ArduinoJson.h>
 
-class DynamicJsonBuffer_NoMemory_Tests : public ::testing::Test {
-  class NoMemoryAllocator {
-   public:
-    void* allocate(size_t) { return NULL; }
-    void deallocate(void*) {}
-  };
+class NoMemoryAllocator {
+ public:
+  void* allocate(size_t) { return NULL; }
+  void deallocate(void*) {}
+};
 
+class DynamicJsonBuffer_NoMemory_Tests : public ::testing::Test {
  protected:
   Internals::BlockJsonBuffer<NoMemoryAllocator> _jsonBuffer;
 };
+
+TEST_F(DynamicJsonBuffer_NoMemory_Tests, FixCodeCoverage) {
+  // call this function to fix code coverage
+  NoMemoryAllocator().deallocate(NULL);
+}
 
 TEST_F(DynamicJsonBuffer_NoMemory_Tests, CreateArray) {
   ASSERT_FALSE(_jsonBuffer.createArray().success());
