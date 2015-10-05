@@ -32,8 +32,10 @@ double JsonVariant::as<double>() const {
   if (_type == JSON_LONG || _type == JSON_BOOLEAN)
     return static_cast<double>(_content.asLong);
 
-  if ((_type == JSON_STRING || _type == JSON_UNPARSED) && _content.asString)
-    return strtod(_content.asString, NULL);
+  if ((_type == JSON_STRING || _type == JSON_UNPARSED) && _content.asString) {
+    char *end;
+    return strtod(_content.asString, &end);
+  }
 
   return 0.0;
 }
@@ -47,7 +49,8 @@ long JsonVariant::as<long>() const {
 
   if ((_type == JSON_STRING || _type == JSON_UNPARSED) && _content.asString) {
     if (!strcmp("true", _content.asString)) return 1;
-    return strtol(_content.asString, NULL, 10);
+    char *end;
+    return strtol(_content.asString, &end, 10);
   }
 
   return 0L;
