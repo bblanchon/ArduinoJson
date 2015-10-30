@@ -22,4 +22,10 @@ String::String(long value) {
   *this = tmp;
 }
 
+String::String(int value) {
+  char tmp[32];
+  sprintf(tmp, "%d", value);
+  *this = tmp;
+}
+
 #endif

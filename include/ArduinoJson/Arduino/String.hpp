@@ -16,6 +16,7 @@ class String : public std::string {
   String(const char *cstr = "") : std::string(cstr) {}
   String(const String &str) : std::string(str) {}
   explicit String(long);
+  explicit String(int);
   explicit String(double, unsigned char decimalPlaces = 2);
 };
 

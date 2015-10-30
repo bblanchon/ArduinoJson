@@ -5,6 +5,7 @@ v5.0.5
 ------
 
 * Add overload `JsonObjectSuscript::set(value, decimals)` (issue #143)
+* Use `float` instead of `double` to reduce the size of `JsonVariant` (issue #134)
 
 v5.0.4
 ------

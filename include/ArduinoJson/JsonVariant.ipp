@@ -11,8 +11,9 @@
 namespace ArduinoJson {
 
 inline JsonVariant::JsonVariant(bool value) {
-  _type = Internals::JSON_BOOLEAN;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_BOOLEAN;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(const char *value) {
@@ -26,15 +27,15 @@ inline JsonVariant::JsonVariant(Internals::Unparsed value) {
 }
 
 inline JsonVariant::JsonVariant(double value, uint8_t decimals) {
-  _type = static_cast<Internals::JsonVariantType>(
-      Internals::JSON_DOUBLE_0_DECIMALS + decimals);
-  _content.asDouble = value;
+  using namespace Internals;
+  _type = static_cast<JsonVariantType>(JSON_FLOAT_0_DECIMALS + decimals);
+  _content.asFloat = static_cast<JsonFloat>(value);
 }
 
 inline JsonVariant::JsonVariant(float value, uint8_t decimals) {
-  _type = static_cast<Internals::JsonVariantType>(
-      Internals::JSON_DOUBLE_0_DECIMALS + decimals);
-  _content.asDouble = value;
+  using namespace Internals;
+  _type = static_cast<JsonVariantType>(JSON_FLOAT_0_DECIMALS + decimals);
+  _content.asFloat = static_cast<JsonFloat>(value);
 }
 
 inline JsonVariant::JsonVariant(JsonArray &array) {
@@ -48,50 +49,52 @@ inline JsonVariant::JsonVariant(JsonObject &object) {
 }
 
 inline JsonVariant::JsonVariant(signed char value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(signed int value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(signed long value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(signed short value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(unsigned char value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(unsigned int value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(unsigned long value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
 
 inline JsonVariant::JsonVariant(unsigned short value) {
-  _type = Internals::JSON_LONG;
-  _content.asLong = value;
+  using namespace Internals;
+  _type = JSON_INTEGER;
+  _content.asInteger = static_cast<JsonInteger>(value);
 }
-
-template <>
-double JsonVariant::as<double>() const;
-
-template <>
-long JsonVariant::as<long>() const;
 
 template <>
 String JsonVariant::as<String>() const;
@@ -101,47 +104,57 @@ const char *JsonVariant::as<const char *>() const;
 
 template <>
 inline bool JsonVariant::as<bool>() const {
-  return as<long>() != 0;
+  return asInteger() != 0;
 }
 
 template <>
 inline signed char JsonVariant::as<signed char>() const {
-  return static_cast<signed char>(as<long>());
+  return static_cast<signed char>(asInteger());
 }
 
 template <>
 inline unsigned char JsonVariant::as<unsigned char>() const {
-  return static_cast<unsigned char>(as<long>());
+  return static_cast<unsigned char>(asInteger());
 }
 
 template <>
 inline signed short JsonVariant::as<signed short>() const {
-  return static_cast<signed short>(as<long>());
+  return static_cast<signed short>(asInteger());
 }
 
 template <>
 inline unsigned short JsonVariant::as<unsigned short>() const {
-  return static_cast<unsigned short>(as<long>());
+  return static_cast<unsigned short>(asInteger());
 }
 
 template <>
 inline signed int JsonVariant::as<signed int>() const {
-  return static_cast<signed int>(as<long>());
+  return static_cast<signed int>(asInteger());
 }
 
 template <>
 inline unsigned int JsonVariant::as<unsigned int>() const {
-  return static_cast<unsigned int>(as<long>());
+  return static_cast<unsigned int>(asInteger());
 }
 
 template <>
 inline unsigned long JsonVariant::as<unsigned long>() const {
-  return static_cast<unsigned long>(as<long>());
+  return static_cast<unsigned long>(asInteger());
+}
+
+template <>
+inline signed long JsonVariant::as<signed long>() const {
+  return static_cast<unsigned long>(asInteger());
+}
+
+template <>
+inline double JsonVariant::as<double>() const {
+  return static_cast<double>(asFloat());
 }
 
 template <>
 inline float JsonVariant::as<float>() const {
-  return static_cast<float>(as<double>());
+  return static_cast<float>(asFloat());
 }
 
 template <typename T>

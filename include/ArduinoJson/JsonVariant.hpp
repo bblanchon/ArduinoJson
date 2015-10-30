@@ -83,6 +83,9 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   static T invalid();
 
  private:
+  Internals::JsonFloat asFloat() const;
+  Internals::JsonInteger asInteger() const;
+
   // The current type of the variant
   Internals::JsonVariantType _type;
 

@@ -14,7 +14,7 @@ namespace Internals {
 // A Print implementation that allows to write in a char[]
 class StaticStringBuilder : public Print {
  public:
-  StaticStringBuilder(char *buf, int size)
+  StaticStringBuilder(char *buf, size_t size)
       : buffer(buf), capacity(size - 1), length(0) {
     buffer[0] = '\0';
   }
@@ -23,8 +23,8 @@ class StaticStringBuilder : public Print {
 
  private:
   char *buffer;
-  int capacity;
-  int length;
+  size_t capacity;
+  size_t length;
 };
 }
 }

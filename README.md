@@ -63,7 +63,7 @@ data.add(2.302038, 6);   // if not specified, 2 digits are printed
 root.printTo(Serial);
 // This prints:
 // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
-``
+```
 
 
 Documentation
