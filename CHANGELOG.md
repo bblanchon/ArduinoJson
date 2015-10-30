@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+v5.0.5
+------
+
+* Add overload `JsonObjectSuscript::set(value, decimals)` (issue #143)
+
 v5.0.4
 ------
 

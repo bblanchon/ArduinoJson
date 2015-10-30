@@ -54,6 +54,11 @@ class JsonObjectSubscript
     return _object.set(_key, value);
   }
 
+  template <typename TValue>
+  FORCE_INLINE bool set(TValue value, uint8_t decimals) {
+    return _object.set(_key, value, decimals);
+  }
+
   FORCE_INLINE JsonVariant get() { return _object.get(_key); }
 
   void writeTo(Internals::JsonWriter& writer) const {

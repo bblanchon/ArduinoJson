@@ -46,6 +46,14 @@ TEST_(StoreDouble) {
   EXPECT_EQ(123.45, _object["hello"].as<double>());
 }
 
+TEST_(StoreDoubleWithDigits) {
+  _object["hello"].set(123.45, 2);
+
+  EXPECT_TRUE(_object["hello"].is<double>());
+  EXPECT_FALSE(_object["hello"].is<long>());
+  EXPECT_EQ(123.45, _object["hello"].as<double>());
+}
+
 TEST_(StoreBoolean) {
   _object["hello"] = true;
 
