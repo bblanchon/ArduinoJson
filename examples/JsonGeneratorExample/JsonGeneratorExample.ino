@@ -8,7 +8,9 @@
 
 void setup() {
   Serial.begin(9600);
-  // delay(1000); <--needed for some boards (like Teensy)
+  while (!Serial) {
+    // wait serial port initialization
+  }
 
   StaticJsonBuffer<200> jsonBuffer;
 

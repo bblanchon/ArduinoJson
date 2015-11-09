@@ -6,6 +6,7 @@ v5.0.6
 
 * Added parameter to `DynamicJsonBuffer` constructor to set initial size (issue #152)
 * Fixed warning about library category in Arduino 1.6.6 (issue #147)
+* Examples: Added a loop to wait for serial port to be ready (issue #156)
 
 v5.0.5
 ------
