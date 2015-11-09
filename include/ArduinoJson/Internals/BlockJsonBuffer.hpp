@@ -31,7 +31,8 @@ class BlockJsonBuffer : public JsonBuffer {
   };
 
  public:
-  BlockJsonBuffer() : _head(NULL) {}
+  BlockJsonBuffer(size_t initialSize = 256)
+      : _head(NULL), _nextBlockSize(initialSize) {}
 
   ~BlockJsonBuffer() {
     Block* currentBlock = _head;
@@ -55,8 +56,6 @@ class BlockJsonBuffer : public JsonBuffer {
   }
 
  private:
-  static const size_t FIRST_BLOCK_CAPACITY = 32;
-
   bool canAllocInHead(size_t bytes) const {
     return _head != NULL && _head->size + bytes <= _head->capacity;
   }
@@ -68,10 +67,11 @@ class BlockJsonBuffer : public JsonBuffer {
   }
 
   void* allocInNewBlock(size_t bytes) {
-    size_t capacity = FIRST_BLOCK_CAPACITY;
+    size_t capacity = _nextBlockSize;
     if (_head != NULL) capacity = _head->capacity * 2;
     if (bytes > capacity) capacity = bytes;
     if (!addNewBlock(capacity)) return NULL;
+    _nextBlockSize *= 2;
     return allocInHead(bytes);
   }
 
@@ -86,8 +86,9 @@ class BlockJsonBuffer : public JsonBuffer {
     return true;
   }
 
-  Block* _head;
   TAllocator _allocator;
+  Block* _head;
+  size_t _nextBlockSize;
 };
 }
 }

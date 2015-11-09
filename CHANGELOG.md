@@ -1,10 +1,16 @@
 ArduinoJson: change log
 =======================
 
+v5.0.6
+------
+
+* Added parameter to `DynamicJsonBuffer` constructor to set initial size (issue #152)
+* Fixed warning about library category in Arduino 1.6.6 (issue #147)
+
 v5.0.5
 ------
 
-* Add overload `JsonObjectSuscript::set(value, decimals)` (issue #143)
+* Added overload `JsonObjectSuscript::set(value, decimals)` (issue #143)
 * Use `float` instead of `double` to reduce the size of `JsonVariant` (issue #134)
 
 v5.0.4

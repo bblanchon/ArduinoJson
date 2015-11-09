@@ -20,22 +20,22 @@ template <typename TFloat>
 static TFloat parse(const char *);
 
 template <>
-FORCE_INLINE float parse<float>(const char *s) {
+float parse<float>(const char *s) {
   return static_cast<float>(strtod(s, NULL));
 }
 
 template <>
-FORCE_INLINE double parse<double>(const char *s) {
+double parse<double>(const char *s) {
   return strtod(s, NULL);
 }
 
 template <>
-FORCE_INLINE long parse<long>(const char *s) {
+long parse<long>(const char *s) {
   return strtol(s, NULL, 10);
 }
 
 template <>
-FORCE_INLINE int parse<int>(const char *s) {
+int parse<int>(const char *s) {
   return atoi(s);
 }
 
