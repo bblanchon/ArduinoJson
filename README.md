@@ -98,6 +98,18 @@ From GitHub user `zacsketches`:
 
 > I am just starting an ESP8266 clock project and now I can output JSON from my server script and interpret it painlessly.
 
+Donators
+--------
+
+Special thanks to the following persons and companies who made generous donations to the library author:
+
+* Robert Murphy
+* Surge Communications
+* Alex Scott
+* Firepick Services LLC
+* A B Doodkorte
+* Scott Smith
+
 ---
 
 Found this library useful? Please star this project or [help me back with a donation!](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=donate%40benoitblanchon%2efr&lc=GB&item_name=Benoit%20Blanchon&item_number=Arduino%20JSON&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted) :smile:
