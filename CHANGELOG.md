@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Made library easier to use from a CMake project: simply add_subdirectory(ArduinoJson/src)
+
 v5.0.6
 ------
 

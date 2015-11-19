@@ -48,4 +48,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	)
 endif()
 
+if(MSVC)
+	add_definitions(
+		-D_CRT_SECURE_NO_WARNINGS
+		-W4)
+endif()
+
 add_library(ArduinoJson ${CPP_FILES} ${HPP_FILES} ${IPP_FILES})
+
+target_include_directories(ArduinoJson INTERFACE ${CMAKE_CURRENT_LIST_DIR}/../include)
