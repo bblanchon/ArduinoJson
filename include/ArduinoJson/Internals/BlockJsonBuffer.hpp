@@ -68,7 +68,6 @@ class BlockJsonBuffer : public JsonBuffer {
 
   void* allocInNewBlock(size_t bytes) {
     size_t capacity = _nextBlockSize;
-    if (_head != NULL) capacity = _head->capacity * 2;
     if (bytes > capacity) capacity = bytes;
     if (!addNewBlock(capacity)) return NULL;
     _nextBlockSize *= 2;
