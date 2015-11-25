@@ -1,10 +1,10 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.0.7
+------
 
-* Made library easier to use from a CMake project: simply add_subdirectory(ArduinoJson/src)
+* Made library easier to use from a CMake project: simply `add_subdirectory(ArduinoJson/src)`
 * Changed `String` to be a `typedef` of `std::string` (issues #142 and #161)
 
 **BREAKING CHANGES**:
