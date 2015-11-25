@@ -57,7 +57,7 @@ TEST(JsonVariant_As_Tests, FalseAsLong) {
 
 TEST(JsonVariant_As_Tests, FalseAsString) {
   JsonVariant variant = false;
-  ASSERT_EQ(String("0"), variant.as<String>());
+  ASSERT_EQ(String("false"), variant.as<String>());
 }
 
 TEST(JsonVariant_As_Tests, TrueAsBool) {
@@ -77,7 +77,7 @@ TEST(JsonVariant_As_Tests, TrueAsLong) {
 
 TEST(JsonVariant_As_Tests, TrueAsString) {
   JsonVariant variant = true;
-  ASSERT_EQ(String("1"), variant.as<String>());
+  ASSERT_EQ(String("true"), variant.as<String>());
 }
 
 TEST(JsonVariant_As_Tests, LongAsBool) {

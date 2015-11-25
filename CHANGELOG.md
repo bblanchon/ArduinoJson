@@ -5,6 +5,11 @@ HEAD
 ----
 
 * Made library easier to use from a CMake project: simply add_subdirectory(ArduinoJson/src)
+* Changed `String` to be a `typedef` of `std::string` (issues #142 and #161)
+
+**BREAKING CHANGES**:
+- `JsonVariant(true).as<String>()` now returns `"true"` instead of `"1"`
+- `JsonVariant(false).as<String>()` now returns `"false"` instead of `"0"`
 
 v5.0.6
 ------

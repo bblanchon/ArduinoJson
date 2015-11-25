@@ -76,20 +76,12 @@ JsonInteger JsonVariant::asInteger() const {
 
 template <>
 String JsonVariant::as<String>() const {
+  String s;
   if ((_type == JSON_STRING || _type == JSON_UNPARSED) &&
       _content.asString != NULL)
-    return String(_content.asString);
-
-  if (_type == JSON_INTEGER || _type == JSON_BOOLEAN)
-    return String(_content.asInteger);
-
-  if (_type >= JSON_FLOAT_0_DECIMALS) {
-    uint8_t decimals = static_cast<uint8_t>(_type - JSON_FLOAT_0_DECIMALS);
-    return String(_content.asFloat, decimals);
-  }
-
-  String s;
-  printTo(s);
+    s = _content.asString;
+  else
+    printTo(s);
   return s;
 }
 
