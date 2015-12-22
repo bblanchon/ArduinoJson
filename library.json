@@ -15,7 +15,8 @@
   "exclude": [
     "scripts",
     "test",
-    "third-party"
+    "third-party",
+    "src/ArduinoJson.h"
   ],
   "frameworks": "arduino",
   "platforms": "*"  
