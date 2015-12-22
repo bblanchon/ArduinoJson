@@ -12,6 +12,12 @@
     "name": "Benoit Blanchon",
     "url": "http://blog.benoitblanchon.fr"
   },
+  "exclude": [
+    "scripts",
+    "test",
+    "third-party",
+    "src/ArduinoJson.h"
+  ],
   "frameworks": "arduino",
-  "platforms": "atmelavr"  
+  "platforms": "*"  
 }
