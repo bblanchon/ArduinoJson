@@ -1,8 +1,15 @@
 sudo: false
 language: cpp
+cache:
+  directories:
+    - "~/.platformio"
 env:
   - COMPILER=gcc
   - COMPILER=clang
   - COMPILER=arduino VERSION=1.5.8 BOARD=arduino:avr:uno
   - COMPILER=arduino VERSION=1.6.7 BOARD=arduino:avr:uno
+  - COMPILER=platformio BOARD=uno
+  - COMPILER=platformio BOARD=due
+  - COMPILER=platformio BOARD=esp01
+  - COMPILER=platformio BOARD=teensy31
 script: scripts/travis/$COMPILER.sh

@@ -2,16 +2,20 @@
   "name": "Json",
   "keywords": "json, rest, http, web",
   "description": "An elegant and efficient JSON library for embedded systems",
-  "repository":
-  {
+  "repository": {
     "type": "git",
     "url": "https://github.com/bblanchon/ArduinoJson.git"
   },
-  "authors":
-  {
+  "authors": {
     "name": "Benoit Blanchon",
     "url": "http://blog.benoitblanchon.fr"
   },
+  "exclude": [
+    "scripts",
+    "src/ArduinoJson.h",
+    "test",
+    "third-party"
+  ],
   "frameworks": "arduino",
-  "platforms": "atmelavr"  
+  "platforms": "*"
 }

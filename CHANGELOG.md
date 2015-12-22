@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Made the library compatible with platform.io (issue #181)
+
 v5.0.7
 ------
 
