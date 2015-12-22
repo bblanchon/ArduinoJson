@@ -1,23 +1,8 @@
 sudo: false
-language: c++
-compiler:
-  - gcc
-  - clang
-before_install:
-  - pip install --user cpp-coveralls
-  - mkdir -p /tmp/cmake
-  - curl https://cmake.org/files/v3.4/cmake-3.4.0-Linux-x86_64.tar.gz | tar xz -C /tmp/cmake --strip 1
-  - export PATH=/tmp/cmake/bin:$PATH
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
-  - sleep 3
-  - export DISPLAY=:1.0
-  - mkdir -p /tmp/arduino
-  - curl http://downloads.arduino.cc/arduino-1.6.5-linux64.tar.xz | tar xJ -C /tmp/arduino --strip 1
-  - export PATH=$PATH:/tmp/arduino/
-  - ln -s $PWD /tmp/arduino/libraries/ArduinoJson
-script:
-  - cmake -DCOVERAGE=true . && make && make test
-  - arduino --verify --board arduino:avr:uno $PWD/examples/JsonParserExample/JsonParserExample.ino
-  - arduino --verify --board arduino:avr:uno $PWD/examples/JsonGeneratorExample/JsonGeneratorExample.ino
-after_success:
-    - if [ "$CC" = "gcc" ]; then coveralls --exclude third-party --gcov-options '\-lp'; fi
+language: cpp
+env:
+  - COMPILER=gcc
+  - COMPILER=clang
+  - COMPILER=arduino VERSION=1.5.8 BOARD=arduino:avr:uno
+  - COMPILER=arduino VERSION=1.6.7 BOARD=arduino:avr:uno
+script: scripts/travis/$COMPILER.sh
