@@ -6,9 +6,8 @@
 
 // About this file
 // ---------------
-// This file is here to please the platform.io compile. It must be present in
-// the root for the IDE to find it. Feel free to ignore this file if your
-// working in another environment.
-// ...and yes this is driving me crazy!
+// This file is here for [PlatformIO](http://platformio.org/).
+// It must be present in the root for the tool to find it.
+// Feel free to ignore this file if your working in another environment.
 
 #include "include/ArduinoJson.h"

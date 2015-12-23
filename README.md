@@ -27,7 +27,12 @@ Works on
 * All Arduino boards
 * ESP8266
 * Teensy
+* Intel Edison
+* PlatformIO
+* Energia
 * Computers (Windows, Linux, OSX...)
+
+See [FAQ: Compatibility issues](https://github.com/bblanchon/ArduinoJson/wiki/Compatibility-issues)
 
 Quick start
 -----------
