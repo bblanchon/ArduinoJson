@@ -1,3 +1,10 @@
+# Copyright Benoit Blanchon 2014-2016
+# MIT License
+# 
+# Arduino JSON library
+# https://github.com/bblanchon/ArduinoJson
+# If you like this project, please add a star!
+
 set(GTEST_DIR ../third-party/gtest-1.7.0)
 
 file(GLOB TESTS_FILES *.hpp *.cpp)

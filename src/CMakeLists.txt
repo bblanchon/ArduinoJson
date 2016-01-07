@@ -1,3 +1,10 @@
+# Copyright Benoit Blanchon 2014-2016
+# MIT License
+# 
+# Arduino JSON library
+# https://github.com/bblanchon/ArduinoJson
+# If you like this project, please add a star!
+
 file(GLOB_RECURSE HPP_FILES ../include/*.hpp)
 file(GLOB_RECURSE IPP_FILES ../include/*.ipp)
 file(GLOB_RECURSE CPP_FILES *.cpp)

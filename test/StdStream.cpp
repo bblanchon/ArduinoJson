@@ -1,29 +1,30 @@
-// Copyright Benoit Blanchon 2014-2015
+// Copyright Benoit Blanchon 2014-2016
 // MIT License
 //
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
+// If you like this project, please add a star!
 
 #include <sstream>
 #include <gtest/gtest.h>
 #define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
 
-TEST(StdStream, JsonVariantFalse) { 
+TEST(StdStream, JsonVariantFalse) {
   std::ostringstream os;
   JsonVariant variant = false;
   os << variant;
   ASSERT_EQ("false", os.str());
 }
 
-TEST(StdStream, JsonVariantString) { 
+TEST(StdStream, JsonVariantString) {
   std::ostringstream os;
   JsonVariant variant = "coucou";
   os << variant;
   ASSERT_EQ("\"coucou\"", os.str());
 }
 
-TEST(StdStream, JsonObject) { 
+TEST(StdStream, JsonObject) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonObject& object = jsonBuffer.createObject();
@@ -32,7 +33,7 @@ TEST(StdStream, JsonObject) {
   ASSERT_EQ("{\"key\":\"value\"}", os.str());
 }
 
-TEST(StdStream, JsonObjectSubscript) { 
+TEST(StdStream, JsonObjectSubscript) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonObject& object = jsonBuffer.createObject();
@@ -41,7 +42,7 @@ TEST(StdStream, JsonObjectSubscript) {
   ASSERT_EQ("\"value\"", os.str());
 }
 
-TEST(StdStream, JsonArray) { 
+TEST(StdStream, JsonArray) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonArray& array = jsonBuffer.createArray();
@@ -50,7 +51,7 @@ TEST(StdStream, JsonArray) {
   ASSERT_EQ("[\"value\"]", os.str());
 }
 
-TEST(StdStream, JsonArraySubscript) { 
+TEST(StdStream, JsonArraySubscript) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonArray& array = jsonBuffer.createArray();
@@ -58,5 +59,3 @@ TEST(StdStream, JsonArraySubscript) {
   os << array[0];
   ASSERT_EQ("\"value\"", os.str());
 }
-
-

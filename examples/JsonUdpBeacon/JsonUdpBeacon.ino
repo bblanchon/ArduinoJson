@@ -3,7 +3,7 @@
 // You can easily test this program with netcat:
 // $ nc -ulp 8888
 //
-// by Benoit Blanchon, MIT License 2015
+// by Benoit Blanchon, MIT License 2015-2016
 
 #include <SPI.h>
 #include <Ethernet.h>
