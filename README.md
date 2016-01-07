@@ -114,6 +114,7 @@ Special thanks to the following persons and companies who made generous donation
 * Firepick Services LLC
 * A B Doodkorte
 * Scott Smith
+* Johann Stieger
 
 ---
 
