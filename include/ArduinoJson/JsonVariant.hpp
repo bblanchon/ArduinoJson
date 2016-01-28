@@ -77,7 +77,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   bool is() const;
 
   // Serialize the variant to a JsonWriter
-  void writeTo(Internals::JsonWriter &writer) const;
+  size_t writeTo(Internals::JsonWriter &writer) const;
 
   // TODO: rename
   template <typename T>

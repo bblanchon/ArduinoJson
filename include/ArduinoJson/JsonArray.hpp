@@ -114,7 +114,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   static JsonArray &invalid() { return _invalid; }
 
   // Serialize the array to the specified JsonWriter.
-  void writeTo(Internals::JsonWriter &writer) const;
+  size_t writeTo(Internals::JsonWriter &writer) const;
 
  private:
   node_type *getNodeAt(size_t index) const;

@@ -53,20 +53,33 @@ JsonObject::node_type *JsonObject::getNodeAt(JsonObjectKey key) const {
   return NULL;
 }
 
-void JsonObject::writeTo(JsonWriter &writer) const {
-  writer.beginObject();
+size_t JsonObject::writeTo(JsonWriter &writer) const {
+  size_t written = 0;
+  if((written = writer.beginObject()) == 0)
+    return 0;
 
   const node_type *node = _firstNode;
+  size_t total = written;
   while (node) {
-    writer.writeString(node->content.key);
-    writer.writeColon();
-    node->content.value.writeTo(writer);
+    if((written = writer.writeString(node->content.key)) == 0)
+      break;
+    total += written;
+    if((written = writer.writeColon()) == 0)
+      break;
+    total += written;
+    if((written = node->content.value.writeTo(writer)) == 0)
+      break;
+    total += written;
 
     node = node->next;
     if (!node) break;
 
-    writer.writeComma();
+    if((written = writer.writeComma()) == 0)
+      break;
+    total += written;
   }
 
-  writer.endObject();
+  if(written)
+    total += writer.endObject();
+  return total;
 }

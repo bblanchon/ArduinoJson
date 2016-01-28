@@ -37,18 +37,25 @@ JsonObject &JsonArray::createNestedObject() {
 
 void JsonArray::removeAt(size_t index) { removeNode(getNodeAt(index)); }
 
-void JsonArray::writeTo(JsonWriter &writer) const {
-  writer.beginArray();
+size_t JsonArray::writeTo(JsonWriter &writer) const {
+  size_t written = 0;
+  if((written = writer.beginArray()) == 0)
+    return 0;
 
   const node_type *child = _firstNode;
+  size_t total = written;
   while (child) {
-    child->content.writeTo(writer);
+    if((written = child->content.writeTo(writer)) == 0) break;
+    total += written;
 
     child = child->next;
     if (!child) break;
 
-    writer.writeComma();
+    if((written = writer.writeComma()) == 0) break;
+    total += written;
   }
 
-  writer.endArray();
+  if(written)
+    total += writer.endArray();
+  return total;
 }
