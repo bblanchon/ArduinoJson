@@ -121,7 +121,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   static JsonObject& invalid() { return _invalid; }
 
   // Serialize the object to the specified JsonWriter
-  void writeTo(Internals::JsonWriter& writer) const;
+  size_t writeTo(Internals::JsonWriter& writer) const;
 
  private:
   // Returns the list node that matches the specified key.

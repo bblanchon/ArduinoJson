@@ -32,48 +32,59 @@ class JsonWriter {
   // number of bytes written.
   size_t bytesWritten() const { return _length; }
 
-  void beginArray() { write('['); }
-  void endArray() { write(']'); }
+  size_t beginArray() { return write('['); }
+  size_t endArray() { return write(']'); }
 
-  void beginObject() { write('{'); }
-  void endObject() { write('}'); }
+  size_t beginObject() { return write('{'); }
+  size_t endObject() { return write('}'); }
 
-  void writeColon() { write(':'); }
-  void writeComma() { write(','); }
+  size_t writeColon() { return write(':'); }
+  size_t writeComma() { return write(','); }
 
-  void writeBoolean(bool value) { write(value ? "true" : "false"); }
+  size_t writeBoolean(bool value) { return write(value ? "true" : "false"); }
 
-  void writeString(const char *value) {
+  size_t writeString(const char *value) {
+    size_t written = 0;
     if (!value) {
-      write("null");
+      written = write("null");
     } else {
-      write('\"');
-      while (*value) writeChar(*value++);
-      write('\"');
+      written = write('\"');
+      while (*value && writeChar(*value++) == 1) written++;
+      written += write('\"');
     }
+    return written;
   }
 
-  void writeChar(char c) {
+  size_t writeChar(char c) {
     char specialChar = Encoding::escapeChar(c);
+    size_t written = 0;
     if (specialChar) {
-      write('\\');
-      write(specialChar);
+      if(write('\\') == 0)
+        return 0;
+      written = write(specialChar);
     } else {
-      write(c);
+      written = write(c);
     }
+    return written;
   }
 
-  void writeInteger(JsonInteger value) { _length += _sink.print(value); }
-
-  void writeFloat(JsonFloat value, uint8_t decimals) {
-    _length += _sink.print(value, decimals);
+  size_t writeInteger(JsonInteger value) {
+    size_t written = _sink.print(value);
+    _length += written;
+    return written;
   }
 
-  void writeRaw(const char *s) { return write(s); }
+  size_t writeFloat(JsonFloat value, uint8_t decimals) {
+    size_t written = _sink.print(value, decimals);
+    _length += written;
+    return written;
+  }
+
+  size_t writeRaw(const char *s) { return write(s); }
 
  protected:
-  void write(char c) { _length += _sink.write(c); }
-  FORCE_INLINE void write(const char *s) { _length += _sink.print(s); }
+  size_t write(char c) { size_t written = _sink.write(c); _length += written; return written; }
+  FORCE_INLINE size_t write(const char *s) { size_t written = _sink.print(s); _length += written; return written; }
 
   Print &_sink;
   size_t _length;
