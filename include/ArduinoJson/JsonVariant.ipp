@@ -174,10 +174,8 @@ bool JsonVariant::is<signed long>() const;
 template <>  // in .cpp
 bool JsonVariant::is<double>() const;
 
-template <>
-inline bool JsonVariant::is<bool>() const {
-  return _type == Internals::JSON_BOOLEAN;
-}
+template <>  // int .cpp
+bool JsonVariant::is<bool>() const;
 
 template <>
 inline bool JsonVariant::is<char const *>() const {

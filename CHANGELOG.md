@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Made the library compatible with [PlatformIO](http://platformio.org/) (issue #181)
+* Fixed `JsonVariant::is<bool>()` that was incorrectly returning false (issue #214)
 
 v5.0.7
 ------

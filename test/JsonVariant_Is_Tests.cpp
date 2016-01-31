@@ -77,6 +77,26 @@ TEST(SUITE, StringIsInt) { assertIsNot<int>("42"); }
 TEST(SUITE, StringIsLong) { assertIsNot<long>("42"); }
 TEST(SUITE, StringIsString) { assertIs<const char*>("42"); }
 
+TEST(SUITE, UnparsedTrueIsArra) { assertIsNot<JsonArray&>(Unparsed("true")); }
+TEST(SUITE, UnparsedTrueIsBool) { assertIs<bool>(Unparsed("true")); }
+TEST(SUITE, UnparsedTrueIsDouble) { assertIsNot<double>(Unparsed("true")); }
+TEST(SUITE, UnparsedTrueIsFloat) { assertIsNot<float>(Unparsed("true")); }
+TEST(SUITE, UnparsedTrueIsInt) { assertIsNot<int>(Unparsed("true")); }
+TEST(SUITE, UnparsedTrueIsLong) { assertIsNot<long>(Unparsed("true")); }
+TEST(SUITE, UnparsedTrueIsString) {
+  assertIsNot<const char*>(Unparsed("true"));
+}
+
+TEST(SUITE, UnparsedFalseIsArra) { assertIsNot<JsonArray&>(Unparsed("false")); }
+TEST(SUITE, UnparsedFalseIsBool) { assertIs<bool>(Unparsed("false")); }
+TEST(SUITE, UnparsedFalseIsDouble) { assertIsNot<double>(Unparsed("false")); }
+TEST(SUITE, UnparsedFalseIsFloat) { assertIsNot<float>(Unparsed("false")); }
+TEST(SUITE, UnparsedFalseIsInt) { assertIsNot<int>(Unparsed("false")); }
+TEST(SUITE, UnparsedFalseIsLong) { assertIsNot<long>(Unparsed("false")); }
+TEST(SUITE, UnparsedFalseIsString) {
+  assertIsNot<const char*>(Unparsed("false"));
+}
+
 TEST(SUITE, UnparsedIntIsArra) { assertIsNot<JsonArray&>(Unparsed("42")); }
 TEST(SUITE, UnparsedIntIsBool) { assertIsNot<bool>(Unparsed("42")); }
 TEST(SUITE, UnparsedIntIsDouble) { assertIsNot<double>(Unparsed("42")); }

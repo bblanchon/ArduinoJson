@@ -87,6 +87,16 @@ String JsonVariant::as<String>() const {
 }
 
 template <>
+bool JsonVariant::is<bool>() const {
+  if (_type == JSON_BOOLEAN) return true;
+
+  if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
+
+  return !strcmp(_content.asString, "true") ||
+         !strcmp(_content.asString, "false");
+}
+
+template <>
 bool JsonVariant::is<signed long>() const {
   if (_type == JSON_INTEGER) return true;
 
