@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.1.0
+------
 
 * Added support of `long long` (issue #171)
 * Moved all build settings to `ArduinoJson/Configuration.hpp`
