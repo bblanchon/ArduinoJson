@@ -6,8 +6,8 @@
 // If you like this project, please add a star!
 
 #include <gtest/gtest.h>
-#define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
+#include <stdint.h>
 
 class JsonArray_Subscript_Tests : public ::testing::Test {
  protected:
@@ -29,6 +29,13 @@ TEST_(SizeIsUnchanged) {
 TEST_(StoreInteger) {
   _array[0] = 123;
   EXPECT_EQ(123, _array[0].as<int>());
+  EXPECT_TRUE(_array[0].is<int>());
+  EXPECT_FALSE(_array[0].is<double>());
+}
+
+TEST_(StoreInt64) {
+  _array[0] = 9223372036854775807;
+  EXPECT_EQ(9223372036854775807, _array[0].as<int64_t>());
   EXPECT_TRUE(_array[0].is<int>());
   EXPECT_FALSE(_array[0].is<double>());
 }

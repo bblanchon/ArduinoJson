@@ -7,14 +7,16 @@
 
 #pragma once
 
-#include "JsonObjectKey.hpp"
-#include "JsonVariant.hpp"
-
 namespace ArduinoJson {
+namespace TypeTraits {
 
-// A key value pair for JsonObject.
-struct JsonPair {
-  const char* key;
-  JsonVariant value;
+// A meta-function that return the type T if Condition is true.
+template <bool Condition, typename T>
+struct EnableIf {};
+
+template <typename T>
+struct EnableIf<true, T> {
+  typedef T type;
 };
+}
 }

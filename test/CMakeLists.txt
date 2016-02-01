@@ -17,13 +17,18 @@ add_definitions(-DGTEST_HAS_PTHREAD=0)
 
 # Workaround for Visual Studio 2012
 if (MSVC AND MSVC_VERSION EQUAL 1700)
-  add_definitions(-D_VARIADIC_MAX=10)
+    add_definitions(-D_VARIADIC_MAX=10)
+endif()
+
+if (MSVC)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 add_executable(ArduinoJsonTests 
     ${TESTS_FILES}
     ${GTEST_DIR}/src/gtest-all.cc
     ${GTEST_DIR}/src/gtest_main.cc)
+
 
 target_link_libraries(ArduinoJsonTests ArduinoJson)
 

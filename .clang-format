@@ -1,3 +1,4 @@
 # http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 BasedOnStyle: Google
+Standard: Cpp03

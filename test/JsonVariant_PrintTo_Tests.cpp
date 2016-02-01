@@ -71,3 +71,13 @@ TEST_F(JsonVariant_PrintTo_Tests, OneFalse) {
   variant = false;
   outputMustBe("false");
 }
+
+TEST_F(JsonVariant_PrintTo_Tests, NegativeInt64) {
+  variant = -9223372036854775807 - 1;
+  outputMustBe("-9223372036854775808");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, PositiveInt64) {
+  variant = 9223372036854775807;
+  outputMustBe("9223372036854775807");
+}

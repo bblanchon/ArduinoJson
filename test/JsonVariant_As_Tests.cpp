@@ -6,8 +6,9 @@
 // If you like this project, please add a star!
 
 #include <gtest/gtest.h>
-#define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
+
+#include <stdint.h>
 
 static const char* null = 0;
 
@@ -134,6 +135,16 @@ TEST(JsonVariant_As_Tests, NumberStringAsBool) {
 TEST(JsonVariant_As_Tests, NumberStringAsLong) {
   JsonVariant variant = "42";
   ASSERT_EQ(42L, variant.as<long>());
+}
+
+TEST(JsonVariant_As_Tests, NumberStringAsInt64Negative) {
+  JsonVariant variant = "-9223372036854775808";
+  ASSERT_EQ(-9223372036854775807 - 1, variant.as<int64_t>());
+}
+
+TEST(JsonVariant_As_Tests, NumberStringAsInt64Positive) {
+  JsonVariant variant = "9223372036854775807";
+  ASSERT_EQ(9223372036854775807, variant.as<int64_t>());
 }
 
 TEST(JsonVariant_As_Tests, RandomStringAsBool) {
