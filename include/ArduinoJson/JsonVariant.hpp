@@ -18,9 +18,9 @@
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsFloatingPoint.hpp"
 #include "TypeTraits/IsIntegral.hpp"
+#include "TypeTraits/IsSame.hpp"
 #include "TypeTraits/RemoveConst.hpp"
 #include "TypeTraits/RemoveReference.hpp"
-#include "TypeTraits/IsSame.hpp"
 
 namespace ArduinoJson {
 
@@ -191,17 +191,24 @@ inline JsonVariant double_with_n_digits(double value, uint8_t digits) {
 
 template <typename T>
 struct JsonVariant::IsConstructibleFrom {
-  static const bool value = TypeTraits::IsIntegral<T>::value ||
-                            TypeTraits::IsFloatingPoint<T>::value ||
-                            TypeTraits::IsSame<T, bool>::value ||
-                            TypeTraits::IsSame<T, char *>::value ||
-                            TypeTraits::IsSame<T, const char *>::value ||
-                            TypeTraits::IsSame<T, JsonArray &>::value ||
-                            TypeTraits::IsSame<T, const JsonArray &>::value ||
-                            TypeTraits::IsSame<T, JsonObject &>::value ||
-                            TypeTraits::IsSame<T, const JsonObject &>::value ||
-                            TypeTraits::IsSame<T, JsonVariant &>::value ||
-                            TypeTraits::IsSame<T, const JsonVariant &>::value;
+  static const bool value =
+      TypeTraits::IsIntegral<T>::value ||
+      TypeTraits::IsFloatingPoint<T>::value ||
+      TypeTraits::IsSame<T, bool>::value ||
+      TypeTraits::IsSame<T, char *>::value ||
+      TypeTraits::IsSame<T, const char *>::value ||
+      TypeTraits::IsSame<T, JsonArray &>::value ||
+      TypeTraits::IsSame<T, const JsonArray &>::value ||
+      TypeTraits::IsSame<T, JsonArraySubscript &>::value ||
+      TypeTraits::IsSame<T, const JsonArraySubscript &>::value ||
+      TypeTraits::IsSame<T, JsonObject &>::value ||
+      TypeTraits::IsSame<T, const JsonObject &>::value ||
+      TypeTraits::IsSame<T, JsonObjectSubscript<const char *> &>::value ||
+      TypeTraits::IsSame<T, const JsonObjectSubscript<const char *> &>::value ||
+      TypeTraits::IsSame<T, JsonObjectSubscript<String> &>::value ||
+      TypeTraits::IsSame<T, const JsonObjectSubscript<String> &>::value ||
+      TypeTraits::IsSame<T, JsonVariant &>::value ||
+      TypeTraits::IsSame<T, const JsonVariant &>::value;
 };
 }
 

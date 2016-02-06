@@ -92,10 +92,6 @@ inline std::ostream& operator<<(
 }
 #endif
 
-template <typename T>
-struct JsonVariant::IsConstructibleFrom<JsonObjectSubscript<T> > {
-  static const bool value = true;
-};
 }  // namespace ArduinoJson
 
 #ifdef _MSC_VER

@@ -72,6 +72,7 @@ TEST_F(JsonVariant_PrintTo_Tests, OneFalse) {
   outputMustBe("false");
 }
 
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
 TEST_F(JsonVariant_PrintTo_Tests, NegativeInt64) {
   variant = -9223372036854775807 - 1;
   outputMustBe("-9223372036854775808");
@@ -81,3 +82,4 @@ TEST_F(JsonVariant_PrintTo_Tests, PositiveInt64) {
   variant = 9223372036854775807;
   outputMustBe("9223372036854775807");
 }
+#endif

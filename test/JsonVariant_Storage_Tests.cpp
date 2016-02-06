@@ -5,9 +5,9 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
+#include <gtest/gtest.h>
 #include <stdint.h>
 #include <limits>
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
 
 class JsonVariant_Storage_Tests : public ::testing::Test {
@@ -37,9 +37,11 @@ class JsonVariant_Storage_Tests : public ::testing::Test {
   }
 };
 
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
 TEST_F(JsonVariant_Storage_Tests, SizeOfJsonInteger) {
   ASSERT_EQ(8, sizeof(Internals::JsonInteger));
 }
+#endif
 
 TEST_F(JsonVariant_Storage_Tests, Null) { testValue<const char *>(NULL); }
 TEST_F(JsonVariant_Storage_Tests, String) { testValue<const char *>("hello"); }
@@ -57,15 +59,21 @@ TEST_F(JsonVariant_Storage_Tests, UChar) { testNumericType<unsigned char>(); }
 TEST_F(JsonVariant_Storage_Tests, UInt) { testNumericType<unsigned int>(); }
 TEST_F(JsonVariant_Storage_Tests, ULong) { testNumericType<unsigned long>(); }
 TEST_F(JsonVariant_Storage_Tests, UShort) { testNumericType<unsigned short>(); }
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+TEST_F(JsonVariant_Storage_Tests, LongLong) { testNumericType<unsigned long long>(); }
+TEST_F(JsonVariant_Storage_Tests, ULongLong) { testNumericType<unsigned long long>(); }
+#endif
 
 TEST_F(JsonVariant_Storage_Tests, Int8) { testNumericType<int8_t>(); }
-TEST_F(JsonVariant_Storage_Tests, Int16) { testNumericType<int16_t>(); }
-TEST_F(JsonVariant_Storage_Tests, Int32) { testNumericType<int32_t>(); }
-TEST_F(JsonVariant_Storage_Tests, Int64) { testNumericType<int64_t>(); }
 TEST_F(JsonVariant_Storage_Tests, Uint8) { testNumericType<uint8_t>(); }
+TEST_F(JsonVariant_Storage_Tests, Int16) { testNumericType<int16_t>(); }
 TEST_F(JsonVariant_Storage_Tests, Uint16) { testNumericType<uint16_t>(); }
+TEST_F(JsonVariant_Storage_Tests, Int32) { testNumericType<int32_t>(); }
 TEST_F(JsonVariant_Storage_Tests, Uint32) { testNumericType<uint32_t>(); }
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+TEST_F(JsonVariant_Storage_Tests, Int64) { testNumericType<int64_t>(); }
 TEST_F(JsonVariant_Storage_Tests, Uint64) { testNumericType<uint64_t>(); }
+#endif
 
 TEST_F(JsonVariant_Storage_Tests, CanStoreObject) {
   DynamicJsonBuffer jsonBuffer;

@@ -5,9 +5,9 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
 
+#include <gtest/gtest.h>
 #include <stdint.h>
 
 static const char* null = 0;
@@ -137,15 +137,17 @@ TEST(JsonVariant_As_Tests, NumberStringAsLong) {
   ASSERT_EQ(42L, variant.as<long>());
 }
 
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
 TEST(JsonVariant_As_Tests, NumberStringAsInt64Negative) {
   JsonVariant variant = "-9223372036854775808";
-  ASSERT_EQ(-9223372036854775807 - 1, variant.as<int64_t>());
+  ASSERT_EQ(-9223372036854775807 - 1, variant.as<long long>());
 }
 
 TEST(JsonVariant_As_Tests, NumberStringAsInt64Positive) {
   JsonVariant variant = "9223372036854775807";
-  ASSERT_EQ(9223372036854775807, variant.as<int64_t>());
+  ASSERT_EQ(9223372036854775807, variant.as<long long>());
 }
+#endif
 
 TEST(JsonVariant_As_Tests, RandomStringAsBool) {
   JsonVariant variant = "hello";

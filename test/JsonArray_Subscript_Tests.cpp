@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 #include <stdint.h>
 
 class JsonArray_Subscript_Tests : public ::testing::Test {
@@ -33,12 +33,14 @@ TEST_(StoreInteger) {
   EXPECT_FALSE(_array[0].is<double>());
 }
 
-TEST_(StoreInt64) {
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+TEST_(StoreLongLong) {
   _array[0] = 9223372036854775807;
-  EXPECT_EQ(9223372036854775807, _array[0].as<int64_t>());
+  EXPECT_EQ(9223372036854775807, _array[0].as<long long>());
   EXPECT_TRUE(_array[0].is<int>());
   EXPECT_FALSE(_array[0].is<double>());
 }
+#endif
 
 TEST_(StoreDouble) {
   _array[0] = 123.45;

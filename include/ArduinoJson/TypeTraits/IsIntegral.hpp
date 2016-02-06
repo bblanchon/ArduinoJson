@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "../Configuration.hpp"
 #include "IsSame.hpp"
 
 #include <stdint.h>
@@ -25,10 +26,14 @@ struct IsIntegral {
                             TypeTraits::IsSame<T, unsigned int>::value ||
                             TypeTraits::IsSame<T, signed long>::value ||
                             TypeTraits::IsSame<T, unsigned long>::value ||
-#ifndef ARDUINO
-                            // on a computer add support for 64 bit
-                            TypeTraits::IsSame<T, int64_t>::value ||
-                            TypeTraits::IsSame<T, uint64_t>::value ||
+#if ARDUINOJSON_USE_LONG_LONG
+                            TypeTraits::IsSame<T, long long>::value ||
+                            TypeTraits::IsSame<T, unsigned long long>::value ||
+#endif
+
+#if ARDUINOJSON_USE_INT64
+                            TypeTraits::IsSame<T, __int64>::value ||
+                            TypeTraits::IsSame<T, unsigned __int64>::value ||
 #endif
                             TypeTraits::IsSame<T, char>::value;
 };
