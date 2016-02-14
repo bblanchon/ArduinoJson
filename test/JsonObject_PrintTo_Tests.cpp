@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 using namespace ArduinoJson::Internals;
 
@@ -78,7 +78,8 @@ TEST_F(JsonObject_PrintTo_Tests, TwoIntegers) {
 TEST_F(JsonObject_PrintTo_Tests, TwoDoublesFourDigits) {
   _object["a"] = double_with_n_digits(3.14159265358979323846, 4);
   _object.set("b", 2.71828182845904523536, 4);
-  outputMustBe("{\"a\":3.1416,\"b\":2.7183}");
+  _object.set("c", double_with_n_digits(3.14159265358979323846, 3));
+  outputMustBe("{\"a\":3.1416,\"b\":2.7183,\"c\":3.142}");
 }
 
 TEST_F(JsonObject_PrintTo_Tests, TwoDoubleDefaultDigits) {

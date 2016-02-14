@@ -64,7 +64,22 @@ TEST_F(JsonArray_PrintTo_Tests, OneDoubleDefaultDigits) {
 }
 
 TEST_F(JsonArray_PrintTo_Tests, OneDoubleFourDigits) {
+  array.add(3.14159265358979323846, 4);
+  outputMustBe("[3.1416]");
+}
+
+TEST_F(JsonArray_PrintTo_Tests, OneDoubleFourDigits_AlternativeSyntax) {
   array.add(double_with_n_digits(3.14159265358979323846, 4));
+  outputMustBe("[3.1416]");
+}
+
+TEST_F(JsonArray_PrintTo_Tests, OneFloatDefaultDigits) {
+  array.add(3.14159f);
+  outputMustBe("[3.14]");
+}
+
+TEST_F(JsonArray_PrintTo_Tests, OneFloatFourDigits) {
+  array.add(3.14159f, 4);
   outputMustBe("[3.1416]");
 }
 

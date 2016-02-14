@@ -18,35 +18,7 @@ using namespace ArduinoJson::Internals;
 
 JsonObject JsonObject::_invalid(NULL);
 
-JsonObject::node_type *JsonObject::getOrCreateNodeAt(JsonObjectKey key) {
-  node_type *existingNode = getNodeAt(key);
-  if (existingNode) return existingNode;
-
-  node_type *newNode = addNewNode();
-  return newNode;
-}
-
-template <typename TKey>
-JsonArray &JsonObject::createArrayAt(TKey key) {
-  if (!_buffer) return JsonArray::invalid();
-  JsonArray &array = _buffer->createArray();
-  setNodeAt<TKey, const JsonVariant &>(key, array);
-  return array;
-}
-template JsonArray &JsonObject::createArrayAt<const char *>(const char *);
-template JsonArray &JsonObject::createArrayAt<const String &>(const String &);
-
-template <typename TKey>
-JsonObject &JsonObject::createObjectAt(TKey key) {
-  if (!_buffer) return JsonObject::invalid();
-  JsonObject &array = _buffer->createObject();
-  setNodeAt<TKey, const JsonVariant &>(key, array);
-  return array;
-}
-template JsonObject &JsonObject::createObjectAt<const char *>(const char *);
-template JsonObject &JsonObject::createObjectAt<const String &>(const String &);
-
-JsonObject::node_type *JsonObject::getNodeAt(JsonObjectKey key) const {
+JsonObject::node_type *JsonObject::getNodeAt(const char *key) const {
   for (node_type *node = _firstNode; node; node = node->next) {
     if (!strcmp(node->content.key, key)) return node;
   }

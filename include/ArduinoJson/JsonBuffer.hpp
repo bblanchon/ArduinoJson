@@ -107,12 +107,11 @@ class JsonBuffer {
  protected:
   // Preserve aligment if nessary
   static FORCE_INLINE size_t round_size_up(size_t bytes) {
-#if defined ARDUINO_ARCH_AVR
-    // alignment isn't needed for 8-bit AVR
-    return bytes;
-#else
+#if ARDUINOJSON_ENABLE_ALIGNMENT
     const size_t x = sizeof(void *) - 1;
     return (bytes + x) & ~x;
+#else
+    return bytes;
 #endif
   }
 

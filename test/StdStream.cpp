@@ -7,7 +7,6 @@
 
 #include <sstream>
 #include <gtest/gtest.h>
-#define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
 
 TEST(StdStream, JsonVariantFalse) {

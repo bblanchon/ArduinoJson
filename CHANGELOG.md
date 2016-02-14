@@ -1,6 +1,15 @@
 ArduinoJson: change log
 =======================
 
+v5.1.0
+------
+
+* Added support of `long long` (issue #171)
+* Moved all build settings to `ArduinoJson/Configuration.hpp`
+
+**BREAKING CHANGE**:
+If you defined `ARDUINOJSON_ENABLE_STD_STREAM`, you now need to define it to `1`.
+
 v5.0.8
 ------
 

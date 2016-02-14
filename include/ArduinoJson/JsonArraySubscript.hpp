@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "JsonSubscriptBase.hpp"
+#include "Configuration.hpp"
+#include "JsonVariantBase.hpp"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -15,20 +16,30 @@
 #endif
 
 namespace ArduinoJson {
-class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
+class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
  public:
   FORCE_INLINE JsonArraySubscript(JsonArray& array, size_t index)
       : _array(array), _index(index) {}
 
-  using JsonSubscriptBase<JsonArraySubscript>::operator=;
-
   JsonArraySubscript& operator=(const JsonArraySubscript& src) {
-    return assign<const JsonVariant&>(src);
+    _array.set<const JsonVariant&>(_index, src);
+    return *this;
   }
 
   template <typename T>
-  JsonArraySubscript& operator=(const T& src) {
-    return assign<const JsonVariant&>(src);
+  typename TypeTraits::EnableIf<JsonArray::CanSet<T&>::value,
+                                JsonArraySubscript>::type&
+  operator=(const T& src) {
+    _array.set<T&>(_index, const_cast<T&>(src));
+    return *this;
+  }
+
+  template <typename T>
+  typename TypeTraits::EnableIf<JsonArray::CanSet<T>::value,
+                                JsonArraySubscript>::type&
+  operator=(T src) {
+    _array.set<T>(_index, src);
+    return *this;
   }
 
   FORCE_INLINE bool success() const { return _index < _array.size(); }
@@ -59,7 +70,7 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
   const size_t _index;
 };
 
-#ifdef ARDUINOJSON_ENABLE_STD_STREAM
+#if ARDUINOJSON_ENABLE_STD_STREAM
 inline std::ostream& operator<<(std::ostream& os,
                                 const JsonArraySubscript& source) {
   return source.printTo(os);

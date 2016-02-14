@@ -21,20 +21,6 @@ JsonArray::node_type *JsonArray::getNodeAt(size_t index) const {
   return node;
 }
 
-JsonArray &JsonArray::createNestedArray() {
-  if (!_buffer) return JsonArray::invalid();
-  JsonArray &array = _buffer->createArray();
-  add(array);
-  return array;
-}
-
-JsonObject &JsonArray::createNestedObject() {
-  if (!_buffer) return JsonObject::invalid();
-  JsonObject &object = _buffer->createObject();
-  add(object);
-  return object;
-}
-
 void JsonArray::removeAt(size_t index) { removeNode(getNodeAt(index)); }
 
 void JsonArray::writeTo(JsonWriter &writer) const {

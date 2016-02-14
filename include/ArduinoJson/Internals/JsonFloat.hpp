@@ -7,15 +7,15 @@
 
 #pragma once
 
+#include "../Configuration.hpp"
+
 namespace ArduinoJson {
 namespace Internals {
 
-#ifdef ARDUINO
-// On embedded platform, we with use float instead of double to keep JsonVariant
-// small (issue #134)
-typedef float JsonFloat;
-#else
+#if ARDUINOJSON_USE_DOUBLE
 typedef double JsonFloat;
+#else
+typedef float JsonFloat;
 #endif
 }
 }

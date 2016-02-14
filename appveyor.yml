@@ -1,0 +1,16 @@
+version: 5.1.0.{build}
+environment:
+  matrix:
+  - CMAKE_GENERATOR: Visual Studio 14 2015
+  - CMAKE_GENERATOR: Visual Studio 12 2013
+  - CMAKE_GENERATOR: Visual Studio 11 2012
+  - CMAKE_GENERATOR: Visual Studio 10 2010
+  - CMAKE_GENERATOR: MinGW Makefiles
+configuration: Debug
+before_build:
+- set PATH=C:\MinGW\bin;%PATH:C:\Program Files\Git\usr\bin;=% # Workaround for CMake not wanting sh.exe on PATH for MinGW
+- cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "%CMAKE_GENERATOR%" .
+build_script:
+- cmake --build . --config %CONFIGURATION%
+test_script:
+- ctest -V . 

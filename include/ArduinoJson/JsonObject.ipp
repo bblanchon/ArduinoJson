@@ -7,25 +7,26 @@
 
 #pragma once
 
+#include "JsonArray.hpp"
 #include "JsonObject.hpp"
 #include "JsonObjectSubscript.hpp"
 
 namespace ArduinoJson {
 
 inline JsonVariant JsonObject::get(JsonObjectKey key) const {
-  node_type *node = getNodeAt(key);
+  node_type *node = getNodeAt(key.c_str());
   return node ? node->content.value : JsonVariant();
 }
 
 template <typename T>
 inline T JsonObject::get(JsonObjectKey key) const {
-  node_type *node = getNodeAt(key);
+  node_type *node = getNodeAt(key.c_str());
   return node ? node->content.value.as<T>() : JsonVariant::invalid<T>();
 }
 
 template <typename T>
 inline bool JsonObject::is(JsonObjectKey key) const {
-  node_type *node = getNodeAt(key);
+  node_type *node = getNodeAt(key.c_str());
   return node ? node->content.value.is<T>() : false;
 }
 
@@ -44,165 +45,46 @@ inline JsonVariant JsonObject::operator[](JsonObjectKey key) const {
 }
 
 inline bool JsonObject::containsKey(JsonObjectKey key) const {
-  return getNodeAt(key) != NULL;
-}
-
-inline JsonArray &JsonObject::createNestedArray(const char *key) {
-  return createArrayAt<const char *>(key);
-}
-
-inline JsonArray &JsonObject::createNestedArray(const String &key) {
-  return createArrayAt<const String &>(key);
-}
-
-inline JsonObject &JsonObject::createNestedObject(const char *key) {
-  return createObjectAt<const char *>(key);
-}
-
-inline JsonObject &JsonObject::createNestedObject(const String &key) {
-  return createObjectAt<const String &>(key);
+  return getNodeAt(key.c_str()) != NULL;
 }
 
 inline void JsonObject::remove(JsonObjectKey key) {
-  removeNode(getNodeAt(key));
+  removeNode(getNodeAt(key.c_str()));
 }
 
-inline bool JsonObject::set(const char *key, bool value) {
-  return setNodeAt<const char *, bool>(key, value);
-}
-inline bool JsonObject::set(const char *key, float value, uint8_t decimals) {
-  return setNodeAt<const char *, const JsonVariant &>(
-      key, JsonVariant(value, decimals));
-}
-inline bool JsonObject::set(const char *key, double value, uint8_t decimals) {
-  return setNodeAt<const char *, const JsonVariant &>(
-      key, JsonVariant(value, decimals));
-}
-inline bool JsonObject::set(const char *key, signed char value) {
-  return setNodeAt<const char *, signed char>(key, value);
-}
-inline bool JsonObject::set(const char *key, signed long value) {
-  return setNodeAt<const char *, signed long>(key, value);
-}
-inline bool JsonObject::set(const char *key, signed int value) {
-  return setNodeAt<const char *, signed int>(key, value);
-}
-inline bool JsonObject::set(const char *key, signed short value) {
-  return setNodeAt<const char *, signed short>(key, value);
-}
-inline bool JsonObject::set(const char *key, unsigned char value) {
-  return setNodeAt<const char *, unsigned char>(key, value);
-}
-inline bool JsonObject::set(const char *key, unsigned long value) {
-  return setNodeAt<const char *, unsigned long>(key, value);
-}
-inline bool JsonObject::set(const char *key, unsigned int value) {
-  return setNodeAt<const char *, unsigned int>(key, value);
-}
-inline bool JsonObject::set(const char *key, unsigned short value) {
-  return setNodeAt<const char *, unsigned short>(key, value);
-}
-inline bool JsonObject::set(const char *key, const char *value) {
-  return setNodeAt<const char *, const char *>(key, value);
-}
-inline bool JsonObject::set(const char *key, const String &value) {
-  return setNodeAt<const char *, const String &>(key, value);
-}
-inline bool JsonObject::set(const char *key, JsonArray &array) {
-  return setNodeAt<const char *, JsonArray &>(key, array);
-}
-inline bool JsonObject::set(const char *key, JsonObject &object) {
-  return setNodeAt<const char *, JsonObject &>(key, object);
-}
-inline bool JsonObject::set(const char *key, const JsonVariant &value) {
-  return setNodeAt<const char *, const JsonVariant &>(key, value);
-}
 template <typename T>
-inline bool JsonObject::set(const char *key, const T &value) {
-  return setNodeAt<const char *, JsonVariant>(key, value);
-}
-inline bool JsonObject::set(const String &key, bool value) {
-  return setNodeAt<const String &, bool>(key, value);
-}
-inline bool JsonObject::set(const String &key, float value, uint8_t decimals) {
-  return setNodeAt<const String &, const JsonVariant &>(
-      key, JsonVariant(value, decimals));
-}
-inline bool JsonObject::set(const String &key, double value, uint8_t decimals) {
-  return setNodeAt<const String &, const JsonVariant &>(
-      key, JsonVariant(value, decimals));
-}
-inline bool JsonObject::set(const String &key, signed char value) {
-  return setNodeAt<const String &, signed char>(key, value);
-}
-inline bool JsonObject::set(const String &key, signed long value) {
-  return setNodeAt<const String &, signed long>(key, value);
-}
-inline bool JsonObject::set(const String &key, signed int value) {
-  return setNodeAt<const String &, signed int>(key, value);
-}
-inline bool JsonObject::set(const String &key, signed short value) {
-  return setNodeAt<const String &, signed short>(key, value);
-}
-inline bool JsonObject::set(const String &key, unsigned char value) {
-  return setNodeAt<const String &, unsigned char>(key, value);
-}
-inline bool JsonObject::set(const String &key, unsigned long value) {
-  return setNodeAt<const String &, unsigned long>(key, value);
-}
-inline bool JsonObject::set(const String &key, unsigned int value) {
-  return setNodeAt<const String &, unsigned int>(key, value);
-}
-inline bool JsonObject::set(const String &key, unsigned short value) {
-  return setNodeAt<const String &, unsigned short>(key, value);
-}
-inline bool JsonObject::set(const String &key, const char *value) {
-  return setNodeAt<const String &, const char *>(key, value);
-}
-inline bool JsonObject::set(const String &key, const String &value) {
-  return setNodeAt<const String &, const String &>(key, value);
-}
-inline bool JsonObject::set(const String &key, JsonArray &array) {
-  return setNodeAt<const String &, JsonArray &>(key, array);
-}
-inline bool JsonObject::set(const String &key, JsonObject &object) {
-  return setNodeAt<const String &, JsonObject &>(key, object);
-}
-inline bool JsonObject::set(const String &key, const JsonVariant &value) {
-  return setNodeAt<const String &, const JsonVariant &>(key, value);
-}
-template <typename T>
-inline bool JsonObject::set(const String &key, const T &value) {
-  return setNodeAt<const String &, JsonVariant>(key, value);
+inline bool JsonObject::setNodeAt(JsonObjectKey key, T value) {
+  node_type *node = getNodeAt(key.c_str());
+  if (!node) node = addNewNode();
+  return node && setNodeKey(node, key) && setNodeValue<T>(node, value);
 }
 
-template <typename TKey, typename TValue>
-inline bool JsonObject::setNodeAt(TKey key, TValue value) {
-  node_type *node = getOrCreateNodeAt(key);
-  if (!node) return false;
-  setNodeKey<TKey>(node, key);
-  setNodeValue<TValue>(node, value);
+inline bool JsonObject::setNodeKey(node_type *node, JsonObjectKey key) {
+  if (key.needs_copy()) {
+    node->content.key = _buffer->strdup(key.c_str());
+    if (node->content.key == NULL) return false;
+  } else {
+    node->content.key = key.c_str();
+  }
+  return true;
+}
+
+template <typename TValue>
+inline bool JsonObject::setNodeValue(node_type *node, TValue value) {
+  node->content.value = value;
   return true;
 }
 
 template <>
-inline void JsonObject::setNodeKey(node_type *node, const char *key) {
-  node->content.key = key;
-}
-
-template <>
-inline void JsonObject::setNodeKey(node_type *node, const String &key) {
-  node->content.key = _buffer->strdup(key);
-}
-
-template <typename TValue>
-inline void JsonObject::setNodeValue(node_type *node, TValue value) {
-  node->content.value = value;
-}
-
-template <>
-inline void JsonObject::setNodeValue(node_type *node, const String &value) {
+inline bool JsonObject::setNodeValue(node_type *node, String &value) {
   node->content.value = _buffer->strdup(value);
+  return node->content.value;
+}
+
+template <>
+inline bool JsonObject::setNodeValue(node_type *node, const String &value) {
+  node->content.value = _buffer->strdup(value);
+  return node->content.value;
 }
 
 template <typename TImplem>
@@ -227,15 +109,22 @@ inline JsonObject &JsonVariant::invalid<JsonObject &>() {
   return JsonObject::invalid();
 }
 
-template <>
-inline JsonObject &JsonVariant::as<JsonObject &>() const {
+inline JsonObject &JsonVariant::asObject() const {
   if (_type == Internals::JSON_OBJECT) return *_content.asObject;
   return JsonObject::invalid();
 }
 
-template <>
-inline const JsonObject &JsonVariant::as<const JsonObject &>() const {
-  if (_type == Internals::JSON_OBJECT) return *_content.asObject;
-  return JsonObject::invalid();
+inline JsonObject &JsonObject::createNestedObject(JsonObjectKey key) {
+  if (!_buffer) return JsonObject::invalid();
+  JsonObject &array = _buffer->createObject();
+  setNodeAt<const JsonVariant &>(key, array);
+  return array;
+}
+
+inline JsonObject &JsonArray::createNestedObject() {
+  if (!_buffer) return JsonObject::invalid();
+  JsonObject &object = _buffer->createObject();
+  add(object);
+  return object;
 }
 }

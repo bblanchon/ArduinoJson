@@ -5,9 +5,9 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
-#define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
+#include <stdint.h>
 
 class JsonArray_Subscript_Tests : public ::testing::Test {
  protected:
@@ -32,6 +32,15 @@ TEST_(StoreInteger) {
   EXPECT_TRUE(_array[0].is<int>());
   EXPECT_FALSE(_array[0].is<double>());
 }
+
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+TEST_(StoreLongLong) {
+  _array[0] = 9223372036854775807;
+  EXPECT_EQ(9223372036854775807, _array[0].as<long long>());
+  EXPECT_TRUE(_array[0].is<int>());
+  EXPECT_FALSE(_array[0].is<double>());
+}
+#endif
 
 TEST_(StoreDouble) {
   _array[0] = 123.45;
