@@ -24,12 +24,13 @@ Features
 Works on
 --------
 
-* All Arduino boards
+* All Arduino boards (Uno, Due, Mini, Micro, Yun...)
 * ESP8266
 * Teensy
 * Intel Edison
 * PlatformIO
 * Energia
+* RedBearLab boards (BLE Nano...)
 * Computers (Windows, Linux, OSX...)
 
 See [FAQ: Compatibility issues](https://github.com/bblanchon/ArduinoJson/wiki/Compatibility-issues)
