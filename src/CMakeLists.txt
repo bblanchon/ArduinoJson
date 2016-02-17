@@ -10,7 +10,7 @@ file(GLOB_RECURSE IPP_FILES ../include/*.ipp)
 file(GLOB_RECURSE CPP_FILES *.cpp)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-	add_definitions(
+	add_compile_options(
 		-fno-exceptions
 		-fno-rtti
 		-pedantic
@@ -40,25 +40,30 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU)")
-	add_definitions(
-		-Wlogical-op
-		-Wnoexcept
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	add_compile_options(
 		-Wstrict-null-sentinel
 	)
+
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.5)
+		add_compile_options(-Wlogical-op) # the flag exists in 4.4 but is buggy
+	endif()
+
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.6)
+		add_compile_options(-Wnoexcept)
+	endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	add_definitions(
+	add_compile_options(
 		-Wc++11-compat
 		-Wdeprecated-register
 	)
 endif()
 
 if(MSVC)
-	add_definitions(
-		-D_CRT_SECURE_NO_WARNINGS
-		-W4)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	add_compile_options(-W4)
 endif()
 
 add_library(ArduinoJson ${CPP_FILES} ${HPP_FILES} ${IPP_FILES})

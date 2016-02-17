@@ -1,15 +1,84 @@
 sudo: false
 language: cpp
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.4']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.4
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.5']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.5
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.6']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.6
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.7']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.7
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.8
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.9
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-5
+    - compiler: clang
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.5']
+          packages: ['clang-3.5']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.5
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.6']
+          packages: ['clang-3.6']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.6
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.7']
+          packages: ['clang-3.7']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.7
+    # - compiler: clang
+    #   addons:
+    #     apt:
+    #       sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
+    #       packages: ['clang-3.8']
+    #   env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.8
+    - compiler: gcc
+      env: SCRIPT=coverage
+    - env: SCRIPT=arduino VERSION=1.5.8 BOARD=arduino:avr:uno
+    - env: SCRIPT=arduino VERSION=1.6.7 BOARD=arduino:avr:uno
+    - env: SCRIPT=platformio BOARD=uno
+    - env: SCRIPT=platformio BOARD=due
+    - env: SCRIPT=platformio BOARD=esp01
+    - env: SCRIPT=platformio BOARD=teensy31
 cache:
   directories:
     - "~/.platformio"
-env:
-  - COMPILER=gcc
-  - COMPILER=clang
-  - COMPILER=arduino VERSION=1.5.8 BOARD=arduino:avr:uno
-  - COMPILER=arduino VERSION=1.6.7 BOARD=arduino:avr:uno
-  - COMPILER=platformio BOARD=uno
-  - COMPILER=platformio BOARD=due
-  - COMPILER=platformio BOARD=esp01
-  - COMPILER=platformio BOARD=teensy31
-script: scripts/travis/$COMPILER.sh
+script: scripts/travis/$SCRIPT.sh
