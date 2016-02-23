@@ -55,8 +55,12 @@ inline void JsonObject::remove(JsonObjectKey key) {
 template <typename T>
 inline bool JsonObject::setNodeAt(JsonObjectKey key, T value) {
   node_type *node = getNodeAt(key.c_str());
-  if (!node) node = addNewNode();
-  return node && setNodeKey(node, key) && setNodeValue<T>(node, value);
+  if (!node) {
+    node = addNewNode();
+    if (!node || !setNodeKey(node, key))
+      return false;
+  }
+  return setNodeValue<T>(node, value);
 }
 
 inline bool JsonObject::setNodeKey(node_type *node, JsonObjectKey key) {

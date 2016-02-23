@@ -219,3 +219,27 @@ TEST_F(ArduinoStringTests, JsonObject_PrettyPrintTo) {
   object.prettyPrintTo(json);
   ASSERT_EQ(String("{\r\n  \"key\": \"value\"\r\n}"), json);
 }
+
+TEST_F(ArduinoStringTests, JsonBuffer_GrowWhenAddingNewKey) {
+  JsonObject &object = _jsonBuffer.createObject();
+  String key1("hello"), key2("world");
+
+  object[key1] = 1;
+  size_t sizeBefore = _jsonBuffer.size();
+  object[key2] = 2;
+  size_t sizeAfter = _jsonBuffer.size();
+
+  ASSERT_GT(sizeAfter - sizeBefore, key2.size());
+}
+
+TEST_F(ArduinoStringTests, JsonBuffer_DontGrowWhenReusingKey) {
+  JsonObject &object = _jsonBuffer.createObject();
+  String key("hello");
+
+  object[key] = 1;
+  size_t sizeBefore = _jsonBuffer.size();
+  object[key] = 2;
+  size_t sizeAfter = _jsonBuffer.size();
+
+  ASSERT_EQ(sizeBefore, sizeAfter);
+}
