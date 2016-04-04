@@ -82,13 +82,16 @@ Testimonials
 ------------
 
 From Arduino's Forum user `jflaplante`:
+
 > I tried aJson json-arduino before trying your library. I always ran into memory problem after a while.
 > I have no such problem so far with your library. It is working perfectly with my web services.
 
 From Arduino's Forum user `gbathree`:
+
 > Thanks so much - this is an awesome library!  If you want to see what we're doing with it - the project is located at www.photosynq.org.
 
 From StackOverflow user `thegreendroid`:
+
 > It has a really elegant, simple API and it works like a charm on embedded and Windows/Linux platforms. We recently started using this on an embedded project and I can vouch for its quality.
 
 From GitHub user `zacsketches`:
@@ -104,6 +107,10 @@ From GitHub user `zacsketches`:
 [From Reddit user `makerhacks`](https://www.reddit.com/r/arduino/comments/3jj6ep/announcing_arduinojson_50/cusqg7b):
 
 > I am just starting an ESP8266 clock project and now I can output JSON from my server script and interpret it painlessly.
+
+[From Twitter user `@hemalchevli`](https://twitter.com/hemalchevli/status/715788439397011456)
+
+> #arduinoJson libirary by @BenoitBlanchon should be used as a benchmark/reference for making libraries. Truly elegant. #kudos
 
 Donators
 --------
