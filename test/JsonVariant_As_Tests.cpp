@@ -159,6 +159,16 @@ TEST(JsonVariant_As_Tests, RandomStringAsLong) {
   ASSERT_EQ(0L, variant.as<long>());
 }
 
+TEST(JsonVariant_As_Tests, RandomStringAsConstCharPtr) {
+  JsonVariant variant = "hello";
+  ASSERT_STREQ("hello", variant.as<const char*>());
+}
+
+TEST(JsonVariant_As_Tests, RandomStringAsCharPtr) {
+  JsonVariant variant = "hello";
+  ASSERT_STREQ("hello", variant.as<char*>());
+}
+
 TEST(JsonVariant_As_Tests, RandomStringAsString) {
   JsonVariant variant = "hello";
   ASSERT_EQ(String("hello"), variant.as<String>());

@@ -115,7 +115,8 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   // const char* as<const char*>() const;
   // const char* as<char*>() const;
   template <typename T>
-  typename TypeTraits::EnableIf<TypeTraits::IsSame<T, const char *>::value,
+  typename TypeTraits::EnableIf<TypeTraits::IsSame<T, const char *>::value ||
+                                    TypeTraits::IsSame<T, char *>::value,
                                 const char *>::type
   as() const {
     return asString();

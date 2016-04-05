@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added `JsonVariant::as<char*>()` as a synonym for `JsonVariant::as<const char*>()` (issue #257)
+
 v5.1.1
 ------
 
