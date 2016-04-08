@@ -11,5 +11,6 @@ export PATH=$PATH:/tmp/arduino/
   
 ln -s $PWD /tmp/arduino/libraries/ArduinoJson
 
-arduino --verify --board $BOARD $PWD/examples/JsonParserExample/JsonParserExample.ino
-arduino --verify --board $BOARD $PWD/examples/JsonGeneratorExample/JsonGeneratorExample.ino
+for EXAMPLE in $PWD/examples/*/*.ino; do
+	arduino --verify --board $BOARD $EXAMPLE
+done
