@@ -161,6 +161,59 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // Serialize the array to the specified JsonWriter.
   void writeTo(Internals::JsonWriter &writer) const;
 
+  // Imports a 1D array
+  template <typename T, size_t N>
+  bool copyFrom(T(&array)[N]) {
+    return copyFrom(array, N);
+  }
+
+  // Imports a 1D array
+  template <typename T>
+  bool copyFrom(T *array, size_t len) {
+    bool ok = true;
+    for (size_t i = 0; i < len; i++) {
+      ok &= add(array[i]);
+    }
+    return ok;
+  }
+
+  // Imports a 2D array
+  template <typename T, size_t N1, size_t N2>
+  bool copyFrom(T(&array)[N1][N2]) {
+    bool ok = true;
+    for (size_t i = 0; i < N1; i++) {
+      JsonArray &nestedArray = createNestedArray();
+      for (size_t j = 0; j < N2; j++) {
+        ok &= nestedArray.add(array[i][j]);
+      }
+    }
+    return ok;
+  }
+
+  // Exports a 1D array
+  template <typename T, size_t N>
+  size_t copyTo(T(&array)[N]) const {
+    return copyTo(array, N);
+  }
+
+  // Exports a 1D array
+  template <typename T>
+  size_t copyTo(T *array, size_t len) const {
+    size_t i = 0;
+    for (const_iterator it = begin(); it != end() && i < len; ++it)
+      array[i++] = *it;
+    return i;
+  }
+
+  // Exports a 2D array
+  template <typename T, size_t N1, size_t N2>
+  void copyTo(T(&array)[N1][N2]) const {
+    size_t i = 0;
+    for (const_iterator it = begin(); it != end() && i < N1; ++it) {
+      it->asArray().copyTo(array[i++]);
+    }
+  }
+
  private:
   node_type *getNodeAt(size_t index) const;
 
