@@ -7,6 +7,7 @@ HEAD
 * Added `JsonVariant::as<char*>()` as a synonym for `JsonVariant::as<const char*>()` (issue #257)
 * Added example `JsonHttpClient` (issue #256)
 * Added `JsonArray::copyTo()` and `JsonArray::copyFrom()` (issue #254)
+* Added `RawJson()` to insert pregenerated JSON portions (issue #259)
 
 v5.1.1
 ------

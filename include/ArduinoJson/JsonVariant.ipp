@@ -26,7 +26,7 @@ inline JsonVariant::JsonVariant(const char *value) {
   _content.asString = value;
 }
 
-inline JsonVariant::JsonVariant(Internals::Unparsed value) {
+inline JsonVariant::JsonVariant(RawJson value) {
   _type = Internals::JSON_UNPARSED;
   _content.asString = value;
 }
@@ -44,85 +44,6 @@ inline JsonVariant::JsonVariant(JsonObject &object) {
 template <typename T>
 inline T JsonVariant::invalid() {
   return T();
-}
-
-template <typename T>
-inline bool JsonVariant::is() const {
-  return false;
-}
-
-template <>  // in .cpp
-bool JsonVariant::is<signed long>() const;
-
-template <>  // in .cpp
-bool JsonVariant::is<double>() const;
-
-template <>  // int .cpp
-bool JsonVariant::is<bool>() const;
-
-template <>
-inline bool JsonVariant::is<char const *>() const {
-  return _type == Internals::JSON_STRING;
-}
-
-template <>
-inline bool JsonVariant::is<float>() const {
-  return is<double>();
-}
-
-template <>
-inline bool JsonVariant::is<JsonArray &>() const {
-  return _type == Internals::JSON_ARRAY;
-}
-
-template <>
-inline bool JsonVariant::is<JsonArray const &>() const {
-  return _type == Internals::JSON_ARRAY;
-}
-
-template <>
-inline bool JsonVariant::is<JsonObject &>() const {
-  return _type == Internals::JSON_OBJECT;
-}
-
-template <>
-inline bool JsonVariant::is<JsonObject const &>() const {
-  return _type == Internals::JSON_OBJECT;
-}
-
-template <>
-inline bool JsonVariant::is<signed char>() const {
-  return is<signed long>();
-}
-
-template <>
-inline bool JsonVariant::is<signed int>() const {
-  return is<signed long>();
-}
-
-template <>
-inline bool JsonVariant::is<signed short>() const {
-  return is<signed long>();
-}
-
-template <>
-inline bool JsonVariant::is<unsigned char>() const {
-  return is<signed long>();
-}
-
-template <>
-inline bool JsonVariant::is<unsigned int>() const {
-  return is<signed long>();
-}
-
-template <>
-inline bool JsonVariant::is<unsigned long>() const {
-  return is<signed long>();
-}
-
-template <>
-inline bool JsonVariant::is<unsigned short>() const {
-  return is<signed long>();
 }
 
 inline Internals::JsonInteger JsonVariant::asInteger() const {

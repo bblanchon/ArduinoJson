@@ -10,8 +10,6 @@
 
 #define SUITE JsonVariant_Is_Tests
 
-using namespace ArduinoJson::Internals;
-
 template <typename TTo, typename TFrom>
 void assertIsNot(TFrom value) {
   JsonVariant variant = value;
@@ -76,37 +74,35 @@ TEST(SUITE, StringIsInt) { assertIsNot<int>("42"); }
 TEST(SUITE, StringIsLong) { assertIsNot<long>("42"); }
 TEST(SUITE, StringIsString) { assertIs<const char*>("42"); }
 
-TEST(SUITE, UnparsedTrueIsArra) { assertIsNot<JsonArray&>(Unparsed("true")); }
-TEST(SUITE, UnparsedTrueIsBool) { assertIs<bool>(Unparsed("true")); }
-TEST(SUITE, UnparsedTrueIsDouble) { assertIsNot<double>(Unparsed("true")); }
-TEST(SUITE, UnparsedTrueIsFloat) { assertIsNot<float>(Unparsed("true")); }
-TEST(SUITE, UnparsedTrueIsInt) { assertIsNot<int>(Unparsed("true")); }
-TEST(SUITE, UnparsedTrueIsLong) { assertIsNot<long>(Unparsed("true")); }
-TEST(SUITE, UnparsedTrueIsString) {
-  assertIsNot<const char*>(Unparsed("true"));
-}
+TEST(SUITE, UnparsedTrueIsArra) { assertIsNot<JsonArray&>(RawJson("true")); }
+TEST(SUITE, UnparsedTrueIsBool) { assertIs<bool>(RawJson("true")); }
+TEST(SUITE, UnparsedTrueIsDouble) { assertIsNot<double>(RawJson("true")); }
+TEST(SUITE, UnparsedTrueIsFloat) { assertIsNot<float>(RawJson("true")); }
+TEST(SUITE, UnparsedTrueIsInt) { assertIsNot<int>(RawJson("true")); }
+TEST(SUITE, UnparsedTrueIsLong) { assertIsNot<long>(RawJson("true")); }
+TEST(SUITE, UnparsedTrueIsString) { assertIsNot<const char*>(RawJson("true")); }
 
-TEST(SUITE, UnparsedFalseIsArra) { assertIsNot<JsonArray&>(Unparsed("false")); }
-TEST(SUITE, UnparsedFalseIsBool) { assertIs<bool>(Unparsed("false")); }
-TEST(SUITE, UnparsedFalseIsDouble) { assertIsNot<double>(Unparsed("false")); }
-TEST(SUITE, UnparsedFalseIsFloat) { assertIsNot<float>(Unparsed("false")); }
-TEST(SUITE, UnparsedFalseIsInt) { assertIsNot<int>(Unparsed("false")); }
-TEST(SUITE, UnparsedFalseIsLong) { assertIsNot<long>(Unparsed("false")); }
+TEST(SUITE, UnparsedFalseIsArra) { assertIsNot<JsonArray&>(RawJson("false")); }
+TEST(SUITE, UnparsedFalseIsBool) { assertIs<bool>(RawJson("false")); }
+TEST(SUITE, UnparsedFalseIsDouble) { assertIsNot<double>(RawJson("false")); }
+TEST(SUITE, UnparsedFalseIsFloat) { assertIsNot<float>(RawJson("false")); }
+TEST(SUITE, UnparsedFalseIsInt) { assertIsNot<int>(RawJson("false")); }
+TEST(SUITE, UnparsedFalseIsLong) { assertIsNot<long>(RawJson("false")); }
 TEST(SUITE, UnparsedFalseIsString) {
-  assertIsNot<const char*>(Unparsed("false"));
+  assertIsNot<const char*>(RawJson("false"));
 }
 
-TEST(SUITE, UnparsedIntIsArra) { assertIsNot<JsonArray&>(Unparsed("42")); }
-TEST(SUITE, UnparsedIntIsBool) { assertIsNot<bool>(Unparsed("42")); }
-TEST(SUITE, UnparsedIntIsDouble) { assertIsNot<double>(Unparsed("42")); }
-TEST(SUITE, UnparsedIntIsFloat) { assertIsNot<float>(Unparsed("42")); }
-TEST(SUITE, UnparsedIntIsInt) { assertIs<int>(Unparsed("42")); }
-TEST(SUITE, UnparsedIntIsLong) { assertIs<long>(Unparsed("42")); }
-TEST(SUITE, UnparsedIntIsString) { assertIsNot<const char*>(Unparsed("42")); }
+TEST(SUITE, UnparsedIntIsArra) { assertIsNot<JsonArray&>(RawJson("42")); }
+TEST(SUITE, UnparsedIntIsBool) { assertIsNot<bool>(RawJson("42")); }
+TEST(SUITE, UnparsedIntIsDouble) { assertIsNot<double>(RawJson("42")); }
+TEST(SUITE, UnparsedIntIsFloat) { assertIsNot<float>(RawJson("42")); }
+TEST(SUITE, UnparsedIntIsInt) { assertIs<int>(RawJson("42")); }
+TEST(SUITE, UnparsedIntIsLong) { assertIs<long>(RawJson("42")); }
+TEST(SUITE, UnparsedIntIsString) { assertIsNot<const char*>(RawJson("42")); }
 
-TEST(SUITE, UnparsedFloatIsBool) { assertIsNot<bool>(Unparsed("4.2e-10")); }
-TEST(SUITE, UnparsedFloatIsDouble) { assertIs<double>(Unparsed("4.2e-10")); }
-TEST(SUITE, UnparsedFloatIsFloat) { assertIs<float>(Unparsed("4.2e-10")); }
-TEST(SUITE, UnparsedFloatIsInt) { assertIsNot<int>(Unparsed("4.2e-10")); }
-TEST(SUITE, UnparsedFloatIsLong) { assertIsNot<long>(Unparsed("4.2e-10")); }
-TEST(SUITE, UnparsedFloatIsStr) { assertIsNot<const char*>(Unparsed("4.2")); }
+TEST(SUITE, UnparsedFloatIsBool) { assertIsNot<bool>(RawJson("4.2e-10")); }
+TEST(SUITE, UnparsedFloatIsDouble) { assertIs<double>(RawJson("4.2e-10")); }
+TEST(SUITE, UnparsedFloatIsFloat) { assertIs<float>(RawJson("4.2e-10")); }
+TEST(SUITE, UnparsedFloatIsInt) { assertIsNot<int>(RawJson("4.2e-10")); }
+TEST(SUITE, UnparsedFloatIsLong) { assertIsNot<long>(RawJson("4.2e-10")); }
+TEST(SUITE, UnparsedFloatIsStr) { assertIsNot<const char*>(RawJson("4.2")); }

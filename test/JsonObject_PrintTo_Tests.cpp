@@ -8,8 +8,6 @@
 #include <ArduinoJson.h>
 #include <gtest/gtest.h>
 
-using namespace ArduinoJson::Internals;
-
 class JsonObject_PrintTo_Tests : public testing::Test {
  public:
   JsonObject_PrintTo_Tests() : _object(_jsonBuffer.createObject()) {}
@@ -73,6 +71,12 @@ TEST_F(JsonObject_PrintTo_Tests, TwoIntegers) {
   _object["a"] = 1;
   _object.set("b", 2);
   outputMustBe("{\"a\":1,\"b\":2}");
+}
+
+TEST_F(JsonObject_PrintTo_Tests, RawJson) {
+  _object["a"] = RawJson("[1,2]");
+  _object.set("b", RawJson("[4,5]"));
+  outputMustBe("{\"a\":[1,2],\"b\":[4,5]}");
 }
 
 TEST_F(JsonObject_PrintTo_Tests, TwoDoublesFourDigits) {

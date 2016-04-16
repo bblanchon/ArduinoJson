@@ -195,7 +195,7 @@ bool JsonParser::parseStringTo(JsonVariant *destination) {
   if (hasQuotes) {
     *destination = value;
   } else {
-    *destination = Unparsed(value);
+    *destination = RawJson(value);
   }
   return true;
 }

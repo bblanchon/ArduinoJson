@@ -14,13 +14,11 @@
 
 #define SUITE Issue90
 
-using namespace ArduinoJson::Internals;
-
 static const char* superLong =
     "12345678901234567890123456789012345678901234567890123456789012345678901234"
     "5678901234567890123456789012345678901234567890123456789012345678901234567";
 
-static const JsonVariant variant = Unparsed(superLong);
+static const JsonVariant variant = RawJson(superLong);
 
 TEST(SUITE, IsNotALong) { ASSERT_FALSE(variant.is<long>()); }
 

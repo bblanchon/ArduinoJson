@@ -71,6 +71,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // bool set(TKey key, float value);
   // bool set(TKey key, double value);
   // bool set(TKey key, const char* value);
+  // bool set(TKey key, RawJson value);
   template <typename T>
   FORCE_INLINE bool set(
       JsonObjectKey key, T value,

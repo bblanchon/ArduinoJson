@@ -96,6 +96,12 @@ TEST_F(JsonArray_PrintTo_Tests, TwoIntegers) {
   outputMustBe("[1,2]");
 }
 
+TEST_F(JsonArray_PrintTo_Tests, RawJson) {
+  array.add(RawJson("{\"key\":\"value\"}"));
+
+  outputMustBe("[{\"key\":\"value\"}]");
+}
+
 TEST_F(JsonArray_PrintTo_Tests, OneIntegerOverCapacity) {
   array.add(1);
   array.add(2);

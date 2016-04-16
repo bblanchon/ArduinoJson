@@ -47,8 +47,7 @@ String JsonVariant::toString() const {
   return s;
 }
 
-template <>
-bool JsonVariant::is<bool>() const {
+bool JsonVariant::isBoolean() const {
   if (_type == JSON_BOOLEAN) return true;
 
   if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
@@ -57,8 +56,7 @@ bool JsonVariant::is<bool>() const {
          !strcmp(_content.asString, "false");
 }
 
-template <>
-bool JsonVariant::is<signed long>() const {
+bool JsonVariant::isInteger() const {
   if (_type == JSON_INTEGER) return true;
 
   if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
@@ -70,8 +68,7 @@ bool JsonVariant::is<signed long>() const {
   return *end == '\0' && errno == 0;
 }
 
-template <>
-bool JsonVariant::is<double>() const {
+bool JsonVariant::isFloat() const {
   if (_type >= JSON_FLOAT_0_DECIMALS) return true;
 
   if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
