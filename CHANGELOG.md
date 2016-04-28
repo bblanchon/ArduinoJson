@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix `unsigned long` printed as `signed long` (issue #170)
+
 v5.2.0
 ------
 

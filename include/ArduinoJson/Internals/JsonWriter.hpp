@@ -32,49 +32,47 @@ class JsonWriter {
   // number of bytes written.
   size_t bytesWritten() const { return _length; }
 
-  void beginArray() { write('['); }
-  void endArray() { write(']'); }
+  void beginArray() { writeRaw('['); }
+  void endArray() { writeRaw(']'); }
 
-  void beginObject() { write('{'); }
-  void endObject() { write('}'); }
+  void beginObject() { writeRaw('{'); }
+  void endObject() { writeRaw('}'); }
 
-  void writeColon() { write(':'); }
-  void writeComma() { write(','); }
+  void writeColon() { writeRaw(':'); }
+  void writeComma() { writeRaw(','); }
 
-  void writeBoolean(bool value) { write(value ? "true" : "false"); }
+  void writeBoolean(bool value) { writeRaw(value ? "true" : "false"); }
 
   void writeString(const char *value) {
     if (!value) {
-      write("null");
+      writeRaw("null");
     } else {
-      write('\"');
+      writeRaw('\"');
       while (*value) writeChar(*value++);
-      write('\"');
+      writeRaw('\"');
     }
   }
 
   void writeChar(char c) {
     char specialChar = Encoding::escapeChar(c);
     if (specialChar) {
-      write('\\');
-      write(specialChar);
+      writeRaw('\\');
+      writeRaw(specialChar);
     } else {
-      write(c);
+      writeRaw(c);
     }
   }
 
-  void writeInteger(JsonInteger value) { _length += _sink.print(value); }
+  void writeInteger(JsonUInt value) { _length += _sink.print(value); }
 
   void writeFloat(JsonFloat value, uint8_t decimals) {
     _length += _sink.print(value, decimals);
   }
 
-  void writeRaw(const char *s) { return write(s); }
+  void writeRaw(const char *s) { _length += _sink.print(s); }
+  void writeRaw(char c) { _length += _sink.write(c); }
 
  protected:
-  void write(char c) { _length += _sink.write(c); }
-  FORCE_INLINE void write(const char *s) { _length += _sink.print(s); }
-
   Print &_sink;
   size_t _length;
 

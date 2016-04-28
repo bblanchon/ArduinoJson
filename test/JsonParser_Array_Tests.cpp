@@ -125,6 +125,14 @@ TEST_F(JsonParser_Array_Tests, TwoDoubles) {
   secondElementMustBe(1e2);
 }
 
+TEST_F(JsonParser_Array_Tests, UnsignedLong) {
+  whenInputIs("[4294967295]");
+
+  parseMustSucceed();
+  sizeMustBe(1);
+  firstElementMustBe(4294967295UL);
+}
+
 TEST_F(JsonParser_Array_Tests, TwoBooleans) {
   whenInputIs("[true,false]");
 

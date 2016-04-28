@@ -72,8 +72,13 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
       typename TypeTraits::EnableIf<TypeTraits::IsIntegral<T>::value>::type * =
           0) {
     using namespace Internals;
-    _type = JSON_INTEGER;
-    _content.asInteger = static_cast<JsonInteger>(value);
+    if (value >= 0) {
+      _type = JSON_POSITIVE_INTEGER;
+      _content.asInteger = static_cast<JsonInteger>(value);
+    } else {
+      _type = JSON_NEGATIVE_INTEGER;
+      _content.asInteger = static_cast<JsonInteger>(-value);
+    }
   }
 
   // Create a JsonVariant containing a string.

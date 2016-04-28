@@ -57,6 +57,11 @@ TEST_F(JsonVariant_PrintTo_Tests, Long) {
   outputMustBe("42");
 }
 
+TEST_F(JsonVariant_PrintTo_Tests, UnsignedLong) {
+  variant = 4294967295UL;
+  outputMustBe("4294967295");
+}
+
 TEST_F(JsonVariant_PrintTo_Tests, Char) {
   variant = '*';
   outputMustBe("42");
@@ -81,5 +86,10 @@ TEST_F(JsonVariant_PrintTo_Tests, NegativeInt64) {
 TEST_F(JsonVariant_PrintTo_Tests, PositiveInt64) {
   variant = 9223372036854775807;
   outputMustBe("9223372036854775807");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, UInt64) {
+  variant = 18446744073709551615;
+  outputMustBe("18446744073709551615");
 }
 #endif

@@ -47,19 +47,23 @@ inline T JsonVariant::invalid() {
 }
 
 inline Internals::JsonInteger JsonVariant::asInteger() const {
-  if (_type == Internals::JSON_INTEGER || _type == Internals::JSON_BOOLEAN)
-    return _content.asInteger;
-
-  if (_type >= Internals::JSON_FLOAT_0_DECIMALS)
-    return static_cast<Internals::JsonInteger>(_content.asFloat);
-
-  if ((_type == Internals::JSON_STRING || _type == Internals::JSON_UNPARSED) &&
-      _content.asString) {
-    if (!strcmp("true", _content.asString)) return 1;
-    return Internals::parse<Internals::JsonInteger>(_content.asString);
+  using namespace Internals;
+  switch (_type) {
+    case JSON_UNDEFINED:
+      return 0;
+    case JSON_POSITIVE_INTEGER:
+    case JSON_BOOLEAN:
+      return _content.asInteger;
+    case JSON_NEGATIVE_INTEGER:
+      return -_content.asInteger;
+    case JSON_STRING:
+    case JSON_UNPARSED:
+      if (!_content.asString) return 0;
+      if (!strcmp("true", _content.asString)) return 1;
+      return parse<Internals::JsonInteger>(_content.asString);
+    default:
+      return static_cast<Internals::JsonInteger>(_content.asFloat);
   }
-
-  return 0L;
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM

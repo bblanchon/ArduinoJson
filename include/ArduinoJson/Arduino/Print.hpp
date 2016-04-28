@@ -56,22 +56,16 @@ class Print {
     return print(tmp);
   }
 
-  size_t print(ArduinoJson::Internals::JsonInteger value) {
-    // see http://clc-wiki.net/wiki/K%26R2_solutions:Chapter_3:Exercise_4
+  size_t print(ArduinoJson::Internals::JsonUInt value) {
     char buffer[22];
 
-    size_t n = 0;
-    if (value < 0) {
-      value = -value;
-      n += write('-');
-    }
     uint8_t i = 0;
     do {
-      ArduinoJson::Internals::JsonInteger digit = value % 10;
+      buffer[i++] = static_cast<char>(value % 10 + '0');
       value /= 10;
-      buffer[i++] = static_cast<char>(digit >= 0 ? '0' + digit : '0' - digit);
     } while (value);
 
+    size_t n = 0;
     while (i > 0) {
       n += write(buffer[--i]);
     }
