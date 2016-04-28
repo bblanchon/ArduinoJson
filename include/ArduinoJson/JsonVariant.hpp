@@ -63,22 +63,32 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   }
 
   // Create a JsonVariant containing an integer value.
-  // JsonVariant(short)
-  // JsonVariant(int)
-  // JsonVariant(long)
+  // JsonVariant(signed short)
+  // JsonVariant(signed int)
+  // JsonVariant(signed long)
   template <typename T>
   FORCE_INLINE JsonVariant(
-      T value,
-      typename TypeTraits::EnableIf<TypeTraits::IsIntegral<T>::value>::type * =
-          0) {
+      T value, typename TypeTraits::EnableIf<
+                   TypeTraits::IsSignedIntegral<T>::value>::type * = 0) {
     using namespace Internals;
     if (value >= 0) {
       _type = JSON_POSITIVE_INTEGER;
-      _content.asInteger = static_cast<JsonInteger>(value);
+      _content.asInteger = static_cast<JsonUInt>(value);
     } else {
       _type = JSON_NEGATIVE_INTEGER;
-      _content.asInteger = static_cast<JsonInteger>(-value);
+      _content.asInteger = static_cast<JsonUInt>(-value);
     }
+  }
+  // JsonVariant(unsigned short)
+  // JsonVariant(unsigned int)
+  // JsonVariant(unsigned long)
+  template <typename T>
+  FORCE_INLINE JsonVariant(
+      T value, typename TypeTraits::EnableIf<
+                   TypeTraits::IsUnsignedIntegral<T>::value>::type * = 0) {
+    using namespace Internals;
+    _type = JSON_POSITIVE_INTEGER;
+    _content.asInteger = static_cast<JsonUInt>(value);
   }
 
   // Create a JsonVariant containing a string.
@@ -95,13 +105,24 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
 
   // Get the variant as the specified type.
   //
-  // short as<short>() const;
-  // int as<int>() const;
-  // long as<long>() const;
+  // short as<signed short>() const;
+  // int as<signed int>() const;
+  // long as<signed long>() const;
   template <typename T>
-  const typename TypeTraits::EnableIf<TypeTraits::IsIntegral<T>::value, T>::type
+  const typename TypeTraits::EnableIf<TypeTraits::IsSignedIntegral<T>::value,
+                                      T>::type
   as() const {
     return static_cast<T>(asInteger());
+  }
+  //
+  // short as<unsigned short>() const;
+  // int as<unsigned int>() const;
+  // long as<unsigned long>() const;
+  template <typename T>
+  const typename TypeTraits::EnableIf<TypeTraits::IsUnsignedIntegral<T>::value,
+                                      T>::type
+  as() const {
+    return static_cast<T>(asUnsignedInteger());
   }
   //
   // double as<double>() const;
@@ -247,9 +268,16 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   JsonObject &asObject() const;
 
  private:
+  // It's not allowed to store a char
+  template <typename T>
+  FORCE_INLINE JsonVariant(T value,
+                           typename TypeTraits::EnableIf<
+                               TypeTraits::IsSame<T, char>::value>::type * = 0);
+
   String toString() const;
   Internals::JsonFloat asFloat() const;
   Internals::JsonInteger asInteger() const;
+  Internals::JsonUInt asUnsignedInteger() const;
   bool isBoolean() const;
   bool isFloat() const;
   bool isInteger() const;

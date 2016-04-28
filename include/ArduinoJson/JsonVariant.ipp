@@ -55,7 +55,7 @@ inline Internals::JsonInteger JsonVariant::asInteger() const {
     case JSON_BOOLEAN:
       return _content.asInteger;
     case JSON_NEGATIVE_INTEGER:
-      return -_content.asInteger;
+      return -static_cast<Internals::JsonInteger>(_content.asInteger);
     case JSON_STRING:
     case JSON_UNPARSED:
       if (!_content.asString) return 0;
@@ -63,6 +63,25 @@ inline Internals::JsonInteger JsonVariant::asInteger() const {
       return parse<Internals::JsonInteger>(_content.asString);
     default:
       return static_cast<Internals::JsonInteger>(_content.asFloat);
+  }
+}
+
+inline Internals::JsonUInt JsonVariant::asUnsignedInteger() const {
+  using namespace Internals;
+  switch (_type) {
+    case JSON_UNDEFINED:
+      return 0;
+    case JSON_POSITIVE_INTEGER:
+    case JSON_BOOLEAN:
+    case JSON_NEGATIVE_INTEGER:
+      return _content.asInteger;
+    case JSON_STRING:
+    case JSON_UNPARSED:
+      if (!_content.asString) return 0;
+      if (!strcmp("true", _content.asString)) return 1;
+      return parse<Internals::JsonUInt>(_content.asString);
+    default:
+      return static_cast<Internals::JsonUInt>(_content.asFloat);
   }
 }
 

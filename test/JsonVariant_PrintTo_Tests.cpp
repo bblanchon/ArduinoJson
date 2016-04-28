@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <limits>
 
 class JsonVariant_PrintTo_Tests : public testing::Test {
  protected:
@@ -15,8 +16,8 @@ class JsonVariant_PrintTo_Tests : public testing::Test {
   void outputMustBe(const char *expected) {
     char buffer[256] = "";
     size_t n = variant.printTo(buffer, sizeof(buffer));
-    EXPECT_STREQ(expected, buffer);
-    EXPECT_EQ(strlen(expected), n);
+    ASSERT_STREQ(expected, buffer);
+    ASSERT_EQ(strlen(expected), n);
   }
 };
 
@@ -47,6 +48,46 @@ TEST_F(JsonVariant_PrintTo_Tests, DoubleFourDigits) {
   outputMustBe("3.1416");
 }
 
+TEST_F(JsonVariant_PrintTo_Tests, Infinity) {
+  variant = std::numeric_limits<double>::infinity();
+  outputMustBe("Infinity");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, MinusInfinity) {
+  variant = -std::numeric_limits<double>::infinity();
+  outputMustBe("-Infinity");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, SignalingNaN) {
+  variant = std::numeric_limits<double>::signaling_NaN();
+  outputMustBe("NaN");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, QuietNaN) {
+  variant = std::numeric_limits<double>::quiet_NaN();
+  outputMustBe("NaN");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, VeryBigPositiveDouble) {
+  variant = JsonVariant(3.14159265358979323846e42, 4);
+  outputMustBe("3.1416e42");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, VeryBigNegativeDouble) {
+  variant = JsonVariant(-3.14159265358979323846e42, 4);
+  outputMustBe("-3.1416e42");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, VerySmallPositiveDouble) {
+  variant = JsonVariant(3.14159265358979323846e-42, 4);
+  outputMustBe("3.1416e-42");
+}
+
+TEST_F(JsonVariant_PrintTo_Tests, VerySmallNegativeDouble) {
+  variant = JsonVariant(-3.14159265358979323846e-42, 4);
+  outputMustBe("-3.1416e-42");
+}
+
 TEST_F(JsonVariant_PrintTo_Tests, Integer) {
   variant = 42;
   outputMustBe("42");
@@ -60,11 +101,6 @@ TEST_F(JsonVariant_PrintTo_Tests, Long) {
 TEST_F(JsonVariant_PrintTo_Tests, UnsignedLong) {
   variant = 4294967295UL;
   outputMustBe("4294967295");
-}
-
-TEST_F(JsonVariant_PrintTo_Tests, Char) {
-  variant = '*';
-  outputMustBe("42");
 }
 
 TEST_F(JsonVariant_PrintTo_Tests, True) {

@@ -21,7 +21,7 @@ if [[ $(uname) == MINGW* ]]
 then
 	build-env "Make" "MinGW Makefiles"
 	build-env "SublimeText" "Sublime Text 2 - Ninja"
-	build-env "VisualStudio" "Visual Studio 12 2013"
+	build-env "VisualStudio" "Visual Studio 14 2015"
 else
 	build-env "SublimeText" "Sublime Text 2 - Ninja"
 	build-env "Make" "Unix Makefiles"

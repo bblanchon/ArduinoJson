@@ -30,6 +30,11 @@ inline long parse<long>(const char *s) {
 }
 
 template <>
+inline unsigned long parse<unsigned long>(const char *s) {
+  return strtoul(s, NULL, 10);
+}
+
+template <>
 inline int parse<int>(const char *s) {
   return atoi(s);
 }
@@ -39,12 +44,22 @@ template <>
 inline long long parse<long long>(const char *s) {
   return strtoll(s, NULL, 10);
 }
+
+template <>
+inline unsigned long long parse<unsigned long long>(const char *s) {
+  return strtoull(s, NULL, 10);
+}
 #endif
 
 #if ARDUINOJSON_USE_INT64
 template <>
 inline __int64 parse<__int64>(const char *s) {
   return _strtoi64(s, NULL, 10);
+}
+
+template <>
+inline unsigned __int64 parse<unsigned __int64>(const char *s) {
+  return _strtoui64(s, NULL, 10);
 }
 #endif
 }
