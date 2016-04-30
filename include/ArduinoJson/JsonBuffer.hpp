@@ -94,6 +94,21 @@ class JsonBuffer {
     return parseObject(json.c_str(), nesting);
   }
 
+  // Generalized version of parseArray() and parseObject(), also works for
+  // integral types.
+  JsonVariant parse(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
+
+  // Same with a const char*.
+  // With this overload, the JsonBuffer will make a copy of the string
+  JsonVariant parse(const char *json, uint8_t nesting = DEFAULT_LIMIT) {
+    return parse(strdup(json), nesting);
+  }
+
+  // Same as above with a String class
+  JsonVariant parse(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
+    return parse(json.c_str(), nesting);
+  }
+
   // Duplicate a string
   char *strdup(const char *src) {
     return src ? strdup(src, strlen(src)) : NULL;

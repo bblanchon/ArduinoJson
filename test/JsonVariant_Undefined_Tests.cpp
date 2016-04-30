@@ -17,6 +17,10 @@ TEST_F(JsonVariant_Undefined_Tests, AsLongReturns0) {
   EXPECT_EQ(0, variant.as<long>());
 }
 
+TEST_F(JsonVariant_Undefined_Tests, AsUnsignedReturns0) {
+  EXPECT_EQ(0, variant.as<unsigned>());
+}
+
 TEST_F(JsonVariant_Undefined_Tests, AsStringReturnsNull) {
   EXPECT_EQ(0, variant.asString());
 }

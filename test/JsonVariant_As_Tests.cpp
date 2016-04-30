@@ -32,6 +32,11 @@ TEST(JsonVariant_As_Tests, DoubleAsLong) {
   ASSERT_EQ(4L, variant.as<long>());
 }
 
+TEST(JsonVariant_As_Tests, DoubleAsUnsigned) {
+  JsonVariant variant = 4.2;
+  ASSERT_EQ(4U, variant.as<unsigned>());
+}
+
 TEST(JsonVariant_As_Tests, DoubleZeroAsBool) {
   JsonVariant variant = 0.0;
   ASSERT_FALSE(variant.as<bool>());
@@ -92,9 +97,14 @@ TEST(JsonVariant_As_Tests, LongZeroAsBool) {
   ASSERT_FALSE(variant.as<bool>());
 }
 
-TEST(JsonVariant_As_Tests, LongAsDouble) {
+TEST(JsonVariant_As_Tests, PositiveLongAsDouble) {
   JsonVariant variant = 42L;
   ASSERT_EQ(42.0, variant.as<double>());
+}
+
+TEST(JsonVariant_As_Tests, NegativeLongAsDouble) {
+  JsonVariant variant = -42L;
+  ASSERT_EQ(-42.0, variant.as<double>());
 }
 
 TEST(JsonVariant_As_Tests, LongAsString) {

@@ -93,9 +93,9 @@ TEST_F(JsonVariant_PrintTo_Tests, Integer) {
   outputMustBe("42");
 }
 
-TEST_F(JsonVariant_PrintTo_Tests, Long) {
-  variant = 42L;
-  outputMustBe("42");
+TEST_F(JsonVariant_PrintTo_Tests, NegativeLong) {
+  variant = -42;
+  outputMustBe("-42");
 }
 
 TEST_F(JsonVariant_PrintTo_Tests, UnsignedLong) {
