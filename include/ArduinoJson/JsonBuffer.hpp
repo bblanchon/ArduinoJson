@@ -11,7 +11,7 @@
 #include <stdint.h>  // for uint8_t
 #include <string.h>
 
-#include "Arduino/String.hpp"
+#include "String.hpp"
 #include "JsonVariant.hpp"
 
 #if defined(__clang__)

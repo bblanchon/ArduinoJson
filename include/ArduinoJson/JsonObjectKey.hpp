@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Arduino/String.hpp"
+#include "String.hpp"
 
 namespace ArduinoJson {
 

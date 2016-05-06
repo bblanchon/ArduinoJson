@@ -7,13 +7,18 @@
 
 #pragma once
 
-#ifndef ARDUINO
+#include "Configuration.hpp"
 
-#include <string>
-typedef std::string String;
+#if ARDUINOJSON_USE_ARDUINO_STRING
+
+#include <WString.h>
 
 #else
 
-#include <WString.h>
+#include <string>
+
+namespace ArduinoJson {
+typedef std::string String;
+}
 
 #endif

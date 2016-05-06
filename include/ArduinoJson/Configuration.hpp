@@ -22,6 +22,11 @@
 #define ARDUINOJSON_USE_INT64 0
 #endif
 
+// arduino has its own implementation of String to replace std::string
+#ifndef ARDUINOJSON_USE_ARDUINO_STRING
+#define ARDUINOJSON_USE_ARDUINO_STRING 1
+#endif
+
 // arduino doesn't support STL stream
 #ifndef ARDUINOJSON_ENABLE_STD_STREAM
 #define ARDUINOJSON_ENABLE_STD_STREAM 0
@@ -60,6 +65,11 @@
 #else
 #define ARDUINOJSON_USE_INT64 0
 #endif
+#endif
+
+// on a computer, we can use std::string
+#ifndef ARDUINOJSON_USE_ARDUINO_STRING
+#define ARDUINOJSON_USE_ARDUINO_STRING 0
 #endif
 
 // on a computer, we can assume that the STL is there

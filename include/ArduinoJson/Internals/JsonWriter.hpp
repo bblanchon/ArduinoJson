@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "../Arduino/Print.hpp"
-#include "../Polyfills/isNaN.hpp"
 #include "../Polyfills/isInfinity.hpp"
+#include "../Polyfills/isNaN.hpp"
 #include "../Polyfills/normalize.hpp"
+#include "../Print.hpp"
 #include "Encoding.hpp"
 #include "ForceInline.hpp"
 #include "JsonFloat.hpp"

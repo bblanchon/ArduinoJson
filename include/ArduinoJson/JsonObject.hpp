@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Arduino/String.hpp"
+#include "String.hpp"
 #include "Internals/JsonBufferAllocated.hpp"
 #include "Internals/JsonPrintable.hpp"
 #include "Internals/List.hpp"

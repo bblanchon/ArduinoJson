@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
+#include <ArduinoJson.h>
 #include <gtest/gtest.h>
-#include <ArduinoJson/Internals/StaticStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 
