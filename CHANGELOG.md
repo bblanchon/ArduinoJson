@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.4.0
+------
 
 * Changed `::String` to `ArduinoJson::String` (issue #275)
 * Changed `::Print` to `ArduinoJson::Print` too
