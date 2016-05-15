@@ -64,14 +64,46 @@ matrix:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.7']
           packages: ['clang-3.7']
       env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.7
-    # - compiler: clang
-    #   addons:
-    #     apt:
-    #       sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
-    #       packages: ['clang-3.8']
-    #   env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.8
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
+          packages: ['clang-3.8']
+      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.8
     - compiler: gcc
       env: SCRIPT=coverage
+    - os: osx
+      osx_image: beta-xcode6.1
+      compiler: clang
+      env: SCRIPT=cmake-osx
+    - os: osx
+      osx_image: beta-xcode6.2
+      compiler: clang
+      env: SCRIPT=cmake-osx
+    - os: osx
+      osx_image: beta-xcode6.3
+      compiler: clang
+      env: SCRIPT=cmake-osx
+    - os: osx
+      osx_image: xcode6.4
+      compiler: clang
+      env: SCRIPT=cmake-osx
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: SCRIPT=cmake-osx
+    - os: osx
+      osx_image: xcode7.1
+      compiler: clang
+      env: SCRIPT=cmake-osx
+    - os: osx
+      osx_image: xcode7.2
+      compiler: clang
+      env: SCRIPT=cmake-osx
+    - os: osx
+      osx_image: xcode7.3
+      compiler: clang
+      env: SCRIPT=cmake-osx
     - env: SCRIPT=arduino VERSION=1.5.8 BOARD=arduino:avr:uno
     - env: SCRIPT=arduino VERSION=1.6.7 BOARD=arduino:avr:uno
     - env: SCRIPT=arduino VERSION=1.6.8 BOARD=arduino:avr:uno
