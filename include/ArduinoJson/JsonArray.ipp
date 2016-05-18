@@ -55,7 +55,7 @@ inline JsonVariant JsonArray::get(size_t index) const {
 template <typename T>
 inline T JsonArray::get(size_t index) const {
   node_type *node = getNodeAt(index);
-  return node ? node->content.as<T>() : JsonVariant::invalid<T>();
+  return node ? node->content.as<T>() : JsonVariant::defaultValue<T>();
 }
 
 template <typename T>
@@ -71,12 +71,12 @@ inline const JsonArraySubscript JsonVariantBase<TImplem>::operator[](
 }
 
 template <>
-inline JsonArray &JsonVariant::invalid<JsonArray &>() {
+inline JsonArray &JsonVariant::defaultValue<JsonArray &>() {
   return JsonArray::invalid();
 }
 
 template <>
-inline JsonArray const &JsonVariant::invalid<JsonArray const &>() {
+inline JsonArray const &JsonVariant::defaultValue<JsonArray const &>() {
   return JsonArray::invalid();
 }
 

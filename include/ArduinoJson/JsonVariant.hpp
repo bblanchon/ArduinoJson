@@ -256,14 +256,17 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
     return isObject();
   }
 
+  // Returns true if the variant has a value
   bool success() const { return _type != Internals::JSON_UNDEFINED; }
 
   // Serialize the variant to a JsonWriter
   void writeTo(Internals::JsonWriter &writer) const;
 
-  // TODO: rename
+  // Value returned if the variant has an incompatible type
   template <typename T>
-  static T invalid();
+  static T defaultValue() {
+    return T();
+  }
 
   const char *asString() const;
   JsonArray &asArray() const;

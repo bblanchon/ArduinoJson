@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added `JsonVariant::success()` (issue #279)
+* Renamed `JsonVariant::invalid<T>()` to `JsonVariant::defaultValue<T>()`
 
 v5.4.0
 ------

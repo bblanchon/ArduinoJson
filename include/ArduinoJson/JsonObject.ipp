@@ -21,7 +21,7 @@ inline JsonVariant JsonObject::get(JsonObjectKey key) const {
 template <typename T>
 inline T JsonObject::get(JsonObjectKey key) const {
   node_type *node = getNodeAt(key.c_str());
-  return node ? node->content.value.as<T>() : JsonVariant::invalid<T>();
+  return node ? node->content.value.as<T>() : JsonVariant::defaultValue<T>();
 }
 
 template <typename T>
@@ -57,8 +57,7 @@ inline bool JsonObject::setNodeAt(JsonObjectKey key, T value) {
   node_type *node = getNodeAt(key.c_str());
   if (!node) {
     node = addNewNode();
-    if (!node || !setNodeKey(node, key))
-      return false;
+    if (!node || !setNodeKey(node, key)) return false;
   }
   return setNodeValue<T>(node, value);
 }
@@ -104,12 +103,12 @@ operator[](const String &key) const {
 }
 
 template <>
-inline JsonObject const &JsonVariant::invalid<JsonObject const &>() {
+inline JsonObject const &JsonVariant::defaultValue<JsonObject const &>() {
   return JsonObject::invalid();
 }
 
 template <>
-inline JsonObject &JsonVariant::invalid<JsonObject &>() {
+inline JsonObject &JsonVariant::defaultValue<JsonObject &>() {
   return JsonObject::invalid();
 }
 

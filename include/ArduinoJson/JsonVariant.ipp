@@ -41,11 +41,6 @@ inline JsonVariant::JsonVariant(JsonObject &object) {
   _content.asObject = &object;
 }
 
-template <typename T>
-inline T JsonVariant::invalid() {
-  return T();
-}
-
 inline Internals::JsonInteger JsonVariant::asInteger() const {
   using namespace Internals;
   switch (_type) {
