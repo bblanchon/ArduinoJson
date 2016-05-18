@@ -29,6 +29,9 @@ class JsonParser_Variant_Test : public testing::Test {
     EXPECT_TRUE(_result.is<T>());
   }
 
+  void resultMustBeInvalid() { EXPECT_FALSE(_result.success()); }
+  void resultMustBeValid() { EXPECT_TRUE(_result.success()); }
+
  private:
   DynamicJsonBuffer _jsonBuffer;
   JsonVariant _result;
@@ -37,40 +40,52 @@ class JsonParser_Variant_Test : public testing::Test {
 
 TEST_F(JsonParser_Variant_Test, EmptyObject) {
   whenInputIs("{}");
+  resultMustBeValid();
   resultTypeMustBe<JsonObject>();
 }
 
 TEST_F(JsonParser_Variant_Test, EmptyArray) {
   whenInputIs("[]");
+  resultMustBeValid();
   resultTypeMustBe<JsonArray>();
 }
 
 TEST_F(JsonParser_Variant_Test, Integer) {
   whenInputIs("42");
+  resultMustBeValid();
   resultTypeMustBe<int>();
   resultMustEqual(42);
 }
 
 TEST_F(JsonParser_Variant_Test, Double) {
   whenInputIs("3.14");
+  resultMustBeValid();
   resultTypeMustBe<double>();
   resultMustEqual(3.14);
 }
 
 TEST_F(JsonParser_Variant_Test, String) {
   whenInputIs("\"hello world\"");
+  resultMustBeValid();
   resultTypeMustBe<char*>();
   resultMustEqual("hello world");
 }
 
 TEST_F(JsonParser_Variant_Test, True) {
   whenInputIs("true");
+  resultMustBeValid();
   resultTypeMustBe<bool>();
   resultMustEqual(true);
 }
 
 TEST_F(JsonParser_Variant_Test, False) {
   whenInputIs("false");
+  resultMustBeValid();
   resultTypeMustBe<bool>();
   resultMustEqual(false);
+}
+
+TEST_F(JsonParser_Variant_Test, Invalid) {
+  whenInputIs("{");
+  resultMustBeInvalid();
 }

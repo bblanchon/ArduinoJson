@@ -256,6 +256,8 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
     return isObject();
   }
 
+  bool success() const { return _type != Internals::JSON_UNDEFINED; }
+
   // Serialize the variant to a JsonWriter
   void writeTo(Internals::JsonWriter &writer) const;
 

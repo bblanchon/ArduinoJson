@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added `JsonVariant::success()` (issue #279)
+
 v5.4.0
 ------
 
