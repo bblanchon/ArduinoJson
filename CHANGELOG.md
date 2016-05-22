@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.5.0
+------
 
 * Added `JsonVariant::success()` (issue #279)
 * Renamed `JsonVariant::invalid<T>()` to `JsonVariant::defaultValue<T>()`
