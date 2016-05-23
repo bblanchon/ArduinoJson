@@ -121,6 +121,7 @@ Special thanks to the following persons and companies who made generous donation
 * Charles-Henri Hallard <img alt='France' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1eb-1f1f7.svg' width='18' height='18'>
 * Martijn van den Burg <img alt='Netherlands' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1f3-1f1f1.svg' width='18' height='18'>
 * Nick Koumaris <img alt='Greece' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1ec-1f1f7.svg' width='18' height='18'>
+* Jon Williams <img alt='USA' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1fa-1f1f8.svg' width='18' height='18'>
 
 ---
 
