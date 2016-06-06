@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed compilation error with Intel Galileo (issue #299)
+
 v5.5.0
 ------
 
