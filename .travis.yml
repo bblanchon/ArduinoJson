@@ -46,30 +46,30 @@ matrix:
       env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-5
     - compiler: clang
       env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++
-    - compiler: clang
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.5']
-          packages: ['clang-3.5']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.5
-    - compiler: clang
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.6']
-          packages: ['clang-3.6']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.6
-    - compiler: clang
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.7']
-          packages: ['clang-3.7']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.7
-    - compiler: clang
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
-          packages: ['clang-3.8']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.8
+    # - compiler: clang
+    #   addons:
+    #     apt:
+    #       sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.5']
+    #       packages: ['clang-3.5']
+    #   env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.5
+    # - compiler: clang
+    #   addons:
+    #     apt:
+    #       sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.6']
+    #       packages: ['clang-3.6']
+    #   env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.6
+    # - compiler: clang
+    #   addons:
+    #     apt:
+    #       sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.7']
+    #       packages: ['clang-3.7']
+    #   env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.7
+    # - compiler: clang
+    #   addons:
+    #     apt:
+    #       sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
+    #       packages: ['clang-3.8']
+    #   env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.8
     - compiler: gcc
       env: SCRIPT=coverage
     - os: osx
