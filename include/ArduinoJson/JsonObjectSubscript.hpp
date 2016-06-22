@@ -45,9 +45,13 @@ class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript<TKey> > {
     return *this;
   }
 
-  FORCE_INLINE bool success() const { return _object.containsKey(_key); }
+  FORCE_INLINE bool success() const {
+    return _object.containsKey(_key);
+  }
 
-  FORCE_INLINE operator JsonVariant() const { return _object.get(_key); }
+  FORCE_INLINE operator JsonVariant() const {
+    return _object.get(_key);
+  }
 
   template <typename TValue>
   FORCE_INLINE TValue as() const {
@@ -69,7 +73,9 @@ class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript<TKey> > {
     return _object.set(_key, value, decimals);
   }
 
-  FORCE_INLINE JsonVariant get() { return _object.get(_key); }
+  FORCE_INLINE JsonVariant get() {
+    return _object.get(_key);
+  }
 
   void writeTo(Internals::JsonWriter& writer) const {
     _object.get(_key).writeTo(writer);
@@ -91,6 +97,28 @@ inline std::ostream& operator<<(
   return source.printTo(os);
 }
 #endif
+
+inline JsonObjectSubscript<const char*> JsonObject::operator[](
+    const char* key) {
+  return JsonObjectSubscript<const char*>(*this, key);
+}
+
+inline JsonObjectSubscript<const String&> JsonObject::operator[](
+    const String& key) {
+  return JsonObjectSubscript<const String&>(*this, key);
+}
+
+template <typename TImplem>
+inline const JsonObjectSubscript<const char*> JsonVariantBase<TImplem>::
+operator[](const char* key) const {
+  return asObject()[key];
+}
+
+template <typename TImplem>
+inline const JsonObjectSubscript<const String&> JsonVariantBase<TImplem>::
+operator[](const String& key) const {
+  return asObject()[key];
+}
 
 }  // namespace ArduinoJson
 

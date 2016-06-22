@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Internals/ForceInline.hpp"
+#include "Polyfills/attributes.hpp"
 #include "JsonObjectKey.hpp"
 
 namespace ArduinoJson {

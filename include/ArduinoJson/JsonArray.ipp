@@ -13,61 +13,12 @@
 
 namespace ArduinoJson {
 
-inline JsonArraySubscript JsonArray::operator[](size_t index) {
-  return JsonArraySubscript(*this, index);
-}
-
-inline JsonVariant JsonArray::operator[](size_t index) const {
-  return get(index);
-}
-
-template <typename TValue>
-inline bool JsonArray::addNode(TValue value) {
-  node_type *node = addNewNode();
-  return node != NULL && setNodeValue<TValue>(node, value);
-}
-
-template <typename TValue>
-inline bool JsonArray::setNodeAt(size_t index, TValue value) {
-  node_type *node = getNodeAt(index);
-  return node != NULL && setNodeValue<TValue>(node, value);
-}
-
-template <typename TValue>
-inline bool JsonArray::setNodeValue(node_type *node, TValue value) {
-  node->content = value;
-  return true;
-}
-
 template <>
 inline bool JsonArray::setNodeValue(node_type *node, String &value) {
   const char *copy = _buffer->strdup(value);
   if (!copy) return false;
   node->content = copy;
   return true;
-}
-
-inline JsonVariant JsonArray::get(size_t index) const {
-  node_type *node = getNodeAt(index);
-  return node ? node->content : JsonVariant();
-}
-
-template <typename T>
-inline T JsonArray::get(size_t index) const {
-  node_type *node = getNodeAt(index);
-  return node ? node->content.as<T>() : JsonVariant::defaultValue<T>();
-}
-
-template <typename T>
-inline bool JsonArray::is(size_t index) const {
-  node_type *node = getNodeAt(index);
-  return node ? node->content.is<T>() : false;
-}
-
-template <typename TImplem>
-inline const JsonArraySubscript JsonVariantBase<TImplem>::operator[](
-    int index) const {
-  return asArray()[index];
 }
 
 template <>

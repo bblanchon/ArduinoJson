@@ -44,7 +44,7 @@ TEST(JsonArray_CopyTo_Tests, TwoOneDimensionIntegerArray) {
   DynamicJsonBuffer jsonBuffer;
   JsonArray& array = jsonBuffer.parseArray(json);
 
-  int destination[3][2] = {0};
+  int destination[3][2] = {{0}};
   array.copyTo(destination);
 
   ASSERT_EQ(1, destination[0][0]);

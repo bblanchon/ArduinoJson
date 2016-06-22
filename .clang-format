@@ -2,3 +2,4 @@
 
 BasedOnStyle: Google
 Standard: Cpp03
+AllowShortFunctionsOnASingleLine: Empty

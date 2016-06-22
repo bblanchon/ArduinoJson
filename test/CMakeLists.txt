@@ -5,31 +5,69 @@
 # https://github.com/bblanchon/ArduinoJson
 # If you like this project, please add a star!
 
-set(GTEST_DIR ../third-party/gtest-1.7.0)
+include(gtest.cmake)
 
 file(GLOB TESTS_FILES *.hpp *.cpp)
 
-include_directories(
-    ${GTEST_DIR}
-    ${GTEST_DIR}/include)
-
-add_definitions(-DGTEST_HAS_PTHREAD=0)
-
-# Workaround for Visual Studio 2012
-if (MSVC AND MSVC_VERSION EQUAL 1700)
-    add_definitions(-D_VARIADIC_MAX=10)
+if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
+	add_compile_options(
+		-fno-exceptions
+		-fno-rtti
+		-pedantic
+		-Wall
+		-Wcast-align
+		-Wcast-qual
+		-Wconversion
+		-Wctor-dtor-privacy
+		-Wdisabled-optimization
+		-Werror
+		-Wextra
+		-Wformat=2
+		-Winit-self
+		-Wmissing-include-dirs
+		-Wno-parentheses
+		-Wno-sign-conversion
+		-Wno-unused
+		-Wno-variadic-macros
+		-Wnon-virtual-dtor
+		-Wold-style-cast
+		-Woverloaded-virtual
+		-Wredundant-decls
+		-Wshadow
+		-Wsign-promo
+		-Wstrict-overflow=5
+		-Wundef
+	)
 endif()
 
-if (MSVC)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	add_compile_options(
+		-Wstrict-null-sentinel
+	)
+
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.5)
+		add_compile_options(-Wlogical-op) # the flag exists in 4.4 but is buggy
+	endif()
+
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.6)
+		add_compile_options(-Wnoexcept)
+	endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	add_compile_options(
+		-Wc++11-compat
+		-Wdeprecated-register
+	)
+endif()
+
+if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	add_compile_options(-W4)
 endif()
 
-add_executable(ArduinoJsonTests 
-    ${TESTS_FILES}
-    ${GTEST_DIR}/src/gtest-all.cc
-    ${GTEST_DIR}/src/gtest_main.cc)
-
-
-target_link_libraries(ArduinoJsonTests ArduinoJson)
+add_executable(ArduinoJsonTests ${TESTS_FILES})
+target_include_directories(ArduinoJsonTests PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../include)
+target_link_libraries(ArduinoJsonTests gtest)
 
 add_test(ArduinoJsonTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ArduinoJsonTests)

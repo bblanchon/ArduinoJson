@@ -36,21 +36,56 @@ class List {
   // Would return false in the following situation:
   // - the memory allocation failed (StaticJsonBuffer was too small)
   // - the JSON parsing failed
-  bool success() const { return _buffer != NULL; }
+  bool success() const {
+    return _buffer != NULL;
+  }
 
   // Returns the numbers of elements in the list.
   // For a JsonObject, it would return the number of key-value pairs
-  size_t size() const;
+  size_t size() const {
+    size_t nodeCount = 0;
+    for (node_type *node = _firstNode; node; node = node->next) nodeCount++;
+    return nodeCount;
+  }
 
-  iterator begin() { return iterator(_firstNode); }
-  iterator end() { return iterator(NULL); }
+  iterator begin() {
+    return iterator(_firstNode);
+  }
+  iterator end() {
+    return iterator(NULL);
+  }
 
-  const_iterator begin() const { return const_iterator(_firstNode); }
-  const_iterator end() const { return const_iterator(NULL); }
+  const_iterator begin() const {
+    return const_iterator(_firstNode);
+  }
+  const_iterator end() const {
+    return const_iterator(NULL);
+  }
 
  protected:
-  node_type *addNewNode();
-  void removeNode(node_type *nodeToRemove);
+  node_type *addNewNode() {
+    node_type *newNode = new (_buffer) node_type();
+
+    if (_firstNode) {
+      node_type *lastNode = _firstNode;
+      while (lastNode->next) lastNode = lastNode->next;
+      lastNode->next = newNode;
+    } else {
+      _firstNode = newNode;
+    }
+
+    return newNode;
+  }
+
+  void removeNode(node_type *nodeToRemove) {
+    if (!nodeToRemove) return;
+    if (nodeToRemove == _firstNode) {
+      _firstNode = nodeToRemove->next;
+    } else {
+      for (node_type *node = _firstNode; node; node = node->next)
+        if (node->next == nodeToRemove) node->next = nodeToRemove->next;
+    }
+  }
 
   JsonBuffer *_buffer;
   node_type *_firstNode;

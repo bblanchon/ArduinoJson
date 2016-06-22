@@ -7,12 +7,12 @@
 
 #pragma once
 
+#include "../Polyfills/attributes.hpp"
 #include "../Polyfills/isInfinity.hpp"
 #include "../Polyfills/isNaN.hpp"
 #include "../Polyfills/normalize.hpp"
 #include "../Print.hpp"
 #include "Encoding.hpp"
-#include "ForceInline.hpp"
 #include "JsonFloat.hpp"
 #include "JsonInteger.hpp"
 

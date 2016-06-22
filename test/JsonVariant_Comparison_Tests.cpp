@@ -6,9 +6,7 @@
 // If you like this project, please add a star!
 
 #include <gtest/gtest.h>
-#include <ArduinoJson/JsonVariant.hpp>
-
-using namespace ArduinoJson;
+#include <ArduinoJson.h>
 
 class JsonVariant_Comparison_Tests : public ::testing::Test {
  protected:

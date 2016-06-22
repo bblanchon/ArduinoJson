@@ -5,7 +5,7 @@
 # https://github.com/bblanchon/ArduinoJson
 # If you like this project, please add a star!
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.0)
 project(ArduinoJson)
 
 enable_testing()
@@ -18,5 +18,4 @@ if(${COVERAGE})
 	set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
 endif()
 
-add_subdirectory(src)
 add_subdirectory(test)

@@ -20,7 +20,13 @@ class StaticStringBuilder : public Print {
     buffer[0] = '\0';
   }
 
-  virtual size_t write(uint8_t c);
+  virtual size_t write(uint8_t c) {
+    if (length >= capacity) return 0;
+
+    buffer[length++] = c;
+    buffer[length] = '\0';
+    return 1;
+  }
 
  private:
   char *buffer;

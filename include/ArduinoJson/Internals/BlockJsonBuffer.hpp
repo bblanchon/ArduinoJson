@@ -11,12 +11,26 @@
 
 #include <stdlib.h>
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnon-virtual-dtor"
+#elif defined(__GNUC__)
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#pragma GCC diagnostic push
+#endif
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
+
 namespace ArduinoJson {
 namespace Internals {
 class DefaultAllocator {
  public:
-  void* allocate(size_t size) { return malloc(size); }
-  void deallocate(void* pointer) { free(pointer); }
+  void* allocate(size_t size) {
+    return malloc(size);
+  }
+  void deallocate(void* pointer) {
+    free(pointer);
+  }
 };
 
 template <typename TAllocator>
@@ -51,7 +65,6 @@ class BlockJsonBuffer : public JsonBuffer {
     return total;
   }
 
- protected:
   virtual void* alloc(size_t bytes) {
     return canAllocInHead(bytes) ? allocInHead(bytes) : allocInNewBlock(bytes);
   }
@@ -92,3 +105,11 @@ class BlockJsonBuffer : public JsonBuffer {
 };
 }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#pragma GCC diagnostic pop
+#endif
+#endif

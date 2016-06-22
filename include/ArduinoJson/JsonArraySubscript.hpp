@@ -77,6 +77,16 @@ inline std::ostream& operator<<(std::ostream& os,
 }
 #endif
 
+inline JsonArraySubscript JsonArray::operator[](size_t index) {
+  return JsonArraySubscript(*this, index);
+}
+
+template <typename TImplem>
+inline const JsonArraySubscript JsonVariantBase<TImplem>::operator[](
+    int index) const {
+  return asArray()[index];
+}
+
 }  // namespace ArduinoJson
 
 #ifdef _MSC_VER

@@ -10,9 +10,13 @@
 
 class StaticJsonBuffer_ParseArray_Tests : public testing::Test {
  protected:
-  void with(JsonBuffer& jsonBuffer) { _jsonBuffer = &jsonBuffer; }
+  void with(JsonBuffer& jsonBuffer) {
+    _jsonBuffer = &jsonBuffer;
+  }
 
-  void whenInputIs(const char* json) { strcpy(_jsonString, json); }
+  void whenInputIs(const char* json) {
+    strcpy(_jsonString, json);
+  }
 
   void parseMustSucceed() {
     EXPECT_TRUE(_jsonBuffer->parseArray(_jsonString).success());
@@ -73,9 +77,12 @@ TEST_F(StaticJsonBuffer_ParseArray_Tests,
 }
 
 TEST_F(StaticJsonBuffer_ParseArray_Tests, CharPtrNull) {
-  ASSERT_FALSE(StaticJsonBuffer<100>().parseArray((char*)0).success());
+  ASSERT_FALSE(
+      StaticJsonBuffer<100>().parseArray(static_cast<char*>(0)).success());
 }
 
 TEST_F(StaticJsonBuffer_ParseArray_Tests, ConstCharPtrNull) {
-  ASSERT_FALSE(StaticJsonBuffer<100>().parseArray((const char*)0).success());
+  ASSERT_FALSE(StaticJsonBuffer<100>()
+                   .parseArray(static_cast<const char*>(0))
+                   .success());
 }

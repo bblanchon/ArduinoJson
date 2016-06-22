@@ -56,10 +56,12 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
       : Internals::List<JsonVariant>(buffer) {}
 
   // Gets the value at the specified index
-  FORCE_INLINE JsonVariant operator[](size_t index) const;
+  JsonVariant operator[](size_t index) const {
+    return get(index);
+  }
 
   // Gets or sets the value at specified index
-  FORCE_INLINE JsonArraySubscript operator[](size_t index);
+  JsonArraySubscript operator[](size_t index);
 
   // Adds the specified value at the end of the array.
   //
@@ -72,7 +74,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // bool add(double value);
   // bool add(const char*);
   template <typename T>
-  FORCE_INLINE bool add(
+  bool add(
       T value,
       typename TypeTraits::EnableIf<
           CanSet<T>::value && !TypeTraits::IsReference<T>::value>::type * = 0) {
@@ -83,18 +85,16 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // bool add(JsonArray&);
   // bool add(JsonObject&);
   template <typename T>
-  FORCE_INLINE bool add(
-      const T &value,
-      typename TypeTraits::EnableIf<CanSet<T &>::value>::type * = 0) {
+  bool add(const T &value,
+           typename TypeTraits::EnableIf<CanSet<T &>::value>::type * = 0) {
     return addNode<T &>(const_cast<T &>(value));
   }
   // bool add(float value, uint8_t decimals);
   // bool add(double value, uint8_t decimals);
   template <typename T>
-  FORCE_INLINE bool add(
-      T value, uint8_t decimals,
-      typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<T>::value>::type
-          * = 0) {
+  bool add(T value, uint8_t decimals,
+           typename TypeTraits::EnableIf<
+               TypeTraits::IsFloatingPoint<T>::value>::type * = 0) {
     return addNode<JsonVariant>(JsonVariant(value, decimals));
   }
 
@@ -105,7 +105,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // bool set(size_t index, int value);
   // bool set(size_t index, short value);
   template <typename T>
-  FORCE_INLINE bool set(
+  bool set(
       size_t index, T value,
       typename TypeTraits::EnableIf<
           CanSet<T>::value && !TypeTraits::IsReference<T>::value>::type * = 0) {
@@ -116,31 +116,38 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // bool set(size_t index, JsonArray&);
   // bool set(size_t index, JsonObject&);
   template <typename T>
-  FORCE_INLINE bool set(
-      size_t index, const T &value,
-      typename TypeTraits::EnableIf<CanSet<T &>::value>::type * = 0) {
+  bool set(size_t index, const T &value,
+           typename TypeTraits::EnableIf<CanSet<T &>::value>::type * = 0) {
     return setNodeAt<T &>(index, const_cast<T &>(value));
   }
   // bool set(size_t index, float value, uint8_t decimals = 2);
   // bool set(size_t index, double value, uint8_t decimals = 2);
   template <typename T>
-  FORCE_INLINE bool set(
-      size_t index, T value, uint8_t decimals,
-      typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<T>::value>::type
-          * = 0) {
+  bool set(size_t index, T value, uint8_t decimals,
+           typename TypeTraits::EnableIf<
+               TypeTraits::IsFloatingPoint<T>::value>::type * = 0) {
     return setNodeAt<const JsonVariant &>(index, JsonVariant(value, decimals));
   }
 
   // Gets the value at the specified index.
-  FORCE_INLINE JsonVariant get(size_t index) const;
+  JsonVariant get(size_t index) const {
+    node_type *node = getNodeAt(index);
+    return node ? node->content : JsonVariant();
+  }
 
   // Gets the value at the specified index.
   template <typename T>
-  FORCE_INLINE T get(size_t index) const;
+  T get(size_t index) const {
+    node_type *node = getNodeAt(index);
+    return node ? node->content.as<T>() : JsonVariant::defaultValue<T>();
+  }
 
   // Check the type of the value at specified index.
   template <typename T>
-  FORCE_INLINE bool is(size_t index) const;
+  bool is(size_t index) const {
+    node_type *node = getNodeAt(index);
+    return node ? node->content.is<T>() : false;
+  }
 
   // Creates a JsonArray and adds a reference at the end of the array.
   // It's a shortcut for JsonBuffer::createArray() and JsonArray::add()
@@ -151,15 +158,34 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   JsonObject &createNestedObject();
 
   // Removes element at specified index.
-  void removeAt(size_t index);
+  void removeAt(size_t index) {
+    removeNode(getNodeAt(index));
+  }
 
   // Returns a reference an invalid JsonArray.
   // This object is meant to replace a NULL pointer.
   // This is used when memory allocation or JSON parsing fail.
-  static JsonArray &invalid() { return _invalid; }
+  static JsonArray &invalid() {
+    static JsonArray instance(NULL);
+    return instance;
+  }
 
   // Serialize the array to the specified JsonWriter.
-  void writeTo(Internals::JsonWriter &writer) const;
+  void writeTo(Internals::JsonWriter &writer) const {
+    writer.beginArray();
+
+    const node_type *child = _firstNode;
+    while (child) {
+      child->content.writeTo(writer);
+
+      child = child->next;
+      if (!child) break;
+
+      writer.writeComma();
+    }
+
+    writer.endArray();
+  }
 
   // Imports a 1D array
   template <typename T, size_t N>
@@ -215,20 +241,28 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   }
 
  private:
-  node_type *getNodeAt(size_t index) const;
+  node_type *getNodeAt(size_t index) const {
+    node_type *node = _firstNode;
+    while (node && index--) node = node->next;
+    return node;
+  }
 
   template <typename TValue>
-  bool setNodeAt(size_t index, TValue value);
+  bool setNodeAt(size_t index, TValue value) {
+    node_type *node = getNodeAt(index);
+    return node != NULL && setNodeValue<TValue>(node, value);
+  }
 
   template <typename TValue>
-  bool addNode(TValue);
+  bool addNode(TValue value) {
+    node_type *node = addNewNode();
+    return node != NULL && setNodeValue<TValue>(node, value);
+  }
 
   template <typename T>
-  FORCE_INLINE bool setNodeValue(node_type *, T value);
-
-  // The instance returned by JsonArray::invalid()
-  static JsonArray _invalid;
+  bool setNodeValue(node_type *node, T value) {
+    node->content = value;
+    return true;
+  }
 };
 }
-
-#include "JsonArray.ipp"

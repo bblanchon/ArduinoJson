@@ -44,6 +44,19 @@ class JsonParser {
   inline bool parseObjectTo(JsonVariant *destination);
   inline bool parseStringTo(JsonVariant *destination);
 
+  static inline bool isInRange(char c, char min, char max) {
+    return min <= c && c <= max;
+  }
+
+  static inline bool isLetterOrNumber(char c) {
+    return isInRange(c, '0', '9') || isInRange(c, 'a', 'z') ||
+           isInRange(c, 'A', 'Z') || c == '-' || c == '.';
+  }
+
+  static inline bool isQuote(char c) {
+    return c == '\'' || c == '\"';
+  }
+
   JsonBuffer *_buffer;
   const char *_readPtr;
   char *_writePtr;

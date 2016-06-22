@@ -6,11 +6,7 @@
 // If you like this project, please add a star!
 
 #include <gtest/gtest.h>
-
-#define protected public
-#include <ArduinoJson/DynamicJsonBuffer.hpp>
-
-using namespace ArduinoJson;
+#include <ArduinoJson.h>
 
 class DynamicJsonBuffer_Basic_Tests : public testing::Test {
  protected:
