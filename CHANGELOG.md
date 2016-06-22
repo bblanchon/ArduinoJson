@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.6.0
+------
 
 * ArduinoJson is now a header-only library (issue #199)
 
