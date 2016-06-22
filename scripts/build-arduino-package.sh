@@ -17,5 +17,4 @@ rm -f $OUTPUT
 	ArduinoJson/library.properties \
 	ArduinoJson/LICENSE.md \
 	ArduinoJson/README.md \
-	ArduinoJson/src	\
-	-x!ArduinoJson/src/CMakeLists.txt
+	ArduinoJson/ArduinoJson.h
