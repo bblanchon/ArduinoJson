@@ -5,8 +5,10 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include "JsonParser.hpp"
+#pragma once
+
 #include "Comments.hpp"
+#include "JsonParser.hpp"
 
 inline bool ArduinoJson::Internals::JsonParser::skip(char charToSkip) {
   const char *ptr = skipSpacesAndComments(_readPtr);

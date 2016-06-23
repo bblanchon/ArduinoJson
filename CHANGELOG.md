@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added missing `#pragma once` (issue #310)
+
 v5.6.0
 ------
 

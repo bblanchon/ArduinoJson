@@ -20,6 +20,7 @@ Features
 * Portable (written in C++98)
 * Self-contained (no external dependency)
 * Small footprint
+* Header-only library
 * MIT License
 
 Works on

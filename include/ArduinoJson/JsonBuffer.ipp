@@ -5,6 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
+#pragma once
+
 #include "Internals/JsonParser.hpp"
 
 inline ArduinoJson::JsonArray &ArduinoJson::JsonBuffer::createArray() {
