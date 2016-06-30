@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.6.2
+------
 
 * Fixed build when another lib does `#undef isnan` (issue #284)
 
