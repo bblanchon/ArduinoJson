@@ -8,8 +8,7 @@
 #pragma once
 
 #include "../Polyfills/attributes.hpp"
-#include "../Polyfills/isInfinity.hpp"
-#include "../Polyfills/isNaN.hpp"
+#include "../Polyfills/math.hpp"
 #include "../Polyfills/normalize.hpp"
 #include "../Print.hpp"
 #include "Encoding.hpp"
@@ -33,18 +32,34 @@ class JsonWriter {
   // Returns the number of bytes sent to the Print implementation.
   // This is very handy for implementations of printTo() that must return the
   // number of bytes written.
-  size_t bytesWritten() const { return _length; }
+  size_t bytesWritten() const {
+    return _length;
+  }
 
-  void beginArray() { writeRaw('['); }
-  void endArray() { writeRaw(']'); }
+  void beginArray() {
+    writeRaw('[');
+  }
+  void endArray() {
+    writeRaw(']');
+  }
 
-  void beginObject() { writeRaw('{'); }
-  void endObject() { writeRaw('}'); }
+  void beginObject() {
+    writeRaw('{');
+  }
+  void endObject() {
+    writeRaw('}');
+  }
 
-  void writeColon() { writeRaw(':'); }
-  void writeComma() { writeRaw(','); }
+  void writeColon() {
+    writeRaw(':');
+  }
+  void writeComma() {
+    writeRaw(',');
+  }
 
-  void writeBoolean(bool value) { writeRaw(value ? "true" : "false"); }
+  void writeBoolean(bool value) {
+    writeRaw(value ? "true" : "false");
+  }
 
   void writeString(const char *value) {
     if (!value) {
@@ -132,8 +147,12 @@ class JsonWriter {
     }
   }
 
-  void writeRaw(const char *s) { _length += _sink.print(s); }
-  void writeRaw(char c) { _length += _sink.write(c); }
+  void writeRaw(const char *s) {
+    _length += _sink.print(s);
+  }
+  void writeRaw(char c) {
+    _length += _sink.write(c);
+  }
 
  protected:
   Print &_sink;
