@@ -9,7 +9,7 @@
 
 #include "Configuration.hpp"
 
-#if ARDUINOJSON_USE_ARDUINO_STRING
+#ifdef ARDUINOJSON_USE_ARDUINO_STRING
 
 #include <WString.h>
 
