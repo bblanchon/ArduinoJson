@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Improved speed of float serialization (about twice faster)
+
 v5.6.2
 ------
 
