@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Improved speed of float serialization (about twice faster)
+* Added `as<JsonArray>()` as a synonym for `as<JsonArray&>()`... (issue #291)
 
 v5.6.2
 ------

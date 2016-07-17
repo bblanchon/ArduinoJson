@@ -106,7 +106,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
   // Gets the value associated with the specified key.
   template <typename T>
-  T get(JsonObjectKey key) const {
+  typename Internals::JsonVariantAs<T>::type get(JsonObjectKey key) const {
     node_type* node = getNodeAt(key.c_str());
     return node ? node->content.value.as<T>() : JsonVariant::defaultValue<T>();
   }

@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "Polyfills/attributes.hpp"
+#include "Internals/JsonVariantAs.hpp"
 #include "JsonObjectKey.hpp"
+#include "Polyfills/attributes.hpp"
 
 namespace ArduinoJson {
 
@@ -20,20 +21,35 @@ class JsonObjectSubscript;
 template <typename TImpl>
 class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
  public:
-  FORCE_INLINE const char *asString() const { return as<const char *>(); }
+  // DEPRECATED: use as<char*>() instead
+  FORCE_INLINE const char *asString() const {
+    return as<const char *>();
+  }
 
   // Gets the variant as an array.
   // Returns a reference to the JsonArray or JsonArray::invalid() if the
   // variant
   // is not an array.
-  FORCE_INLINE operator JsonArray &() const { return as<JsonArray &>(); }
-  FORCE_INLINE JsonArray &asArray() const { return as<JsonArray &>(); }
+  FORCE_INLINE operator JsonArray &() const {
+    return as<JsonArray &>();
+  }
+
+  // DEPRECATED: use as<JsonArray>() instead
+  FORCE_INLINE JsonArray &asArray() const {
+    return as<JsonArray &>();
+  }
 
   // Gets the variant as an object.
   // Returns a reference to the JsonObject or JsonObject::invalid() if the
   // variant is not an object.
-  FORCE_INLINE operator JsonObject &() const { return as<JsonObject &>(); }
-  FORCE_INLINE JsonObject &asObject() const { return as<JsonObject &>(); }
+  FORCE_INLINE operator JsonObject &() const {
+    return as<JsonObject &>();
+  }
+
+  // DEPRECATED: use as<JsonObject>() instead
+  FORCE_INLINE JsonObject &asObject() const {
+    return as<JsonObject &>();
+  }
 
   template <typename T>
   FORCE_INLINE operator T() const {
@@ -41,14 +57,16 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   }
 
   template <typename T>
-  FORCE_INLINE const T as() const {
+  FORCE_INLINE const typename Internals::JsonVariantAs<T>::type as() const {
     return impl()->template as<T>();
   }
 
   // Mimics an array or an object.
   // Returns the size of the array or object if the variant has that type.
   // Returns 0 if the variant is neither an array nor an object
-  size_t size() const { return asArray().size() + asObject().size(); }
+  size_t size() const {
+    return asArray().size() + asObject().size();
+  }
 
   // Mimics an array.
   // Returns the element at specified index if the variant is an array.
@@ -68,7 +86,9 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   void writeTo(Internals::JsonWriter &writer) const;
 
  private:
-  const TImpl *impl() const { return static_cast<const TImpl *>(this); }
+  const TImpl *impl() const {
+    return static_cast<const TImpl *>(this);
+  }
 };
 
 template <typename TImpl, typename TComparand>

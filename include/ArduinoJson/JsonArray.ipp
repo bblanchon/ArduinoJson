@@ -22,12 +22,22 @@ inline bool JsonArray::setNodeValue(node_type *node, String &value) {
 }
 
 template <>
+inline JsonArray &JsonVariant::defaultValue<JsonArray>() {
+  return JsonArray::invalid();
+}
+
+template <>
 inline JsonArray &JsonVariant::defaultValue<JsonArray &>() {
   return JsonArray::invalid();
 }
 
 template <>
-inline JsonArray const &JsonVariant::defaultValue<JsonArray const &>() {
+inline const JsonArray &JsonVariant::defaultValue<const JsonArray>() {
+  return JsonArray::invalid();
+}
+
+template <>
+inline const JsonArray &JsonVariant::defaultValue<const JsonArray &>() {
   return JsonArray::invalid();
 }
 

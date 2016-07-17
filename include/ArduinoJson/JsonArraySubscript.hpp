@@ -42,12 +42,16 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return *this;
   }
 
-  FORCE_INLINE bool success() const { return _index < _array.size(); }
+  FORCE_INLINE bool success() const {
+    return _index < _array.size();
+  }
 
-  FORCE_INLINE operator JsonVariant() const { return _array.get(_index); }
+  FORCE_INLINE operator JsonVariant() const {
+    return _array.get(_index);
+  }
 
   template <typename T>
-  FORCE_INLINE T as() const {
+  FORCE_INLINE typename Internals::JsonVariantAs<T>::type as() const {
     return _array.get<T>(_index);
   }
 

@@ -26,12 +26,22 @@ inline bool JsonObject::setNodeValue(node_type *node, const String &value) {
 }
 
 template <>
-inline JsonObject const &JsonVariant::defaultValue<JsonObject const &>() {
+inline const JsonObject &JsonVariant::defaultValue<const JsonObject &>() {
+  return JsonObject::invalid();
+}
+
+template <>
+inline const JsonObject &JsonVariant::defaultValue<const JsonObject>() {
   return JsonObject::invalid();
 }
 
 template <>
 inline JsonObject &JsonVariant::defaultValue<JsonObject &>() {
+  return JsonObject::invalid();
+}
+
+template <>
+inline JsonObject &JsonVariant::defaultValue<JsonObject>() {
   return JsonObject::invalid();
 }
 

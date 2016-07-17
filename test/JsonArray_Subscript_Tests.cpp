@@ -59,6 +59,7 @@ TEST_(StoreBoolean) {
 TEST_(StoreString) {
   _array[0] = "hello";
   EXPECT_STREQ("hello", _array[0].as<const char*>());
+  EXPECT_STREQ("hello", _array[0].as<char*>());  // <- short hand
   EXPECT_TRUE(_array[0].is<const char*>());
   EXPECT_FALSE(_array[0].is<int>());
 }
@@ -69,6 +70,9 @@ TEST_(StoreNestedArray) {
   _array[0] = arr;
 
   EXPECT_EQ(&arr, &_array[0].as<JsonArray&>());
+  EXPECT_EQ(&arr, &_array[0].as<JsonArray>());  // <- short hand
+  EXPECT_EQ(&arr, &_array[0].as<const JsonArray&>());
+  EXPECT_EQ(&arr, &_array[0].as<const JsonArray>());  // <- short hand
   EXPECT_TRUE(_array[0].is<JsonArray&>());
   EXPECT_FALSE(_array[0].is<int>());
 }
@@ -79,6 +83,9 @@ TEST_(StoreNestedObject) {
   _array[0] = obj;
 
   EXPECT_EQ(&obj, &_array[0].as<JsonObject&>());
+  EXPECT_EQ(&obj, &_array[0].as<JsonObject>());  // <- short hand
+  EXPECT_EQ(&obj, &_array[0].as<const JsonObject&>());
+  EXPECT_EQ(&obj, &_array[0].as<const JsonObject>());  // <- short hand
   EXPECT_TRUE(_array[0].is<JsonObject&>());
   EXPECT_FALSE(_array[0].is<int>());
 }

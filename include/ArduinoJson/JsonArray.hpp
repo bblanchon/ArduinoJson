@@ -137,7 +137,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
 
   // Gets the value at the specified index.
   template <typename T>
-  T get(size_t index) const {
+  typename Internals::JsonVariantAs<T>::type get(size_t index) const {
     node_type *node = getNodeAt(index);
     return node ? node->content.as<T>() : JsonVariant::defaultValue<T>();
   }

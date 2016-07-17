@@ -214,3 +214,21 @@ TEST(JsonVariant_As_Tests, ArrayAsString) {
   JsonVariant variant = arr;
   ASSERT_EQ(String("[4,2]"), variant.as<String>());
 }
+
+TEST(JsonVariant_As_Tests, ArrayAsJsonArray) {
+  DynamicJsonBuffer buffer;
+  JsonArray& arr = buffer.createArray();
+
+  JsonVariant variant = arr;
+  ASSERT_EQ(&arr, &variant.as<JsonArray&>());
+  ASSERT_EQ(&arr, &variant.as<JsonArray>());  // <- shorthand
+}
+
+TEST(JsonVariant_As_Tests, ObjectAsJsonObject) {
+  DynamicJsonBuffer buffer;
+  JsonObject& arr = buffer.createObject();
+
+  JsonVariant variant = arr;
+  ASSERT_EQ(&arr, &variant.as<JsonObject&>());
+  ASSERT_EQ(&arr, &variant.as<JsonObject>());  // <- shorthand
+}

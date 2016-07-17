@@ -68,6 +68,7 @@ TEST_(StoreString) {
   EXPECT_TRUE(_object["hello"].is<const char*>());
   EXPECT_FALSE(_object["hello"].is<long>());
   EXPECT_STREQ("h3110", _object["hello"].as<const char*>());
+  EXPECT_STREQ("h3110", _object["hello"].as<char*>());  // <- short hand
 }
 
 TEST_(StoreArray) {
@@ -75,8 +76,15 @@ TEST_(StoreArray) {
 
   _object["hello"] = arr;
 
-  EXPECT_EQ(&arr, &_object["hello"].asArray());
+  EXPECT_EQ(&arr, &_object["hello"].asArray());  // <- DEPRECATED
+  EXPECT_EQ(&arr, &_object["hello"].as<JsonArray&>());
+  EXPECT_EQ(&arr, &_object["hello"].as<JsonArray>());  // <- short hand
+  EXPECT_EQ(&arr, &_object["hello"].as<const JsonArray&>());
+  EXPECT_EQ(&arr, &_object["hello"].as<const JsonArray>());  // <- short hand
   EXPECT_TRUE(_object["hello"].is<JsonArray&>());
+  EXPECT_TRUE(_object["hello"].is<JsonArray>());
+  EXPECT_TRUE(_object["hello"].is<const JsonArray&>());
+  EXPECT_TRUE(_object["hello"].is<const JsonArray>());
   EXPECT_FALSE(_object["hello"].is<JsonObject&>());
 }
 
@@ -85,8 +93,15 @@ TEST_(StoreObject) {
 
   _object["hello"] = obj;
 
-  EXPECT_EQ(&obj, &_object["hello"].asObject());
+  EXPECT_EQ(&obj, &_object["hello"].asObject());  // DEPRECATED
+  EXPECT_EQ(&obj, &_object["hello"].as<JsonObject&>());
+  EXPECT_EQ(&obj, &_object["hello"].as<JsonObject>());  // <- short hand
+  EXPECT_EQ(&obj, &_object["hello"].as<const JsonObject&>());
+  EXPECT_EQ(&obj, &_object["hello"].as<const JsonObject>());  // <- short hand
   EXPECT_TRUE(_object["hello"].is<JsonObject&>());
+  EXPECT_TRUE(_object["hello"].is<JsonObject>());
+  EXPECT_TRUE(_object["hello"].is<const JsonObject&>());
+  EXPECT_TRUE(_object["hello"].is<const JsonObject>());
   EXPECT_FALSE(_object["hello"].is<JsonArray&>());
 }
 
