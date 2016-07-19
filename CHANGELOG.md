@@ -6,6 +6,7 @@ HEAD
 
 * Improved speed of float serialization (about twice faster)
 * Added `as<JsonArray>()` as a synonym for `as<JsonArray&>()`... (issue #291)
+* Fixed `call of overloaded isinf(double&) is ambiguous` (issue #284)
 
 v5.6.2
 ------

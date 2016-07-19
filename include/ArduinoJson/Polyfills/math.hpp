@@ -62,6 +62,20 @@ bool isNaN(T x) {
   return isnan(x);
 }
 
+#if defined(_GLIBCXX_HAVE_ISNANL) && _GLIBCXX_HAVE_ISNANL
+template <>
+inline bool isNaN<double>(double x) {
+  return isnanl(x);
+}
+#endif
+
+#if defined(_GLIBCXX_HAVE_ISNANF) && _GLIBCXX_HAVE_ISNANF
+template <>
+inline bool isNaN<float>(float x) {
+  return isnanf(x);
+}
+#endif
+
 template <typename T>
 bool isInfinity(T x) {
 // Workaround for libs that #undef isinf
@@ -72,6 +86,20 @@ bool isInfinity(T x) {
 
   return isinf(x);
 }
+
+#if defined(_GLIBCXX_HAVE_ISINFL) && _GLIBCXX_HAVE_ISINFL
+template <>
+inline bool isInfinity<double>(double x) {
+  return isinfl(x);
+}
+#endif
+
+#if defined(_GLIBCXX_HAVE_ISINFF) && _GLIBCXX_HAVE_ISINFF
+template <>
+inline bool isInfinity<float>(float x) {
+  return isinff(x);
+}
+#endif
 
 #if defined(__GNUC__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
