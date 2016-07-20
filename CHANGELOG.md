@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.6.4
+------
 
 * Fixed error in float serialization (issue #324)
 
