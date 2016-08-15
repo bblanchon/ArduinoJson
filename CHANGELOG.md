@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* `as<char*>()` now returns `true` when input is `null` (issue #330)
+
 v5.6.4
 ------
 

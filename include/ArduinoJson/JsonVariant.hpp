@@ -300,8 +300,13 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
     return T();
   }
 
+  // DEPRECATED: use as<char*>() instead
   const char *asString() const;
+
+  // DEPRECATED: use as<JsonArray>() instead
   JsonArray &asArray() const;
+
+  // DEPRECATED: use as<JsonObject>() instead
   JsonObject &asObject() const;
 
  private:
@@ -324,7 +329,9 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
     return _type == Internals::JSON_OBJECT;
   }
   bool isString() const {
-    return _type == Internals::JSON_STRING;
+    return _type == Internals::JSON_STRING ||
+           _type == Internals::JSON_UNPARSED && _content.asString &&
+               !strcmp("null", _content.asString);
   }
 
   // The current type of the variant
