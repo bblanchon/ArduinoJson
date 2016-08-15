@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.6.5
+------
 
 * `as<char*>()` now returns `true` when input is `null` (issue #330)
 
