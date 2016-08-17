@@ -330,8 +330,8 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   }
   bool isString() const {
     return _type == Internals::JSON_STRING ||
-           _type == Internals::JSON_UNPARSED && _content.asString &&
-               !strcmp("null", _content.asString);
+          (_type == Internals::JSON_UNPARSED && _content.asString &&
+               !strcmp("null", _content.asString));
   }
 
   // The current type of the variant
