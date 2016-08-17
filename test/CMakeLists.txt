@@ -25,7 +25,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wformat=2
 		-Winit-self
 		-Wmissing-include-dirs
-		-Wno-parentheses
+		-Wparentheses
 		-Wno-sign-conversion
 		-Wno-unused
 		-Wno-variadic-macros

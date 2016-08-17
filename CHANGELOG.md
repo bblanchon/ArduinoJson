@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed `-Wparentheses` warning introduced in v5.6.5 (PR #335 by @nuket)
+
 v5.6.5
 ------
 
