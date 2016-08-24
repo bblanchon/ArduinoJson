@@ -1,5 +1,5 @@
 {
-  "name": "Json",
+  "name": "ArduinoJson",
   "keywords": "json, rest, http, web",
   "description": "An elegant and efficient JSON library for embedded systems",
   "repository": {
