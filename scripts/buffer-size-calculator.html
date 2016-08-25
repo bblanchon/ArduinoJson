@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ArduinoJson - JsonBuffer size calculator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>JsonBuffer size calculator</h1>
+        </div>
+        <div id='error' class="alert alert-danger" role="alert">
+            Please paste your JSON in the "input" box
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Input</h2>
+                <textarea class="form-control" rows=30 id='input'></textarea><br>
+            </div>
+            <div id='results' class="col-md-6" style='display:none'>
+                <h2>Result</h2>
+                <h3>Expression</h3>
+                <p><code id='resultexpr'></code></p>
+                <table class="table">
+                  <thead>
+                    <th>Platform</th>
+                    <th>Size (in bytes)</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AVR 8-bit</td>
+                      <td id='sizeavr8'></td>
+                    </tr>
+                    <tr>
+                      <td>ESP8266</td>
+                      <td id='sizeesp8266'></td>
+                    </tr>
+                    <tr>
+                      <td>x86</td>
+                      <td id='sizex86'></td>
+                    </tr>
+                    <tr>
+                      <td>x64</td>
+                      <td id='sizex64'></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function getExpression(obj) {
+        var elements = [];
+        if (obj instanceof Array) {
+            elements.push("JSON_ARRAY_SIZE(" + obj.length + ")");
+            for (var i = 0; i<obj.length; i++) {
+                elements.push(getExpression(obj[i]))
+            }
+        }
+        if (obj instanceof Object) {
+            elements.push("JSON_OBJECT_SIZE(" + Object.keys(obj).length + ")");
+            for (var key in obj) {
+                elements.push(getExpression(obj[key]))
+            }
+        }
+        return elements.filter(function(x){return x.length > 0}).join(" + ");
+    }
+
+    input.oninput = function(e) {
+        results.style.display = 'none';
+        error.style.visibility = 'hidden';
+
+        try {
+            var obj = JSON.parse(input.value);
+            var expression = getExpression(obj);
+
+            resultexpr.innerText = expression;
+            sizeavr8.innerText = eval(
+                "function JSON_ARRAY_SIZE(n) { return 4 + 8*n }" +
+                "function JSON_OBJECT_SIZE(n) { return 4 + 10*n }" +
+                expression
+            );
+            sizeesp8266.innerText = eval(
+                "function JSON_ARRAY_SIZE(n) { return 8 + 12*n }" +
+                "function JSON_OBJECT_SIZE(n) { return 8 + 16*n }" +
+                expression
+            );
+            sizex86.innerText = eval(
+                "function JSON_ARRAY_SIZE(n) { return 12 + 24*n }" +
+                "function JSON_OBJECT_SIZE(n) { return 12 + 32*n }" +
+                expression
+            );
+            sizex64.innerText = eval(
+                "function JSON_ARRAY_SIZE(n) { return 24 + 24*n }" +
+                "function JSON_OBJECT_SIZE(n) { return 24 + 32*n }" +
+                expression
+            );
+            results.style.display = 'block';
+        }
+        catch (ex) {
+            error.innerText = "ERROR: " + ex.message;
+            error.style.visibility = 'visible';
+        }
+    }
+</script>
+</html>
