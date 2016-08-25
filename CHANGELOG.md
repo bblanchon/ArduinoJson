@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed `-Wparentheses` warning introduced in v5.6.5 (PR #335 by @nuket)
+* Added `.mbedignore` for ARM mbdeb (PR #334 by @nuket)
 
 v5.6.5
 ------
