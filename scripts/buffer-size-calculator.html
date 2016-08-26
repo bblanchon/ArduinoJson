@@ -59,7 +59,7 @@
                 elements.push(getExpression(obj[i]))
             }
         }
-        if (obj instanceof Object) {
+        else if (obj instanceof Object) {
             elements.push("JSON_OBJECT_SIZE(" + Object.keys(obj).length + ")");
             for (var key in obj) {
                 elements.push(getExpression(obj[key]))
