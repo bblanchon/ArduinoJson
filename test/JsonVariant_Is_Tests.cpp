@@ -34,26 +34,33 @@ void assertIs(JsonArray& value) {
   ASSERT_TRUE(variant.is<TTo>());
 }
 
-TEST(SUITE, ArrayIsArry) {
-  assertIs<JsonArray&>(JsonArray::invalid());
+TEST(SUITE, ArrayIsArray) {
+  DynamicJsonBuffer jsonBuffer;
+  assertIs<JsonArray&>(jsonBuffer.createArray());
 }
-TEST(SUITE, ArrayIsBool) {
-  assertIsNot<bool>(JsonArray::invalid());
+TEST(SUITE, ArrayIsNotBool) {
+  DynamicJsonBuffer jsonBuffer;
+  assertIsNot<bool>(jsonBuffer.createArray());
 }
-TEST(SUITE, ArrayIsDouble) {
-  assertIsNot<double>(JsonArray::invalid());
+TEST(SUITE, ArrayIsNotDouble) {
+  DynamicJsonBuffer jsonBuffer;
+  assertIsNot<double>(jsonBuffer.createArray());
 }
-TEST(SUITE, ArrayIsFloat) {
-  assertIsNot<float>(JsonArray::invalid());
+TEST(SUITE, ArrayIsNotFloat) {
+  DynamicJsonBuffer jsonBuffer;
+  assertIsNot<float>(jsonBuffer.createArray());
 }
-TEST(SUITE, ArrayIsInt) {
-  assertIsNot<int>(JsonArray::invalid());
+TEST(SUITE, ArrayIsNotInt) {
+  DynamicJsonBuffer jsonBuffer;
+  assertIsNot<int>(jsonBuffer.createArray());
 }
-TEST(SUITE, ArrayIsLong) {
-  assertIsNot<long>(JsonArray::invalid());
+TEST(SUITE, ArrayIsNotLong) {
+  DynamicJsonBuffer jsonBuffer;
+  assertIsNot<long>(jsonBuffer.createArray());
 }
-TEST(SUITE, ArrayIsString) {
-  assertIsNot<const char*>(JsonArray::invalid());
+TEST(SUITE, ArrayIsNotString) {
+  DynamicJsonBuffer jsonBuffer;
+  assertIsNot<const char*>(jsonBuffer.createArray());
 }
 
 TEST(SUITE, BoolIsArray) {

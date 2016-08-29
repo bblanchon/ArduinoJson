@@ -107,16 +107,10 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   }
 
   // Create a JsonVariant containing a reference to an array.
-  JsonVariant(JsonArray &array) {
-    _type = Internals::JSON_ARRAY;
-    _content.asArray = &array;
-  }
+  JsonVariant(JsonArray &array);
 
   // Create a JsonVariant containing a reference to an object.
-  JsonVariant(JsonObject &object) {
-    _type = Internals::JSON_OBJECT;
-    _content.asObject = &object;
-  }
+  JsonVariant(JsonObject &object);
 
   // Get the variant as the specified type.
   //

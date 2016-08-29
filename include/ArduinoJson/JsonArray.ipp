@@ -8,10 +8,28 @@
 #pragma once
 
 #include "JsonArray.hpp"
-#include "JsonObject.hpp"
 #include "JsonArraySubscript.hpp"
+#include "JsonObject.hpp"
 
 namespace ArduinoJson {
+
+inline JsonVariant::JsonVariant(JsonArray &array) {
+  if (array.success()) {
+    _type = Internals::JSON_ARRAY;
+    _content.asArray = &array;
+  } else {
+    _type = Internals::JSON_UNDEFINED;
+  }
+}
+
+inline JsonVariant::JsonVariant(JsonObject &object) {
+  if (object.success()) {
+    _type = Internals::JSON_OBJECT;
+    _content.asObject = &object;
+  } else {
+    _type = Internals::JSON_UNDEFINED;
+  }
+}
 
 template <>
 inline bool JsonArray::setNodeValue(node_type *node, String &value) {
