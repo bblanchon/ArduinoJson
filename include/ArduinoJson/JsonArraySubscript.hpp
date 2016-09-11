@@ -60,10 +60,6 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return _array.is<T>(_index);
   }
 
-  void writeTo(Internals::JsonWriter& writer) const {
-    _array.get(_index).writeTo(writer);
-  }
-
   template <typename TValue>
   void set(TValue value) {
     _array.set(_index, value);

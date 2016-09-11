@@ -144,25 +144,6 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
     return instance;
   }
 
-  // Serialize the object to the specified JsonWriter
-  void writeTo(Internals::JsonWriter& writer) const {
-    writer.beginObject();
-
-    const node_type* node = _firstNode;
-    while (node) {
-      writer.writeString(node->content.key);
-      writer.writeColon();
-      node->content.value.writeTo(writer);
-
-      node = node->next;
-      if (!node) break;
-
-      writer.writeComma();
-    }
-
-    writer.endObject();
-  }
-
  private:
   // Returns the list node that matches the specified key.
   node_type* getNodeAt(const char* key) const {

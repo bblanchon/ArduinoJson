@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed `array[idx].as<JsonVariant>()` and `object[key].as<JsonVariant>()`
+
 v5.6.6
 ------
 

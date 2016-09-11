@@ -133,44 +133,6 @@ inline bool JsonVariant::isFloat() const {
   return *end == '\0' && errno == 0 && !is<long>();
 }
 
-inline void JsonVariant::writeTo(Internals::JsonWriter &writer) const {
-  using namespace Internals;
-  switch (_type) {
-    case JSON_UNDEFINED:
-      return;
-
-    case JSON_ARRAY:
-      _content.asArray->writeTo(writer);
-      return;
-
-    case JSON_OBJECT:
-      _content.asObject->writeTo(writer);
-      return;
-
-    case JSON_STRING:
-      writer.writeString(_content.asString);
-      return;
-
-    case JSON_UNPARSED:
-      writer.writeRaw(_content.asString);
-      return;
-
-    case JSON_NEGATIVE_INTEGER:
-      writer.writeRaw('-');
-    case JSON_POSITIVE_INTEGER:
-      writer.writeInteger(_content.asInteger);
-      return;
-
-    case JSON_BOOLEAN:
-      writer.writeBoolean(_content.asInteger != 0);
-      return;
-
-    default:
-      uint8_t decimals = static_cast<uint8_t>(_type - JSON_FLOAT_0_DECIMALS);
-      writer.writeFloat(_content.asFloat, decimals);
-  }
-}
-
 #if ARDUINOJSON_ENABLE_STD_STREAM
 inline std::ostream &operator<<(std::ostream &os, const JsonVariant &source) {
   return source.printTo(os);

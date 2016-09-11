@@ -77,10 +77,6 @@ class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript<TKey> > {
     return _object.get(_key);
   }
 
-  void writeTo(Internals::JsonWriter& writer) const {
-    _object.get(_key).writeTo(writer);
-  }
-
  private:
   JsonObject& _object;
   TKey _key;

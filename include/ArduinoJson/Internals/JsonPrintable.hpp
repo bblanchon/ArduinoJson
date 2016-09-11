@@ -9,11 +9,12 @@
 
 #include "../Configuration.hpp"
 #include "DummyPrint.hpp"
+#include "DynamicStringBuilder.hpp"
 #include "IndentedPrint.hpp"
+#include "JsonSerializer.hpp"
 #include "JsonWriter.hpp"
 #include "Prettyfier.hpp"
 #include "StaticStringBuilder.hpp"
-#include "DynamicStringBuilder.hpp"
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 #include "StreamPrintAdapter.hpp"
@@ -31,7 +32,7 @@ class JsonPrintable {
  public:
   size_t printTo(Print &print) const {
     JsonWriter writer(print);
-    downcast().writeTo(writer);
+    JsonSerializer::serialize(downcast(), writer);
     return writer.bytesWritten();
   }
 
@@ -84,7 +85,9 @@ class JsonPrintable {
   }
 
  private:
-  const T &downcast() const { return *static_cast<const T *>(this); }
+  const T &downcast() const {
+    return *static_cast<const T *>(this);
+  }
 };
 
 #if ARDUINOJSON_ENABLE_STD_STREAM

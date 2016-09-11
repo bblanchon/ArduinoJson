@@ -82,9 +82,6 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   FORCE_INLINE const JsonObjectSubscript<const String &> operator[](
       const String &key) const;
 
-  // Serialize the variant to a JsonWriter
-  void writeTo(Internals::JsonWriter &writer) const;
-
  private:
   const TImpl *impl() const {
     return static_cast<const TImpl *>(this);
