@@ -107,3 +107,21 @@ TEST_(StoreObjectSubscript) {
 
   EXPECT_EQ(42, _object["a"]);
 }
+
+TEST_(ShouldReturnTrue_WhenAllocationSucceeds) {
+  StaticJsonBuffer<JSON_OBJECT_SIZE(1) + 15> jsonBuffer;
+  JsonObject& obj = jsonBuffer.createObject();
+
+  bool result = obj.set(String("hello"), String("world"));
+
+  ASSERT_TRUE(result);
+}
+
+TEST_(ShouldReturnFalse_WhenAllocationFails) {
+  StaticJsonBuffer<JSON_OBJECT_SIZE(1) + 10> jsonBuffer;
+  JsonObject& obj = jsonBuffer.createObject();
+
+  bool result = obj.set(String("hello"), String("world"));
+
+  ASSERT_FALSE(result);
+}
