@@ -66,28 +66,46 @@ class Prettyfier : public Print {
   }
 
   size_t writeBlockClose(uint8_t c) {
-    return unindentIfNeeded() + _sink.write(c);
+    size_t n = 0;
+    n += unindentIfNeeded();
+    n += _sink.write(c);
+    return n;
   }
 
   size_t writeBlockOpen(uint8_t c) {
-    return indentIfNeeded() + _sink.write(c);
+    size_t n = 0;
+    n += indentIfNeeded();
+    n += _sink.write(c);
+    return n;
   }
 
   size_t writeColon() {
-    return _sink.write(':') + _sink.write(' ');
+    size_t n = 0;
+    n += _sink.write(':');
+    n += _sink.write(' ');
+    return n;
   }
 
   size_t writeComma() {
-    return _sink.write(',') + _sink.println();
+    size_t n = 0;
+    n += _sink.write(',');
+    n += _sink.println();
+    return n;
   }
 
   size_t writeQuoteOpen() {
     _inString = true;
-    return indentIfNeeded() + _sink.write('"');
+    size_t n = 0;
+    n += indentIfNeeded();
+    n += _sink.write('"');
+    return n;
   }
 
   size_t writeNormalChar(uint8_t c) {
-    return indentIfNeeded() + _sink.write(c);
+    size_t n = 0;
+    n += indentIfNeeded();
+    n += _sink.write(c);
+    return n;
   }
 
   size_t indentIfNeeded() {

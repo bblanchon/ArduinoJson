@@ -28,7 +28,12 @@ class Print {
     return n;
   }
 
-  size_t println() { return write('\r') + write('\n'); }
+  size_t println() {
+    size_t n = 0;
+    n += write('\r');
+    n += write('\n');
+    return n;
+  }
 };
 }
 
