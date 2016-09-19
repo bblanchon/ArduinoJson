@@ -50,7 +50,7 @@ class JsonParser {
 
   static inline bool isLetterOrNumber(char c) {
     return isInRange(c, '0', '9') || isInRange(c, 'a', 'z') ||
-           isInRange(c, 'A', 'Z') || c == '-' || c == '.';
+           isInRange(c, 'A', 'Z') || c == '+' || c == '-' || c == '.';
   }
 
   static inline bool isQuote(char c) {

@@ -24,13 +24,29 @@ class JsonParser_Variant_Test : public testing::Test {
     EXPECT_STREQ(expected, _result.as<char*>());
   }
 
+  void resultMustEqual(double expected) {
+    EXPECT_DOUBLE_EQ(expected, _result.as<double>());
+  }
+
   template <typename T>
   void resultTypeMustBe() {
     EXPECT_TRUE(_result.is<T>());
   }
 
-  void resultMustBeInvalid() { EXPECT_FALSE(_result.success()); }
-  void resultMustBeValid() { EXPECT_TRUE(_result.success()); }
+  void resultMustBeInvalid() {
+    EXPECT_FALSE(_result.success());
+  }
+  void resultMustBeValid() {
+    EXPECT_TRUE(_result.success());
+  }
+
+  template <typename T>
+  void verify(const char* input, T expected) {
+    whenInputIs(input);
+    resultMustBeValid();
+    resultTypeMustBe<T>();
+    resultMustEqual(expected);
+  }
 
  private:
   DynamicJsonBuffer _jsonBuffer;
@@ -51,38 +67,29 @@ TEST_F(JsonParser_Variant_Test, EmptyArray) {
 }
 
 TEST_F(JsonParser_Variant_Test, Integer) {
-  whenInputIs("42");
-  resultMustBeValid();
-  resultTypeMustBe<int>();
-  resultMustEqual(42);
+  verify("42", 42);
+  verify("-42", -42);
 }
 
 TEST_F(JsonParser_Variant_Test, Double) {
-  whenInputIs("3.14");
-  resultMustBeValid();
-  resultTypeMustBe<double>();
-  resultMustEqual(3.14);
+  verify("3.14", 3.14);
+  verify("3.14", 3.14);
+  verify("1E+10", 1E+10);
+  verify("-1E+10", -1E+10);
+  verify("1.234E+10", 1.234E+10);
+  verify("1.79769e+308", 1.79769e+308);
+  verify("-1.79769e+308", -1.79769e+308);
+  verify("1.7976931348623157e+308", 1.7976931348623157e+308);
+  verify("0.017976931348623157e+310", 0.017976931348623157e+310);
 }
 
 TEST_F(JsonParser_Variant_Test, String) {
-  whenInputIs("\"hello world\"");
-  resultMustBeValid();
-  resultTypeMustBe<char*>();
-  resultMustEqual("hello world");
+  verify("\"hello world\"", "hello world");
 }
 
 TEST_F(JsonParser_Variant_Test, True) {
-  whenInputIs("true");
-  resultMustBeValid();
-  resultTypeMustBe<bool>();
-  resultMustEqual(true);
-}
-
-TEST_F(JsonParser_Variant_Test, False) {
-  whenInputIs("false");
-  resultMustBeValid();
-  resultTypeMustBe<bool>();
-  resultMustEqual(false);
+  verify("true", true);
+  verify("false", false);
 }
 
 TEST_F(JsonParser_Variant_Test, Invalid) {

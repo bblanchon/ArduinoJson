@@ -26,9 +26,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Winit-self
 		-Wmissing-include-dirs
 		-Wparentheses
-		-Wno-sign-conversion
-		-Wno-unused
-		-Wno-variadic-macros
 		-Wnon-virtual-dtor
 		-Wold-style-cast
 		-Woverloaded-virtual
@@ -63,7 +60,10 @@ endif()
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-	add_compile_options(-W4)
+	add_compile_options(
+		/W4 # Set warning level
+		/WX # Treats all compiler warnings as errors.
+	)
 endif()
 
 add_executable(ArduinoJsonTests ${TESTS_FILES})
