@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.6.7
+------
 
 * Fixed `array[idx].as<JsonVariant>()` and `object[key].as<JsonVariant>()`
 * Fixed return value of `JsonObject::set()` (issue #350)
