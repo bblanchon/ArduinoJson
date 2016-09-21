@@ -5,12 +5,14 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class JsonParser_Array_Tests : public testing::Test {
  protected:
-  void whenInputIs(const char *json) { strcpy(_jsonString, json); }
+  void whenInputIs(const char *json) {
+    strcpy(_jsonString, json);
+  }
 
   void whenInputIs(const char *json, size_t len) {
     memcpy(_jsonString, json, len);
@@ -27,7 +29,9 @@ class JsonParser_Array_Tests : public testing::Test {
     EXPECT_EQ(0, _array->size());
   }
 
-  void sizeMustBe(int expected) { ASSERT_EQ(expected, _array->size()); }
+  void sizeMustBe(int expected) {
+    ASSERT_EQ(expected, _array->size());
+  }
 
   template <typename T>
   void firstElementMustBe(T expected) {
@@ -345,4 +349,9 @@ TEST_F(JsonParser_Array_Tests, InvalidComment) {
 TEST_F(JsonParser_Array_Tests, UnfinishedCComment) {
   whenInputIs("[/*COMMENT]");
   parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, DeeplyNested) {
+  whenInputIs("[[[[[[[[[[[[[[[[[[[\"Not too deep\"]]]]]]]]]]]]]]]]]]]");
+  parseMustSucceed();
 }

@@ -117,7 +117,9 @@ class JsonBuffer {
   char *strdup(const char *src) {
     return src ? strdup(src, strlen(src)) : NULL;
   }
-  char *strdup(const String &src) { return strdup(src.c_str(), src.length()); }
+  char *strdup(const String &src) {
+    return strdup(src.c_str(), src.length());
+  }
 
   // Allocates n bytes in the JsonBuffer.
   // Return a pointer to the allocated memory or NULL if allocation fails.
@@ -139,9 +141,8 @@ class JsonBuffer {
 
   // Default value of nesting limit of parseArray() and parseObject().
   //
-  // The nesting limit is a contain on the level of nesting allowed in the
-  // JSON
-  // string.
+  // The nesting limit is a constrain on the level of nesting allowed in the
+  // JSON string.
   // If set to 0, only a flat array or objects can be parsed.
   // If set to 1, the object can contain nested arrays or objects but only 1
   // level deep.
@@ -150,7 +151,7 @@ class JsonBuffer {
   // The purpose of this feature is to prevent stack overflow that could
   // lead to
   // a security risk.
-  static const uint8_t DEFAULT_LIMIT = 10;
+  static const uint8_t DEFAULT_LIMIT = ARDUINOJSON_DEFAULT_NESTING_LIMIT;
 };
 }
 

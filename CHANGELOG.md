@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Increased default nesting limit to 50 when compiled for a computer (issue #349)
+
 v5.6.7
 ------
 

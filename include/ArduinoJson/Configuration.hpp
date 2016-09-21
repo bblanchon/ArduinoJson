@@ -42,6 +42,11 @@
 #endif
 #endif
 
+// low value to prevent stack overflow
+#ifndef ARDUINOJSON_DEFAULT_NESTING_LIMIT
+#define ARDUINOJSON_DEFAULT_NESTING_LIMIT 10
+#endif
+
 #else  // assume this is a computer
 
 // on a computer we have plenty of memory so we can use doubles
@@ -80,6 +85,11 @@
 #ifndef ARDUINOJSON_ENABLE_ALIGNMENT
 // even if not required, most cpu's are faster with aligned pointers
 #define ARDUINOJSON_ENABLE_ALIGNMENT 1
+#endif
+
+// on a computer, we should have a lot of space on the stack
+#ifndef ARDUINOJSON_DEFAULT_NESTING_LIMIT
+#define ARDUINOJSON_DEFAULT_NESTING_LIMIT 50
 #endif
 
 #endif
