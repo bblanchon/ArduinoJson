@@ -51,21 +51,55 @@
     </div>
 </body>
 <script type="text/javascript">
-    function getExpression(obj) {
-        var elements = [];
-        if (obj instanceof Array) {
-            elements.push("JSON_ARRAY_SIZE(" + obj.length + ")");
-            for (var i = 0; i<obj.length; i++) {
-                elements.push(getExpression(obj[i]))
+    function Recipe() {
+        var arrays = [];
+        var objects = [];
+
+        this.addJsonArray = function(size) {
+            if (arrays[size])
+                arrays[size]++;
+            else
+                arrays[size] = 1;
+        }
+
+        this.addJsonObject = function(size) {
+            if (objects[size])
+                objects[size]++;
+            else
+                objects[size] = 1;
+        }
+
+        this.getExpression = function() {
+            var elements = [];
+            for (var size in arrays) {
+                var count = arrays[size];
+                if (count > 1)
+                    elements.push(count + "*JSON_ARRAY_SIZE("+size+")");
+                else
+                    elements.push("JSON_ARRAY_SIZE("+size+")");
             }
+            for (var size in objects) {
+                var count = objects[size];
+                if (count > 1)
+                    elements.push(count + "*JSON_OBJECT_SIZE("+size+")");
+                else
+                    elements.push("JSON_OBJECT_SIZE("+size+")");
+            }
+            return elements.join(" + ");
+        }
+    }
+
+    function scanJson(recipe, obj) {
+        if (obj instanceof Array) {
+            recipe.addJsonArray(obj.length);
+            for (var i = 0; i<obj.length; i++)
+                scanJson(recipe, obj[i]);
         }
         else if (obj instanceof Object) {
-            elements.push("JSON_OBJECT_SIZE(" + Object.keys(obj).length + ")");
-            for (var key in obj) {
-                elements.push(getExpression(obj[key]))
-            }
+            recipe.addJsonObject(Object.keys(obj).length);
+            for (var key in obj) 
+                scanJson(recipe, obj[key]);
         }
-        return elements.filter(function(x){return x.length > 0}).join(" + ");
     }
 
     input.oninput = function(e) {
@@ -73,8 +107,9 @@
         error.style.visibility = 'hidden';
 
         try {
-            var obj = JSON.parse(input.value);
-            var expression = getExpression(obj);
+            var recipe = new Recipe();
+            scanJson(recipe, JSON.parse(input.value));
+            var expression = recipe.getExpression();
 
             resultexpr.innerText = expression;
             sizeavr8.innerText = eval(
