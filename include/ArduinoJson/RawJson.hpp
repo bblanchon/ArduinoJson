@@ -13,7 +13,9 @@ namespace ArduinoJson {
 class RawJson {
  public:
   explicit RawJson(const char* str) : _str(str) {}
-  operator const char*() const { return _str; }
+  operator const char*() const {
+    return _str;
+  }
 
  private:
   const char* _str;

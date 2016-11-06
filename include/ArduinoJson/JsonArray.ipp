@@ -13,50 +13,31 @@
 
 namespace ArduinoJson {
 
-inline JsonVariant::JsonVariant(JsonArray &array) {
+inline JsonVariant::JsonVariant(const JsonArray &array) {
   if (array.success()) {
     _type = Internals::JSON_ARRAY;
-    _content.asArray = &array;
+    _content.asArray = const_cast<JsonArray *>(&array);
   } else {
     _type = Internals::JSON_UNDEFINED;
   }
 }
 
-inline JsonVariant::JsonVariant(JsonObject &object) {
+inline JsonVariant::JsonVariant(const JsonObject &object) {
   if (object.success()) {
     _type = Internals::JSON_OBJECT;
-    _content.asObject = &object;
+    _content.asObject = const_cast<JsonObject *>(&object);
   } else {
     _type = Internals::JSON_UNDEFINED;
   }
 }
 
+namespace Internals {
 template <>
-inline bool JsonArray::setNodeValue(node_type *node, String &value) {
-  const char *copy = _buffer->strdup(value);
-  if (!copy) return false;
-  node->content = copy;
-  return true;
-}
-
-template <>
-inline JsonArray &JsonVariant::defaultValue<JsonArray>() {
-  return JsonArray::invalid();
-}
-
-template <>
-inline JsonArray &JsonVariant::defaultValue<JsonArray &>() {
-  return JsonArray::invalid();
-}
-
-template <>
-inline const JsonArray &JsonVariant::defaultValue<const JsonArray>() {
-  return JsonArray::invalid();
-}
-
-template <>
-inline const JsonArray &JsonVariant::defaultValue<const JsonArray &>() {
-  return JsonArray::invalid();
+struct JsonVariantDefault<JsonArray> {
+  static JsonArray &get() {
+    return JsonArray::invalid();
+  }
+};
 }
 
 inline JsonArray &JsonVariant::asArray() const {
@@ -71,10 +52,11 @@ inline JsonArray &JsonArray::createNestedArray() {
   return array;
 }
 
-inline JsonArray &JsonObject::createNestedArray(JsonObjectKey key) {
+template <typename TString>
+inline JsonArray &JsonObject::createNestedArray(const TString &key) {
   if (!_buffer) return JsonArray::invalid();
   JsonArray &array = _buffer->createArray();
-  setNodeAt<const JsonVariant &>(key, array);
+  set(key, array);
   return array;
 }
 }

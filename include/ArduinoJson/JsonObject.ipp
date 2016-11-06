@@ -13,38 +13,13 @@
 
 namespace ArduinoJson {
 
+namespace Internals {
 template <>
-inline bool JsonObject::setNodeValue(node_type *node, String &value) {
-  const char *dup = _buffer->strdup(value);
-  node->content.value = dup;
-  return dup != NULL;
-}
-
-template <>
-inline bool JsonObject::setNodeValue(node_type *node, const String &value) {
-  const char *dup = _buffer->strdup(value);
-  node->content.value = dup;
-  return dup != NULL;
-}
-
-template <>
-inline const JsonObject &JsonVariant::defaultValue<const JsonObject &>() {
-  return JsonObject::invalid();
-}
-
-template <>
-inline const JsonObject &JsonVariant::defaultValue<const JsonObject>() {
-  return JsonObject::invalid();
-}
-
-template <>
-inline JsonObject &JsonVariant::defaultValue<JsonObject &>() {
-  return JsonObject::invalid();
-}
-
-template <>
-inline JsonObject &JsonVariant::defaultValue<JsonObject>() {
-  return JsonObject::invalid();
+struct JsonVariantDefault<JsonObject> {
+  static JsonObject &get() {
+    return JsonObject::invalid();
+  }
+};
 }
 
 inline JsonObject &JsonVariant::asObject() const {
@@ -52,11 +27,12 @@ inline JsonObject &JsonVariant::asObject() const {
   return JsonObject::invalid();
 }
 
-inline JsonObject &JsonObject::createNestedObject(JsonObjectKey key) {
+template <typename TString>
+inline JsonObject &JsonObject::createNestedObject(const TString &key) {
   if (!_buffer) return JsonObject::invalid();
-  JsonObject &array = _buffer->createObject();
-  setNodeAt<const JsonVariant &>(key, array);
-  return array;
+  JsonObject &object = _buffer->createObject();
+  set(key, object);
+  return object;
 }
 
 inline JsonObject &JsonArray::createNestedObject() {

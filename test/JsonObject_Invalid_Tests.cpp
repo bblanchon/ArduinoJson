@@ -5,11 +5,11 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 TEST(JsonObject_Invalid_Tests, SubscriptFails) {
-  ASSERT_FALSE(JsonObject::invalid()[0].success());
+  ASSERT_FALSE(JsonObject::invalid()["key"].success());
 }
 
 TEST(JsonObject_Invalid_Tests, AddFails) {

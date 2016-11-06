@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "../Configuration.hpp"
 #include "IsSame.hpp"
 #include "IsSignedIntegral.hpp"
 #include "IsUnsignedIntegral.hpp"
@@ -20,7 +19,11 @@ template <typename T>
 struct IsIntegral {
   static const bool value = TypeTraits::IsSignedIntegral<T>::value ||
                             TypeTraits::IsUnsignedIntegral<T>::value ||
-                            TypeTraits::IsSame<T, char>::value;
+                            TypeTraits::IsSame<T, char>::value ||
+                            TypeTraits::IsSame<T, bool>::value;
 };
+
+template <typename T>
+struct IsIntegral<const T> : IsIntegral<T> {};
 }
 }

@@ -24,7 +24,7 @@ TEST(JsonVariant_As_Tests, DoubleAsCstr) {
 
 TEST(JsonVariant_As_Tests, DoubleAsString) {
   JsonVariant variant = 4.2;
-  ASSERT_EQ(String("4.20"), variant.as<String>());
+  ASSERT_EQ(std::string("4.20"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, DoubleAsLong) {
@@ -64,7 +64,7 @@ TEST(JsonVariant_As_Tests, FalseAsLong) {
 
 TEST(JsonVariant_As_Tests, FalseAsString) {
   JsonVariant variant = false;
-  ASSERT_EQ(String("false"), variant.as<String>());
+  ASSERT_EQ(std::string("false"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, TrueAsBool) {
@@ -84,7 +84,7 @@ TEST(JsonVariant_As_Tests, TrueAsLong) {
 
 TEST(JsonVariant_As_Tests, TrueAsString) {
   JsonVariant variant = true;
-  ASSERT_EQ(String("true"), variant.as<String>());
+  ASSERT_EQ(std::string("true"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, LongAsBool) {
@@ -109,7 +109,7 @@ TEST(JsonVariant_As_Tests, NegativeLongAsDouble) {
 
 TEST(JsonVariant_As_Tests, LongAsString) {
   JsonVariant variant = 42L;
-  ASSERT_EQ(String("42"), variant.as<String>());
+  ASSERT_EQ(std::string("42"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, LongZeroAsDouble) {
@@ -134,7 +134,7 @@ TEST(JsonVariant_As_Tests, NullAsLong) {
 
 TEST(JsonVariant_As_Tests, NullAsString) {
   JsonVariant variant = null;
-  ASSERT_EQ(String("null"), variant.as<String>());
+  ASSERT_EQ(std::string("null"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, NumberStringAsBool) {
@@ -181,7 +181,7 @@ TEST(JsonVariant_As_Tests, RandomStringAsCharPtr) {
 
 TEST(JsonVariant_As_Tests, RandomStringAsString) {
   JsonVariant variant = "hello";
-  ASSERT_EQ(String("hello"), variant.as<String>());
+  ASSERT_EQ(std::string("hello"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, TrueStringAsBool) {
@@ -201,7 +201,7 @@ TEST(JsonVariant_As_Tests, ObjectAsString) {
   obj["key"] = "value";
 
   JsonVariant variant = obj;
-  ASSERT_EQ(String("{\"key\":\"value\"}"), variant.as<String>());
+  ASSERT_EQ(std::string("{\"key\":\"value\"}"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, ArrayAsString) {
@@ -212,7 +212,7 @@ TEST(JsonVariant_As_Tests, ArrayAsString) {
   arr.add(2);
 
   JsonVariant variant = arr;
-  ASSERT_EQ(String("[4,2]"), variant.as<String>());
+  ASSERT_EQ(std::string("[4,2]"), variant.as<std::string>());
 }
 
 TEST(JsonVariant_As_Tests, ArrayAsJsonArray) {

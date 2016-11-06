@@ -8,17 +8,19 @@
 #pragma once
 
 namespace ArduinoJson {
-namespace TypeTraits {
+namespace Internals {
 
-// A meta-function that returns true if T is a reference
 template <typename T>
-struct IsReference {
-  static const bool value = false;
+struct JsonVariantDefault {
+  static T get() {
+    return T();
+  }
 };
 
 template <typename T>
-struct IsReference<T&> {
-  static const bool value = true;
-};
+struct JsonVariantDefault<const T> : JsonVariantDefault<T> {};
+
+template <typename T>
+struct JsonVariantDefault<T&> : JsonVariantDefault<T> {};
 }
 }

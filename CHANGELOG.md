@@ -4,7 +4,36 @@ ArduinoJson: change log
 HEAD
 ----
 
+* Templatized all functions using `String` or `std::string`
+* Removed `ArduinoJson::String`
+* Removed `JsonVariant::defaultValue<T>()`
+* Removed non-template `JsonObject::get()` and `JsonArray.get()`
+* Fixed support for `StringSumHelper` (issue #184)
+* Replaced `ARDUINOJSON_USE_ARDUINO_STRING` by `ARDUINOJSON_ENABLE_STD_STRING` and `ARDUINOJSON_ENABLE_ARDUINO_STRING` (issue #378)
+* Added example `StringExample.ino` to show where `String` can be used
 * Increased default nesting limit to 50 when compiled for a computer (issue #349)
+
+**BREAKING CHANGES**:
+
+The non-template functions `JsonObject::get()` and `JsonArray.get()` have been removed. This means that you need to explicitely tell the type you expect in return.
+
+Old code:
+
+```c++
+#define ARDUINOJSON_USE_ARDUINO_STRING 0
+JsonVariant value1 = myObject.get("myKey");
+JsonVariant value2 = myArray.get(0);
+```
+
+New code:
+
+```c++
+#define ARDUINOJSON_ENABLE_ARDUINO_STRING 0
+#define ARDUINOJSON_ENABLE_STD_STRING 1
+JsonVariant value1 = myObject.get<JsonVariant>("myKey");
+JsonVariant value2 = myArray.get<JsonVariant>(0);
+```
+
 
 v5.6.7
 ------

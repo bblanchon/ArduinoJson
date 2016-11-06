@@ -21,33 +21,19 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   FORCE_INLINE JsonArraySubscript(JsonArray& array, size_t index)
       : _array(array), _index(index) {}
 
-  JsonArraySubscript& operator=(const JsonArraySubscript& src) {
-    _array.set<const JsonVariant&>(_index, src);
+  FORCE_INLINE JsonArraySubscript& operator=(const JsonArraySubscript& src) {
+    _array.set(_index, src);
     return *this;
   }
 
   template <typename T>
-  typename TypeTraits::EnableIf<JsonArray::CanSet<T&>::value,
-                                JsonArraySubscript>::type&
-  operator=(const T& src) {
-    _array.set<T&>(_index, const_cast<T&>(src));
-    return *this;
-  }
-
-  template <typename T>
-  typename TypeTraits::EnableIf<JsonArray::CanSet<T>::value,
-                                JsonArraySubscript>::type&
-  operator=(T src) {
-    _array.set<T>(_index, src);
+  FORCE_INLINE JsonArraySubscript& operator=(const T& src) {
+    _array.set(_index, src);
     return *this;
   }
 
   FORCE_INLINE bool success() const {
     return _index < _array.size();
-  }
-
-  FORCE_INLINE operator JsonVariant() const {
-    return _array.get(_index);
   }
 
   template <typename T>
@@ -61,7 +47,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   }
 
   template <typename TValue>
-  void set(TValue value) {
+  FORCE_INLINE void set(const TValue& value) {
     _array.set(_index, value);
   }
 

@@ -8,7 +8,6 @@
 #pragma once
 
 #include "Internals/JsonVariantAs.hpp"
-#include "JsonObjectKey.hpp"
 #include "Polyfills/attributes.hpp"
 
 namespace ArduinoJson {
@@ -77,10 +76,9 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // Returns the value associated with the specified key if the variant is
   // an object.
   // Return JsonVariant::invalid() if the variant is not an object.
-  FORCE_INLINE const JsonObjectSubscript<const char *> operator[](
-      const char *key) const;
-  FORCE_INLINE const JsonObjectSubscript<const String &> operator[](
-      const String &key) const;
+  template <typename TString>
+  FORCE_INLINE const JsonObjectSubscript<TString> operator[](
+      const TString &key) const;
 
  private:
   const TImpl *impl() const {

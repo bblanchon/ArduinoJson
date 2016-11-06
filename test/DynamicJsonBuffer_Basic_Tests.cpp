@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class DynamicJsonBuffer_Basic_Tests : public testing::Test {
  protected:
@@ -37,4 +37,17 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, Alignment) {
     size_t addr = reinterpret_cast<size_t>(buffer.alloc(1));
     ASSERT_EQ(0, addr & mask);
   }
+}
+
+TEST_F(DynamicJsonBuffer_Basic_Tests, strdup) {
+  char original[] = "hello";
+  char* copy = buffer.strdup(original);
+  strcpy(original, "world");
+  ASSERT_STREQ("hello", copy);
+}
+
+TEST_F(DynamicJsonBuffer_Basic_Tests, strdup_givenNull) {
+  const char* original = NULL;
+  char* copy = buffer.strdup(original);
+  ASSERT_EQ(NULL, copy);
 }

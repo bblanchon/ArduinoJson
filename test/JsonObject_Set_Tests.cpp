@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class JsonObject_Set_Tests : public ::testing::Test {
  public:
@@ -112,7 +112,7 @@ TEST_(ShouldReturnTrue_WhenAllocationSucceeds) {
   StaticJsonBuffer<JSON_OBJECT_SIZE(1) + 15> jsonBuffer;
   JsonObject& obj = jsonBuffer.createObject();
 
-  bool result = obj.set(String("hello"), String("world"));
+  bool result = obj.set(std::string("hello"), std::string("world"));
 
   ASSERT_TRUE(result);
 }
@@ -121,7 +121,7 @@ TEST_(ShouldReturnFalse_WhenAllocationFails) {
   StaticJsonBuffer<JSON_OBJECT_SIZE(1) + 10> jsonBuffer;
   JsonObject& obj = jsonBuffer.createObject();
 
-  bool result = obj.set(String("hello"), String("world"));
+  bool result = obj.set(std::string("hello"), std::string("world"));
 
   ASSERT_FALSE(result);
 }

@@ -12,7 +12,6 @@
 #include <string.h>
 
 #include "JsonVariant.hpp"
-#include "String.hpp"
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -58,21 +57,18 @@ class JsonBuffer {
   // writable
   // because the parser will insert null-terminators and replace escaped chars.
   //
-  // The second argument set the nesting limit (see comment on DEFAULT_LIMIT)
+  // The second argument set the nesting limit
   //
   // Returns a reference to the new JsonObject or JsonObject::invalid() if the
   // allocation fails.
-  JsonArray &parseArray(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
+  JsonArray &parseArray(
+      char *json, uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT);
 
-  // Same with a const char*.
   // With this overload, the JsonBuffer will make a copy of the string
-  JsonArray &parseArray(const char *json, uint8_t nesting = DEFAULT_LIMIT) {
+  template <typename TString>
+  JsonArray &parseArray(const TString &json,
+                        uint8_t nesting = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
     return parseArray(strdup(json), nesting);
-  }
-
-  // Same as above with a String class
-  JsonArray &parseArray(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
-    return parseArray(json.c_str(), nesting);
   }
 
   // Allocates and populate a JsonObject from a JSON string.
@@ -81,44 +77,36 @@ class JsonBuffer {
   // writable
   // because the parser will insert null-terminators and replace escaped chars.
   //
-  // The second argument set the nesting limit (see comment on DEFAULT_LIMIT)
+  // The second argument set the nesting limit
   //
   // Returns a reference to the new JsonObject or JsonObject::invalid() if the
   // allocation fails.
-  JsonObject &parseObject(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
+  JsonObject &parseObject(
+      char *json, uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT);
 
-  // Same with a const char*.
   // With this overload, the JsonBuffer will make a copy of the string
-  JsonObject &parseObject(const char *json, uint8_t nesting = DEFAULT_LIMIT) {
+  template <typename TString>
+  JsonObject &parseObject(const TString &json,
+                          uint8_t nesting = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
     return parseObject(strdup(json), nesting);
-  }
-
-  // Same as above with a String class
-  JsonObject &parseObject(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
-    return parseObject(json.c_str(), nesting);
   }
 
   // Generalized version of parseArray() and parseObject(), also works for
   // integral types.
-  JsonVariant parse(char *json, uint8_t nestingLimit = DEFAULT_LIMIT);
+  JsonVariant parse(char *json,
+                    uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT);
 
-  // Same with a const char*.
   // With this overload, the JsonBuffer will make a copy of the string
-  JsonVariant parse(const char *json, uint8_t nesting = DEFAULT_LIMIT) {
+  template <typename TString>
+  JsonVariant parse(const TString &json,
+                    uint8_t nesting = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
     return parse(strdup(json), nesting);
   }
 
-  // Same as above with a String class
-  JsonVariant parse(const String &json, uint8_t nesting = DEFAULT_LIMIT) {
-    return parse(json.c_str(), nesting);
-  }
-
   // Duplicate a string
-  char *strdup(const char *src) {
-    return src ? strdup(src, strlen(src)) : NULL;
-  }
-  char *strdup(const String &src) {
-    return strdup(src.c_str(), src.length());
+  template <typename TString>
+  char *strdup(const TString &src) {
+    return Internals::StringFuncs<TString>::duplicate(src, this);
   }
 
   // Allocates n bytes in the JsonBuffer.
@@ -135,23 +123,6 @@ class JsonBuffer {
     return bytes;
 #endif
   }
-
- private:
-  char *strdup(const char *, size_t);
-
-  // Default value of nesting limit of parseArray() and parseObject().
-  //
-  // The nesting limit is a constrain on the level of nesting allowed in the
-  // JSON string.
-  // If set to 0, only a flat array or objects can be parsed.
-  // If set to 1, the object can contain nested arrays or objects but only 1
-  // level deep.
-  // And bigger values will allow more level of nesting.
-  //
-  // The purpose of this feature is to prevent stack overflow that could
-  // lead to
-  // a security risk.
-  static const uint8_t DEFAULT_LIMIT = ARDUINOJSON_DEFAULT_NESTING_LIMIT;
 };
 }
 

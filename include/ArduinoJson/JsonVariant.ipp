@@ -8,14 +8,14 @@
 #pragma once
 
 #include "Configuration.hpp"
-#include "JsonVariant.hpp"
 #include "Internals/Parse.hpp"
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
+#include "JsonVariant.hpp"
 
-#include <string.h>  // for strcmp
 #include <errno.h>   // for errno
 #include <stdlib.h>  // for strtol, strtod
+#include <string.h>  // for strcmp
 
 namespace ArduinoJson {
 
@@ -83,17 +83,6 @@ inline Internals::JsonFloat JsonVariant::asFloat() const {
     default:
       return _content.asFloat;
   }
-}
-
-inline String JsonVariant::toString() const {
-  using namespace Internals;
-  String s;
-  if ((_type == JSON_STRING || _type == JSON_UNPARSED) &&
-      _content.asString != NULL)
-    s = _content.asString;
-  else
-    printTo(s);
-  return s;
 }
 
 inline bool JsonVariant::isBoolean() const {

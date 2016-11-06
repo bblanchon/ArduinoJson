@@ -36,11 +36,3 @@ inline ArduinoJson::JsonVariant ArduinoJson::JsonBuffer::parse(
   Internals::JsonParser parser(this, json, nestingLimit);
   return parser.parseVariant();
 }
-
-inline char *ArduinoJson::JsonBuffer::strdup(const char *source,
-                                             size_t length) {
-  size_t size = length + 1;
-  char *dest = static_cast<char *>(alloc(size));
-  if (dest != NULL) memcpy(dest, source, size);
-  return dest;
-}

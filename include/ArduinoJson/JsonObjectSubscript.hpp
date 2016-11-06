@@ -9,6 +9,7 @@
 
 #include "Configuration.hpp"
 #include "JsonVariantBase.hpp"
+#include "TypeTraits/ConstRefOrConstPtr.hpp"
 #include "TypeTraits/EnableIf.hpp"
 
 #ifdef _MSC_VER
@@ -18,30 +19,27 @@
 
 namespace ArduinoJson {
 
-template <typename TKey>
-class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript<TKey> > {
+template <typename TString>
+class JsonObjectSubscript
+    : public JsonVariantBase<JsonObjectSubscript<TString> > {
+  // const String&
+  // const std::string&
+  // const char*
+  typedef typename TypeTraits::ConstRefOrConstPtr<TString>::type TStringRef;
+
  public:
-  FORCE_INLINE JsonObjectSubscript(JsonObject& object, TKey key)
+  FORCE_INLINE JsonObjectSubscript(JsonObject& object, TStringRef key)
       : _object(object), _key(key) {}
 
-  JsonObjectSubscript<TKey>& operator=(const JsonObjectSubscript<TKey>& src) {
-    _object.set<const JsonVariant&>(_key, src);
+  FORCE_INLINE JsonObjectSubscript<TString>& operator=(
+      const JsonObjectSubscript<TString>& src) {
+    _object.set(_key, src);
     return *this;
   }
 
   template <typename T>
-  typename TypeTraits::EnableIf<JsonObject::CanSet<T&>::value,
-                                JsonObjectSubscript<TKey> >::type&
-  operator=(const T& src) {
-    _object.set<T&>(_key, const_cast<T&>(src));
-    return *this;
-  }
-
-  template <typename T>
-  typename TypeTraits::EnableIf<JsonObject::CanSet<T>::value,
-                                JsonObjectSubscript<TKey> >::type&
-  operator=(T src) {
-    _object.set<T>(_key, src);
+  FORCE_INLINE JsonObjectSubscript<TString>& operator=(const T& src) {
+    _object.set(_key, src);
     return *this;
   }
 
@@ -49,13 +47,9 @@ class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript<TKey> > {
     return _object.containsKey(_key);
   }
 
-  FORCE_INLINE operator JsonVariant() const {
-    return _object.get(_key);
-  }
-
   template <typename TValue>
   FORCE_INLINE typename Internals::JsonVariantAs<TValue>::type as() const {
-    return _object.get<TValue>(_key);
+    return _object.get<TValue, TStringRef>(_key);
   }
 
   template <typename TValue>
@@ -64,58 +58,39 @@ class JsonObjectSubscript : public JsonVariantBase<JsonObjectSubscript<TKey> > {
   }
 
   template <typename TValue>
-  FORCE_INLINE bool set(TValue value) {
-    return _object.set<TValue>(_key, value);
+  FORCE_INLINE bool set(const TValue& value) {
+    return _object.set(_key, value);
   }
 
   template <typename TValue>
-  FORCE_INLINE bool set(TValue value, uint8_t decimals) {
+  FORCE_INLINE bool set(const TValue& value, uint8_t decimals) {
     return _object.set(_key, value, decimals);
-  }
-
-  FORCE_INLINE JsonVariant get() {
-    return _object.get(_key);
   }
 
  private:
   JsonObject& _object;
-  TKey _key;
+  TStringRef _key;
 };
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream& operator<<(
-    std::ostream& os, const JsonObjectSubscript<const String&>& source) {
-  return source.printTo(os);
-}
-
-inline std::ostream& operator<<(
-    std::ostream& os, const JsonObjectSubscript<const char*>& source) {
+template <typename TString>
+inline std::ostream& operator<<(std::ostream& os,
+                                const JsonObjectSubscript<TString>& source) {
   return source.printTo(os);
 }
 #endif
 
-inline JsonObjectSubscript<const char*> JsonObject::operator[](
-    const char* key) {
-  return JsonObjectSubscript<const char*>(*this, key);
-}
-
-inline JsonObjectSubscript<const String&> JsonObject::operator[](
-    const String& key) {
-  return JsonObjectSubscript<const String&>(*this, key);
+template <typename TString>
+inline JsonObjectSubscript<TString> JsonObject::operator[](const TString& key) {
+  return JsonObjectSubscript<TString>(*this, key);
 }
 
 template <typename TImplem>
-inline const JsonObjectSubscript<const char*> JsonVariantBase<TImplem>::
-operator[](const char* key) const {
+template <class TString>
+inline const JsonObjectSubscript<TString> JsonVariantBase<TImplem>::operator[](
+    const TString& key) const {
   return asObject()[key];
 }
-
-template <typename TImplem>
-inline const JsonObjectSubscript<const String&> JsonVariantBase<TImplem>::
-operator[](const String& key) const {
-  return asObject()[key];
-}
-
 }  // namespace ArduinoJson
 
 #ifdef _MSC_VER
