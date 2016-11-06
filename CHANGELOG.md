@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.7.0
+------
 
 * Templatized all functions using `String` or `std::string`
 * Removed `ArduinoJson::String`
