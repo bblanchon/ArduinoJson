@@ -90,5 +90,26 @@ struct StringFuncs<StringSumHelper> : StdStringFuncs<StringSumHelper> {};
 template <>
 struct StringFuncs<std::string> : StdStringFuncs<std::string> {};
 #endif
+
+#if ARDUINOJSON_ENABLE_PROGMEM
+template <>
+struct StringFuncs<const __FlashStringHelper*> {
+  static bool equals(const __FlashStringHelper* str, const char* expected) {
+    return strcmp_P((PGM_P)str, expected) == 0;
+  }
+
+  template <typename Buffer>
+  static char* duplicate(const __FlashStringHelper* str, Buffer* buffer) {
+    if (!str) return NULL;
+    size_t size = strlen_P((PGM_P)str) + 1;
+    void* dup = buffer->alloc(size);
+    if (dup != NULL) memcpy_P(dup, (PGM_P)str, size);
+    return static_cast<char*>(dup);
+  }
+
+  static const bool has_append = false;
+  static const bool should_duplicate = true;
+};
+#endif
 }
 }

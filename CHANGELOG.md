@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added support for PROGMEM (issue #76)
+
 v5.7.0
 ------
 

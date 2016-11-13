@@ -27,6 +27,15 @@
 #define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
 #endif
 
+// On AVR archiecture, we can use PROGMEM
+#ifndef ARDUINOJSON_ENABLE_PROGMEM
+#ifdef ARDUINO_ARCH_AVR
+#define ARDUINOJSON_ENABLE_PROGMEM 1
+#else
+#define ARDUINOJSON_ENABLE_PROGMEM 0
+#endif
+#endif
+
 // Arduino doesn't have std::string
 #ifndef ARDUINOJSON_ENABLE_STD_STRING
 #define ARDUINOJSON_ENABLE_STD_STRING 0
@@ -85,6 +94,11 @@
 // on a computer, there is no reason to beleive Arduino String is available
 #ifndef ARDUINOJSON_ENABLE_ARDUINO_STRING
 #define ARDUINOJSON_ENABLE_ARDUINO_STRING 0
+#endif
+
+// PROGMEM is only available on AVR architecture
+#ifndef ARDUINOJSON_ENABLE_PROGMEM
+#define ARDUINOJSON_ENABLE_PROGMEM 0
 #endif
 
 // on a computer, we can assume that the STL is there
