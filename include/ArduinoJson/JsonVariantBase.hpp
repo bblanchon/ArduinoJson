@@ -77,8 +77,12 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // an object.
   // Return JsonVariant::invalid() if the variant is not an object.
   template <typename TString>
-  FORCE_INLINE const JsonObjectSubscript<TString> operator[](
-      const TString &key) const;
+  FORCE_INLINE
+      typename TypeTraits::EnableIf<Internals::StringFuncs<TString>::has_equals,
+                                    const JsonObjectSubscript<TString> >::type
+      operator[](const TString &key) const {
+    return asObject()[key];
+  }
 
  private:
   const TImpl *impl() const {

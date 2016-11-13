@@ -84,13 +84,6 @@ template <typename TString>
 inline JsonObjectSubscript<TString> JsonObject::operator[](const TString& key) {
   return JsonObjectSubscript<TString>(*this, key);
 }
-
-template <typename TImplem>
-template <class TString>
-inline const JsonObjectSubscript<TString> JsonVariantBase<TImplem>::operator[](
-    const TString& key) const {
-  return asObject()[key];
-}
 }  // namespace ArduinoJson
 
 #ifdef _MSC_VER

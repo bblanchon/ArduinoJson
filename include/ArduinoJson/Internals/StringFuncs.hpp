@@ -44,6 +44,7 @@ struct CharPtrFuncs {
   }
 
   static const bool has_append = false;
+  static const bool has_equals = true;
   static const bool should_duplicate = false;
 };
 
@@ -55,6 +56,9 @@ struct StringFuncs<char*> : CharPtrFuncs {};
 
 template <size_t N>
 struct StringFuncs<char[N]> : CharPtrFuncs {};
+
+template <size_t N>
+struct StringFuncs<const char[N]> : CharPtrFuncs {};
 
 template <typename TString>
 struct StdStringFuncs {
@@ -76,6 +80,7 @@ struct StdStringFuncs {
   }
 
   static const bool has_append = true;
+  static const bool has_equals = true;
   static const bool should_duplicate = true;
 };
 
@@ -108,6 +113,7 @@ struct StringFuncs<const __FlashStringHelper*> {
   }
 
   static const bool has_append = false;
+  static const bool has_equals = true;
   static const bool should_duplicate = true;
 };
 #endif

@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added support for PROGMEM (issue #76)
+* Fixed compilation error when index is not an `int` (issue #381)
 
 v5.7.0
 ------
