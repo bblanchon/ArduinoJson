@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.7.1
+------
 
 * Added support for PROGMEM (issue #76)
 * Fixed compilation error when index is not an `int` (issue #381)
