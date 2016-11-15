@@ -103,6 +103,9 @@ From GitHub user `zacsketches`:
 [From Twitter user `@hemalchevli`](https://twitter.com/hemalchevli/status/715788439397011456):
 > ArduinoJson library should be used as a benchmark/reference for making libraries. Truly elegant.
 
+[From GitHub user `sticilface`](https://github.com/bblanchon/ArduinoJson/issues/381#issuecomment-260203594):
+> its a great lib:) and i use it in everything!
+
 Donators
 --------
 
@@ -123,6 +126,7 @@ Special thanks to the following persons and companies who made generous donation
 * Kestutis Liaugminas <img alt='Lithuania' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1f1-1f1f9.svg' width='18' height='18'>
 * Darlington Adibe <img alt='Nigeria' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1f3-1f1ec.svg' width='18' height='18'>
 * Yoeri Kroon <img alt='Netherlands' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1f3-1f1f1.svg' width='18' height='18'>
+* Andrew Melvin <img alt='United Kingdom' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1ec-1f1e7.svg' width='18' height='18'>
 
 ---
 
