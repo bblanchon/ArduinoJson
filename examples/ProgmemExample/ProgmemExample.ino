@@ -15,7 +15,7 @@
 // efficient in term of code size, speed and memory usage.
 
 void setup() {
-#if ARDUINO_ARCH_AVR
+#ifdef PROGMEM
   DynamicJsonBuffer jsonBuffer;
 
   // You can use a Flash String as your JSON input.
