@@ -104,10 +104,8 @@ matrix:
       osx_image: xcode7.3
       compiler: clang
       env: SCRIPT=cmake-osx
-    - env: SCRIPT=arduino VERSION=1.5.8 BOARD=arduino:avr:uno
     - env: SCRIPT=arduino VERSION=1.6.7 BOARD=arduino:avr:uno
-    - env: SCRIPT=arduino VERSION=1.6.8 BOARD=arduino:avr:uno
-    - env: SCRIPT=arduino VERSION=1.6.9 BOARD=arduino:avr:uno
+    - env: SCRIPT=arduino VERSION=1.6.12 BOARD=arduino:avr:uno
     - env: SCRIPT=platformio BOARD=uno
     - env: SCRIPT=platformio BOARD=due
     - env: SCRIPT=platformio BOARD=esp01
