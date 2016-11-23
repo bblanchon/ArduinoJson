@@ -1,4 +1,4 @@
-version: 5.7.1.{build}
+version: 5.7.2.{build}
 environment:
   matrix:
   - CMAKE_GENERATOR: Visual Studio 14 2015
