@@ -100,7 +100,7 @@ struct StringFuncs<std::string> : StdStringFuncs<std::string> {};
 template <>
 struct StringFuncs<const __FlashStringHelper*> {
   static bool equals(const __FlashStringHelper* str, const char* expected) {
-    return strcmp_P((PGM_P)str, expected) == 0;
+    return strcmp_P(expected, (PGM_P)str) == 0;
   }
 
   template <typename Buffer>
