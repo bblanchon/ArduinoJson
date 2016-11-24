@@ -33,7 +33,12 @@ void setup() {
 
   // You can get a String from a JsonObject or JsonArray:
   // No duplication is done, at least not in the JsonBuffer.
-  String sensor = root[String("sensor")];
+  String sensor = root["sensor"];
+
+  // Unfortunately, the following doesn't work (issue #118):
+  // sensor = root["sensor"]; // <-  error "ambiguous overload for 'operator='"
+  // As a workaround, you need to replace by:
+  sensor = root["sensor"].as<String>();
 
   // You can set a String to a JsonObject or JsonArray:
   // WARNING: the content of the String will be duplicated in the JsonBuffer.
