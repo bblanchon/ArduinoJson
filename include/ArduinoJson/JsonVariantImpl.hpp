@@ -19,6 +19,34 @@
 
 namespace ArduinoJson {
 
+inline JsonVariant::JsonVariant(const JsonArray &array) {
+  if (array.success()) {
+    _type = Internals::JSON_ARRAY;
+    _content.asArray = const_cast<JsonArray *>(&array);
+  } else {
+    _type = Internals::JSON_UNDEFINED;
+  }
+}
+
+inline JsonVariant::JsonVariant(const JsonObject &object) {
+  if (object.success()) {
+    _type = Internals::JSON_OBJECT;
+    _content.asObject = const_cast<JsonObject *>(&object);
+  } else {
+    _type = Internals::JSON_UNDEFINED;
+  }
+}
+
+inline JsonArray &JsonVariant::asArray() const {
+  if (_type == Internals::JSON_ARRAY) return *_content.asArray;
+  return JsonArray::invalid();
+}
+
+inline JsonObject &JsonVariant::asObject() const {
+  if (_type == Internals::JSON_OBJECT) return *_content.asObject;
+  return JsonObject::invalid();
+}
+
 inline Internals::JsonInteger JsonVariant::asInteger() const {
   using namespace Internals;
   switch (_type) {

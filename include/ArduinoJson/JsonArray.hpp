@@ -227,4 +227,13 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
                                                   value);
   }
 };
+
+namespace Internals {
+template <>
+struct JsonVariantDefault<JsonArray> {
+  static JsonArray &get() {
+    return JsonArray::invalid();
+  }
+};
+}
 }

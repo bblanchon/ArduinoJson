@@ -165,4 +165,13 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
                                                   value);
   }
 };
+
+namespace Internals {
+template <>
+struct JsonVariantDefault<JsonObject> {
+  static JsonObject& get() {
+    return JsonObject::invalid();
+  }
+};
+}
 }

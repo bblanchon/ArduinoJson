@@ -13,20 +13,6 @@
 
 namespace ArduinoJson {
 
-namespace Internals {
-template <>
-struct JsonVariantDefault<JsonObject> {
-  static JsonObject &get() {
-    return JsonObject::invalid();
-  }
-};
-}
-
-inline JsonObject &JsonVariant::asObject() const {
-  if (_type == Internals::JSON_OBJECT) return *_content.asObject;
-  return JsonObject::invalid();
-}
-
 template <typename TString>
 inline JsonObject &JsonObject::createNestedObject(const TString &key) {
   if (!_buffer) return JsonObject::invalid();
@@ -35,10 +21,11 @@ inline JsonObject &JsonObject::createNestedObject(const TString &key) {
   return object;
 }
 
-inline JsonObject &JsonArray::createNestedObject() {
-  if (!_buffer) return JsonObject::invalid();
-  JsonObject &object = _buffer->createObject();
-  add(object);
-  return object;
+template <typename TString>
+inline JsonArray &JsonObject::createNestedArray(const TString &key) {
+  if (!_buffer) return JsonArray::invalid();
+  JsonArray &array = _buffer->createArray();
+  set(key, array);
+  return array;
 }
 }

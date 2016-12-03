@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Renamed `*.ipp` to `*Impl.hpp` because they were ignored by Arduino IDE (issue #396)
+
 v5.7.2
 ------
 
