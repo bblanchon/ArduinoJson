@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.7.3
+------
 
 * Added an `printTo(char[N])` and `prettyPrintTo(char[N])` (issue #292)
 * Added ability to set a nested value like this: `root["A"]["B"] = "C"` (issue #352)
