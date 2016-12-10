@@ -50,6 +50,11 @@ class JsonPrintable {
     return printTo(sb);
   }
 
+  template <size_t N>
+  size_t printTo(char (&buffer)[N]) const {
+    return printTo(buffer, N);
+  }
+
   template <typename TString>
   typename TypeTraits::EnableIf<StringFuncs<TString>::has_append, size_t>::type
   printTo(TString &str) const {
@@ -65,6 +70,11 @@ class JsonPrintable {
   size_t prettyPrintTo(char *buffer, size_t bufferSize) const {
     StaticStringBuilder sb(buffer, bufferSize);
     return prettyPrintTo(sb);
+  }
+
+  template <size_t N>
+  size_t prettyPrintTo(char (&buffer)[N]) const {
+    return prettyPrintTo(buffer, N);
   }
 
   size_t prettyPrintTo(Print &print) const {

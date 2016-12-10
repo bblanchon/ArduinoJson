@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class JsonArray_PrettyPrintTo_Tests : public testing::Test {
  public:
@@ -19,7 +19,7 @@ class JsonArray_PrettyPrintTo_Tests : public testing::Test {
   void outputMustBe(const char* expected) {
     char actual[256];
 
-    size_t actualLen = array.prettyPrintTo(actual, sizeof(actual));
+    size_t actualLen = array.prettyPrintTo(actual);
     size_t measuredLen = array.measurePrettyLength();
 
     EXPECT_STREQ(expected, actual);
@@ -28,7 +28,9 @@ class JsonArray_PrettyPrintTo_Tests : public testing::Test {
   }
 };
 
-TEST_F(JsonArray_PrettyPrintTo_Tests, Empty) { outputMustBe("[]"); }
+TEST_F(JsonArray_PrettyPrintTo_Tests, Empty) {
+  outputMustBe("[]");
+}
 
 TEST_F(JsonArray_PrettyPrintTo_Tests, OneElement) {
   array.add(1);

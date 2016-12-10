@@ -15,7 +15,7 @@ class JsonObject_PrintTo_Tests : public testing::Test {
  protected:
   void outputMustBe(const char *expected) {
     char actual[256];
-    size_t actualLen = _object.printTo(actual, sizeof(actual));
+    size_t actualLen = _object.printTo(actual);
     size_t measuredLen = _object.measureLength();
 
     EXPECT_STREQ(expected, actual);
@@ -27,7 +27,9 @@ class JsonObject_PrintTo_Tests : public testing::Test {
   JsonObject &_object;
 };
 
-TEST_F(JsonObject_PrintTo_Tests, EmptyObject) { outputMustBe("{}"); }
+TEST_F(JsonObject_PrintTo_Tests, EmptyObject) {
+  outputMustBe("{}");
+}
 
 TEST_F(JsonObject_PrintTo_Tests, TwoStrings) {
   _object["key1"] = "value1";
