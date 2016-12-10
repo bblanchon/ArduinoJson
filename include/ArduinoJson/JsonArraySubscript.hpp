@@ -68,6 +68,11 @@ inline JsonArraySubscript JsonArray::operator[](size_t index) {
 }
 
 template <typename TImplem>
+inline JsonArraySubscript JsonVariantBase<TImplem>::operator[](int index) {
+  return asArray()[index];
+}
+
+template <typename TImplem>
 inline const JsonArraySubscript JsonVariantBase<TImplem>::operator[](
     int index) const {
   return asArray()[index];

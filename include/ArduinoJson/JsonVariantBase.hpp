@@ -71,6 +71,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // Returns the element at specified index if the variant is an array.
   // Returns JsonVariant::invalid() if the variant is not an array.
   FORCE_INLINE const JsonArraySubscript operator[](int index) const;
+  FORCE_INLINE JsonArraySubscript operator[](int index);
 
   // Mimics an object.
   // Returns the value associated with the specified key if the variant is
@@ -81,6 +82,13 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
       typename TypeTraits::EnableIf<Internals::StringFuncs<TString>::has_equals,
                                     const JsonObjectSubscript<TString> >::type
       operator[](const TString &key) const {
+    return asObject()[key];
+  }
+  template <typename TString>
+  FORCE_INLINE
+      typename TypeTraits::EnableIf<Internals::StringFuncs<TString>::has_equals,
+                                    JsonObjectSubscript<TString> >::type
+      operator[](const TString &key) {
     return asObject()[key];
   }
 

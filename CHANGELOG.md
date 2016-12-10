@@ -4,6 +4,7 @@ ArduinoJson: change log
 HEAD
 ----
 
+* Added ability to set a nested value like this: `root["A"]["B"] = "C"` (issue #352)
 * Renamed `*.ipp` to `*Impl.hpp` because they were ignored by Arduino IDE (issue #396)
 
 v5.7.2

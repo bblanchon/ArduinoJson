@@ -59,3 +59,25 @@ TEST_F(JsonVariant_Subscript_Tests, String) {
   EXPECT_FALSE(_variant["0"].success());
   EXPECT_FALSE(_variant[0].success());
 }
+
+TEST_F(JsonVariant_Subscript_Tests, ObjectSetValue) {
+  _variant = _jsonBuffer.createObject();
+  _variant["hello"] = "world";
+  EXPECT_EQ(1, _variant.size());
+  EXPECT_STREQ("world", _variant["hello"]);
+}
+
+TEST_F(JsonVariant_Subscript_Tests, ArraySetValue) {
+  _variant = _jsonBuffer.parseArray("[\"hello\"]");
+  _variant[0] = "world";
+  EXPECT_EQ(1, _variant.size());
+  EXPECT_STREQ("world", _variant[0]);
+}
+
+TEST_F(JsonVariant_Subscript_Tests, NestedObjectSetValue) {
+  _variant = _jsonBuffer.parseArray("[{}]");
+  _variant[0]["hello"] = "world";
+  EXPECT_EQ(1, _variant.size());
+  EXPECT_EQ(1, _variant[0].size());
+  EXPECT_STREQ("world", _variant[0]["hello"]);
+}
