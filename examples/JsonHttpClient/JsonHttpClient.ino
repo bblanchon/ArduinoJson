@@ -87,7 +87,7 @@ bool sendRequest(const char* host, const char* resource) {
 
   client.print("GET ");
   client.print(resource);
-  client.println(" HTTP/1.1");
+  client.println(" HTTP/1.0");
   client.print("Host: ");
   client.println(server);
   client.println("Connection: close");
