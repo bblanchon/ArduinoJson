@@ -54,7 +54,7 @@ long time          = root["time"];
 double latitude    = root["data"][0];
 double longitude   = root["data"][1];
 ```
-
+To decode/parse string with multidimentional array/object refer to https://github.com/bblanchon/ArduinoJson/issues/252 
 #### Encoding / Generating
 
 ```c++
