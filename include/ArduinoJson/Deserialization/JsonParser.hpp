@@ -9,6 +9,8 @@
 
 #include "../JsonBuffer.hpp"
 #include "../JsonVariant.hpp"
+#include "StringReader.hpp"
+#include "StringWriter.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -20,8 +22,8 @@ class JsonParser {
  public:
   JsonParser(JsonBuffer *buffer, char *json, uint8_t nestingLimit)
       : _buffer(buffer),
-        _readPtr(json ? json : ""),
-        _writePtr(json),
+        _reader(json),
+        _writer(json),
         _nestingLimit(nestingLimit) {}
 
   JsonArray &parseArray();
@@ -34,7 +36,10 @@ class JsonParser {
   }
 
  private:
-  bool skip(char charToSkip);
+  static bool eat(StringReader &, char charToSkip);
+  FORCE_INLINE bool eat(char charToSkip) {
+    return eat(_reader, charToSkip);
+  }
 
   const char *parseString();
   bool parseAnythingTo(JsonVariant *destination);
@@ -58,8 +63,8 @@ class JsonParser {
   }
 
   JsonBuffer *_buffer;
-  const char *_readPtr;
-  char *_writePtr;
+  StringReader _reader;
+  StringWriter _writer;
   uint8_t _nestingLimit;
 };
 }

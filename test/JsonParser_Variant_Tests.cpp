@@ -5,8 +5,8 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class JsonParser_Variant_Test : public testing::Test {
  protected:
@@ -92,7 +92,14 @@ TEST_F(JsonParser_Variant_Test, True) {
   verify("false", false);
 }
 
-TEST_F(JsonParser_Variant_Test, Invalid) {
+TEST_F(JsonParser_Variant_Test, OpenBrace) {
   whenInputIs("{");
   resultMustBeInvalid();
+}
+
+TEST_F(JsonParser_Variant_Test, IncompleteStrings) {
+  verify("\"", "");
+  verify("\"hello", "hello");
+  verify("\'", "");
+  verify("\'world", "world");
 }

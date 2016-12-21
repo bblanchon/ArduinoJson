@@ -13,11 +13,11 @@
 #include "ArduinoJson/JsonVariantComparisons.hpp"
 #include "ArduinoJson/StaticJsonBuffer.hpp"
 
-#include "ArduinoJson/Internals/JsonParserImpl.hpp"
-#include "ArduinoJson/Internals/JsonSerializerImpl.hpp"
+#include "ArduinoJson/Deserialization/JsonParserImpl.hpp"
 #include "ArduinoJson/JsonArrayImpl.hpp"
 #include "ArduinoJson/JsonBufferImpl.hpp"
 #include "ArduinoJson/JsonObjectImpl.hpp"
 #include "ArduinoJson/JsonVariantImpl.hpp"
+#include "ArduinoJson/Serialization/JsonSerializerImpl.hpp"
 
 using namespace ArduinoJson;

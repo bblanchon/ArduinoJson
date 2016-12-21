@@ -7,8 +7,8 @@
 
 #include <gtest/gtest.h>
 
-#include <ArduinoJson/Internals/JsonWriter.hpp>
-#include <ArduinoJson/Internals/StaticStringBuilder.hpp>
+#include <ArduinoJson/Serialization/JsonWriter.hpp>
+#include <ArduinoJson/Serialization/StaticStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 

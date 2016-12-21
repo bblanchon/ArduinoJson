@@ -10,12 +10,12 @@
 #include <stddef.h>
 #include <stdint.h>  // for uint8_t
 
-#include "Internals/JsonPrintable.hpp"
-#include "Internals/JsonVariantContent.hpp"
-#include "Internals/JsonVariantDefault.hpp"
-#include "Internals/JsonVariantType.hpp"
+#include "Data/JsonVariantContent.hpp"
+#include "Data/JsonVariantDefault.hpp"
+#include "Data/JsonVariantType.hpp"
 #include "JsonVariantBase.hpp"
 #include "RawJson.hpp"
+#include "Serialization/JsonPrintable.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsFloatingPoint.hpp"
 #include "TypeTraits/IsIntegral.hpp"

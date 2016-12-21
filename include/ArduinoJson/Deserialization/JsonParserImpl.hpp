@@ -10,11 +10,12 @@
 #include "Comments.hpp"
 #include "JsonParser.hpp"
 
-inline bool ArduinoJson::Internals::JsonParser::skip(char charToSkip) {
-  const char *ptr = skipSpacesAndComments(_readPtr);
-  if (*ptr != charToSkip) return false;
-  ptr++;
-  _readPtr = skipSpacesAndComments(ptr);
+inline bool ArduinoJson::Internals::JsonParser::eat(StringReader &reader,
+                                                    char charToSkip) {
+  skipSpacesAndComments(reader);
+  if (reader.peek() != charToSkip) return false;
+  reader.skip();
+  skipSpacesAndComments(reader);
   return true;
 }
 
@@ -29,9 +30,9 @@ inline bool ArduinoJson::Internals::JsonParser::parseAnythingTo(
 
 inline bool ArduinoJson::Internals::JsonParser::parseAnythingToUnsafe(
     JsonVariant *destination) {
-  _readPtr = skipSpacesAndComments(_readPtr);
+  skipSpacesAndComments(_reader);
 
-  switch (*_readPtr) {
+  switch (_reader.peek()) {
     case '[':
       return parseArrayTo(destination);
 
@@ -49,8 +50,8 @@ ArduinoJson::Internals::JsonParser::parseArray() {
   JsonArray &array = _buffer->createArray();
 
   // Check opening braket
-  if (!skip('[')) goto ERROR_MISSING_BRACKET;
-  if (skip(']')) goto SUCCESS_EMPTY_ARRAY;
+  if (!eat('[')) goto ERROR_MISSING_BRACKET;
+  if (eat(']')) goto SUCCESS_EMPTY_ARRAY;
 
   // Read each value
   for (;;) {
@@ -60,8 +61,8 @@ ArduinoJson::Internals::JsonParser::parseArray() {
     if (!array.add(value)) goto ERROR_NO_MEMORY;
 
     // 2 - More values?
-    if (skip(']')) goto SUCCES_NON_EMPTY_ARRAY;
-    if (!skip(',')) goto ERROR_MISSING_COMMA;
+    if (eat(']')) goto SUCCES_NON_EMPTY_ARRAY;
+    if (!eat(',')) goto ERROR_MISSING_COMMA;
   }
 
 SUCCESS_EMPTY_ARRAY:
@@ -90,15 +91,15 @@ ArduinoJson::Internals::JsonParser::parseObject() {
   JsonObject &object = _buffer->createObject();
 
   // Check opening brace
-  if (!skip('{')) goto ERROR_MISSING_BRACE;
-  if (skip('}')) goto SUCCESS_EMPTY_OBJECT;
+  if (!eat('{')) goto ERROR_MISSING_BRACE;
+  if (eat('}')) goto SUCCESS_EMPTY_OBJECT;
 
   // Read each key value pair
   for (;;) {
     // 1 - Parse key
     const char *key = parseString();
     if (!key) goto ERROR_INVALID_KEY;
-    if (!skip(':')) goto ERROR_MISSING_COLON;
+    if (!eat(':')) goto ERROR_MISSING_COLON;
 
     // 2 - Parse value
     JsonVariant value;
@@ -106,8 +107,8 @@ ArduinoJson::Internals::JsonParser::parseObject() {
     if (!object.set(key, value)) goto ERROR_NO_MEMORY;
 
     // 3 - More keys/values?
-    if (skip('}')) goto SUCCESS_NON_EMPTY_OBJECT;
-    if (!skip(',')) goto ERROR_MISSING_COMMA;
+    if (eat('}')) goto SUCCESS_NON_EMPTY_OBJECT;
+    if (!eat(',')) goto ERROR_MISSING_COMMA;
   }
 
 SUCCESS_EMPTY_OBJECT:
@@ -133,53 +134,45 @@ inline bool ArduinoJson::Internals::JsonParser::parseObjectTo(
 }
 
 inline const char *ArduinoJson::Internals::JsonParser::parseString() {
-  const char *readPtr = _readPtr;
-  char *writePtr = _writePtr;
+  const char *str = _writer.startString();
 
-  char c = *readPtr;
+  char c = _reader.peek();
 
   if (isQuote(c)) {  // quotes
+    _reader.skip();
     char stopChar = c;
     for (;;) {
-      c = *++readPtr;
+      c = _reader.peek();
       if (c == '\0') break;
+      _reader.skip();
 
-      if (c == stopChar) {
-        readPtr++;
-        break;
-      }
+      if (c == stopChar) break;
 
       if (c == '\\') {
         // replace char
-        c = Encoding::unescapeChar(*++readPtr);
+        c = Encoding::unescapeChar(_reader.peek());
         if (c == '\0') break;
+        _reader.skip();
       }
 
-      *writePtr++ = c;
+      _writer.append(c);
     }
   } else {  // no quotes
     for (;;) {
       if (!isLetterOrNumber(c)) break;
-      *writePtr++ = c;
-      c = *++readPtr;
+      _reader.skip();
+      _writer.append(c);
+      c = _reader.peek();
     }
   }
-  // end the string here
-  *writePtr++ = '\0';
 
-  const char *startPtr = _writePtr;
-
-  // update end ptr
-  _readPtr = readPtr;
-  _writePtr = writePtr;
-
-  // return pointer to unquoted string
-  return startPtr;
+  _writer.stopString();
+  return str;
 }
 
 inline bool ArduinoJson::Internals::JsonParser::parseStringTo(
     JsonVariant *destination) {
-  bool hasQuotes = isQuote(_readPtr[0]);
+  bool hasQuotes = isQuote(_reader.peek());
   const char *value = parseString();
   if (value == NULL) return false;
   if (hasQuotes) {

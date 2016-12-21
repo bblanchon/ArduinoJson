@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "Internals/JsonVariantAs.hpp"
+#include "Data/JsonVariantAs.hpp"
 #include "Polyfills/attributes.hpp"
+#include "Serialization/JsonPrintable.hpp"
 
 namespace ArduinoJson {
 

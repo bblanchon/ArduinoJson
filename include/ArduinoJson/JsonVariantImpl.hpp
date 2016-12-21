@@ -8,7 +8,7 @@
 #pragma once
 
 #include "Configuration.hpp"
-#include "Internals/Parse.hpp"
+#include "Data/Parse.hpp"
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
 #include "JsonVariant.hpp"
