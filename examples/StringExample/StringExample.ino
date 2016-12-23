@@ -48,6 +48,11 @@ void setup() {
   // WARNING: the content of the String will be duplicated in the JsonBuffer.
   root[String("sen") + "sor"] = String("gp") + "s";
 
+  // You can compare the content of a JsonObject with a String
+  if (root["sensor"] == sensor) {
+    // ...
+  }
+
   // Lastly, you can print the resulting JSON to a String
   String output;
   root.printTo(output);
