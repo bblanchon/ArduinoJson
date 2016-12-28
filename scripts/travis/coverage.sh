@@ -6,5 +6,5 @@ curl https://cmake.org/files/v3.4/cmake-3.4.0-Linux-x86_64.tar.gz | tar xz -C /t
 make 
 make test
 
-pip install --user cpp-coveralls
+pip install --user cpp-coveralls 'requests[security]'
 coveralls --exclude third-party --gcov-options '\-lp'; fi
