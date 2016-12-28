@@ -4,7 +4,7 @@ pip install --user platformio
 
 rm -r test
 
-for EXAMPLE in JsonParserExample JsonGeneratorExample
+for EXAMPLE in $PWD/examples/*/*.ino; 
 do
-	platformio ci examples/$EXAMPLE/$EXAMPLE.ino -l '.' -b $BOARD
+	platformio ci $EXAMPLE -l '.' -b $BOARD
 done
