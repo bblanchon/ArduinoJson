@@ -30,13 +30,19 @@ TEST_F(DynamicJsonBuffer_Basic_Tests, ReturnDifferentPointer) {
   ASSERT_NE(p1, p2);
 }
 
-TEST_F(DynamicJsonBuffer_Basic_Tests, Alignment) {
-  size_t mask = sizeof(void*) - 1;
+static bool isAligned(void* ptr) {
+  const size_t mask = sizeof(void*) - 1;
+  size_t addr = reinterpret_cast<size_t>(ptr);
+  return (addr & mask) == 0;
+}
 
-  for (size_t size = 1; size <= sizeof(void*); size++) {
-    size_t addr = reinterpret_cast<size_t>(buffer.alloc(1));
-    ASSERT_EQ(0, addr & mask);
-  }
+TEST_F(DynamicJsonBuffer_Basic_Tests, Alignment) {
+  // make room for tow but not three
+  buffer = DynamicJsonBuffer(2 * sizeof(void*) + 1);
+
+  ASSERT_TRUE(isAligned(buffer.alloc(1)));  // this on is aligned by design
+  ASSERT_TRUE(isAligned(buffer.alloc(1)));  // this one fits in the first block
+  ASSERT_TRUE(isAligned(buffer.alloc(1)));  // this one requires a new block
 }
 
 TEST_F(DynamicJsonBuffer_Basic_Tests, strdup) {

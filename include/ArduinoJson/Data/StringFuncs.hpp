@@ -30,6 +30,17 @@ template <typename TString>
 struct StringFuncs<TString&> : StringFuncs<TString> {};
 
 struct CharPtrFuncs {
+  class Iterator {
+    const char* _ptr;
+
+   public:
+    Iterator(const char* ptr) : _ptr(ptr ? ptr : "") {}
+
+    char next() {
+      return *_ptr++;
+    }
+  };
+
   static bool equals(const char* str, const char* expected) {
     return strcmp(str, expected) == 0;
   }
@@ -71,6 +82,10 @@ struct StdStringFuncs {
     return static_cast<char*>(dup);
   }
 
+  struct Iterator : CharPtrFuncs::Iterator {
+    Iterator(const TString& str) : CharPtrFuncs::Iterator(str.c_str()) {}
+  };
+
   static bool equals(const TString& str, const char* expected) {
     return str == expected;
   }
@@ -99,6 +114,18 @@ struct StringFuncs<std::string> : StdStringFuncs<std::string> {};
 #if ARDUINOJSON_ENABLE_PROGMEM
 template <>
 struct StringFuncs<const __FlashStringHelper*> {
+  class Iterator {
+    const char* _ptr;
+
+   public:
+    Iterator(const __FlashStringHelper* ptr)
+        : _ptr(reinterpret_cast<const char*>(ptr)) {}
+
+    char next() {
+      return pgm_read_byte_near(_ptr++);
+    }
+  };
+
   static bool equals(const __FlashStringHelper* str, const char* expected) {
     return strcmp_P(expected, (PGM_P)str) == 0;
   }

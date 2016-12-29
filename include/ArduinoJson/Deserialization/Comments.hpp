@@ -12,51 +12,51 @@ namespace Internals {
 template <typename TInput>
 void skipSpacesAndComments(TInput& input) {
   for (;;) {
-    switch (input.peek()) {
+    switch (input.current()) {
       // spaces
       case ' ':
       case '\t':
       case '\r':
       case '\n':
-        input.skip();
+        input.move();
         continue;
 
       // comments
       case '/':
-        switch (input.peekNext()) {
+        switch (input.next()) {
           // C-style block comment
           case '*':
-            input.skip();  // skip '/'
-            input.skip();  // skip '*'
+            input.move();  // skip '/'
+            input.move();  // skip '*'
             for (;;) {
-              switch (input.peek()) {
+              switch (input.current()) {
                 case '\0':
                   return;
                 case '*':
-                  input.skip();  // skip '*'
-                  if (input.peek() == '/') {
-                    input.skip();  // skip '/'
+                  input.move();  // skip '*'
+                  if (input.current() == '/') {
+                    input.move();  // skip '/'
                     return;
                   }
                   break;
                 default:
-                  input.skip();
+                  input.move();
               }
             }
             break;
 
           // C++-style line comment
           case '/':
-            input.skip();  // skip '/'
+            input.move();  // skip '/'
             for (;;) {
-              switch (input.peek()) {
+              switch (input.current()) {
                 case '\0':
                   return;
                 case '\n':
-                  input.skip();
+                  input.move();
                   return;
                 default:
-                  input.skip();
+                  input.move();
               }
             }
             return;

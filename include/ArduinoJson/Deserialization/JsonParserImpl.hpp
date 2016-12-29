@@ -10,16 +10,19 @@
 #include "Comments.hpp"
 #include "JsonParser.hpp"
 
-inline bool ArduinoJson::Internals::JsonParser::eat(StringReader &reader,
-                                                    char charToSkip) {
+template <typename TReader, typename TWriter>
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::eat(
+    TReader &reader, char charToSkip) {
   skipSpacesAndComments(reader);
-  if (reader.peek() != charToSkip) return false;
-  reader.skip();
+  if (reader.current() != charToSkip) return false;
+  reader.move();
   skipSpacesAndComments(reader);
   return true;
 }
 
-inline bool ArduinoJson::Internals::JsonParser::parseAnythingTo(
+template <typename TReader, typename TWriter>
+inline bool
+ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingTo(
     JsonVariant *destination) {
   if (_nestingLimit == 0) return false;
   _nestingLimit--;
@@ -28,11 +31,13 @@ inline bool ArduinoJson::Internals::JsonParser::parseAnythingTo(
   return success;
 }
 
-inline bool ArduinoJson::Internals::JsonParser::parseAnythingToUnsafe(
+template <typename TReader, typename TWriter>
+inline bool
+ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingToUnsafe(
     JsonVariant *destination) {
   skipSpacesAndComments(_reader);
 
-  switch (_reader.peek()) {
+  switch (_reader.current()) {
     case '[':
       return parseArrayTo(destination);
 
@@ -44,8 +49,9 @@ inline bool ArduinoJson::Internals::JsonParser::parseAnythingToUnsafe(
   }
 }
 
+template <typename TReader, typename TWriter>
 inline ArduinoJson::JsonArray &
-ArduinoJson::Internals::JsonParser::parseArray() {
+ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseArray() {
   // Create an empty array
   JsonArray &array = _buffer->createArray();
 
@@ -76,7 +82,8 @@ ERROR_NO_MEMORY:
   return JsonArray::invalid();
 }
 
-inline bool ArduinoJson::Internals::JsonParser::parseArrayTo(
+template <typename TReader, typename TWriter>
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseArrayTo(
     JsonVariant *destination) {
   JsonArray &array = parseArray();
   if (!array.success()) return false;
@@ -85,8 +92,9 @@ inline bool ArduinoJson::Internals::JsonParser::parseArrayTo(
   return true;
 }
 
+template <typename TReader, typename TWriter>
 inline ArduinoJson::JsonObject &
-ArduinoJson::Internals::JsonParser::parseObject() {
+ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObject() {
   // Create an empty object
   JsonObject &object = _buffer->createObject();
 
@@ -124,7 +132,8 @@ ERROR_NO_MEMORY:
   return JsonObject::invalid();
 }
 
-inline bool ArduinoJson::Internals::JsonParser::parseObjectTo(
+template <typename TReader, typename TWriter>
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObjectTo(
     JsonVariant *destination) {
   JsonObject &object = parseObject();
   if (!object.success()) return false;
@@ -133,46 +142,49 @@ inline bool ArduinoJson::Internals::JsonParser::parseObjectTo(
   return true;
 }
 
-inline const char *ArduinoJson::Internals::JsonParser::parseString() {
-  const char *str = _writer.startString();
+template <typename TReader, typename TWriter>
+inline const char *
+ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseString() {
+  typename TypeTraits::RemoveReference<TWriter>::type::String str =
+      _writer.startString();
 
-  char c = _reader.peek();
+  char c = _reader.current();
 
   if (isQuote(c)) {  // quotes
-    _reader.skip();
+    _reader.move();
     char stopChar = c;
     for (;;) {
-      c = _reader.peek();
+      c = _reader.current();
       if (c == '\0') break;
-      _reader.skip();
+      _reader.move();
 
       if (c == stopChar) break;
 
       if (c == '\\') {
         // replace char
-        c = Encoding::unescapeChar(_reader.peek());
+        c = Encoding::unescapeChar(_reader.current());
         if (c == '\0') break;
-        _reader.skip();
+        _reader.move();
       }
 
-      _writer.append(c);
+      str.append(c);
     }
   } else {  // no quotes
     for (;;) {
       if (!isLetterOrNumber(c)) break;
-      _reader.skip();
-      _writer.append(c);
-      c = _reader.peek();
+      _reader.move();
+      str.append(c);
+      c = _reader.current();
     }
   }
 
-  _writer.stopString();
-  return str;
+  return str.c_str();
 }
 
-inline bool ArduinoJson::Internals::JsonParser::parseStringTo(
+template <typename TReader, typename TWriter>
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseStringTo(
     JsonVariant *destination) {
-  bool hasQuotes = isQuote(_reader.peek());
+  bool hasQuotes = isQuote(_reader.current());
   const char *value = parseString();
   if (value == NULL) return false;
   if (hasQuotes) {

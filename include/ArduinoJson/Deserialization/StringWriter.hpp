@@ -10,27 +10,34 @@
 namespace ArduinoJson {
 namespace Internals {
 
-// Parse JSON string to create JsonArrays and JsonObjects
-// This internal class is not indended to be used directly.
-// Instead, use JsonBuffer.parseArray() or .parseObject()
 class StringWriter {
  public:
-  StringWriter(char *buffer) : _ptr(buffer) {}
+  class String {
+   public:
+    String(char** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
 
-  const char *startString() {
-    return _ptr;
-  }
+    void append(char c) {
+      *(*_writePtr)++ = c;
+    }
 
-  void stopString() {
-    *_ptr++ = 0;
-  }
+    const char* c_str() const {
+      *(*_writePtr)++ = 0;
+      return _startPtr;
+    }
 
-  void append(char c) {
-    *_ptr++ = c;
+   private:
+    char** _writePtr;
+    char* _startPtr;
+  };
+
+  StringWriter(char* buffer) : _ptr(buffer) {}
+
+  String startString() {
+    return String(&_ptr);
   }
 
  private:
-  char *_ptr;
+  char* _ptr;
 };
 }
 }

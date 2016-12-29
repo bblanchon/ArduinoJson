@@ -5,18 +5,20 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class NoMemoryAllocator {
  public:
-  void* allocate(size_t) { return NULL; }
+  void* allocate(size_t) {
+    return NULL;
+  }
   void deallocate(void*) {}
 };
 
 class DynamicJsonBuffer_NoMemory_Tests : public ::testing::Test {
  protected:
-  Internals::BlockJsonBuffer<NoMemoryAllocator> _jsonBuffer;
+  DynamicJsonBufferBase<NoMemoryAllocator> _jsonBuffer;
 };
 
 TEST_F(DynamicJsonBuffer_NoMemory_Tests, FixCodeCoverage) {

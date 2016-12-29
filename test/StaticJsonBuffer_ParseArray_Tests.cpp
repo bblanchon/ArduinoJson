@@ -5,12 +5,12 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class StaticJsonBuffer_ParseArray_Tests : public testing::Test {
  protected:
-  void with(JsonBuffer& jsonBuffer) {
+  void with(StaticJsonBufferBase& jsonBuffer) {
     _jsonBuffer = &jsonBuffer;
   }
 
@@ -27,7 +27,7 @@ class StaticJsonBuffer_ParseArray_Tests : public testing::Test {
   }
 
  private:
-  JsonBuffer* _jsonBuffer;
+  StaticJsonBufferBase* _jsonBuffer;
   char _jsonString[256];
 };
 
@@ -85,4 +85,12 @@ TEST_F(StaticJsonBuffer_ParseArray_Tests, ConstCharPtrNull) {
   ASSERT_FALSE(StaticJsonBuffer<100>()
                    .parseArray(static_cast<const char*>(0))
                    .success());
+}
+
+TEST_F(StaticJsonBuffer_ParseArray_Tests, CopyStringNotSpaces) {
+  StaticJsonBuffer<100> jsonBuffer;
+  jsonBuffer.parseArray("  [ \"1234567\" ] ");
+  ASSERT_EQ(JSON_ARRAY_SIZE(1) + sizeof("1234567"), jsonBuffer.size());
+  // note we use a string of 8 bytes to be sure that the StaticJsonBuffer
+  // will not insert bytes to enforce alignement
 }

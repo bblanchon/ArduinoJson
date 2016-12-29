@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Internals/StringFuncs.hpp"
+#include "Data/StringFuncs.hpp"
 #include "JsonVariantBase.hpp"
 #include "TypeTraits/EnableIf.hpp"
 

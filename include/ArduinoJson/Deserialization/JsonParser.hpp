@@ -18,12 +18,14 @@ namespace Internals {
 // Parse JSON string to create JsonArrays and JsonObjects
 // This internal class is not indended to be used directly.
 // Instead, use JsonBuffer.parseArray() or .parseObject()
+template <typename TReader, typename TWriter>
 class JsonParser {
  public:
-  JsonParser(JsonBuffer *buffer, char *json, uint8_t nestingLimit)
+  JsonParser(JsonBuffer *buffer, TReader reader, TWriter writer,
+             uint8_t nestingLimit)
       : _buffer(buffer),
-        _reader(json),
-        _writer(json),
+        _reader(reader),
+        _writer(writer),
         _nestingLimit(nestingLimit) {}
 
   JsonArray &parseArray();
@@ -36,7 +38,9 @@ class JsonParser {
   }
 
  private:
-  static bool eat(StringReader &, char charToSkip);
+  JsonParser &operator=(const JsonParser &);  // non-copiable
+
+  static bool eat(TReader &, char charToSkip);
   FORCE_INLINE bool eat(char charToSkip) {
     return eat(_reader, charToSkip);
   }
@@ -63,9 +67,42 @@ class JsonParser {
   }
 
   JsonBuffer *_buffer;
-  StringReader _reader;
-  StringWriter _writer;
+  TReader _reader;
+  TWriter _writer;
   uint8_t _nestingLimit;
 };
+
+template <typename TJsonBuffer, typename TString>
+struct JsonParserBuilder {
+  typedef typename Internals::StringFuncs<TString>::Iterator InputIterator;
+  typedef JsonParser<StringReader<InputIterator>, TJsonBuffer &> TParser;
+
+  static TParser makeParser(TJsonBuffer *buffer, const TString &json,
+                            uint8_t nestingLimit) {
+    return TParser(buffer, InputIterator(json), *buffer, nestingLimit);
+  }
+};
+
+template <typename TJsonBuffer>
+struct JsonParserBuilder<TJsonBuffer, char *> {
+  typedef typename Internals::StringFuncs<char *>::Iterator InputIterator;
+  typedef JsonParser<StringReader<InputIterator>, StringWriter> TParser;
+
+  static TParser makeParser(TJsonBuffer *buffer, char *json,
+                            uint8_t nestingLimit) {
+    return TParser(buffer, InputIterator(json), json, nestingLimit);
+  }
+};
+
+template <typename TJsonBuffer, typename TChar, size_t N>
+struct JsonParserBuilder<TJsonBuffer, TChar[N]>
+    : JsonParserBuilder<TJsonBuffer, TChar *> {};
+
+template <typename TJsonBuffer, typename TString>
+inline typename JsonParserBuilder<TJsonBuffer, TString>::TParser makeParser(
+    TJsonBuffer *buffer, TString &json, uint8_t nestingLimit) {
+  return JsonParserBuilder<TJsonBuffer, TString>::makeParser(buffer, json,
+                                                             nestingLimit);
+}
 }
 }

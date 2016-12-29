@@ -10,7 +10,7 @@
 
 class StaticJsonBuffer_ParseObject_Tests : public testing::Test {
  protected:
-  void with(JsonBuffer& jsonBuffer) {
+  void with(StaticJsonBufferBase& jsonBuffer) {
     _jsonBuffer = &jsonBuffer;
   }
 
@@ -27,7 +27,7 @@ class StaticJsonBuffer_ParseObject_Tests : public testing::Test {
   }
 
  private:
-  JsonBuffer* _jsonBuffer;
+  StaticJsonBufferBase* _jsonBuffer;
   char _jsonString[256];
 };
 
