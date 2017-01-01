@@ -18,4 +18,8 @@ if(${COVERAGE})
 	set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
 endif()
 
+if(${SANITIZE})
+   set(CMAKE_CXX_FLAGS "-fsanitize=address,undefined")
+endif()
+
 add_subdirectory(test)

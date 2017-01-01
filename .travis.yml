@@ -70,6 +70,12 @@ matrix:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
           packages: ['clang-3.8']
       env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.8
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
+          packages: ['clang-3.8']
+      env: SCRIPT=sanitize CMAKE_CXX_COMPILER=clang++-3.8
     - compiler: gcc
       env: SCRIPT=coverage
     - os: osx
