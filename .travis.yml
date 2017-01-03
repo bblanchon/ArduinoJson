@@ -79,18 +79,6 @@ matrix:
     - compiler: gcc
       env: SCRIPT=coverage
     - os: osx
-      osx_image: beta-xcode6.1
-      compiler: clang
-      env: SCRIPT=cmake-osx
-    - os: osx
-      osx_image: beta-xcode6.2
-      compiler: clang
-      env: SCRIPT=cmake-osx
-    - os: osx
-      osx_image: beta-xcode6.3
-      compiler: clang
-      env: SCRIPT=cmake-osx
-    - os: osx
       osx_image: xcode6.4
       compiler: clang
       env: SCRIPT=cmake-osx
