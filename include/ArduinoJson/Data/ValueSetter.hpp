@@ -9,8 +9,8 @@
 
 #include "../JsonBuffer.hpp"
 #include "../JsonVariant.hpp"
+#include "../StringTraits/StringTraits.hpp"
 #include "../TypeTraits/EnableIf.hpp"
-#include "StringFuncs.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

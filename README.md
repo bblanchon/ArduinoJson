@@ -5,9 +5,10 @@ Arduino JSON library
 
 *An elegant and efficient JSON library for embedded systems.*
 
-It's designed to have the most intuitive API, the smallest footprint and works without any allocation on the heap (no malloc).
+It's designed to have the most intuitive API, the smallest footprint and is able to work without any allocation on the heap (no malloc).
 
 It has been written with Arduino in mind, but it isn't linked to Arduino libraries so you can use this library in any other C++ project.
+For instance, it supports Aduino's `String` and `Stream`, but also `std::string`, `std::istream` and `std::ostream`.
 
 Features
 --------
@@ -55,6 +56,8 @@ double latitude    = root["data"][0];
 double longitude   = root["data"][1];
 ```
 
+[See JsonParserExample.ino](examples/JsonParserExample/JsonParserExample.ino)
+
 #### Encoding / Generating
 
 ```c++
@@ -72,6 +75,8 @@ root.printTo(Serial);
 // This prints:
 // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 ```
+
+[See JsonGeneratorExample.ino](examples/JsonGeneratorExample/JsonGeneratorExample.ino)
 
 
 Documentation

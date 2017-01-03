@@ -27,6 +27,10 @@
 #define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
 #endif
 
+#ifndef ARDUINOJSON_ENABLE_ARDUINO_STREAM
+#define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
+#endif
+
 // On AVR archiecture, we can use PROGMEM
 #ifndef ARDUINOJSON_ENABLE_PROGMEM
 #ifdef PROGMEM
@@ -104,6 +108,11 @@
 // on a computer, we can assume that the STL is there
 #ifndef ARDUINOJSON_ENABLE_STD_STREAM
 #define ARDUINOJSON_ENABLE_STD_STREAM 1
+#endif
+
+// on a computer, there is no reason to beleive Arduino Stream is available
+#ifndef ARDUINOJSON_ENABLE_ARDUINO_STREAM
+#define ARDUINOJSON_ENABLE_ARDUINO_STREAM 0
 #endif
 
 #ifndef ARDUINOJSON_ENABLE_ALIGNMENT

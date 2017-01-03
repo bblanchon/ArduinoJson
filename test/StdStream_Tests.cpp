@@ -5,25 +5,25 @@
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <sstream>
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
+#include <sstream>
 
-TEST(StdStream, JsonVariantFalse) {
+TEST(StdStream_Tests, JsonVariantFalse) {
   std::ostringstream os;
   JsonVariant variant = false;
   os << variant;
   ASSERT_EQ("false", os.str());
 }
 
-TEST(StdStream, JsonVariantString) {
+TEST(StdStream_Tests, JsonVariantString) {
   std::ostringstream os;
   JsonVariant variant = "coucou";
   os << variant;
   ASSERT_EQ("\"coucou\"", os.str());
 }
 
-TEST(StdStream, JsonObject) {
+TEST(StdStream_Tests, JsonObject) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonObject& object = jsonBuffer.createObject();
@@ -32,7 +32,7 @@ TEST(StdStream, JsonObject) {
   ASSERT_EQ("{\"key\":\"value\"}", os.str());
 }
 
-TEST(StdStream, JsonObjectSubscript) {
+TEST(StdStream_Tests, JsonObjectSubscript) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonObject& object = jsonBuffer.createObject();
@@ -41,7 +41,7 @@ TEST(StdStream, JsonObjectSubscript) {
   ASSERT_EQ("\"value\"", os.str());
 }
 
-TEST(StdStream, JsonArray) {
+TEST(StdStream_Tests, JsonArray) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonArray& array = jsonBuffer.createArray();
@@ -50,11 +50,29 @@ TEST(StdStream, JsonArray) {
   ASSERT_EQ("[\"value\"]", os.str());
 }
 
-TEST(StdStream, JsonArraySubscript) {
+TEST(StdStream_Tests, JsonArraySubscript) {
   std::ostringstream os;
   DynamicJsonBuffer jsonBuffer;
   JsonArray& array = jsonBuffer.createArray();
   array.add("value");
   os << array[0];
   ASSERT_EQ("\"value\"", os.str());
+}
+
+TEST(StdStream_Tests, ParseArray) {
+  std::istringstream json("[42]");
+  DynamicJsonBuffer jsonBuffer;
+  JsonArray& arr = jsonBuffer.parseArray(json);
+  ASSERT_TRUE(arr.success());
+  ASSERT_EQ(1, arr.size());
+  ASSERT_EQ(42, arr[0]);
+}
+
+TEST(StdStream_Tests, ParseObject) {
+  std::istringstream json("{hello:world}");
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& obj = jsonBuffer.parseObject(json);
+  ASSERT_TRUE(obj.success());
+  ASSERT_EQ(1, obj.size());
+  ASSERT_STREQ("world", obj["hello"]);
 }

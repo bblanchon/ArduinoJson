@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Data/StringFuncs.hpp"
 #include "JsonVariantBase.hpp"
+#include "StringTraits/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 
 namespace ArduinoJson {

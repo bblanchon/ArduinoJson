@@ -351,6 +351,16 @@ TEST_F(JsonParser_Array_Tests, UnfinishedCComment) {
   parseMustFail();
 }
 
+TEST_F(JsonParser_Array_Tests, EndsInCppComment) {
+  whenInputIs("[//COMMENT");
+  parseMustFail();
+}
+
+TEST_F(JsonParser_Array_Tests, AfterClosingStar) {
+  whenInputIs("[/*COMMENT*");
+  parseMustFail();
+}
+
 TEST_F(JsonParser_Array_Tests, DeeplyNested) {
   whenInputIs("[[[[[[[[[[[[[[[[[[[\"Not too deep\"]]]]]]]]]]]]]]]]]]]");
   parseMustSucceed();

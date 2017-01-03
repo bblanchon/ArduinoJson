@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../Data/StringFuncs.hpp"
 #include "../Print.hpp"
+#include "../StringTraits/StringTraits.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

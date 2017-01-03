@@ -77,7 +77,7 @@ struct JsonParserBuilder {
   typedef typename Internals::StringFuncs<TString>::Iterator InputIterator;
   typedef JsonParser<StringReader<InputIterator>, TJsonBuffer &> TParser;
 
-  static TParser makeParser(TJsonBuffer *buffer, const TString &json,
+  static TParser makeParser(TJsonBuffer *buffer, TString &json,
                             uint8_t nestingLimit) {
     return TParser(buffer, InputIterator(json), *buffer, nestingLimit);
   }
@@ -94,9 +94,9 @@ struct JsonParserBuilder<TJsonBuffer, char *> {
   }
 };
 
-template <typename TJsonBuffer, typename TChar, size_t N>
-struct JsonParserBuilder<TJsonBuffer, TChar[N]>
-    : JsonParserBuilder<TJsonBuffer, TChar *> {};
+template <typename TJsonBuffer, size_t N>
+struct JsonParserBuilder<TJsonBuffer, char[N]>
+    : JsonParserBuilder<TJsonBuffer, char *> {};
 
 template <typename TJsonBuffer, typename TString>
 inline typename JsonParserBuilder<TJsonBuffer, TString>::TParser makeParser(

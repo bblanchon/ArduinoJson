@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added operator `==` to compare `JsonVariant` and strings (issue #402)
+* Added support for `Stream` (issue #300)
 * Reduced memory consumption by not duplicating spaces and comments
 
 v5.7.3
