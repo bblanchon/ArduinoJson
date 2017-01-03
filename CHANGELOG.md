@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.8.0
+------
 
 * Added operator `==` to compare `JsonVariant` and strings (issue #402)
 * Added support for `Stream` (issue #300)
