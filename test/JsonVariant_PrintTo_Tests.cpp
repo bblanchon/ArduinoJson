@@ -1,12 +1,12 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 #include <limits>
 
 class JsonVariant_PrintTo_Tests : public testing::Test {
@@ -21,7 +21,9 @@ class JsonVariant_PrintTo_Tests : public testing::Test {
   }
 };
 
-TEST_F(JsonVariant_PrintTo_Tests, Empty) { outputMustBe(""); }
+TEST_F(JsonVariant_PrintTo_Tests, Empty) {
+  outputMustBe("");
+}
 
 TEST_F(JsonVariant_PrintTo_Tests, Null) {
   variant = static_cast<char *>(0);

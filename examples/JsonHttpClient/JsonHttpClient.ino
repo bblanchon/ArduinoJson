@@ -1,7 +1,7 @@
 // Sample Arduino Json Web Client
 // Downloads and parse http://jsonplaceholder.typicode.com/users/1
 //
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library

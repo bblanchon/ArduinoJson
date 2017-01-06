@@ -1,4 +1,4 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
@@ -20,10 +20,18 @@ static const char* superLong =
 
 static const JsonVariant variant = RawJson(superLong);
 
-TEST(SUITE, IsNotALong) { ASSERT_FALSE(variant.is<long>()); }
+TEST(SUITE, IsNotALong) {
+  ASSERT_FALSE(variant.is<long>());
+}
 
-TEST(SUITE, AsLong) { ASSERT_EQ(LONG_MAX, variant.as<long>()); }
+TEST(SUITE, AsLong) {
+  ASSERT_EQ(LONG_MAX, variant.as<long>());
+}
 
-TEST(SUITE, IsAString) { ASSERT_FALSE(variant.is<const char*>()); }
+TEST(SUITE, IsAString) {
+  ASSERT_FALSE(variant.is<const char*>());
+}
 
-TEST(SUITE, AsString) { ASSERT_STREQ(superLong, variant.as<const char*>()); }
+TEST(SUITE, AsString) {
+  ASSERT_STREQ(superLong, variant.as<const char*>());
+}

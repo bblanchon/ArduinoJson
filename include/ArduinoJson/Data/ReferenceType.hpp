@@ -1,4 +1,4 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
@@ -19,7 +19,9 @@ class ReferenceType {
     return this == &other;
   }
 
-  bool operator!=(const ReferenceType& other) const { return this != &other; }
+  bool operator!=(const ReferenceType& other) const {
+    return this != &other;
+  }
 
  protected:
   ReferenceType() {}

@@ -1,4 +1,4 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "ListNode.hpp"
 #include "ListConstIterator.hpp"
+#include "ListNode.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -19,8 +19,12 @@ class ListIterator {
  public:
   explicit ListIterator(ListNode<T> *node = NULL) : _node(node) {}
 
-  T &operator*() const { return _node->content; }
-  T *operator->() { return &_node->content; }
+  T &operator*() const {
+    return _node->content;
+  }
+  T *operator->() {
+    return &_node->content;
+  }
 
   bool operator==(const ListIterator<T> &other) const {
     return _node == other._node;
@@ -35,7 +39,9 @@ class ListIterator {
     return *this;
   }
 
-  operator ListConstIterator<T>() const { return ListConstIterator<T>(_node); }
+  operator ListConstIterator<T>() const {
+    return ListConstIterator<T>(_node);
+  }
 
  private:
   ListNode<T> *_node;

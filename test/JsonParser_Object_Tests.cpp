@@ -1,12 +1,12 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class JsonParser_Object_Test : public testing::Test {
  protected:
@@ -15,11 +15,17 @@ class JsonParser_Object_Test : public testing::Test {
     _object = &_jsonBuffer.parseObject(_jsonString);
   }
 
-  void parseMustSucceed() { EXPECT_TRUE(_object->success()); }
+  void parseMustSucceed() {
+    EXPECT_TRUE(_object->success());
+  }
 
-  void parseMustFail() { EXPECT_FALSE(_object->success()); }
+  void parseMustFail() {
+    EXPECT_FALSE(_object->success());
+  }
 
-  void sizeMustBe(int expected) { EXPECT_EQ(expected, _object->size()); }
+  void sizeMustBe(int expected) {
+    EXPECT_EQ(expected, _object->size());
+  }
 
   void keyMustHaveValue(const char *key, const char *expected) {
     EXPECT_STREQ(expected, (*_object)[key]);

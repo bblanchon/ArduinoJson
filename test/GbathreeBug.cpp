@@ -1,12 +1,12 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 class GbathreeBug : public testing::Test {
  public:
@@ -34,37 +34,61 @@ class GbathreeBug : public testing::Test {
   }
 };
 
-TEST_F(GbathreeBug, Success) { EXPECT_TRUE(_object.success()); }
+TEST_F(GbathreeBug, Success) {
+  EXPECT_TRUE(_object.success());
+}
 
 TEST_F(GbathreeBug, ProtocolName) {
   EXPECT_STREQ("fluorescence", _object["protocol_name"]);
 }
 
-TEST_F(GbathreeBug, Repeats) { EXPECT_EQ(1, _object["repeats"]); }
+TEST_F(GbathreeBug, Repeats) {
+  EXPECT_EQ(1, _object["repeats"]);
+}
 
-TEST_F(GbathreeBug, Wait) { EXPECT_EQ(0, _object["wait"]); }
+TEST_F(GbathreeBug, Wait) {
+  EXPECT_EQ(0, _object["wait"]);
+}
 
-TEST_F(GbathreeBug, Measurements) { EXPECT_EQ(3, _object["measurements"]); }
+TEST_F(GbathreeBug, Measurements) {
+  EXPECT_EQ(3, _object["measurements"]);
+}
 
-TEST_F(GbathreeBug, Meas2_Light) { EXPECT_EQ(15, _object["meas2_light"]); }
+TEST_F(GbathreeBug, Meas2_Light) {
+  EXPECT_EQ(15, _object["meas2_light"]);
+}
 
-TEST_F(GbathreeBug, Meas1_Baseline) { EXPECT_EQ(0, _object["meas1_baseline"]); }
+TEST_F(GbathreeBug, Meas1_Baseline) {
+  EXPECT_EQ(0, _object["meas1_baseline"]);
+}
 
-TEST_F(GbathreeBug, Act_Light) { EXPECT_EQ(20, _object["act_light"]); }
+TEST_F(GbathreeBug, Act_Light) {
+  EXPECT_EQ(20, _object["act_light"]);
+}
 
-TEST_F(GbathreeBug, Pulsesize) { EXPECT_EQ(25, _object["pulsesize"]); }
+TEST_F(GbathreeBug, Pulsesize) {
+  EXPECT_EQ(25, _object["pulsesize"]);
+}
 
 TEST_F(GbathreeBug, Pulsedistance) {
   EXPECT_EQ(10000, _object["pulsedistance"]);
 }
 
-TEST_F(GbathreeBug, Actintensity1) { EXPECT_EQ(50, _object["actintensity1"]); }
+TEST_F(GbathreeBug, Actintensity1) {
+  EXPECT_EQ(50, _object["actintensity1"]);
+}
 
-TEST_F(GbathreeBug, Actintensity2) { EXPECT_EQ(255, _object["actintensity2"]); }
+TEST_F(GbathreeBug, Actintensity2) {
+  EXPECT_EQ(255, _object["actintensity2"]);
+}
 
-TEST_F(GbathreeBug, Measintensity) { EXPECT_EQ(255, _object["measintensity"]); }
+TEST_F(GbathreeBug, Measintensity) {
+  EXPECT_EQ(255, _object["measintensity"]);
+}
 
-TEST_F(GbathreeBug, Calintensity) { EXPECT_EQ(255, _object["calintensity"]); }
+TEST_F(GbathreeBug, Calintensity) {
+  EXPECT_EQ(255, _object["calintensity"]);
+}
 
 TEST_F(GbathreeBug, Pulses) {
   // "pulses":[50,50,50]

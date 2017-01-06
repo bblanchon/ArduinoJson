@@ -1,12 +1,12 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
 // https://github.com/bblanchon/ArduinoJson
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson.h>
+#include <gtest/gtest.h>
 
 TEST(StaticJsonBuffer_CreateArray_Tests, GrowsWithArray) {
   StaticJsonBuffer<JSON_ARRAY_SIZE(2)> json;

@@ -1,4 +1,4 @@
-# Copyright Benoit Blanchon 2014-2016
+# Copyright Benoit Blanchon 2014-2017
 # MIT License
 #
 # Arduino JSON library

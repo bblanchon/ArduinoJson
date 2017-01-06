@@ -1,4 +1,4 @@
-// Copyright Benoit Blanchon 2014-2016
+// Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
 // Arduino JSON library
@@ -18,8 +18,12 @@ class ListConstIterator {
  public:
   explicit ListConstIterator(const ListNode<T> *node = NULL) : _node(node) {}
 
-  const T &operator*() const { return _node->content; }
-  const T *operator->() { return &_node->content; }
+  const T &operator*() const {
+    return _node->content;
+  }
+  const T *operator->() {
+    return &_node->content;
+  }
 
   bool operator==(const ListConstIterator<T> &other) const {
     return _node == other._node;
