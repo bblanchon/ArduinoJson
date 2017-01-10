@@ -8,6 +8,24 @@ v5.8.0
 * Added support for `Stream` (issue #300)
 * Reduced memory consumption by not duplicating spaces and comments
 
+**BREAKING CHANGES**:
+
+`JsonBuffer::parseObject()` and  `JsonBuffer::parseArray()` have been pulled down to the derived classes `DynamicJsonBuffer` and `StaticJsonBufferBase`.
+
+This means that if you have code like:
+
+```c++
+void myFunction(JsonBuffer& jsonBuffer);
+```
+
+you need to replace it with one of the following:
+
+```c++
+void myFunction(DynamicJsonBuffer& jsonBuffer);
+void myFunction(StaticJsonBufferBase& jsonBuffer);
+template<typename TJsonBuffer> void myFunction(TJsonBuffer& jsonBuffer);
+```
+
 v5.7.3
 ------
 
