@@ -19,7 +19,7 @@ class IsBaseOf {
   typedef char No[2];
 
   static Yes &probe(const TBase *);
-  static No &probe(const void *);
+  static No &probe(...);
 
  public:
   enum {

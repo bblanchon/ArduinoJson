@@ -38,6 +38,15 @@ TEST_(StoreInteger) {
   EXPECT_FALSE(_object["hello"].is<double>());
 }
 
+TEST_(StoreVolatileInteger) {  // issue #415
+  volatile int i = 123;
+  _object["hello"] = i;
+
+  EXPECT_EQ(123, _object["hello"].as<int>());
+  EXPECT_TRUE(_object["hello"].is<int>());
+  EXPECT_FALSE(_object["hello"].is<double>());
+}
+
 TEST_(StoreDouble) {
   _object["hello"] = 123.45;
 

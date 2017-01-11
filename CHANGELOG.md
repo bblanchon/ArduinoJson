@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed error when assigning a `volatile int` to a `JsonVariant` (issue #415)
+
 v5.8.0
 ------
 
