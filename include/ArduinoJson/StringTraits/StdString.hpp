@@ -19,7 +19,7 @@ namespace ArduinoJson {
 namespace Internals {
 
 template <typename TString>
-struct StdStringFuncs {
+struct StdStringTraits {
   template <typename Buffer>
   static char* duplicate(const TString& str, Buffer* buffer) {
     if (!str.c_str()) return NULL;  // <- Arduino string can return NULL
@@ -29,8 +29,8 @@ struct StdStringFuncs {
     return static_cast<char*>(dup);
   }
 
-  struct Iterator : CharPtrFuncs::Iterator {
-    Iterator(const TString& str) : CharPtrFuncs::Iterator(str.c_str()) {}
+  struct Iterator : CharPointerTraits::Iterator {
+    Iterator(const TString& str) : CharPointerTraits::Iterator(str.c_str()) {}
   };
 
   static bool equals(const TString& str, const char* expected) {
@@ -48,14 +48,15 @@ struct StdStringFuncs {
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
 template <>
-struct StringFuncs<String, void> : StdStringFuncs<String> {};
+struct StringTraits<String, void> : StdStringTraits<String> {};
 template <>
-struct StringFuncs<StringSumHelper, void> : StdStringFuncs<StringSumHelper> {};
+struct StringTraits<StringSumHelper, void> : StdStringTraits<StringSumHelper> {
+};
 #endif
 
 #if ARDUINOJSON_ENABLE_STD_STRING
 template <>
-struct StringFuncs<std::string, void> : StdStringFuncs<std::string> {};
+struct StringTraits<std::string, void> : StdStringTraits<std::string> {};
 #endif
 }
 }

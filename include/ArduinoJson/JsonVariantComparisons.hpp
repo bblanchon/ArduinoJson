@@ -21,11 +21,11 @@ struct JsonVariantComparer {
 
 template <typename TVariant, typename TString>
 struct JsonVariantComparer<
-    TVariant, TString, typename TypeTraits::EnableIf<
-                           Internals::StringFuncs<TString>::has_equals>::type> {
+    TVariant, TString, typename TypeTraits::EnableIf<Internals::StringTraits<
+                           TString>::has_equals>::type> {
   static bool equals(const TVariant &variant, const TString &comparand) {
     const char *value = variant.template as<const char *>();
-    return Internals::StringFuncs<TString>::equals(comparand, value);
+    return Internals::StringTraits<TString>::equals(comparand, value);
   }
 };
 

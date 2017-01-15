@@ -282,7 +282,7 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   template <typename TStringRef>
   node_type* findNode(TStringRef key) const {
     for (node_type* node = _firstNode; node; node = node->next) {
-      if (Internals::StringFuncs<TStringRef>::equals(key, node->content.key))
+      if (Internals::StringTraits<TStringRef>::equals(key, node->content.key))
         return node;
     }
     return NULL;

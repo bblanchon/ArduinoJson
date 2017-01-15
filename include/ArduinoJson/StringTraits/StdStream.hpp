@@ -15,7 +15,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
-struct StdStreamFuncs {
+struct StdStreamTraits {
   class Iterator {
     std::istream& _stream;
 
@@ -32,11 +32,11 @@ struct StdStreamFuncs {
 };
 
 template <typename TStream>
-struct StringFuncs<TStream,
-                   // match any type that is derived from std::istream:
-                   typename TypeTraits::EnableIf<TypeTraits::IsBaseOf<
-                       std::istream, typename TypeTraits::RemoveReference<
-                                         TStream>::type>::value>::type>
-    : StdStreamFuncs {};
+struct StringTraits<TStream,
+                    // match any type that is derived from std::istream:
+                    typename TypeTraits::EnableIf<TypeTraits::IsBaseOf<
+                        std::istream, typename TypeTraits::RemoveReference<
+                                          TStream>::type>::value>::type>
+    : StdStreamTraits {};
 }
 }

@@ -13,13 +13,13 @@ namespace ArduinoJson {
 namespace Internals {
 
 template <typename TString, typename Enable = void>
-struct StringFuncs {};
+struct StringTraits {};
 
 template <typename TString>
-struct StringFuncs<const TString, void> : StringFuncs<TString> {};
+struct StringTraits<const TString, void> : StringTraits<TString> {};
 
 template <typename TString>
-struct StringFuncs<TString&, void> : StringFuncs<TString> {};
+struct StringTraits<TString&, void> : StringTraits<TString> {};
 }
 }
 

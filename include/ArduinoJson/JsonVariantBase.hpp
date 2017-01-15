@@ -83,7 +83,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // TKey = const std::string&, const String&
   template <typename TString>
   FORCE_INLINE typename TypeTraits::EnableIf<
-      Internals::StringFuncs<TString>::has_equals,
+      Internals::StringTraits<TString>::has_equals,
       const JsonObjectSubscript<const TString &> >::type
   operator[](const TString &key) const {
     return asObject()[key];
@@ -92,10 +92,10 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // const JsonObjectSubscript operator[](TKey) const;
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  FORCE_INLINE
-      typename TypeTraits::EnableIf<Internals::StringFuncs<TString>::has_equals,
-                                    JsonObjectSubscript<const TString &> >::type
-      operator[](const TString &key) {
+  FORCE_INLINE typename TypeTraits::EnableIf<
+      Internals::StringTraits<TString>::has_equals,
+      JsonObjectSubscript<const TString &> >::type
+  operator[](const TString &key) {
     return asObject()[key];
   }
   //
@@ -103,7 +103,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // TKey = const std::string&, const String&
   template <typename TString>
   FORCE_INLINE typename TypeTraits::EnableIf<
-      Internals::StringFuncs<TString *>::has_equals,
+      Internals::StringTraits<TString *>::has_equals,
       JsonObjectSubscript<const TString *> >::type
   operator[](const TString *key) {
     return asObject()[key];
@@ -113,7 +113,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
   FORCE_INLINE typename TypeTraits::EnableIf<
-      Internals::StringFuncs<TString *>::has_equals,
+      Internals::StringTraits<TString *>::has_equals,
       const JsonObjectSubscript<const TString *> >::type
   operator[](const TString *key) const {
     return asObject()[key];

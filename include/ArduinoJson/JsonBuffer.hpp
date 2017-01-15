@@ -61,14 +61,14 @@ class JsonBuffer {
   typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
                                 char *>::type
   strdup(const TString &src) {
-    return Internals::StringFuncs<TString>::duplicate(src, this);
+    return Internals::StringTraits<TString>::duplicate(src, this);
   }
   //
   // char* strdup(TValue);
   // TValue = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
   char *strdup(const TString *src) {
-    return Internals::StringFuncs<const TString *>::duplicate(src, this);
+    return Internals::StringTraits<const TString *>::duplicate(src, this);
   }
 
   // Allocates n bytes in the JsonBuffer.

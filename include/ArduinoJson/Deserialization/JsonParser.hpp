@@ -74,7 +74,7 @@ class JsonParser {
 
 template <typename TJsonBuffer, typename TString>
 struct JsonParserBuilder {
-  typedef typename Internals::StringFuncs<TString>::Iterator InputIterator;
+  typedef typename Internals::StringTraits<TString>::Iterator InputIterator;
   typedef JsonParser<StringReader<InputIterator>, TJsonBuffer &> TParser;
 
   static TParser makeParser(TJsonBuffer *buffer, TString &json,
@@ -85,7 +85,7 @@ struct JsonParserBuilder {
 
 template <typename TJsonBuffer>
 struct JsonParserBuilder<TJsonBuffer, char *> {
-  typedef typename Internals::StringFuncs<char *>::Iterator InputIterator;
+  typedef typename Internals::StringTraits<char *>::Iterator InputIterator;
   typedef JsonParser<StringReader<InputIterator>, StringWriter> TParser;
 
   static TParser makeParser(TJsonBuffer *buffer, char *json,

@@ -10,7 +10,7 @@
 namespace ArduinoJson {
 namespace Internals {
 template <>
-struct StringFuncs<const __FlashStringHelper*, void> {
+struct StringTraits<const __FlashStringHelper*, void> {
   class Iterator {
     const char* _ptr;
 

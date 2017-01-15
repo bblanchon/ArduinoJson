@@ -10,7 +10,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
-struct CharPtrFuncs {
+struct CharPointerTraits {
   class Iterator {
     const char* _ptr;
 
@@ -43,9 +43,9 @@ struct CharPtrFuncs {
 };
 
 template <>
-struct StringFuncs<const char*, void> : CharPtrFuncs {};
+struct StringTraits<const char*, void> : CharPointerTraits {};
 
 template <>
-struct StringFuncs<char*, void> : CharPtrFuncs {};
+struct StringTraits<char*, void> : CharPointerTraits {};
 }
 }

@@ -20,7 +20,7 @@ class DynamicStringBuilder : public Print {
   DynamicStringBuilder(TString &str) : _str(str) {}
 
   virtual size_t write(uint8_t c) {
-    StringFuncs<TString>::append(_str, static_cast<char>(c));
+    StringTraits<TString>::append(_str, static_cast<char>(c));
     return 1;
   }
 
