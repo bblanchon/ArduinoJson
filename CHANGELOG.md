@@ -7,6 +7,7 @@ HEAD
 * Fixed error when assigning a `volatile int` to a `JsonVariant` (issue #415)
 * Fixed errors with Variable Length Arrays (issue #416)
 * Fixed error when both `ARDUINOJSON_ENABLE_STD_STREAM` and `ARDUINOJSON_ENABLE_ARDUINO_STREAM` are set to `1`
+* Fixed error "Stream does not name a type" (issue #412)
 
 v5.8.0
 ------
