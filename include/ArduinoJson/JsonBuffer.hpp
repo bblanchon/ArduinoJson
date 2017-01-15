@@ -12,6 +12,8 @@
 #include <string.h>
 
 #include "JsonVariant.hpp"
+#include "TypeTraits/EnableIf.hpp"
+#include "TypeTraits/IsArray.hpp"
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -51,10 +53,22 @@ class JsonBuffer {
   // allocation fails.
   JsonObject &createObject();
 
-  // Duplicate a string
+  // Duplicates a string
+  //
+  // char* strdup(TValue);
+  // TValue = const std::string&, const String&,
   template <typename TString>
-  char *strdup(const TString &src) {
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                char *>::type
+  strdup(const TString &src) {
     return Internals::StringFuncs<TString>::duplicate(src, this);
+  }
+  //
+  // char* strdup(TValue);
+  // TValue = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  char *strdup(const TString *src) {
+    return Internals::StringFuncs<const TString *>::duplicate(src, this);
   }
 
   // Allocates n bytes in the JsonBuffer.

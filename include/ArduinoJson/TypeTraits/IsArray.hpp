@@ -12,20 +12,16 @@ namespace TypeTraits {
 
 // A meta-function that return the type T without the const modifier
 template <typename T>
-struct ConstRefOrConstPtr {
-  typedef const T& type;
+struct IsArray {
+  static const bool value = false;
 };
 template <typename T>
-struct ConstRefOrConstPtr<T*> {
-  typedef const T* type;
-};
-template <typename T>
-struct ConstRefOrConstPtr<T[]> {
-  typedef const T* type;
+struct IsArray<T[]> {
+  static const bool value = true;
 };
 template <typename T, size_t N>
-struct ConstRefOrConstPtr<T[N]> {
-  typedef const T* type;
+struct IsArray<T[N]> {
+  static const bool value = true;
 };
 }
 }

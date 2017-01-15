@@ -94,10 +94,6 @@ struct JsonParserBuilder<TJsonBuffer, char *> {
   }
 };
 
-template <typename TJsonBuffer, size_t N>
-struct JsonParserBuilder<TJsonBuffer, char[N]>
-    : JsonParserBuilder<TJsonBuffer, char *> {};
-
 template <typename TJsonBuffer, typename TString>
 inline typename JsonParserBuilder<TJsonBuffer, TString>::TParser makeParser(
     TJsonBuffer *buffer, TString &json, uint8_t nestingLimit) {

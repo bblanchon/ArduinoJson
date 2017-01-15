@@ -47,11 +47,5 @@ struct StringFuncs<const char*, void> : CharPtrFuncs {};
 
 template <>
 struct StringFuncs<char*, void> : CharPtrFuncs {};
-
-template <size_t N>
-struct StringFuncs<char[N], void> : CharPtrFuncs {};
-
-template <size_t N>
-struct StringFuncs<const char[N], void> : CharPtrFuncs {};
 }
 }

@@ -15,3 +15,9 @@ TEST(StdStream, IsBaseOf) {
   ASSERT_FALSE((IsBaseOf<std::istream, std::ostringstream>::value));
   ASSERT_TRUE((IsBaseOf<std::istream, std::istringstream>::value));
 }
+
+TEST(StdStream, IsArray) {
+  ASSERT_FALSE((IsArray<const char*>::value));
+  ASSERT_TRUE((IsArray<const char[]>::value));
+  ASSERT_TRUE((IsArray<const char[10]>::value));
+}

@@ -9,7 +9,6 @@
 
 #include "Configuration.hpp"
 #include "JsonVariantBase.hpp"
-#include "TypeTraits/ConstRefOrConstPtr.hpp"
 #include "TypeTraits/EnableIf.hpp"
 
 #ifdef _MSC_VER
@@ -19,26 +18,39 @@
 
 namespace ArduinoJson {
 
-template <typename TString>
+template <typename TStringRef>
 class JsonObjectSubscript
-    : public JsonVariantBase<JsonObjectSubscript<TString> > {
-  // const String&
-  // const std::string&
-  // const char*
-  typedef typename TypeTraits::ConstRefOrConstPtr<TString>::type TStringRef;
+    : public JsonVariantBase<JsonObjectSubscript<TStringRef> > {
+  typedef JsonObjectSubscript<TStringRef> this_type;
 
  public:
   FORCE_INLINE JsonObjectSubscript(JsonObject& object, TStringRef key)
       : _object(object), _key(key) {}
 
-  FORCE_INLINE JsonObjectSubscript<TString>& operator=(
-      const JsonObjectSubscript<TString>& src) {
+  FORCE_INLINE this_type& operator=(const this_type& src) {
     _object.set(_key, src);
     return *this;
   }
 
-  template <typename T>
-  FORCE_INLINE JsonObjectSubscript<TString>& operator=(const T& src) {
+  // Set the specified value
+  //
+  // operator=(TValue);
+  // TValue = bool, char, long, int, short, float, double,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
+  template <typename TValue>
+  FORCE_INLINE
+      typename TypeTraits::EnableIf<!TypeTraits::IsArray<TValue>::value,
+                                    this_type&>::type
+      operator=(const TValue& src) {
+    _object.set(_key, src);
+    return *this;
+  }
+  //
+  // operator=(TValue);
+  // TValue = const char*, const char[N], const FlashStringHelper*
+  template <typename TValue>
+  FORCE_INLINE this_type& operator=(const TValue* src) {
     _object.set(_key, src);
     return *this;
   }
@@ -49,7 +61,7 @@ class JsonObjectSubscript
 
   template <typename TValue>
   FORCE_INLINE typename Internals::JsonVariantAs<TValue>::type as() const {
-    return _object.get<TValue, TStringRef>(_key);
+    return _object.get<TValue>(_key);
   }
 
   template <typename TValue>
@@ -57,11 +69,29 @@ class JsonObjectSubscript
     return _object.is<TValue>(_key);
   }
 
+  // Sets the specified value.
+  //
+  // bool set(TValue);
+  // TValue = bool, char, long, int, short, float, double, RawJson, JsonVariant,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
   template <typename TValue>
-  FORCE_INLINE bool set(const TValue& value) {
+  FORCE_INLINE
+      typename TypeTraits::EnableIf<!TypeTraits::IsArray<TValue>::value,
+                                    bool>::type
+      set(const TValue& value) {
     return _object.set(_key, value);
   }
-
+  //
+  // bool set(TValue);
+  // TValue = const char*, const char[N], const FlashStringHelper*
+  template <typename TValue>
+  FORCE_INLINE bool set(const TValue* value) {
+    return _object.set(_key, value);
+  }
+  //
+  // bool set(TValue, uint8_t decimals);
+  // TValue = float, double
   template <typename TValue>
   FORCE_INLINE bool set(const TValue& value, uint8_t decimals) {
     return _object.set(_key, value, decimals);
@@ -73,17 +103,12 @@ class JsonObjectSubscript
 };
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-template <typename TString>
+template <typename TStringRef>
 inline std::ostream& operator<<(std::ostream& os,
-                                const JsonObjectSubscript<TString>& source) {
+                                const JsonObjectSubscript<TStringRef>& source) {
   return source.printTo(os);
 }
 #endif
-
-template <typename TString>
-inline JsonObjectSubscript<TString> JsonObject::operator[](const TString& key) {
-  return JsonObjectSubscript<TString>(*this, key);
-}
 }  // namespace ArduinoJson
 
 #ifdef _MSC_VER

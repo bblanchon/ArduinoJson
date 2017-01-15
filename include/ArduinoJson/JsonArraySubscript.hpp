@@ -26,8 +26,22 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return *this;
   }
 
+  // Replaces the value
+  //
+  // operator=(TValue)
+  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
   template <typename T>
   FORCE_INLINE JsonArraySubscript& operator=(const T& src) {
+    _array.set(_index, src);
+    return *this;
+  }
+  //
+  // operator=(TValue)
+  // TValue = const char*, const char[N], const FlashStringHelper*
+  template <typename T>
+  FORCE_INLINE JsonArraySubscript& operator=(const T* src) {
     _array.set(_index, src);
     return *this;
   }
@@ -46,9 +60,29 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return _array.is<T>(_index);
   }
 
+  // Replaces the value
+  //
+  // bool set(TValue)
+  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
   template <typename TValue>
-  FORCE_INLINE void set(const TValue& value) {
-    _array.set(_index, value);
+  FORCE_INLINE bool set(const TValue& value) {
+    return _array.set(_index, value);
+  }
+  //
+  // bool set(TValue)
+  // TValue = const char*, const char[N], const FlashStringHelper*
+  template <typename TValue>
+  FORCE_INLINE bool set(const TValue* value) {
+    return _array.set(_index, value);
+  }
+  //
+  // bool set(TValue, uint8_t decimals);
+  // TValue = float, double
+  template <typename TValue>
+  FORCE_INLINE bool set(const TValue& value, uint8_t decimals) {
+    return _array.set(_index, value, decimals);
   }
 
  private:

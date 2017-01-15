@@ -49,6 +49,13 @@ TEST_(StoreDouble) {
   EXPECT_FALSE(_array[0].is<int>());
 }
 
+TEST_(StoreDoubleWithDecimals) {
+  _array[0].set(123.45, 2);
+  EXPECT_EQ(123.45, _array[0].as<double>());
+  EXPECT_TRUE(_array[0].is<double>());
+  EXPECT_FALSE(_array[0].is<int>());
+}
+
 TEST_(StoreBoolean) {
   _array[0] = true;
   EXPECT_EQ(true, _array[0].as<bool>());

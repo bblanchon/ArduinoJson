@@ -14,8 +14,8 @@
 #include "JsonPair.hpp"
 #include "Serialization/JsonPrintable.hpp"
 #include "StringTraits/StringTraits.hpp"
-#include "TypeTraits/ConstRefOrConstPtr.hpp"
 #include "TypeTraits/EnableIf.hpp"
+#include "TypeTraits/IsArray.hpp"
 #include "TypeTraits/IsFloatingPoint.hpp"
 #include "TypeTraits/IsSame.hpp"
 
@@ -47,81 +47,226 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   explicit JsonObject(JsonBuffer* buffer) : Internals::List<JsonPair>(buffer) {}
 
   // Gets or sets the value associated with the specified key.
+  //
+  // JsonObjectSubscript operator[](TKey)
+  // TKey = const std::string&, const String&
   template <typename TString>
-  JsonObjectSubscript<TString> operator[](const TString& key);
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                JsonObjectSubscript<const TString&> >::type
+  operator[](const TString& key) {
+    return JsonObjectSubscript<const TString&>(*this, key);
+  }
+  //
+  // JsonObjectSubscript operator[](TKey)
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  JsonObjectSubscript<const TString*> operator[](const TString* key) {
+    return JsonObjectSubscript<const TString*>(*this, key);
+  }
 
   // Gets the value associated with the specified key.
+  //
+  // JsonVariant operator[](TKey) const;
+  // TKey = const std::string&, const String&
   template <typename TString>
-  JsonVariant operator[](const TString& key) const {
-    return get<JsonVariant>(key);
+  const JsonVariant operator[](const TString& key) const {
+    return get_impl<const TString&, JsonVariant>(key);
+  }
+  //
+  // JsonVariant operator[](TKey) const;
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  const JsonVariant operator[](const TString* key) const {
+    return get_impl<const TString*, JsonVariant>(key);
   }
 
   // Sets the specified key with the specified value.
-  // bool set(TKey key, bool value);
-  // bool set(TKey key, char value);
-  // bool set(TKey key, long value);
-  // bool set(TKey key, int value);
-  // bool set(TKey key, short value);
-  // bool set(TKey key, float value);
-  // bool set(TKey key, double value);
-  // bool set(TKey key, const char* value);
-  // bool set(TKey key, RawJson value);
-  // bool set(Key, String&);
-  // bool set(Key, JsonArray&);
-  // bool set(Key, JsonObject&);
-  // bool set(Key, JsonVariant&);
+  //
+  // bool set(TKey, TValue);
+  // TKey = const std::string&, const String&
+  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
   template <typename TValue, typename TString>
-  bool set(const TString& key, const TValue& value) {
-    // reduce the number of template function instanciation to reduce code size
-    return setNodeAt<typename TypeTraits::ConstRefOrConstPtr<TString>::type,
-                     typename TypeTraits::ConstRefOrConstPtr<TValue>::type>(
-        key, value);
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value &&
+                                    !TypeTraits::IsArray<TValue>::value,
+                                bool>::type
+  set(const TString& key, const TValue& value) {
+    return set_impl<const TString&, const TValue&>(key, value);
   }
-  // bool set(Key, float value, uint8_t decimals);
-  // bool set(Key, double value, uint8_t decimals);
+  //
+  // bool set(TKey, TValue);
+  // TKey = const std::string&, const String&
+  // TValue = const char*, const char[N], const FlashStringHelper*
+  template <typename TValue, typename TString>
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                bool>::type
+  set(const TString& key, const TValue* value) {
+    return set_impl<const TString&, const TValue*>(key, value);
+  }
+  //
+  // bool set(TKey, TValue);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
+  template <typename TValue, typename TString>
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TValue>::value, bool>::type
+  set(const TString* key, const TValue& value) {
+    return set_impl<const TString*, const TValue&>(key, value);
+  }
+  //
+  // bool set(TKey, TValue);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TValue = const char*, const char[N], const FlashStringHelper*
+  template <typename TValue, typename TString>
+  bool set(const TString* key, const TValue* value) {
+    return set_impl<const TString*, const TValue*>(key, value);
+  }
+  //
+  // bool set(TKey, TValue, uint8_t decimals);
+  // TKey = const std::string&, const String&
+  // TValue = float, double
+  template <typename TValue, typename TString>
+  typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<TValue>::value &&
+                                    !TypeTraits::IsArray<TString>::value,
+                                bool>::type
+  set(const TString& key, TValue value, uint8_t decimals) {
+    return set_impl<const TString&, const JsonVariant&>(
+        key, JsonVariant(value, decimals));
+  }
+  //
+  // bool set(TKey, TValue, uint8_t decimals);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TValue = float, double
   template <typename TValue, typename TString>
   typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<TValue>::value,
                                 bool>::type
-  set(const TString& key, TValue value, uint8_t decimals) {
-    return set(key, JsonVariant(value, decimals));
+  set(const TString* key, TValue value, uint8_t decimals) {
+    return set_impl<const TString*, const JsonVariant&>(
+        key, JsonVariant(value, decimals));
   }
 
   // Gets the value associated with the specified key.
+  //
+  // TValue get<TValue>(TKey);
+  // TKey = const std::string&, const String&
+  // TValue = bool, char, long, int, short, float, double,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
+  template <typename TValue, typename TString>
+  typename TypeTraits::EnableIf<
+      !TypeTraits::IsArray<TString>::value,
+      typename Internals::JsonVariantAs<TValue>::type>::type
+  get(const TString& key) const {
+    return get_impl<const TString&, TValue>(key);
+  }
+  //
+  // TValue get<TValue>(TKey);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TValue = bool, char, long, int, short, float, double,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
   template <typename TValue, typename TString>
   typename Internals::JsonVariantAs<TValue>::type get(
-      const TString& key) const {
-    node_type* node = getNodeAt(key);
-    return node ? node->content.value.as<TValue>()
-                : Internals::JsonVariantDefault<TValue>::get();
+      const TString* key) const {
+    return get_impl<const TString*, TValue>(key);
   }
 
   // Checks the type of the value associated with the specified key.
+  //
+  //
+  // bool is<TValue>(TKey) const;
+  // TKey = const std::string&, const String&
+  // TValue = bool, char, long, int, short, float, double,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
   template <typename TValue, typename TString>
-  bool is(const TString& key) const {
-    node_type* node = getNodeAt(key);
-    return node ? node->content.value.is<TValue>() : false;
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                bool>::type
+  is(const TString& key) const {
+    return is_impl<const TString&, TValue>(key);
+  }
+  //
+  // bool is<TValue>(TKey) const;
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TValue = bool, char, long, int, short, float, double,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
+  template <typename TValue, typename TString>
+  bool is(const TString* key) const {
+    return is_impl<const TString*, TValue>(key);
   }
 
   // Creates and adds a JsonArray.
-  // This is a shortcut for JsonBuffer::createArray() and JsonObject::add().
+  //
+  // JsonArray& createNestedArray(TKey);
+  // TKey = const std::string&, const String&
   template <typename TString>
-  JsonArray& createNestedArray(const TString& key);
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                JsonArray&>::type
+  createNestedArray(const TString& key) {
+    return createNestedArray_impl<const TString&>(key);
+  }
+  // JsonArray& createNestedArray(TKey);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  JsonArray& createNestedArray(const TString* key) {
+    return createNestedArray_impl<const TString*>(key);
+  }
 
   // Creates and adds a JsonObject.
-  // This is a shortcut for JsonBuffer::createObject() and JsonObject::add().
+  //
+  // JsonObject& createNestedObject(TKey);
+  // TKey = const std::string&, const String&
   template <typename TString>
-  JsonObject& createNestedObject(const TString& key);
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                JsonObject&>::type
+  createNestedObject(const TString& key) {
+    return createNestedObject_impl<const TString&>(key);
+  }
+  //
+  // JsonObject& createNestedObject(TKey);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  JsonObject& createNestedObject(const TString* key) {
+    return createNestedObject_impl<const TString*>(key);
+  }
 
   // Tells weither the specified key is present and associated with a value.
+  //
+  // bool containsKey(TKey);
+  // TKey = const std::string&, const String&
   template <typename TString>
-  bool containsKey(const TString& key) const {
-    return getNodeAt(key) != NULL;
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                bool>::type
+  containsKey(const TString& key) const {
+    return findNode<const TString&>(key) != NULL;
+  }
+  //
+  // bool containsKey(TKey);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  bool containsKey(const TString* key) const {
+    return findNode<const TString*>(key) != NULL;
   }
 
   // Removes the specified key and the associated value.
+  //
+  // void remove(TKey);
+  // TKey = const std::string&, const String&
   template <typename TString>
-  void remove(const TString& key) {
-    removeNode(getNodeAt(key));
+  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
+                                void>::type
+  remove(const TString& key) {
+    removeNode(findNode<const TString&>(key));
+  }
+  //
+  // void remove(TKey);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  void remove(const TString* key) {
+    removeNode(findNode<const TString*>(key));
   }
 
   // Returns a reference an invalid JsonObject.
@@ -134,15 +279,8 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
  private:
   // Returns the list node that matches the specified key.
-  template <typename TString>
-  node_type* getNodeAt(const TString& key) const {
-    // reduce the number of template function instanciation to reduce code size
-    return getNodeAtImpl<
-        typename TypeTraits::ConstRefOrConstPtr<TString>::type>(key);
-  }
-
   template <typename TStringRef>
-  node_type* getNodeAtImpl(TStringRef key) const {
+  node_type* findNode(TStringRef key) const {
     for (node_type* node = _firstNode; node; node = node->next) {
       if (Internals::StringFuncs<TStringRef>::equals(key, node->content.key))
         return node;
@@ -150,9 +288,17 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
     return NULL;
   }
 
+  template <typename TStringRef, typename TValue>
+  typename Internals::JsonVariantAs<TValue>::type get_impl(
+      TStringRef key) const {
+    node_type* node = findNode<TStringRef>(key);
+    return node ? node->content.value.as<TValue>()
+                : Internals::JsonVariantDefault<TValue>::get();
+  }
+
   template <typename TStringRef, typename TValueRef>
-  bool setNodeAt(TStringRef key, TValueRef value) {
-    node_type* node = getNodeAtImpl<TStringRef>(key);
+  bool set_impl(TStringRef key, TValueRef value) {
+    node_type* node = findNode<TStringRef>(key);
     if (!node) {
       node = addNewNode();
       if (!node) return false;
@@ -164,6 +310,18 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
     return Internals::ValueSetter<TValueRef>::set(_buffer, node->content.value,
                                                   value);
   }
+
+  template <typename TStringRef, typename TValue>
+  bool is_impl(TStringRef key) const {
+    node_type* node = findNode<TStringRef>(key);
+    return node ? node->content.value.is<TValue>() : false;
+  }
+
+  template <typename TStringRef>
+  JsonArray& createNestedArray_impl(TStringRef key);
+
+  template <typename TStringRef>
+  JsonObject& createNestedObject_impl(TStringRef key);
 };
 
 namespace Internals {

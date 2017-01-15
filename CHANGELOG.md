@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed error when assigning a `volatile int` to a `JsonVariant` (issue #415)
+* Fixed errors with Variable Length Arrays (issue #416)
 
 v5.8.0
 ------
