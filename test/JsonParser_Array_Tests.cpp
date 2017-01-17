@@ -237,7 +237,7 @@ TEST_F(JsonParser_Array_Tests, StringWithUnterminatedEscapeSequence) {
 }
 
 TEST_F(JsonParser_Array_Tests, CCommentBeforeOpeningBracket) {
-  whenInputIs("/*COMMENT*/[\"hello\"]");
+  whenInputIs("/*COMMENT*/  [\"hello\"]");
 
   parseMustSucceed();
   sizeMustBe(1);
@@ -245,7 +245,7 @@ TEST_F(JsonParser_Array_Tests, CCommentBeforeOpeningBracket) {
 }
 
 TEST_F(JsonParser_Array_Tests, CCommentAfterOpeningBracket) {
-  whenInputIs("[/*COMMENT*/\"hello\"]");
+  whenInputIs("[/*COMMENT*/ \"hello\"]");
 
   parseMustSucceed();
   sizeMustBe(1);
@@ -278,7 +278,7 @@ TEST_F(JsonParser_Array_Tests, CCommentBeforeComma) {
 }
 
 TEST_F(JsonParser_Array_Tests, CCommentAfterComma) {
-  whenInputIs("[\"hello\",/*COMMENT*/\"world\"]");
+  whenInputIs("[\"hello\",/*COMMENT*/ \"world\"]");
 
   parseMustSucceed();
   sizeMustBe(2);
@@ -287,7 +287,7 @@ TEST_F(JsonParser_Array_Tests, CCommentAfterComma) {
 }
 
 TEST_F(JsonParser_Array_Tests, CppCommentBeforeOpeningBracket) {
-  whenInputIs("//COMMENT\n[\"hello\"]");
+  whenInputIs("//COMMENT\n\t[\"hello\"]");
 
   parseMustSucceed();
   sizeMustBe(1);
@@ -303,7 +303,7 @@ TEST_F(JsonParser_Array_Tests, CppCommentAfterOpeningBracket) {
 }
 
 TEST_F(JsonParser_Array_Tests, CppCommentBeforeClosingBracket) {
-  whenInputIs("[\"hello\"//COMMENT\n]");
+  whenInputIs("[\"hello\"//COMMENT\r\n]");
 
   parseMustSucceed();
   sizeMustBe(1);

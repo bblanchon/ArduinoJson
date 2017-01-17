@@ -27,39 +27,27 @@ void skipSpacesAndComments(TInput& input) {
           // C-style block comment
           case '*':
             input.move();  // skip '/'
-            input.move();  // skip '*'
+            // no need to skip '*'
             for (;;) {
-              switch (input.current()) {
-                case '\0':
-                  return;
-                case '*':
-                  input.move();  // skip '*'
-                  if (input.current() == '/') {
-                    input.move();  // skip '/'
-                    return;
-                  }
-                  break;
-                default:
-                  input.move();
+              input.move();
+              if (input.current() == '\0') return;
+              if (input.current() == '*' && input.next() == '/') {
+                input.move();  // skip '*'
+                input.move();  // skip '/'
+                break;
               }
             }
             break;
 
           // C++-style line comment
           case '/':
-            input.move();  // skip '/'
+            // not need to skip "//"
             for (;;) {
-              switch (input.current()) {
-                case '\0':
-                  return;
-                case '\n':
-                  input.move();
-                  return;
-                default:
-                  input.move();
-              }
+              input.move();
+              if (input.current() == '\0') return;
+              if (input.current() == '\n') break;
             }
-            return;
+            break;
 
           // not a comment, just a '/'
           default:

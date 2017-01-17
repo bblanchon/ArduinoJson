@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed parsing of comments (issue #421)
+
 v5.8.1
 ------
 
