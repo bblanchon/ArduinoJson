@@ -7,97 +7,91 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.4']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.4
+      env: SCRIPT=cmake GCC=4.4
     - compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.5']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.5
+      env: SCRIPT=cmake GCC=4.5
     - compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.6']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.6
+      env: SCRIPT=cmake GCC=4.6
     - compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.7']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.7
+      env: SCRIPT=cmake GCC=4.7
     - compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.8']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.8
+      env: SCRIPT=cmake GCC=4.8 SANITIZE=address
     - compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.9']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-4.9
+      env: SCRIPT=cmake GCC=4.9 SANITIZE=leak
     - compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=g++-5
+      env: SCRIPT=cmake GCC=5 SANITIZE=undefined
     - compiler: clang
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++
+      env: SCRIPT=cmake
     - compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.5']
           packages: ['clang-3.5']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.5
+      env: SCRIPT=cmake CLANG=3.5 SANITIZE=address
     - compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.6']
           packages: ['clang-3.6']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.6
+      env: SCRIPT=cmake CLANG=3.6 SANITIZE=leak
     - compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.7']
           packages: ['clang-3.7']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.7
+      env: SCRIPT=cmake CLANG=3.7
     - compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
           packages: ['clang-3.8']
-      env: SCRIPT=cmake CMAKE_CXX_COMPILER=clang++-3.8
-    - compiler: clang
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
-          packages: ['clang-3.8']
-      env: SCRIPT=sanitize CMAKE_CXX_COMPILER=clang++-3.8
+      env: SCRIPT=cmake CLANG=3.8 SANITIZE=undefined
     - compiler: gcc
       env: SCRIPT=coverage
     - os: osx
       osx_image: xcode6.4
       compiler: clang
-      env: SCRIPT=cmake-osx
+      env: SCRIPT=cmake
     - os: osx
       osx_image: xcode7
       compiler: clang
-      env: SCRIPT=cmake-osx
+      env: SCRIPT=cmake
     - os: osx
       osx_image: xcode7.1
       compiler: clang
-      env: SCRIPT=cmake-osx
+      env: SCRIPT=cmake
     - os: osx
       osx_image: xcode7.2
       compiler: clang
-      env: SCRIPT=cmake-osx
+      env: SCRIPT=cmake
     - os: osx
       osx_image: xcode7.3
       compiler: clang
-      env: SCRIPT=cmake-osx
+      env: SCRIPT=cmake SANITIZE=address
     - env: SCRIPT=arduino VERSION=1.6.7 BOARD=arduino:avr:uno
     - env: SCRIPT=arduino VERSION=1.6.12 BOARD=arduino:avr:uno
     - env: SCRIPT=platformio BOARD=uno
