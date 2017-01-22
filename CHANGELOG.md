@@ -7,6 +7,8 @@ HEAD
 * Fixed parsing of comments (issue #421)
 * Fixed ignored `Stream` timeout (issue #422)
 * Made sure we don't read more that necessary (issue #422)
+* Fixed error when the key of a `JsonObject` is a `char[]` (issue #423)
+* Reduced code size when using `const` references
 
 v5.8.1
 ------

@@ -131,3 +131,9 @@ TEST_(StoreObjectSubscript) {
 
   EXPECT_EQ(42, _object["a"]);
 }
+
+TEST_(KeyAsCharArray) {  // issue #423
+  char key[] = "hello";
+  _object[key] = 42;
+  EXPECT_EQ(42, _object[key]);
+}

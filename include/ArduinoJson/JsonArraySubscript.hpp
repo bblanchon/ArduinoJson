@@ -101,6 +101,10 @@ inline JsonArraySubscript JsonArray::operator[](size_t index) {
   return JsonArraySubscript(*this, index);
 }
 
+inline const JsonArraySubscript JsonArray::operator[](size_t index) const {
+  return JsonArraySubscript(*const_cast<JsonArray*>(this), index);
+}
+
 template <typename TImplem>
 inline JsonArraySubscript JsonVariantBase<TImplem>::operator[](int index) {
   return asArray()[index];

@@ -49,9 +49,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
       : Internals::List<JsonVariant>(buffer) {}
 
   // Gets the value at the specified index
-  JsonVariant operator[](size_t index) const {
-    return get<JsonVariant>(index);
-  }
+  const JsonArraySubscript operator[](size_t index) const;
 
   // Gets or sets the value at specified index
   JsonArraySubscript operator[](size_t index);

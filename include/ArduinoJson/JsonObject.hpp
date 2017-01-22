@@ -66,18 +66,24 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
   // Gets the value associated with the specified key.
   //
-  // JsonVariant operator[](TKey) const;
+  // const JsonObjectSubscript operator[](TKey) const;
   // TKey = const std::string&, const String&
   template <typename TString>
-  const JsonVariant operator[](const TString& key) const {
-    return get_impl<const TString&, JsonVariant>(key);
+  typename TypeTraits::EnableIf<
+      !TypeTraits::IsArray<TString>::value,
+      const JsonObjectSubscript<const TString&> >::type
+  operator[](const TString& key) const {
+    return JsonObjectSubscript<const TString&>(*const_cast<JsonObject*>(this),
+                                               key);
   }
   //
-  // JsonVariant operator[](TKey) const;
+  // const JsonObjectSubscript operator[](TKey) const;
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  const JsonVariant operator[](const TString* key) const {
-    return get_impl<const TString*, JsonVariant>(key);
+  const JsonObjectSubscript<const TString*> operator[](
+      const TString* key) const {
+    return JsonObjectSubscript<const TString*>(*const_cast<JsonObject*>(this),
+                                               key);
   }
 
   // Sets the specified key with the specified value.
