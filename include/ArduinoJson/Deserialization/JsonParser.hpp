@@ -9,7 +9,6 @@
 
 #include "../JsonBuffer.hpp"
 #include "../JsonVariant.hpp"
-#include "StringReader.hpp"
 #include "StringWriter.hpp"
 
 namespace ArduinoJson {
@@ -74,23 +73,23 @@ class JsonParser {
 
 template <typename TJsonBuffer, typename TString>
 struct JsonParserBuilder {
-  typedef typename Internals::StringTraits<TString>::Iterator InputIterator;
-  typedef JsonParser<StringReader<InputIterator>, TJsonBuffer &> TParser;
+  typedef typename Internals::StringTraits<TString>::Reader InputReader;
+  typedef JsonParser<InputReader, TJsonBuffer &> TParser;
 
   static TParser makeParser(TJsonBuffer *buffer, TString &json,
                             uint8_t nestingLimit) {
-    return TParser(buffer, InputIterator(json), *buffer, nestingLimit);
+    return TParser(buffer, InputReader(json), *buffer, nestingLimit);
   }
 };
 
 template <typename TJsonBuffer>
 struct JsonParserBuilder<TJsonBuffer, char *> {
-  typedef typename Internals::StringTraits<char *>::Iterator InputIterator;
-  typedef JsonParser<StringReader<InputIterator>, StringWriter> TParser;
+  typedef typename Internals::StringTraits<char *>::Reader InputReader;
+  typedef JsonParser<InputReader, StringWriter> TParser;
 
   static TParser makeParser(TJsonBuffer *buffer, char *json,
                             uint8_t nestingLimit) {
-    return TParser(buffer, InputIterator(json), json, nestingLimit);
+    return TParser(buffer, InputReader(json), json, nestingLimit);
   }
 };
 

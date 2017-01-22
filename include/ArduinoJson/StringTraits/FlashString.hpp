@@ -11,15 +11,23 @@ namespace ArduinoJson {
 namespace Internals {
 template <>
 struct StringTraits<const __FlashStringHelper*, void> {
-  class Iterator {
+  class Reader {
     const char* _ptr;
 
    public:
-    Iterator(const __FlashStringHelper* ptr)
+    Reader(const __FlashStringHelper* ptr)
         : _ptr(reinterpret_cast<const char*>(ptr)) {}
 
-    char next() {
-      return pgm_read_byte_near(_ptr++);
+    void move() {
+      _ptr++;
+    }
+
+    char current() const {
+      return pgm_read_byte_near(_ptr);
+    }
+
+    char next() const {
+      return pgm_read_byte_near(_ptr + 1);
     }
   };
 

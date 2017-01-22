@@ -60,7 +60,7 @@ TEST(StdStream_Tests, JsonArraySubscript) {
 }
 
 TEST(StdStream_Tests, ParseArray) {
-  std::istringstream json("[42]");
+  std::istringstream json(" [ 42 /* comment */ ] ");
   DynamicJsonBuffer jsonBuffer;
   JsonArray& arr = jsonBuffer.parseArray(json);
   ASSERT_TRUE(arr.success());
@@ -69,10 +69,17 @@ TEST(StdStream_Tests, ParseArray) {
 }
 
 TEST(StdStream_Tests, ParseObject) {
-  std::istringstream json("{hello:world}");
+  std::istringstream json(" { hello : world // comment\n }");
   DynamicJsonBuffer jsonBuffer;
   JsonObject& obj = jsonBuffer.parseObject(json);
   ASSERT_TRUE(obj.success());
   ASSERT_EQ(1, obj.size());
   ASSERT_STREQ("world", obj["hello"]);
+}
+
+TEST(StdStream_Tests, ShouldNotReadPastTheEnd) {
+  std::istringstream json("{}123");
+  DynamicJsonBuffer jsonBuffer;
+  jsonBuffer.parseObject(json);
+  ASSERT_EQ('1', json.get());
 }

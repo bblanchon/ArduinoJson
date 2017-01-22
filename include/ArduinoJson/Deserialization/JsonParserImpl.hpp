@@ -16,7 +16,6 @@ inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::eat(
   skipSpacesAndComments(reader);
   if (reader.current() != charToSkip) return false;
   reader.move();
-  skipSpacesAndComments(reader);
   return true;
 }
 
@@ -148,6 +147,7 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseString() {
   typename TypeTraits::RemoveReference<TWriter>::type::String str =
       _writer.startString();
 
+  skipSpacesAndComments(_reader);
   char c = _reader.current();
 
   if (isQuote(c)) {  // quotes

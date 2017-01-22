@@ -17,15 +17,35 @@ namespace ArduinoJson {
 namespace Internals {
 
 struct ArduinoStreamTraits {
-  class Iterator {
+  class Reader {
     Stream& _stream;
+    char _current, _next;
 
    public:
-    Iterator(Stream& stream) : _stream(stream) {}
+    Reader(Stream& stream) : _stream(stream), _current(0), _next(0) {}
+
+    void move() {
+      _current = _next;
+      _next = 0;
+    }
+
+    char current() {
+      if (!_current) _current = read();
+      return _current;
+    }
 
     char next() {
-      int n = _stream.read();
-      return n >= 0 ? static_cast<char>(n) : '\0';
+      // assumes that current() has been called
+      if (!_next) _next = read();
+      return _next;
+    }
+
+   private:
+    char read() {
+      // don't use _stream.read() as it ignores the timeout
+      char c = 0;
+      _stream.readBytes(&c, 1);
+      return c;
     }
   };
 };

@@ -11,16 +11,22 @@ namespace ArduinoJson {
 namespace Internals {
 
 struct CharPointerTraits {
-  class Iterator {
+  class Reader {
     const char* _ptr;
 
    public:
-    Iterator(const char* ptr) : _ptr(ptr ? ptr : "") {}
+    Reader(const char* ptr) : _ptr(ptr ? ptr : "") {}
 
-    char next() {
-      char c = *_ptr;
-      if (c) ++_ptr;
-      return c;
+    void move() {
+      ++_ptr;
+    }
+
+    char current() const {
+      return _ptr[0];
+    }
+
+    char next() const {
+      return _ptr[1];
     }
   };
 

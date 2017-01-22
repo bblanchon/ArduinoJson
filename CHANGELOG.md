@@ -5,6 +5,8 @@ HEAD
 ----
 
 * Fixed parsing of comments (issue #421)
+* Fixed ignored `Stream` timeout (issue #422)
+* Made sure we don't read more that necessary (issue #422)
 
 v5.8.1
 ------
