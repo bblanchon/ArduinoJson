@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.8.2
+------
 
 * Fixed parsing of comments (issue #421)
 * Fixed ignored `Stream` timeout (issue #422)
