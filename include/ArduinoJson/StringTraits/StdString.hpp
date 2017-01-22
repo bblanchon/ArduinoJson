@@ -29,8 +29,8 @@ struct StdStringTraits {
     return static_cast<char*>(dup);
   }
 
-  struct Reader : CharPointerTraits::Reader {
-    Reader(const TString& str) : CharPointerTraits::Reader(str.c_str()) {}
+  struct Reader : CharPointerTraits<char>::Reader {
+    Reader(const TString& str) : CharPointerTraits<char>::Reader(str.c_str()) {}
   };
 
   static bool equals(const TString& str, const char* expected) {

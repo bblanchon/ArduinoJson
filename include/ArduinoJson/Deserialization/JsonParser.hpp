@@ -9,6 +9,7 @@
 
 #include "../JsonBuffer.hpp"
 #include "../JsonVariant.hpp"
+#include "../TypeTraits/IsConst.hpp"
 #include "StringWriter.hpp"
 
 namespace ArduinoJson {
@@ -71,7 +72,7 @@ class JsonParser {
   uint8_t _nestingLimit;
 };
 
-template <typename TJsonBuffer, typename TString>
+template <typename TJsonBuffer, typename TString, typename Enable = void>
 struct JsonParserBuilder {
   typedef typename Internals::StringTraits<TString>::Reader InputReader;
   typedef JsonParser<InputReader, TJsonBuffer &> TParser;
@@ -82,14 +83,17 @@ struct JsonParserBuilder {
   }
 };
 
-template <typename TJsonBuffer>
-struct JsonParserBuilder<TJsonBuffer, char *> {
-  typedef typename Internals::StringTraits<char *>::Reader InputReader;
-  typedef JsonParser<InputReader, StringWriter> TParser;
+template <typename TJsonBuffer, typename TChar>
+struct JsonParserBuilder<
+    TJsonBuffer, TChar *,
+    typename TypeTraits::EnableIf<!TypeTraits::IsConst<TChar>::value>::type> {
+  typedef typename Internals::StringTraits<TChar *>::Reader TReader;
+  typedef StringWriter<TChar> TWriter;
+  typedef JsonParser<TReader, TWriter> TParser;
 
-  static TParser makeParser(TJsonBuffer *buffer, char *json,
+  static TParser makeParser(TJsonBuffer *buffer, TChar *json,
                             uint8_t nestingLimit) {
-    return TParser(buffer, InputReader(json), json, nestingLimit);
+    return TParser(buffer, TReader(json), TWriter(json), nestingLimit);
   }
 };
 

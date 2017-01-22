@@ -10,34 +10,35 @@
 namespace ArduinoJson {
 namespace Internals {
 
+template <typename TChar>
 class StringWriter {
  public:
   class String {
    public:
-    String(char** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
+    String(TChar** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
 
-    void append(char c) {
+    void append(TChar c) {
       *(*_writePtr)++ = c;
     }
 
     const char* c_str() const {
       *(*_writePtr)++ = 0;
-      return _startPtr;
+      return reinterpret_cast<const char*>(_startPtr);
     }
 
    private:
-    char** _writePtr;
-    char* _startPtr;
+    TChar** _writePtr;
+    TChar* _startPtr;
   };
 
-  StringWriter(char* buffer) : _ptr(buffer) {}
+  StringWriter(TChar* buffer) : _ptr(buffer) {}
 
   String startString() {
     return String(&_ptr);
   }
 
  private:
-  char* _ptr;
+  TChar* _ptr;
 };
 }
 }

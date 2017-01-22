@@ -17,6 +17,7 @@
 #include "RawJson.hpp"
 #include "Serialization/JsonPrintable.hpp"
 #include "TypeTraits/EnableIf.hpp"
+#include "TypeTraits/IsChar.hpp"
 #include "TypeTraits/IsFloatingPoint.hpp"
 #include "TypeTraits/IsIntegral.hpp"
 #include "TypeTraits/IsSame.hpp"
@@ -98,9 +99,16 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   }
 
   // Create a JsonVariant containing a string.
-  JsonVariant(const char *value) {
+  // JsonVariant(const char*);
+  // JsonVariant(const signed char*);
+  // JsonVariant(const unsigned char*);
+  template <typename TChar>
+  JsonVariant(
+      const TChar *value,
+      typename TypeTraits::EnableIf<TypeTraits::IsChar<TChar>::value>::type * =
+          0) {
     _type = Internals::JSON_STRING;
-    _content.asString = value;
+    _content.asString = reinterpret_cast<const char *>(value);
   }
 
   // Create a JsonVariant containing an unparsed string

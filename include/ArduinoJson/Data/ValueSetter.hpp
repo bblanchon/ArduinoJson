@@ -37,5 +37,17 @@ struct ValueSetter<TSource, typename TypeTraits::EnableIf<StringTraits<
     return true;
   }
 };
+
+template <typename TSource>
+struct ValueSetter<TSource, typename TypeTraits::EnableIf<!StringTraits<
+                                TSource>::should_duplicate>::type> {
+  template <typename TDestination>
+  static bool set(JsonBuffer*, TDestination& destination,
+                  const TSource& source) {
+    // unsigned char* -> char*
+    destination = reinterpret_cast<const char*>(source);
+    return true;
+  }
+};
 }
 }

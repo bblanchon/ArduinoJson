@@ -7,37 +7,42 @@
 
 #pragma once
 
+#include "../TypeTraits/EnableIf.hpp"
+#include "../TypeTraits/IsChar.hpp"
+
 namespace ArduinoJson {
 namespace Internals {
 
+template <typename TChar>
 struct CharPointerTraits {
   class Reader {
-    const char* _ptr;
+    const TChar* _ptr;
 
    public:
-    Reader(const char* ptr) : _ptr(ptr ? ptr : "") {}
+    Reader(const TChar* ptr)
+        : _ptr(ptr ? ptr : reinterpret_cast<const TChar*>("")) {}
 
     void move() {
       ++_ptr;
     }
 
-    char current() const {
+    TChar current() const {
       return _ptr[0];
     }
 
-    char next() const {
+    TChar next() const {
       return _ptr[1];
     }
   };
 
-  static bool equals(const char* str, const char* expected) {
-    return strcmp(str, expected) == 0;
+  static bool equals(const TChar* str, const char* expected) {
+    return strcmp(reinterpret_cast<const char*>(str), expected) == 0;
   }
 
   template <typename Buffer>
-  static char* duplicate(const char* str, Buffer* buffer) {
+  static char* duplicate(const TChar* str, Buffer* buffer) {
     if (!str) return NULL;
-    size_t size = strlen(str) + 1;
+    size_t size = strlen(reinterpret_cast<const char*>(str)) + 1;
     void* dup = buffer->alloc(size);
     if (dup != NULL) memcpy(dup, str, size);
     return static_cast<char*>(dup);
@@ -48,10 +53,9 @@ struct CharPointerTraits {
   static const bool should_duplicate = false;
 };
 
-template <>
-struct StringTraits<const char*, void> : CharPointerTraits {};
-
-template <>
-struct StringTraits<char*, void> : CharPointerTraits {};
+template <typename TChar>
+struct StringTraits<TChar*, typename TypeTraits::EnableIf<
+                                TypeTraits::IsChar<TChar>::value>::type>
+    : CharPointerTraits<TChar> {};
 }
 }
