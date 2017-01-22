@@ -10,6 +10,7 @@ HEAD
 * Fixed error when the key of a `JsonObject` is a `char[]` (issue #423)
 * Reduced code size when using `const` references
 * Fixed error with string of type `unsigned char*` (issue #428)
+* Added `deprecated` attribute on `asArray()`, `asObject()` and `asString()` (issue #420)
 
 v5.8.1
 ------

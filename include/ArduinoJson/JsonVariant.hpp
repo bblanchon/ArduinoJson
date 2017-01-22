@@ -136,7 +136,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   const typename TypeTraits::EnableIf<TypeTraits::IsSignedIntegral<T>::value,
                                       T>::type
   as() const {
-    return static_cast<T>(asInteger());
+    return static_cast<T>(variantAsInteger());
   }
   //
   // short as<unsigned short>() const;
@@ -155,7 +155,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   const typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<T>::value,
                                       T>::type
   as() const {
-    return static_cast<T>(asFloat());
+    return static_cast<T>(variantAsFloat());
   }
   //
   // const char* as<const char*>() const;
@@ -165,7 +165,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
                                     TypeTraits::IsSame<T, char *>::value,
                                 const char *>::type
   as() const {
-    return asString();
+    return variantAsString();
   }
   //
   // std::string as<std::string>() const;
@@ -173,7 +173,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   template <typename T>
   typename TypeTraits::EnableIf<Internals::StringTraits<T>::has_append, T>::type
   as() const {
-    const char *cstr = asString();
+    const char *cstr = variantAsString();
     if (cstr) return T(cstr);
     T s;
     printTo(s);
@@ -185,7 +185,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   const typename TypeTraits::EnableIf<TypeTraits::IsSame<T, bool>::value,
                                       T>::type
   as() const {
-    return asInteger() != 0;
+    return variantAsInteger() != 0;
   }
   //
   // JsonArray& as<JsonArray> const;
@@ -196,7 +196,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
                          JsonArray>::value,
       JsonArray &>::type
   as() const {
-    return asArray();
+    return variantAsArray();
   }
   //
   // const JsonArray& as<const JsonArray&> const;
@@ -206,7 +206,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
                          const JsonArray>::value,
       const JsonArray &>::type
   as() const {
-    return asArray();
+    return variantAsArray();
   }
   //
   // JsonObject& as<JsonObject> const;
@@ -217,7 +217,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
                          JsonObject>::value,
       JsonObject &>::type
   as() const {
-    return asObject();
+    return variantAsObject();
   }
   //
   // JsonObject& as<const JsonObject> const;
@@ -228,7 +228,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
                          const JsonObject>::value,
       const JsonObject &>::type
   as() const {
-    return asObject();
+    return variantAsObject();
   }
   //
   // JsonVariant as<JsonVariant> const;
@@ -313,23 +313,17 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
     return _type != Internals::JSON_UNDEFINED;
   }
 
-  // DEPRECATED: use as<char*>() instead
-  const char *asString() const;
-
-  // DEPRECATED: use as<JsonArray>() instead
-  JsonArray &asArray() const;
-
-  // DEPRECATED: use as<JsonObject>() instead
-  JsonObject &asObject() const;
-
  private:
   // It's not allowed to store a char
   template <typename T>
   JsonVariant(T value, typename TypeTraits::EnableIf<
                            TypeTraits::IsSame<T, char>::value>::type * = 0);
 
-  Internals::JsonFloat asFloat() const;
-  Internals::JsonInteger asInteger() const;
+  JsonArray &variantAsArray() const;
+  JsonObject &variantAsObject() const;
+  const char *variantAsString() const;
+  Internals::JsonFloat variantAsFloat() const;
+  Internals::JsonInteger variantAsInteger() const;
   Internals::JsonUInt asUnsignedInteger() const;
   bool isBoolean() const;
   bool isFloat() const;

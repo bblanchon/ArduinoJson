@@ -21,10 +21,22 @@ class JsonObjectSubscript;
 template <typename TImpl>
 class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
  public:
-  // DEPRECATED: use as<char*>() instead
+#if ARDUINOJSON_ENABLE_DEPRECATED
+  DEPRECATED("use as<JsonArray>() instead")
+  FORCE_INLINE JsonArray &asArray() const {
+    return as<JsonArray>();
+  }
+
+  DEPRECATED("use as<JsonObject>() instead")
+  FORCE_INLINE JsonObject &asObject() const {
+    return as<JsonObject>();
+  }
+
+  DEPRECATED("use as<char*>() instead")
   FORCE_INLINE const char *asString() const {
     return as<const char *>();
   }
+#endif
 
   // Gets the variant as an array.
   // Returns a reference to the JsonArray or JsonArray::invalid() if the
@@ -34,20 +46,10 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
     return as<JsonArray &>();
   }
 
-  // DEPRECATED: use as<JsonArray>() instead
-  FORCE_INLINE JsonArray &asArray() const {
-    return as<JsonArray &>();
-  }
-
   // Gets the variant as an object.
   // Returns a reference to the JsonObject or JsonObject::invalid() if the
   // variant is not an object.
   FORCE_INLINE operator JsonObject &() const {
-    return as<JsonObject &>();
-  }
-
-  // DEPRECATED: use as<JsonObject>() instead
-  FORCE_INLINE JsonObject &asObject() const {
     return as<JsonObject &>();
   }
 
@@ -65,7 +67,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // Returns the size of the array or object if the variant has that type.
   // Returns 0 if the variant is neither an array nor an object
   size_t size() const {
-    return asArray().size() + asObject().size();
+    return as<JsonArray>().size() + as<JsonObject>().size();
   }
 
   // Mimics an array.
@@ -86,7 +88,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
       Internals::StringTraits<TString>::has_equals,
       const JsonObjectSubscript<const TString &> >::type
   operator[](const TString &key) const {
-    return asObject()[key];
+    return as<JsonObject>()[key];
   }
   //
   // const JsonObjectSubscript operator[](TKey) const;
@@ -96,7 +98,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
       Internals::StringTraits<TString>::has_equals,
       JsonObjectSubscript<const TString &> >::type
   operator[](const TString &key) {
-    return asObject()[key];
+    return as<JsonObject>()[key];
   }
   //
   // JsonObjectSubscript operator[](TKey);
@@ -106,7 +108,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
       Internals::StringTraits<TString *>::has_equals,
       JsonObjectSubscript<const TString *> >::type
   operator[](const TString *key) {
-    return asObject()[key];
+    return as<JsonObject>()[key];
   }
   //
   // JsonObjectSubscript operator[](TKey);
@@ -116,7 +118,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
       Internals::StringTraits<TString *>::has_equals,
       const JsonObjectSubscript<const TString *> >::type
   operator[](const TString *key) const {
-    return asObject()[key];
+    return as<JsonObject>()[key];
   }
 
  private:

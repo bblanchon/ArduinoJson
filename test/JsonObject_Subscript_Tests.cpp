@@ -85,7 +85,6 @@ TEST_(StoreArray) {
 
   _object["hello"] = arr;
 
-  EXPECT_EQ(&arr, &_object["hello"].asArray());  // <- DEPRECATED
   EXPECT_EQ(&arr, &_object["hello"].as<JsonArray&>());
   EXPECT_EQ(&arr, &_object["hello"].as<JsonArray>());  // <- short hand
   EXPECT_EQ(&arr, &_object["hello"].as<const JsonArray&>());
@@ -102,7 +101,6 @@ TEST_(StoreObject) {
 
   _object["hello"] = obj;
 
-  EXPECT_EQ(&obj, &_object["hello"].asObject());  // DEPRECATED
   EXPECT_EQ(&obj, &_object["hello"].as<JsonObject&>());
   EXPECT_EQ(&obj, &_object["hello"].as<JsonObject>());  // <- short hand
   EXPECT_EQ(&obj, &_object["hello"].as<const JsonObject&>());

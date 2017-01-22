@@ -107,13 +107,13 @@ inline const JsonArraySubscript JsonArray::operator[](size_t index) const {
 
 template <typename TImplem>
 inline JsonArraySubscript JsonVariantBase<TImplem>::operator[](int index) {
-  return asArray()[index];
+  return as<JsonArray>()[index];
 }
 
 template <typename TImplem>
 inline const JsonArraySubscript JsonVariantBase<TImplem>::operator[](
     int index) const {
-  return asArray()[index];
+  return as<JsonArray>()[index];
 }
 
 }  // namespace ArduinoJson

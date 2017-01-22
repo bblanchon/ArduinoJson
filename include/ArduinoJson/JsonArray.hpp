@@ -193,7 +193,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   void copyTo(T (&array)[N1][N2]) const {
     size_t i = 0;
     for (const_iterator it = begin(); it != end() && i < N1; ++it) {
-      it->asArray().copyTo(array[i++]);
+      it->as<JsonArray>().copyTo(array[i++]);
     }
   }
 

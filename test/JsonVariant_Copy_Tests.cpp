@@ -54,7 +54,7 @@ TEST_F(JsonVariant_Copy_Tests, ObjectsAreCopiedByReference) {
 
   object["hello"] = "world";
 
-  EXPECT_EQ(1, _variant1.asObject().size());
+  EXPECT_EQ(1, _variant1.as<JsonObject>().size());
 }
 
 TEST_F(JsonVariant_Copy_Tests, ArraysAreCopiedByReference) {
@@ -64,5 +64,5 @@ TEST_F(JsonVariant_Copy_Tests, ArraysAreCopiedByReference) {
 
   array.add("world");
 
-  EXPECT_EQ(1, _variant1.asArray().size());
+  EXPECT_EQ(1, _variant1.as<JsonArray>().size());
 }

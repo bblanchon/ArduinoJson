@@ -75,7 +75,7 @@ TEST_(StoreArray) {
 
   _object.set("hello", arr);
 
-  EXPECT_EQ(&arr, &_object["hello"].asArray());
+  EXPECT_EQ(&arr, &_object["hello"].as<JsonArray>());
   EXPECT_TRUE(_object["hello"].is<JsonArray&>());
   EXPECT_FALSE(_object["hello"].is<JsonObject&>());
 }
@@ -85,7 +85,7 @@ TEST_(StoreObject) {
 
   _object.set("hello", obj);
 
-  EXPECT_EQ(&obj, &_object["hello"].asObject());
+  EXPECT_EQ(&obj, &_object["hello"].as<JsonObject>());
   EXPECT_TRUE(_object["hello"].is<JsonObject&>());
   EXPECT_FALSE(_object["hello"].is<JsonArray&>());
 }

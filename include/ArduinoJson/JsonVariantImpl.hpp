@@ -37,17 +37,17 @@ inline JsonVariant::JsonVariant(const JsonObject &object) {
   }
 }
 
-inline JsonArray &JsonVariant::asArray() const {
+inline JsonArray &JsonVariant::variantAsArray() const {
   if (_type == Internals::JSON_ARRAY) return *_content.asArray;
   return JsonArray::invalid();
 }
 
-inline JsonObject &JsonVariant::asObject() const {
+inline JsonObject &JsonVariant::variantAsObject() const {
   if (_type == Internals::JSON_OBJECT) return *_content.asObject;
   return JsonObject::invalid();
 }
 
-inline Internals::JsonInteger JsonVariant::asInteger() const {
+inline Internals::JsonInteger JsonVariant::variantAsInteger() const {
   using namespace Internals;
   switch (_type) {
     case JSON_UNDEFINED:
@@ -86,7 +86,7 @@ inline Internals::JsonUInt JsonVariant::asUnsignedInteger() const {
   }
 }
 
-inline const char *JsonVariant::asString() const {
+inline const char *JsonVariant::variantAsString() const {
   using namespace Internals;
   if (_type == JSON_UNPARSED && _content.asString &&
       !strcmp("null", _content.asString))
@@ -95,7 +95,7 @@ inline const char *JsonVariant::asString() const {
   return NULL;
 }
 
-inline Internals::JsonFloat JsonVariant::asFloat() const {
+inline Internals::JsonFloat JsonVariant::variantAsFloat() const {
   using namespace Internals;
   switch (_type) {
     case JSON_UNDEFINED:

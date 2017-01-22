@@ -22,11 +22,10 @@ TEST_F(JsonVariant_Subscript_Tests, Array) {
   _variant = array;
 
   EXPECT_EQ(2, _variant.size());
-  EXPECT_STREQ("element at index 0", _variant[0].asString());
-  EXPECT_STREQ("element at index 1", _variant[1].asString());
-  EXPECT_STREQ(
-      "element at index 0",
-      _variant[static_cast<unsigned char>(0)].asString());  // issue #381
+  EXPECT_STREQ("element at index 0", _variant[0]);
+  EXPECT_STREQ("element at index 1", _variant[1]);
+  EXPECT_STREQ("element at index 0",
+               _variant[static_cast<unsigned char>(0)]);  // issue #381
   EXPECT_FALSE(_variant[-1].success());
   EXPECT_FALSE(_variant[3].success());
   EXPECT_FALSE(_variant["0"].success());
@@ -40,8 +39,8 @@ TEST_F(JsonVariant_Subscript_Tests, Object) {
   _variant = object;
 
   EXPECT_EQ(2, _variant.size());
-  EXPECT_STREQ("element at key \"a\"", _variant["a"].asString());
-  EXPECT_STREQ("element at key \"b\"", _variant["b"].asString());
+  EXPECT_STREQ("element at key \"a\"", _variant["a"]);
+  EXPECT_STREQ("element at key \"b\"", _variant["b"]);
   EXPECT_FALSE(_variant["c"].success());
   EXPECT_FALSE(_variant[0].success());
 }

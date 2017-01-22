@@ -7,6 +7,11 @@
 
 #pragma once
 
+// enable deprecated functions by default
+#ifndef ARDUINOJSON_ENABLE_DEPRECATED
+#define ARDUINOJSON_ENABLE_DEPRECATED 1
+#endif
+
 #ifdef ARDUINO  // assume this is an embedded platform
 
 // store using float instead of double to reduce the memory usage (issue #134)

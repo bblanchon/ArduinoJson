@@ -22,7 +22,7 @@ TEST_F(JsonVariant_Undefined_Tests, AsUnsignedReturns0) {
 }
 
 TEST_F(JsonVariant_Undefined_Tests, AsStringReturnsNull) {
-  EXPECT_EQ(0, variant.asString());
+  EXPECT_EQ(0, variant.as<char*>());
 }
 
 TEST_F(JsonVariant_Undefined_Tests, AsDoubleReturns0) {
@@ -50,9 +50,9 @@ TEST_F(JsonVariant_Undefined_Tests, AsConstObjectReturnInvalid) {
 }
 
 TEST_F(JsonVariant_Undefined_Tests, AsArrayWrapperReturnInvalid) {
-  EXPECT_EQ(JsonArray::invalid(), variant.asArray());
+  EXPECT_EQ(JsonArray::invalid(), variant.as<JsonArray>());
 }
 
 TEST_F(JsonVariant_Undefined_Tests, AsObjectWrapperReturnInvalid) {
-  EXPECT_EQ(JsonObject::invalid(), variant.asObject());
+  EXPECT_EQ(JsonObject::invalid(), variant.as<JsonObject>());
 }
