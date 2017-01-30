@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed an access violation in `DynamicJsonBuffer` when memory allocation fails (issue #433)
+
 v5.8.2
 ------
 
