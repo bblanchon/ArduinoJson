@@ -84,7 +84,7 @@ class DynamicJsonBufferBase
         char* newStart =
             static_cast<char*>(_parent->allocInNewBlock(_length + 1));
         if (_start && newStart) memcpy(newStart, _start, _length);
-        newStart[_length] = c;
+        if (newStart) newStart[_length] = c;
         _start = newStart;
       }
       _length++;

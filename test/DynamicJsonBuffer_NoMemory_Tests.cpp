@@ -43,3 +43,9 @@ TEST_F(DynamicJsonBuffer_NoMemory_Tests, ParseObject) {
   char json[] = "{}";
   ASSERT_FALSE(_jsonBuffer.parseObject(json).success());
 }
+
+TEST_F(DynamicJsonBuffer_NoMemory_Tests, String) {
+  DynamicJsonBufferBase<NoMemoryAllocator>::String str = _jsonBuffer.startString();
+  str.append('!');
+  ASSERT_EQ(NULL, str.c_str());
+}
