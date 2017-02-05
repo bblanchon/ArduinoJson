@@ -57,5 +57,10 @@ template <typename TChar>
 struct StringTraits<TChar*, typename TypeTraits::EnableIf<
                                 TypeTraits::IsChar<TChar>::value>::type>
     : CharPointerTraits<TChar> {};
+
+template <typename TChar, size_t N>
+struct StringTraits<TChar[N], typename TypeTraits::EnableIf<
+                                  TypeTraits::IsChar<TChar>::value>::type>
+    : CharPointerTraits<TChar> {};
 }
 }

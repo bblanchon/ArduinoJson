@@ -126,3 +126,16 @@ TEST_F(JsonVariant_Comparison_Tests, String) {
   ASSERT_TRUE(std::string("world") != variant);
   ASSERT_FALSE(std::string("world") == variant);
 }
+
+TEST_F(JsonVariant_Comparison_Tests, IntegerInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonVariant variant1 = 42;
+  JsonVariant variant2 = 42;
+  JsonVariant variant3 = 666;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
