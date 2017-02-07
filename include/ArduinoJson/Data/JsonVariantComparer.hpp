@@ -69,8 +69,11 @@ struct JsonVariantComparer<TVariant1, TVariant2,
                            typename TypeTraits::EnableIf<
                                TypeTraits::IsVariant<TVariant1>::value &&
                                TypeTraits::IsVariant<TVariant2>::value>::type> {
-  static bool equals(const TVariant1 &variant1, const TVariant2 &variant2) {
-    return &variant1 == &variant2;  // TODO
+  static bool equals(const TVariant1 &left, const TVariant2 &right) {
+    if (left.template is<JsonInteger>() && right.template is<JsonInteger>())
+      return left.template as<JsonInteger>() ==
+             right.template as<JsonInteger>();
+    return false;
   }
 };
 }
