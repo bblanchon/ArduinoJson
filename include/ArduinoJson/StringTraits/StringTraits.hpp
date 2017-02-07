@@ -40,3 +40,18 @@ struct StringTraits<TString&, void> : StringTraits<TString> {};
 #if ARDUINOJSON_ENABLE_PROGMEM
 #include "FlashString.hpp"
 #endif
+
+namespace ArduinoJson {
+namespace TypeTraits {
+template <typename T, typename Enable = void>
+struct IsString {
+  static const bool value = false;
+};
+
+template <typename T>
+struct IsString<T, typename TypeTraits::EnableIf<
+                       Internals::StringTraits<T>::has_equals>::type> {
+  static const bool value = Internals::StringTraits<T>::has_equals;
+};
+}
+}
