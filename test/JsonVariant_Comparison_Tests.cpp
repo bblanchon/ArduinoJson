@@ -190,3 +190,19 @@ TEST_F(JsonVariant_Comparison_Tests, ArrayInVariant) {
   ASSERT_TRUE(variant1 != variant3);
   ASSERT_FALSE(variant1 == variant3);
 }
+
+TEST_F(JsonVariant_Comparison_Tests, ObjectInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& obj1 = jsonBuffer.createObject();
+  JsonObject& obj2 = jsonBuffer.createObject();
+
+  JsonVariant variant1 = obj1;
+  JsonVariant variant2 = obj1;
+  JsonVariant variant3 = obj2;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
