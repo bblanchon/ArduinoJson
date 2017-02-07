@@ -165,3 +165,16 @@ TEST_F(JsonVariant_Comparison_Tests, DoubleInVariant) {
   ASSERT_TRUE(variant1 != variant3);
   ASSERT_FALSE(variant1 == variant3);
 }
+
+TEST_F(JsonVariant_Comparison_Tests, BoolInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonVariant variant1 = true;
+  JsonVariant variant2 = true;
+  JsonVariant variant3 = false;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}

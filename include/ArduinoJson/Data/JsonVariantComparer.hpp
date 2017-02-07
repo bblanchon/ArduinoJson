@@ -70,6 +70,8 @@ struct JsonVariantComparer<TVariant1, TVariant2,
                                TypeTraits::IsVariant<TVariant1>::value &&
                                TypeTraits::IsVariant<TVariant2>::value>::type> {
   static bool equals(const TVariant1 &left, const TVariant2 &right) {
+    if (left.template is<bool>() && right.template is<bool>())
+      return left.template as<bool>() == right.template as<bool>();
     if (left.template is<JsonInteger>() && right.template is<JsonInteger>())
       return left.template as<JsonInteger>() ==
              right.template as<JsonInteger>();
