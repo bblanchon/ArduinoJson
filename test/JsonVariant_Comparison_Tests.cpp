@@ -128,7 +128,6 @@ TEST_F(JsonVariant_Comparison_Tests, String) {
 }
 
 TEST_F(JsonVariant_Comparison_Tests, IntegerInVariant) {
-  DynamicJsonBuffer jsonBuffer;
   JsonVariant variant1 = 42;
   JsonVariant variant2 = 42;
   JsonVariant variant3 = 666;
@@ -141,7 +140,6 @@ TEST_F(JsonVariant_Comparison_Tests, IntegerInVariant) {
 }
 
 TEST_F(JsonVariant_Comparison_Tests, StringInVariant) {
-  DynamicJsonBuffer jsonBuffer;
   JsonVariant variant1 = "0hello" + 1;  // make sure they have
   JsonVariant variant2 = "1hello" + 1;  // different addresses
   JsonVariant variant3 = "world";
@@ -154,7 +152,6 @@ TEST_F(JsonVariant_Comparison_Tests, StringInVariant) {
 }
 
 TEST_F(JsonVariant_Comparison_Tests, DoubleInVariant) {
-  DynamicJsonBuffer jsonBuffer;
   JsonVariant variant1 = 42.0;
   JsonVariant variant2 = 42.0;
   JsonVariant variant3 = 666.0;
@@ -167,10 +164,25 @@ TEST_F(JsonVariant_Comparison_Tests, DoubleInVariant) {
 }
 
 TEST_F(JsonVariant_Comparison_Tests, BoolInVariant) {
-  DynamicJsonBuffer jsonBuffer;
   JsonVariant variant1 = true;
   JsonVariant variant2 = true;
   JsonVariant variant3 = false;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
+
+TEST_F(JsonVariant_Comparison_Tests, ArrayInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonArray& array1 = jsonBuffer.createArray();
+  JsonArray& array2 = jsonBuffer.createArray();
+
+  JsonVariant variant1 = array1;
+  JsonVariant variant2 = array1;
+  JsonVariant variant3 = array2;
 
   ASSERT_TRUE(variant1 == variant2);
   ASSERT_FALSE(variant1 != variant2);

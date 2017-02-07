@@ -7,7 +7,7 @@
 
 include(gtest.cmake)
 
-file(GLOB TESTS_FILES *.hpp *.cpp)
+file(GLOB TESTS_FILES *Comparison*.cpp)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_compile_options(
