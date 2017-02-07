@@ -73,6 +73,8 @@ struct JsonVariantComparer<TVariant1, TVariant2,
     if (left.template is<JsonInteger>() && right.template is<JsonInteger>())
       return left.template as<JsonInteger>() ==
              right.template as<JsonInteger>();
+    if (left.template is<JsonFloat>() && right.template is<JsonFloat>())
+      return left.template as<JsonFloat>() == right.template as<JsonFloat>();
     if (left.template is<char *>() && right.template is<char *>())
       return strcmp(left.template as<char *>(), right.template as<char *>()) ==
              0;

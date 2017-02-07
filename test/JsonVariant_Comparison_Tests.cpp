@@ -152,3 +152,16 @@ TEST_F(JsonVariant_Comparison_Tests, StringInVariant) {
   ASSERT_TRUE(variant1 != variant3);
   ASSERT_FALSE(variant1 == variant3);
 }
+
+TEST_F(JsonVariant_Comparison_Tests, DoubleInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonVariant variant1 = 42.0;
+  JsonVariant variant2 = 42.0;
+  JsonVariant variant3 = 666.0;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
