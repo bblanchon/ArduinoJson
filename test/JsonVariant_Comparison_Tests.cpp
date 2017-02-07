@@ -139,3 +139,16 @@ TEST_F(JsonVariant_Comparison_Tests, IntegerInVariant) {
   ASSERT_TRUE(variant1 != variant3);
   ASSERT_FALSE(variant1 == variant3);
 }
+
+TEST_F(JsonVariant_Comparison_Tests, StringInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonVariant variant1 = "0hello" + 1;  // make sure they have
+  JsonVariant variant2 = "1hello" + 1;  // different addresses
+  JsonVariant variant3 = "world";
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
