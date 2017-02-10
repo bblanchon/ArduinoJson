@@ -41,8 +41,8 @@ void loop() {
         printUserData(&userData);
       }
     }
-    disconnect();
   }
+  disconnect();
   wait();
 }
 
