@@ -7,54 +7,52 @@
 
 #pragma once
 
-#include "JsonVariantBase.hpp"
-#include "StringTraits/StringTraits.hpp"
-#include "TypeTraits/EnableIf.hpp"
+#include "Data/JsonVariantComparer.hpp"
 
 namespace ArduinoJson {
-template <typename TVariant, typename TComparand, typename Enable = void>
-struct JsonVariantComparer {
-  static bool equals(const TVariant &variant, const TComparand &comparand) {
-    return variant.template as<TComparand>() == comparand;
-  }
-};
 
-template <typename TVariant, typename TString>
-struct JsonVariantComparer<
-    TVariant, TString, typename TypeTraits::EnableIf<Internals::StringTraits<
-                           TString>::has_equals>::type> {
-  static bool equals(const TVariant &variant, const TString &comparand) {
-    const char *value = variant.template as<const char *>();
-    return Internals::StringTraits<TString>::equals(comparand, value);
-  }
-};
-
-template <typename TImpl, typename TComparand>
-inline bool operator==(const JsonVariantBase<TImpl> &variant,
-                       TComparand comparand) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+// operator==(TLeft left, TRight right)
+//
+template <typename TLeft, typename TRight>
+inline typename TypeTraits::EnableIf<!TypeTraits::IsArray<TLeft>::value &&
+                                         !TypeTraits::IsArray<TRight>::value,
+                                     bool>::type
+operator==(const TLeft &left, const TRight &right) {
+  return Internals::JsonVariantComparer<TLeft, TRight>::equals(left, right);
+}
+// TLeft = const char*, const char[N], const FlashStringHelper*
+template <typename TLeft, typename TRight>
+inline bool operator==(const TLeft *left, const TRight &right) {
+  return Internals::JsonVariantComparer<const TLeft *, TRight>::equals(left,
+                                                                       right);
+}
+// TRight = const char*, const char[N], const FlashStringHelper*
+template <typename TLeft, typename TRight>
+inline bool operator==(const TLeft &left, const TRight *right) {
+  return Internals::JsonVariantComparer<TLeft, const TRight *>::equals(left,
+                                                                       right);
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator==(TComparand comparand,
-                       const JsonVariantBase<TImpl> &variant) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+// operator!=(TLeft left, TRight right)
+//
+template <typename TLeft, typename TRight>
+inline typename TypeTraits::EnableIf<!TypeTraits::IsArray<TLeft>::value &&
+                                         !TypeTraits::IsArray<TRight>::value,
+                                     bool>::type
+operator!=(const TLeft &left, const TRight &right) {
+  return !Internals::JsonVariantComparer<TLeft, TRight>::equals(left, right);
 }
-
-template <typename TImpl, typename TComparand>
-inline bool operator!=(const JsonVariantBase<TImpl> &variant,
-                       TComparand comparand) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return !JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+// TLeft = const char*, const char[N], const FlashStringHelper*
+template <typename TLeft, typename TRight>
+inline bool operator!=(const TLeft *left, const TRight &right) {
+  return !Internals::JsonVariantComparer<const TLeft *, TRight>::equals(left,
+                                                                        right);
 }
-
-template <typename TImpl, typename TComparand>
-inline bool operator!=(TComparand comparand,
-                       const JsonVariantBase<TImpl> &variant) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return !JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+// TRight = const char*, const char[N], const FlashStringHelper*
+template <typename TLeft, typename TRight>
+inline bool operator!=(const TLeft &left, const TRight *right) {
+  return !Internals::JsonVariantComparer<TLeft, const TRight *>::equals(left,
+                                                                        right);
 }
 
 template <typename TImpl, typename TComparand>

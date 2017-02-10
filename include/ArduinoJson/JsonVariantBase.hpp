@@ -126,4 +126,9 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
     return static_cast<const TImpl *>(this);
   }
 };
+
+namespace TypeTraits {
+template <typename T>
+struct IsVariant : IsBaseOf<JsonVariantBase<T>, T> {};
+}
 }

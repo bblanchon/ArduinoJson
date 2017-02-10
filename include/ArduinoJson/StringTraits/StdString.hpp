@@ -34,7 +34,7 @@ struct StdStringTraits {
   };
 
   static bool equals(const TString& str, const char* expected) {
-    return str == expected;
+    return 0 == strcmp(str.c_str(), expected);
   }
 
   static void append(TString& str, char c) {
