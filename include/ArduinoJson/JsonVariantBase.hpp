@@ -97,7 +97,7 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   }
   //
   // const JsonObjectSubscript operator[](TKey) const;
-  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TKey = const std::string&, const String&
   template <typename TString>
   FORCE_INLINE typename TypeTraits::EnableIf<
       Internals::StringTraits<TString>::has_equals,
@@ -107,10 +107,10 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   }
   //
   // JsonObjectSubscript operator[](TKey);
-  // TKey = const std::string&, const String&
+  // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
   FORCE_INLINE typename TypeTraits::EnableIf<
-      Internals::StringTraits<TString *>::has_equals,
+      Internals::StringTraits<const TString *>::has_equals,
       JsonObjectSubscript<const TString *> >::type
   operator[](const TString *key) {
     return as<JsonObject>()[key];
