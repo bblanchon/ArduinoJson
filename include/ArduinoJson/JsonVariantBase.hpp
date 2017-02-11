@@ -63,6 +63,11 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
     return impl()->template as<T>();
   }
 
+  template <typename T>
+  FORCE_INLINE bool is() const {
+    return impl()->template is<T>();
+  }
+
   // Mimics an array or an object.
   // Returns the size of the array or object if the variant has that type.
   // Returns 0 if the variant is neither an array nor an object
@@ -126,4 +131,9 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
     return static_cast<const TImpl *>(this);
   }
 };
+
+namespace TypeTraits {
+template <typename T>
+struct IsVariant : IsBaseOf<JsonVariantBase<T>, T> {};
+}
 }

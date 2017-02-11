@@ -126,3 +126,103 @@ TEST_F(JsonVariant_Comparison_Tests, String) {
   ASSERT_TRUE(std::string("world") != variant);
   ASSERT_FALSE(std::string("world") == variant);
 }
+
+TEST_F(JsonVariant_Comparison_Tests, IntegerInVariant) {
+  JsonVariant variant1 = 42;
+  JsonVariant variant2 = 42;
+  JsonVariant variant3 = 666;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
+
+TEST_F(JsonVariant_Comparison_Tests, StringInVariant) {
+  JsonVariant variant1 = "0hello" + 1;  // make sure they have
+  JsonVariant variant2 = "1hello" + 1;  // different addresses
+  JsonVariant variant3 = "world";
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
+
+TEST_F(JsonVariant_Comparison_Tests, DoubleInVariant) {
+  JsonVariant variant1 = 42.0;
+  JsonVariant variant2 = 42.0;
+  JsonVariant variant3 = 666.0;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
+
+TEST_F(JsonVariant_Comparison_Tests, BoolInVariant) {
+  JsonVariant variant1 = true;
+  JsonVariant variant2 = true;
+  JsonVariant variant3 = false;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
+
+TEST_F(JsonVariant_Comparison_Tests, ArrayInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonArray& array1 = jsonBuffer.createArray();
+  JsonArray& array2 = jsonBuffer.createArray();
+
+  JsonVariant variant1 = array1;
+  JsonVariant variant2 = array1;
+  JsonVariant variant3 = array2;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
+
+TEST_F(JsonVariant_Comparison_Tests, ObjectInVariant) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& obj1 = jsonBuffer.createObject();
+  JsonObject& obj2 = jsonBuffer.createObject();
+
+  JsonVariant variant1 = obj1;
+  JsonVariant variant2 = obj1;
+  JsonVariant variant3 = obj2;
+
+  ASSERT_TRUE(variant1 == variant2);
+  ASSERT_FALSE(variant1 != variant2);
+
+  ASSERT_TRUE(variant1 != variant3);
+  ASSERT_FALSE(variant1 == variant3);
+}
+
+TEST_F(JsonVariant_Comparison_Tests, VariantsOfDifferentTypes) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonVariant variants[] = {
+      true,
+      42,
+      666.667,
+      "hello",
+      jsonBuffer.createArray(),
+      jsonBuffer.createObject(),
+  };
+  size_t n = sizeof(variants) / sizeof(variants[0]);
+
+  for (size_t i = 0; i < n; i++) {
+    for (size_t j = i + 1; j < n; j++) {
+      ASSERT_TRUE(variants[i] != variants[j]);
+      ASSERT_FALSE(variants[i] == variants[j]);
+    }
+  }
+}

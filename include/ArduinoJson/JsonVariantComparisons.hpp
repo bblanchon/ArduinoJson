@@ -7,100 +7,82 @@
 
 #pragma once
 
-#include "JsonVariantBase.hpp"
-#include "StringTraits/StringTraits.hpp"
-#include "TypeTraits/EnableIf.hpp"
+#include "Data/JsonVariantComparer.hpp"
 
 namespace ArduinoJson {
-template <typename TVariant, typename TComparand, typename Enable = void>
-struct JsonVariantComparer {
-  static bool equals(const TVariant &variant, const TComparand &comparand) {
-    return variant.template as<TComparand>() == comparand;
-  }
-};
-
-template <typename TVariant, typename TString>
-struct JsonVariantComparer<
-    TVariant, TString, typename TypeTraits::EnableIf<Internals::StringTraits<
-                           TString>::has_equals>::type> {
-  static bool equals(const TVariant &variant, const TString &comparand) {
-    const char *value = variant.template as<const char *>();
-    return Internals::StringTraits<TString>::equals(comparand, value);
-  }
-};
-
-template <typename TImpl, typename TComparand>
-inline bool operator==(const JsonVariantBase<TImpl> &variant,
+template <typename TVariant, typename TComparand>
+inline bool operator==(const JsonVariantBase<TVariant> &variant,
                        TComparand comparand) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+  return Internals::JsonVariantComparer<TComparand>::equals(variant, comparand);
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator==(TComparand comparand,
-                       const JsonVariantBase<TImpl> &variant) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+template <typename TVariant, typename TComparand>
+inline typename TypeTraits::EnableIf<!TypeTraits::IsVariant<TComparand>::value,
+                                     bool>::type
+operator==(TComparand comparand, const JsonVariantBase<TVariant> &variant) {
+  return Internals::JsonVariantComparer<TComparand>::equals(variant, comparand);
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator!=(const JsonVariantBase<TImpl> &variant,
+template <typename TVariant, typename TComparand>
+inline bool operator!=(const JsonVariantBase<TVariant> &variant,
                        TComparand comparand) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return !JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+  return !Internals::JsonVariantComparer<TComparand>::equals(variant,
+                                                             comparand);
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator!=(TComparand comparand,
-                       const JsonVariantBase<TImpl> &variant) {
-  typedef JsonVariantBase<TImpl> TVariant;
-  return !JsonVariantComparer<TVariant, TComparand>::equals(variant, comparand);
+template <typename TVariant, typename TComparand>
+inline typename TypeTraits::EnableIf<!TypeTraits::IsVariant<TComparand>::value,
+                                     bool>::type
+operator!=(TComparand comparand, const JsonVariantBase<TVariant> &variant) {
+  return !Internals::JsonVariantComparer<TComparand>::equals(variant,
+                                                             comparand);
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator<=(const JsonVariantBase<TImpl> &left, TComparand right) {
+template <typename TVariant, typename TComparand>
+inline bool operator<=(const JsonVariantBase<TVariant> &left,
+                       TComparand right) {
   return left.template as<TComparand>() <= right;
 }
 
-template <typename TImpl, typename TComparand>
+template <typename TVariant, typename TComparand>
 inline bool operator<=(TComparand comparand,
-                       const JsonVariantBase<TImpl> &variant) {
+                       const JsonVariantBase<TVariant> &variant) {
   return comparand <= variant.template as<TComparand>();
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator>=(const JsonVariantBase<TImpl> &variant,
+template <typename TVariant, typename TComparand>
+inline bool operator>=(const JsonVariantBase<TVariant> &variant,
                        TComparand comparand) {
   return variant.template as<TComparand>() >= comparand;
 }
 
-template <typename TImpl, typename TComparand>
+template <typename TVariant, typename TComparand>
 inline bool operator>=(TComparand comparand,
-                       const JsonVariantBase<TImpl> &variant) {
+                       const JsonVariantBase<TVariant> &variant) {
   return comparand >= variant.template as<TComparand>();
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator<(const JsonVariantBase<TImpl> &varian,
+template <typename TVariant, typename TComparand>
+inline bool operator<(const JsonVariantBase<TVariant> &varian,
                       TComparand comparand) {
   return varian.template as<TComparand>() < comparand;
 }
 
-template <typename TImpl, typename TComparand>
+template <typename TVariant, typename TComparand>
 inline bool operator<(TComparand comparand,
-                      const JsonVariantBase<TImpl> &variant) {
+                      const JsonVariantBase<TVariant> &variant) {
   return comparand < variant.template as<TComparand>();
 }
 
-template <typename TImpl, typename TComparand>
-inline bool operator>(const JsonVariantBase<TImpl> &variant,
+template <typename TVariant, typename TComparand>
+inline bool operator>(const JsonVariantBase<TVariant> &variant,
                       TComparand comparand) {
   return variant.template as<TComparand>() > comparand;
 }
 
-template <typename TImpl, typename TComparand>
+template <typename TVariant, typename TComparand>
 inline bool operator>(TComparand comparand,
-                      const JsonVariantBase<TImpl> &variant) {
+                      const JsonVariantBase<TVariant> &variant) {
   return comparand > variant.template as<TComparand>();
 }
 }
