@@ -6,4 +6,4 @@ export CXX='clang++'
 export CXXFLAGS='-fsanitize-coverage=trace-pc-guard -fsanitize=address'
 export LIB_FUZZING_ENGINE=-lFuzzer
 make OUT=.
-./json_fuzzer my_corpus seed_corpus
+./json_fuzzer my_corpus seed_corpus -max_len=1024 -timeout=10
