@@ -1,0 +1,10 @@
+//comment
+/*comment*/
+[ //comment
+/*comment*/"comment"/*comment*/,//comment
+/*comment*/{//comment
+/* comment*/"key"//comment
+: //comment
+"value"//comment
+}/*comment*/
+]//comment
