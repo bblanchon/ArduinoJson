@@ -7,6 +7,7 @@
 
 #pragma once
 
+#ifndef PARTICLE
 #ifndef ARDUINO
 
 #include <stddef.h>
@@ -41,4 +42,5 @@ class Print {
 
 #include <Print.h>
 
+#endif
 #endif
