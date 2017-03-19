@@ -7,10 +7,11 @@
 
 #pragma once
 
-// If Visual Studo <= 2012
-#if defined(_MSC_VER) && _MSC_VER <= 1700
+// If Visual Studo
+#if defined(_MSC_VER)
 
 #include <float.h>
+#include <limits>
 
 namespace ArduinoJson {
 namespace Polyfills {
@@ -22,6 +23,16 @@ bool isNaN(T x) {
 template <typename T>
 bool isInfinity(T x) {
   return !_finite(x);
+}
+
+template <typename T>
+T nan() {
+  return std::numeric_limits<T>::quiet_NaN();
+}
+
+template <typename T>
+T inf() {
+  return std::numeric_limits<T>::infinity();
 }
 }
 }
@@ -100,6 +111,16 @@ inline bool isInfinity<float>(float x) {
   return isinff(x);
 }
 #endif
+
+template <typename T>
+T nan() {
+  return static_cast<T>(NAN);
+}
+
+template <typename T>
+T inf() {
+  return static_cast<T>(INFINITY);
+}
 
 #if defined(__GNUC__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)

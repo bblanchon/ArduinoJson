@@ -8,10 +8,12 @@
 #pragma once
 
 #include "Configuration.hpp"
-#include "Data/Parse.hpp"
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
 #include "JsonVariant.hpp"
+#include "Polyfills/isFloat.hpp"
+#include "Polyfills/parseFloat.hpp"
+#include "Polyfills/parseInteger.hpp"
 
 #include <errno.h>   // for errno
 #include <stdlib.h>  // for strtol, strtod
@@ -56,14 +58,14 @@ inline Internals::JsonInteger JsonVariant::variantAsInteger() const {
     case JSON_BOOLEAN:
       return _content.asInteger;
     case JSON_NEGATIVE_INTEGER:
-      return -static_cast<Internals::JsonInteger>(_content.asInteger);
+      return -static_cast<JsonInteger>(_content.asInteger);
     case JSON_STRING:
     case JSON_UNPARSED:
       if (!_content.asString) return 0;
       if (!strcmp("true", _content.asString)) return 1;
-      return parse<Internals::JsonInteger>(_content.asString);
+      return Polyfills::parseInteger<JsonInteger>(_content.asString);
     default:
-      return static_cast<Internals::JsonInteger>(_content.asFloat);
+      return static_cast<JsonInteger>(_content.asFloat);
   }
 }
 
@@ -80,9 +82,9 @@ inline Internals::JsonUInt JsonVariant::asUnsignedInteger() const {
     case JSON_UNPARSED:
       if (!_content.asString) return 0;
       if (!strcmp("true", _content.asString)) return 1;
-      return parse<Internals::JsonUInt>(_content.asString);
+      return Polyfills::parseInteger<JsonUInt>(_content.asString);
     default:
-      return static_cast<Internals::JsonUInt>(_content.asFloat);
+      return static_cast<JsonUInt>(_content.asFloat);
   }
 }
 
@@ -107,7 +109,9 @@ inline Internals::JsonFloat JsonVariant::variantAsFloat() const {
       return -static_cast<JsonFloat>(_content.asInteger);
     case JSON_STRING:
     case JSON_UNPARSED:
-      return _content.asString ? parse<JsonFloat>(_content.asString) : 0;
+      return _content.asString
+                 ? Polyfills::parseFloat<JsonFloat>(_content.asString)
+                 : 0;
     default:
       return _content.asFloat;
   }
@@ -143,11 +147,7 @@ inline bool JsonVariant::isFloat() const {
 
   if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
 
-  char *end;
-  errno = 0;
-  strtod(_content.asString, &end);
-
-  return *end == '\0' && errno == 0 && !is<long>();
+  return Polyfills::isFloat(_content.asString);
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM

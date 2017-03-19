@@ -14,5 +14,11 @@
   12.34e+56,
   12.34E56,
   12.34E-56,
-  12.34E+56
+  12.34E+56,
+  NaN,
+  -NaN,
+  +NaN,
+  Infinity,
+  +Infinity,
+  -Infinity
 ]

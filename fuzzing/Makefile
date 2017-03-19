@@ -7,7 +7,7 @@ all: \
 	$(OUT)/json_fuzzer_seed_corpus.zip \
 	$(OUT)/json_fuzzer.options
 
-$(OUT)/json_fuzzer: fuzzer.cpp
+$(OUT)/json_fuzzer: fuzzer.cpp $(shell find ../include -type f)
 	$(CXX) $(CXXFLAGS) $< -o$@ $(LIB_FUZZING_ENGINE)
 
 $(OUT)/json_fuzzer_seed_corpus.zip: seed_corpus/*
