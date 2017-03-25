@@ -7,6 +7,8 @@
 
 #pragma once
 
+#if ARDUINOJSON_ENABLE_STD_STRING || ARDUINOJSON_ENABLE_ARDUINO_STRING
+
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
 #include <WString.h>
 #endif
@@ -60,3 +62,5 @@ struct StringTraits<std::string, void> : StdStringTraits<std::string> {};
 #endif
 }
 }
+
+#endif

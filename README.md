@@ -82,7 +82,7 @@ root.printTo(Serial);
 Documentation
 -------------
 
-The documentation is available online in the [ArduinoJson wiki](https://github.com/bblanchon/ArduinoJson/wiki).
+The documentation is available online in the [ArduinoJson Website](https://github.com/bblanchon/ArduinoJson/).
 
 The [ArduinoJson Assistant](https://bblanchon.github.io/ArduinoJson/assistant/) helps you get started with the library.
 

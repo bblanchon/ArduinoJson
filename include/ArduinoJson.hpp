@@ -19,5 +19,3 @@
 #include "ArduinoJson/JsonObjectImpl.hpp"
 #include "ArduinoJson/JsonVariantImpl.hpp"
 #include "ArduinoJson/Serialization/JsonSerializerImpl.hpp"
-
-using namespace ArduinoJson;

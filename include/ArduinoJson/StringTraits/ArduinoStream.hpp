@@ -7,6 +7,8 @@
 
 #pragma once
 
+#if ARDUINOJSON_ENABLE_ARDUINO_STREAM
+
 #include <Stream.h>
 
 #include "../TypeTraits/EnableIf.hpp"
@@ -59,3 +61,5 @@ struct StringTraits<TStream,
     : ArduinoStreamTraits {};
 }
 }
+
+#endif

@@ -23,23 +23,11 @@ struct StringTraits<TString&, void> : StringTraits<TString> {};
 }
 }
 
-#include "CharPointer.hpp"
-
-#if ARDUINOJSON_ENABLE_STD_STRING || ARDUINOJSON_ENABLE_ARDUINO_STRING
-#include "StdString.hpp"
-#endif
-
-#if ARDUINOJSON_ENABLE_STD_STREAM
-#include "StdStream.hpp"
-#endif
-
-#if ARDUINOJSON_ENABLE_ARDUINO_STREAM
 #include "ArduinoStream.hpp"
-#endif
-
-#if ARDUINOJSON_ENABLE_PROGMEM
+#include "CharPointer.hpp"
 #include "FlashString.hpp"
-#endif
+#include "StdStream.hpp"
+#include "StdString.hpp"
 
 namespace ArduinoJson {
 namespace TypeTraits {

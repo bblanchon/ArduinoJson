@@ -7,6 +7,8 @@
 
 #pragma once
 
+#if ARDUINOJSON_ENABLE_STD_STREAM
+
 #include <istream>
 #include "../TypeTraits/EnableIf.hpp"
 #include "../TypeTraits/IsBaseOf.hpp"
@@ -57,3 +59,5 @@ struct StringTraits<TStream,
     : StdStreamTraits {};
 }
 }
+
+#endif

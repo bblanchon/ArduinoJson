@@ -7,6 +7,8 @@
 
 #pragma once
 
+#if ARDUINOJSON_ENABLE_PROGMEM
+
 namespace ArduinoJson {
 namespace Internals {
 template <>
@@ -50,3 +52,5 @@ struct StringTraits<const __FlashStringHelper*, void> {
 };
 }
 }
+
+#endif
