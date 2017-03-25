@@ -2,7 +2,7 @@
 # MIT License
 # 
 # Arduino JSON library
-# https://github.com/bblanchon/ArduinoJson
+# https://bblanchon.github.io/ArduinoJson/
 # If you like this project, please add a star!
 
 cmake_minimum_required(VERSION 3.0)

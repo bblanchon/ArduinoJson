@@ -2,7 +2,7 @@
 // MIT License
 //
 // Arduino JSON library
-// https://github.com/bblanchon/ArduinoJson
+// https://bblanchon.github.io/ArduinoJson/
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
@@ -45,7 +45,8 @@ TEST_F(DynamicJsonBuffer_NoMemory_Tests, ParseObject) {
 }
 
 TEST_F(DynamicJsonBuffer_NoMemory_Tests, String) {
-  DynamicJsonBufferBase<NoMemoryAllocator>::String str = _jsonBuffer.startString();
+  DynamicJsonBufferBase<NoMemoryAllocator>::String str =
+      _jsonBuffer.startString();
   str.append('!');
   ASSERT_EQ(NULL, str.c_str());
 }

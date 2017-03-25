@@ -2,7 +2,7 @@
 // MIT License
 //
 // Arduino JSON library
-// https://github.com/bblanchon/ArduinoJson
+// https://bblanchon.github.io/ArduinoJson/
 // If you like this project, please add a star!
 
 #pragma once
@@ -34,7 +34,7 @@ T parseInteger(const char *s) {
     s++;
   }
 
-  return negative_result ? static_cast<T>(result*-1) : result;
+  return negative_result ? static_cast<T>(result * -1) : result;
 }
 }
 }

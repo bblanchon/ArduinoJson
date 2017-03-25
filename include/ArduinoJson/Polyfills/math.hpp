@@ -2,7 +2,7 @@
 // MIT License
 //
 // Arduino JSON library
-// https://github.com/bblanchon/ArduinoJson
+// https://bblanchon.github.io/ArduinoJson/
 // If you like this project, please add a star!
 
 #pragma once
@@ -54,7 +54,7 @@ T inf() {
 #endif
 
 // Workaround for libs that #undef isnan or isinf
-// https://github.com/bblanchon/ArduinoJson/issues/284
+// https://bblanchon.github.io/ArduinoJson//issues/284
 #if !defined(isnan) || !defined(isinf)
 namespace std {}
 #endif
@@ -65,7 +65,7 @@ namespace Polyfills {
 template <typename T>
 bool isNaN(T x) {
 // Workaround for libs that #undef isnan
-// https://github.com/bblanchon/ArduinoJson/issues/284
+// https://bblanchon.github.io/ArduinoJson//issues/284
 #ifndef isnan
   using namespace std;
 #endif
@@ -90,7 +90,7 @@ inline bool isNaN<float>(float x) {
 template <typename T>
 bool isInfinity(T x) {
 // Workaround for libs that #undef isinf
-// https://github.com/bblanchon/ArduinoJson/issues/284
+// https://bblanchon.github.io/ArduinoJson//issues/284
 #ifndef isinf
   using namespace std;
 #endif
