@@ -9,48 +9,32 @@
 
 #include <stdlib.h>
 
+#include "../Configuration.hpp"
+#include "./ctype.hpp"
+
 namespace ArduinoJson {
 namespace Polyfills {
 template <typename T>
-T parseInteger(const char *s);
+T parseInteger(const char *s) {
+  if (!s) return 0;
 
-template <>
-inline long parseInteger<long>(const char *s) {
-  return ::strtol(s, NULL, 10);
-}
+  T result = 0;
+  bool negative_result = false;
 
-template <>
-inline unsigned long parseInteger<unsigned long>(const char *s) {
-  return ::strtoul(s, NULL, 10);
-}
+  switch (*s) {
+    case '-':
+      negative_result = true;
+    case '+':
+      s++;
+      break;
+  }
 
-template <>
-inline int parseInteger<int>(const char *s) {
-  return ::atoi(s);
-}
+  while (isdigit(*s)) {
+    result = static_cast<T>(result * 10 + (*s - '0'));
+    s++;
+  }
 
-#if ARDUINOJSON_USE_LONG_LONG
-template <>
-inline long long parseInteger<long long>(const char *s) {
-  return ::strtoll(s, NULL, 10);
+  return negative_result ? static_cast<T>(result*-1) : result;
 }
-
-template <>
-inline unsigned long long parseInteger<unsigned long long>(const char *s) {
-  return ::strtoull(s, NULL, 10);
-}
-#endif
-
-#if ARDUINOJSON_USE_INT64
-template <>
-inline __int64 parseInteger<__int64>(const char *s) {
-  return ::_strtoi64(s, NULL, 10);
-}
-
-template <>
-inline unsigned __int64 parseInteger<unsigned __int64>(const char *s) {
-  return ::_strtoui64(s, NULL, 10);
-}
-#endif
 }
 }

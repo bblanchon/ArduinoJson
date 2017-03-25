@@ -63,6 +63,9 @@ TEST_F(JsonVariant_Storage_Tests, Double) {
 TEST_F(JsonVariant_Storage_Tests, Float) {
   testNumericType<float>();
 }
+TEST_F(JsonVariant_Storage_Tests, Char) {
+  testNumericType<char>();
+}
 TEST_F(JsonVariant_Storage_Tests, SChar) {
   testNumericType<signed char>();
 }

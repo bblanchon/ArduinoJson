@@ -19,8 +19,8 @@ template <typename T>
 struct IsIntegral {
   static const bool value = TypeTraits::IsSignedIntegral<T>::value ||
                             TypeTraits::IsUnsignedIntegral<T>::value ||
-                            TypeTraits::IsSame<T, char>::value ||
-                            TypeTraits::IsSame<T, bool>::value;
+                            TypeTraits::IsSame<T, char>::value;
+  // CAUTION: differs from std::is_integral as it doesn't include bool
 };
 
 template <typename T>

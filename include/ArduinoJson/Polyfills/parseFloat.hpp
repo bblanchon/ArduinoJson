@@ -20,6 +20,8 @@ inline T parseFloat(const char* s) {
   typedef typename traits::mantissa_type mantissa_t;
   typedef typename traits::exponent_type exponent_t;
 
+  if (!s) return 0;
+
   bool negative_result = false;
   switch (*s) {
     case '-':

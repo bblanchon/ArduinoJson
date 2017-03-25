@@ -54,6 +54,14 @@ struct Polyfills_ParseFloat_Double_Tests : testing::Test {
 };
 #define TEST_DOUBLE(X) TEST_F(Polyfills_ParseFloat_Double_Tests, X)
 
+TEST_DOUBLE(Null) {
+  check(NULL, 0);
+}
+
+TEST_FLOAT(Null) {
+  check(NULL, 0);
+}
+
 TEST_DOUBLE(Short_NoExponent) {
   check("3.14", 3.14);
   check("-3.14", -3.14);

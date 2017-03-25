@@ -12,11 +12,10 @@
 #include "JsonObject.hpp"
 #include "JsonVariant.hpp"
 #include "Polyfills/isFloat.hpp"
+#include "Polyfills/isInteger.hpp"
 #include "Polyfills/parseFloat.hpp"
 #include "Polyfills/parseInteger.hpp"
 
-#include <errno.h>   // for errno
-#include <stdlib.h>  // for strtol, strtod
 #include <string.h>  // for strcmp
 
 namespace ArduinoJson {
@@ -49,42 +48,24 @@ inline JsonObject &JsonVariant::variantAsObject() const {
   return JsonObject::invalid();
 }
 
-inline Internals::JsonInteger JsonVariant::variantAsInteger() const {
+template <typename T>
+inline T JsonVariant::variantAsInteger() const {
   using namespace Internals;
   switch (_type) {
     case JSON_UNDEFINED:
       return 0;
     case JSON_POSITIVE_INTEGER:
     case JSON_BOOLEAN:
-      return _content.asInteger;
+      return static_cast<T>(_content.asInteger);
     case JSON_NEGATIVE_INTEGER:
-      return -static_cast<JsonInteger>(_content.asInteger);
+      return static_cast<T>(_content.asInteger * -1);
     case JSON_STRING:
     case JSON_UNPARSED:
       if (!_content.asString) return 0;
       if (!strcmp("true", _content.asString)) return 1;
-      return Polyfills::parseInteger<JsonInteger>(_content.asString);
+      return Polyfills::parseInteger<T>(_content.asString);
     default:
-      return static_cast<JsonInteger>(_content.asFloat);
-  }
-}
-
-inline Internals::JsonUInt JsonVariant::asUnsignedInteger() const {
-  using namespace Internals;
-  switch (_type) {
-    case JSON_UNDEFINED:
-      return 0;
-    case JSON_POSITIVE_INTEGER:
-    case JSON_BOOLEAN:
-    case JSON_NEGATIVE_INTEGER:
-      return _content.asInteger;
-    case JSON_STRING:
-    case JSON_UNPARSED:
-      if (!_content.asString) return 0;
-      if (!strcmp("true", _content.asString)) return 1;
-      return Polyfills::parseInteger<JsonUInt>(_content.asString);
-    default:
-      return static_cast<JsonUInt>(_content.asFloat);
+      return static_cast<T>(_content.asFloat);
   }
 }
 
@@ -97,27 +78,26 @@ inline const char *JsonVariant::variantAsString() const {
   return NULL;
 }
 
-inline Internals::JsonFloat JsonVariant::variantAsFloat() const {
+template <typename T>
+inline T JsonVariant::variantAsFloat() const {
   using namespace Internals;
   switch (_type) {
     case JSON_UNDEFINED:
       return 0;
     case JSON_POSITIVE_INTEGER:
     case JSON_BOOLEAN:
-      return static_cast<JsonFloat>(_content.asInteger);
+      return static_cast<T>(_content.asInteger);
     case JSON_NEGATIVE_INTEGER:
-      return -static_cast<JsonFloat>(_content.asInteger);
+      return -static_cast<T>(_content.asInteger);
     case JSON_STRING:
     case JSON_UNPARSED:
-      return _content.asString
-                 ? Polyfills::parseFloat<JsonFloat>(_content.asString)
-                 : 0;
+      return Polyfills::parseFloat<T>(_content.asString);
     default:
-      return _content.asFloat;
+      return static_cast<T>(_content.asFloat);
   }
 }
 
-inline bool JsonVariant::isBoolean() const {
+inline bool JsonVariant::variantIsBoolean() const {
   using namespace Internals;
   if (_type == JSON_BOOLEAN) return true;
 
@@ -127,27 +107,18 @@ inline bool JsonVariant::isBoolean() const {
          !strcmp(_content.asString, "false");
 }
 
-inline bool JsonVariant::isInteger() const {
+inline bool JsonVariant::variantIsInteger() const {
   using namespace Internals;
-  if (_type == JSON_POSITIVE_INTEGER || _type == JSON_NEGATIVE_INTEGER)
-    return true;
 
-  if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
-
-  char *end;
-  errno = 0;
-  strtol(_content.asString, &end, 10);
-
-  return *end == '\0' && errno == 0;
+  return _type == JSON_POSITIVE_INTEGER || _type == JSON_NEGATIVE_INTEGER ||
+         (_type == JSON_UNPARSED && Polyfills::isInteger(_content.asString));
 }
 
-inline bool JsonVariant::isFloat() const {
+inline bool JsonVariant::variantIsFloat() const {
   using namespace Internals;
-  if (_type >= JSON_FLOAT_0_DECIMALS) return true;
 
-  if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
-
-  return Polyfills::isFloat(_content.asString);
+  return _type >= JSON_FLOAT_0_DECIMALS ||
+         (_type == JSON_UNPARSED && Polyfills::isFloat(_content.asString));
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM

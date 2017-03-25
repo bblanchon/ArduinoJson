@@ -18,6 +18,10 @@ struct Polyfills_IsFloat_Tests : testing::Test {
 };
 #define TEST_(X) TEST_F(Polyfills_IsFloat_Tests, X)
 
+TEST_(Null) {
+  check(false, NULL);
+}
+
 TEST_(NoExponent) {
   check(true, "3.14");
   check(true, "-3.14");

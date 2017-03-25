@@ -5,6 +5,8 @@ HEAD
 ----
 
 * Added custom implementation of `strtod()` (issue #453)
+* Added custom implementation of `strtol()` (issue #465)
+* `char` is now treated as an integral type (issue #337, #370)
 
 v5.8.3
 ------

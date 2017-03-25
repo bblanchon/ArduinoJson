@@ -70,13 +70,15 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   }
 
   // Create a JsonVariant containing an integer value.
+  // JsonVariant(char)
   // JsonVariant(signed short)
   // JsonVariant(signed int)
   // JsonVariant(signed long)
+  // JsonVariant(signed char)
   template <typename T>
-  JsonVariant(T value,
-              typename TypeTraits::EnableIf<
-                  TypeTraits::IsSignedIntegral<T>::value>::type * = 0) {
+  JsonVariant(T value, typename TypeTraits::EnableIf<
+                           TypeTraits::IsSignedIntegral<T>::value ||
+                           TypeTraits::IsSame<T, char>::value>::type * = 0) {
     using namespace Internals;
     if (value >= 0) {
       _type = JSON_POSITIVE_INTEGER;
@@ -129,24 +131,26 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
 
   // Get the variant as the specified type.
   //
-  // short as<signed short>() const;
-  // int as<signed int>() const;
-  // long as<signed long>() const;
+  // char as<char>() const;
+  // signed char as<signed char>() const;
+  // signed short as<signed short>() const;
+  // signed int as<signed int>() const;
+  // signed long as<signed long>() const;
+  // unsigned char as<unsigned char>() const;
+  // unsigned short as<unsigned short>() const;
+  // unsigned int as<unsigned int>() const;
+  // unsigned long as<unsigned long>() const;
   template <typename T>
-  const typename TypeTraits::EnableIf<TypeTraits::IsSignedIntegral<T>::value,
-                                      T>::type
+  const typename TypeTraits::EnableIf<TypeTraits::IsIntegral<T>::value, T>::type
   as() const {
-    return static_cast<T>(variantAsInteger());
+    return variantAsInteger<T>();
   }
-  //
-  // short as<unsigned short>() const;
-  // int as<unsigned int>() const;
-  // long as<unsigned long>() const;
+  // bool as<bool>() const
   template <typename T>
-  const typename TypeTraits::EnableIf<TypeTraits::IsUnsignedIntegral<T>::value,
+  const typename TypeTraits::EnableIf<TypeTraits::IsSame<T, bool>::value,
                                       T>::type
   as() const {
-    return static_cast<T>(asUnsignedInteger());
+    return variantAsInteger<int>() != 0;
   }
   //
   // double as<double>() const;
@@ -155,7 +159,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   const typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<T>::value,
                                       T>::type
   as() const {
-    return static_cast<T>(variantAsFloat());
+    return variantAsFloat<T>();
   }
   //
   // const char* as<const char*>() const;
@@ -178,14 +182,6 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
     T s;
     printTo(s);
     return s;
-  }
-  //
-  // const bool as<bool>() const
-  template <typename T>
-  const typename TypeTraits::EnableIf<TypeTraits::IsSame<T, bool>::value,
-                                      T>::type
-  as() const {
-    return variantAsInteger() != 0;
   }
   //
   // JsonArray& as<JsonArray> const;
@@ -242,32 +238,35 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   // Tells weither the variant has the specified type.
   // Returns true if the variant has type type T, false otherwise.
   //
-  // short as<short>() const;
-  // int as<int>() const;
-  // long as<long>() const;
+  // bool is<char>() const;
+  // bool is<signed char>() const;
+  // bool is<signed short>() const;
+  // bool is<signed int>() const;
+  // bool is<signed long>() const;
+  // bool is<unsigned char>() const;
+  // bool is<unsigned short>() const;
+  // bool is<unsigned int>() const;
+  // bool is<unsigned long>() const;
   template <typename T>
-  const typename TypeTraits::EnableIf<TypeTraits::IsIntegral<T>::value &&
-                                          !TypeTraits::IsSame<T, bool>::value,
-                                      bool>::type
+  typename TypeTraits::EnableIf<TypeTraits::IsIntegral<T>::value, bool>::type
   is() const {
-    return isInteger();
+    return variantIsInteger();
   }
   //
-  // double is<double>() const;
-  // float is<float>() const;
+  // bool is<double>() const;
+  // bool is<float>() const;
   template <typename T>
-  const typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<T>::value,
-                                      bool>::type
+  typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<T>::value,
+                                bool>::type
   is() const {
-    return isFloat();
+    return variantIsFloat();
   }
   //
-  // const bool is<bool>() const
+  // bool is<bool>() const
   template <typename T>
-  const typename TypeTraits::EnableIf<TypeTraits::IsSame<T, bool>::value,
-                                      bool>::type
+  typename TypeTraits::EnableIf<TypeTraits::IsSame<T, bool>::value, bool>::type
   is() const {
-    return isBoolean();
+    return variantIsBoolean();
   }
   //
   // bool is<const char*>() const;
@@ -277,7 +276,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
                                     TypeTraits::IsSame<T, char *>::value,
                                 bool>::type
   is() const {
-    return isString();
+    return variantIsString();
   }
   //
   // bool is<JsonArray> const;
@@ -291,7 +290,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
           JsonArray>::value,
       bool>::type
   is() const {
-    return isArray();
+    return variantIsArray();
   }
   //
   // bool is<JsonObject> const;
@@ -305,7 +304,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
           JsonObject>::value,
       bool>::type
   is() const {
-    return isObject();
+    return variantIsObject();
   }
 
   // Returns true if the variant has a value
@@ -314,27 +313,23 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   }
 
  private:
-  // It's not allowed to store a char
-  template <typename T>
-  JsonVariant(T value, typename TypeTraits::EnableIf<
-                           TypeTraits::IsSame<T, char>::value>::type * = 0);
-
   JsonArray &variantAsArray() const;
   JsonObject &variantAsObject() const;
   const char *variantAsString() const;
-  Internals::JsonFloat variantAsFloat() const;
-  Internals::JsonInteger variantAsInteger() const;
-  Internals::JsonUInt asUnsignedInteger() const;
-  bool isBoolean() const;
-  bool isFloat() const;
-  bool isInteger() const;
-  bool isArray() const {
+  template <typename T>
+  T variantAsFloat() const;
+  template <typename T>
+  T variantAsInteger() const;
+  bool variantIsBoolean() const;
+  bool variantIsFloat() const;
+  bool variantIsInteger() const;
+  bool variantIsArray() const {
     return _type == Internals::JSON_ARRAY;
   }
-  bool isObject() const {
+  bool variantIsObject() const {
     return _type == Internals::JSON_OBJECT;
   }
-  bool isString() const {
+  bool variantIsString() const {
     return _type == Internals::JSON_STRING ||
            (_type == Internals::JSON_UNPARSED && _content.asString &&
             !strcmp("null", _content.asString));
