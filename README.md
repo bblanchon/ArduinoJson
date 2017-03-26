@@ -36,8 +36,6 @@ Works on
 * RedBearLab boards (BLE Nano...)
 * Computers (Windows, Linux, OSX...)
 
-See [FAQ: Compatibility issues](https://bblanchon.github.io/ArduinoJson/faq/compilation-fails-device-crashes-nothing-on-serial-console)
-
 Quick start
 -----------
 
