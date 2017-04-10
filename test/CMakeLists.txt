@@ -7,11 +7,6 @@
 
 include(gtest.cmake)
 
-file(GLOB_RECURSE TESTS_FILES
-	*.hpp
-	*.cpp
-)
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_compile_options(
 		-fno-exceptions
@@ -68,8 +63,15 @@ if(MSVC)
 	)
 endif()
 
-add_executable(ArduinoJsonTests ${TESTS_FILES})
-target_include_directories(ArduinoJsonTests PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../include)
-target_link_libraries(ArduinoJsonTests gtest)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
 
-add_test(ArduinoJsonTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ArduinoJsonTests)
+add_subdirectory(DynamicJsonBuffer)
+add_subdirectory(IntegrationTests)
+add_subdirectory(JsonArray)
+add_subdirectory(JsonBuffer)
+add_subdirectory(JsonObject)
+add_subdirectory(JsonVariant)
+add_subdirectory(JsonWriter)
+add_subdirectory(Misc)
+add_subdirectory(Polyfills)
+add_subdirectory(StaticJsonBuffer)
