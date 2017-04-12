@@ -22,7 +22,7 @@ class JsonArray_Remove_Tests : public ::testing::Test {
 
 #define TEST_(name) TEST_F(JsonArray_Remove_Tests, name)
 
-TEST_(RemoveFirstElement) {
+TEST_(RemoveFirstByIndex) {
   _array.removeAt(0);
 
   EXPECT_EQ(2, _array.size());
@@ -30,7 +30,7 @@ TEST_(RemoveFirstElement) {
   EXPECT_STREQ("three", _array[1]);
 }
 
-TEST_(RemoveMiddleElement) {
+TEST_(RemoveMiddleByIndex) {
   _array.removeAt(1);
 
   EXPECT_EQ(2, _array.size());
@@ -38,8 +38,38 @@ TEST_(RemoveMiddleElement) {
   EXPECT_STREQ("three", _array[1]);
 }
 
-TEST_(RemoveLastElement) {
+TEST_(RemoveLastByIndex) {
   _array.removeAt(2);
+
+  EXPECT_EQ(2, _array.size());
+  EXPECT_STREQ("one", _array[0]);
+  EXPECT_STREQ("two", _array[1]);
+}
+
+TEST_(RemoveFirstByIterator) {
+  JsonArray::iterator it = _array.begin();
+  _array.remove(it);
+
+  EXPECT_EQ(2, _array.size());
+  EXPECT_STREQ("two", _array[0]);
+  EXPECT_STREQ("three", _array[1]);
+}
+
+TEST_(RemoveMiddleByIterator) {
+  JsonArray::iterator it = _array.begin();
+  ++it;
+  _array.remove(it);
+
+  EXPECT_EQ(2, _array.size());
+  EXPECT_STREQ("one", _array[0]);
+  EXPECT_STREQ("three", _array[1]);
+}
+
+TEST_(RemoveLastByIterator) {
+  JsonArray::iterator it = _array.begin();
+  ++it;
+  ++it;
+  _array.remove(it);
 
   EXPECT_EQ(2, _array.size());
   EXPECT_STREQ("one", _array[0]);

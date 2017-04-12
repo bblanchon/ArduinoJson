@@ -1,6 +1,12 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added `JsonArray::remove(iterator)` (issue #479)
+* Added `JsonObject::remove(iterator)`
+
 v5.8.4
 ------
 

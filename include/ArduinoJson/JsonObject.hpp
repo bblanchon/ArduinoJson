@@ -247,14 +247,14 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
                                 bool>::type
   containsKey(const TString& key) const {
-    return findNode<const TString&>(key) != NULL;
+    return findKey<const TString&>(key) != end();
   }
   //
   // bool containsKey(TKey);
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
   bool containsKey(const TString* key) const {
-    return findNode<const TString*>(key) != NULL;
+    return findKey<const TString*>(key) != end();
   }
 
   // Removes the specified key and the associated value.
@@ -265,15 +265,18 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
                                 void>::type
   remove(const TString& key) {
-    removeNode(findNode<const TString&>(key));
+    remove(findKey<const TString&>(key));
   }
   //
   // void remove(TKey);
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
   void remove(const TString* key) {
-    removeNode(findNode<const TString*>(key));
+    remove(findKey<const TString*>(key));
   }
+  //
+  // void remove(iterator)
+  using Internals::List<JsonPair>::remove;
 
   // Returns a reference an invalid JsonObject.
   // This object is meant to replace a NULL pointer.
@@ -286,41 +289,44 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
  private:
   // Returns the list node that matches the specified key.
   template <typename TStringRef>
-  node_type* findNode(TStringRef key) const {
-    for (node_type* node = _firstNode; node; node = node->next) {
-      if (Internals::StringTraits<TStringRef>::equals(key, node->content.key))
-        return node;
+  iterator findKey(TStringRef key) {
+    iterator it;
+    for (it = begin(); it != end(); ++it) {
+      if (Internals::StringTraits<TStringRef>::equals(key, it->key)) break;
     }
-    return NULL;
+    return it;
+  }
+  template <typename TStringRef>
+  const_iterator findKey(TStringRef key) const {
+    return const_cast<JsonObject*>(this)->findKey<TStringRef>(key);
   }
 
   template <typename TStringRef, typename TValue>
   typename Internals::JsonVariantAs<TValue>::type get_impl(
       TStringRef key) const {
-    node_type* node = findNode<TStringRef>(key);
-    return node ? node->content.value.as<TValue>()
-                : Internals::JsonVariantDefault<TValue>::get();
+    const_iterator it = findKey<TStringRef>(key);
+    return it != end() ? it->value.as<TValue>()
+                       : Internals::JsonVariantDefault<TValue>::get();
   }
 
   template <typename TStringRef, typename TValueRef>
   bool set_impl(TStringRef key, TValueRef value) {
-    node_type* node = findNode<TStringRef>(key);
-    if (!node) {
-      node = addNewNode();
-      if (!node) return false;
+    iterator it = findKey<TStringRef>(key);
+    if (it == end()) {
+      it = Internals::List<JsonPair>::add();
+      if (it == end()) return false;
 
-      bool key_ok = Internals::ValueSetter<TStringRef>::set(
-          _buffer, node->content.key, key);
+      bool key_ok =
+          Internals::ValueSetter<TStringRef>::set(_buffer, it->key, key);
       if (!key_ok) return false;
     }
-    return Internals::ValueSetter<TValueRef>::set(_buffer, node->content.value,
-                                                  value);
+    return Internals::ValueSetter<TValueRef>::set(_buffer, it->value, value);
   }
 
   template <typename TStringRef, typename TValue>
   bool is_impl(TStringRef key) const {
-    node_type* node = findNode<TStringRef>(key);
-    return node ? node->content.value.is<TValue>() : false;
+    const_iterator it = findKey<TStringRef>(key);
+    return it != end() ? it->value.is<TValue>() : false;
   }
 
   template <typename TStringRef>

@@ -13,9 +13,14 @@
 namespace ArduinoJson {
 namespace Internals {
 
+template <typename T>
+class List;
+
 // A read-write forward iterator for List<T>
 template <typename T>
 class ListIterator {
+  friend class List<T>;
+
  public:
   explicit ListIterator(ListNode<T> *node = NULL) : _node(node) {}
 
@@ -36,6 +41,14 @@ class ListIterator {
 
   ListIterator<T> &operator++() {
     if (_node) _node = _node->next;
+    return *this;
+  }
+
+  ListIterator<T> &operator+=(size_t distance) {
+    while (_node && distance) {
+      _node = _node->next;
+      --distance;
+    }
     return *this;
   }
 

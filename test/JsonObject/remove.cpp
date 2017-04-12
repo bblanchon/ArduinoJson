@@ -29,3 +29,16 @@ TEST_(SizeUntouched_WhenRemoveIsCalledWithAWrongKey) {
 
   EXPECT_EQ(1, _object.size());
 }
+
+TEST_(RemoveByIterator) {
+  DynamicJsonBuffer _jsonBuffer;
+  JsonObject& _object = _jsonBuffer.parseObject("{\"a\":0,\"b\":1,\"c\":2}");
+
+  for (JsonObject::iterator it = _object.begin(); it != _object.end(); ++it) {
+    if (it->value == 1) _object.remove(it);
+  }
+
+  char result[64];
+  _object.printTo(result);
+  EXPECT_STREQ("{\"a\":0,\"c\":2}", result);
+}

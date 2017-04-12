@@ -111,16 +111,15 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // Gets the value at the specified index.
   template <typename T>
   typename Internals::JsonVariantAs<T>::type get(size_t index) const {
-    node_type *node = findNode(index);
-    return node ? node->content.as<T>()
-                : Internals::JsonVariantDefault<T>::get();
+    const_iterator it = begin() += index;
+    return it != end() ? it->as<T>() : Internals::JsonVariantDefault<T>::get();
   }
 
   // Check the type of the value at specified index.
   template <typename T>
   bool is(size_t index) const {
-    node_type *node = findNode(index);
-    return node ? node->content.is<T>() : false;
+    const_iterator it = begin() += index;
+    return it != end() ? it->is<T>() : false;
   }
 
   // Creates a JsonArray and adds a reference at the end of the array.
@@ -133,8 +132,9 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
 
   // Removes element at specified index.
   void removeAt(size_t index) {
-    removeNode(findNode(index));
+    remove(begin() += index);
   }
+  using Internals::List<JsonVariant>::remove;
 
   // Returns a reference an invalid JsonArray.
   // This object is meant to replace a NULL pointer.
@@ -198,28 +198,18 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   }
 
  private:
-  node_type *findNode(size_t index) const {
-    node_type *node = _firstNode;
-    while (node && index--) node = node->next;
-    return node;
-  }
-
   template <typename TValueRef>
   bool set_impl(size_t index, TValueRef value) {
-    node_type *node = findNode(index);
-    if (!node) return false;
-
-    return Internals::ValueSetter<TValueRef>::set(_buffer, node->content,
-                                                  value);
+    iterator it = begin() += index;
+    if (it == end()) return false;
+    return Internals::ValueSetter<TValueRef>::set(_buffer, *it, value);
   }
 
   template <typename TValueRef>
   bool add_impl(TValueRef value) {
-    node_type *node = addNewNode();
-    if (!node) return false;
-
-    return Internals::ValueSetter<TValueRef>::set(_buffer, node->content,
-                                                  value);
+    iterator it = Internals::List<JsonVariant>::add();
+    if (it == end()) return false;
+    return Internals::ValueSetter<TValueRef>::set(_buffer, *it, value);
   }
 };
 

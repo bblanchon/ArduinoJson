@@ -48,6 +48,20 @@ class List {
     return nodeCount;
   }
 
+  iterator add() {
+    node_type *newNode = new (_buffer) node_type();
+
+    if (_firstNode) {
+      node_type *lastNode = _firstNode;
+      while (lastNode->next) lastNode = lastNode->next;
+      lastNode->next = newNode;
+    } else {
+      _firstNode = newNode;
+    }
+
+    return iterator(newNode);
+  }
+
   iterator begin() {
     return iterator(_firstNode);
   }
@@ -62,22 +76,8 @@ class List {
     return const_iterator(NULL);
   }
 
- protected:
-  node_type *addNewNode() {
-    node_type *newNode = new (_buffer) node_type();
-
-    if (_firstNode) {
-      node_type *lastNode = _firstNode;
-      while (lastNode->next) lastNode = lastNode->next;
-      lastNode->next = newNode;
-    } else {
-      _firstNode = newNode;
-    }
-
-    return newNode;
-  }
-
-  void removeNode(node_type *nodeToRemove) {
+  void remove(iterator it) {
+    node_type *nodeToRemove = it._node;
     if (!nodeToRemove) return;
     if (nodeToRemove == _firstNode) {
       _firstNode = nodeToRemove->next;
@@ -87,6 +87,7 @@ class List {
     }
   }
 
+ protected:
   JsonBuffer *_buffer;
   node_type *_firstNode;
 };
