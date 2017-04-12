@@ -131,7 +131,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   JsonObject &createNestedObject();
 
   // Removes element at specified index.
-  void removeAt(size_t index) {
+  void remove(size_t index) {
     remove(begin() += index);
   }
   using Internals::List<JsonVariant>::remove;
@@ -196,6 +196,13 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
       it->as<JsonArray>().copyTo(array[i++]);
     }
   }
+
+#if ARDUINOJSON_ENABLE_DEPRECATED
+  DEPRECATED("use remove() instead")
+  FORCE_INLINE void removeAt(size_t index) {
+    return remove(index);
+  }
+#endif
 
  private:
   template <typename TValueRef>

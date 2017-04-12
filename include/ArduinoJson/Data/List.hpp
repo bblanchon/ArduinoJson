@@ -89,6 +89,8 @@ class List {
 
  protected:
   JsonBuffer *_buffer;
+
+ private:
   node_type *_firstNode;
 };
 }

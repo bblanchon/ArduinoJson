@@ -23,7 +23,7 @@ class JsonArray_Remove_Tests : public ::testing::Test {
 #define TEST_(name) TEST_F(JsonArray_Remove_Tests, name)
 
 TEST_(RemoveFirstByIndex) {
-  _array.removeAt(0);
+  _array.remove(0);
 
   EXPECT_EQ(2, _array.size());
   EXPECT_STREQ("two", _array[0]);
@@ -31,7 +31,7 @@ TEST_(RemoveFirstByIndex) {
 }
 
 TEST_(RemoveMiddleByIndex) {
-  _array.removeAt(1);
+  _array.remove(1);
 
   EXPECT_EQ(2, _array.size());
   EXPECT_STREQ("one", _array[0]);
@@ -39,7 +39,7 @@ TEST_(RemoveMiddleByIndex) {
 }
 
 TEST_(RemoveLastByIndex) {
-  _array.removeAt(2);
+  _array.remove(2);
 
   EXPECT_EQ(2, _array.size());
   EXPECT_STREQ("one", _array[0]);

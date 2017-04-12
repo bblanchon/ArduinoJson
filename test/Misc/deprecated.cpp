@@ -34,3 +34,9 @@ TEST(Deprecated, asString) {
   JsonVariant variant = "hello";
   ASSERT_STREQ("hello", variant.asString());
 }
+
+TEST(Deprecated, removeAt) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonArray& arr = jsonBuffer.createArray();
+  arr.removeAt(0);
+}

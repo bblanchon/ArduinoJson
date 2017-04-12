@@ -6,6 +6,7 @@ HEAD
 
 * Added `JsonArray::remove(iterator)` (issue #479)
 * Added `JsonObject::remove(iterator)`
+* Renamed `JsonArray::removeAt(size_t)` into `remove(size_t)`
 
 v5.8.4
 ------
