@@ -5,10 +5,12 @@
 # https://bblanchon.github.io/ArduinoJson/
 # If you like this project, please add a star!
 
-add_executable(IntegrationTests 
-	gbathree.cpp
-	round_trip.cpp
+add_library(catch
+	catch.hpp
+	catch.cpp
 )
 
-target_link_libraries(IntegrationTests catch)
-add_test(IntegrationTests IntegrationTests)
+target_include_directories(catch
+	PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+)

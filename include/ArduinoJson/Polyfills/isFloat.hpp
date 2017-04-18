@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <string.h>  // for strcmp
 #include "./ctype.hpp"
 
 namespace ArduinoJson {

@@ -8,7 +8,7 @@
 #define ARDUINOJSON_ENABLE_DEPRECATED 1
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -18,25 +18,27 @@
 #pragma warning(disable : 4996)
 #endif
 
-TEST(Deprecated, asArray) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonVariant variant = jsonBuffer.createArray();
-  ASSERT_TRUE(variant.asArray().success());
-}
+TEST_CASE("Deprecated functions") {
+  SECTION("JsonVariant::asArray()") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonVariant variant = jsonBuffer.createArray();
+    REQUIRE(variant.asArray().success());
+  }
 
-TEST(Deprecated, asObject) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonVariant variant = jsonBuffer.createObject();
-  ASSERT_TRUE(variant.asObject().success());
-}
+  SECTION("JsonVariant::asObject()") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonVariant variant = jsonBuffer.createObject();
+    REQUIRE(variant.asObject().success());
+  }
 
-TEST(Deprecated, asString) {
-  JsonVariant variant = "hello";
-  ASSERT_STREQ("hello", variant.asString());
-}
+  SECTION("JsonVariant::asString()") {
+    JsonVariant variant = "hello";
+    REQUIRE(std::string("hello") == variant.asString());
+  }
 
-TEST(Deprecated, removeAt) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& arr = jsonBuffer.createArray();
-  arr.removeAt(0);
+  SECTION("JsonArray::removeAt()") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonArray& arr = jsonBuffer.createArray();
+    arr.removeAt(0);
+  }
 }

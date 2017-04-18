@@ -17,5 +17,5 @@ add_executable(JsonVariantTests
 	undefined.cpp
 )
 
-target_link_libraries(JsonVariantTests gtest)
+target_link_libraries(JsonVariantTests catch)
 add_test(JsonVariant JsonVariantTests)

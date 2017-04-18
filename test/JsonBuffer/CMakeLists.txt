@@ -13,5 +13,5 @@ add_executable(JsonBufferTests
 	parseObject.cpp
 )
 
-target_link_libraries(JsonBufferTests gtest)
+target_link_libraries(JsonBufferTests catch)
 add_test(JsonBuffer JsonBufferTests)

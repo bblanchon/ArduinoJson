@@ -6,80 +6,46 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonParser_NestingLimit_Tests : public testing::Test {
- protected:
-  void whenNestingLimitIs(uint8_t nestingLimit) {
-    _nestingLimit = nestingLimit;
-  }
-
-  void parseArrayMustFail(const char *json) {
-    ASSERT_FALSE(tryParseArray(json));
-  }
-
-  void parseArrayMustSucceed(const char *json) {
-    ASSERT_TRUE(tryParseArray(json));
-  }
-
-  void parseObjectMustFail(const char *json) {
-    ASSERT_FALSE(tryParseObject(json));
-  }
-
-  void parseObjectMustSucceed(const char *json) {
-    ASSERT_TRUE(tryParseObject(json));
-  }
-
- private:
-  bool tryParseArray(const char *json) {
-    DynamicJsonBuffer buffer;
-    char s[256];
-    strcpy(s, json);
-    return buffer.parseArray(s, _nestingLimit).success();
-  }
-
-  bool tryParseObject(const char *json) {
-    DynamicJsonBuffer buffer;
-    char s[256];
-    strcpy(s, json);
-    return buffer.parseObject(s, _nestingLimit).success();
-  }
-
-  uint8_t _nestingLimit;
-};
-
-TEST_F(JsonParser_NestingLimit_Tests, ParseArrayWithNestingLimit0) {
-  whenNestingLimitIs(0);
-  parseArrayMustSucceed("[]");
-  parseArrayMustFail("[[]]");
+bool tryParseArray(const char *json, uint8_t nestingLimit) {
+  DynamicJsonBuffer buffer;
+  return buffer.parseArray(json, nestingLimit).success();
 }
 
-TEST_F(JsonParser_NestingLimit_Tests, ParseArrayWithNestingLimit1) {
-  whenNestingLimitIs(1);
-  parseArrayMustSucceed("[[]]");
-  parseArrayMustFail("[[[]]]");
+bool tryParseObject(const char *json, uint8_t nestingLimit) {
+  DynamicJsonBuffer buffer;
+  return buffer.parseObject(json, nestingLimit).success();
 }
 
-TEST_F(JsonParser_NestingLimit_Tests, ParseArrayWithNestingLimit2) {
-  whenNestingLimitIs(2);
-  parseArrayMustSucceed("[[[]]]");
-  parseArrayMustFail("[[[[]]]]");
-}
+TEST_CASE("JsonParser nestingLimit") {
+  SECTION("ParseArrayWithNestingLimit0") {
+    REQUIRE(true == tryParseArray("[]", 0));
+    REQUIRE(false == tryParseArray("[[]]", 0));
+  }
 
-TEST_F(JsonParser_NestingLimit_Tests, ParseObjectWithNestingLimit0) {
-  whenNestingLimitIs(0);
-  parseObjectMustSucceed("{}");
-  parseObjectMustFail("{\"key\":{}}");
-}
+  SECTION("ParseArrayWithNestingLimit1") {
+    REQUIRE(true == tryParseArray("[[]]", 1));
+    REQUIRE(false == tryParseArray("[[[]]]", 1));
+  }
 
-TEST_F(JsonParser_NestingLimit_Tests, ParseObjectWithNestingLimit1) {
-  whenNestingLimitIs(1);
-  parseObjectMustSucceed("{\"key\":{}}");
-  parseObjectMustFail("{\"key\":{\"key\":{}}}");
-}
+  SECTION("ParseArrayWithNestingLimit2") {
+    REQUIRE(true == tryParseArray("[[[]]]", 2));
+    REQUIRE(false == tryParseArray("[[[[]]]]", 2));
+  }
 
-TEST_F(JsonParser_NestingLimit_Tests, ParseObjectWithNestingLimit2) {
-  whenNestingLimitIs(2);
-  parseObjectMustSucceed("{\"key\":{\"key\":{}}}");
-  parseObjectMustFail("{\"key\":{\"key\":{\"key\":{}}}}");
+  SECTION("ParseObjectWithNestingLimit0") {
+    REQUIRE(true == tryParseObject("{}", 0));
+    REQUIRE(false == tryParseObject("{\"key\":{}}", 0));
+  }
+
+  SECTION("ParseObjectWithNestingLimit1") {
+    REQUIRE(true == tryParseObject("{\"key\":{}}", 1));
+    REQUIRE(false == tryParseObject("{\"key\":{\"key\":{}}}", 1));
+  }
+
+  SECTION("ParseObjectWithNestingLimit2") {
+    REQUIRE(true == tryParseObject("{\"key\":{\"key\":{}}}", 2));
+    REQUIRE(false == tryParseObject("{\"key\":{\"key\":{\"key\":{}}}}", 2));
+  }
 }

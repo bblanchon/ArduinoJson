@@ -6,182 +6,153 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonParser_Object_Test : public testing::Test {
- protected:
-  void whenInputIs(const char *jsonString) {
-    strcpy(_jsonString, jsonString);
-    _object = &_jsonBuffer.parseObject(_jsonString);
+TEST_CASE("JsonBuffer::parseObject()") {
+  DynamicJsonBuffer jb;
+
+  SECTION("EmptyObject") {
+    JsonObject& obj = jb.parseObject("{}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 0);
   }
 
-  void parseMustSucceed() {
-    EXPECT_TRUE(_object->success());
+  SECTION("MissingOpeningBrace") {
+    JsonObject& obj = jb.parseObject("}");
+    REQUIRE_FALSE(obj.success());
   }
 
-  void parseMustFail() {
-    EXPECT_FALSE(_object->success());
+  SECTION("MissingClosingBrace") {
+    JsonObject& obj = jb.parseObject("{");
+    REQUIRE_FALSE(obj.success());
   }
 
-  void sizeMustBe(int expected) {
-    EXPECT_EQ(expected, _object->size());
+  SECTION("MissingColonAndValue") {
+    JsonObject& obj = jb.parseObject("{\"key\"}");
+    REQUIRE_FALSE(obj.success());
   }
 
-  void keyMustHaveValue(const char *key, const char *expected) {
-    EXPECT_STREQ(expected, (*_object)[key]);
+  SECTION("MissingQuotesAndColonAndValue") {
+    JsonObject& obj = jb.parseObject("{key}");
+    REQUIRE_FALSE(obj.success());
   }
 
-  template <typename T>
-  void keyMustHaveValue(const char *key, T expected) {
-    EXPECT_EQ(expected, (*_object)[key].as<T>());
+  SECTION("OneString") {
+    JsonObject& obj = jb.parseObject("{\"key\":\"value\"}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj["key"] == "value");
   }
 
- private:
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject *_object;
-  char _jsonString[256];
-};
+  SECTION("OneStringSingleQuotes") {
+    JsonObject& obj = jb.parseObject("{'key':'value'}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj["key"] == "value");
+  }
 
-TEST_F(JsonParser_Object_Test, EmptyObject) {
-  whenInputIs("{}");
-  parseMustSucceed();
-  sizeMustBe(0);
-}
+  SECTION("OneStringNoQuotes") {
+    JsonObject& obj = jb.parseObject("{key:value}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj["key"] == "value");
+  }
 
-TEST_F(JsonParser_Object_Test, MissingOpeningBrace) {
-  whenInputIs("}");
-  parseMustFail();
-}
+  SECTION("OneStringSpaceBeforeKey") {
+    JsonObject& obj = jb.parseObject("{ \"key\":\"value\"}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj["key"] == "value");
+  }
 
-TEST_F(JsonParser_Object_Test, MissingClosingBrace) {
-  whenInputIs("{");
-  parseMustFail();
-}
+  SECTION("OneStringSpaceAfterKey") {
+    JsonObject& obj = jb.parseObject("{\"key\" :\"value\"}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj["key"] == "value");
+  }
 
-TEST_F(JsonParser_Object_Test, MissingColonAndValue) {
-  whenInputIs("{\"key\"}");
-  parseMustFail();
-}
+  SECTION("OneStringSpaceBeforeValue") {
+    JsonObject& obj = jb.parseObject("{\"key\": \"value\"}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj["key"] == "value");
+  }
 
-TEST_F(JsonParser_Object_Test, MissingQuotesAndColonAndValue) {
-  whenInputIs("{key}");
-  parseMustFail();
-}
+  SECTION("OneStringSpaceAfterValue") {
+    JsonObject& obj = jb.parseObject("{\"key\":\"value\" }");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj["key"] == "value");
+  }
 
-TEST_F(JsonParser_Object_Test, OneString) {
-  whenInputIs("{\"key\":\"value\"}");
-  parseMustSucceed();
-  sizeMustBe(1);
-  keyMustHaveValue("key", "value");
-}
+  SECTION("TwoStrings") {
+    JsonObject& obj =
+        jb.parseObject("{\"key1\":\"value1\",\"key2\":\"value2\"}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 2);
+    REQUIRE(obj["key1"] == "value1");
+    REQUIRE(obj["key2"] == "value2");
+  }
 
-TEST_F(JsonParser_Object_Test, OneStringSingleQuotes) {
-  whenInputIs("{'key':'value'}");
-  parseMustSucceed();
-  sizeMustBe(1);
-  keyMustHaveValue("key", "value");
-}
+  SECTION("TwoStringsSpaceBeforeComma") {
+    JsonObject& obj =
+        jb.parseObject("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 2);
+    REQUIRE(obj["key1"] == "value1");
+    REQUIRE(obj["key2"] == "value2");
+  }
 
-TEST_F(JsonParser_Object_Test, OneStringNoQuotes) {
-  whenInputIs("{key:value}");
-  parseMustSucceed();
-  sizeMustBe(1);
-  keyMustHaveValue("key", "value");
-}
+  SECTION("TwoStringsSpaceAfterComma") {
+    JsonObject& obj =
+        jb.parseObject("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 2);
+    REQUIRE(obj["key1"] == "value1");
+    REQUIRE(obj["key2"] == "value2");
+  }
 
-TEST_F(JsonParser_Object_Test, OneStringSpaceBeforeKey) {
-  whenInputIs("{ \"key\":\"value\"}");
-  parseMustSucceed();
-  sizeMustBe(1);
-  keyMustHaveValue("key", "value");
-}
+  SECTION("EndingWithAComma") {
+    JsonObject& obj = jb.parseObject("{\"key1\":\"value1\",}");
+    REQUIRE_FALSE(obj.success());
+    REQUIRE(obj.size() == 0);
+  }
 
-TEST_F(JsonParser_Object_Test, OneStringSpaceAfterKey) {
-  whenInputIs("{\"key\" :\"value\"}");
-  parseMustSucceed();
-  sizeMustBe(1);
-  keyMustHaveValue("key", "value");
-}
+  SECTION("TwoIntergers") {
+    JsonObject& obj = jb.parseObject("{\"key1\":42,\"key2\":-42}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 2);
+    REQUIRE(obj["key1"] == 42);
+    REQUIRE(obj["key2"] == -42);
+  }
 
-TEST_F(JsonParser_Object_Test, OneStringSpaceBeforeValue) {
-  whenInputIs("{\"key\": \"value\"}");
-  parseMustSucceed();
-  sizeMustBe(1);
-  keyMustHaveValue("key", "value");
-}
+  SECTION("TwoDoubles") {
+    JsonObject& obj = jb.parseObject("{\"key1\":12.345,\"key2\":-7E89}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 2);
+    REQUIRE(obj["key1"] == 12.345);
+    REQUIRE(obj["key2"] == -7E89);
+  }
 
-TEST_F(JsonParser_Object_Test, OneStringSpaceAfterValue) {
-  whenInputIs("{\"key\":\"value\" }");
-  parseMustSucceed();
-  sizeMustBe(1);
-  keyMustHaveValue("key", "value");
-}
+  SECTION("TwoBooleans") {
+    JsonObject& obj = jb.parseObject("{\"key1\":true,\"key2\":false}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 2);
+    REQUIRE(obj["key1"] == true);
+    REQUIRE(obj["key2"] == false);
+  }
 
-TEST_F(JsonParser_Object_Test, TwoStrings) {
-  whenInputIs("{\"key1\":\"value1\",\"key2\":\"value2\"}");
-  parseMustSucceed();
-  sizeMustBe(2);
-  keyMustHaveValue("key1", "value1");
-  keyMustHaveValue("key2", "value2");
-}
+  SECTION("TwoNulls") {
+    JsonObject& obj = jb.parseObject("{\"key1\":null,\"key2\":null}");
+    REQUIRE(obj.success());
+    REQUIRE(obj.size() == 2);
+    REQUIRE(obj["key1"].as<char*>() == 0);
+    REQUIRE(obj["key2"].as<char*>() == 0);
+  }
 
-TEST_F(JsonParser_Object_Test, TwoStringsSpaceBeforeComma) {
-  whenInputIs("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
-  parseMustSucceed();
-  sizeMustBe(2);
-  keyMustHaveValue("key1", "value1");
-  keyMustHaveValue("key2", "value2");
-}
-
-TEST_F(JsonParser_Object_Test, TwoStringsSpaceAfterComma) {
-  whenInputIs("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
-  parseMustSucceed();
-  sizeMustBe(2);
-  keyMustHaveValue("key1", "value1");
-  keyMustHaveValue("key2", "value2");
-}
-
-TEST_F(JsonParser_Object_Test, EndingWithAComma) {
-  whenInputIs("{\"key1\":\"value1\",}");
-  parseMustFail();
-  sizeMustBe(0);
-}
-
-TEST_F(JsonParser_Object_Test, TwoIntergers) {
-  whenInputIs("{\"key1\":42,\"key2\":-42}");
-  parseMustSucceed();
-  sizeMustBe(2);
-  keyMustHaveValue("key1", 42);
-  keyMustHaveValue("key2", -42);
-}
-
-TEST_F(JsonParser_Object_Test, TwoDoubles) {
-  whenInputIs("{\"key1\":12.345,\"key2\":-7E89}");
-  parseMustSucceed();
-  sizeMustBe(2);
-  keyMustHaveValue("key1", 12.345);
-  keyMustHaveValue("key2", -7E89);
-}
-
-TEST_F(JsonParser_Object_Test, TwoBooleans) {
-  whenInputIs("{\"key1\":true,\"key2\":false}");
-  parseMustSucceed();
-  sizeMustBe(2);
-  keyMustHaveValue("key1", true);
-  keyMustHaveValue("key2", false);
-}
-
-TEST_F(JsonParser_Object_Test, TwoNulls) {
-  const char *const nullstr = 0;
-
-  whenInputIs("{\"key1\":null,\"key2\":null}");
-  parseMustSucceed();
-  sizeMustBe(2);
-  keyMustHaveValue("key1", nullstr);
-  keyMustHaveValue("key2", nullstr);
-}
-
-TEST_F(JsonParser_Object_Test, NullForKey) {
-  whenInputIs("null:\"value\"}");
-  parseMustFail();
+  SECTION("NullForKey") {
+    JsonObject& obj = jb.parseObject("null:\"value\"}");
+    REQUIRE_FALSE(obj.success());
+  }
 }

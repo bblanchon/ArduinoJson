@@ -14,4 +14,5 @@ if(${COVERAGE})
 	set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
 endif()
 
+add_subdirectory(third-party/catch)
 add_subdirectory(test)

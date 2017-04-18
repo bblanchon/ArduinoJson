@@ -6,51 +6,50 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-TEST(JsonArray_CopyTo_Tests, BiggerOneDimensionIntegerArray) {
-  char json[] = "[1,2,3]";
-
+TEST_CASE("JsonArray::copyTo()") {
   DynamicJsonBuffer jsonBuffer;
-  JsonArray& array = jsonBuffer.parseArray(json);
 
-  int destination[4] = {0};
-  size_t result = array.copyTo(destination);
+  SECTION("BiggerOneDimensionIntegerArray") {
+    char json[] = "[1,2,3]";
+    JsonArray& array = jsonBuffer.parseArray(json);
 
-  ASSERT_EQ(3, result);
-  ASSERT_EQ(1, destination[0]);
-  ASSERT_EQ(2, destination[1]);
-  ASSERT_EQ(3, destination[2]);
-  ASSERT_EQ(0, destination[3]);
-}
+    int destination[4] = {0};
+    size_t result = array.copyTo(destination);
 
-TEST(JsonArray_CopyTo_Tests, SmallerOneDimensionIntegerArray) {
-  char json[] = "[1,2,3]";
+    REQUIRE(3 == result);
+    REQUIRE(1 == destination[0]);
+    REQUIRE(2 == destination[1]);
+    REQUIRE(3 == destination[2]);
+    REQUIRE(0 == destination[3]);
+  }
 
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& array = jsonBuffer.parseArray(json);
+  SECTION("SmallerOneDimensionIntegerArray") {
+    char json[] = "[1,2,3]";
+    JsonArray& array = jsonBuffer.parseArray(json);
 
-  int destination[2] = {0};
-  size_t result = array.copyTo(destination);
+    int destination[2] = {0};
+    size_t result = array.copyTo(destination);
 
-  ASSERT_EQ(2, result);
-  ASSERT_EQ(1, destination[0]);
-  ASSERT_EQ(2, destination[1]);
-}
+    REQUIRE(2 == result);
+    REQUIRE(1 == destination[0]);
+    REQUIRE(2 == destination[1]);
+  }
 
-TEST(JsonArray_CopyTo_Tests, TwoOneDimensionIntegerArray) {
-  char json[] = "[[1,2],[3],[4]]";
+  SECTION("TwoOneDimensionIntegerArray") {
+    char json[] = "[[1,2],[3],[4]]";
 
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& array = jsonBuffer.parseArray(json);
+    JsonArray& array = jsonBuffer.parseArray(json);
 
-  int destination[3][2] = {{0}};
-  array.copyTo(destination);
+    int destination[3][2] = {{0}};
+    array.copyTo(destination);
 
-  ASSERT_EQ(1, destination[0][0]);
-  ASSERT_EQ(2, destination[0][1]);
-  ASSERT_EQ(3, destination[1][0]);
-  ASSERT_EQ(0, destination[1][1]);
-  ASSERT_EQ(4, destination[2][0]);
-  ASSERT_EQ(0, destination[2][1]);
+    REQUIRE(1 == destination[0][0]);
+    REQUIRE(2 == destination[0][1]);
+    REQUIRE(3 == destination[1][0]);
+    REQUIRE(0 == destination[1][1]);
+    REQUIRE(4 == destination[2][0]);
+    REQUIRE(0 == destination[2][1]);
+  }
 }

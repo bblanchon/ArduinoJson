@@ -6,70 +6,37 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 using namespace ArduinoJson::Internals;
 
-class StringBuilderTests : public testing::Test {
- protected:
-  virtual void SetUp() {
-    _stringBuilder = new StaticStringBuilder(_buffer, sizeof(_buffer));
+TEST_CASE("StringBuilder") {
+  char output[20];
+  StaticStringBuilder sb(output, sizeof(output));
+
+  SECTION("InitialState") {
+    REQUIRE(std::string("") == output);
   }
 
-  virtual void TearDown() {
-    delete _stringBuilder;
+  SECTION("OverCapacity") {
+    REQUIRE(19 == sb.print("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+    REQUIRE(0 == sb.print("ABC"));
+    REQUIRE(std::string("ABCDEFGHIJKLMNOPQRS") == output);
   }
 
-  void print(const char *value) {
-    _returnValue = _stringBuilder->print(value);
+  SECTION("EmptyString") {
+    REQUIRE(0 == sb.print(""));
+    REQUIRE(std::string("") == output);
   }
 
-  void outputMustBe(const char *expected) {
-    EXPECT_STREQ(expected, _buffer);
+  SECTION("OneString") {
+    REQUIRE(4 == sb.print("ABCD"));
+    REQUIRE(std::string("ABCD") == output);
   }
 
-  void resultMustBe(size_t expected) {
-    EXPECT_EQ(expected, _returnValue);
+  SECTION("TwoStrings") {
+    REQUIRE(4 == sb.print("ABCD"));
+    REQUIRE(4 == sb.print("EFGH"));
+    REQUIRE(std::string("ABCDEFGH") == output);
   }
-
- private:
-  char _buffer[20];
-  Print *_stringBuilder;
-  size_t _returnValue;
-};
-
-TEST_F(StringBuilderTests, InitialState) {
-  outputMustBe("");
-}
-
-TEST_F(StringBuilderTests, OverCapacity) {
-  print("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  resultMustBe(19);
-
-  print("ABC");
-  resultMustBe(0);
-
-  outputMustBe("ABCDEFGHIJKLMNOPQRS");
-}
-
-TEST_F(StringBuilderTests, EmptyString) {
-  print("");
-  resultMustBe(0);
-  outputMustBe("");
-}
-
-TEST_F(StringBuilderTests, OneString) {
-  print("ABCD");
-  resultMustBe(4);
-  outputMustBe("ABCD");
-}
-
-TEST_F(StringBuilderTests, TwoStrings) {
-  print("ABCD");
-  resultMustBe(4);
-
-  print("EFGH");
-  resultMustBe(4);
-
-  outputMustBe("ABCDEFGH");
 }

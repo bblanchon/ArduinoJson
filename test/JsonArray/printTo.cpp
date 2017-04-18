@@ -6,147 +6,140 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonArray_PrintTo_Tests : public testing::Test {
- public:
-  JsonArray_PrintTo_Tests() : array(json.createArray()) {}
+static void check(JsonArray &array, std::string expected) {
+  std::string actual;
+  size_t actualLen = array.printTo(actual);
+  size_t measuredLen = array.measureLength();
+  CHECK(actualLen == expected.size());
+  CHECK(measuredLen == expected.size());
+  REQUIRE(expected == actual);
+}
 
- protected:
-  StaticJsonBuffer<JSON_ARRAY_SIZE(2)> json;
-  JsonArray &array;
+TEST_CASE("JsonArray::printTo()") {
+  StaticJsonBuffer<JSON_ARRAY_SIZE(2)> jb;
+  JsonArray &array = jb.createArray();
 
-  void outputMustBe(const char *expected) {
-    size_t actualLen = array.printTo(buffer);
-    size_t measuredLen = array.measureLength();
-
-    EXPECT_STREQ(expected, buffer);
-    EXPECT_EQ(strlen(expected), actualLen);
-    EXPECT_EQ(strlen(expected), measuredLen);
+  SECTION("Empty") {
+    check(array, "[]");
   }
 
- private:
-  char buffer[256];
-};
+  SECTION("Null") {
+    array.add(static_cast<char *>(0));
 
-TEST_F(JsonArray_PrintTo_Tests, Empty) {
-  outputMustBe("[]");
-}
+    check(array, "[null]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, Null) {
-  array.add(static_cast<char *>(0));
+  SECTION("OneString") {
+    array.add("hello");
 
-  outputMustBe("[null]");
-}
+    check(array, "[\"hello\"]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneString) {
-  array.add("hello");
+  SECTION("TwoStrings") {
+    array.add("hello");
+    array.add("world");
 
-  outputMustBe("[\"hello\"]");
-}
+    check(array, "[\"hello\",\"world\"]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, TwoStrings) {
-  array.add("hello");
-  array.add("world");
+  SECTION("OneStringOverCapacity") {
+    array.add("hello");
+    array.add("world");
+    array.add("lost");
 
-  outputMustBe("[\"hello\",\"world\"]");
-}
+    check(array, "[\"hello\",\"world\"]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneStringOverCapacity) {
-  array.add("hello");
-  array.add("world");
-  array.add("lost");
+  SECTION("OneDoubleDefaultDigits") {
+    array.add(3.14159265358979323846);
+    check(array, "[3.14]");
+  }
 
-  outputMustBe("[\"hello\",\"world\"]");
-}
+  SECTION("OneDoubleFourDigits") {
+    array.add(3.14159265358979323846, 4);
+    check(array, "[3.1416]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneDoubleDefaultDigits) {
-  array.add(3.14159265358979323846);
-  outputMustBe("[3.14]");
-}
+  SECTION("OneDoubleFourDigits_AlternativeSyntax") {
+    array.add(double_with_n_digits(3.14159265358979323846, 4));
+    check(array, "[3.1416]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneDoubleFourDigits) {
-  array.add(3.14159265358979323846, 4);
-  outputMustBe("[3.1416]");
-}
+  SECTION("OneFloatDefaultDigits") {
+    array.add(3.14159f);
+    check(array, "[3.14]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneDoubleFourDigits_AlternativeSyntax) {
-  array.add(double_with_n_digits(3.14159265358979323846, 4));
-  outputMustBe("[3.1416]");
-}
+  SECTION("OneFloatFourDigits") {
+    array.add(3.14159f, 4);
+    check(array, "[3.1416]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneFloatDefaultDigits) {
-  array.add(3.14159f);
-  outputMustBe("[3.14]");
-}
+  SECTION("OneInteger") {
+    array.add(1);
 
-TEST_F(JsonArray_PrintTo_Tests, OneFloatFourDigits) {
-  array.add(3.14159f, 4);
-  outputMustBe("[3.1416]");
-}
+    check(array, "[1]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneInteger) {
-  array.add(1);
+  SECTION("TwoIntegers") {
+    array.add(1);
+    array.add(2);
 
-  outputMustBe("[1]");
-}
+    check(array, "[1,2]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, TwoIntegers) {
-  array.add(1);
-  array.add(2);
+  SECTION("RawJson") {
+    array.add(RawJson("{\"key\":\"value\"}"));
 
-  outputMustBe("[1,2]");
-}
+    check(array, "[{\"key\":\"value\"}]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, RawJson) {
-  array.add(RawJson("{\"key\":\"value\"}"));
+  SECTION("OneIntegerOverCapacity") {
+    array.add(1);
+    array.add(2);
+    array.add(3);
 
-  outputMustBe("[{\"key\":\"value\"}]");
-}
+    check(array, "[1,2]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneIntegerOverCapacity) {
-  array.add(1);
-  array.add(2);
-  array.add(3);
+  SECTION("OneTrue") {
+    array.add(true);
 
-  outputMustBe("[1,2]");
-}
+    check(array, "[true]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneTrue) {
-  array.add(true);
+  SECTION("OneFalse") {
+    array.add(false);
 
-  outputMustBe("[true]");
-}
+    check(array, "[false]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneFalse) {
-  array.add(false);
+  SECTION("TwoBooleans") {
+    array.add(false);
+    array.add(true);
 
-  outputMustBe("[false]");
-}
+    check(array, "[false,true]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, TwoBooleans) {
-  array.add(false);
-  array.add(true);
+  SECTION("OneBooleanOverCapacity") {
+    array.add(false);
+    array.add(true);
+    array.add(false);
 
-  outputMustBe("[false,true]");
-}
+    check(array, "[false,true]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneBooleanOverCapacity) {
-  array.add(false);
-  array.add(true);
-  array.add(false);
+  SECTION("OneEmptyNestedArray") {
+    array.createNestedArray();
 
-  outputMustBe("[false,true]");
-}
+    check(array, "[[]]");
+  }
 
-TEST_F(JsonArray_PrintTo_Tests, OneEmptyNestedArray) {
-  array.createNestedArray();
+  SECTION("OneEmptyNestedHash") {
+    array.createNestedObject();
 
-  outputMustBe("[[]]");
-}
-
-TEST_F(JsonArray_PrintTo_Tests, OneEmptyNestedHash) {
-  array.createNestedObject();
-
-  outputMustBe("[{}]");
+    check(array, "[{}]");
+  }
 }

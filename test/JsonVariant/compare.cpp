@@ -6,223 +6,230 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonVariant_Comparison_Tests : public ::testing::Test {
- protected:
-  template <typename T>
-  void testValue(T low, T mid, T high) {
-    setValueTo(mid);
-    mustBeEqualTo(mid);
-    mustBeGreaterThan(low);
-    mustBeLessThan(high);
+template <typename T>
+void checkEquals(JsonVariant a, T b) {
+  REQUIRE(b == a);
+  REQUIRE(a == b);
+  REQUIRE(b <= a);
+  REQUIRE(a <= b);
+  REQUIRE(b >= a);
+  REQUIRE(a >= b);
+
+  REQUIRE_FALSE(b != a);
+  REQUIRE_FALSE(a != b);
+  REQUIRE_FALSE(b > a);
+  REQUIRE_FALSE(a > b);
+  REQUIRE_FALSE(b < a);
+  REQUIRE_FALSE(a < b);
+}
+
+template <typename T>
+void checkGreater(JsonVariant a, T b) {
+  REQUIRE(a > b);
+  REQUIRE(b < a);
+  REQUIRE(a != b);
+  REQUIRE(b != a);
+
+  REQUIRE_FALSE(a < b);
+  REQUIRE_FALSE(b > a);
+  REQUIRE_FALSE(a == b);
+  REQUIRE_FALSE(b == a);
+}
+
+template <typename T>
+void checkLower(JsonVariant a, T b) {
+  REQUIRE(a < b);
+  REQUIRE(b > a);
+  REQUIRE(a != b);
+  REQUIRE(b != a);
+
+  REQUIRE_FALSE(a > b);
+  REQUIRE_FALSE(b < a);
+  REQUIRE_FALSE(a == b);
+  REQUIRE_FALSE(b == a);
+}
+
+template <typename T>
+void checkComparisons(T low, T mid, T high) {
+  checkEquals(mid, mid);
+  checkGreater(mid, low);
+  checkLower(mid, high);
+}
+
+TEST_CASE("JsonVariant comparisons") {
+  SECTION("Double") {
+    checkComparisons<double>(123.44, 123.45, 123.46);
   }
 
- private:
-  template <typename T>
-  void setValueTo(T expected) {
-    actual = expected;
+  SECTION("Float") {
+    checkComparisons<float>(123.44f, 123.45f, 123.46f);
   }
 
-  template <typename T>
-  void mustBeEqualTo(T expected) {
-    EXPECT_EQ(expected, actual);  // operator==
-    EXPECT_EQ(actual, expected);  // operator==
-    EXPECT_LE(expected, actual);  // operator<=
-    EXPECT_LE(actual, expected);  // operator<=
-    EXPECT_GE(expected, actual);  // operator>=
-    EXPECT_GE(actual, expected);  // operator>=
+  SECTION("SChar") {
+    checkComparisons<signed char>(122, 123, 124);
   }
 
-  template <typename T>
-  void mustBeGreaterThan(T expected) {
-    EXPECT_GT(actual, expected);  // operator>
-    EXPECT_LT(expected, actual);  // operator<
-    EXPECT_NE(actual, expected);  // operator!=
-    EXPECT_NE(expected, actual);  // operator!=
+  SECTION("SInt") {
+    checkComparisons<signed int>(122, 123, 124);
   }
 
-  template <typename T>
-  void mustBeLessThan(T expected) {
-    EXPECT_LT(actual, expected);  // operator<
-    EXPECT_GT(expected, actual);  // operator<
-    EXPECT_NE(actual, expected);  // operator!=
-    EXPECT_NE(expected, actual);  // operator!=
+  SECTION("SLong") {
+    checkComparisons<signed long>(122L, 123L, 124L);
   }
 
-  JsonVariant actual;
-};
+  SECTION("SShort") {
+    checkComparisons<signed short>(122, 123, 124);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, Double) {
-  testValue<double>(123.44, 123.45, 123.46);
-}
+  SECTION("UChar") {
+    checkComparisons<unsigned char>(122, 123, 124);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, Float) {
-  testValue<float>(123.44f, 123.45f, 123.46f);
-}
+  SECTION("UInt") {
+    checkComparisons<unsigned int>(122, 123, 124);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, SChar) {
-  testValue<signed char>(122, 123, 124);
-}
+  SECTION("ULong") {
+    checkComparisons<unsigned long>(122L, 123L, 124L);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, SInt) {
-  testValue<signed int>(122, 123, 124);
-}
+  SECTION("UShort") {
+    checkComparisons<unsigned short>(122, 123, 124);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, SLong) {
-  testValue<signed long>(122L, 123L, 124L);
-}
+  SECTION("StringLiteral") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonVariant variant = jsonBuffer.parse("\"hello\"");
 
-TEST_F(JsonVariant_Comparison_Tests, SShort) {
-  testValue<signed short>(122, 123, 124);
-}
+    REQUIRE(variant == "hello");
+    REQUIRE_FALSE(variant != "hello");
 
-TEST_F(JsonVariant_Comparison_Tests, UChar) {
-  testValue<unsigned char>(122, 123, 124);
-}
+    REQUIRE(variant != "world");
+    REQUIRE_FALSE(variant == "world");
 
-TEST_F(JsonVariant_Comparison_Tests, UInt) {
-  testValue<unsigned int>(122, 123, 124);
-}
+    REQUIRE("hello" == variant);
+    REQUIRE_FALSE("hello" != variant);
 
-TEST_F(JsonVariant_Comparison_Tests, ULong) {
-  testValue<unsigned long>(122L, 123L, 124L);
-}
+    REQUIRE("world" != variant);
+    REQUIRE_FALSE("world" == variant);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, UShort) {
-  testValue<unsigned short>(122, 123, 124);
-}
+  SECTION("String") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonVariant variant = jsonBuffer.parse("\"hello\"");
 
-TEST_F(JsonVariant_Comparison_Tests, StringLiteral) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonVariant variant = jsonBuffer.parse("\"hello\"");
+    REQUIRE(variant == std::string("hello"));
+    REQUIRE_FALSE(variant != std::string("hello"));
 
-  ASSERT_TRUE(variant == "hello");
-  ASSERT_FALSE(variant != "hello");
+    REQUIRE(variant != std::string("world"));
+    REQUIRE_FALSE(variant == std::string("world"));
 
-  ASSERT_TRUE(variant != "world");
-  ASSERT_FALSE(variant == "world");
+    REQUIRE(std::string("hello") == variant);
+    REQUIRE_FALSE(std::string("hello") != variant);
 
-  ASSERT_TRUE("hello" == variant);
-  ASSERT_FALSE("hello" != variant);
+    REQUIRE(std::string("world") != variant);
+    REQUIRE_FALSE(std::string("world") == variant);
+  }
 
-  ASSERT_TRUE("world" != variant);
-  ASSERT_FALSE("world" == variant);
-}
+  SECTION("IntegerInVariant") {
+    JsonVariant variant1 = 42;
+    JsonVariant variant2 = 42;
+    JsonVariant variant3 = 666;
 
-TEST_F(JsonVariant_Comparison_Tests, String) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonVariant variant = jsonBuffer.parse("\"hello\"");
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
 
-  ASSERT_TRUE(variant == std::string("hello"));
-  ASSERT_FALSE(variant != std::string("hello"));
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
 
-  ASSERT_TRUE(variant != std::string("world"));
-  ASSERT_FALSE(variant == std::string("world"));
+  SECTION("StringInVariant") {
+    JsonVariant variant1 = "0hello" + 1;  // make sure they have
+    JsonVariant variant2 = "1hello" + 1;  // different addresses
+    JsonVariant variant3 = "world";
 
-  ASSERT_TRUE(std::string("hello") == variant);
-  ASSERT_FALSE(std::string("hello") != variant);
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
 
-  ASSERT_TRUE(std::string("world") != variant);
-  ASSERT_FALSE(std::string("world") == variant);
-}
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, IntegerInVariant) {
-  JsonVariant variant1 = 42;
-  JsonVariant variant2 = 42;
-  JsonVariant variant3 = 666;
+  SECTION("DoubleInVariant") {
+    JsonVariant variant1 = 42.0;
+    JsonVariant variant2 = 42.0;
+    JsonVariant variant3 = 666.0;
 
-  ASSERT_TRUE(variant1 == variant2);
-  ASSERT_FALSE(variant1 != variant2);
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
 
-  ASSERT_TRUE(variant1 != variant3);
-  ASSERT_FALSE(variant1 == variant3);
-}
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, StringInVariant) {
-  JsonVariant variant1 = "0hello" + 1;  // make sure they have
-  JsonVariant variant2 = "1hello" + 1;  // different addresses
-  JsonVariant variant3 = "world";
+  SECTION("BoolInVariant") {
+    JsonVariant variant1 = true;
+    JsonVariant variant2 = true;
+    JsonVariant variant3 = false;
 
-  ASSERT_TRUE(variant1 == variant2);
-  ASSERT_FALSE(variant1 != variant2);
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
 
-  ASSERT_TRUE(variant1 != variant3);
-  ASSERT_FALSE(variant1 == variant3);
-}
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
 
-TEST_F(JsonVariant_Comparison_Tests, DoubleInVariant) {
-  JsonVariant variant1 = 42.0;
-  JsonVariant variant2 = 42.0;
-  JsonVariant variant3 = 666.0;
+  SECTION("ArrayInVariant") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonArray& array1 = jsonBuffer.createArray();
+    JsonArray& array2 = jsonBuffer.createArray();
 
-  ASSERT_TRUE(variant1 == variant2);
-  ASSERT_FALSE(variant1 != variant2);
+    JsonVariant variant1 = array1;
+    JsonVariant variant2 = array1;
+    JsonVariant variant3 = array2;
 
-  ASSERT_TRUE(variant1 != variant3);
-  ASSERT_FALSE(variant1 == variant3);
-}
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
 
-TEST_F(JsonVariant_Comparison_Tests, BoolInVariant) {
-  JsonVariant variant1 = true;
-  JsonVariant variant2 = true;
-  JsonVariant variant3 = false;
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
 
-  ASSERT_TRUE(variant1 == variant2);
-  ASSERT_FALSE(variant1 != variant2);
+  SECTION("ObjectInVariant") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& obj1 = jsonBuffer.createObject();
+    JsonObject& obj2 = jsonBuffer.createObject();
 
-  ASSERT_TRUE(variant1 != variant3);
-  ASSERT_FALSE(variant1 == variant3);
-}
+    JsonVariant variant1 = obj1;
+    JsonVariant variant2 = obj1;
+    JsonVariant variant3 = obj2;
 
-TEST_F(JsonVariant_Comparison_Tests, ArrayInVariant) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& array1 = jsonBuffer.createArray();
-  JsonArray& array2 = jsonBuffer.createArray();
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
 
-  JsonVariant variant1 = array1;
-  JsonVariant variant2 = array1;
-  JsonVariant variant3 = array2;
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
 
-  ASSERT_TRUE(variant1 == variant2);
-  ASSERT_FALSE(variant1 != variant2);
+  SECTION("VariantsOfDifferentTypes") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonVariant variants[] = {
+        true,
+        42,
+        666.667,
+        "hello",
+        jsonBuffer.createArray(),
+        jsonBuffer.createObject(),
+    };
+    size_t n = sizeof(variants) / sizeof(variants[0]);
 
-  ASSERT_TRUE(variant1 != variant3);
-  ASSERT_FALSE(variant1 == variant3);
-}
-
-TEST_F(JsonVariant_Comparison_Tests, ObjectInVariant) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& obj1 = jsonBuffer.createObject();
-  JsonObject& obj2 = jsonBuffer.createObject();
-
-  JsonVariant variant1 = obj1;
-  JsonVariant variant2 = obj1;
-  JsonVariant variant3 = obj2;
-
-  ASSERT_TRUE(variant1 == variant2);
-  ASSERT_FALSE(variant1 != variant2);
-
-  ASSERT_TRUE(variant1 != variant3);
-  ASSERT_FALSE(variant1 == variant3);
-}
-
-TEST_F(JsonVariant_Comparison_Tests, VariantsOfDifferentTypes) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonVariant variants[] = {
-      true,
-      42,
-      666.667,
-      "hello",
-      jsonBuffer.createArray(),
-      jsonBuffer.createObject(),
-  };
-  size_t n = sizeof(variants) / sizeof(variants[0]);
-
-  for (size_t i = 0; i < n; i++) {
-    for (size_t j = i + 1; j < n; j++) {
-      ASSERT_TRUE(variants[i] != variants[j]);
-      ASSERT_FALSE(variants[i] == variants[j]);
+    for (size_t i = 0; i < n; i++) {
+      for (size_t j = i + 1; j < n; j++) {
+        REQUIRE(variants[i] != variants[j]);
+        REQUIRE_FALSE(variants[i] == variants[j]);
+      }
     }
   }
 }

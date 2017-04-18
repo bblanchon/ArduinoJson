@@ -12,5 +12,5 @@ add_executable(PolyfillsTests
 	parseInteger.cpp
 )
 
-target_link_libraries(PolyfillsTests gtest)
+target_link_libraries(PolyfillsTests catch)
 add_test(Polyfills PolyfillsTests)

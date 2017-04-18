@@ -6,80 +6,82 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <sstream>
 
-TEST(StdStream_Tests, JsonVariantFalse) {
-  std::ostringstream os;
-  JsonVariant variant = false;
-  os << variant;
-  ASSERT_EQ("false", os.str());
-}
+TEST_CASE("std::stream") {
+  SECTION("JsonVariantFalse") {
+    std::ostringstream os;
+    JsonVariant variant = false;
+    os << variant;
+    REQUIRE("false" == os.str());
+  }
 
-TEST(StdStream_Tests, JsonVariantString) {
-  std::ostringstream os;
-  JsonVariant variant = "coucou";
-  os << variant;
-  ASSERT_EQ("\"coucou\"", os.str());
-}
+  SECTION("JsonVariantString") {
+    std::ostringstream os;
+    JsonVariant variant = "coucou";
+    os << variant;
+    REQUIRE("\"coucou\"" == os.str());
+  }
 
-TEST(StdStream_Tests, JsonObject) {
-  std::ostringstream os;
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& object = jsonBuffer.createObject();
-  object["key"] = "value";
-  os << object;
-  ASSERT_EQ("{\"key\":\"value\"}", os.str());
-}
+  SECTION("JsonObject") {
+    std::ostringstream os;
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& object = jsonBuffer.createObject();
+    object["key"] = "value";
+    os << object;
+    REQUIRE("{\"key\":\"value\"}" == os.str());
+  }
 
-TEST(StdStream_Tests, JsonObjectSubscript) {
-  std::ostringstream os;
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& object = jsonBuffer.createObject();
-  object["key"] = "value";
-  os << object["key"];
-  ASSERT_EQ("\"value\"", os.str());
-}
+  SECTION("JsonObjectSubscript") {
+    std::ostringstream os;
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& object = jsonBuffer.createObject();
+    object["key"] = "value";
+    os << object["key"];
+    REQUIRE("\"value\"" == os.str());
+  }
 
-TEST(StdStream_Tests, JsonArray) {
-  std::ostringstream os;
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& array = jsonBuffer.createArray();
-  array.add("value");
-  os << array;
-  ASSERT_EQ("[\"value\"]", os.str());
-}
+  SECTION("JsonArray") {
+    std::ostringstream os;
+    DynamicJsonBuffer jsonBuffer;
+    JsonArray& array = jsonBuffer.createArray();
+    array.add("value");
+    os << array;
+    REQUIRE("[\"value\"]" == os.str());
+  }
 
-TEST(StdStream_Tests, JsonArraySubscript) {
-  std::ostringstream os;
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& array = jsonBuffer.createArray();
-  array.add("value");
-  os << array[0];
-  ASSERT_EQ("\"value\"", os.str());
-}
+  SECTION("JsonArraySubscript") {
+    std::ostringstream os;
+    DynamicJsonBuffer jsonBuffer;
+    JsonArray& array = jsonBuffer.createArray();
+    array.add("value");
+    os << array[0];
+    REQUIRE("\"value\"" == os.str());
+  }
 
-TEST(StdStream_Tests, ParseArray) {
-  std::istringstream json(" [ 42 /* comment */ ] ");
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& arr = jsonBuffer.parseArray(json);
-  ASSERT_TRUE(arr.success());
-  ASSERT_EQ(1, arr.size());
-  ASSERT_EQ(42, arr[0]);
-}
+  SECTION("ParseArray") {
+    std::istringstream json(" [ 42 /* comment */ ] ");
+    DynamicJsonBuffer jsonBuffer;
+    JsonArray& arr = jsonBuffer.parseArray(json);
+    REQUIRE(true == arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(42 == arr[0]);
+  }
 
-TEST(StdStream_Tests, ParseObject) {
-  std::istringstream json(" { hello : world // comment\n }");
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& obj = jsonBuffer.parseObject(json);
-  ASSERT_TRUE(obj.success());
-  ASSERT_EQ(1, obj.size());
-  ASSERT_STREQ("world", obj["hello"]);
-}
+  SECTION("ParseObject") {
+    std::istringstream json(" { hello : world // comment\n }");
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& obj = jsonBuffer.parseObject(json);
+    REQUIRE(true == obj.success());
+    REQUIRE(1 == obj.size());
+    REQUIRE(std::string("world") == obj["hello"]);
+  }
 
-TEST(StdStream_Tests, ShouldNotReadPastTheEnd) {
-  std::istringstream json("{}123");
-  DynamicJsonBuffer jsonBuffer;
-  jsonBuffer.parseObject(json);
-  ASSERT_EQ('1', json.get());
+  SECTION("ShouldNotReadPastTheEnd") {
+    std::istringstream json("{}123");
+    DynamicJsonBuffer jsonBuffer;
+    jsonBuffer.parseObject(json);
+    REQUIRE('1' == json.get());
+  }
 }

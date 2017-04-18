@@ -6,100 +6,78 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonParser_Variant_Test : public testing::Test {
- protected:
-  void whenInputIs(const char* jsonString) {
-    strcpy(_jsonString, jsonString);
-    _result = _jsonBuffer.parse(_jsonString);
+using namespace Catch::Matchers;
+
+TEST_CASE("JsonBuffer::parse()") {
+  DynamicJsonBuffer jb;
+
+  SECTION("EmptyObject") {
+    JsonVariant variant = jb.parse("{}");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<JsonObject>());
   }
 
-  template <typename T>
-  void resultMustEqual(T expected) {
-    EXPECT_EQ(expected, _result.as<T>());
+  SECTION("EmptyArray") {
+    JsonVariant variant = jb.parse("[]");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<JsonArray>());
   }
 
-  void resultMustEqual(const char* expected) {
-    EXPECT_STREQ(expected, _result.as<char*>());
+  SECTION("Integer") {
+    JsonVariant variant = jb.parse("-42");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<int>());
+    REQUIRE_FALSE(variant.is<double>());
+    REQUIRE(variant == -42);
   }
 
-  void resultMustEqual(double expected) {
-    EXPECT_DOUBLE_EQ(expected, _result.as<double>());
+  SECTION("Double") {
+    JsonVariant variant = jb.parse("-1.23e+4");
+    REQUIRE(variant.success());
+    REQUIRE_FALSE(variant.is<int>());
+    REQUIRE(variant.is<double>());
+    REQUIRE(variant.as<double>() == Approx(-1.23e+4));
   }
 
-  template <typename T>
-  void resultTypeMustBe() {
-    EXPECT_TRUE(_result.is<T>());
+  SECTION("Double quoted string") {
+    JsonVariant variant = jb.parse("\"hello world\"");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<char*>());
+    REQUIRE_THAT(variant.as<char*>(), Equals("hello world"));
   }
 
-  void resultMustBeInvalid() {
-    EXPECT_FALSE(_result.success());
-  }
-  void resultMustBeValid() {
-    EXPECT_TRUE(_result.success());
-  }
-
-  template <typename T>
-  void verify(const char* input, T expected) {
-    whenInputIs(input);
-    resultMustBeValid();
-    resultTypeMustBe<T>();
-    resultMustEqual(expected);
+  SECTION("Single quoted string") {
+    JsonVariant variant = jb.parse("\'hello world\'");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<char*>());
+    REQUIRE_THAT(variant.as<char*>(), Equals("hello world"));
   }
 
- private:
-  DynamicJsonBuffer _jsonBuffer;
-  JsonVariant _result;
-  char _jsonString[256];
-};
+  SECTION("True") {
+    JsonVariant variant = jb.parse("true");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<bool>());
+    REQUIRE(variant == true);
+  }
 
-TEST_F(JsonParser_Variant_Test, EmptyObject) {
-  whenInputIs("{}");
-  resultMustBeValid();
-  resultTypeMustBe<JsonObject>();
-}
+  SECTION("False") {
+    JsonVariant variant = jb.parse("false");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<bool>());
+    REQUIRE(variant == false);
+  }
 
-TEST_F(JsonParser_Variant_Test, EmptyArray) {
-  whenInputIs("[]");
-  resultMustBeValid();
-  resultTypeMustBe<JsonArray>();
-}
+  SECTION("OpenBrace") {
+    JsonVariant variant = jb.parse("{");
+    REQUIRE_FALSE(variant.success());
+  }
 
-TEST_F(JsonParser_Variant_Test, Integer) {
-  verify("42", 42);
-  verify("-42", -42);
-}
-
-TEST_F(JsonParser_Variant_Test, Double) {
-  verify("3.14", 3.14);
-  verify("3.14", 3.14);
-  verify("1E+10", 1E+10);
-  verify("-1E+10", -1E+10);
-  verify("1.234E+10", 1.234E+10);
-  verify("1.79769e+308", 1.79769e+308);
-  verify("-1.79769e+308", -1.79769e+308);
-  verify("1.7976931348623157e+308", 1.7976931348623157e+308);
-  verify("0.017976931348623157e+310", 0.017976931348623157e+310);
-}
-
-TEST_F(JsonParser_Variant_Test, String) {
-  verify("\"hello world\"", "hello world");
-}
-
-TEST_F(JsonParser_Variant_Test, True) {
-  verify("true", true);
-  verify("false", false);
-}
-
-TEST_F(JsonParser_Variant_Test, OpenBrace) {
-  whenInputIs("{");
-  resultMustBeInvalid();
-}
-
-TEST_F(JsonParser_Variant_Test, IncompleteStrings) {
-  verify("\"", "");
-  verify("\"hello", "hello");
-  verify("\'", "");
-  verify("\'world", "world");
+  SECTION("Incomplete string") {
+    JsonVariant variant = jb.parse("\"hello");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<char*>());
+    REQUIRE_THAT(variant.as<char*>(), Equals("hello"));
+  }
 }

@@ -6,129 +6,128 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
 #include <stdint.h>
+#include <catch.hpp>
 #include <limits>
 
-class JsonVariant_Storage_Tests : public ::testing::Test {
- protected:
-  template <typename T>
-  void testValue(T expected) {
-    JsonVariant variant = expected;
-    EXPECT_EQ(expected, variant.as<T>());
-  }
-
-  template <typename T>
-  void testReference(T &expected) {
-    JsonVariant variant = expected;
-    EXPECT_EQ(expected, variant.as<T &>());
-  }
-
-  template <typename T>
-  void testNumericType() {
-    T min = std::numeric_limits<T>::min();
-    T max = std::numeric_limits<T>::max();
-
-    JsonVariant variantMin(min);
-    JsonVariant variantMax(max);
-
-    EXPECT_EQ(min, variantMin.as<T>());
-    EXPECT_EQ(max, variantMax.as<T>());
-  }
-};
-
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
-TEST_F(JsonVariant_Storage_Tests, SizeOfJsonInteger) {
-  ASSERT_EQ(8, sizeof(Internals::JsonInteger));
+template <typename T>
+void checkValue(T expected) {
+  JsonVariant variant = expected;
+  REQUIRE(expected == variant.as<T>());
 }
+
+template <typename T>
+void checkReference(T &expected) {
+  JsonVariant variant = expected;
+  REQUIRE(expected == variant.as<T &>());
+}
+
+template <typename T>
+void checkNumericType() {
+  T min = std::numeric_limits<T>::min();
+  T max = std::numeric_limits<T>::max();
+
+  JsonVariant variantMin(min);
+  JsonVariant variantMax(max);
+
+  REQUIRE(min == variantMin.as<T>());
+  REQUIRE(max == variantMax.as<T>());
+}
+
+TEST_CASE("JsonVariant set()/get()") {
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+  SECTION("SizeOfJsonInteger") {
+    REQUIRE(8 == sizeof(Internals::JsonInteger));
+  }
 #endif
 
-TEST_F(JsonVariant_Storage_Tests, Null) {
-  testValue<const char *>(NULL);
-}
-TEST_F(JsonVariant_Storage_Tests, String) {
-  testValue<const char *>("hello");
-}
+  SECTION("Null") {
+    checkValue<const char *>(NULL);
+  }
+  SECTION("String") {
+    checkValue<const char *>("hello");
+  }
 
-TEST_F(JsonVariant_Storage_Tests, False) {
-  testValue<bool>(false);
-}
-TEST_F(JsonVariant_Storage_Tests, True) {
-  testValue<bool>(true);
-}
+  SECTION("False") {
+    checkValue<bool>(false);
+  }
+  SECTION("True") {
+    checkValue<bool>(true);
+  }
 
-TEST_F(JsonVariant_Storage_Tests, Double) {
-  testNumericType<double>();
-}
-TEST_F(JsonVariant_Storage_Tests, Float) {
-  testNumericType<float>();
-}
-TEST_F(JsonVariant_Storage_Tests, Char) {
-  testNumericType<char>();
-}
-TEST_F(JsonVariant_Storage_Tests, SChar) {
-  testNumericType<signed char>();
-}
-TEST_F(JsonVariant_Storage_Tests, SInt) {
-  testNumericType<signed int>();
-}
-TEST_F(JsonVariant_Storage_Tests, SLong) {
-  testNumericType<signed long>();
-}
-TEST_F(JsonVariant_Storage_Tests, SShort) {
-  testNumericType<signed short>();
-}
-TEST_F(JsonVariant_Storage_Tests, UChar) {
-  testNumericType<unsigned char>();
-}
-TEST_F(JsonVariant_Storage_Tests, UInt) {
-  testNumericType<unsigned int>();
-}
-TEST_F(JsonVariant_Storage_Tests, ULong) {
-  testNumericType<unsigned long>();
-}
-TEST_F(JsonVariant_Storage_Tests, UShort) {
-  testNumericType<unsigned short>();
-}
+  SECTION("Double") {
+    checkNumericType<double>();
+  }
+  SECTION("Float") {
+    checkNumericType<float>();
+  }
+  SECTION("Char") {
+    checkNumericType<char>();
+  }
+  SECTION("SChar") {
+    checkNumericType<signed char>();
+  }
+  SECTION("SInt") {
+    checkNumericType<signed int>();
+  }
+  SECTION("SLong") {
+    checkNumericType<signed long>();
+  }
+  SECTION("SShort") {
+    checkNumericType<signed short>();
+  }
+  SECTION("UChar") {
+    checkNumericType<unsigned char>();
+  }
+  SECTION("UInt") {
+    checkNumericType<unsigned int>();
+  }
+  SECTION("ULong") {
+    checkNumericType<unsigned long>();
+  }
+  SECTION("UShort") {
+    checkNumericType<unsigned short>();
+  }
 #if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
-TEST_F(JsonVariant_Storage_Tests, LongLong) {
-  testNumericType<unsigned long long>();
-}
-TEST_F(JsonVariant_Storage_Tests, ULongLong) {
-  testNumericType<unsigned long long>();
-}
+  SECTION("LongLong") {
+    checkNumericType<unsigned long long>();
+  }
+  SECTION("ULongLong") {
+    checkNumericType<unsigned long long>();
+  }
 #endif
 
-TEST_F(JsonVariant_Storage_Tests, Int8) {
-  testNumericType<int8_t>();
-}
-TEST_F(JsonVariant_Storage_Tests, Uint8) {
-  testNumericType<uint8_t>();
-}
-TEST_F(JsonVariant_Storage_Tests, Int16) {
-  testNumericType<int16_t>();
-}
-TEST_F(JsonVariant_Storage_Tests, Uint16) {
-  testNumericType<uint16_t>();
-}
-TEST_F(JsonVariant_Storage_Tests, Int32) {
-  testNumericType<int32_t>();
-}
-TEST_F(JsonVariant_Storage_Tests, Uint32) {
-  testNumericType<uint32_t>();
-}
+  SECTION("Int8") {
+    checkNumericType<int8_t>();
+  }
+  SECTION("Uint8") {
+    checkNumericType<uint8_t>();
+  }
+  SECTION("Int16") {
+    checkNumericType<int16_t>();
+  }
+  SECTION("Uint16") {
+    checkNumericType<uint16_t>();
+  }
+  SECTION("Int32") {
+    checkNumericType<int32_t>();
+  }
+  SECTION("Uint32") {
+    checkNumericType<uint32_t>();
+  }
 #if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
-TEST_F(JsonVariant_Storage_Tests, Int64) {
-  testNumericType<int64_t>();
-}
-TEST_F(JsonVariant_Storage_Tests, Uint64) {
-  testNumericType<uint64_t>();
-}
+  SECTION("Int64") {
+    checkNumericType<int64_t>();
+  }
+  SECTION("Uint64") {
+    checkNumericType<uint64_t>();
+  }
 #endif
 
-TEST_F(JsonVariant_Storage_Tests, CanStoreObject) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject &object = jsonBuffer.createObject();
+  SECTION("CanStoreObject") {
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject &object = jsonBuffer.createObject();
 
-  testReference(object);
+    checkReference(object);
+  }
 }

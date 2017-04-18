@@ -19,5 +19,5 @@ add_executable(JsonArrayTests
 	subscript.cpp
 )
 
-target_link_libraries(JsonArrayTests gtest)
+target_link_libraries(JsonArrayTests catch)
 add_test(JsonArray JsonArrayTests)

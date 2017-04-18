@@ -5,81 +5,75 @@
 // https://bblanchon.github.io/ArduinoJson/
 // If you like this project, please add a star!
 
-#include <gtest/gtest.h>
 #include <ArduinoJson/Polyfills/isFloat.hpp>
+#include <catch.hpp>
 
 using namespace ArduinoJson::Polyfills;
 
-struct Polyfills_IsFloat_Tests : testing::Test {
-  void check(bool expected, const char* input) {
-    bool actual = isFloat(input);
-    EXPECT_EQ(expected, actual) << input;
+TEST_CASE("isFloat()") {
+  SECTION("Input is NULL") {
+    REQUIRE(isFloat(NULL) == false);
   }
-};
-#define TEST_(X) TEST_F(Polyfills_IsFloat_Tests, X)
 
-TEST_(Null) {
-  check(false, NULL);
-}
+  SECTION("NoExponent") {
+    REQUIRE(isFloat("3.14"));
+    REQUIRE(isFloat("-3.14"));
+    REQUIRE(isFloat("+3.14"));
+  }
 
-TEST_(NoExponent) {
-  check(true, "3.14");
-  check(true, "-3.14");
-  check(true, "+3.14");
-}
+  SECTION("IntegralPartMissing") {
+    REQUIRE(isFloat(".14"));
+    REQUIRE(isFloat("-.14"));
+    REQUIRE(isFloat("+.14"));
+  }
 
-TEST_(IntegralPartMissing) {
-  check(true, ".14");
-  check(true, "-.14");
-  check(true, "+.14");
-}
+  SECTION("FractionalPartMissing") {
+    REQUIRE(isFloat("3."));
+    REQUIRE(isFloat("-3.e14"));
+    REQUIRE(isFloat("+3.e-14"));
+  }
 
-TEST_(FractionalPartMissing) {
-  check(true, "3.");
-  check(true, "-3.e14");
-  check(true, "+3.e-14");
-}
+  SECTION("NoDot") {
+    REQUIRE(isFloat("3e14"));
+    REQUIRE(isFloat("3e-14"));
+    REQUIRE(isFloat("3e+14"));
+  }
 
-TEST_(NoDot) {
-  check(true, "3e14");
-  check(true, "3e-14");
-  check(true, "3e+14");
-}
+  SECTION("Integer") {
+    REQUIRE_FALSE(isFloat("14"));
+    REQUIRE_FALSE(isFloat("-14"));
+    REQUIRE_FALSE(isFloat("+14"));
+  }
 
-TEST_(Integer) {
-  check(false, "14");
-  check(false, "-14");
-  check(false, "+14");
-}
+  SECTION("ExponentMissing") {
+    REQUIRE_FALSE(isFloat("3.14e"));
+    REQUIRE_FALSE(isFloat("3.14e-"));
+    REQUIRE_FALSE(isFloat("3.14e+"));
+  }
 
-TEST_(ExponentMissing) {
-  check(false, "3.14e");
-  check(false, "3.14e-");
-  check(false, "3.14e+");
-}
+  SECTION("JustASign") {
+    REQUIRE_FALSE(isFloat("-"));
+    REQUIRE_FALSE(isFloat("+"));
+  }
 
-TEST_(JustASign) {
-  check(false, "-");
-  check(false, "+");
-}
+  SECTION("Empty") {
+    REQUIRE_FALSE(isFloat(""));
+  }
 
-TEST_(Empty) {
-  check(false, "");
-}
+  SECTION("NaN") {
+    REQUIRE(isFloat("NaN"));
+    REQUIRE_FALSE(isFloat("n"));
+    REQUIRE_FALSE(isFloat("N"));
+    REQUIRE_FALSE(isFloat("nan"));
+    REQUIRE_FALSE(isFloat("-NaN"));
+    REQUIRE_FALSE(isFloat("+NaN"));
+  }
 
-TEST_(NaN) {
-  check(true, "NaN");
-  check(false, "n");
-  check(false, "N");
-  check(false, "nan");
-  check(false, "-NaN");
-  check(false, "+NaN");
-}
-
-TEST_(Infinity) {
-  check(true, "Infinity");
-  check(true, "+Infinity");
-  check(true, "-Infinity");
-  check(false, "infinity");
-  check(false, "Inf");
+  SECTION("Infinity") {
+    REQUIRE(isFloat("Infinity"));
+    REQUIRE(isFloat("+Infinity"));
+    REQUIRE(isFloat("-Infinity"));
+    REQUIRE_FALSE(isFloat("infinity"));
+    REQUIRE_FALSE(isFloat("Inf"));
+  }
 }

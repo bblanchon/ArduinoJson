@@ -6,7 +6,7 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 template <typename TIterator>
 static void run_iterator_test() {
@@ -19,21 +19,23 @@ static void run_iterator_test() {
   TIterator it = array.begin();
   TIterator end = array.end();
 
-  EXPECT_NE(end, it);
-  EXPECT_EQ(12, it->template as<int>());
-  EXPECT_EQ(12, static_cast<int>(*it));
+  REQUIRE(end != it);
+  REQUIRE(12 == it->template as<int>());
+  REQUIRE(12 == static_cast<int>(*it));
   ++it;
-  EXPECT_NE(end, it);
-  EXPECT_EQ(34, it->template as<int>());
-  EXPECT_EQ(34, static_cast<int>(*it));
+  REQUIRE(end != it);
+  REQUIRE(34 == it->template as<int>());
+  REQUIRE(34 == static_cast<int>(*it));
   ++it;
-  EXPECT_EQ(end, it);
+  REQUIRE(end == it);
 }
 
-TEST(JsonArray_Iterator_Test, RunItertorToEnd) {
-  run_iterator_test<JsonArray::iterator>();
-}
+TEST_CASE("JsonArray::begin()/end()") {
+  SECTION("Mutable") {
+    run_iterator_test<JsonArray::iterator>();
+  }
 
-TEST(JsonArray_Iterator_Test, RunConstItertorToEnd) {
-  run_iterator_test<JsonArray::const_iterator>();
+  SECTION("Const") {
+    run_iterator_test<JsonArray::const_iterator>();
+  }
 }

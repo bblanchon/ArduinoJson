@@ -6,28 +6,33 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-TEST(JsonObject_Invalid_Tests, SubscriptFails) {
-  ASSERT_FALSE(JsonObject::invalid()["key"].success());
-}
+using namespace Catch::Matchers;
 
-TEST(JsonObject_Invalid_Tests, AddFails) {
-  JsonObject& object = JsonObject::invalid();
-  object.set("hello", "world");
-  ASSERT_EQ(0, object.size());
-}
+TEST_CASE("JsonObject::invalid()") {
+  JsonObject& obj = JsonObject::invalid();
 
-TEST(JsonObject_Invalid_Tests, CreateNestedArrayFails) {
-  ASSERT_FALSE(JsonObject::invalid().createNestedArray("hello").success());
-}
+  SECTION("SubscriptFails") {
+    REQUIRE_FALSE(obj["key"].success());
+  }
 
-TEST(JsonObject_Invalid_Tests, CreateNestedObjectFails) {
-  ASSERT_FALSE(JsonObject::invalid().createNestedObject("world").success());
-}
+  SECTION("AddFails") {
+    obj.set("hello", "world");
+    REQUIRE(0 == obj.size());
+  }
 
-TEST(JsonObject_Invalid_Tests, PrintToWritesBraces) {
-  char buffer[32];
-  JsonObject::invalid().printTo(buffer, sizeof(buffer));
-  ASSERT_STREQ("{}", buffer);
+  SECTION("CreateNestedArrayFails") {
+    REQUIRE_FALSE(obj.createNestedArray("hello").success());
+  }
+
+  SECTION("CreateNestedObjectFails") {
+    REQUIRE_FALSE(obj.createNestedObject("world").success());
+  }
+
+  SECTION("PrintToWritesBraces") {
+    char buffer[32];
+    obj.printTo(buffer, sizeof(buffer));
+    REQUIRE_THAT(buffer, Equals("{}"));
+  }
 }

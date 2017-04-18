@@ -10,5 +10,5 @@ add_executable(JsonWriterTests
 	writeString.cpp
 )
 
-target_link_libraries(JsonWriterTests gtest)
+target_link_libraries(JsonWriterTests catch)
 add_test(JsonWriter JsonWriterTests)

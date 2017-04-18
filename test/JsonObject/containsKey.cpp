@@ -6,34 +6,28 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-#define TEST_(name) TEST(JsonObject_Basic_Tests, name)
-
-TEST_(ContainsKeyReturnsFalseForNonExistingKey) {
+TEST_CASE("JsonObject::containsKey()") {
   DynamicJsonBuffer _jsonBuffer;
   JsonObject& _object = _jsonBuffer.createObject();
 
-  _object.set("hello", 42);
+  SECTION("ContainsKeyReturnsFalseForNonExistingKey") {
+    _object.set("hello", 42);
 
-  EXPECT_FALSE(_object.containsKey("world"));
-}
+    REQUIRE(false == _object.containsKey("world"));
+  }
 
-TEST_(ContainsKeyReturnsTrueForDefinedValue) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.createObject();
+  SECTION("ContainsKeyReturnsTrueForDefinedValue") {
+    _object.set("hello", 42);
 
-  _object.set("hello", 42);
+    REQUIRE(true == _object.containsKey("hello"));
+  }
 
-  EXPECT_TRUE(_object.containsKey("hello"));
-}
+  SECTION("ContainsKeyReturnsFalseAfterRemove") {
+    _object.set("hello", 42);
+    _object.remove("hello");
 
-TEST_(ContainsKeyReturnsFalseAfterRemove) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.createObject();
-
-  _object.set("hello", 42);
-  _object.remove("hello");
-
-  EXPECT_FALSE(_object.containsKey("hello"));
+    REQUIRE(false == _object.containsKey("hello"));
+  }
 }

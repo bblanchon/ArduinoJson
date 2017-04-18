@@ -6,84 +6,60 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
-
-class StaticJsonBuffer_ParseObject_Tests : public testing::Test {
- protected:
-  void with(StaticJsonBufferBase& jsonBuffer) {
-    _jsonBuffer = &jsonBuffer;
+#include <catch.hpp>
+TEST_CASE("StaticJsonBuffer::parseObject()") {
+  SECTION("TooSmallBufferForEmptyObject") {
+    StaticJsonBuffer<JSON_OBJECT_SIZE(0) - 1> bufferTooSmall;
+    char input[] = "{}";
+    JsonObject& obj = bufferTooSmall.parseObject(input);
+    REQUIRE_FALSE(obj.success());
   }
 
-  void whenInputIs(const char* json) {
-    strcpy(_jsonString, json);
+  SECTION("BufferOfTheRightSizeForEmptyObject") {
+    StaticJsonBuffer<JSON_OBJECT_SIZE(0)> bufferOfRightSize;
+    char input[] = "{}";
+    JsonObject& obj = bufferOfRightSize.parseObject(input);
+    REQUIRE(obj.success());
   }
 
-  void parseMustSucceed() {
-    EXPECT_TRUE(_jsonBuffer->parseObject(_jsonString).success());
+  SECTION("TooSmallBufferForObjectWithOneValue") {
+    StaticJsonBuffer<JSON_OBJECT_SIZE(1) - 1> bufferTooSmall;
+    char input[] = "{\"a\":1}";
+    JsonObject& obj = bufferTooSmall.parseObject(input);
+    REQUIRE_FALSE(obj.success());
   }
 
-  void parseMustFail() {
-    EXPECT_FALSE(_jsonBuffer->parseObject(_jsonString).success());
+  SECTION("BufferOfTheRightSizeForObjectWithOneValue") {
+    StaticJsonBuffer<JSON_OBJECT_SIZE(1)> bufferOfRightSize;
+    char input[] = "{\"a\":1}";
+    JsonObject& obj = bufferOfRightSize.parseObject(input);
+    REQUIRE(obj.success());
   }
 
- private:
-  StaticJsonBufferBase* _jsonBuffer;
-  char _jsonString[256];
-};
+  SECTION("TooSmallBufferForObjectWithNestedObject") {
+    StaticJsonBuffer<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0) - 1>
+        bufferTooSmall;
+    char input[] = "{\"a\":[]}";
+    JsonObject& obj = bufferTooSmall.parseObject(input);
+    REQUIRE_FALSE(obj.success());
+  }
 
-TEST_F(StaticJsonBuffer_ParseObject_Tests, TooSmallBufferForEmptyObject) {
-  StaticJsonBuffer<JSON_OBJECT_SIZE(0) - 1> bufferTooSmall;
-  with(bufferTooSmall);
-  whenInputIs("{}");
-  parseMustFail();
-}
+  SECTION("BufferOfTheRightSizeForObjectWithNestedObject") {
+    StaticJsonBuffer<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0)>
+        bufferOfRightSize;
+    char input[] = "{\"a\":[]}";
+    JsonObject& obj = bufferOfRightSize.parseObject(input);
+    REQUIRE(obj.success());
+  }
 
-TEST_F(StaticJsonBuffer_ParseObject_Tests, BufferOfTheRightSizeForEmptyObject) {
-  StaticJsonBuffer<JSON_OBJECT_SIZE(0)> bufferOfRightSize;
-  with(bufferOfRightSize);
-  whenInputIs("{}");
-  parseMustSucceed();
-}
+  SECTION("CharPtrNull") {
+    REQUIRE_FALSE(
+        StaticJsonBuffer<100>().parseObject(static_cast<char*>(0)).success());
+  }
 
-TEST_F(StaticJsonBuffer_ParseObject_Tests,
-       TooSmallBufferForObjectWithOneValue) {
-  StaticJsonBuffer<JSON_OBJECT_SIZE(1) - 1> bufferTooSmall;
-  with(bufferTooSmall);
-  whenInputIs("{\"a\":1}");
-  parseMustFail();
-}
-
-TEST_F(StaticJsonBuffer_ParseObject_Tests,
-       BufferOfTheRightSizeForObjectWithOneValue) {
-  StaticJsonBuffer<JSON_OBJECT_SIZE(1)> bufferOfRightSize;
-  with(bufferOfRightSize);
-  whenInputIs("{\"a\":1}");
-  parseMustSucceed();
-}
-
-TEST_F(StaticJsonBuffer_ParseObject_Tests,
-       TooSmallBufferForObjectWithNestedObject) {
-  StaticJsonBuffer<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0) - 1> bufferTooSmall;
-  with(bufferTooSmall);
-  whenInputIs("{\"a\":[]}");
-  parseMustFail();
-}
-
-TEST_F(StaticJsonBuffer_ParseObject_Tests,
-       BufferOfTheRightSizeForObjectWithNestedObject) {
-  StaticJsonBuffer<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0)> bufferOfRightSize;
-  with(bufferOfRightSize);
-  whenInputIs("{\"a\":[]}");
-  parseMustSucceed();
-}
-
-TEST_F(StaticJsonBuffer_ParseObject_Tests, CharPtrNull) {
-  ASSERT_FALSE(
-      StaticJsonBuffer<100>().parseObject(static_cast<char*>(0)).success());
-}
-
-TEST_F(StaticJsonBuffer_ParseObject_Tests, ConstCharPtrNull) {
-  ASSERT_FALSE(StaticJsonBuffer<100>()
-                   .parseObject(static_cast<const char*>(0))
-                   .success());
+  SECTION("ConstCharPtrNull") {
+    REQUIRE_FALSE(StaticJsonBuffer<100>()
+                      .parseObject(static_cast<const char*>(0))
+                      .success());
+  }
 }

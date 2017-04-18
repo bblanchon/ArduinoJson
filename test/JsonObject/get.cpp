@@ -6,21 +6,17 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonObject_Get_Tests : public ::testing::Test {
- public:
-  JsonObject_Get_Tests() : _object(_jsonBuffer.createObject()) {}
+using namespace Catch::Matchers;
 
- protected:
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object;
-};
+TEST_CASE("JsonObject::get()") {
+  DynamicJsonBuffer jb;
+  JsonObject& obj = jb.createObject();
 
-#define TEST_(name) TEST_F(JsonObject_Get_Tests, name)
-
-TEST_(GetConstCharPointer_GivenStringLiteral) {
-  _object.set("hello", "world");
-  const char* value = _object.get<const char*>("hello");
-  EXPECT_STREQ("world", value);
+  SECTION("GetConstCharPointer_GivenStringLiteral") {
+    obj.set("hello", "world");
+    const char* value = obj.get<const char*>("hello");
+    REQUIRE_THAT(value, Equals("world"));
+  }
 }

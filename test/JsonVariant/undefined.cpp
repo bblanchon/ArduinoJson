@@ -6,53 +6,52 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonVariant_Undefined_Tests : public ::testing::Test {
- protected:
+TEST_CASE("JsonVariant undefined") {
   JsonVariant variant;
-};
 
-TEST_F(JsonVariant_Undefined_Tests, AsLongReturns0) {
-  EXPECT_EQ(0, variant.as<long>());
-}
+  SECTION("AsLongReturns0") {
+    REQUIRE(0 == variant.as<long>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsUnsignedReturns0) {
-  EXPECT_EQ(0, variant.as<unsigned>());
-}
+  SECTION("AsUnsignedReturns0") {
+    REQUIRE(0 == variant.as<unsigned>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsStringReturnsNull) {
-  EXPECT_EQ(0, variant.as<char*>());
-}
+  SECTION("AsStringReturnsNull") {
+    REQUIRE(0 == variant.as<char*>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsDoubleReturns0) {
-  EXPECT_EQ(0, variant.as<double>());
-}
+  SECTION("AsDoubleReturns0") {
+    REQUIRE(0 == variant.as<double>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsBoolReturnsFalse) {
-  EXPECT_FALSE(variant.as<bool>());
-}
+  SECTION("AsBoolReturnsFalse") {
+    REQUIRE(false == variant.as<bool>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsArrayReturnInvalid) {
-  EXPECT_EQ(JsonArray::invalid(), variant.as<JsonArray&>());
-}
+  SECTION("AsArrayReturnInvalid") {
+    REQUIRE(JsonArray::invalid() == variant.as<JsonArray&>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsConstArrayReturnInvalid) {
-  EXPECT_EQ(JsonArray::invalid(), variant.as<const JsonArray&>());
-}
+  SECTION("AsConstArrayReturnInvalid") {
+    REQUIRE(JsonArray::invalid() == variant.as<const JsonArray&>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsObjectReturnInvalid) {
-  EXPECT_EQ(JsonObject::invalid(), variant.as<JsonObject&>());
-}
+  SECTION("AsObjectReturnInvalid") {
+    REQUIRE(JsonObject::invalid() == variant.as<JsonObject&>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsConstObjectReturnInvalid) {
-  EXPECT_EQ(JsonObject::invalid(), variant.as<const JsonObject&>());
-}
+  SECTION("AsConstObjectReturnInvalid") {
+    REQUIRE(JsonObject::invalid() == variant.as<const JsonObject&>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsArrayWrapperReturnInvalid) {
-  EXPECT_EQ(JsonArray::invalid(), variant.as<JsonArray>());
-}
+  SECTION("AsArrayWrapperReturnInvalid") {
+    REQUIRE(JsonArray::invalid() == variant.as<JsonArray>());
+  }
 
-TEST_F(JsonVariant_Undefined_Tests, AsObjectWrapperReturnInvalid) {
-  EXPECT_EQ(JsonObject::invalid(), variant.as<JsonObject>());
+  SECTION("AsObjectWrapperReturnInvalid") {
+    REQUIRE(JsonObject::invalid() == variant.as<JsonObject>());
+  }
 }

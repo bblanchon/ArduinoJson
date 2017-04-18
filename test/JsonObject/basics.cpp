@@ -6,20 +6,17 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-#define TEST_(name) TEST(JsonObject_Basic_Tests, name)
-
-TEST_(InitialSizeIsZero) {
+TEST_CASE("JsonObject basics") {
   DynamicJsonBuffer _jsonBuffer;
   JsonObject& _object = _jsonBuffer.createObject();
 
-  EXPECT_EQ(0, _object.size());
-}
+  SECTION("InitialSizeIsZero") {
+    REQUIRE(0 == _object.size());
+  }
 
-TEST_(SuccessIsTrue) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.createObject();
-
-  EXPECT_TRUE(_object.success());
+  SECTION("SuccessIsTrue") {
+    REQUIRE(_object.success());
+  }
 }

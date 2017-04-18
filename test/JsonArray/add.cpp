@@ -6,85 +6,83 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonArray_Add_Tests : public ::testing::Test {
- protected:
-  JsonArray_Add_Tests() : _array(_jsonBuffer.createArray()) {}
-
+TEST_CASE("JsonArray::add()") {
   DynamicJsonBuffer _jsonBuffer;
-  JsonArray& _array;
-};
+  JsonArray& _array = _jsonBuffer.createArray();
 
-#define TEST_(name) TEST_F(JsonArray_Add_Tests, name)
+  SECTION("SizeIncreased_WhenValuesAreAdded") {
+    _array.add("hello");
+    REQUIRE(1U == _array.size());
+  }
 
-TEST_(SizeIncreased_WhenValuesAreAdded) {
-  _array.add("hello");
-  EXPECT_EQ(1U, _array.size());
-}
+  SECTION("StoreInteger") {
+    _array.add(123);
+    REQUIRE(123 == _array[0].as<int>());
+    REQUIRE(_array[0].is<int>());
+    REQUIRE_FALSE(_array[0].is<double>());
+  }
 
-TEST_(StoreInteger) {
-  _array.add(123);
-  EXPECT_EQ(123, _array[0].as<int>());
-  EXPECT_TRUE(_array[0].is<int>());
-  EXPECT_FALSE(_array[0].is<double>());
-}
+  SECTION("StoreDouble") {
+    _array.add(123.45);
+    REQUIRE(123.45 == _array[0].as<double>());
+    REQUIRE(_array[0].is<double>());
+    REQUIRE_FALSE(_array[0].is<int>());
+  }
 
-TEST_(StoreDouble) {
-  _array.add(123.45);
-  EXPECT_EQ(123.45, _array[0].as<double>());
-  EXPECT_TRUE(_array[0].is<double>());
-  EXPECT_FALSE(_array[0].is<int>());
-}
+  SECTION("StoreBoolean") {
+    _array.add(true);
+    REQUIRE(true == _array[0].as<bool>());
+    REQUIRE(_array[0].is<bool>());
+    REQUIRE_FALSE(_array[0].is<int>());
+  }
 
-TEST_(StoreBoolean) {
-  _array.add(true);
-  EXPECT_EQ(true, _array[0].as<bool>());
-  EXPECT_TRUE(_array[0].is<bool>());
-  EXPECT_FALSE(_array[0].is<int>());
-}
+  SECTION("StoreString") {
+    const char* str = "hello";
+    _array.add(str);
+    REQUIRE(str == _array[0].as<const char*>());
+    REQUIRE(_array[0].is<const char*>());
+    REQUIRE_FALSE(_array[0].is<int>());
+  }
 
-TEST_(StoreString) {
-  _array.add("hello");
-  EXPECT_STREQ("hello", _array[0].as<const char*>());
-  EXPECT_TRUE(_array[0].is<const char*>());
-  EXPECT_FALSE(_array[0].is<int>());
-}
+  SECTION("StoreNestedArray") {
+    JsonArray& arr = _jsonBuffer.createArray();
 
-TEST_(StoreNestedArray) {
-  JsonArray& arr = _jsonBuffer.createArray();
+    _array.add(arr);
 
-  _array.add(arr);
+    REQUIRE(&arr == &_array[0].as<JsonArray&>());
+    REQUIRE(_array[0].is<JsonArray&>());
+    REQUIRE_FALSE(_array[0].is<int>());
+  }
 
-  EXPECT_EQ(&arr, &_array[0].as<JsonArray&>());
-  EXPECT_TRUE(_array[0].is<JsonArray&>());
-  EXPECT_FALSE(_array[0].is<int>());
-}
+  SECTION("StoreNestedObject") {
+    JsonObject& obj = _jsonBuffer.createObject();
 
-TEST_(StoreNestedObject) {
-  JsonObject& obj = _jsonBuffer.createObject();
+    _array.add(obj);
 
-  _array.add(obj);
+    REQUIRE(&obj == &_array[0].as<JsonObject&>());
+    REQUIRE(_array[0].is<JsonObject&>());
+    REQUIRE_FALSE(_array[0].is<int>());
+  }
 
-  EXPECT_EQ(&obj, &_array[0].as<JsonObject&>());
-  EXPECT_TRUE(_array[0].is<JsonObject&>());
-  EXPECT_FALSE(_array[0].is<int>());
-}
+  SECTION("StoreArraySubscript") {
+    const char* str = "hello";
+    JsonArray& arr = _jsonBuffer.createArray();
+    arr.add(str);
 
-TEST_(StoreArraySubscript) {
-  JsonArray& arr = _jsonBuffer.createArray();
-  arr.add("hello");
+    _array.add(arr[0]);
 
-  _array.add(arr[0]);
+    REQUIRE(str == _array[0]);
+  }
 
-  EXPECT_STREQ("hello", _array[0]);
-}
+  SECTION("StoreObjectSubscript") {
+    const char* str = "hello";
+    JsonObject& obj = _jsonBuffer.createObject();
+    obj["x"] = str;
 
-TEST_(StoreObjectSubscript) {
-  JsonObject& obj = _jsonBuffer.createObject();
-  obj["x"] = "hello";
+    _array.add(obj["x"]);
 
-  _array.add(obj["x"]);
-
-  EXPECT_STREQ("hello", _array[0]);
+    REQUIRE(str == _array[0]);
+  }
 }

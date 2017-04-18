@@ -6,39 +6,39 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
+#include <string>
 
-#define TEST_(name) TEST(JsonObject_Remove_Tests, name)
+TEST_CASE("JsonObject::remove()") {
+  DynamicJsonBuffer jb;
 
-TEST_(SizeDecreased_WhenValuesAreRemoved) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.createObject();
-  _object["hello"] = 1;
+  SECTION("SizeDecreased_WhenValuesAreRemoved") {
+    JsonObject& obj = jb.createObject();
+    obj["hello"] = 1;
 
-  _object.remove("hello");
+    obj.remove("hello");
 
-  EXPECT_EQ(0, _object.size());
-}
-
-TEST_(SizeUntouched_WhenRemoveIsCalledWithAWrongKey) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.createObject();
-  _object["hello"] = 1;
-
-  _object.remove("world");
-
-  EXPECT_EQ(1, _object.size());
-}
-
-TEST_(RemoveByIterator) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.parseObject("{\"a\":0,\"b\":1,\"c\":2}");
-
-  for (JsonObject::iterator it = _object.begin(); it != _object.end(); ++it) {
-    if (it->value == 1) _object.remove(it);
+    REQUIRE(0 == obj.size());
   }
 
-  char result[64];
-  _object.printTo(result);
-  EXPECT_STREQ("{\"a\":0,\"c\":2}", result);
+  SECTION("SizeUntouched_WhenRemoveIsCalledWithAWrongKey") {
+    JsonObject& obj = jb.createObject();
+    obj["hello"] = 1;
+
+    obj.remove("world");
+
+    REQUIRE(1 == obj.size());
+  }
+
+  SECTION("RemoveByIterator") {
+    JsonObject& obj = jb.parseObject("{\"a\":0,\"b\":1,\"c\":2}");
+
+    for (JsonObject::iterator it = obj.begin(); it != obj.end(); ++it) {
+      if (it->value == 1) obj.remove(it);
+    }
+
+    std::string result;
+    obj.printTo(result);
+    REQUIRE("{\"a\":0,\"c\":2}" == result);
+  }
 }

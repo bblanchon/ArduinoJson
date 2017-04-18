@@ -6,52 +6,49 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonObject_Iterator_Test : public testing::Test {
- public:
-  JsonObject_Iterator_Test() : _object(_buffer.createObject()) {
-    _object["ab"] = 12;
-    _object["cd"] = 34;
+using namespace Catch::Matchers;
+
+TEST_CASE("JsonObject::begin()/end()") {
+  StaticJsonBuffer<JSON_OBJECT_SIZE(2)> jb;
+  JsonObject& obj = jb.createObject();
+  obj["ab"] = 12;
+  obj["cd"] = 34;
+
+  SECTION("NonConstIterator") {
+    JsonObject::iterator it = obj.begin();
+    REQUIRE(obj.end() != it);
+    REQUIRE_THAT(it->key, Equals("ab"));
+    REQUIRE(12 == it->value);
+    it->key = "a.b";
+    it->value = 1.2;
+    ++it;
+    REQUIRE(obj.end() != it);
+    REQUIRE_THAT(it->key, Equals("cd"));
+    REQUIRE(34 == it->value);
+    it->key = "c.d";
+    it->value = 3.4;
+    ++it;
+    REQUIRE(obj.end() == it);
+
+    REQUIRE(2 == obj.size());
+    REQUIRE(1.2 == obj["a.b"]);
+    REQUIRE(3.4 == obj["c.d"]);
   }
 
- protected:
-  StaticJsonBuffer<JSON_OBJECT_SIZE(2)> _buffer;
-  JsonObject& _object;
-};
+  SECTION("ConstIterator") {
+    const JsonObject& const_object = obj;
+    JsonObject::const_iterator it = const_object.begin();
 
-TEST_F(JsonObject_Iterator_Test, NonConstIterator) {
-  JsonObject::iterator it = _object.begin();
-  ASSERT_NE(_object.end(), it);
-  EXPECT_STREQ("ab", it->key);
-  EXPECT_EQ(12, it->value);
-  it->key = "a.b";
-  it->value = 1.2;
-  ++it;
-  ASSERT_NE(_object.end(), it);
-  EXPECT_STREQ("cd", it->key);
-  EXPECT_EQ(34, it->value);
-  it->key = "c.d";
-  it->value = 3.4;
-  ++it;
-  ASSERT_EQ(_object.end(), it);
-
-  ASSERT_EQ(2, _object.size());
-  EXPECT_EQ(1.2, _object["a.b"]);
-  EXPECT_EQ(3.4, _object["c.d"]);
-}
-
-TEST_F(JsonObject_Iterator_Test, ConstIterator) {
-  const JsonObject& const_object = _object;
-  JsonObject::const_iterator it = const_object.begin();
-
-  ASSERT_NE(const_object.end(), it);
-  EXPECT_STREQ("ab", it->key);
-  EXPECT_EQ(12, it->value);
-  ++it;
-  ASSERT_NE(const_object.end(), it);
-  EXPECT_STREQ("cd", it->key);
-  EXPECT_EQ(34, it->value);
-  ++it;
-  ASSERT_EQ(const_object.end(), it);
+    REQUIRE(const_object.end() != it);
+    REQUIRE_THAT(it->key, Equals("ab"));
+    REQUIRE(12 == it->value);
+    ++it;
+    REQUIRE(const_object.end() != it);
+    REQUIRE_THAT(it->key, Equals("cd"));
+    REQUIRE(34 == it->value);
+    ++it;
+    REQUIRE(const_object.end() == it);
+  }
 }

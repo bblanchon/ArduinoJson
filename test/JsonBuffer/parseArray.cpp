@@ -6,362 +6,316 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonParser_Array_Tests : public testing::Test {
- protected:
-  void whenInputIs(const char *json) {
-    strcpy(_jsonString, json);
+TEST_CASE("JsonBuffer::parseArray()") {
+  DynamicJsonBuffer jb;
+
+  SECTION("EmptyArray") {
+    JsonArray& arr = jb.parseArray("[]");
+
+    REQUIRE(arr.success());
+    REQUIRE(0 == arr.size());
   }
 
-  void whenInputIs(const char *json, size_t len) {
-    memcpy(_jsonString, json, len);
+  SECTION("MissingOpeningBracket") {
+    JsonArray& arr = jb.parseArray("]");
+    REQUIRE_FALSE(arr.success());
   }
 
-  void parseMustSucceed() {
-    _array = &_jsonBuffer.parseArray(_jsonString);
-    EXPECT_TRUE(_array->success());
+  SECTION("ArrayWithNoEnd") {
+    JsonArray& arr = jb.parseArray("[");
+    REQUIRE_FALSE(arr.success());
   }
 
-  void parseMustFail() {
-    _array = &_jsonBuffer.parseArray(_jsonString);
-    EXPECT_FALSE(_array->success());
-    EXPECT_EQ(0, _array->size());
+  SECTION("EmptyArrayWithLeadingSpaces") {
+    JsonArray& arr = jb.parseArray("  []");
+
+    REQUIRE(arr.success());
+    REQUIRE(0 == arr.size());
   }
 
-  void sizeMustBe(int expected) {
-    ASSERT_EQ(expected, _array->size());
+  SECTION("Garbage") {
+    JsonArray& arr = jb.parseArray("%*$£¤");
+
+    REQUIRE_FALSE(arr.success());
   }
 
-  template <typename T>
-  void firstElementMustBe(T expected) {
-    elementAtIndexMustBe(0, expected);
+  SECTION("OneInteger") {
+    JsonArray& arr = jb.parseArray("[42]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == 42);
   }
 
-  template <typename T>
-  void secondElementMustBe(T expected) {
-    elementAtIndexMustBe(1, expected);
+  SECTION("OneIntegerWithSpacesBefore") {
+    JsonArray& arr = jb.parseArray("[ \t\r\n42]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == 42);
   }
 
-  template <typename T>
-  void elementAtIndexMustBe(int index, T expected) {
-    EXPECT_EQ(expected, (*_array)[index].as<T>());
+  SECTION("OneIntegerWithSpaceAfter") {
+    JsonArray& arr = jb.parseArray("[42 \t\r\n]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == 42);
   }
 
-  void elementAtIndexMustBe(int index, const char *expected) {
-    EXPECT_STREQ(expected, (*_array)[index].as<const char *>());
+  SECTION("TwoIntegers") {
+    JsonArray& arr = jb.parseArray("[42,84]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == 42);
+    REQUIRE(arr[1] == 84);
   }
 
-  DynamicJsonBuffer _jsonBuffer;
-  JsonArray *_array;
-  char _jsonString[256];
-};
-
-TEST_F(JsonParser_Array_Tests, EmptyArray) {
-  whenInputIs("[]");
-
-  parseMustSucceed();
-  sizeMustBe(0);
-}
-
-TEST_F(JsonParser_Array_Tests, MissingOpeningBracket) {
-  whenInputIs("]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, ArrayWithNoEnd) {
-  whenInputIs("[");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, EmptyArrayWithLeadingSpaces) {
-  whenInputIs("  []");
-
-  parseMustSucceed();
-  sizeMustBe(0);
-}
-
-TEST_F(JsonParser_Array_Tests, Garbage) {
-  whenInputIs("%*$£¤");
-
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, OneInteger) {
-  whenInputIs("[42]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe(42);
-}
-
-TEST_F(JsonParser_Array_Tests, OneIntegerWithSpacesBefore) {
-  whenInputIs("[ \t\r\n42]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe(42);
-}
-
-TEST_F(JsonParser_Array_Tests, OneIntegerWithSpaceAfter) {
-  whenInputIs("[42 \t\r\n]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe(42);
-}
-
-TEST_F(JsonParser_Array_Tests, TwoIntegers) {
-  whenInputIs("[42,84]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe(42);
-  secondElementMustBe(84);
-}
-
-TEST_F(JsonParser_Array_Tests, TwoDoubles) {
-  whenInputIs("[4.2,1e2]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe(4.2);
-  secondElementMustBe(1e2);
-}
-
-TEST_F(JsonParser_Array_Tests, UnsignedLong) {
-  whenInputIs("[4294967295]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe(4294967295UL);
-}
-
-TEST_F(JsonParser_Array_Tests, TwoBooleans) {
-  whenInputIs("[true,false]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe(true);
-  secondElementMustBe(false);
-}
-
-TEST_F(JsonParser_Array_Tests, TwoNulls) {
-  const char *const nullCharPtr = 0;
-
-  whenInputIs("[null,null]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe(nullCharPtr);
-  secondElementMustBe(nullCharPtr);
-}
-
-TEST_F(JsonParser_Array_Tests, TwoStringsDoubleQuotes) {
-  whenInputIs("[ \"hello\" , \"world\" ]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("hello");
-  secondElementMustBe("world");
-}
-
-TEST_F(JsonParser_Array_Tests, TwoStringsSingleQuotes) {
-  whenInputIs("[ 'hello' , 'world' ]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("hello");
-  secondElementMustBe("world");
-}
-
-TEST_F(JsonParser_Array_Tests, TwoStringsNoQuotes) {
-  whenInputIs("[ hello , world ]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("hello");
-  secondElementMustBe("world");
-}
-
-TEST_F(JsonParser_Array_Tests, EmptyStringsDoubleQuotes) {
-  whenInputIs("[\"\",\"\"]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("");
-  secondElementMustBe("");
-}
-
-TEST_F(JsonParser_Array_Tests, EmptyStringSingleQuotes) {
-  whenInputIs("[\'\',\'\']");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("");
-  secondElementMustBe("");
-}
-
-TEST_F(JsonParser_Array_Tests, EmptyStringNoQuotes) {
-  whenInputIs("[,]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("");
-  secondElementMustBe("");
-}
-
-TEST_F(JsonParser_Array_Tests, ClosingDoubleQuoteMissing) {
-  whenInputIs("[\"]");
-
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, ClosingSignleQuoteMissing) {
-  whenInputIs("[\']");
-
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, StringWithEscapedChars) {
-  whenInputIs("[\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("1\"2\\3/4\b5\f6\n7\r8\t9");
-}
-
-TEST_F(JsonParser_Array_Tests, StringWithUnterminatedEscapeSequence) {
-  whenInputIs("\"\\\0\"", 4);
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, CCommentBeforeOpeningBracket) {
-  whenInputIs("/*COMMENT*/  [\"hello\"]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CCommentAfterOpeningBracket) {
-  whenInputIs("[/*COMMENT*/ \"hello\"]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CCommentBeforeClosingBracket) {
-  whenInputIs("[\"hello\"/*COMMENT*/]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CCommentAfterClosingBracket) {
-  whenInputIs("[\"hello\"]/*COMMENT*/");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CCommentBeforeComma) {
-  whenInputIs("[\"hello\"/*COMMENT*/,\"world\"]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("hello");
-  secondElementMustBe("world");
-}
-
-TEST_F(JsonParser_Array_Tests, CCommentAfterComma) {
-  whenInputIs("[\"hello\",/*COMMENT*/ \"world\"]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("hello");
-  secondElementMustBe("world");
-}
-
-TEST_F(JsonParser_Array_Tests, CppCommentBeforeOpeningBracket) {
-  whenInputIs("//COMMENT\n\t[\"hello\"]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CppCommentAfterOpeningBracket) {
-  whenInputIs("[//COMMENT\n\"hello\"]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CppCommentBeforeClosingBracket) {
-  whenInputIs("[\"hello\"//COMMENT\r\n]");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CppCommentAfterClosingBracket) {
-  whenInputIs("[\"hello\"]//COMMENT\n");
-
-  parseMustSucceed();
-  sizeMustBe(1);
-  firstElementMustBe("hello");
-}
-
-TEST_F(JsonParser_Array_Tests, CppCommentBeforeComma) {
-  whenInputIs("[\"hello\"//COMMENT\n,\"world\"]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("hello");
-  secondElementMustBe("world");
-}
-
-TEST_F(JsonParser_Array_Tests, CppCommentAfterComma) {
-  whenInputIs("[\"hello\",//COMMENT\n\"world\"]");
-
-  parseMustSucceed();
-  sizeMustBe(2);
-  firstElementMustBe("hello");
-  secondElementMustBe("world");
-}
-
-TEST_F(JsonParser_Array_Tests, InvalidCppComment) {
-  whenInputIs("[/COMMENT\n]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, InvalidComment) {
-  whenInputIs("[/*/\n]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, UnfinishedCComment) {
-  whenInputIs("[/*COMMENT]");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, EndsInCppComment) {
-  whenInputIs("[//COMMENT");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, AfterClosingStar) {
-  whenInputIs("[/*COMMENT*");
-  parseMustFail();
-}
-
-TEST_F(JsonParser_Array_Tests, DeeplyNested) {
-  whenInputIs("[[[[[[[[[[[[[[[[[[[\"Not too deep\"]]]]]]]]]]]]]]]]]]]");
-  parseMustSucceed();
+  SECTION("TwoDoubles") {
+    JsonArray& arr = jb.parseArray("[4.2,1e2]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == 4.2);
+    REQUIRE(arr[1] == 1e2);
+  }
+
+  SECTION("UnsignedLong") {
+    JsonArray& arr = jb.parseArray("[4294967295]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == 4294967295UL);
+  }
+
+  SECTION("TwoBooleans") {
+    JsonArray& arr = jb.parseArray("[true,false]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == true);
+    REQUIRE(arr[1] == false);
+  }
+
+  SECTION("TwoNulls") {
+    JsonArray& arr = jb.parseArray("[null,null]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0].as<char*>() == 0);
+    REQUIRE(arr[1].as<char*>() == 0);
+  }
+
+  SECTION("TwoStringsDoubleQuotes") {
+    JsonArray& arr = jb.parseArray("[ \"hello\" , \"world\" ]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "hello");
+    REQUIRE(arr[1] == "world");
+  }
+
+  SECTION("TwoStringsSingleQuotes") {
+    JsonArray& arr = jb.parseArray("[ 'hello' , 'world' ]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "hello");
+    REQUIRE(arr[1] == "world");
+  }
+
+  SECTION("TwoStringsNoQuotes") {
+    JsonArray& arr = jb.parseArray("[ hello , world ]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "hello");
+    REQUIRE(arr[1] == "world");
+  }
+
+  SECTION("EmptyStringsDoubleQuotes") {
+    JsonArray& arr = jb.parseArray("[\"\",\"\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "");
+    REQUIRE(arr[1] == "");
+  }
+
+  SECTION("EmptyStringSingleQuotes") {
+    JsonArray& arr = jb.parseArray("[\'\',\'\']");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "");
+    REQUIRE(arr[1] == "");
+  }
+
+  SECTION("EmptyStringNoQuotes") {
+    JsonArray& arr = jb.parseArray("[,]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "");
+    REQUIRE(arr[1] == "");
+  }
+
+  SECTION("ClosingDoubleQuoteMissing") {
+    JsonArray& arr = jb.parseArray("[\"]");
+
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("ClosingSignleQuoteMissing") {
+    JsonArray& arr = jb.parseArray("[\']");
+
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("StringWithEscapedChars") {
+    JsonArray& arr = jb.parseArray("[\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "1\"2\\3/4\b5\f6\n7\r8\t9");
+  }
+
+  SECTION("StringWithUnterminatedEscapeSequence") {
+    JsonArray& arr = jb.parseArray("\"\\\0\"", 4);
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("CCommentBeforeOpeningBracket") {
+    JsonArray& arr = jb.parseArray("/*COMMENT*/  [\"hello\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CCommentAfterOpeningBracket") {
+    JsonArray& arr = jb.parseArray("[/*COMMENT*/ \"hello\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CCommentBeforeClosingBracket") {
+    JsonArray& arr = jb.parseArray("[\"hello\"/*COMMENT*/]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CCommentAfterClosingBracket") {
+    JsonArray& arr = jb.parseArray("[\"hello\"]/*COMMENT*/");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CCommentBeforeComma") {
+    JsonArray& arr = jb.parseArray("[\"hello\"/*COMMENT*/,\"world\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "hello");
+    REQUIRE(arr[1] == "world");
+  }
+
+  SECTION("CCommentAfterComma") {
+    JsonArray& arr = jb.parseArray("[\"hello\",/*COMMENT*/ \"world\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "hello");
+    REQUIRE(arr[1] == "world");
+  }
+
+  SECTION("CppCommentBeforeOpeningBracket") {
+    JsonArray& arr = jb.parseArray("//COMMENT\n\t[\"hello\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CppCommentAfterOpeningBracket") {
+    JsonArray& arr = jb.parseArray("[//COMMENT\n\"hello\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CppCommentBeforeClosingBracket") {
+    JsonArray& arr = jb.parseArray("[\"hello\"//COMMENT\r\n]");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CppCommentAfterClosingBracket") {
+    JsonArray& arr = jb.parseArray("[\"hello\"]//COMMENT\n");
+
+    REQUIRE(arr.success());
+    REQUIRE(1 == arr.size());
+    REQUIRE(arr[0] == "hello");
+  }
+
+  SECTION("CppCommentBeforeComma") {
+    JsonArray& arr = jb.parseArray("[\"hello\"//COMMENT\n,\"world\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "hello");
+    REQUIRE(arr[1] == "world");
+  }
+
+  SECTION("CppCommentAfterComma") {
+    JsonArray& arr = jb.parseArray("[\"hello\",//COMMENT\n\"world\"]");
+
+    REQUIRE(arr.success());
+    REQUIRE(2 == arr.size());
+    REQUIRE(arr[0] == "hello");
+    REQUIRE(arr[1] == "world");
+  }
+
+  SECTION("InvalidCppComment") {
+    JsonArray& arr = jb.parseArray("[/COMMENT\n]");
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("InvalidComment") {
+    JsonArray& arr = jb.parseArray("[/*/\n]");
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("UnfinishedCComment") {
+    JsonArray& arr = jb.parseArray("[/*COMMENT]");
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("EndsInCppComment") {
+    JsonArray& arr = jb.parseArray("[//COMMENT");
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("AfterClosingStar") {
+    JsonArray& arr = jb.parseArray("[/*COMMENT*");
+    REQUIRE_FALSE(arr.success());
+  }
+
+  SECTION("DeeplyNested") {
+    JsonArray& arr =
+        jb.parseArray("[[[[[[[[[[[[[[[[[[[\"Not too deep\"]]]]]]]]]]]]]]]]]]]");
+    REQUIRE(arr.success());
+  }
 }

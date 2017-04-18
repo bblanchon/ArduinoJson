@@ -6,79 +6,73 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonArray_PrettyPrintTo_Tests : public testing::Test {
- public:
-  JsonArray_PrettyPrintTo_Tests() : array(jsonBuffer.createArray()) {}
+static void check(JsonArray& array, std::string expected) {
+  std::string actual;
+  size_t actualLen = array.prettyPrintTo(actual);
+  size_t measuredLen = array.measurePrettyLength();
+  CHECK(actualLen == expected.size());
+  CHECK(measuredLen == expected.size());
+  REQUIRE(expected == actual);
+}
 
- protected:
-  DynamicJsonBuffer jsonBuffer;
-  JsonArray& array;
+TEST_CASE("JsonArray::prettyPrintTo()") {
+  DynamicJsonBuffer jb;
+  JsonArray& array = jb.createArray();
 
-  void outputMustBe(const char* expected) {
-    char actual[256];
-
-    size_t actualLen = array.prettyPrintTo(actual);
-    size_t measuredLen = array.measurePrettyLength();
-
-    EXPECT_STREQ(expected, actual);
-    EXPECT_EQ(strlen(expected), actualLen);
-    EXPECT_EQ(strlen(expected), measuredLen);
+  SECTION("Empty") {
+    check(array, "[]");
   }
-};
 
-TEST_F(JsonArray_PrettyPrintTo_Tests, Empty) {
-  outputMustBe("[]");
-}
+  SECTION("OneElement") {
+    array.add(1);
 
-TEST_F(JsonArray_PrettyPrintTo_Tests, OneElement) {
-  array.add(1);
+    check(array,
+          "[\r\n"
+          "  1\r\n"
+          "]");
+  }
 
-  outputMustBe(
-      "[\r\n"
-      "  1\r\n"
-      "]");
-}
+  SECTION("TwoElements") {
+    array.add(1);
+    array.add(2);
 
-TEST_F(JsonArray_PrettyPrintTo_Tests, TwoElements) {
-  array.add(1);
-  array.add(2);
+    check(array,
+          "[\r\n"
+          "  1,\r\n"
+          "  2\r\n"
+          "]");
+  }
 
-  outputMustBe(
-      "[\r\n"
-      "  1,\r\n"
-      "  2\r\n"
-      "]");
-}
+  SECTION("EmptyNestedArrays") {
+    array.createNestedArray();
+    array.createNestedArray();
 
-TEST_F(JsonArray_PrettyPrintTo_Tests, EmptyNestedArrays) {
-  array.createNestedArray();
-  array.createNestedArray();
+    check(array,
+          "[\r\n"
+          "  [],\r\n"
+          "  []\r\n"
+          "]");
+  }
 
-  outputMustBe(
-      "[\r\n"
-      "  [],\r\n"
-      "  []\r\n"
-      "]");
-}
+  SECTION("NestedArrays") {
+    JsonArray& nested1 = array.createNestedArray();
+    nested1.add(1);
+    nested1.add(2);
 
-TEST_F(JsonArray_PrettyPrintTo_Tests, NestedArrays) {
-  JsonArray& nested1 = array.createNestedArray();
-  nested1.add(1);
-  nested1.add(2);
+    JsonObject& nested2 = array.createNestedObject();
+    nested2["key"] = 3;
 
-  JsonObject& nested2 = array.createNestedObject();
-  nested2["key"] = 3;
-
-  outputMustBe(
-      "[\r\n"
-      "  [\r\n"
-      "    1,\r\n"
-      "    2\r\n"
-      "  ],\r\n"
-      "  {\r\n"
-      "    \"key\": 3\r\n"
-      "  }\r\n"
-      "]");
+    check(array,
+          "[\r\n"
+          "  [\r\n"
+          "    1,\r\n"
+          "    2\r\n"
+          "  ],\r\n"
+          "  {\r\n"
+          "    \"key\": 3\r\n"
+          "  }\r\n"
+          "]");
+  }
 }

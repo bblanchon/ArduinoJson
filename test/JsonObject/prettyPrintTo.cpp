@@ -6,77 +6,74 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
+#include <string>
 
-class JsonObject_PrettyPrintTo_Tests : public testing::Test {
- public:
-  JsonObject_PrettyPrintTo_Tests() : _object(_jsonBuffer.createObject()) {}
+void check(const JsonObject &obj, const std::string expected) {
+  char json[256];
 
- protected:
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject &_object;
+  size_t actualLen = obj.prettyPrintTo(json);
+  size_t measuredLen = obj.measurePrettyLength();
 
-  void outputMustBe(const char *expected) {
-    char buffer[256];
+  REQUIRE(json == expected);
+  REQUIRE(expected.size() == actualLen);
+  REQUIRE(expected.size() == measuredLen);
+}
 
-    size_t actualLen = _object.prettyPrintTo(buffer);
-    size_t measuredLen = _object.measurePrettyLength();
+TEST_CASE("JsonObject::prettyPrintTo()") {
+  DynamicJsonBuffer jb;
+  JsonObject &obj = jb.createObject();
 
-    EXPECT_STREQ(expected, buffer);
-    EXPECT_EQ(strlen(expected), actualLen);
-    EXPECT_EQ(strlen(expected), measuredLen);
+  SECTION("EmptyObject") {
+    check(obj, "{}");
   }
-};
 
-TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyObject) {
-  outputMustBe("{}");
-}
+  SECTION("OneMember") {
+    obj["key"] = "value";
 
-TEST_F(JsonObject_PrettyPrintTo_Tests, OneMember) {
-  _object["key"] = "value";
+    check(obj,
+          "{\r\n"
+          "  \"key\": \"value\"\r\n"
+          "}");
+  }
 
-  outputMustBe(
-      "{\r\n"
-      "  \"key\": \"value\"\r\n"
-      "}");
-}
+  SECTION("TwoMembers") {
+    obj["key1"] = "value1";
+    obj["key2"] = "value2";
 
-TEST_F(JsonObject_PrettyPrintTo_Tests, TwoMembers) {
-  _object["key1"] = "value1";
-  _object["key2"] = "value2";
+    check(obj,
+          "{\r\n"
+          "  \"key1\": \"value1\",\r\n"
+          "  \"key2\": \"value2\"\r\n"
+          "}");
+  }
 
-  outputMustBe(
-      "{\r\n"
-      "  \"key1\": \"value1\",\r\n"
-      "  \"key2\": \"value2\"\r\n"
-      "}");
-}
+  SECTION("EmptyNestedContainers") {
+    obj.createNestedObject("key1");
+    obj.createNestedArray("key2");
 
-TEST_F(JsonObject_PrettyPrintTo_Tests, EmptyNestedContainers) {
-  _object.createNestedObject("key1");
-  _object.createNestedArray("key2");
+    check(obj,
+          "{\r\n"
+          "  \"key1\": {},\r\n"
+          "  \"key2\": []\r\n"
+          "}");
+  }
 
-  outputMustBe(
-      "{\r\n"
-      "  \"key1\": {},\r\n"
-      "  \"key2\": []\r\n"
-      "}");
-}
+  SECTION("NestedContainers") {
+    JsonObject &nested1 = obj.createNestedObject("key1");
+    nested1["a"] = 1;
 
-TEST_F(JsonObject_PrettyPrintTo_Tests, NestedContainers) {
-  JsonObject &nested1 = _object.createNestedObject("key1");
-  nested1["a"] = 1;
+    JsonArray &nested2 = obj.createNestedArray("key2");
+    nested2.add(2);
 
-  JsonArray &nested2 = _object.createNestedArray("key2");
-  nested2.add(2);
-
-  outputMustBe(
-      "{\r\n"
-      "  \"key1\": {\r\n"
-      "    \"a\": 1\r\n"
-      "  },\r\n"
-      "  \"key2\": [\r\n"
-      "    2\r\n"
-      "  ]\r\n"
-      "}");
+    check(obj,
+          "{\r\n"
+          "  \"key1\": {\r\n"
+          "    \"a\": 1\r\n"
+          "  },\r\n"
+          "  \"key2\": [\r\n"
+          "    2\r\n"
+          "  ]\r\n"
+          "}");
+  }
 }

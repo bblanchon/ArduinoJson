@@ -6,13 +6,13 @@
 # If you like this project, please add a star!
 
 add_executable(StaticJsonBufferTests 
-	basics.cpp
+	alloc.cpp
 	createArray.cpp
 	createObject.cpp
 	parseArray.cpp
 	parseObject.cpp
-	string.cpp
+	startString.cpp
 )
 
-target_link_libraries(StaticJsonBufferTests gtest)
+target_link_libraries(StaticJsonBufferTests catch)
 add_test(StaticJsonBuffer StaticJsonBufferTests)

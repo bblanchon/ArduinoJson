@@ -6,38 +6,40 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-TEST(JsonVariant_Success_Tests, ReturnsFalse_WhenUndefined) {
-  JsonVariant variant;
-  EXPECT_FALSE(variant.success());
-}
+TEST_CASE("JsonVariant::success()") {
+  SECTION("ReturnsFalse_WhenUndefined") {
+    JsonVariant variant;
+    REQUIRE(false == variant.success());
+  }
 
-TEST(JsonVariant_Success_Tests, ReturnsTrue_WhenInteger) {
-  JsonVariant variant = 0;
-  EXPECT_TRUE(variant.success());
-}
+  SECTION("ReturnsTrue_WhenInteger") {
+    JsonVariant variant = 0;
+    REQUIRE(true == variant.success());
+  }
 
-TEST(JsonVariant_Success_Tests, ReturnsTrue_WhenEmptyArray) {
-  DynamicJsonBuffer jsonBuffer;
+  SECTION("ReturnsTrue_WhenEmptyArray") {
+    DynamicJsonBuffer jsonBuffer;
 
-  JsonVariant variant = jsonBuffer.createArray();
-  EXPECT_TRUE(variant.success());
-}
+    JsonVariant variant = jsonBuffer.createArray();
+    REQUIRE(true == variant.success());
+  }
 
-TEST(JsonVariant_Success_Tests, ReturnsTrue_WhenEmptyObject) {
-  DynamicJsonBuffer jsonBuffer;
+  SECTION("ReturnsTrue_WhenEmptyObject") {
+    DynamicJsonBuffer jsonBuffer;
 
-  JsonVariant variant = jsonBuffer.createObject();
-  EXPECT_TRUE(variant.success());
-}
+    JsonVariant variant = jsonBuffer.createObject();
+    REQUIRE(true == variant.success());
+  }
 
-TEST(JsonVariant_Success_Tests, ReturnsFalse_WhenInvalidArray) {
-  JsonVariant variant = JsonArray::invalid();
-  EXPECT_FALSE(variant.success());
-}
+  SECTION("ReturnsFalse_WhenInvalidArray") {
+    JsonVariant variant = JsonArray::invalid();
+    REQUIRE(false == variant.success());
+  }
 
-TEST(JsonVariant_Success_Tests, ReturnsFalse_WhenInvalidObject) {
-  JsonVariant variant = JsonObject::invalid();
-  EXPECT_FALSE(variant.success());
+  SECTION("ReturnsFalse_WhenInvalidObject") {
+    JsonVariant variant = JsonObject::invalid();
+    REQUIRE(false == variant.success());
+  }
 }

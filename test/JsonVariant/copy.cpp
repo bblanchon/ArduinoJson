@@ -6,63 +6,62 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-class JsonVariant_Copy_Tests : public ::testing::Test {
- protected:
+TEST_CASE("JsonVariant copy") {
   DynamicJsonBuffer _jsonBuffer;
   JsonVariant _variant1;
   JsonVariant _variant2;
-};
 
-TEST_F(JsonVariant_Copy_Tests, IntegersAreCopiedByValue) {
-  _variant1 = 123;
-  _variant2 = _variant1;
-  _variant1 = 456;
+  SECTION("IntegersAreCopiedByValue") {
+    _variant1 = 123;
+    _variant2 = _variant1;
+    _variant1 = 456;
 
-  EXPECT_EQ(123, _variant2.as<int>());
-}
+    REQUIRE(123 == _variant2.as<int>());
+  }
 
-TEST_F(JsonVariant_Copy_Tests, DoublesAreCopiedByValue) {
-  _variant1 = 123.45;
-  _variant2 = _variant1;
-  _variant1 = 456.78;
+  SECTION("DoublesAreCopiedByValue") {
+    _variant1 = 123.45;
+    _variant2 = _variant1;
+    _variant1 = 456.78;
 
-  EXPECT_EQ(123.45, _variant2.as<double>());
-}
+    REQUIRE(123.45 == _variant2.as<double>());
+  }
 
-TEST_F(JsonVariant_Copy_Tests, BooleansAreCopiedByValue) {
-  _variant1 = true;
-  _variant2 = _variant1;
-  _variant1 = false;
+  SECTION("BooleansAreCopiedByValue") {
+    _variant1 = true;
+    _variant2 = _variant1;
+    _variant1 = false;
 
-  EXPECT_TRUE(_variant2.as<bool>());
-}
+    REQUIRE(_variant2.as<bool>());
+  }
 
-TEST_F(JsonVariant_Copy_Tests, StringsAreCopiedByValue) {
-  _variant1 = "hello";
-  _variant2 = _variant1;
-  _variant1 = "world";
+  SECTION("StringsAreCopiedByValue") {
+    _variant1 = "hello";
+    _variant2 = _variant1;
+    _variant1 = "world";
 
-  EXPECT_STREQ("hello", _variant2.as<const char *>());
-}
+    REQUIRE(std::string("hello") == _variant2.as<const char *>());
+  }
 
-TEST_F(JsonVariant_Copy_Tests, ObjectsAreCopiedByReference) {
-  JsonObject &object = _jsonBuffer.createObject();
+  SECTION("ObjectsAreCopiedByReference") {
+    JsonObject &object = _jsonBuffer.createObject();
 
-  _variant1 = object;
+    _variant1 = object;
 
-  object["hello"] = "world";
+    object["hello"] = "world";
 
-  EXPECT_EQ(1, _variant1.as<JsonObject>().size());
-}
+    REQUIRE(1 == _variant1.as<JsonObject>().size());
+  }
 
-TEST_F(JsonVariant_Copy_Tests, ArraysAreCopiedByReference) {
-  JsonArray &array = _jsonBuffer.createArray();
+  SECTION("ArraysAreCopiedByReference") {
+    JsonArray &array = _jsonBuffer.createArray();
 
-  _variant1 = array;
+    _variant1 = array;
 
-  array.add("world");
+    array.add("world");
 
-  EXPECT_EQ(1, _variant1.as<JsonArray>().size());
+    REQUIRE(1 == _variant1.as<JsonArray>().size());
+  }
 }

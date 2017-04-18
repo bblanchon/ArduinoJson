@@ -6,36 +6,27 @@
 // If you like this project, please add a star!
 
 #include <ArduinoJson.h>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
-#define TEST_(name) TEST(JsonArray_Basic_Tests, name)
+TEST_CASE("JsonArray basics") {
+  DynamicJsonBuffer jb;
+  JsonArray& array = jb.createArray();
 
-TEST_(SuccessIsTrue) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonArray& array = _jsonBuffer.createArray();
+  SECTION("SuccessIsTrue") {
+    REQUIRE(array.success());
+  }
 
-  EXPECT_TRUE(array.success());
-}
+  SECTION("InitialSizeIsZero") {
+    REQUIRE(0U == array.size());
+  }
 
-TEST_(InitialSizeIsZero) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonArray& array = _jsonBuffer.createArray();
+  SECTION("CreateNestedArray") {
+    JsonArray& arr = array.createNestedArray();
+    REQUIRE(&arr == &array[0].as<JsonArray&>());
+  }
 
-  EXPECT_EQ(0U, array.size());
-}
-
-TEST_(CreateNestedArray) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonArray& array = _jsonBuffer.createArray();
-
-  JsonArray& arr = array.createNestedArray();
-  EXPECT_EQ(&arr, &array[0].as<JsonArray&>());
-}
-
-TEST_(CreateNestedObject) {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonArray& array = _jsonBuffer.createArray();
-
-  JsonObject& obj = array.createNestedObject();
-  EXPECT_EQ(&obj, &array[0].as<JsonObject&>());
+  SECTION("CreateNestedObject") {
+    JsonObject& obj = array.createNestedObject();
+    REQUIRE(&obj == &array[0].as<JsonObject&>());
+  }
 }

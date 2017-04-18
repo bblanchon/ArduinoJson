@@ -15,5 +15,5 @@ add_executable(MiscTests
 	vla.cpp
 )
 
-target_link_libraries(MiscTests gtest)
+target_link_libraries(MiscTests catch)
 add_test(Misc MiscTests)
