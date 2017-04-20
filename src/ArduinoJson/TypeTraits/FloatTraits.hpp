@@ -17,7 +17,7 @@ namespace TypeTraits {
 template <typename T, size_t = sizeof(T)>
 struct FloatTraits {};
 
-#ifndef ARDUINO_ARCH_AVR  // double is 32 bits, so 1e64 gives a warning
+#if !defined(__SIZEOF_DOUBLE__) || __SIZEOF_DOUBLE__ >= 8
 template <typename T>
 struct FloatTraits<T, 8 /*64bits*/> {
   typedef int64_t mantissa_type;

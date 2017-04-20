@@ -8,6 +8,7 @@ HEAD
 * Added `JsonObject::remove(iterator)`
 * Renamed `JsonArray::removeAt(size_t)` into `remove(size_t)`
 * Renamed folder `include/` to `src/`
+* Fixed warnings `floating constant exceeds range of float`and `floating constant truncated to zero` (issue #483)
 
 v5.8.4
 ------
