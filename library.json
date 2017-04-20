@@ -13,7 +13,6 @@
   },
   "exclude": [
     "scripts",
-    "src/ArduinoJson.h",
     "test",
     "third-party"
   ],

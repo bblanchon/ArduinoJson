@@ -60,8 +60,6 @@ if(MSVC)
 	)
 endif()
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
-
 add_subdirectory(DynamicJsonBuffer)
 add_subdirectory(IntegrationTests)
 add_subdirectory(JsonArray)

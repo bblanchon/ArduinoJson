@@ -39,6 +39,6 @@ process()
 
 cd $(dirname $0)/../
 INCLUDED=()
-process include/ArduinoJson.h true > ../ArduinoJson-$TAG.h
+process src/ArduinoJson.h true > ../ArduinoJson-$TAG.h
 INCLUDED=()
-process include/ArduinoJson.hpp true > ../ArduinoJson-$TAG.hpp
+process src/ArduinoJson.hpp true > ../ArduinoJson-$TAG.hpp
