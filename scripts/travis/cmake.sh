@@ -27,4 +27,4 @@ fi
 
 $CMAKE .
 $CMAKE --build .
-$CTEST -VV .
+$CTEST --output-on-failure .
