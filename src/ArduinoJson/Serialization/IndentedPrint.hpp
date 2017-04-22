@@ -7,15 +7,14 @@
 
 #pragma once
 
-#include "../Print.hpp"
-
 namespace ArduinoJson {
 namespace Internals {
 
 // Decorator on top of Print to allow indented output.
 // This class is used by JsonPrintable::prettyPrintTo() but can also be used
 // for your own purpose, like logging.
-class IndentedPrint : public Print {
+template <typename Print>
+class IndentedPrint {
  public:
   explicit IndentedPrint(Print &p) : sink(&p) {
     level = 0;
@@ -23,11 +22,18 @@ class IndentedPrint : public Print {
     isNewLine = true;
   }
 
-  virtual size_t write(uint8_t c) {
+  size_t print(char c) {
     size_t n = 0;
     if (isNewLine) n += writeTabs();
-    n += sink->write(c);
+    n += sink->print(c);
     isNewLine = c == '\n';
+    return n;
+  }
+
+  size_t print(const char *s) {
+    // TODO: optimize
+    size_t n = 0;
+    while (*s) n += print(*s++);
     return n;
   }
 
@@ -54,7 +60,7 @@ class IndentedPrint : public Print {
 
   size_t writeTabs() {
     size_t n = 0;
-    for (int i = 0; i < level * tabSize; i++) n += sink->write(' ');
+    for (int i = 0; i < level * tabSize; i++) n += sink->print(' ');
     return n;
   }
 

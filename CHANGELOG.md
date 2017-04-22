@@ -9,6 +9,8 @@ HEAD
 * Renamed `JsonArray::removeAt(size_t)` into `remove(size_t)`
 * Renamed folder `include/` to `src/`
 * Fixed warnings `floating constant exceeds range of float`and `floating constant truncated to zero` (issue #483)
+* Removed `Print` class and converted `printTo()` to a template method (issue #276)
+* Removed example `IndentedPrintExample.ino`
 
 v5.8.4
 ------

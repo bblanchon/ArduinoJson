@@ -40,8 +40,8 @@ class JsonObject;
 // - a string (const char*)
 // - a reference to a JsonArray or JsonObject
 class JsonVariant : public JsonVariantBase<JsonVariant> {
-  friend void Internals::JsonSerializer::serialize(const JsonVariant &,
-                                                   JsonWriter &);
+  template <typename Print>
+  friend class Internals::JsonSerializer;
 
  public:
   // Creates an uninitialized JsonVariant

@@ -31,9 +31,12 @@ namespace Internals {
 template <typename T>
 class JsonPrintable {
  public:
-  size_t printTo(Print &print) const {
-    JsonWriter writer(print);
-    JsonSerializer::serialize(downcast(), writer);
+  template <typename Print>
+  typename TypeTraits::EnableIf<!TypeTraits::IsString<Print>::value,
+                                size_t>::type
+  printTo(Print &print) const {
+    JsonWriter<Print> writer(print);
+    JsonSerializer<JsonWriter<Print> >::serialize(downcast(), writer);
     return writer.bytesWritten();
   }
 
@@ -62,8 +65,9 @@ class JsonPrintable {
     return printTo(sb);
   }
 
-  size_t prettyPrintTo(IndentedPrint &print) const {
-    Prettyfier p(print);
+  template <typename Print>
+  size_t prettyPrintTo(IndentedPrint<Print> &print) const {
+    Prettyfier<Print> p(print);
     return printTo(p);
   }
 
@@ -77,8 +81,11 @@ class JsonPrintable {
     return prettyPrintTo(buffer, N);
   }
 
-  size_t prettyPrintTo(Print &print) const {
-    IndentedPrint indentedPrint = IndentedPrint(print);
+  template <typename Print>
+  typename TypeTraits::EnableIf<!TypeTraits::IsString<Print>::value,
+                                size_t>::type
+  prettyPrintTo(Print &print) const {
+    IndentedPrint<Print> indentedPrint(print);
     return prettyPrintTo(indentedPrint);
   }
 

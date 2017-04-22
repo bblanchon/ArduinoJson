@@ -13,16 +13,24 @@ namespace ArduinoJson {
 namespace Internals {
 
 // Converts a compact JSON string into an indented one.
-class Prettyfier : public Print {
+template <typename Print>
+class Prettyfier {
  public:
-  explicit Prettyfier(IndentedPrint& p) : _sink(p) {
+  explicit Prettyfier(IndentedPrint<Print>& p) : _sink(p) {
     _previousChar = 0;
     _inString = false;
   }
 
-  virtual size_t write(uint8_t c) {
+  size_t print(char c) {
     size_t n = _inString ? handleStringChar(c) : handleMarkupChar(c);
     _previousChar = c;
+    return n;
+  }
+
+  size_t print(const char* s) {
+    // TODO: optimize
+    size_t n = 0;
+    while (*s) n += print(*s++);
     return n;
   }
 
@@ -33,15 +41,15 @@ class Prettyfier : public Print {
     return _previousChar == '{' || _previousChar == '[';
   }
 
-  size_t handleStringChar(uint8_t c) {
+  size_t handleStringChar(char c) {
     bool isQuote = c == '"' && _previousChar != '\\';
 
     if (isQuote) _inString = false;
 
-    return _sink.write(c);
+    return _sink.print(c);
   }
 
-  size_t handleMarkupChar(uint8_t c) {
+  size_t handleMarkupChar(char c) {
     switch (c) {
       case '{':
       case '[':
@@ -65,31 +73,29 @@ class Prettyfier : public Print {
     }
   }
 
-  size_t writeBlockClose(uint8_t c) {
+  size_t writeBlockClose(char c) {
     size_t n = 0;
     n += unindentIfNeeded();
-    n += _sink.write(c);
+    n += _sink.print(c);
     return n;
   }
 
-  size_t writeBlockOpen(uint8_t c) {
+  size_t writeBlockOpen(char c) {
     size_t n = 0;
     n += indentIfNeeded();
-    n += _sink.write(c);
+    n += _sink.print(c);
     return n;
   }
 
   size_t writeColon() {
     size_t n = 0;
-    n += _sink.write(':');
-    n += _sink.write(' ');
+    n += _sink.print(": ");
     return n;
   }
 
   size_t writeComma() {
     size_t n = 0;
-    n += _sink.write(',');
-    n += _sink.println();
+    n += _sink.print(",\r\n");
     return n;
   }
 
@@ -97,14 +103,14 @@ class Prettyfier : public Print {
     _inString = true;
     size_t n = 0;
     n += indentIfNeeded();
-    n += _sink.write('"');
+    n += _sink.print('"');
     return n;
   }
 
-  size_t writeNormalChar(uint8_t c) {
+  size_t writeNormalChar(char c) {
     size_t n = 0;
     n += indentIfNeeded();
-    n += _sink.write(c);
+    n += _sink.print(c);
     return n;
   }
 
@@ -112,18 +118,18 @@ class Prettyfier : public Print {
     if (!inEmptyBlock()) return 0;
 
     _sink.indent();
-    return _sink.println();
+    return _sink.print("\r\n");
   }
 
   size_t unindentIfNeeded() {
     if (inEmptyBlock()) return 0;
 
     _sink.unindent();
-    return _sink.println();
+    return _sink.print("\r\n");
   }
 
-  uint8_t _previousChar;
-  IndentedPrint& _sink;
+  char _previousChar;
+  IndentedPrint<Print>& _sink;
   bool _inString;
 };
 }

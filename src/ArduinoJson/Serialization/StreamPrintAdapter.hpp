@@ -11,20 +11,23 @@
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 
-#include "../Print.hpp"
-
 #include <ostream>
 
 namespace ArduinoJson {
 namespace Internals {
 
-class StreamPrintAdapter : public Print {
+class StreamPrintAdapter {
  public:
   explicit StreamPrintAdapter(std::ostream& os) : _os(os) {}
 
-  virtual size_t write(uint8_t c) {
-    _os << static_cast<char>(c);
+  size_t print(char c) {
+    _os << c;
     return 1;
+  }
+
+  size_t print(const char* s) {
+    _os << s;
+    return strlen(s);
   }
 
  private:

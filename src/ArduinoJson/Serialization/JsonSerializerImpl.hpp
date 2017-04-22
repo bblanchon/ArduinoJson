@@ -14,8 +14,9 @@
 #include "../JsonVariant.hpp"
 #include "JsonSerializer.hpp"
 
-inline void ArduinoJson::Internals::JsonSerializer::serialize(
-    const JsonArray& array, JsonWriter& writer) {
+template <typename Writer>
+inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
+    const JsonArray& array, Writer& writer) {
   writer.beginArray();
 
   JsonArray::const_iterator it = array.begin();
@@ -31,13 +32,15 @@ inline void ArduinoJson::Internals::JsonSerializer::serialize(
   writer.endArray();
 }
 
-inline void ArduinoJson::Internals::JsonSerializer::serialize(
-    const JsonArraySubscript& arraySubscript, JsonWriter& writer) {
+template <typename Writer>
+inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
+    const JsonArraySubscript& arraySubscript, Writer& writer) {
   serialize(arraySubscript.as<JsonVariant>(), writer);
 }
 
-inline void ArduinoJson::Internals::JsonSerializer::serialize(
-    const JsonObject& object, JsonWriter& writer) {
+template <typename Writer>
+inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
+    const JsonObject& object, Writer& writer) {
   writer.beginObject();
 
   JsonObject::const_iterator it = object.begin();
@@ -55,14 +58,16 @@ inline void ArduinoJson::Internals::JsonSerializer::serialize(
   writer.endObject();
 }
 
+template <typename Writer>
 template <typename TKey>
-inline void ArduinoJson::Internals::JsonSerializer::serialize(
-    const JsonObjectSubscript<TKey>& objectSubscript, JsonWriter& writer) {
+inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
+    const JsonObjectSubscript<TKey>& objectSubscript, Writer& writer) {
   serialize(objectSubscript.template as<JsonVariant>(), writer);
 }
 
-inline void ArduinoJson::Internals::JsonSerializer::serialize(
-    const JsonVariant& variant, JsonWriter& writer) {
+template <typename Writer>
+inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
+    const JsonVariant& variant, Writer& writer) {
   switch (variant._type) {
     case JSON_UNDEFINED:
       return;

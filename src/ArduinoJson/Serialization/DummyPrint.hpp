@@ -7,16 +7,18 @@
 
 #pragma once
 
-#include "../Print.hpp"
-
 namespace ArduinoJson {
 namespace Internals {
 
 // A dummy Print implementation used in JsonPrintable::measureLength()
-class DummyPrint : public Print {
+class DummyPrint {
  public:
-  virtual size_t write(uint8_t) {
+  size_t print(char) {
     return 1;
+  }
+
+  size_t print(const char* s) {
+    return strlen(s);
   }
 };
 }

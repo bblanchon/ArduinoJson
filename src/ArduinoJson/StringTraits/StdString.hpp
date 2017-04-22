@@ -43,6 +43,10 @@ struct StdStringTraits {
     str += c;
   }
 
+  static void append(TString& str, const char* s) {
+    str += s;
+  }
+
   static const bool has_append = true;
   static const bool has_equals = true;
   static const bool should_duplicate = true;

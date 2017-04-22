@@ -15,7 +15,7 @@ using namespace ArduinoJson::Internals;
 void check(const char* input, std::string expected) {
   char output[1024];
   StaticStringBuilder sb(output, sizeof(output));
-  JsonWriter writer(sb);
+  JsonWriter<StaticStringBuilder> writer(sb);
   writer.writeString(input);
   REQUIRE(expected == output);
   REQUIRE(writer.bytesWritten() == expected.size());

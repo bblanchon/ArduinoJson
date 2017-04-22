@@ -7,13 +7,13 @@
 
 #pragma once
 
+#include <stdint.h>
 #include "../Data/Encoding.hpp"
 #include "../Data/JsonFloat.hpp"
 #include "../Data/JsonInteger.hpp"
 #include "../Polyfills/attributes.hpp"
 #include "../Polyfills/math.hpp"
 #include "../Polyfills/normalize.hpp"
-#include "../Print.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -25,6 +25,7 @@ namespace Internals {
 // - JsonVariant::writeTo()
 // Its derived by PrettyJsonWriter that overrides some members to add
 // indentation.
+template <typename Print>
 class JsonWriter {
  public:
   explicit JsonWriter(Print &sink) : _sink(sink), _length(0) {}
@@ -150,7 +151,7 @@ class JsonWriter {
     _length += _sink.print(s);
   }
   void writeRaw(char c) {
-    _length += _sink.write(c);
+    _length += _sink.print(c);
   }
 
  protected:

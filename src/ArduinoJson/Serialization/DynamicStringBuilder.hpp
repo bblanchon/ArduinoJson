@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "../Print.hpp"
 #include "../StringTraits/StringTraits.hpp"
 
 namespace ArduinoJson {
@@ -15,13 +14,19 @@ namespace Internals {
 
 // A Print implementation that allows to write in a String
 template <typename TString>
-class DynamicStringBuilder : public Print {
+class DynamicStringBuilder {
  public:
   DynamicStringBuilder(TString &str) : _str(str) {}
 
-  virtual size_t write(uint8_t c) {
-    StringTraits<TString>::append(_str, static_cast<char>(c));
+  size_t print(char c) {
+    StringTraits<TString>::append(_str, c);
     return 1;
+  }
+
+  size_t print(const char *s) {
+    size_t initialLen = _str.length();
+    StringTraits<TString>::append(_str, s);
+    return _str.length() - initialLen;
   }
 
  private:
