@@ -11,6 +11,7 @@ HEAD
 * Fixed warnings `floating constant exceeds range of float`and `floating constant truncated to zero` (issue #483)
 * Removed `Print` class and converted `printTo()` to a template method (issue #276)
 * Removed example `IndentedPrintExample.ino`
+* Now compatible with Particle 0.6.1, thanks to Jacob Nite (issue #294 and PR #461 by @foodbag)
 
 v5.8.4
 ------
