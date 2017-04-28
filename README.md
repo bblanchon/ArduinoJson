@@ -27,14 +27,16 @@ Features
 Works on
 --------
 
-* All Arduino boards (Uno, Due, Mini, Micro, Yun...)
-* ESP8266
+* Arduino boards: Uno, Due, Mini, Micro, Yun...
+* ESP8266, ESP32
 * Teensy
-* Intel Edison and Galileo
-* PlatformIO
-* Energia
 * RedBearLab boards (BLE Nano...)
-* Computers (Windows, Linux, OSX...)
+* Intel Edison and Galileo
+* WeMos boards: D1...
+* Computers: Windows, Linux, OSX...
+* PlatformIO
+* Particle
+* Energia
 
 Quick start
 -----------
