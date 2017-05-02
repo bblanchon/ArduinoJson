@@ -44,6 +44,12 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
       env: SCRIPT=cmake GCC=5 SANITIZE=undefined
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-6']
+      env: SCRIPT=cmake GCC=6
     - compiler: clang
       env: SCRIPT=cmake
     - compiler: clang
