@@ -11,10 +11,6 @@
 
 #include <Stream.h>
 
-#include "../TypeTraits/EnableIf.hpp"
-#include "../TypeTraits/IsBaseOf.hpp"
-#include "../TypeTraits/RemoveReference.hpp"
-
 namespace ArduinoJson {
 namespace Internals {
 

@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed error `IsBaseOf is not a member of ArduinoJson::TypeTraits` (issue #495)
+
 v5.9.0
 ------
 

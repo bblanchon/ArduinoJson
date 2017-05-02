@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "../TypeTraits/EnableIf.hpp"
-#include "../TypeTraits/IsChar.hpp"
-
 namespace ArduinoJson {
 namespace Internals {
 

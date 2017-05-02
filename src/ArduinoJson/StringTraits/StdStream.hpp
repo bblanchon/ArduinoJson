@@ -10,9 +10,6 @@
 #if ARDUINOJSON_ENABLE_STD_STREAM
 
 #include <istream>
-#include "../TypeTraits/EnableIf.hpp"
-#include "../TypeTraits/IsBaseOf.hpp"
-#include "../TypeTraits/RemoveReference.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

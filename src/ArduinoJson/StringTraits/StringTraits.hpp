@@ -8,6 +8,10 @@
 #pragma once
 
 #include "../Configuration.hpp"
+#include "../TypeTraits/EnableIf.hpp"
+#include "../TypeTraits/IsBaseOf.hpp"
+#include "../TypeTraits/IsChar.hpp"
+#include "../TypeTraits/RemoveReference.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
