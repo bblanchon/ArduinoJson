@@ -29,6 +29,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wstrict-overflow=5
 		-Wundef
 	)
+
+	if(NOT MINGW)
+		add_compile_options(
+			-std=c++98
+		)
+	endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")

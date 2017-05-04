@@ -15,22 +15,21 @@
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename TSource, typename Enable = void>
+template <typename TSourceRef, typename Enable = void>
 struct ValueSetter {
   template <typename TDestination>
-  static bool set(JsonBuffer*, TDestination& destination,
-                  const TSource& source) {
+  static bool set(JsonBuffer*, TDestination& destination, TSourceRef source) {
     destination = source;
     return true;
   }
 };
 
-template <typename TSource>
-struct ValueSetter<TSource, typename TypeTraits::EnableIf<StringTraits<
-                                TSource>::should_duplicate>::type> {
+template <typename TSourceRef>
+struct ValueSetter<TSourceRef, typename TypeTraits::EnableIf<StringTraits<
+                                   TSourceRef>::should_duplicate>::type> {
   template <typename TDestination>
   static bool set(JsonBuffer* buffer, TDestination& destination,
-                  const TSource& source) {
+                  TSourceRef source) {
     const char* copy = buffer->strdup(source);
     if (!copy) return false;
     destination = copy;
@@ -38,12 +37,11 @@ struct ValueSetter<TSource, typename TypeTraits::EnableIf<StringTraits<
   }
 };
 
-template <typename TSource>
-struct ValueSetter<TSource, typename TypeTraits::EnableIf<!StringTraits<
-                                TSource>::should_duplicate>::type> {
+template <typename TSourceRef>
+struct ValueSetter<TSourceRef, typename TypeTraits::EnableIf<!StringTraits<
+                                   TSourceRef>::should_duplicate>::type> {
   template <typename TDestination>
-  static bool set(JsonBuffer*, TDestination& destination,
-                  const TSource& source) {
+  static bool set(JsonBuffer*, TDestination& destination, TSourceRef source) {
     // unsigned char* -> char*
     destination = reinterpret_cast<const char*>(source);
     return true;
