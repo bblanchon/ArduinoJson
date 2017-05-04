@@ -83,18 +83,6 @@ matrix:
       compiler: clang
       env: SCRIPT=cmake
     - os: osx
-      osx_image: xcode7
-      compiler: clang
-      env: SCRIPT=cmake
-    - os: osx
-      osx_image: xcode7.1
-      compiler: clang
-      env: SCRIPT=cmake
-    - os: osx
-      osx_image: xcode7.2
-      compiler: clang
-      env: SCRIPT=cmake
-    - os: osx
       osx_image: xcode7.3
       compiler: clang
       env: SCRIPT=cmake SANITIZE=address
