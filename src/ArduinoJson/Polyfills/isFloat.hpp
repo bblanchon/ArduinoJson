@@ -19,24 +19,23 @@ inline bool isFloat(const char* s) {
   if (!strcmp(s, "NaN")) return true;
   if (issign(*s)) s++;
   if (!strcmp(s, "Infinity")) return true;
+  if (*s == '\0') return false;
 
   while (isdigit(*s)) s++;
 
-  bool has_dot = *s == '.';
-  if (has_dot) {
+  if (*s == '.') {
     s++;
     while (isdigit(*s)) s++;
   }
 
-  bool has_exponent = *s == 'e' || *s == 'E';
-  if (has_exponent) {
+  if (*s == 'e' || *s == 'E') {
     s++;
     if (issign(*s)) s++;
     if (!isdigit(*s)) return false;
     while (isdigit(*s)) s++;
   }
 
-  return (has_dot || has_exponent) && *s == '\0';
+  return *s == '\0';
 }
 }
 }

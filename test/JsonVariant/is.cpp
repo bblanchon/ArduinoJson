@@ -50,10 +50,10 @@ void checkIsFloat(JsonVariant var) {
 void checkIsInteger(JsonVariant var) {
   REQUIRE(var.is<long>());
   REQUIRE(var.is<int>());
+  REQUIRE(var.is<float>());
+  REQUIRE(var.is<double>());
 
   REQUIRE_FALSE(var.is<bool>());
-  REQUIRE_FALSE(var.is<double>());
-  REQUIRE_FALSE(var.is<float>());
   REQUIRE_FALSE(var.is<const char*>());
   REQUIRE_FALSE(var.is<JsonArray>());
   REQUIRE_FALSE(var.is<JsonObject>());

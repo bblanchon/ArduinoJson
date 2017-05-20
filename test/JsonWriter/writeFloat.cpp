@@ -9,82 +9,96 @@
 #include <limits>
 #include <string>
 
+#include <ArduinoJson/Serialization/DynamicStringBuilder.hpp>
 #include <ArduinoJson/Serialization/JsonWriter.hpp>
-#include <ArduinoJson/Serialization/StaticStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 
-void check(const std::string& expected, double input, uint8_t digits = 2) {
-  char output[1024];
-  StaticStringBuilder sb(output, sizeof(output));
-  JsonWriter<StaticStringBuilder> writer(sb);
-  writer.writeFloat(input, digits);
-  REQUIRE(output == expected);
-  REQUIRE(writer.bytesWritten() == expected.size());
+void check(double input, const std::string& expected) {
+  std::string output;
+  DynamicStringBuilder<std::string> sb(output);
+  JsonWriter<DynamicStringBuilder<std::string> > writer(sb);
+  writer.writeFloat(input);
+  REQUIRE(writer.bytesWritten() == output.size());
+  CHECK(expected == output);
 }
 
 TEST_CASE("JsonWriter::writeFloat()") {
-  SECTION("NaN") {
-    check("NaN", std::numeric_limits<double>::signaling_NaN());
+  SECTION("Pi") {
+    check(3.14159265359, "3.141592654");
   }
 
-  SECTION("PositiveInfinity") {
-    check("Infinity", std::numeric_limits<double>::infinity());
+  SECTION("Signaling NaN") {
+    double nan = std::numeric_limits<double>::signaling_NaN();
+    check(nan, "NaN");
   }
 
-  SECTION("NegativeInfinity") {
-    check("-Infinity", -std::numeric_limits<double>::infinity());
+  SECTION("Quiet NaN") {
+    double nan = std::numeric_limits<double>::quiet_NaN();
+    check(nan, "NaN");
+  }
+
+  SECTION("Infinity") {
+    double inf = std::numeric_limits<double>::infinity();
+    check(inf, "Infinity");
+    check(-inf, "-Infinity");
   }
 
   SECTION("Zero") {
-    check("0.00", 0);
+    check(0.0, "0");
+    check(-0.0, "0");
   }
 
-  SECTION("ZeroDigits_Rounding") {
-    check("10", 9.5, 0);
+  SECTION("Espilon") {
+    check(2.2250738585072014E-308, "2.225073859e-308");
+    check(-2.2250738585072014E-308, "-2.225073859e-308");
   }
 
-  SECTION("ZeroDigits_NoRounding") {
-    check("9", 9.4, 0);
+  SECTION("Max double") {
+    check(1.7976931348623157E+308, "1.797693135e308");
+    check(-1.7976931348623157E+308, "-1.797693135e308");
   }
 
-  SECTION("OneDigit_Rounding") {
-    check("10.0", 9.95, 1);
+  SECTION("Big exponent") {
+    // this test increases coverage of normalize()
+    check(1e255, "1e255");
+    check(1e-255, "1e-255");
   }
 
-  SECTION("OneDigit_NoRounding") {
-    check("9.9", 9.94, 1);
+  SECTION("Exponentation when <= 1e-5") {
+    check(1e-4, "0.0001");
+    check(1e-5, "1e-5");
+
+    check(-1e-4, "-0.0001");
+    check(-1e-5, "-1e-5");
   }
 
-  SECTION("TwoDigits_Rounding") {
-    check("10.00", 9.995, 2);
+  SECTION("Exponentation when >= 1e7") {
+    check(9999999.999, "9999999.999");
+    check(10000000, "1e7");
+
+    check(-9999999.999, "-9999999.999");
+    check(-10000000, "-1e7");
   }
 
-  SECTION("TwoDigits_NoRounding") {
-    check("9.99", 9.994, 2);
+  SECTION("Rounding when too many decimals") {
+    check(0.000099999999999, "0.0001");
+    check(0.0000099999999999, "1e-5");
   }
 
-  SECTION("ThreeDigits_Rounding") {
-    check("10.000", 9.9995, 3);
+  SECTION("9 decimal places") {
+    check(0.100000001, "0.100000001");
+    check(0.999999999, "0.999999999");
+
+    check(9.000000001, "9.000000001");
+    check(9.999999999, "9.999999999");
   }
 
-  SECTION("ThreeDigits_NoRounding") {
-    check("9.999", 9.9994, 3);
-  }
+  SECTION("10 decimal places") {
+    check(0.1000000001, "0.1");
+    check(0.9999999999, "1");
 
-  SECTION("FourDigits_Rounding") {
-    check("10.0000", 9.99995, 4);
-  }
-
-  SECTION("FourDigits_NoRounding") {
-    check("9.9999", 9.99994, 4);
-  }
-
-  SECTION("FiveDigits_Rounding") {
-    check("10.00000", 9.999995, 5);
-  }
-
-  SECTION("FiveDigits_NoRounding") {
-    check("9.99999", 9.999994, 5);
+    check(9.0000000001, "9");
+    check(9.9999999999, "10");
   }
 }

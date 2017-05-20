@@ -117,7 +117,7 @@ inline bool JsonVariant::variantIsInteger() const {
 inline bool JsonVariant::variantIsFloat() const {
   using namespace Internals;
 
-  return _type >= JSON_FLOAT_0_DECIMALS ||
+  return _type == JSON_FLOAT || _type == JSON_POSITIVE_INTEGER || _type == JSON_NEGATIVE_INTEGER || 
          (_type == JSON_UNPARSED && Polyfills::isFloat(_content.asString));
 }
 

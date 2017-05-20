@@ -19,44 +19,37 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(1U == _array.size());
   }
 
-  SECTION("StoreInteger") {
+  SECTION("int") {
     _array[0] = 123;
     REQUIRE(123 == _array[0].as<int>());
     REQUIRE(true == _array[0].is<int>());
-    REQUIRE(false == _array[0].is<double>());
+    REQUIRE(false == _array[0].is<bool>());
   }
 
 #if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
-  SECTION("StoreLongLong") {
+  SECTION("long long") {
     _array[0] = 9223372036854775807;
     REQUIRE(9223372036854775807 == _array[0].as<long long>());
     REQUIRE(true == _array[0].is<int>());
-    REQUIRE(false == _array[0].is<double>());
+    REQUIRE(false == _array[0].is<bool>());
   }
 #endif
 
-  SECTION("StoreDouble") {
+  SECTION("double") {
     _array[0] = 123.45;
     REQUIRE(123.45 == _array[0].as<double>());
     REQUIRE(true == _array[0].is<double>());
     REQUIRE(false == _array[0].is<int>());
   }
 
-  SECTION("StoreDoubleWithDecimals") {
-    _array[0].set(123.45, 2);
-    REQUIRE(123.45 == _array[0].as<double>());
-    REQUIRE(true == _array[0].is<double>());
-    REQUIRE(false == _array[0].is<int>());
-  }
-
-  SECTION("StoreBoolean") {
+  SECTION("bool") {
     _array[0] = true;
     REQUIRE(true == _array[0].as<bool>());
     REQUIRE(true == _array[0].is<bool>());
     REQUIRE(false == _array[0].is<int>());
   }
 
-  SECTION("StoreString") {
+  SECTION("const char*") {
     const char* str = "hello";
 
     _array[0] = str;
@@ -66,7 +59,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(false == _array[0].is<int>());
   }
 
-  SECTION("StoreNestedArray") {
+  SECTION("nested array") {
     JsonArray& arr = _jsonBuffer.createArray();
 
     _array[0] = arr;
@@ -79,7 +72,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(false == _array[0].is<int>());
   }
 
-  SECTION("StoreNestedObject") {
+  SECTION("nested object") {
     JsonObject& obj = _jsonBuffer.createObject();
 
     _array[0] = obj;
@@ -92,7 +85,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(false == _array[0].is<int>());
   }
 
-  SECTION("StoreArraySubscript") {
+  SECTION("array subscript") {
     JsonArray& arr = _jsonBuffer.createArray();
     const char* str = "hello";
 
@@ -103,7 +96,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(str == _array[0]);
   }
 
-  SECTION("StoreObjectSubscript") {
+  SECTION("object subscript") {
     JsonObject& obj = _jsonBuffer.createObject();
     const char* str = "hello";
 

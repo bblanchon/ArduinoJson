@@ -40,9 +40,9 @@ TEST_CASE("isFloat()") {
   }
 
   SECTION("Integer") {
-    REQUIRE_FALSE(isFloat("14"));
-    REQUIRE_FALSE(isFloat("-14"));
-    REQUIRE_FALSE(isFloat("+14"));
+    REQUIRE(isFloat("14"));
+    REQUIRE(isFloat("-14"));
+    REQUIRE(isFloat("+14"));
   }
 
   SECTION("ExponentMissing") {

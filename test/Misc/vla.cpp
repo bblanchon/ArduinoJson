@@ -214,18 +214,6 @@ TEST_CASE("Variable Length Array") {
     REQUIRE(std::string("world") == obj["hello"]);
   }
 
-  SECTION("JsonObject_Set_Key_WithDecimals") {
-    int i = 16;
-    char vla[i];
-    strcpy(vla, "hello");
-
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
-    obj.set(vla, 3.14, 2);
-
-    REQUIRE(3.14 == obj["hello"]);
-  }
-
   SECTION("JsonObject_Set_KeyAndValue") {
     int i = 16;
     char vla[i];

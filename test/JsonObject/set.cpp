@@ -24,31 +24,23 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(1 == _object.size());
   }
 
-  SECTION("StoreInteger") {
+  SECTION("int") {
     _object.set("hello", 123);
 
     REQUIRE(123 == _object["hello"].as<int>());
     REQUIRE(_object["hello"].is<int>());
-    REQUIRE_FALSE(_object["hello"].is<double>());
+    REQUIRE_FALSE(_object["hello"].is<bool>());
   }
 
-  SECTION("StoreDouble") {
+  SECTION("double") {
     _object.set("hello", 123.45);
 
     REQUIRE(123.45 == _object["hello"].as<double>());
     REQUIRE(_object["hello"].is<double>());
-    REQUIRE_FALSE(_object["hello"].is<long>());
+    REQUIRE_FALSE(_object["hello"].is<bool>());
   }
 
-  SECTION("StoreDoubleWithDigits") {
-    _object.set("hello", 123.45, 2);
-
-    REQUIRE(123.45 == _object["hello"].as<double>());
-    REQUIRE(_object["hello"].is<double>());
-    REQUIRE_FALSE(_object["hello"].is<long>());
-  }
-
-  SECTION("StoreBoolean") {
+  SECTION("bool") {
     _object.set("hello", true);
 
     REQUIRE(_object["hello"].as<bool>());
@@ -56,7 +48,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE_FALSE(_object["hello"].is<long>());
   }
 
-  SECTION("StoreString") {
+  SECTION("const char*") {
     _object.set("hello", "h3110");
 
     REQUIRE(std::string("h3110") == _object["hello"].as<const char*>());
@@ -64,7 +56,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE_FALSE(_object["hello"].is<long>());
   }
 
-  SECTION("StoreArray") {
+  SECTION("nested array") {
     JsonArray& arr = jb.createArray();
 
     _object.set("hello", arr);
@@ -74,7 +66,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE_FALSE(_object["hello"].is<JsonObject&>());
   }
 
-  SECTION("StoreObject") {
+  SECTION("nested object") {
     JsonObject& obj = jb.createObject();
 
     _object.set("hello", obj);
@@ -84,7 +76,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE_FALSE(_object["hello"].is<JsonArray&>());
   }
 
-  SECTION("StoreArraySubscript") {
+  SECTION("array subscript") {
     JsonArray& arr = jb.createArray();
     arr.add(42);
 
@@ -93,7 +85,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(42 == _object["a"]);
   }
 
-  SECTION("StoreObjectSubscript") {
+  SECTION("object subscript") {
     JsonObject& obj = jb.createObject();
     obj.set("x", 42);
 

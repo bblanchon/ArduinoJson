@@ -134,23 +134,25 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // TKey = const std::string&, const String&
   // TValue = float, double
   template <typename TValue, typename TString>
+  DEPRECATED("Second argument is not supported anymore")
   typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<TValue>::value &&
                                     !TypeTraits::IsArray<TString>::value,
                                 bool>::type
-  set(const TString& key, TValue value, uint8_t decimals) {
-    return set_impl<const TString&, const JsonVariant&>(
-        key, JsonVariant(value, decimals));
+      set(const TString& key, TValue value, uint8_t) {
+    return set_impl<const TString&, const JsonVariant&>(key,
+                                                        JsonVariant(value));
   }
   //
   // bool set(TKey, TValue, uint8_t decimals);
   // TKey = const char*, const char[N], const FlashStringHelper*
   // TValue = float, double
   template <typename TValue, typename TString>
+  DEPRECATED("Second argument is not supported anymore")
   typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<TValue>::value,
                                 bool>::type
-  set(const TString* key, TValue value, uint8_t decimals) {
-    return set_impl<const TString*, const JsonVariant&>(
-        key, JsonVariant(value, decimals));
+      set(const TString* key, TValue value, uint8_t) {
+    return set_impl<const TString*, const JsonVariant&>(key,
+                                                        JsonVariant(value));
   }
 
   // Gets the value associated with the specified key.

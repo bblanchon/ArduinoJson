@@ -93,8 +93,9 @@ class JsonObjectSubscript
   // bool set(TValue, uint8_t decimals);
   // TValue = float, double
   template <typename TValue>
-  FORCE_INLINE bool set(const TValue& value, uint8_t decimals) {
-    return _object.set(_key, value, decimals);
+  DEPRECATED("Second argument is not supported anymore")
+  FORCE_INLINE bool set(const TValue& value, uint8_t) {
+    return _object.set(_key, value);
   }
 
  private:

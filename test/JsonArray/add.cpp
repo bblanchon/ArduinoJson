@@ -17,28 +17,28 @@ TEST_CASE("JsonArray::add()") {
     REQUIRE(1U == _array.size());
   }
 
-  SECTION("StoreInteger") {
+  SECTION("int") {
     _array.add(123);
     REQUIRE(123 == _array[0].as<int>());
     REQUIRE(_array[0].is<int>());
-    REQUIRE_FALSE(_array[0].is<double>());
+    REQUIRE(_array[0].is<double>());
   }
 
-  SECTION("StoreDouble") {
+  SECTION("double") {
     _array.add(123.45);
     REQUIRE(123.45 == _array[0].as<double>());
     REQUIRE(_array[0].is<double>());
-    REQUIRE_FALSE(_array[0].is<int>());
+    REQUIRE_FALSE(_array[0].is<bool>());
   }
 
-  SECTION("StoreBoolean") {
+  SECTION("bool") {
     _array.add(true);
     REQUIRE(true == _array[0].as<bool>());
     REQUIRE(_array[0].is<bool>());
     REQUIRE_FALSE(_array[0].is<int>());
   }
 
-  SECTION("StoreString") {
+  SECTION("const char*") {
     const char* str = "hello";
     _array.add(str);
     REQUIRE(str == _array[0].as<const char*>());
@@ -46,7 +46,7 @@ TEST_CASE("JsonArray::add()") {
     REQUIRE_FALSE(_array[0].is<int>());
   }
 
-  SECTION("StoreNestedArray") {
+  SECTION("nested array") {
     JsonArray& arr = _jsonBuffer.createArray();
 
     _array.add(arr);
@@ -56,7 +56,7 @@ TEST_CASE("JsonArray::add()") {
     REQUIRE_FALSE(_array[0].is<int>());
   }
 
-  SECTION("StoreNestedObject") {
+  SECTION("nested object") {
     JsonObject& obj = _jsonBuffer.createObject();
 
     _array.add(obj);
@@ -66,7 +66,7 @@ TEST_CASE("JsonArray::add()") {
     REQUIRE_FALSE(_array[0].is<int>());
   }
 
-  SECTION("StoreArraySubscript") {
+  SECTION("array subscript") {
     const char* str = "hello";
     JsonArray& arr = _jsonBuffer.createArray();
     arr.add(str);
@@ -76,7 +76,7 @@ TEST_CASE("JsonArray::add()") {
     REQUIRE(str == _array[0]);
   }
 
-  SECTION("StoreObjectSubscript") {
+  SECTION("object subscript") {
     const char* str = "hello";
     JsonObject& obj = _jsonBuffer.createObject();
     obj["x"] = str;

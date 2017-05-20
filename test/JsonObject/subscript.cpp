@@ -23,24 +23,24 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(1 == _object.size());
   }
 
-  SECTION("StoreInteger") {
+  SECTION("int") {
     _object["hello"] = 123;
 
     REQUIRE(123 == _object["hello"].as<int>());
     REQUIRE(true == _object["hello"].is<int>());
-    REQUIRE(false == _object["hello"].is<double>());
+    REQUIRE(false == _object["hello"].is<bool>());
   }
 
-  SECTION("StoreVolatileInteger") {  // issue #415
+  SECTION("volatile int") {  // issue #415
     volatile int i = 123;
     _object["hello"] = i;
 
     REQUIRE(123 == _object["hello"].as<int>());
     REQUIRE(true == _object["hello"].is<int>());
-    REQUIRE(false == _object["hello"].is<double>());
+    REQUIRE(false == _object["hello"].is<bool>());
   }
 
-  SECTION("StoreDouble") {
+  SECTION("double") {
     _object["hello"] = 123.45;
 
     REQUIRE(true == _object["hello"].is<double>());
@@ -48,15 +48,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(123.45 == _object["hello"].as<double>());
   }
 
-  SECTION("StoreDoubleWithDigits") {
-    _object["hello"].set(123.45, 2);
-
-    REQUIRE(true == _object["hello"].is<double>());
-    REQUIRE(false == _object["hello"].is<long>());
-    REQUIRE(123.45 == _object["hello"].as<double>());
-  }
-
-  SECTION("StoreBoolean") {
+  SECTION("bool") {
     _object["hello"] = true;
 
     REQUIRE(true == _object["hello"].is<bool>());
@@ -64,7 +56,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(true == _object["hello"].as<bool>());
   }
 
-  SECTION("StoreString") {
+  SECTION("const char*") {
     _object["hello"] = "h3110";
 
     REQUIRE(true == _object["hello"].is<const char*>());
@@ -74,7 +66,7 @@ TEST_CASE("JsonObject::operator[]") {
             _object["hello"].as<char*>());  // <- short hand
   }
 
-  SECTION("StoreArray") {
+  SECTION("array") {
     JsonArray& arr = _jsonBuffer.createArray();
 
     _object["hello"] = arr;
@@ -90,7 +82,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == _object["hello"].is<JsonObject&>());
   }
 
-  SECTION("StoreObject") {
+  SECTION("object") {
     JsonObject& obj = _jsonBuffer.createObject();
 
     _object["hello"] = obj;
@@ -106,7 +98,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == _object["hello"].is<JsonArray&>());
   }
 
-  SECTION("StoreArraySubscript") {
+  SECTION("array subscript") {
     JsonArray& arr = _jsonBuffer.createArray();
     arr.add(42);
 
@@ -115,7 +107,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(42 == _object["a"]);
   }
 
-  SECTION("StoreObjectSubscript") {
+  SECTION("object subscript") {
     JsonObject& obj = _jsonBuffer.createObject();
     obj.set("x", 42);
 

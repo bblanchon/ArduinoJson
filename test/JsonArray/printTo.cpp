@@ -52,29 +52,9 @@ TEST_CASE("JsonArray::printTo()") {
     check(array, "[\"hello\",\"world\"]");
   }
 
-  SECTION("OneDoubleDefaultDigits") {
-    array.add(3.14159265358979323846);
-    check(array, "[3.14]");
-  }
-
-  SECTION("OneDoubleFourDigits") {
-    array.add(3.14159265358979323846, 4);
-    check(array, "[3.1416]");
-  }
-
-  SECTION("OneDoubleFourDigits_AlternativeSyntax") {
-    array.add(double_with_n_digits(3.14159265358979323846, 4));
-    check(array, "[3.1416]");
-  }
-
-  SECTION("OneFloatDefaultDigits") {
-    array.add(3.14159f);
-    check(array, "[3.14]");
-  }
-
-  SECTION("OneFloatFourDigits") {
-    array.add(3.14159f, 4);
-    check(array, "[3.1416]");
+  SECTION("One double") {
+    array.add(3.1415927);
+    check(array, "[3.1415927]");
   }
 
   SECTION("OneInteger") {

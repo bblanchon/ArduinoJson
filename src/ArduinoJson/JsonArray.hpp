@@ -76,8 +76,9 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // bool add(TValue value, uint8_t decimals);
   // TValue = float, double
   template <typename T>
-  bool add(T value, uint8_t decimals) {
-    return add_impl<const JsonVariant &>(JsonVariant(value, decimals));
+  DEPRECATED("Second argument is not supported anymore")
+  bool add(T value, uint8_t) {
+    return add_impl<const JsonVariant &>(JsonVariant(value));
   }
 
   // Sets the value at specified index.

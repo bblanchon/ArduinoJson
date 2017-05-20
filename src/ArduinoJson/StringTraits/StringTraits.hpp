@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <string.h>
 #include "../Configuration.hpp"
 #include "../TypeTraits/EnableIf.hpp"
 #include "../TypeTraits/IsBaseOf.hpp"

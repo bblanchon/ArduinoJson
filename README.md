@@ -68,8 +68,8 @@ root["sensor"] = "gps";
 root["time"] = 1351824120;
 
 JsonArray& data = root.createNestedArray("data");
-data.add(48.756080, 6);  // 6 is the number of decimals to print
-data.add(2.302038, 6);   // if not specified, 2 digits are printed
+data.add(48.756080);
+data.add(2.302038);
 
 root.printTo(Serial);
 // This prints:

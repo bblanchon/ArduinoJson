@@ -24,7 +24,7 @@ TEST_CASE("JsonVariant::as()") {
 
   SECTION("DoubleAsString") {
     JsonVariant variant = 4.2;
-    REQUIRE(std::string("4.20") == variant.as<std::string>());
+    REQUIRE(std::string("4.2") == variant.as<std::string>());
   }
 
   SECTION("DoubleAsLong") {

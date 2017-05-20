@@ -29,48 +29,8 @@ TEST_CASE("JsonVariant::printTo()") {
     check("hello", "\"hello\"");
   }
 
-  SECTION("DoubleZero") {
-    check(0.0, "0.00");
-  }
-
-  SECTION("DoubleDefaultDigits") {
-    check(3.14159265358979323846, "3.14");
-  }
-
-  SECTION("DoubleFourDigits") {
-    check(JsonVariant(3.14159265358979323846, 4), "3.1416");
-  }
-
-  SECTION("Infinity") {
-    check(std::numeric_limits<double>::infinity(), "Infinity");
-  }
-
-  SECTION("MinusInfinity") {
-    check(-std::numeric_limits<double>::infinity(), "-Infinity");
-  }
-
-  SECTION("SignalingNaN") {
-    check(std::numeric_limits<double>::signaling_NaN(), "NaN");
-  }
-
-  SECTION("QuietNaN") {
-    check(std::numeric_limits<double>::quiet_NaN(), "NaN");
-  }
-
-  SECTION("VeryBigPositiveDouble") {
-    check(JsonVariant(3.14159265358979323846e42, 4), "3.1416e42");
-  }
-
-  SECTION("VeryBigNegativeDouble") {
-    check(JsonVariant(-3.14159265358979323846e42, 4), "-3.1416e42");
-  }
-
-  SECTION("VerySmallPositiveDouble") {
-    check(JsonVariant(3.14159265358979323846e-42, 4), "3.1416e-42");
-  }
-
-  SECTION("VerySmallNegativeDouble") {
-    check(JsonVariant(-3.14159265358979323846e-42, 4), "-3.1416e-42");
+  SECTION("Double") {
+    check(3.1415927, "3.1415927");
   }
 
   SECTION("Integer") {

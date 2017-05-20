@@ -56,16 +56,22 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   }
 
   // Create a JsonVariant containing a floating point value.
-  // The second argument specifies the number of decimal digits to write in
-  // the JSON string.
-  // JsonVariant(double value, uint8_t decimals);
-  // JsonVariant(float value, uint8_t decimals);
+  // JsonVariant(double value);
+  // JsonVariant(float value);
   template <typename T>
-  JsonVariant(T value, uint8_t decimals = 2,
+  JsonVariant(T value, typename TypeTraits::EnableIf<
+                           TypeTraits::IsFloatingPoint<T>::value>::type * = 0) {
+    using namespace Internals;
+    _type = JSON_FLOAT;
+    _content.asFloat = static_cast<JsonFloat>(value);
+  }
+  template <typename T>
+  DEPRECATED("Second argument is not supported anymore")
+  JsonVariant(T value, uint8_t,
               typename TypeTraits::EnableIf<
                   TypeTraits::IsFloatingPoint<T>::value>::type * = 0) {
     using namespace Internals;
-    _type = static_cast<JsonVariantType>(JSON_FLOAT_0_DECIMALS + decimals);
+    _type = JSON_FLOAT;
     _content.asFloat = static_cast<JsonFloat>(value);
   }
 
@@ -342,11 +348,13 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   Internals::JsonVariantContent _content;
 };
 
-inline JsonVariant float_with_n_digits(float value, uint8_t digits) {
-  return JsonVariant(value, digits);
+DEPRECATED("Decimal places are ignored, use the float value instead")
+inline JsonVariant float_with_n_digits(float value, uint8_t) {
+  return JsonVariant(value);
 }
 
-inline JsonVariant double_with_n_digits(double value, uint8_t digits) {
-  return JsonVariant(value, digits);
+DEPRECATED("Decimal places are ignored, use the double value instead")
+inline JsonVariant double_with_n_digits(double value, uint8_t) {
+  return JsonVariant(value);
 }
 }

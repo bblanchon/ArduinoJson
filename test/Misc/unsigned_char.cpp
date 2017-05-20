@@ -166,16 +166,6 @@ TEST_CASE("unsigned char string") {
     REQUIRE(std::string("world") == obj["hello"]);
   }
 
-  SECTION("JsonObject::set() key with decimals") {
-    unsigned char key[] = "hello";
-
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
-    obj.set(key, 3.14, 2);
-
-    REQUIRE(3.14 == obj["hello"]);
-  }
-
   SECTION("JsonObject::set key&value") {
     unsigned char key[] = "world";
 

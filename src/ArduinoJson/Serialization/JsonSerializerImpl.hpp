@@ -69,7 +69,8 @@ template <typename Writer>
 inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
     const JsonVariant& variant, Writer& writer) {
   switch (variant._type) {
-    case JSON_UNDEFINED:
+    case JSON_FLOAT:
+      writer.writeFloat(variant._content.asFloat);
       return;
 
     case JSON_ARRAY:
@@ -98,9 +99,7 @@ inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
       writer.writeBoolean(variant._content.asInteger != 0);
       return;
 
-    default:
-      uint8_t decimals =
-          static_cast<uint8_t>(variant._type - JSON_FLOAT_0_DECIMALS);
-      writer.writeFloat(variant._content.asFloat, decimals);
+    default:  // JSON_UNDEFINED
+      return;
   }
 }

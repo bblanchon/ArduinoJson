@@ -12,6 +12,17 @@
 #define ARDUINOJSON_ENABLE_DEPRECATED 1
 #endif
 
+// control the exponentiation threshold for big numbers
+// CAUTION: cannot be more that 1e9 !!!!
+#ifndef ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD
+#define ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD 1e7
+#endif
+
+// control the exponentiation threshold for small numbers
+#ifndef ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD
+#define ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD 1e-5
+#endif
+
 #ifdef ARDUINO  // assume this is an embedded platform
 
 // store using float instead of double to reduce the memory usage (issue #134)
