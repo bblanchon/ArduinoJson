@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.10.0
+-------
 
 * Removed configurable number of decimal places (issues #288, #427 and #506)
 * Changed exponentation thresholds to `1e7` and `1e-5` (issues #288, #427 and #506)
@@ -86,7 +86,6 @@ v5.8.0
 
 ### BREAKING CHANGES :warning:
 
-
 `JsonBuffer::parseObject()` and  `JsonBuffer::parseArray()` have been pulled down to the derived classes `DynamicJsonBuffer` and `StaticJsonBufferBase`.
 
 This means that if you have code like:
@@ -102,6 +101,7 @@ void myFunction(DynamicJsonBuffer& jsonBuffer);
 void myFunction(StaticJsonBufferBase& jsonBuffer);
 template<typename TJsonBuffer> void myFunction(TJsonBuffer& jsonBuffer);
 ```
+
 
 v5.7.3
 ------
@@ -135,7 +135,6 @@ v5.7.0
 * Increased default nesting limit to 50 when compiled for a computer (issue #349)
 
 ### BREAKING CHANGES :warning:
-
 
 The non-template functions `JsonObject::get()` and `JsonArray.get()` have been removed. This means that you need to explicitely tell the type you expect in return.
 
