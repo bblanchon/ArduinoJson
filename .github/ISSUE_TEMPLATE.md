@@ -1,11 +1,14 @@
 <!--
-Thanks for using ArduinoJson :-)
-
-Before opening an issue, please make sure you've read these:
+Before opening an issue, please read the FAQ:
 https://bblanchon.github.io/ArduinoJson/faq/
-https://bblanchon.github.io/ArduinoJson/doc/pitfalls/
 
-Next, make sure you provide all the relevant information: platform, code snippet, and error messages.
+Please provide all the relevant information:
+* good title
+* short description of the problem
+* target platform
+* compiler model and version
+* MVCE (https://stackoverflow.com/help/mcve)
+* compiler output
 
-Please be concise!
+Good questions get fast answers!
 -->

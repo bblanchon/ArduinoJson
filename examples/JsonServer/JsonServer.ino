@@ -2,9 +2,9 @@
 // Created by Benoit Blanchon.
 // Heavily inspired by "Web Server" from David A. Mellis and Tom Igoe
 
-#include <SPI.h>
-#include <Ethernet.h>
 #include <ArduinoJson.h>
+#include <Ethernet.h>
+#include <SPI.h>
 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 IPAddress ip(192, 168, 0, 177);
@@ -64,6 +64,8 @@ void loop() {
   if (client) {
     bool success = readRequest(client);
     if (success) {
+      // Use https://bblanchon.github.io/ArduinoJson/assistant/ to
+      // compute the right size for the buffer
       StaticJsonBuffer<500> jsonBuffer;
       JsonObject& json = prepareResponse(jsonBuffer);
       writeResponse(client, json);

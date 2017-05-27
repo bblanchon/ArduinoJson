@@ -17,13 +17,13 @@ void setup() {
   //
   // Inside the brackets, 200 is the size of the pool in bytes.
   // If the JSON object is more complex, you need to increase that value.
+  // See https://bblanchon.github.io/ArduinoJson/assistant/
   StaticJsonBuffer<200> jsonBuffer;
 
   // StaticJsonBuffer allocates memory on the stack, it can be
   // replaced by DynamicJsonBuffer which allocates in the heap.
-  // It's simpler but less efficient.
   //
-  // DynamicJsonBuffer  jsonBuffer;
+  // DynamicJsonBuffer  jsonBuffer(200);
 
   // Create the root of the object tree.
   //

@@ -58,6 +58,8 @@ double longitude   = root["data"][1];
 
 [See JsonParserExample.ino](examples/JsonParserExample/JsonParserExample.ino)
 
+Use [ArduinoJson Assistant](https://bblanchon.github.io/ArduinoJson/assistant/) to compute the buffer size.
+
 #### Encoding / Generating
 
 ```c++
@@ -77,6 +79,8 @@ root.printTo(Serial);
 ```
 
 [See JsonGeneratorExample.ino](examples/JsonGeneratorExample/JsonGeneratorExample.ino)
+
+Use [ArduinoJson Assistant](https://bblanchon.github.io/ArduinoJson/assistant/) to compute the buffer size.
 
 
 Documentation

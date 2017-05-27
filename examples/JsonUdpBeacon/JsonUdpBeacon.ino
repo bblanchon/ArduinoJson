@@ -49,6 +49,8 @@ void setup() {
 void loop() {
   delay(1000);
 
+  // Use https://bblanchon.github.io/ArduinoJson/assistant/ to
+  // compute the right size for the buffer
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& json = buildJson(jsonBuffer);
   sendJson(json);

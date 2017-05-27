@@ -135,7 +135,7 @@ bool skipResponseHeaders() {
 // }
 bool readReponseContent(struct UserData* userData) {
   // Compute optimal size of the JSON buffer according to what we need to parse.
-  // This is only required if you use StaticJsonBuffer.
+  // See https://bblanchon.github.io/ArduinoJson/assistant/
   const size_t BUFFER_SIZE =
       JSON_OBJECT_SIZE(8)    // the root object has 8 elements
       + JSON_OBJECT_SIZE(5)  // the "address" object has 5 elements
