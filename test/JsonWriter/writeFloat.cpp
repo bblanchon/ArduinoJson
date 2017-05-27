@@ -84,6 +84,7 @@ TEST_CASE("JsonWriter::writeFloat()") {
   SECTION("Rounding when too many decimals") {
     check(0.000099999999999, "0.0001");
     check(0.0000099999999999, "1e-5");
+    check(0.9999999996, "1");
   }
 
   SECTION("9 decimal places") {

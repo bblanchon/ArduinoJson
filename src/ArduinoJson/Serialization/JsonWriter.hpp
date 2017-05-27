@@ -38,18 +38,34 @@ class JsonWriter {
   // Returns the number of bytes sent to the Print implementation.
   // This is very handy for implementations of printTo() that must return the
   // number of bytes written.
-  size_t bytesWritten() const { return _length; }
+  size_t bytesWritten() const {
+    return _length;
+  }
 
-  void beginArray() { writeRaw('['); }
-  void endArray() { writeRaw(']'); }
+  void beginArray() {
+    writeRaw('[');
+  }
+  void endArray() {
+    writeRaw(']');
+  }
 
-  void beginObject() { writeRaw('{'); }
-  void endObject() { writeRaw('}'); }
+  void beginObject() {
+    writeRaw('{');
+  }
+  void endObject() {
+    writeRaw('}');
+  }
 
-  void writeColon() { writeRaw(':'); }
-  void writeComma() { writeRaw(','); }
+  void writeColon() {
+    writeRaw(':');
+  }
+  void writeComma() {
+    writeRaw(',');
+  }
 
-  void writeBoolean(bool value) { writeRaw(value ? "true" : "false"); }
+  void writeBoolean(bool value) {
+    writeRaw(value ? "true" : "false");
+  }
 
   void writeString(const char *value) {
     if (!value) {
@@ -106,7 +122,7 @@ class JsonWriter {
 
     *ptr = 0;
     do {
-      *--ptr = static_cast<char>(value % 10 + '0');
+      *--ptr = char(value % 10 + '0');
       value = UInt(value / 10);
     } while (value);
 
@@ -137,8 +153,12 @@ class JsonWriter {
     writeRaw(ptr);
   }
 
-  void writeRaw(const char *s) { _length += _sink.print(s); }
-  void writeRaw(char c) { _length += _sink.print(c); }
+  void writeRaw(const char *s) {
+    _length += _sink.print(s);
+  }
+  void writeRaw(char c) {
+    _length += _sink.print(c);
+  }
 
  protected:
   Print &_sink;
@@ -154,19 +174,19 @@ class JsonWriter {
     integralPart = uint32_t(value);
     JsonFloat remainder = value - JsonFloat(integralPart);
 
-    decimalPart = uint32_t(remainder * maxDecimalPart);
-    remainder = remainder * maxDecimalPart - JsonFloat(decimalPart);
+    remainder *= maxDecimalPart;
+    decimalPart = uint32_t(remainder);
+    remainder = remainder - JsonFloat(decimalPart);
 
-    // rounding
-    if (remainder > 0.5) {
-      decimalPart++;
-      if (decimalPart >= maxDecimalPart) {
-        decimalPart -= maxDecimalPart;
-        integralPart++;
-        if (powersOf10 && integralPart >= 10) {
-          powersOf10++;
-          integralPart /= 10;
-        }
+    // rounding:
+    // increment by 1 if remainder >= 0.5
+    decimalPart += uint32_t(remainder * 2);
+    if (decimalPart >= maxDecimalPart) {
+      decimalPart = 0;
+      integralPart++;
+      if (powersOf10 && integralPart >= 10) {
+        powersOf10++;
+        integralPart = 1;
       }
     }
   }
