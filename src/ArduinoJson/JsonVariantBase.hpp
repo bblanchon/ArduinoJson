@@ -78,8 +78,8 @@ class JsonVariantBase : public Internals::JsonPrintable<TImpl> {
   // Mimics an array.
   // Returns the element at specified index if the variant is an array.
   // Returns JsonVariant::invalid() if the variant is not an array.
-  FORCE_INLINE const JsonArraySubscript operator[](int index) const;
-  FORCE_INLINE JsonArraySubscript operator[](int index);
+  FORCE_INLINE const JsonArraySubscript operator[](size_t index) const;
+  FORCE_INLINE JsonArraySubscript operator[](size_t index);
 
   // Mimics an object.
   // Returns the value associated with the specified key if the variant is

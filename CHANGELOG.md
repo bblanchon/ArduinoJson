@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed IntelliSense errors in Visual Micro (issue #483)
+
 v5.10.0
 -------
 

@@ -20,9 +20,8 @@ inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::eat(
 }
 
 template <typename TReader, typename TWriter>
-inline bool
-ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingTo(
-    JsonVariant *destination) {
+inline bool ArduinoJson::Internals::JsonParser<
+    TReader, TWriter>::parseAnythingTo(JsonVariant *destination) {
   if (_nestingLimit == 0) return false;
   _nestingLimit--;
   bool success = parseAnythingToUnsafe(destination);
@@ -31,9 +30,8 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingTo(
 }
 
 template <typename TReader, typename TWriter>
-inline bool
-ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingToUnsafe(
-    JsonVariant *destination) {
+inline bool ArduinoJson::Internals::JsonParser<
+    TReader, TWriter>::parseAnythingToUnsafe(JsonVariant *destination) {
   skipSpacesAndComments(_reader);
 
   switch (_reader.current()) {

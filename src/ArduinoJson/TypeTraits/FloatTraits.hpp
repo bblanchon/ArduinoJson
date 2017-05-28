@@ -43,11 +43,13 @@ struct FloatTraits<T, 8 /*64bits*/> {
   }
 
   static T nan() {
-    return Polyfills::nan<T>();
+    uint64_t x = uint64_t(0x7ff8) << 48;
+    return *reinterpret_cast<T*>(&x);
   }
 
   static T inf() {
-    return Polyfills::inf<T>();
+    uint64_t x = uint64_t(0x7ff0) << 48;
+    return *reinterpret_cast<T*>(&x);
   }
 };
 #endif
@@ -73,11 +75,13 @@ struct FloatTraits<T, 4 /*32bits*/> {
   }
 
   static T nan() {
-    return Polyfills::nan<T>();
+    uint32_t x = 0x7fc00000;
+    return *reinterpret_cast<T*>(&x);
   }
 
   static T inf() {
-    return Polyfills::inf<T>();
+    uint32_t x = 0x7f800000;
+    return *reinterpret_cast<T*>(&x);
   }
 };
 }

@@ -107,13 +107,13 @@ inline const JsonArraySubscript JsonArray::operator[](size_t index) const {
 }
 
 template <typename TImplem>
-inline JsonArraySubscript JsonVariantBase<TImplem>::operator[](int index) {
+inline JsonArraySubscript JsonVariantBase<TImplem>::operator[](size_t index) {
   return as<JsonArray>()[index];
 }
 
 template <typename TImplem>
 inline const JsonArraySubscript JsonVariantBase<TImplem>::operator[](
-    int index) const {
+    size_t index) const {
   return as<JsonArray>()[index];
 }
 

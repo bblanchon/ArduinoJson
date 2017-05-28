@@ -98,7 +98,7 @@ class DynamicJsonBufferBase
    private:
     DynamicJsonBufferBase* _parent;
     char* _start;
-    int _length;
+    size_t _length;
   };
 
   String startString() {

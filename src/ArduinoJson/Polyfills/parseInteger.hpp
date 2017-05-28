@@ -30,11 +30,11 @@ T parseInteger(const char *s) {
   }
 
   while (isdigit(*s)) {
-    result = static_cast<T>(result * 10 + (*s - '0'));
+    result = T(result * 10 + T(*s - '0'));
     s++;
   }
 
-  return negative_result ? static_cast<T>(result * -1) : result;
+  return negative_result ? T(~result + 1) : result;
 }
 }
 }

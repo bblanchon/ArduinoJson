@@ -23,12 +23,12 @@ struct CharPointerTraits {
       ++_ptr;
     }
 
-    TChar current() const {
-      return _ptr[0];
+    char current() const {
+      return char(_ptr[0]);
     }
 
-    TChar next() const {
-      return _ptr[1];
+    char next() const {
+      return char(_ptr[1]);
     }
   };
 

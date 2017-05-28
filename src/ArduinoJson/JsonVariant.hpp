@@ -52,7 +52,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   JsonVariant(bool value) {
     using namespace Internals;
     _type = JSON_BOOLEAN;
-    _content.asInteger = static_cast<JsonInteger>(value);
+    _content.asInteger = static_cast<JsonUInt>(value);
   }
 
   // Create a JsonVariant containing a floating point value.

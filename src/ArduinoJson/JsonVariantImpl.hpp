@@ -56,16 +56,16 @@ inline T JsonVariant::variantAsInteger() const {
       return 0;
     case JSON_POSITIVE_INTEGER:
     case JSON_BOOLEAN:
-      return static_cast<T>(_content.asInteger);
+      return T(_content.asInteger);
     case JSON_NEGATIVE_INTEGER:
-      return static_cast<T>(_content.asInteger * -1);
+      return T(~_content.asInteger + 1);
     case JSON_STRING:
     case JSON_UNPARSED:
       if (!_content.asString) return 0;
       if (!strcmp("true", _content.asString)) return 1;
       return Polyfills::parseInteger<T>(_content.asString);
     default:
-      return static_cast<T>(_content.asFloat);
+      return T(_content.asFloat);
   }
 }
 
@@ -117,7 +117,8 @@ inline bool JsonVariant::variantIsInteger() const {
 inline bool JsonVariant::variantIsFloat() const {
   using namespace Internals;
 
-  return _type == JSON_FLOAT || _type == JSON_POSITIVE_INTEGER || _type == JSON_NEGATIVE_INTEGER || 
+  return _type == JSON_FLOAT || _type == JSON_POSITIVE_INTEGER ||
+         _type == JSON_NEGATIVE_INTEGER ||
          (_type == JSON_UNPARSED && Polyfills::isFloat(_content.asString));
 }
 

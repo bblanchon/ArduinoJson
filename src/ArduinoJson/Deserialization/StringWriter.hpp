@@ -17,8 +17,8 @@ class StringWriter {
    public:
     String(TChar** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
 
-    void append(TChar c) {
-      *(*_writePtr)++ = c;
+    void append(char c) {
+      *(*_writePtr)++ = TChar(c);
     }
 
     const char* c_str() const {

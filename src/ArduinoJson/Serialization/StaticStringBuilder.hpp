@@ -28,7 +28,7 @@ class StaticStringBuilder {
     char *begin = p;
     while (p < end && *s) *p++ = *s++;
     *p = '\0';
-    return p - begin;
+    return size_t(p - begin);
   }
 
  private:
