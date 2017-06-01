@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>  // for size_t
+#include "../Configuration.hpp"
 #include "../Polyfills/math.hpp"
 
 namespace ArduinoJson {
@@ -17,7 +18,7 @@ namespace TypeTraits {
 template <typename T, size_t = sizeof(T)>
 struct FloatTraits {};
 
-#if !defined(__SIZEOF_DOUBLE__) || __SIZEOF_DOUBLE__ >= 8
+#if ARDUINOJSON_DOUBLE_IS_64BITS
 template <typename T>
 struct FloatTraits<T, 8 /*64bits*/> {
   typedef int64_t mantissa_type;

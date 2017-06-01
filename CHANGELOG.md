@@ -5,12 +5,15 @@ HEAD
 ----
 
 * Fixed IntelliSense errors in Visual Micro (issue #483)
+* Fixed compilation in IAR Embedded Workbench (issue #515)
+* Added `ARDUINOJSON_DOUBLE_IS_64BITS`
+* Added `ARDUINOJSON_EMBEDDED_MODE`
 
 v5.10.0
 -------
 
 * Removed configurable number of decimal places (issues #288, #427 and #506)
-* Changed exponentation thresholds to `1e7` and `1e-5` (issues #288, #427 and #506)
+* Changed exponentiation thresholds to `1e7` and `1e-5` (issues #288, #427 and #506)
 * `JsonVariant::is<double>()` now returns `true` for integers
 * Fixed error `IsBaseOf is not a member of ArduinoJson::TypeTraits` (issue #495)
 * Fixed error `forming reference to reference` (issue #495)
