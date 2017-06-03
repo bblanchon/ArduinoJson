@@ -6,6 +6,7 @@ HEAD
 
 * Fixed IntelliSense errors in Visual Micro (issue #483)
 * Fixed compilation in IAR Embedded Workbench (issue #515)
+* Fixed reading "true" as a float (issue #516)
 * Added `ARDUINOJSON_DOUBLE_IS_64BITS`
 * Added `ARDUINOJSON_EMBEDDED_MODE`
 

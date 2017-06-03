@@ -61,8 +61,6 @@ inline T JsonVariant::variantAsInteger() const {
       return T(~_content.asInteger + 1);
     case JSON_STRING:
     case JSON_UNPARSED:
-      if (!_content.asString) return 0;
-      if (!strcmp("true", _content.asString)) return 1;
       return Polyfills::parseInteger<T>(_content.asString);
     default:
       return T(_content.asFloat);

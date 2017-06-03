@@ -16,7 +16,9 @@ namespace ArduinoJson {
 namespace Polyfills {
 template <typename T>
 T parseInteger(const char *s) {
-  if (!s) return 0;
+  if (!s) return 0;  // NULL
+
+  if (*s == 't') return 1;  // "true"
 
   T result = 0;
   bool negative_result = false;

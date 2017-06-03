@@ -101,6 +101,11 @@ TEST_CASE("parseFloat<float>()") {
     checkInf<float>("+inf", false);
     checkInf<float>("-inf", true);
   }
+
+  SECTION("Boolean") {
+    check<float>("false", 0.0f);
+    check<float>("true", 1.0f);
+  }
 }
 
 TEST_CASE("parseFloat<double>()") {
@@ -166,5 +171,10 @@ TEST_CASE("parseFloat<double>()") {
   SECTION("NaN") {
     checkNaN<double>("NaN");
     checkNaN<double>("nan");
+  }
+
+  SECTION("Boolean") {
+    check<double>("false", 0.0);
+    check<double>("true", 1.0);
   }
 }
