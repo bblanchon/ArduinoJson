@@ -71,6 +71,9 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
     return String(this);
   }
 
+  StaticJsonBufferBase(const StaticJsonBufferBase&) = delete;
+  StaticJsonBufferBase& operator=(const StaticJsonBufferBase&) = delete;
+
  private:
   void alignNextAlloc() {
     _size = round_size_up(_size);
