@@ -17,52 +17,39 @@ static bool isAligned(void *ptr) {
 TEST_CASE("StaticJsonBuffer::alloc()") {
   StaticJsonBuffer<64> buffer;
 
-  SECTION("CapacityMatchTemplateParameter") {
-    REQUIRE(64 == buffer.capacity());
+  SECTION("Returns different addresses") {
+    void *p1 = buffer.alloc(1);
+    void *p2 = buffer.alloc(1);
+    REQUIRE(p1 != p2);
   }
 
-  SECTION("InitialSizeIsZero") {
-    REQUIRE(0 == buffer.size());
-  }
-
-  SECTION("GrowsAfterAlloc") {
-    buffer.alloc(1);
-    REQUIRE(1U <= buffer.size());
-    buffer.alloc(1);
-    REQUIRE(2U <= buffer.size());
-  }
-
-  SECTION("DoesntGrowWhenFull") {
-    buffer.alloc(64);
-    buffer.alloc(1);
-    REQUIRE(64 == buffer.size());
-  }
-
-  SECTION("DoesntGrowWhenTooSmall") {
-    buffer.alloc(65);
-    REQUIRE(0 == buffer.size());
-  }
-
-  SECTION("ReturnsNonNull") {
+  SECTION("Returns non-NULL when using full capacity") {
     void *p = buffer.alloc(64);
     REQUIRE(0 != p);
   }
 
-  SECTION("ReturnsNullWhenFull") {
+  SECTION("Returns NULL when full") {
     buffer.alloc(64);
     void *p = buffer.alloc(1);
     REQUIRE(0 == p);
   }
 
-  SECTION("ReturnsNullWhenTooSmall") {
+  SECTION("Returns NULL when buffer is too small") {
     void *p = buffer.alloc(65);
     REQUIRE(0 == p);
   }
 
-  SECTION("Alignment") {
+  SECTION("Returns aligned pointers") {
     for (size_t size = 1; size <= sizeof(void *); size++) {
       void *p = buffer.alloc(1);
       REQUIRE(isAligned(p));
     }
+  }
+
+  SECTION("Returns same address after clear()") {
+    void *p1 = buffer.alloc(1);
+    buffer.clear();
+    void *p2 = buffer.alloc(1);
+    REQUIRE(p1 == p2);
   }
 }

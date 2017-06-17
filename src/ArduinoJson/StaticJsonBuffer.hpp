@@ -54,17 +54,27 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
   StaticJsonBufferBase(char* buffer, size_t capa)
       : _buffer(buffer), _capacity(capa), _size(0) {}
 
+  // Gets the capacity of the buffer in bytes
   size_t capacity() const {
     return _capacity;
   }
+
+  // Gets the current usage of the buffer in bytes
   size_t size() const {
     return _size;
   }
 
+  // Allocates the specified amount of bytes in the buffer
   virtual void* alloc(size_t bytes) {
     alignNextAlloc();
     if (!canAlloc(bytes)) return NULL;
     return doAlloc(bytes);
+  }
+
+  // Resets the size to zero.
+  // USE WITH CAUTION: this invalidates all previously allocated data
+  void clear() {
+    _size = 0;
   }
 
   String startString() {
