@@ -11,6 +11,7 @@
 #include <stdint.h>  // for uint8_t
 #include <string.h>
 
+#include "Data/NonCopyable.hpp"
 #include "JsonVariant.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsArray.hpp"
@@ -34,7 +35,7 @@ class JsonObject;
 // Handle the memory management (done in derived classes) and calls the parser.
 // This abstract class is implemented by StaticJsonBuffer which implements a
 // fixed memory allocation.
-class JsonBuffer {
+class JsonBuffer : Internals::NonCopyable {
  public:
   // CAUTION: NO VIRTUAL DESTRUCTOR!
   // If we add a virtual constructor the Arduino compiler will add malloc() and

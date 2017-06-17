@@ -39,6 +39,7 @@ class JsonArraySubscript;
 // It can also be deserialized from a JSON string via JsonBuffer::parseArray().
 class JsonArray : public Internals::JsonPrintable<JsonArray>,
                   public Internals::ReferenceType,
+                  public Internals::NonCopyable,
                   public Internals::List<JsonVariant>,
                   public Internals::JsonBufferAllocated {
  public:

@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Made `JsonBuffer` non-copyable (PR #524 by @luisrayas3)
+
 v5.10.1
 -------
 

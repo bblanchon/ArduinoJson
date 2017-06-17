@@ -22,16 +22,6 @@ class ReferenceType {
   bool operator!=(const ReferenceType& other) const {
     return this != &other;
   }
-
- protected:
-  ReferenceType() {}
-
- private:
-  // copy constructor is private
-  ReferenceType(const ReferenceType&);
-
-  // copy operator is private
-  ReferenceType& operator=(const ReferenceType&);
 };
 }
 }

@@ -36,10 +36,10 @@ TEST_CASE("DynamicJsonBuffer::alloc()") {
 
   SECTION("Alignment") {
     // make room for two but not three
-    buffer = DynamicJsonBuffer(2 * sizeof(void*) + 1);
+    DynamicJsonBuffer tinyBuf(2 * sizeof(void*) + 1);
 
-    REQUIRE(isAligned(buffer.alloc(1)));  // this on is aligned by design
-    REQUIRE(isAligned(buffer.alloc(1)));  // this one fits in the first block
-    REQUIRE(isAligned(buffer.alloc(1)));  // this one requires a new block
+    REQUIRE(isAligned(tinyBuf.alloc(1)));  // this on is aligned by design
+    REQUIRE(isAligned(tinyBuf.alloc(1)));  // this one fits in the first block
+    REQUIRE(isAligned(tinyBuf.alloc(1)));  // this one requires a new block
   }
 }

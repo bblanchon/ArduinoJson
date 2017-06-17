@@ -38,6 +38,7 @@ class JsonBuffer;
 // It can also be deserialized from a JSON string via JsonBuffer::parseObject().
 class JsonObject : public Internals::JsonPrintable<JsonObject>,
                    public Internals::ReferenceType,
+                   public Internals::NonCopyable,
                    public Internals::List<JsonPair>,
                    public Internals::JsonBufferAllocated {
  public:
