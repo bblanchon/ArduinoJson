@@ -6,6 +6,7 @@ HEAD
 
 * Made `JsonBuffer` non-copyable (PR #524 by @luisrayas3)
 * Added `StaticJsonBuffer::clear()`
+* Added `DynamicJsonBuffer::clear()`
 
 v5.10.1
 -------

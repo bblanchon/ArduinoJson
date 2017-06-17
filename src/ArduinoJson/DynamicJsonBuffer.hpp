@@ -46,28 +46,33 @@ class DynamicJsonBufferBase
   };
 
  public:
+  enum { EmptyBlockSize = sizeof(EmptyBlock) };
+
   DynamicJsonBufferBase(size_t initialSize = 256)
       : _head(NULL), _nextBlockCapacity(initialSize) {}
 
   ~DynamicJsonBufferBase() {
-    Block* currentBlock = _head;
-
-    while (currentBlock != NULL) {
-      Block* nextBlock = currentBlock->next;
-      _allocator.deallocate(currentBlock);
-      currentBlock = nextBlock;
-    }
+    freeAllBlocks();
   }
 
+  // Gets the number of bytes occupied in the buffer
   size_t size() const {
     size_t total = 0;
     for (const Block* b = _head; b; b = b->next) total += b->size;
     return total;
   }
 
+  // Allocates the specified amount of bytes in the buffer
   virtual void* alloc(size_t bytes) {
     alignNextAlloc();
     return canAllocInHead(bytes) ? allocInHead(bytes) : allocInNewBlock(bytes);
+  }
+
+  // Resets the buffer.
+  // USE WITH CAUTION: this invalidates all previously allocated data
+  void clear() {
+    freeAllBlocks();
+    _head = 0;
   }
 
   class String {
@@ -129,7 +134,7 @@ class DynamicJsonBufferBase
   }
 
   bool addNewBlock(size_t capacity) {
-    size_t bytes = sizeof(EmptyBlock) + capacity;
+    size_t bytes = EmptyBlockSize + capacity;
     Block* block = static_cast<Block*>(_allocator.allocate(bytes));
     if (block == NULL) return false;
     block->capacity = capacity;
@@ -137,6 +142,16 @@ class DynamicJsonBufferBase
     block->next = _head;
     _head = block;
     return true;
+  }
+
+  void freeAllBlocks() {
+    Block* currentBlock = _head;
+
+    while (currentBlock != NULL) {
+      Block* nextBlock = currentBlock->next;
+      _allocator.deallocate(currentBlock);
+      currentBlock = nextBlock;
+    }
   }
 
   TAllocator _allocator;

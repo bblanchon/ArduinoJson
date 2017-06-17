@@ -71,7 +71,7 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
     return doAlloc(bytes);
   }
 
-  // Resets the size to zero.
+  // Resets the buffer.
   // USE WITH CAUTION: this invalidates all previously allocated data
   void clear() {
     _size = 0;

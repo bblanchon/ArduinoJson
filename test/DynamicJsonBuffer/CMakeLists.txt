@@ -8,10 +8,11 @@
 add_executable(DynamicJsonBufferTests 
 	alloc.cpp
 	createArray.cpp
-	no_memory.cpp
 	createObject.cpp
-	strdup.cpp
+	no_memory.cpp
+	size.cpp
 	startString.cpp
+	strdup.cpp
 )
 
 target_link_libraries(DynamicJsonBufferTests catch)

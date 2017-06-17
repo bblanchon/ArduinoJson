@@ -7,6 +7,7 @@
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
+#include <sstream>
 
 static bool isAligned(void* ptr) {
   const size_t mask = sizeof(void*) - 1;
@@ -14,24 +15,56 @@ static bool isAligned(void* ptr) {
   return (addr & mask) == 0;
 }
 
+std::stringstream allocatorLog;
+
+struct SpyingAllocator : DefaultAllocator {
+  void* allocate(size_t n) {
+    allocatorLog << "A" << (n - DynamicJsonBuffer::EmptyBlockSize);
+    return DefaultAllocator::allocate(n);
+  }
+  void deallocate(void* p) {
+    allocatorLog << "F";
+    return DefaultAllocator::deallocate(p);
+  }
+};
+
 TEST_CASE("DynamicJsonBuffer::alloc()") {
-  DynamicJsonBuffer buffer;
-
-  SECTION("InitialSizeIsZero") {
-    REQUIRE(0 == buffer.size());
-  }
-
-  SECTION("SizeIncreasesAfterAlloc") {
-    buffer.alloc(1);
-    REQUIRE(1U <= buffer.size());
-    buffer.alloc(1);
-    REQUIRE(2U <= buffer.size());
-  }
-
-  SECTION("ReturnDifferentPointer") {
+  SECTION("Returns different pointers") {
+    DynamicJsonBuffer buffer;
     void* p1 = buffer.alloc(1);
     void* p2 = buffer.alloc(2);
     REQUIRE(p1 != p2);
+  }
+
+  SECTION("Doubles allocation size when full") {
+    allocatorLog.str("");
+    {
+      DynamicJsonBufferBase<SpyingAllocator> buffer(1);
+      buffer.alloc(1);
+      buffer.alloc(1);
+    }
+    REQUIRE(allocatorLog.str() == "A1A2FF");
+  }
+
+  SECTION("Keeps increasing allocation size after clear") {
+    allocatorLog.str("");
+    {
+      DynamicJsonBufferBase<SpyingAllocator> buffer(1);
+      buffer.alloc(1);
+      buffer.alloc(1);
+      buffer.clear();
+      buffer.alloc(1);
+    }
+    REQUIRE(allocatorLog.str() == "A1A2FFA4F");
+  }
+
+  SECTION("Makes a big allocation when needed") {
+    allocatorLog.str("");
+    {
+      DynamicJsonBufferBase<SpyingAllocator> buffer(1);
+      buffer.alloc(42);
+    }
+    REQUIRE(allocatorLog.str() == "A42F");
   }
 
   SECTION("Alignment") {
