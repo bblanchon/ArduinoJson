@@ -19,7 +19,7 @@ class JsonBufferAllocated {
     return jsonBuffer->alloc(n);
   }
 
-  void operator delete(void *, JsonBuffer *)throw() {}
+  void operator delete(void *, JsonBuffer *)throw();
 };
 }
 }

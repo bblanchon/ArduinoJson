@@ -46,7 +46,7 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   // Create an empty JsonArray attached to the specified JsonBuffer.
   // You should not call this constructor directly.
   // Instead, use JsonBuffer::createArray() or JsonBuffer::parseArray().
-  explicit JsonArray(JsonBuffer *buffer)
+  explicit JsonArray(JsonBuffer *buffer) throw()
       : Internals::List<JsonVariant>(buffer) {}
 
   // Gets the value at the specified index
