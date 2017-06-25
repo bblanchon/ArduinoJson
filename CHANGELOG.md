@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.11.0
+-------
 
 * Made `JsonBuffer` non-copyable (PR #524 by @luisrayas3)
 * Added `StaticJsonBuffer::clear()`
