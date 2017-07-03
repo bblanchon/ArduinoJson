@@ -17,16 +17,16 @@ int16_t normalize(T& value) {
 
   if (value >= ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD) {
 #if ARDUINOJSON_DOUBLE_IS_64BITS
-    if (value >= 1e256) {
-      value /= 1e256;
+    if (value >= 1e256L) {
+      value /= 1e256L;
       powersOf10 = int16_t(powersOf10 + 256);
     }
-    if (value >= 1e128) {
-      value /= 1e128;
+    if (value >= 1e128L) {
+      value /= 1e128L;
       powersOf10 = int16_t(powersOf10 + 128);
     }
-    if (value >= 1e64) {
-      value /= 1e64;
+    if (value >= 1e64L) {
+      value /= 1e64L;
       powersOf10 = int16_t(powersOf10 + 64);
     }
 #endif
@@ -58,16 +58,16 @@ int16_t normalize(T& value) {
 
   if (value > 0 && value <= ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD) {
 #if ARDUINOJSON_DOUBLE_IS_64BITS
-    if (value < 1e-255) {
-      value *= 1e256;
+    if (value < 1e-255L) {
+      value *= 1e256L;
       powersOf10 = int16_t(powersOf10 - 256);
     }
-    if (value < 1e-127) {
-      value *= 1e128;
+    if (value < 1e-127L) {
+      value *= 1e128L;
       powersOf10 = int16_t(powersOf10 - 128);
     }
-    if (value < 1e-63) {
-      value *= 1e64;
+    if (value < 1e-63L) {
+      value *= 1e64L;
       powersOf10 = int16_t(powersOf10 - 64);
     }
 #endif
