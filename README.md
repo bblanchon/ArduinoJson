@@ -118,6 +118,7 @@ Special thanks to the following persons and companies who made generous donation
 * Prokhoryatov Alexey <img alt='Russia' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1f7-1f1fa.svg' width='18' height='18'>
 * Google Inc. <img alt='USA' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1fa-1f1f8.svg' width='18' height='18'>
 * Charles Haynes <img alt='Australia' src='https://d1j8pt39hxlh3d.cloudfront.net/development/emojione/2.2/989/2546.svg' width='18' height='18'>
+* Charles Walker <img alt='USA' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1fa-1f1f8.svg' width='18' height='18'>
 
 
 ---
