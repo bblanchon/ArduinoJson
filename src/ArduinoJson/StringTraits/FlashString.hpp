@@ -34,15 +34,15 @@ struct StringTraits<const __FlashStringHelper*, void> {
   };
 
   static bool equals(const __FlashStringHelper* str, const char* expected) {
-    return strcmp_P(expected, (PGM_P)str) == 0;
+    return strcmp_P(expected, (const char*)str) == 0;
   }
 
   template <typename Buffer>
   static char* duplicate(const __FlashStringHelper* str, Buffer* buffer) {
     if (!str) return NULL;
-    size_t size = strlen_P((PGM_P)str) + 1;
+    size_t size = strlen_P((const char*)str) + 1;
     void* dup = buffer->alloc(size);
-    if (dup != NULL) memcpy_P(dup, (PGM_P)str, size);
+    if (dup != NULL) memcpy_P(dup, (const char*)str, size);
     return static_cast<char*>(dup);
   }
 
