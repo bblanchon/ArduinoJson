@@ -19,13 +19,14 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wformat=2
 		-Winit-self
 		-Wmissing-include-dirs
-		-Wparentheses
 		-Wnon-virtual-dtor
 		-Wold-style-cast
 		-Woverloaded-virtual
+		-Wparentheses
 		-Wredundant-decls
 		-Wshadow
 		-Wsign-promo
+		-Wstrict-aliasing
 		-Wstrict-overflow=5
 		-Wundef
 	)

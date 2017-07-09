@@ -18,7 +18,6 @@ namespace TypeTraits {
 template <typename T, size_t = sizeof(T)>
 struct FloatTraits {};
 
-#if ARDUINOJSON_DOUBLE_IS_64BITS
 template <typename T>
 struct FloatTraits<T, 8 /*64bits*/> {
   typedef int64_t mantissa_type;
@@ -31,29 +30,65 @@ struct FloatTraits<T, 8 /*64bits*/> {
 
   template <typename TExponent>
   static T make_float(T m, TExponent e) {
-    if (e >= 0)
-      return m * (e & 1 ? 1e1 : 1) * (e & 2 ? 1e2 : 1) * (e & 4 ? 1e4 : 1) *
-             (e & 8 ? 1e8 : 1) * (e & 16 ? 1e16 : 1) * (e & 32 ? 1e32 : 1) *
-             (e & 64 ? 1e64 : 1) * (e & 128 ? 1e128 : 1) *
-             (e & 256 ? 1e256 : 1);
-    e = TExponent(-e);
-    return m * (e & 1 ? 1e-1 : 1) * (e & 2 ? 1e-2 : 1) * (e & 4 ? 1e-4 : 1) *
-           (e & 8 ? 1e-8 : 1) * (e & 16 ? 1e-16 : 1) * (e & 32 ? 1e-32 : 1) *
-           (e & 64 ? 1e-64 : 1) * (e & 128 ? 1e-128 : 1) *
-           (e & 256 ? 1e-256 : 1);
+    if (e > 0) {
+      for (uint8_t index = 0; e != 0; index++) {
+        if (e & 1) m *= positiveBinaryPowerOfTen(index);
+        e >>= 1;
+      }
+    } else {
+      e = TExponent(-e);
+      for (uint8_t index = 0; e != 0; index++) {
+        if (e & 1) m *= negativeBinaryPowerOfTen(index);
+        e >>= 1;
+      }
+    }
+    return m;
+  }
+
+  static T positiveBinaryPowerOfTen(int index) {
+    static T factors[] = {
+        1e1, 1e2, 1e4, 1e8, 1e16, 1e32,
+        // workaround to support platforms with single precision literals
+        forge(0x4D384F03, 0xE93FF9F5), forge(0x5A827748, 0xF9301D32),
+        forge(0x75154FDD, 0x7F73BF3C)};
+    return factors[index];
+  }
+
+  static T negativeBinaryPowerOfTen(int index) {
+    static T factors[] = {
+        1e-1, 1e-2, 1e-4, 1e-8, 1e-16, 1e-32,
+        // workaround to support platforms with single precision literals
+        forge(0x32A50FFD, 0x44F4A73D), forge(0x255BBA08, 0xCF8C979D),
+        forge(0x0AC80628, 0x64AC6F43)};
+    return factors[index];
+  }
+
+  static T negativeBinaryPowerOfTenPlusOne(int index) {
+    static T factors[] = {
+        1e0, 1e-1, 1e-3, 1e-7, 1e-15, 1e-31,
+        // workaround to support platforms with single precision literals
+        forge(0x32DA53FC, 0x9631D10D), forge(0x25915445, 0x81B7DEC2),
+        forge(0x0AFE07B2, 0x7DD78B14)};
+    return factors[index];
   }
 
   static T nan() {
-    uint64_t x = uint64_t(0x7ff8) << 48;
-    return *reinterpret_cast<T*>(&x);
+    return forge(0x7ff80000, 0x00000000);
   }
 
   static T inf() {
-    uint64_t x = uint64_t(0x7ff0) << 48;
-    return *reinterpret_cast<T*>(&x);
+    return forge(0x7ff00000, 0x00000000);
+  }
+
+  static T forge(uint32_t msb, uint32_t lsb) {
+    union {
+      uint64_t integerBits;
+      T floatBits;
+    };
+    integerBits = (uint64_t(msb) << 32) | lsb;
+    return floatBits;
   }
 };
-#endif
 
 template <typename T>
 struct FloatTraits<T, 4 /*32bits*/> {
@@ -67,22 +102,51 @@ struct FloatTraits<T, 4 /*32bits*/> {
 
   template <typename TExponent>
   static T make_float(T m, TExponent e) {
-    if (e > 0)
-      return m * (e & 1 ? 1e1f : 1) * (e & 2 ? 1e2f : 1) * (e & 4 ? 1e4f : 1) *
-             (e & 8 ? 1e8f : 1) * (e & 16 ? 1e16f : 1) * (e & 32 ? 1e32f : 1);
-    e = -e;
-    return m * (e & 1 ? 1e-1f : 1) * (e & 2 ? 1e-2f : 1) * (e & 4 ? 1e-4f : 1) *
-           (e & 8 ? 1e-8f : 1) * (e & 16 ? 1e-16f : 1) * (e & 32 ? 1e-32f : 1);
+    if (e > 0) {
+      for (uint8_t index = 0; e != 0; index++) {
+        if (e & 1) m *= positiveBinaryPowerOfTen(index);
+        e >>= 1;
+      }
+    } else {
+      e = -e;
+      for (uint8_t index = 0; e != 0; index++) {
+        if (e & 1) m *= negativeBinaryPowerOfTen(index);
+        e >>= 1;
+      }
+    }
+    return m;
+  }
+
+  static T positiveBinaryPowerOfTen(int index) {
+    static T factors[] = {1e1f, 1e2f, 1e4f, 1e8f, 1e16f, 1e32f};
+    return factors[index];
+  }
+
+  static T negativeBinaryPowerOfTen(int index) {
+    static T factors[] = {1e-1f, 1e-2f, 1e-4f, 1e-8f, 1e-16f, 1e-32f};
+    return factors[index];
+  }
+
+  static T negativeBinaryPowerOfTenPlusOne(int index) {
+    static T factors[] = {1e0f, 1e-1f, 1e-3f, 1e-7f, 1e-15f, 1e-31f};
+    return factors[index];
+  }
+
+  static T forge(uint32_t bits) {
+    union {
+      uint32_t integerBits;
+      T floatBits;
+    };
+    integerBits = bits;
+    return floatBits;
   }
 
   static T nan() {
-    uint32_t x = 0x7fc00000;
-    return *reinterpret_cast<T*>(&x);
+    return forge(0x7fc00000);
   }
 
   static T inf() {
-    uint32_t x = 0x7f800000;
-    return *reinterpret_cast<T*>(&x);
+    return forge(0x7f800000);
   }
 };
 }

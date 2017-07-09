@@ -10,5 +10,12 @@ add_executable(IntegrationTests
 	round_trip.cpp
 )
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	target_compile_options(IntegrationTests
+		PUBLIC
+		-fsingle-precision-constant # issue 544
+	)
+endif()
+
 target_link_libraries(IntegrationTests catch)
 add_test(IntegrationTests IntegrationTests)
