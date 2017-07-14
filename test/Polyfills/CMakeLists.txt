@@ -8,7 +8,6 @@
 add_executable(PolyfillsTests 
 	isFloat.cpp
 	isInteger.cpp
-	normalize.cpp
 	parseFloat.cpp
 	parseInteger.cpp
 )

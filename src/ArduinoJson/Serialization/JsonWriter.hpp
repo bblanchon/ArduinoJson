@@ -9,12 +9,9 @@
 
 #include <stdint.h>
 #include "../Data/Encoding.hpp"
-#include "../Data/JsonFloat.hpp"
 #include "../Data/JsonInteger.hpp"
 #include "../Polyfills/attributes.hpp"
-#include "../Polyfills/math.hpp"
-#include "../Polyfills/normalize.hpp"
-#include "../TypeTraits/FloatTraits.hpp"
+#include "../Serialization/FloatParts.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -28,10 +25,6 @@ namespace Internals {
 // indentation.
 template <typename Print>
 class JsonWriter {
-  static const uint8_t maxDecimalPlaces = sizeof(JsonFloat) >= 8 ? 9 : 6;
-  static const uint32_t maxDecimalPart =
-      sizeof(JsonFloat) >= 8 ? 1000000000 : 1000000;
-
  public:
   explicit JsonWriter(Print &sink) : _sink(sink), _length(0) {}
 
@@ -87,7 +80,8 @@ class JsonWriter {
     }
   }
 
-  void writeFloat(JsonFloat value) {
+  template <typename TFloat>
+  void writeFloat(TFloat value) {
     if (Polyfills::isNaN(value)) return writeRaw("NaN");
 
     if (value < 0.0) {
@@ -97,28 +91,27 @@ class JsonWriter {
 
     if (Polyfills::isInfinity(value)) return writeRaw("Infinity");
 
-    uint32_t integralPart, decimalPart;
-    int16_t powersOf10;
-    splitFloat(value, integralPart, decimalPart, powersOf10);
+    FloatParts<TFloat> parts(value);
 
-    writeInteger(integralPart);
-    if (decimalPart) writeDecimals(decimalPart, maxDecimalPlaces);
+    writeInteger(parts.integral);
+    if (parts.decimalPlaces) writeDecimals(parts.decimal, parts.decimalPlaces);
 
-    if (powersOf10 < 0) {
+    if (parts.exponent < 0) {
       writeRaw("e-");
-      writeInteger(-powersOf10);
+      writeInteger(-parts.exponent);
     }
 
-    if (powersOf10 > 0) {
+    if (parts.exponent > 0) {
       writeRaw('e');
-      writeInteger(powersOf10);
+      writeInteger(parts.exponent);
     }
   }
 
   template <typename UInt>
   void writeInteger(UInt value) {
     char buffer[22];
-    char *ptr = buffer + sizeof(buffer) - 1;
+    char *end = buffer + sizeof(buffer) - 1;
+    char *ptr = end;
 
     *ptr = 0;
     do {
@@ -130,15 +123,9 @@ class JsonWriter {
   }
 
   void writeDecimals(uint32_t value, int8_t width) {
-    // remove trailing zeros
-    while (value % 10 == 0 && width > 0) {
-      value /= 10;
-      width--;
-    }
-
     // buffer should be big enough for all digits, the dot and the null
     // terminator
-    char buffer[maxDecimalPlaces + 2];
+    char buffer[16];
     char *ptr = buffer + sizeof(buffer) - 1;
 
     // write the string in reverse order
@@ -166,30 +153,6 @@ class JsonWriter {
 
  private:
   JsonWriter &operator=(const JsonWriter &);  // cannot be assigned
-
-  void splitFloat(JsonFloat value, uint32_t &integralPart,
-                  uint32_t &decimalPart, int16_t &powersOf10) {
-    powersOf10 = Polyfills::normalize(value);
-
-    integralPart = uint32_t(value);
-    JsonFloat remainder = value - JsonFloat(integralPart);
-
-    remainder *= maxDecimalPart;
-    decimalPart = uint32_t(remainder);
-    remainder = remainder - JsonFloat(decimalPart);
-
-    // rounding:
-    // increment by 1 if remainder >= 0.5
-    decimalPart += uint32_t(remainder * 2);
-    if (decimalPart >= maxDecimalPart) {
-      decimalPart = 0;
-      integralPart++;
-      if (powersOf10 && integralPart >= 10) {
-        powersOf10++;
-        integralPart = 1;
-      }
-    }
-  }
 };
 }
 }

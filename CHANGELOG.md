@@ -8,6 +8,7 @@ HEAD
 * Fixed warning "dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]"
 * Fixed warning "floating constant exceeds range of 'float' [-Woverflow]" (issue #544)
 * Removed `ARDUINOJSON_DOUBLE_IS_64BITS` as it became useless.
+* Fixed too many decimals places in float serialization (issue #543)
 
 v5.11.0
 -------
