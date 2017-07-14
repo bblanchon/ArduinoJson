@@ -26,6 +26,8 @@ T parseInteger(const char *s) {
   switch (*s) {
     case '-':
       negative_result = true;
+      s++;
+      break;
     case '+':
       s++;
       break;

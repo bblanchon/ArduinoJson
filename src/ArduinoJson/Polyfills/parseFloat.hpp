@@ -26,8 +26,11 @@ inline T parseFloat(const char* s) {
   switch (*s) {
     case '-':
       negative_result = true;
+      s++;
+      break;
     case '+':
       s++;
+      break;
   }
 
   if (*s == 't') return 1;  // true

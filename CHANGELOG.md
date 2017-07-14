@@ -7,6 +7,7 @@ HEAD
 * Removed dependency on `PGM_P` as Particle 0.6.2 doesn't define it (issue #546)
 * Fixed warning "dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]"
 * Fixed warning "floating constant exceeds range of 'float' [-Woverflow]" (issue #544)
+* Fixed warning "this statement may fall through" [-Wimplicit-fallthrough=] (issue #539)
 * Removed `ARDUINOJSON_DOUBLE_IS_64BITS` as it became useless.
 * Fixed too many decimals places in float serialization (issue #543)
 
