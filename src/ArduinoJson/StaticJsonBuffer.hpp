@@ -9,16 +9,6 @@
 
 #include "JsonBufferBase.hpp"
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnon-virtual-dtor"
-#elif defined(__GNUC__)
-#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-#pragma GCC diagnostic push
-#endif
-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
-#endif
-
 namespace ArduinoJson {
 
 class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
@@ -81,6 +71,9 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
     return String(this);
   }
 
+ protected:
+  ~StaticJsonBufferBase() {}
+
  private:
   void alignNextAlloc() {
     _size = round_size_up(_size);
@@ -100,6 +93,16 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
   size_t _capacity;
   size_t _size;
 };
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnon-virtual-dtor"
+#elif defined(__GNUC__)
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#pragma GCC diagnostic push
+#endif
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
 
 // Implements a JsonBuffer with fixed memory allocation.
 // The template paramenter CAPACITY specifies the capacity of the buffer in
