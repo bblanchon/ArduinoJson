@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed `DynamicJsonBuffer::clear()` not resetting allocation size (issue #561)
+
 v5.11.1
 -------
 
