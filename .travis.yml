@@ -12,12 +12,6 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.5']
-      env: SCRIPT=cmake GCC=4.5
-    - compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.6']
       env: SCRIPT=cmake GCC=4.6
     - compiler: gcc
