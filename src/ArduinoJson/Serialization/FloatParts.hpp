@@ -27,9 +27,8 @@ struct FloatParts {
     exponent = normalize(value);
 
     integral = uint32_t(value);
-    TFloat remainder = value - TFloat(integral);
+    TFloat remainder = (value - TFloat(integral)) * TFloat(maxDecimalPart);
 
-    remainder *= maxDecimalPart;
     decimal = uint32_t(remainder);
     remainder = remainder - TFloat(decimal);
 
