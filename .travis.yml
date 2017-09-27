@@ -44,6 +44,12 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
       env: SCRIPT=cmake GCC=6
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-7']
+      env: SCRIPT=cmake GCC=7
     - compiler: clang
       env: SCRIPT=cmake
     - compiler: clang
