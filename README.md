@@ -120,6 +120,7 @@ Special thanks to the following persons and companies who made generous donation
 * Charles Haynes <img alt='Australia' src='https://d1j8pt39hxlh3d.cloudfront.net/development/emojione/2.2/989/2546.svg' width='18' height='18'>
 * Charles Walker <img alt='USA' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1fa-1f1f8.svg' width='18' height='18'>
 * Günther Jehle <img alt='Liechtenstein' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1f1-1f1ee.svg' width='18' height='18'>
+* Patrick Elliott
 
 
 ---
