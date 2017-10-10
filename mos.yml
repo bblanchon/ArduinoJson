@@ -1,0 +1,20 @@
+author: mongoose-os
+description: Arduino compatibility
+type: lib
+version: 1.0
+
+platforms: [ cc3200, esp32, esp8266 ]
+
+sources:
+  - src
+includes:
+  - include
+
+cdefs:
+  ARDUINO: 150
+
+tags:
+  - arduino
+  - c
+
+manifest_version: 2017-09-29
