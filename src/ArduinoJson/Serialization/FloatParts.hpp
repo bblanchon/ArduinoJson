@@ -22,11 +22,18 @@ struct FloatParts {
   int8_t decimalPlaces;
 
   FloatParts(TFloat value) {
-    const uint32_t maxDecimalPart = sizeof(TFloat) >= 8 ? 1000000000 : 1000000;
+    uint32_t maxDecimalPart = sizeof(TFloat) >= 8 ? 1000000000 : 1000000;
+    decimalPlaces = sizeof(TFloat) >= 8 ? 9 : 6;
 
     exponent = normalize(value);
 
     integral = uint32_t(value);
+    // reduce number of decimal places by the number of integral places
+    for (uint32_t tmp = integral; tmp >= 10; tmp /= 10) {
+      maxDecimalPart /= 10;
+      decimalPlaces--;
+    }
+
     TFloat remainder = (value - TFloat(integral)) * TFloat(maxDecimalPart);
 
     decimal = uint32_t(remainder);
@@ -42,14 +49,6 @@ struct FloatParts {
         exponent++;
         integral = 1;
       }
-    }
-
-    decimalPlaces = sizeof(TFloat) >= 8 ? 9 : 6;
-
-    // recude number of decimal places by the number of integral places
-    for (uint32_t tmp = integral; tmp >= 10; tmp /= 10) {
-      decimal /= 10;
-      decimalPlaces--;
     }
 
     // remove trailing zeros
