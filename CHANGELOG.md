@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.11.2
+-------
 
 * Fixed `DynamicJsonBuffer::clear()` not resetting allocation size (issue #561)
 * Fixed incorrect rounding for float values (issue #588)
