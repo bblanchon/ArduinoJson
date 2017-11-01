@@ -123,6 +123,7 @@ Special thanks to the following persons and companies who made generous donation
 * Charles Walker <img alt='USA' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1fa-1f1f8.svg' width='18' height='18'>
 * Günther Jehle <img alt='Liechtenstein' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1f1-1f1ee.svg' width='18' height='18'>
 * Patrick Elliott
+* Alexander Wilms <img alt='Germany' src='https://cdnjs.cloudflare.com/ajax/libs/emojione/2.1.4/assets/svg/1f1e9-1f1ea.svg' width='18' height='18'>
 
 
 ---
