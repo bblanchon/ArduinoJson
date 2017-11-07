@@ -1,6 +1,6 @@
 <!--
 Before opening an issue, please read the FAQ:
-https://bblanchon.github.io/ArduinoJson/faq/
+http://arduinojson.org/faq/
 
 Please provide all the relevant information:
 * good title

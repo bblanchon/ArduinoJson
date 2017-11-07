@@ -1,9 +1,6 @@
+// ArduinoJson - arduinojson.org
 // Copyright Benoit Blanchon 2014-2017
 // MIT License
-//
-// Arduino JSON library
-// https://bblanchon.github.io/ArduinoJson/
-// If you like this project, please add a star!
 
 #include <ArduinoJson.h>
 
@@ -17,7 +14,7 @@ void setup() {
   //
   // Inside the brackets, 200 is the size of the pool in bytes.
   // If the JSON object is more complex, you need to increase that value.
-  // See https://bblanchon.github.io/ArduinoJson/assistant/
+  // See http://arduinojson.org/assistant/
   StaticJsonBuffer<200> jsonBuffer;
 
   // StaticJsonBuffer allocates memory on the stack, it can be

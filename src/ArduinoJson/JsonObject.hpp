@@ -1,9 +1,6 @@
+// ArduinoJson - arduinojson.org
 // Copyright Benoit Blanchon 2014-2017
 // MIT License
-//
-// Arduino JSON library
-// https://bblanchon.github.io/ArduinoJson/
-// If you like this project, please add a star!
 
 #pragma once
 
@@ -45,8 +42,8 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // Create an empty JsonArray attached to the specified JsonBuffer.
   // You should not use this constructor directly.
   // Instead, use JsonBuffer::createObject() or JsonBuffer.parseObject().
-  explicit JsonObject(JsonBuffer* buffer) throw() 
-    : Internals::List<JsonPair>(buffer) {}
+  explicit JsonObject(JsonBuffer* buffer) throw()
+      : Internals::List<JsonPair>(buffer) {}
 
   // Gets or sets the value associated with the specified key.
   //

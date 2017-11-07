@@ -1,12 +1,9 @@
 // Sample Arduino Json Web Client
 // Downloads and parse http://jsonplaceholder.typicode.com/users/1
 //
+// ArduinoJson - arduinojson.org
 // Copyright Benoit Blanchon 2014-2017
 // MIT License
-//
-// Arduino JSON library
-// https://bblanchon.github.io/ArduinoJson/
-// If you like this project, please add a star!
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
@@ -135,7 +132,7 @@ bool skipResponseHeaders() {
 // }
 bool readReponseContent(struct UserData* userData) {
   // Compute optimal size of the JSON buffer according to what we need to parse.
-  // See https://bblanchon.github.io/ArduinoJson/assistant/
+  // See http://arduinojson.org/assistant/
   const size_t BUFFER_SIZE =
       JSON_OBJECT_SIZE(8)    // the root object has 8 elements
       + JSON_OBJECT_SIZE(5)  // the "address" object has 5 elements

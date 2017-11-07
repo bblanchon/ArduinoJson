@@ -64,7 +64,7 @@ void loop() {
   if (client) {
     bool success = readRequest(client);
     if (success) {
-      // Use https://bblanchon.github.io/ArduinoJson/assistant/ to
+      // Use http://arduinojson.org/assistant/ to
       // compute the right size for the buffer
       StaticJsonBuffer<500> jsonBuffer;
       JsonObject& json = prepareResponse(jsonBuffer);
