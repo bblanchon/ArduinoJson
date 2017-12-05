@@ -7,6 +7,7 @@ HEAD
 * Added `JsonVariant::operator|` to return a default value (see bellow)
 * Added a clear error message when compiled as C instead of C++ (issue #629)
 * Added detection of MPLAB XC compiler (issue #629)
+* Added detection of Keil ARM Compiler (issue #629)
 * Rewrote example `JsonHttpClient.ino` (issue #600)
 
 > ### How to use the new feature?
