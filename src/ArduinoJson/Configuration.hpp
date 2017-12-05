@@ -6,7 +6,7 @@
 
 // Small or big machine?
 #ifndef ARDUINOJSON_EMBEDDED_MODE
-#if defined(ARDUINO) || defined(__IAR_SYSTEMS_ICC__)
+#if defined(ARDUINO) || defined(__IAR_SYSTEMS_ICC__) || defined(__XC)
 #define ARDUINOJSON_EMBEDDED_MODE 1
 #else
 #define ARDUINOJSON_EMBEDDED_MODE 0
