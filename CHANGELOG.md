@@ -8,7 +8,8 @@ HEAD
 * Added a clear error message when compiled as C instead of C++ (issue #629)
 * Added detection of MPLAB XC compiler (issue #629)
 * Added detection of Keil ARM Compiler (issue #629)
-* Reworked all examples
+* Added an example that shows how to save and load a configuration file
+* Reworked all other examples
 
 > ### How to use the new feature?
 >
