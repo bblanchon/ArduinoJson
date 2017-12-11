@@ -2,9 +2,10 @@
 // Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
-// Example of an HTTP client parsing a JSON response.
+// This example shows how to parse a JSON document in an HTTP response.
+// It uses the Ethernet library, but can be easily adapter for Wifi.
 //
-// This program perform an HTTP GET of arduinojson.org/example.json
+// It performs a GET resquest on arduinojson.org/example.json
 // Here is the expected response:
 // {
 //   "sensor": "gps",
@@ -14,73 +15,98 @@
 //     2.302038
 //   ]
 // }
-// See http://arduinojson.org/assistant/ to compute the size of the buffer.
-//
-// Disclaimer: the code emphasize the communication between client and server,
-// it doesn't claim to be a reference of good coding practices.
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
 #include <SPI.h>
 
 void setup() {
+  // Initialize Serial port
   Serial.begin(9600);
-  while (!Serial);
+  while (!Serial) continue;
 
-  echo("Initialize Ethernet library");
+  // Initialize Ethernet library
   byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-  Ethernet.begin(mac) || die("Failed to configure Ethernet");
+  if (!Ethernet.begin(mac)) {
+    Serial.println(F("Failed to configure Ethernet"));
+    return;
+  }
   delay(1000);
 
-  echo("Connect to HTTP server");
+  Serial.println(F("Connecting..."));
+
+  // Connect to HTTP server
   EthernetClient client;
   client.setTimeout(10000);
-  client.connect("arduinojson.org", 80) || die("Connection failed");
+  if (!client.connect("arduinojson.org", 80)) {
+    Serial.println(F("Connection failed"));
+    return;
+  }
 
-  echo("Send HTTP request");
-  client.println("GET /example.json HTTP/1.0");
-  client.println("Host: arduinojson.org");
-  client.println("Connection: close");
-  client.println() || die("Failed to send request");
+  Serial.println(F("Connected!"));
 
-  echo("Check HTTP status");
+  // Send HTTP request
+  client.println(F("GET /example.json HTTP/1.0"));
+  client.println(F("Host: arduinojson.org"));
+  client.println(F("Connection: close"));
+  if (client.println() == 0) {
+    Serial.println(F("Failed to send request"));
+    return;
+  }
+
+  // Check HTTP status
   char status[32] = {0};
   client.readBytesUntil('\r', status, sizeof(status));
   if (strcmp(status, "HTTP/1.1 200 OK") != 0) {
-    echo(status);
-    die("Unexpected HTTP response");
+    Serial.print(F("Unexpected response: "));
+    Serial.println(status);
+    return;
   }
 
-  echo("Skip HTTP headers");
+  // Skip HTTP headers
   char endOfHeaders[] = "\r\n\r\n";
-  client.find(endOfHeaders) || die("Invalid response");
+  if (!client.find(endOfHeaders)) {
+    Serial.println(F("Invalid response"));
+    return;
+  }
 
-  echo("Allocate JsonBuffer");
-  const size_t BUFFER_SIZE = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
-  DynamicJsonBuffer jsonBuffer(BUFFER_SIZE);
+  // Allocate JsonBuffer
+  // (see https://arduinojson.org/assistant/ to compute the capacity)
+  const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
+  DynamicJsonBuffer jsonBuffer(capacity);
 
-  echo("Parse JSON object");
+  // Parse JSON object
   JsonObject& root = jsonBuffer.parseObject(client);
-  if (!root.success()) die("Parsing failed!");
+  if (!root.success()) {
+    Serial.println(F("Parsing failed!"));
+    return;
+  }
 
-  echo("Extract values");
-  echo(root["sensor"].as<char*>());
-  echo(root["time"].as<char*>());
-  echo(root["data"][0].as<char*>());
-  echo(root["data"][1].as<char*>());
+  // Extract values
+  Serial.println(F("Response:"));
+  Serial.println(root["sensor"].as<char*>());
+  Serial.println(root["time"].as<char*>());
+  Serial.println(root["data"][0].as<char*>());
+  Serial.println(root["data"][1].as<char*>());
 
-  echo("Disconnect");
+  // Disconnect
   client.stop();
 }
 
-void loop() {}
-
-void echo(const char* message) {
-  Serial.println(message);
+void loop() {
+  // not used in this example
 }
 
-bool die(const char* message) {
-  Serial.println(message);
-  while (true);  // loop forever
-  return false;
-}
+// See also
+// --------
+//
+// The website arduinojson.org contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any
+// serialization  problem.
+// Please check it out at: https://arduinojson.org/
+//
+// The book "Mastering ArduinoJson" contains a tutorial on deserialization
+// showing how to parse the response from Yahoo Weather. In the last chapter,
+// it shows how to parse the huge documents from OpenWeatherMap
+// and Weather Underground.
+// Please check it out at: https://leanpub.com/arduinojson/

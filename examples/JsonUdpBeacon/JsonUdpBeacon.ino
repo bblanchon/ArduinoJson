@@ -1,57 +1,101 @@
-// Send a JSON object on UDP at regular interval
+// ArduinoJson - arduinojson.org
+// Copyright Benoit Blanchon 2014-2017
+// MIT License
 //
-// You can easily test this program with netcat:
-// $ nc -ulp 8888
+// This example shows how to JSON document to a UDP socket.
+// At regular interval, it sends a UDP packet that contains the status of
+// analog and digital pins.
+// The JSON document looks like the following:
+// {
+//   "analog": [ 0, 1, 2, 3, 4, 5 ],
+//   "digital": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+// }
 //
-// by Benoit Blanchon, MIT License 2015-2017
+// If you want to test this program, you need to be able to receive the UDP
+// packets.
+// For example, you can run netcat on your computer
+// $ ncat -ulp 8888
+// See https://nmap.org/ncat/
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
 #include <SPI.h>
 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress localIp(192, 168, 0, 177);
-IPAddress remoteIp(192, 168, 0, 109);
-unsigned int remotePort = 8888;
-unsigned localPort = 8888;
+IPAddress remoteIp(192, 168, 0, 108);  // <- EDIT!!!!
+unsigned short remotePort = 8888;
+unsigned short localPort = 8888;
 EthernetUDP udp;
 
-JsonObject& buildJson(JsonBuffer& jsonBuffer) {
-  JsonObject& root = jsonBuffer.createObject();
-
-  JsonArray& analogValues = root.createNestedArray("analog");
-  for (int pin = 0; pin < 6; pin++) {
-    int value = analogRead(pin);
-    analogValues.add(value);
-  }
-
-  JsonArray& digitalValues = root.createNestedArray("digital");
-  for (int pin = 0; pin < 14; pin++) {
-    int value = digitalRead(pin);
-    digitalValues.add(value);
-  }
-
-  return root;
-}
-
-void sendJson(JsonObject& json) {
-  udp.beginPacket(remoteIp, remotePort);
-  json.printTo(udp);
-  udp.println();
-  udp.endPacket();
-}
-
 void setup() {
-  Ethernet.begin(mac, localIp);
+  // Initialize serial port
+  Serial.begin(9600);
+  while (!Serial) continue;
+
+  // Initialize Ethernet libary
+  if (!Ethernet.begin(mac)) {
+    Serial.println(F("Failed to initialize Ethernet library"));
+    return;
+  }
+
+  // Enable UDP
   udp.begin(localPort);
 }
 
 void loop() {
-  delay(1000);
+  // Allocate JsonBuffer
+  // Use http://arduinojson.org/assistant/ to compute the right capacity.
+  StaticJsonBuffer<500> jsonBuffer;
 
-  // Use http://arduinojson.org/assistant/ to
-  // compute the right size for the buffer
-  StaticJsonBuffer<300> jsonBuffer;
-  JsonObject& json = buildJson(jsonBuffer);
-  sendJson(json);
+  // Create the root object
+  JsonObject& root = jsonBuffer.createObject();
+
+  // Create the "analog" array
+  JsonArray& analogValues = root.createNestedArray("analog");
+  for (int pin = 0; pin < 6; pin++) {
+    // Read the analog input
+    int value = analogRead(pin);
+
+    // Add the value at the end of the array
+    analogValues.add(value);
+  }
+
+  // Create the "digital" array
+  JsonArray& digitalValues = root.createNestedArray("digital");
+  for (int pin = 0; pin < 14; pin++) {
+    // Read the digital input
+    int value = digitalRead(pin);
+
+    // Add the value at the end of the array
+    digitalValues.add(value);
+  }
+
+  // Log
+  Serial.print(F("Sending to "));
+  Serial.print(remoteIp);
+  Serial.print(F(" on port "));
+  Serial.println(remotePort);
+  root.printTo(Serial);
+
+  // Send UDP packet
+  udp.beginPacket(remoteIp, remotePort);
+  root.printTo(udp);
+  udp.println();
+  udp.endPacket();
+
+  // Wait
+  delay(10000);
 }
+
+// See also
+// --------
+//
+// The website arduinojson.org contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any
+// serialization problem.
+// Please check it out at: https://arduinojson.org/
+//
+// The book "Mastering ArduinoJson" contains a tutorial on serialization.
+// It begins with a simple example, then adds more features like serializing
+// directly to a file or any stream.
+// Please check it out at: https://leanpub.com/arduinojson/

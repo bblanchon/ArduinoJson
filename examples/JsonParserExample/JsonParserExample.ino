@@ -1,20 +1,21 @@
 // ArduinoJson - arduinojson.org
 // Copyright Benoit Blanchon 2014-2017
 // MIT License
+//
+// This example shows how to deserialize a JSON document with ArduinoJson.
 
 #include <ArduinoJson.h>
 
 void setup() {
+  // Initialize serial port
   Serial.begin(9600);
-  while (!Serial) {
-    // wait serial port initialization
-  }
+  while (!Serial) continue;
 
   // Memory pool for JSON object tree.
   //
-  // Inside the brackets, 200 is the size of the pool in bytes,
-  // If the JSON object is more complex, you need to increase that value.
-  // See http://arduinojson.org/assistant/
+  // Inside the brackets, 200 is the size of the pool in bytes.
+  // Don't forget to change this value to match your JSON document.
+  // See https://arduinojson.org/assistant/
   StaticJsonBuffer<200> jsonBuffer;
 
   // StaticJsonBuffer allocates memory on the stack, it can be
@@ -62,3 +63,16 @@ void setup() {
 void loop() {
   // not used in this example
 }
+
+// See also
+// --------
+//
+// The website arduinojson.org contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any
+// deserialization problem.
+// Please check it out at: https://arduinojson.org/
+//
+// The book "Mastering ArduinoJson" contains a tutorial on deserialization.
+// It begins with a simple example, like the one above, and then adds more
+// features like deserializing directly from a file or an HTTP request.
+// Please check it out at: https://leanpub.com/arduinojson/

@@ -1,15 +1,14 @@
 // ArduinoJson - arduinojson.org
 // Copyright Benoit Blanchon 2014-2017
 // MIT License
+//
+// This example shows the different ways you can use String with ArduinoJson.
+//
+// Use String objects sparingly, because ArduinoJson duplicates them in the
+// JsonBuffer. Prefer plain old char[], as they are more efficient in term of
+// code size, speed, and memory usage.
 
 #include <ArduinoJson.h>
-
-// About
-// -----
-// This example shows the different ways you can use String with ArduinoJson.
-// Please don't see this as an invitation to use String.
-// On the contrary, you should always use char[] when possible, it's much more
-// efficient in term of code size, speed and memory usage.
 
 void setup() {
   DynamicJsonBuffer jsonBuffer;
@@ -58,3 +57,15 @@ void setup() {
 void loop() {
   // not used in this example
 }
+
+// See also
+// --------
+//
+// The website arduinojson.org contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any problem.
+// Please check it out at: https://arduinojson.org/
+//
+// The book "Mastering ArduinoJson" contains a quick C++ course that explains
+// how your microcontroller stores strings in memory. On several occasions, it
+// shows how you can avoid String in your program.
+// Please check it out at: https://leanpub.com/arduinojson/
