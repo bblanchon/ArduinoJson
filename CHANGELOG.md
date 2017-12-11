@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.12.0
+-------
 
 * Added `JsonVariant::operator|` to return a default value (see bellow)
 * Added a clear error message when compiled as C instead of C++ (issue #629)
