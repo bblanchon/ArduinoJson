@@ -31,7 +31,7 @@ void loadConfiguration(const char *filename, Config &config) {
 
   // Allocate the memory pool on the stack.
   // Don't forget to change the capacity to match your JSON document.
-  // Use https://arduinojson.org/assistant/ to compute the capacity.
+  // Use arduinojson.org/assistant to compute the capacity.
   StaticJsonBuffer<512> jsonBuffer;
 
   // Parse the root object

@@ -433,5 +433,5 @@ v4.0
 
 > ### BREAKING CHANGES :warning:
 >
-> API changed significantly since v3, see [Migrating code to the new API](http://arduinojson.org/doc/migration/).
+> API changed significantly since v3, see [Migrating code to the new API](https://arduinojson.org/doc/migration/).
 

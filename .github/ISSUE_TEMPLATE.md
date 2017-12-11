@@ -1,6 +1,6 @@
 <!--
 Before opening an issue, please read the FAQ:
-http://arduinojson.org/faq/
+https://arduinojson.org/faq/
 
 Please provide all the relevant information:
 * good title

@@ -15,7 +15,7 @@ void setup() {
   //
   // Inside the brackets, 200 is the size of the pool in bytes.
   // Don't forget to change this value to match your JSON document.
-  // See https://arduinojson.org/assistant/
+  // Use arduinojson.org/assistant to compute the capacity.
   StaticJsonBuffer<200> jsonBuffer;
 
   // StaticJsonBuffer allocates memory on the stack, it can be

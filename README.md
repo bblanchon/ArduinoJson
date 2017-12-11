@@ -25,7 +25,7 @@ Features
 * Small footprint
 * Header-only library
 * MIT License
-* [Comprehensive documentation](http://arduinojson.org)
+* [Comprehensive documentation](https://arduinojson.org)
 
 Works on
 --------
@@ -59,9 +59,9 @@ double latitude    = root["data"][0];
 double longitude   = root["data"][1];
 ```
 
-[See JsonParserExample.ino](http://arduinojson.org/example/parser/)
+[See JsonParserExample.ino](https://arduinojson.org/example/parser/)
 
-Use [ArduinoJson Assistant](http://arduinojson.org/assistant/) to compute the buffer size.
+Use [ArduinoJson Assistant](https://arduinojson.org/assistant/) to compute the buffer size.
 
 #### Encoding / Generating
 
@@ -81,17 +81,17 @@ root.printTo(Serial);
 // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 ```
 
-[See JsonGeneratorExample.ino](http://arduinojson.org/example/generator/)
+[See JsonGeneratorExample.ino](https://arduinojson.org/example/generator/)
 
-Use [ArduinoJson Assistant](http://arduinojson.org/assistant/) to compute the buffer size.
+Use [ArduinoJson Assistant](https://arduinojson.org/assistant/) to compute the buffer size.
 
 
 Documentation
 -------------
 
-The documentation is available online in the [ArduinoJson Website](http://arduinojson.org/).
+The documentation is available online in the [ArduinoJson Website](https://arduinojson.org/).
 
-The [ArduinoJson Assistant](http://arduinojson.org/assistant/) helps you get started with the library.
+The [ArduinoJson Assistant](https://arduinojson.org/assistant/) helps you get started with the library.
 
 
 Donators

@@ -52,7 +52,7 @@ void loop() {
   while (client.available()) client.read();
 
   // Allocate JsonBuffer
-  // Use http://arduinojson.org/assistant/ to compute the right capacity
+  // Use arduinojson.org/assistant to compute the capacity.
   StaticJsonBuffer<500> jsonBuffer;
 
   // Create the root object

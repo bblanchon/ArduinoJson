@@ -71,7 +71,7 @@ void setup() {
   }
 
   // Allocate JsonBuffer
-  // (see https://arduinojson.org/assistant/ to compute the capacity)
+  // Use arduinojson.org/assistant to compute the capacity.
   const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
   DynamicJsonBuffer jsonBuffer(capacity);
 
