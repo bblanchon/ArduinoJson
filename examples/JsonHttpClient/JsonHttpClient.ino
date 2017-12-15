@@ -3,7 +3,7 @@
 // MIT License
 //
 // This example shows how to parse a JSON document in an HTTP response.
-// It uses the Ethernet library, but can be easily adapter for Wifi.
+// It uses the Ethernet library, but can be easily adapted for Wifi.
 //
 // It performs a GET resquest on arduinojson.org/example.json
 // Here is the expected response:

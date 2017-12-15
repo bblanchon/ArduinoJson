@@ -2,7 +2,7 @@
 // Copyright Benoit Blanchon 2014-2017
 // MIT License
 //
-// This example shows how to JSON document to a UDP socket.
+// This example shows how to send a JSON document to a UDP socket.
 // At regular interval, it sends a UDP packet that contains the status of
 // analog and digital pins.
 // The JSON document looks like the following:

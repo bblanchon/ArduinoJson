@@ -4,7 +4,7 @@ ArduinoJson: change log
 v5.12.0
 -------
 
-* Added `JsonVariant::operator|` to return a default value (see bellow)
+* Added `JsonVariant::operator|` to return a default value (see below)
 * Added a clear error message when compiled as C instead of C++ (issue #629)
 * Added detection of MPLAB XC compiler (issue #629)
 * Added detection of Keil ARM Compiler (issue #629)

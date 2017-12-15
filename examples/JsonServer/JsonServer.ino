@@ -4,7 +4,7 @@
 //
 // This example shows how to implement an HTTP server that sends JSON document
 // in the responses.
-// It uses the Ethernet library but can be easily adapter for Wifi.
+// It uses the Ethernet library but can be easily adapted for Wifi.
 //
 // It sends the value of the analog and digital pins.
 // The JSON document looks like the following:
