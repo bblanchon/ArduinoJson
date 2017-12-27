@@ -106,4 +106,4 @@ void loop() {
 // The book "Mastering ArduinoJson" contains a tutorial on serialization.
 // It begins with a simple example, then adds more features like serializing
 // directly to a file or an HTTP client.
-// Please check it out at: https://leanpub.com/arduinojson/
+// Please check it out at: https://arduinojson.org/book/

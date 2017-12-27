@@ -75,4 +75,4 @@ void loop() {
 // The book "Mastering ArduinoJson" contains a tutorial on deserialization.
 // It begins with a simple example, like the one above, and then adds more
 // features like deserializing directly from a file or an HTTP request.
-// Please check it out at: https://leanpub.com/arduinojson/
+// Please check it out at: https://arduinojson.org/book/

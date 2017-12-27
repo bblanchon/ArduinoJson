@@ -109,4 +109,4 @@ void loop() {
 // showing how to parse the response from Yahoo Weather. In the last chapter,
 // it shows how to parse the huge documents from OpenWeatherMap
 // and Weather Underground.
-// Please check it out at: https://leanpub.com/arduinojson/
+// Please check it out at: https://arduinojson.org/book/

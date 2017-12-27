@@ -141,4 +141,4 @@ void loop() {
 // The book "Mastering ArduinoJson" contains a case study of a project that has
 // a complex configuration with nested members.
 // Contrary to this example, the project in the book uses the SPIFFS filesystem.
-// Please check it out at: https://leanpub.com/arduinojson/
+// Please check it out at: https://arduinojson.org/book/

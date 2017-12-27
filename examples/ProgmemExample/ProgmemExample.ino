@@ -64,4 +64,4 @@ void loop() {
 // The book "Mastering ArduinoJson" contains a quick C++ course that explains
 // how your microcontroller stores strings in memory. It also tells why you
 // should not abuse Flash strings with ArduinoJson.
-// Please check it out at: https://leanpub.com/arduinojson/
+// Please check it out at: https://arduinojson.org/book/

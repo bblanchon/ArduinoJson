@@ -68,4 +68,4 @@ void loop() {
 // The book "Mastering ArduinoJson" contains a quick C++ course that explains
 // how your microcontroller stores strings in memory. On several occasions, it
 // shows how you can avoid String in your program.
-// Please check it out at: https://leanpub.com/arduinojson/
+// Please check it out at: https://arduinojson.org/book/
