@@ -6,6 +6,7 @@ add_executable(JsonObjectTests
 	basics.cpp
 	containsKey.cpp
 	get.cpp
+	getWithDefaultValue.cpp
 	invalid.cpp
 	iterator.cpp
 	prettyPrintTo.cpp

@@ -114,6 +114,14 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
     return it != end() ? it->as<T>() : Internals::JsonVariantDefault<T>::get();
   }
 
+  // Gets the value at the specified index.
+  // If no value associate with the key, return the specified defaultValue
+  template <typename T>
+  typename Internals::JsonVariantAs<T>::type get(size_t index, T defaultValue) const {
+    const_iterator it = begin() += index;
+    return it != end() ? it->as<T>() : defaultValue;
+  }
+
   // Check the type of the value at specified index.
   template <typename T>
   bool is(size_t index) const {
