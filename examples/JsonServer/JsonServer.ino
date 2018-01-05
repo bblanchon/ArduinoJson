@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2017
+// Copyright Benoit Blanchon 2014-2018
 // MIT License
 //
 // This example shows how to implement an HTTP server that sends JSON document
