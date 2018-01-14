@@ -259,14 +259,4 @@ TEST_CASE("unsigned char string") {
 
     REQUIRE(std::string("world") == arr[0]);
   }
-
-  SECTION("JsonBuffer::strdup()") {
-    unsigned char value[] = "world";
-
-    DynamicJsonBuffer jsonBuffer;
-    const char* dup = jsonBuffer.strdup(value);
-
-    REQUIRE(static_cast<const void*>(value) != static_cast<const void*>(dup));
-    REQUIRE(std::string("world") == dup);
-  }
 }

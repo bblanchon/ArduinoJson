@@ -240,11 +240,4 @@ TEST_CASE("std::string") {
 
     REQUIRE(sizeBefore == sizeAfter);
   }
-
-  SECTION("JsonBuffer_strdup") {
-    std::string original("hello");
-    const char *copy = jb.strdup(original);
-    original[0] = 'w';
-    REQUIRE(std::string("hello") == copy);
-  }
 }

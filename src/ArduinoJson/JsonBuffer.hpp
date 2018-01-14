@@ -41,17 +41,18 @@ class JsonBuffer : Internals::NonCopyable {
   // const char* strdup(TValue);
   // TValue = const std::string&, const String&,
   template <typename TString>
+  DEPRECATED("char* are duplicated, you don't need strdup() anymore")
   typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
-                                const char *>::type
-  strdup(const TString &src) {
+                                const char *>::type strdup(const TString &src) {
     return Internals::StringTraits<TString>::duplicate(src, this);
   }
   //
   // const char* strdup(TValue);
-  // TValue = const char*, const char[N], const FlashStringHelper*
+  // TValue = char*, const char*, const FlashStringHelper*
   template <typename TString>
-  const char *strdup(const TString *src) {
-    return Internals::StringTraits<const TString *>::duplicate(src, this);
+  DEPRECATED("char* are duplicated, you don't need strdup() anymore")
+  const char *strdup(TString *src) {
+    return Internals::StringTraits<TString *>::duplicate(src, this);
   }
 
   // Allocates n bytes in the JsonBuffer.
