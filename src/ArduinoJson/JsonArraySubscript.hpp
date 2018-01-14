@@ -25,10 +25,9 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
 
   // Replaces the value
   //
-  // operator=(TValue)
+  // operator=(const TValue&)
   // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
-  //          const std::string&, const String&,
-  //          const JsonArray&, const JsonObject&
+  //          std::string, String, JsonArray, JsonObject
   template <typename T>
   FORCE_INLINE JsonArraySubscript& operator=(const T& src) {
     _array.set(_index, src);
@@ -36,9 +35,9 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   }
   //
   // operator=(TValue)
-  // TValue = const char*, const char[N], const FlashStringHelper*
+  // TValue = char*, const char*, const FlashStringHelper*
   template <typename T>
-  FORCE_INLINE JsonArraySubscript& operator=(const T* src) {
+  FORCE_INLINE JsonArraySubscript& operator=(T* src) {
     _array.set(_index, src);
     return *this;
   }
@@ -59,19 +58,18 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
 
   // Replaces the value
   //
-  // bool set(TValue)
+  // bool set(const TValue&)
   // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
-  //          const std::string&, const String&,
-  //          const JsonArray&, const JsonObject&
+  //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
   FORCE_INLINE bool set(const TValue& value) {
     return _array.set(_index, value);
   }
   //
   // bool set(TValue)
-  // TValue = const char*, const char[N], const FlashStringHelper*
+  // TValue = char*, const char*, const FlashStringHelper*
   template <typename TValue>
-  FORCE_INLINE bool set(const TValue* value) {
+  FORCE_INLINE bool set(TValue* value) {
     return _array.set(_index, value);
   }
   //

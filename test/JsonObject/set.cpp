@@ -10,17 +10,6 @@ TEST_CASE("JsonObject::set()") {
   DynamicJsonBuffer jb;
   JsonObject& _object = jb.createObject();
 
-  SECTION("SizeIncreased_WhenValuesAreAdded") {
-    _object.set("hello", 42);
-    REQUIRE(1 == _object.size());
-  }
-
-  SECTION("SizeUntouched_WhenSameValueIsAdded") {
-    _object["hello"] = 1;
-    _object["hello"] = 2;
-    REQUIRE(1 == _object.size());
-  }
-
   SECTION("int") {
     _object.set("hello", 123);
 
@@ -91,17 +80,59 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(42 == _object["a"]);
   }
 
-  SECTION("ShouldReturnTrue_WhenAllocationSucceeds") {
+  SECTION("returns true when allocation succeeds") {
     StaticJsonBuffer<JSON_OBJECT_SIZE(1) + 15> jsonBuffer;
     JsonObject& obj = jsonBuffer.createObject();
 
     REQUIRE(true == obj.set(std::string("hello"), std::string("world")));
   }
 
-  SECTION("ShouldReturnFalse_WhenAllocationFails") {
+  SECTION("returns false when allocation fails") {
     StaticJsonBuffer<JSON_OBJECT_SIZE(1) + 10> jsonBuffer;
     JsonObject& obj = jsonBuffer.createObject();
 
     REQUIRE(false == obj.set(std::string("hello"), std::string("world")));
+  }
+
+  SECTION("should not duplicate const char*") {
+    _object.set("hello", "world");
+    const size_t expectedSize = JSON_OBJECT_SIZE(1);
+    REQUIRE(expectedSize == jb.size());
+  }
+
+  SECTION("should duplicate char* value") {
+    _object.set("hello", const_cast<char*>("world"));
+    const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
+    REQUIRE(expectedSize == jb.size());
+  }
+
+  SECTION("should duplicate char* key") {
+    _object.set(const_cast<char*>("hello"), "world");
+    const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
+    REQUIRE(expectedSize == jb.size());
+  }
+
+  SECTION("should duplicate char* key&value") {
+    _object.set(const_cast<char*>("hello"), const_cast<char*>("world"));
+    const size_t expectedSize = JSON_OBJECT_SIZE(1) + 12;
+    REQUIRE(expectedSize <= jb.size());
+  }
+
+  SECTION("should duplicate std::string value") {
+    _object.set("hello", std::string("world"));
+    const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
+    REQUIRE(expectedSize == jb.size());
+  }
+
+  SECTION("should duplicate std::string key") {
+    _object.set(std::string("hello"), "world");
+    const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
+    REQUIRE(expectedSize == jb.size());
+  }
+
+  SECTION("should duplicate std::string key&value") {
+    _object.set(std::string("hello"), std::string("world"));
+    const size_t expectedSize = JSON_OBJECT_SIZE(1) + 12;
+    REQUIRE(expectedSize <= jb.size());
   }
 }

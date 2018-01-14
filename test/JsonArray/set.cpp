@@ -12,11 +12,6 @@ TEST_CASE("JsonArray::set()") {
   JsonArray& _array = _jsonBuffer.createArray();
   _array.add(0);
 
-  SECTION("SizeIsUnchanged") {
-    _array.set(0, "hello");
-    REQUIRE(1U == _array.size());
-  }
-
   SECTION("int") {
     _array.set(0, 123);
     REQUIRE(123 == _array[0].as<int>());
@@ -81,5 +76,23 @@ TEST_CASE("JsonArray::set()") {
     _array.set(0, obj["x"]);
 
     REQUIRE_THAT(_array[0].as<char*>(), Equals("hello"));
+  }
+
+  SECTION("should not duplicate const char*") {
+    _array.set(0, "world");
+    const size_t expectedSize = JSON_ARRAY_SIZE(1);
+    REQUIRE(expectedSize == _jsonBuffer.size());
+  }
+
+  SECTION("should duplicate char*") {
+    _array.set(0, const_cast<char*>("world"));
+    const size_t expectedSize = JSON_ARRAY_SIZE(1) + 6;
+    REQUIRE(expectedSize == _jsonBuffer.size());
+  }
+
+  SECTION("should duplicate std::string") {
+    _array.set(0, std::string("world"));
+    const size_t expectedSize = JSON_ARRAY_SIZE(1) + 6;
+    REQUIRE(expectedSize == _jsonBuffer.size());
   }
 }

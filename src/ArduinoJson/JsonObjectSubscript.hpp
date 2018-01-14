@@ -31,10 +31,9 @@ class JsonObjectSubscript
 
   // Set the specified value
   //
-  // operator=(TValue);
+  // operator=(const TValue&);
   // TValue = bool, char, long, int, short, float, double,
-  //          const std::string&, const String&,
-  //          const JsonArray&, const JsonObject&
+  //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
   FORCE_INLINE
       typename TypeTraits::EnableIf<!TypeTraits::IsArray<TValue>::value,
@@ -45,7 +44,7 @@ class JsonObjectSubscript
   }
   //
   // operator=(TValue);
-  // TValue = const char*, const char[N], const FlashStringHelper*
+  // TValue = char*, const char*, const FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE this_type& operator=(const TValue* src) {
     _object.set(_key, src);
@@ -68,10 +67,9 @@ class JsonObjectSubscript
 
   // Sets the specified value.
   //
-  // bool set(TValue);
+  // bool set(const TValue&);
   // TValue = bool, char, long, int, short, float, double, RawJson, JsonVariant,
-  //          const std::string&, const String&,
-  //          const JsonArray&, const JsonObject&
+  //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
   FORCE_INLINE
       typename TypeTraits::EnableIf<!TypeTraits::IsArray<TValue>::value,
@@ -81,7 +79,7 @@ class JsonObjectSubscript
   }
   //
   // bool set(TValue);
-  // TValue = const char*, const char[N], const FlashStringHelper*
+  // TValue = char*, const char, const FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE bool set(const TValue* value) {
     return _object.set(_key, value);

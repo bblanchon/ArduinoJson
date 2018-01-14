@@ -1,6 +1,22 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Changed the rules of string duplication (issue #658)
+
+> ### New rules for string duplication
+>
+> | type         | duplication |
+> |:-------------|:------------|
+> | const char*  | no          |
+> | char*        | ~~no~~ yes  |
+> | String       | yes         |
+> | std::string  | yes         |
+>
+> These new rules make `JsonBuffer::strdup()` useless.
+
 v5.12.0
 -------
 

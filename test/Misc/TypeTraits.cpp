@@ -36,4 +36,9 @@ TEST_CASE("TypeTraits") {
     REQUIRE((IsString<std::string>::value));
     REQUIRE_FALSE((IsString<double>::value));
   }
+
+  SECTION("IsConst") {
+    REQUIRE_FALSE((IsConst<char>::value));
+    REQUIRE((IsConst<const char>::value));
+  }
 }

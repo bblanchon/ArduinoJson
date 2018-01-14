@@ -9,6 +9,7 @@
 #include "../TypeTraits/EnableIf.hpp"
 #include "../TypeTraits/IsBaseOf.hpp"
 #include "../TypeTraits/IsChar.hpp"
+#include "../TypeTraits/IsConst.hpp"
 #include "../TypeTraits/RemoveReference.hpp"
 
 namespace ArduinoJson {

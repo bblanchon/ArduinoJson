@@ -6,7 +6,7 @@
 
 #ifdef _MSC_VER  // Visual Studio
 
-#define FORCE_INLINE __forceinline
+#define FORCE_INLINE  // __forceinline causes C4714 when returning std::string
 #define NO_INLINE __declspec(noinline)
 #define DEPRECATED(msg) __declspec(deprecated(msg))
 
