@@ -38,19 +38,19 @@ class JsonBuffer : Internals::NonCopyable {
 
   // Duplicates a string
   //
-  // char* strdup(TValue);
+  // const char* strdup(TValue);
   // TValue = const std::string&, const String&,
   template <typename TString>
   typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
-                                char *>::type
+                                const char *>::type
   strdup(const TString &src) {
     return Internals::StringTraits<TString>::duplicate(src, this);
   }
   //
-  // char* strdup(TValue);
+  // const char* strdup(TValue);
   // TValue = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  char *strdup(const TString *src) {
+  const char *strdup(const TString *src) {
     return Internals::StringTraits<const TString *>::duplicate(src, this);
   }
 

@@ -10,14 +10,14 @@ TEST_CASE("DynamicJsonBuffer::strdup()") {
 
   SECTION("Should return a copy") {
     char original[] = "hello";
-    char* copy = buffer.strdup(original);
+    const char* copy = buffer.strdup(original);
     strcpy(original, "world");
     REQUIRE(std::string("hello") == copy);
   }
 
   SECTION("Given NULL, return NULL") {
     const char* original = NULL;
-    char* copy = buffer.strdup(original);
+    const char* copy = buffer.strdup(original);
     REQUIRE(0 == copy);
   }
 }

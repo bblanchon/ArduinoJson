@@ -243,7 +243,7 @@ TEST_CASE("std::string") {
 
   SECTION("JsonBuffer_strdup") {
     std::string original("hello");
-    char *copy = jb.strdup(original);
+    const char *copy = jb.strdup(original);
     original[0] = 'w';
     REQUIRE(std::string("hello") == copy);
   }

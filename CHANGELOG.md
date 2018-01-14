@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Changed the rules of string duplication (issue #658)
+* Changed the return type of `strdup()` to `const char*` to prevent double duplication
 
 > ### New rules for string duplication
 >
