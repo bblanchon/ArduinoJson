@@ -20,7 +20,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
 * [100% code coverage](https://coveralls.io/github/bblanchon/ArduinoJson)
 * [Header-only library](https://en.wikipedia.org/wiki/Header-only)
 * [MIT License](https://en.wikipedia.org/wiki/MIT_License)
-* [Comprehensive documentation](https://arduinojson.org?utm_source=readme)
+* [Comprehensive documentation](https://arduinojson.org?utm_source=github&utm_medium=readme)
 
 ## Compatibility
 
@@ -69,7 +69,7 @@ double latitude    = root["data"][0];
 double longitude   = root["data"][1];
 ```
 
-See the [tutorial on arduinojson.org](https://arduinojson.org/doc/decoding/?utm_source=readme)
+See the [tutorial on arduinojson.org](https://arduinojson.org/doc/decoding/?utm_source=github&utm_medium=readme)
 
 ### Serialization
 
@@ -91,20 +91,20 @@ root.printTo(Serial);
 // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 ```
 
-See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/?utm_source=readme)
+See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/?utm_source=github&utm_medium=readme)
 
 ## Documentation
 
-The documentation is available on [arduinojson.org](https://arduinojson.org/?utm_source=readme), here are some shortcuts:
+The documentation is available on [arduinojson.org](https://arduinojson.org/?utm_source=github&utm_medium=readme), here are some shortcuts:
 
-* The [Examples](https://arduinojson.org/example/?utm_source=readme) show how to use the library in various situations.
-* The [API Reference](https://arduinojson.org/api/?utm_source=readme) contains the description of each class and function.
-* The [FAQ](https://arduinojson.org/faq/?utm_source=readme) has the answer to virtually every question.
-* The [ArduinoJson Assistant](https://arduinojson.org/assistant/?utm_source=readme) writes programs for you!
+* The [Examples](https://arduinojson.org/example/?utm_source=github&utm_medium=readme) show how to use the library in various situations.
+* The [API Reference](https://arduinojson.org/api/?utm_source=github&utm_medium=readme) contains the description of each class and function.
+* The [FAQ](https://arduinojson.org/faq/?utm_source=github&utm_medium=readme) has the answer to virtually every question.
+* The [ArduinoJson Assistant](https://arduinojson.org/assistant/?utm_source=github&utm_medium=readme) writes programs for you!
 
 ---
 
 Do you like this library? Please [star this project on GitHub](https://github.com/bblanchon/ArduinoJson/stargazers)!
 
 What? You don't like it but you *love* it?
-We don't take donations anymore, but [we sell a book](https://arduinojson.org/book/?utm_source=readme), so you can help and learn at the same time!
+We don't take donations anymore, but [we sell a book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme), so you can help and learn at the same time!

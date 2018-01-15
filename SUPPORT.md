@@ -6,8 +6,8 @@ We'll be very happy to help you, but first please read the following.
 
 ## Before asking for help
 
-1. Read the [FAQ](https://arduinojson.org/faq/)
-2. Search in the [API Reference](https://arduinojson.org/api/)
+1. Read the [FAQ](https://arduinojson.org/faq/?utm_source=github&utm_medium=support)
+2. Search in the [API Reference](https://arduinojson.org/api/?utm_source=github&utm_medium=support)
 
 If you did not find the answer, please create a [new issue on GitHub](https://github.com/bblanchon/ArduinoJson/issues/new).
 
