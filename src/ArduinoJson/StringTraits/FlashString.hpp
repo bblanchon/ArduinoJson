@@ -34,32 +34,24 @@ struct StringTraits<const __FlashStringHelper*, void> {
     return strcmp_P(expected, (const char*)str) == 0;
   }
 
-  // TODO: remove
+  static bool is_null(const __FlashStringHelper* str) {
+    return !str;
+  }
+
+  typedef const char* duplicate_t;
+
   template <typename Buffer>
-  static char* duplicate(const __FlashStringHelper* str, Buffer* buffer) {
+  static duplicate_t duplicate(const __FlashStringHelper* str, Buffer* buffer) {
     if (!str) return NULL;
     size_t size = strlen_P((const char*)str) + 1;
     void* dup = buffer->alloc(size);
     if (dup != NULL) memcpy_P(dup, (const char*)str, size);
-    return static_cast<char*>(dup);
-  }
-
-  template <typename Buffer, typename Destination>
-  static bool save(const __FlashStringHelper* source, Destination& dest,
-                   Buffer* buffer) {
-    if (source) {
-      size_t size = strlen_P((const char*)source) + 1;
-      void* dup = buffer->alloc(size);
-      if (dup != NULL) memcpy_P(dup, (const char*)source, size);
-      dest = reinterpret_cast<const char*>(dup);
-    } else {
-      dest = reinterpret_cast<const char*>(source);
-    }
-    return true;
+    return static_cast<duplicate_t>(dup);
   }
 
   static const bool has_append = false;
   static const bool has_equals = true;
+  static const bool should_duplicate = true;
 };
 }
 }

@@ -40,6 +40,9 @@ void setup() {
   // WARNING: the content of the String will be duplicated in the JsonBuffer.
   root["sensor"] = sensor;
 
+  // It works with RawJson too:
+  root["sensor"] = RawJson(sensor);
+
   // You can also concatenate strings
   // WARNING: the content of the String will be duplicated in the JsonBuffer.
   root[String("sen") + "sor"] = String("gp") + "s";

@@ -37,6 +37,9 @@ void setup() {
   // JsonBuffer.
   root["sensor"] = F("gps");
 
+  // It works with RawJson too:
+  root["sensor"] = RawJson(F("\"gps\""));
+
   // You can compare the content of a JsonVariant to a Flash String
   if (root["sensor"] == F("gps")) {
     // ...

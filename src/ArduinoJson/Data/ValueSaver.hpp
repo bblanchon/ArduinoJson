@@ -23,11 +23,29 @@ struct ValueSaver {
 
 template <typename Source>
 struct ValueSaver<Source, typename TypeTraits::EnableIf<
-                              TypeTraits::IsString<Source>::value>::type> {
+                              StringTraits<Source>::should_duplicate>::type> {
   template <typename Destination>
-  static bool save(JsonBuffer* buffer, Destination& destination,
-                   Source source) {
-    return StringTraits<Source>::save(source, destination, buffer);
+  static bool save(JsonBuffer* buffer, Destination& dest, Source source) {
+    if (!StringTraits<Source>::is_null(source)) {
+      typename StringTraits<Source>::duplicate_t dup =
+          StringTraits<Source>::duplicate(source, buffer);
+      if (!dup) return false;
+      dest = dup;
+    } else {
+      dest = reinterpret_cast<const char*>(0);
+    }
+    return true;
+  }
+};
+
+// const char*, const signed char*, const unsigned char*
+template <typename Char>
+struct ValueSaver<Char*, typename TypeTraits::EnableIf<
+                             !StringTraits<Char*>::should_duplicate>::type> {
+  template <typename Destination>
+  static bool save(JsonBuffer*, Destination& dest, Char* source) {
+    dest = reinterpret_cast<const char*>(source);
+    return true;
   }
 };
 }

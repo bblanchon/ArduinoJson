@@ -33,58 +33,31 @@ struct CharPointerTraits {
     return strcmp(reinterpret_cast<const char*>(str), expected) == 0;
   }
 
-  // TODO: remove
+  static bool is_null(const TChar* str) {
+    return !str;
+  }
+
+  typedef const char* duplicate_t;
+
   template <typename Buffer>
-  static char* duplicate(const TChar* str, Buffer* buffer) {
+  static duplicate_t duplicate(const TChar* str, Buffer* buffer) {
     if (!str) return NULL;
     size_t size = strlen(reinterpret_cast<const char*>(str)) + 1;
     void* dup = buffer->alloc(size);
     if (dup != NULL) memcpy(dup, str, size);
-    return static_cast<char*>(dup);
+    return static_cast<duplicate_t>(dup);
   }
 
   static const bool has_append = false;
   static const bool has_equals = true;
-};
-
-// const char*, const unsigned char*, const signed char*
-template <typename TChar>
-struct StringTraits<TChar*, typename TypeTraits::EnableIf<
-                                TypeTraits::IsChar<TChar>::value &&
-                                TypeTraits::IsConst<TChar>::value>::type>
-    : CharPointerTraits<TChar> {
-  // Just save the pointer
-  template <typename Buffer, typename Destination>
-  static typename TypeTraits::EnableIf<TypeTraits::IsConst<TChar>::value,
-                                       bool>::type
-  save(const TChar* source, Destination& dest, Buffer*) {
-    dest = reinterpret_cast<const char*>(source);
-    return true;
-  }
+  static const bool should_duplicate = !TypeTraits::IsConst<TChar>::value;
 };
 
 // char*, unsigned char*, signed char*
+// const char*, const unsigned char*, const signed char*
 template <typename TChar>
 struct StringTraits<TChar*, typename TypeTraits::EnableIf<
-                                TypeTraits::IsChar<TChar>::value &&
-                                !TypeTraits::IsConst<TChar>::value>::type>
-    : CharPointerTraits<TChar> {
-  // Make a copy of the string
-  template <typename Buffer, typename Destination>
-  static typename TypeTraits::EnableIf<!TypeTraits::IsConst<TChar>::value,
-                                       bool>::type
-  save(const TChar* source, Destination& dest, Buffer* buffer) {
-    if (source) {
-      size_t size = strlen(reinterpret_cast<const char*>(source)) + 1;
-      void* dup = buffer->alloc(size);
-      if (!dup) return false;
-      memcpy(dup, source, size);
-      dest = reinterpret_cast<const char*>(dup);
-    } else {
-      dest = reinterpret_cast<const char*>(source);
-    }
-    return true;
-  }
-};
+                                TypeTraits::IsChar<TChar>::value>::type>
+    : CharPointerTraits<TChar> {};
 }
 }

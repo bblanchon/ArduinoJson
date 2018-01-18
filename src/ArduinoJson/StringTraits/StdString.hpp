@@ -19,29 +19,20 @@ namespace Internals {
 
 template <typename TString>
 struct StdStringTraits {
-  // TODO: remove
+  typedef const char* duplicate_t;
+
   template <typename Buffer>
-  static char* duplicate(const TString& str, Buffer* buffer) {
+  static duplicate_t duplicate(const TString& str, Buffer* buffer) {
     if (!str.c_str()) return NULL;  // <- Arduino string can return NULL
     size_t size = str.length() + 1;
     void* dup = buffer->alloc(size);
     if (dup != NULL) memcpy(dup, str.c_str(), size);
-    return static_cast<char*>(dup);
+    return static_cast<duplicate_t>(dup);
   }
 
-  template <typename Buffer, typename Destination>
-  static bool save(const TString& str, Destination& dest, Buffer* buffer) {
+  static bool is_null(const TString& str) {
     // Arduino's String::c_str() can return NULL
-    if (str.c_str()) {
-      size_t size = str.length() + 1;
-      void* dup = buffer->alloc(size);
-      if (!dup) return false;
-      memcpy(dup, str.c_str(), size);
-      dest = reinterpret_cast<const char*>(dup);
-    } else {
-      dest = str.c_str();
-    }
-    return true;
+    return !str.c_str();
   }
 
   struct Reader : CharPointerTraits<char>::Reader {
@@ -62,6 +53,7 @@ struct StdStringTraits {
 
   static const bool has_append = true;
   static const bool has_equals = true;
+  static const bool should_duplicate = true;
 };
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING

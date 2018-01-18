@@ -46,7 +46,7 @@ class JsonObjectSubscript
   // operator=(TValue);
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename TValue>
-  FORCE_INLINE this_type& operator=(const TValue* src) {
+  FORCE_INLINE this_type& operator=(TValue* src) {
     _object.set(_key, src);
     return *this;
   }

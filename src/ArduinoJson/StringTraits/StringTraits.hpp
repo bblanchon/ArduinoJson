@@ -16,7 +16,10 @@ namespace ArduinoJson {
 namespace Internals {
 
 template <typename TString, typename Enable = void>
-struct StringTraits {};
+struct StringTraits {
+  static const bool has_append = false;
+  static const bool has_equals = false;
+};
 
 template <typename TString>
 struct StringTraits<const TString, void> : StringTraits<TString> {};
@@ -31,18 +34,3 @@ struct StringTraits<TString&, void> : StringTraits<TString> {};
 #include "FlashString.hpp"
 #include "StdStream.hpp"
 #include "StdString.hpp"
-
-namespace ArduinoJson {
-namespace TypeTraits {
-template <typename T, typename Enable = void>
-struct IsString {
-  static const bool value = false;
-};
-
-template <typename T>
-struct IsString<T, typename TypeTraits::EnableIf<
-                       Internals::StringTraits<T>::has_equals>::type> {
-  static const bool value = Internals::StringTraits<T>::has_equals;
-};
-}
-}

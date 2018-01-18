@@ -4,7 +4,6 @@
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
-#include <sstream>
 
 using namespace ArduinoJson::TypeTraits;
 
@@ -29,12 +28,6 @@ TEST_CASE("TypeTraits") {
     REQUIRE(
         static_cast<bool>(IsVariant<JsonObjectSubscript<const char*> >::value));
     REQUIRE(static_cast<bool>(IsVariant<JsonVariant>::value));
-  }
-
-  SECTION("IsString") {
-    REQUIRE((IsString<const char*>::value));
-    REQUIRE((IsString<std::string>::value));
-    REQUIRE_FALSE((IsString<double>::value));
   }
 
   SECTION("IsConst") {

@@ -29,8 +29,7 @@ template <typename T>
 class JsonPrintable {
  public:
   template <typename Print>
-  typename TypeTraits::EnableIf<!TypeTraits::IsString<Print>::value,
-                                size_t>::type
+  typename TypeTraits::EnableIf<!StringTraits<Print>::has_append, size_t>::type
   printTo(Print &print) const {
     JsonWriter<Print> writer(print);
     JsonSerializer<JsonWriter<Print> >::serialize(downcast(), writer);
@@ -79,8 +78,7 @@ class JsonPrintable {
   }
 
   template <typename Print>
-  typename TypeTraits::EnableIf<!TypeTraits::IsString<Print>::value,
-                                size_t>::type
+  typename TypeTraits::EnableIf<!StringTraits<Print>::has_append, size_t>::type
   prettyPrintTo(Print &print) const {
     IndentedPrint<Print> indentedPrint(print);
     return prettyPrintTo(indentedPrint);

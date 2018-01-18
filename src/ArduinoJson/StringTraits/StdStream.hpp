@@ -42,6 +42,9 @@ struct StdStreamTraits {
       return _stream.eof() ? '\0' : static_cast<char>(_stream.get());
     }
   };
+
+  static const bool has_append = false;
+  static const bool has_equals = false;
 };
 
 template <typename TStream>

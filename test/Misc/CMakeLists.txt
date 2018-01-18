@@ -8,6 +8,7 @@ add_executable(MiscTests
 	std_stream.cpp
 	std_string.cpp
 	StringBuilder.cpp
+	StringTraits.cpp
 	TypeTraits.cpp
 	unsigned_char.cpp
 	vla.cpp

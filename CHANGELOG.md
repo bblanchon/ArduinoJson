@@ -5,17 +5,19 @@ HEAD
 ----
 
 * Changed the rules of string duplication (issue #658)
+* `RawJson()` accepts any kind of string and obeys to the same rules for duplication
 * Changed the return type of `strdup()` to `const char*` to prevent double duplication
 * Marked `strdup()` as deprecated
 
 > ### New rules for string duplication
 >
-> | type         | duplication |
-> |:-------------|:------------|
-> | const char*  | no          |
-> | char*        | ~~no~~ yes  |
-> | String       | yes         |
-> | std::string  | yes         |
+> | type                       | duplication |
+> |:---------------------------|:------------|
+> | const char*                | no          |
+> | char*                      | ~~no~~ yes  |
+> | String                     | yes         |
+> | std::string                | yes         |
+> | const __FlashStringHelper* | yes         |
 >
 > These new rules make `JsonBuffer::strdup()` useless.
 

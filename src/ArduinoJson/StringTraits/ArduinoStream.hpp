@@ -43,6 +43,9 @@ struct ArduinoStreamTraits {
       return c;
     }
   };
+
+  static const bool has_append = false;
+  static const bool has_equals = false;
 };
 
 template <typename TStream>

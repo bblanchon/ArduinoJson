@@ -104,7 +104,7 @@ class JsonVariantComparisons {
   }
 
   template <typename TString>
-  typename TypeTraits::EnableIf<TypeTraits::IsString<TString>::value,
+  typename TypeTraits::EnableIf<Internals::StringTraits<TString>::has_equals,
                                 bool>::type
   equals(const TString &comparand) const {
     const char *value = as<const char *>();
@@ -112,9 +112,10 @@ class JsonVariantComparisons {
   }
 
   template <typename TComparand>
-  typename TypeTraits::EnableIf<!TypeTraits::IsVariant<TComparand>::value &&
-                                    !TypeTraits::IsString<TComparand>::value,
-                                bool>::type
+  typename TypeTraits::EnableIf<
+      !TypeTraits::IsVariant<TComparand>::value &&
+          !Internals::StringTraits<TComparand>::has_equals,
+      bool>::type
   equals(const TComparand &comparand) const {
     return as<TComparand>() == comparand;
   }
