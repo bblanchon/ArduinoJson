@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.13.0
+-------
 
 * Changed the rules of string duplication (issue #658)
 * `RawJson()` accepts any kind of string and obeys to the same rules for duplication
