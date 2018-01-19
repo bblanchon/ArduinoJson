@@ -5,7 +5,7 @@
 #pragma once
 
 namespace ArduinoJson {
-namespace TypeTraits {
+namespace Internals {
 
 // A meta-function that returns true if types T and U are the same.
 template <typename T, typename U>

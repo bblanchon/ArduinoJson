@@ -141,8 +141,7 @@ inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObjectTo(
 template <typename TReader, typename TWriter>
 inline const char *
 ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseString() {
-  typename TypeTraits::RemoveReference<TWriter>::type::String str =
-      _writer.startString();
+  typename RemoveReference<TWriter>::type::String str = _writer.startString();
 
   skipSpacesAndComments(_reader);
   char c = _reader.current();

@@ -5,7 +5,7 @@
 #pragma once
 
 namespace ArduinoJson {
-namespace Polyfills {
+namespace Internals {
 template <typename T>
 bool isNaN(T x) {
   return x != x;

@@ -13,6 +13,7 @@
 #endif
 
 namespace ArduinoJson {
+namespace Internals {
 class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
  public:
   FORCE_INLINE JsonArraySubscript(JsonArray& array, size_t index)
@@ -47,7 +48,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   }
 
   template <typename T>
-  FORCE_INLINE typename Internals::JsonVariantAs<T>::type as() const {
+  FORCE_INLINE typename JsonVariantAs<T>::type as() const {
     return _array.get<T>(_index);
   }
 
@@ -86,21 +87,6 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   const size_t _index;
 };
 
-#if ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream& operator<<(std::ostream& os,
-                                const JsonArraySubscript& source) {
-  return source.printTo(os);
-}
-#endif
-
-inline JsonArraySubscript JsonArray::operator[](size_t index) {
-  return JsonArraySubscript(*this, index);
-}
-
-inline const JsonArraySubscript JsonArray::operator[](size_t index) const {
-  return JsonArraySubscript(*const_cast<JsonArray*>(this), index);
-}
-
 template <typename TImpl>
 inline JsonArraySubscript JsonVariantSubscripts<TImpl>::operator[](
     size_t index) {
@@ -113,7 +99,23 @@ inline const JsonArraySubscript JsonVariantSubscripts<TImpl>::operator[](
   return impl()->template as<JsonArray>()[index];
 }
 
-}  // namespace ArduinoJson
+#if ARDUINOJSON_ENABLE_STD_STREAM
+inline std::ostream& operator<<(std::ostream& os,
+                                const JsonArraySubscript& source) {
+  return source.printTo(os);
+}
+#endif
+}
+
+inline Internals::JsonArraySubscript JsonArray::operator[](size_t index) {
+  return Internals::JsonArraySubscript(*this, index);
+}
+
+inline const Internals::JsonArraySubscript JsonArray::operator[](
+    size_t index) const {
+  return Internals::JsonArraySubscript(*const_cast<JsonArray*>(this), index);
+}
+}
 
 #ifdef _MSC_VER
 #pragma warning(pop)

@@ -14,6 +14,7 @@
 #endif
 
 namespace ArduinoJson {
+namespace Internals {
 
 template <typename TStringRef>
 class JsonObjectSubscript
@@ -35,10 +36,8 @@ class JsonObjectSubscript
   // TValue = bool, char, long, int, short, float, double,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
-  FORCE_INLINE
-      typename TypeTraits::EnableIf<!TypeTraits::IsArray<TValue>::value,
-                                    this_type&>::type
-      operator=(const TValue& src) {
+  FORCE_INLINE typename EnableIf<!IsArray<TValue>::value, this_type&>::type
+  operator=(const TValue& src) {
     _object.set(_key, src);
     return *this;
   }
@@ -56,7 +55,7 @@ class JsonObjectSubscript
   }
 
   template <typename TValue>
-  FORCE_INLINE typename Internals::JsonVariantAs<TValue>::type as() const {
+  FORCE_INLINE typename JsonVariantAs<TValue>::type as() const {
     return _object.get<TValue>(_key);
   }
 
@@ -71,10 +70,8 @@ class JsonObjectSubscript
   // TValue = bool, char, long, int, short, float, double, RawJson, JsonVariant,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
-  FORCE_INLINE
-      typename TypeTraits::EnableIf<!TypeTraits::IsArray<TValue>::value,
-                                    bool>::type
-      set(const TValue& value) {
+  FORCE_INLINE typename EnableIf<!IsArray<TValue>::value, bool>::type set(
+      const TValue& value) {
     return _object.set(_key, value);
   }
   //
@@ -105,7 +102,8 @@ inline std::ostream& operator<<(std::ostream& os,
   return source.printTo(os);
 }
 #endif
-}  // namespace ArduinoJson
+}
+}
 
 #ifdef _MSC_VER
 #pragma warning(pop)

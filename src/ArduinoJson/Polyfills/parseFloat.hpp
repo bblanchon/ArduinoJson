@@ -9,11 +9,11 @@
 #include "./math.hpp"
 
 namespace ArduinoJson {
-namespace Polyfills {
+namespace Internals {
 
 template <typename T>
 inline T parseFloat(const char* s) {
-  typedef TypeTraits::FloatTraits<T> traits;
+  typedef FloatTraits<T> traits;
   typedef typename traits::mantissa_type mantissa_t;
   typedef typename traits::exponent_type exponent_t;
 

@@ -10,7 +10,7 @@
 #include "../Polyfills/math.hpp"
 
 namespace ArduinoJson {
-namespace TypeTraits {
+namespace Internals {
 
 template <typename T, size_t = sizeof(T)>
 struct FloatTraits {};

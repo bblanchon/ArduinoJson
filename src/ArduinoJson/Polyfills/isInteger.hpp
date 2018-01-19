@@ -7,7 +7,7 @@
 #include "./ctype.hpp"
 
 namespace ArduinoJson {
-namespace Polyfills {
+namespace Internals {
 
 inline bool isInteger(const char* s) {
   if (!s) return false;

@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using namespace ArduinoJson::TypeTraits;
+using namespace ArduinoJson::Internals;
 
 TEST_CASE("TypeTraits") {
   SECTION("IsBaseOf") {

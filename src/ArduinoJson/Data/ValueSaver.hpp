@@ -22,8 +22,8 @@ struct ValueSaver {
 };
 
 template <typename Source>
-struct ValueSaver<Source, typename TypeTraits::EnableIf<
-                              StringTraits<Source>::should_duplicate>::type> {
+struct ValueSaver<
+    Source, typename EnableIf<StringTraits<Source>::should_duplicate>::type> {
   template <typename Destination>
   static bool save(JsonBuffer* buffer, Destination& dest, Source source) {
     if (!StringTraits<Source>::is_null(source)) {
@@ -40,8 +40,8 @@ struct ValueSaver<Source, typename TypeTraits::EnableIf<
 
 // const char*, const signed char*, const unsigned char*
 template <typename Char>
-struct ValueSaver<Char*, typename TypeTraits::EnableIf<
-                             !StringTraits<Char*>::should_duplicate>::type> {
+struct ValueSaver<
+    Char*, typename EnableIf<!StringTraits<Char*>::should_duplicate>::type> {
   template <typename Destination>
   static bool save(JsonBuffer*, Destination& dest, Char* source) {
     dest = reinterpret_cast<const char*>(source);

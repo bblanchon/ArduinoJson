@@ -11,12 +11,14 @@
 #include "Serialization/JsonPrintable.hpp"
 
 namespace ArduinoJson {
+namespace Internals {
 
 template <typename TImpl>
-class JsonVariantBase : public Internals::JsonPrintable<TImpl>,
+class JsonVariantBase : public JsonPrintable<TImpl>,
                         public JsonVariantCasts<TImpl>,
                         public JsonVariantComparisons<TImpl>,
                         public JsonVariantOr<TImpl>,
                         public JsonVariantSubscripts<TImpl>,
-                        public TypeTraits::JsonVariantTag {};
+                        public JsonVariantTag {};
+}
 }

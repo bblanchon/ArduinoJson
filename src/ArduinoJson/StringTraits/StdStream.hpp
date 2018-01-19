@@ -48,11 +48,11 @@ struct StdStreamTraits {
 };
 
 template <typename TStream>
-struct StringTraits<TStream,
-                    // match any type that is derived from std::istream:
-                    typename TypeTraits::EnableIf<TypeTraits::IsBaseOf<
-                        std::istream, typename TypeTraits::RemoveReference<
-                                          TStream>::type>::value>::type>
+struct StringTraits<
+    TStream,
+    // match any type that is derived from std::istream:
+    typename EnableIf<IsBaseOf<
+        std::istream, typename RemoveReference<TStream>::type>::value>::type>
     : StdStreamTraits {};
 }
 }

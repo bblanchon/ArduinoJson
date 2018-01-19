@@ -9,6 +9,7 @@
 #include "TypeTraits/IsVariant.hpp"
 
 namespace ArduinoJson {
+namespace Internals {
 
 template <typename TImpl>
 class JsonVariantComparisons {
@@ -20,10 +21,8 @@ class JsonVariantComparisons {
   }
 
   template <typename TComparand>
-  friend
-      typename TypeTraits::EnableIf<!TypeTraits::IsVariant<TComparand>::value,
-                                    bool>::type
-      operator==(TComparand comparand, const JsonVariantComparisons &variant) {
+  friend typename EnableIf<!IsVariant<TComparand>::value, bool>::type
+  operator==(TComparand comparand, const JsonVariantComparisons &variant) {
     return variant.equals(comparand);
   }
 
@@ -34,10 +33,8 @@ class JsonVariantComparisons {
   }
 
   template <typename TComparand>
-  friend
-      typename TypeTraits::EnableIf<!TypeTraits::IsVariant<TComparand>::value,
-                                    bool>::type
-      operator!=(TComparand comparand, const JsonVariantComparisons &variant) {
+  friend typename EnableIf<!IsVariant<TComparand>::value, bool>::type
+  operator!=(TComparand comparand, const JsonVariantComparisons &variant) {
     return !variant.equals(comparand);
   }
 
@@ -94,7 +91,7 @@ class JsonVariantComparisons {
   }
 
   template <typename T>
-  const typename Internals::JsonVariantAs<T>::type as() const {
+  const typename JsonVariantAs<T>::type as() const {
     return impl()->template as<T>();
   }
 
@@ -104,18 +101,16 @@ class JsonVariantComparisons {
   }
 
   template <typename TString>
-  typename TypeTraits::EnableIf<Internals::StringTraits<TString>::has_equals,
-                                bool>::type
-  equals(const TString &comparand) const {
+  typename EnableIf<StringTraits<TString>::has_equals, bool>::type equals(
+      const TString &comparand) const {
     const char *value = as<const char *>();
-    return Internals::StringTraits<TString>::equals(comparand, value);
+    return StringTraits<TString>::equals(comparand, value);
   }
 
   template <typename TComparand>
-  typename TypeTraits::EnableIf<
-      !TypeTraits::IsVariant<TComparand>::value &&
-          !Internals::StringTraits<TComparand>::has_equals,
-      bool>::type
+  typename EnableIf<!IsVariant<TComparand>::value &&
+                        !StringTraits<TComparand>::has_equals,
+                    bool>::type
   equals(const TComparand &comparand) const {
     return as<TComparand>() == comparand;
   }
@@ -139,4 +134,5 @@ class JsonVariantComparisons {
     return false;
   }
 };
+}
 }

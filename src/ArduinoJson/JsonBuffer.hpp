@@ -42,8 +42,8 @@ class JsonBuffer : Internals::NonCopyable {
   // TValue = const std::string&, const String&,
   template <typename TString>
   DEPRECATED("char* are duplicated, you don't need strdup() anymore")
-  typename TypeTraits::EnableIf<!TypeTraits::IsArray<TString>::value,
-                                const char *>::type strdup(const TString &src) {
+  typename Internals::EnableIf<!Internals::IsArray<TString>::value,
+                               const char *>::type strdup(const TString &src) {
     return Internals::StringTraits<TString>::duplicate(src, this);
   }
   //

@@ -7,7 +7,7 @@
 #include "IsBaseOf.hpp"
 
 namespace ArduinoJson {
-namespace TypeTraits {
+namespace Internals {
 
 class JsonVariantTag {};
 

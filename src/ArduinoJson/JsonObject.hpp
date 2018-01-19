@@ -26,6 +26,10 @@ namespace ArduinoJson {
 // Forward declarations
 class JsonArray;
 class JsonBuffer;
+namespace Internals {
+template <typename>
+class JsonObjectSubscript;
+}
 
 // A dictionary of JsonVariant indexed by string (char*)
 //
@@ -50,15 +54,16 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // JsonObjectSubscript operator[](TKey)
   // TKey = const std::string&, const String&
   template <typename TString>
-  JsonObjectSubscript<const TString&> operator[](const TString& key) {
-    return JsonObjectSubscript<const TString&>(*this, key);
+  Internals::JsonObjectSubscript<const TString&> operator[](
+      const TString& key) {
+    return Internals::JsonObjectSubscript<const TString&>(*this, key);
   }
   //
   // JsonObjectSubscript operator[](TKey)
   // TKey = char*, const char*, char[], const char[N], const FlashStringHelper*
   template <typename TString>
-  JsonObjectSubscript<TString*> operator[](TString* key) {
-    return JsonObjectSubscript<TString*>(*this, key);
+  Internals::JsonObjectSubscript<TString*> operator[](TString* key) {
+    return Internals::JsonObjectSubscript<TString*>(*this, key);
   }
 
   // Gets the value associated with the specified key.
@@ -66,17 +71,19 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // const JsonObjectSubscript operator[](TKey) const;
   // TKey = const std::string&, const String&
   template <typename TString>
-  const JsonObjectSubscript<const TString&> operator[](
+  const Internals::JsonObjectSubscript<const TString&> operator[](
       const TString& key) const {
-    return JsonObjectSubscript<const TString&>(*const_cast<JsonObject*>(this),
-                                               key);
+    return Internals::JsonObjectSubscript<const TString&>(
+        *const_cast<JsonObject*>(this), key);
   }
   //
   // const JsonObjectSubscript operator[](TKey) const;
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  const JsonObjectSubscript<TString*> operator[](TString* key) const {
-    return JsonObjectSubscript<TString*>(*const_cast<JsonObject*>(this), key);
+  const Internals::JsonObjectSubscript<TString*> operator[](
+      TString* key) const {
+    return Internals::JsonObjectSubscript<TString*>(
+        *const_cast<JsonObject*>(this), key);
   }
 
   // Sets the specified key with the specified value.
@@ -120,8 +127,8 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // TValue = float, double
   template <typename TValue, typename TString>
   DEPRECATED("Second argument is not supported anymore")
-  typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<TValue>::value,
-                                bool>::type
+  typename Internals::EnableIf<Internals::IsFloatingPoint<TValue>::value,
+                               bool>::type
       set(const TString& key, TValue value, uint8_t) {
     return set_impl<const TString&, const JsonVariant&>(key,
                                                         JsonVariant(value));
@@ -132,8 +139,8 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
   // TValue = float, double
   template <typename TValue, typename TString>
   DEPRECATED("Second argument is not supported anymore")
-  typename TypeTraits::EnableIf<TypeTraits::IsFloatingPoint<TValue>::value,
-                                bool>::type
+  typename Internals::EnableIf<Internals::IsFloatingPoint<TValue>::value,
+                               bool>::type
       set(TString* key, TValue value, uint8_t) {
     return set_impl<TString*, const JsonVariant&>(key, JsonVariant(value));
   }

@@ -56,7 +56,7 @@ struct FloatParts {
   }
 
   static int16_t normalize(TFloat& value) {
-    typedef TypeTraits::FloatTraits<TFloat> traits;
+    typedef FloatTraits<TFloat> traits;
     int16_t powersOf10 = 0;
 
     int8_t index = sizeof(TFloat) == 8 ? 8 : 5;

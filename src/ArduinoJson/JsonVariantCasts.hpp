@@ -8,6 +8,7 @@
 #include "Polyfills/attributes.hpp"
 
 namespace ArduinoJson {
+namespace Internals {
 
 template <typename TImpl>
 class JsonVariantCasts {
@@ -54,4 +55,5 @@ class JsonVariantCasts {
     return static_cast<const TImpl *>(this);
   }
 };
+}
 }

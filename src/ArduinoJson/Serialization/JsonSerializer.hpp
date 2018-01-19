@@ -9,13 +9,14 @@
 namespace ArduinoJson {
 
 class JsonArray;
-class JsonArraySubscript;
 class JsonObject;
-template <typename TKey>
-class JsonObjectSubscript;
 class JsonVariant;
 
 namespace Internals {
+
+class JsonArraySubscript;
+template <typename TKey>
+class JsonObjectSubscript;
 
 template <typename Writer>
 class JsonSerializer {

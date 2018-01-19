@@ -7,7 +7,7 @@
 #include "IsSame.hpp"
 
 namespace ArduinoJson {
-namespace TypeTraits {
+namespace Internals {
 
 // A meta-function that returns true if T is a charater
 template <typename T>

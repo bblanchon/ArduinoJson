@@ -8,7 +8,7 @@
 #include "./ctype.hpp"
 
 namespace ArduinoJson {
-namespace Polyfills {
+namespace Internals {
 
 inline bool isFloat(const char* s) {
   if (!s) return false;

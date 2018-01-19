@@ -5,7 +5,7 @@
 #pragma once
 
 namespace ArduinoJson {
-namespace Polyfills {
+namespace Internals {
 
 inline bool isdigit(char c) {
   return '0' <= c && c <= '9';

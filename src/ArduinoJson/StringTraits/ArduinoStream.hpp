@@ -49,11 +49,11 @@ struct ArduinoStreamTraits {
 };
 
 template <typename TStream>
-struct StringTraits<TStream,
-                    // match any type that is derived from Stream:
-                    typename TypeTraits::EnableIf<TypeTraits::IsBaseOf<
-                        Stream, typename TypeTraits::RemoveReference<
-                                    TStream>::type>::value>::type>
+struct StringTraits<
+    TStream,
+    // match any type that is derived from Stream:
+    typename EnableIf<
+        IsBaseOf<Stream, typename RemoveReference<TStream>::type>::value>::type>
     : ArduinoStreamTraits {};
 }
 }

@@ -71,7 +71,7 @@ class JsonParser {
 
 template <typename TJsonBuffer, typename TString, typename Enable = void>
 struct JsonParserBuilder {
-  typedef typename Internals::StringTraits<TString>::Reader InputReader;
+  typedef typename StringTraits<TString>::Reader InputReader;
   typedef JsonParser<InputReader, TJsonBuffer &> TParser;
 
   static TParser makeParser(TJsonBuffer *buffer, TString &json,
@@ -81,10 +81,9 @@ struct JsonParserBuilder {
 };
 
 template <typename TJsonBuffer, typename TChar>
-struct JsonParserBuilder<
-    TJsonBuffer, TChar *,
-    typename TypeTraits::EnableIf<!TypeTraits::IsConst<TChar>::value>::type> {
-  typedef typename Internals::StringTraits<TChar *>::Reader TReader;
+struct JsonParserBuilder<TJsonBuffer, TChar *,
+                         typename EnableIf<!IsConst<TChar>::value>::type> {
+  typedef typename StringTraits<TChar *>::Reader TReader;
   typedef StringWriter<TChar> TWriter;
   typedef JsonParser<TReader, TWriter> TParser;
 

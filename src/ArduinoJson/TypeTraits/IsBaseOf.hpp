@@ -5,7 +5,7 @@
 #pragma once
 
 namespace ArduinoJson {
-namespace TypeTraits {
+namespace Internals {
 
 // A meta-function that returns true if Derived inherits from TBase is an
 // integral type.

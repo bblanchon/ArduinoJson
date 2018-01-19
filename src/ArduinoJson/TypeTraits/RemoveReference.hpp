@@ -5,7 +5,7 @@
 #pragma once
 
 namespace ArduinoJson {
-namespace TypeTraits {
+namespace Internals {
 
 // A meta-function that return the type T without the reference modifier.
 template <typename T>

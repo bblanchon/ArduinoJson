@@ -58,7 +58,7 @@ inline T JsonVariant::variantAsInteger() const {
       return T(~_content.asInteger + 1);
     case JSON_STRING:
     case JSON_UNPARSED:
-      return Polyfills::parseInteger<T>(_content.asString);
+      return parseInteger<T>(_content.asString);
     default:
       return T(_content.asFloat);
   }
@@ -86,7 +86,7 @@ inline T JsonVariant::variantAsFloat() const {
       return -static_cast<T>(_content.asInteger);
     case JSON_STRING:
     case JSON_UNPARSED:
-      return Polyfills::parseFloat<T>(_content.asString);
+      return parseFloat<T>(_content.asString);
     default:
       return static_cast<T>(_content.asFloat);
   }
@@ -106,7 +106,7 @@ inline bool JsonVariant::variantIsInteger() const {
   using namespace Internals;
 
   return _type == JSON_POSITIVE_INTEGER || _type == JSON_NEGATIVE_INTEGER ||
-         (_type == JSON_UNPARSED && Polyfills::isInteger(_content.asString));
+         (_type == JSON_UNPARSED && isInteger(_content.asString));
 }
 
 inline bool JsonVariant::variantIsFloat() const {
@@ -114,7 +114,7 @@ inline bool JsonVariant::variantIsFloat() const {
 
   return _type == JSON_FLOAT || _type == JSON_POSITIVE_INTEGER ||
          _type == JSON_NEGATIVE_INTEGER ||
-         (_type == JSON_UNPARSED && Polyfills::isFloat(_content.asString));
+         (_type == JSON_UNPARSED && isFloat(_content.asString));
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
