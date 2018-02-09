@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed `JsonVariant::operator|(int)` that returned the default value if the variant contained a double (issue #675)
+
 v5.13.0
 -------
 

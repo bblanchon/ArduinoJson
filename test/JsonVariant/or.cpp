@@ -51,6 +51,12 @@ TEST_CASE("JsonVariant::operator|()") {
     REQUIRE(result == 0);
   }
 
+  SECTION("double | int") {
+    JsonVariant variant = 42.0;
+    int result = variant | 666;
+    REQUIRE(result == 42);
+  }
+
   SECTION("bool | bool") {
     JsonVariant variant = false;
     bool result = variant | true;
