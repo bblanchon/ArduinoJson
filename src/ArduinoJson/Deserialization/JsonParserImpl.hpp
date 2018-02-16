@@ -167,7 +167,7 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseString() {
     }
   } else {  // no quotes
     for (;;) {
-      if (!isLetterOrNumber(c)) break;
+      if (!canBeInNonQuotedString(c)) break;
       _reader.move();
       str.append(c);
       c = _reader.current();

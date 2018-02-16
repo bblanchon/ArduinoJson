@@ -8,148 +8,163 @@
 TEST_CASE("JsonBuffer::parseObject()") {
   DynamicJsonBuffer jb;
 
-  SECTION("EmptyObject") {
+  SECTION("An empty object") {
     JsonObject& obj = jb.parseObject("{}");
     REQUIRE(obj.success());
     REQUIRE(obj.size() == 0);
   }
 
-  SECTION("MissingOpeningBrace") {
-    JsonObject& obj = jb.parseObject("}");
-    REQUIRE_FALSE(obj.success());
+  SECTION("Quotes") {
+    SECTION("Double quotes") {
+      JsonObject& obj = jb.parseObject("{\"key\":\"value\"}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["key"] == "value");
+    }
+
+    SECTION("Single quotes") {
+      JsonObject& obj = jb.parseObject("{'key':'value'}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["key"] == "value");
+    }
+
+    SECTION("No quotes") {
+      JsonObject& obj = jb.parseObject("{key:value}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["key"] == "value");
+    }
+
+    SECTION("No quotes, allow underscore in key") {
+      JsonObject& obj = jb.parseObject("{_k_e_y_:42}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["_k_e_y_"] == 42);
+    }
   }
 
-  SECTION("MissingClosingBrace") {
-    JsonObject& obj = jb.parseObject("{");
-    REQUIRE_FALSE(obj.success());
+  SECTION("Spaces") {
+    SECTION("Before the key") {
+      JsonObject& obj = jb.parseObject("{ \"key\":\"value\"}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["key"] == "value");
+    }
+
+    SECTION("After the key") {
+      JsonObject& obj = jb.parseObject("{\"key\" :\"value\"}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["key"] == "value");
+    }
+
+    SECTION("Before the value") {
+      JsonObject& obj = jb.parseObject("{\"key\": \"value\"}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["key"] == "value");
+    }
+
+    SECTION("After the value") {
+      JsonObject& obj = jb.parseObject("{\"key\":\"value\" }");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 1);
+      REQUIRE(obj["key"] == "value");
+    }
+
+    SECTION("Before the colon") {
+      JsonObject& obj =
+          jb.parseObject("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"] == "value1");
+      REQUIRE(obj["key2"] == "value2");
+    }
+
+    SECTION("After the colon") {
+      JsonObject& obj =
+          jb.parseObject("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"] == "value1");
+      REQUIRE(obj["key2"] == "value2");
+    }
   }
 
-  SECTION("MissingColonAndValue") {
-    JsonObject& obj = jb.parseObject("{\"key\"}");
-    REQUIRE_FALSE(obj.success());
+  SECTION("Values types") {
+    SECTION("String") {
+      JsonObject& obj =
+          jb.parseObject("{\"key1\":\"value1\",\"key2\":\"value2\"}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"] == "value1");
+      REQUIRE(obj["key2"] == "value2");
+    }
+
+    SECTION("Integer") {
+      JsonObject& obj = jb.parseObject("{\"key1\":42,\"key2\":-42}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"] == 42);
+      REQUIRE(obj["key2"] == -42);
+    }
+
+    SECTION("Double") {
+      JsonObject& obj = jb.parseObject("{\"key1\":12.345,\"key2\":-7E89}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"] == 12.345);
+      REQUIRE(obj["key2"] == -7E89);
+    }
+
+    SECTION("Booleans") {
+      JsonObject& obj = jb.parseObject("{\"key1\":true,\"key2\":false}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"] == true);
+      REQUIRE(obj["key2"] == false);
+    }
+
+    SECTION("Null") {
+      JsonObject& obj = jb.parseObject("{\"key1\":null,\"key2\":null}");
+      REQUIRE(obj.success());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"].as<char*>() == 0);
+      REQUIRE(obj["key2"].as<char*>() == 0);
+    }
   }
 
-  SECTION("MissingQuotesAndColonAndValue") {
-    JsonObject& obj = jb.parseObject("{key}");
-    REQUIRE_FALSE(obj.success());
-  }
+  SECTION("Misc") {
+    SECTION("The opening brace is missing") {
+      JsonObject& obj = jb.parseObject("}");
+      REQUIRE_FALSE(obj.success());
+    }
 
-  SECTION("OneString") {
-    JsonObject& obj = jb.parseObject("{\"key\":\"value\"}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 1);
-    REQUIRE(obj["key"] == "value");
-  }
+    SECTION("The closing brace is missing") {
+      JsonObject& obj = jb.parseObject("{");
+      REQUIRE_FALSE(obj.success());
+    }
 
-  SECTION("OneStringSingleQuotes") {
-    JsonObject& obj = jb.parseObject("{'key':'value'}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 1);
-    REQUIRE(obj["key"] == "value");
-  }
+    SECTION("A quoted key without value") {
+      JsonObject& obj = jb.parseObject("{\"key\"}");
+      REQUIRE_FALSE(obj.success());
+    }
 
-  SECTION("OneStringNoQuotes") {
-    JsonObject& obj = jb.parseObject("{key:value}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 1);
-    REQUIRE(obj["key"] == "value");
-  }
+    SECTION("A non-quoted key without value") {
+      JsonObject& obj = jb.parseObject("{key}");
+      REQUIRE_FALSE(obj.success());
+    }
 
-  SECTION("OneStringSpaceBeforeKey") {
-    JsonObject& obj = jb.parseObject("{ \"key\":\"value\"}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 1);
-    REQUIRE(obj["key"] == "value");
-  }
+    SECTION("A dangling comma") {
+      JsonObject& obj = jb.parseObject("{\"key1\":\"value1\",}");
+      REQUIRE_FALSE(obj.success());
+      REQUIRE(obj.size() == 0);
+    }
 
-  SECTION("OneStringSpaceAfterKey") {
-    JsonObject& obj = jb.parseObject("{\"key\" :\"value\"}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 1);
-    REQUIRE(obj["key"] == "value");
-  }
-
-  SECTION("OneStringSpaceBeforeValue") {
-    JsonObject& obj = jb.parseObject("{\"key\": \"value\"}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 1);
-    REQUIRE(obj["key"] == "value");
-  }
-
-  SECTION("OneStringSpaceAfterValue") {
-    JsonObject& obj = jb.parseObject("{\"key\":\"value\" }");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 1);
-    REQUIRE(obj["key"] == "value");
-  }
-
-  SECTION("TwoStrings") {
-    JsonObject& obj =
-        jb.parseObject("{\"key1\":\"value1\",\"key2\":\"value2\"}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 2);
-    REQUIRE(obj["key1"] == "value1");
-    REQUIRE(obj["key2"] == "value2");
-  }
-
-  SECTION("TwoStringsSpaceBeforeComma") {
-    JsonObject& obj =
-        jb.parseObject("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 2);
-    REQUIRE(obj["key1"] == "value1");
-    REQUIRE(obj["key2"] == "value2");
-  }
-
-  SECTION("TwoStringsSpaceAfterComma") {
-    JsonObject& obj =
-        jb.parseObject("{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 2);
-    REQUIRE(obj["key1"] == "value1");
-    REQUIRE(obj["key2"] == "value2");
-  }
-
-  SECTION("EndingWithAComma") {
-    JsonObject& obj = jb.parseObject("{\"key1\":\"value1\",}");
-    REQUIRE_FALSE(obj.success());
-    REQUIRE(obj.size() == 0);
-  }
-
-  SECTION("TwoIntergers") {
-    JsonObject& obj = jb.parseObject("{\"key1\":42,\"key2\":-42}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 2);
-    REQUIRE(obj["key1"] == 42);
-    REQUIRE(obj["key2"] == -42);
-  }
-
-  SECTION("TwoDoubles") {
-    JsonObject& obj = jb.parseObject("{\"key1\":12.345,\"key2\":-7E89}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 2);
-    REQUIRE(obj["key1"] == 12.345);
-    REQUIRE(obj["key2"] == -7E89);
-  }
-
-  SECTION("TwoBooleans") {
-    JsonObject& obj = jb.parseObject("{\"key1\":true,\"key2\":false}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 2);
-    REQUIRE(obj["key1"] == true);
-    REQUIRE(obj["key2"] == false);
-  }
-
-  SECTION("TwoNulls") {
-    JsonObject& obj = jb.parseObject("{\"key1\":null,\"key2\":null}");
-    REQUIRE(obj.success());
-    REQUIRE(obj.size() == 2);
-    REQUIRE(obj["key1"].as<char*>() == 0);
-    REQUIRE(obj["key2"].as<char*>() == 0);
-  }
-
-  SECTION("NullForKey") {
-    JsonObject& obj = jb.parseObject("null:\"value\"}");
-    REQUIRE_FALSE(obj.success());
+    SECTION("null as a key") {
+      JsonObject& obj = jb.parseObject("null:\"value\"}");
+      REQUIRE_FALSE(obj.success());
+    }
   }
 }
