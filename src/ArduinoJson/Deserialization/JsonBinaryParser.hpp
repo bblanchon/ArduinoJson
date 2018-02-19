@@ -14,11 +14,6 @@
 namespace ArduinoJson {
     namespace Internals {
 
-#define signF64UI( a ) ((bool) ((uint64_t) (a)>>63))
-#define expF64UI( a ) ((int_fast16_t) ((a)>>52) & 0x7FF)
-#define fracF64UI( a ) ((a) & UINT64_C( 0x000FFFFFFFFFFFFF ))
-#define packToF32UI( sign, exp, sig ) (((uint32_t) (sign)<<31) + ((uint32_t) (exp)<<23) + (sig))
-
 // Parse JSON string to create JsonArrays and JsonObjects
 // This internal class is not indended to be used directly.
 // Instead, use JsonBuffer.parseArray() or .parseObject()
