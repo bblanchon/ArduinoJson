@@ -8,25 +8,44 @@
 
 namespace ArduinoJson {
 
-class JsonArray;
-class JsonObject;
-class JsonVariant;
+    class JsonArray;
 
-namespace Internals {
+    class JsonObject;
 
-class JsonArraySubscript;
-template <typename TKey>
-class JsonObjectSubscript;
+    class JsonVariant;
 
-template <typename Writer>
-class JsonSerializer {
- public:
-  static void serialize(const JsonArray &, Writer &);
-  static void serialize(const JsonArraySubscript &, Writer &);
-  static void serialize(const JsonObject &, Writer &);
-  template <typename TKey>
-  static void serialize(const JsonObjectSubscript<TKey> &, Writer &);
-  static void serialize(const JsonVariant &, Writer &);
-};
-}
+    namespace Internals {
+
+        class JsonArraySubscript;
+
+        template<typename TKey>
+        class JsonObjectSubscript;
+
+        template<typename Writer>
+        class JsonSerializer {
+        public:
+            static void serialize(const JsonArray &, Writer &);
+
+            static void serialize(const JsonArraySubscript &, Writer &);
+
+            static void serialize(const JsonObject &, Writer &);
+
+            template<typename TKey>
+            static void serialize(const JsonObjectSubscript<TKey> &, Writer &);
+
+            static void serialize(const JsonVariant &, Writer &);
+
+
+            static void binarySerialize(const JsonArray &, Writer &);
+
+            static void binarySerialize(const JsonArraySubscript &, Writer &);
+
+            static void binarySerialize(const JsonObject &, Writer &);
+
+            template<typename TKey>
+            static void binarySerialize(const JsonObjectSubscript<TKey> &, Writer &);
+
+            static void binarySerialize(const JsonVariant &, Writer &);
+        };
+    }
 }
