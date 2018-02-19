@@ -1,4 +1,4 @@
-version: 5.13.0.{build}
+version: 5.13.1.{build}
 environment:
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
