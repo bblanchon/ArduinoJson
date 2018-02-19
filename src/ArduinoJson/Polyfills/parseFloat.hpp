@@ -8,7 +8,6 @@
 #include "./ctype.hpp"
 #include "./math.hpp"
 #include "./convertDouble.hpp"
-#include "convertDouble.hpp"
 
 namespace ArduinoJson {
     namespace Internals {
