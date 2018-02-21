@@ -166,6 +166,35 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
     return get_impl<TString*, TValue>(key);
   }
 
+  // Gets the value associated with the specified key.
+  // If no value found, return the specified defaultValue.
+  //
+  // TValue get<TValue>(TKey, TValue);
+  // TKey = const std::string&, const String&
+  // TValue = bool, char, long, int, short, float, double,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
+  template<typename TValue, typename TString>
+  typename TypeTraits::EnableIf<
+          !TypeTraits::IsArray<TString>::value,
+          typename Internals::JsonVariantAs<TValue>::type>::type
+  get(const TString &key, TValue defaultValue) const {
+    return get_impl<const TString &, TValue>(key, defaultValue);
+  }
+
+  //
+  // TValue get<TValue>(TKey, defaultValue)
+  // If no value found, return the specified defaultValue;
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TValue = bool, char, long, int, short, float, double,
+  //          const std::string&, const String&,
+  //          const JsonArray&, const JsonObject&
+  template<typename TValue, typename TString>
+  typename Internals::JsonVariantAs<TValue>::type get(
+          const TString *key, TValue defaultValue) const {
+    return get_impl<const TString *, TValue>(key, defaultValue);
+  }
+
   // Checks the type of the value associated with the specified key.
   //
   //
@@ -282,6 +311,14 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
     const_iterator it = findKey<TStringRef>(key);
     return it != end() ? it->value.as<TValue>()
                        : Internals::JsonVariantDefault<TValue>::get();
+  }
+
+  template<typename TStringRef, typename TValue>
+  typename Internals::JsonVariantAs<TValue>::type get_impl(
+          TStringRef key, TValue defaultValue) const {
+    const_iterator it = findKey<TStringRef>(key);
+    return it != end() ? it->value.as<TValue>()
+                       : defaultValue;
   }
 
   template <typename TStringRef, typename TValueRef>

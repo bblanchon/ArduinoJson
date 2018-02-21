@@ -1,4 +1,4 @@
-.DS_Store
+*/.DS_Store
 /.idea
 /build
 /bin
@@ -9,3 +9,4 @@
 /fuzzing/*_fuzzer
 /fuzzing/*_fuzzer.options
 /fuzzing/*_fuzzer_seed_corpus.zip
+/cmake-build-debug
