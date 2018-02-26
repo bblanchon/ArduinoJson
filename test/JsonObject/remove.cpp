@@ -7,10 +7,9 @@
 #include <string>
 
 TEST_CASE("JsonObject::remove()") {
-  DynamicJsonBuffer jb;
+  DynamicJsonObject obj;
 
   SECTION("SizeDecreased_WhenValuesAreRemoved") {
-    JsonObject& obj = jb.createObject();
     obj["hello"] = 1;
 
     obj.remove("hello");
@@ -19,7 +18,6 @@ TEST_CASE("JsonObject::remove()") {
   }
 
   SECTION("SizeUntouched_WhenRemoveIsCalledWithAWrongKey") {
-    JsonObject& obj = jb.createObject();
     obj["hello"] = 1;
 
     obj.remove("world");
@@ -28,7 +26,7 @@ TEST_CASE("JsonObject::remove()") {
   }
 
   SECTION("RemoveByIterator") {
-    JsonObject& obj = jb.parseObject("{\"a\":0,\"b\":1,\"c\":2}");
+    deserializeJson(obj, "{\"a\":0,\"b\":1,\"c\":2}");
 
     for (JsonObject::iterator it = obj.begin(); it != obj.end(); ++it) {
       if (it->value == 1) obj.remove(it);

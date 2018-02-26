@@ -15,8 +15,7 @@ static void check(JsonArray &array, std::string expected) {
 }
 
 TEST_CASE("JsonArray::printTo()") {
-  StaticJsonBuffer<JSON_ARRAY_SIZE(2)> jb;
-  JsonArray &array = jb.createArray();
+  StaticJsonArray<JSON_ARRAY_SIZE(2)> array;
 
   SECTION("Empty") {
     check(array, "[]");
@@ -74,13 +73,10 @@ TEST_CASE("JsonArray::printTo()") {
   }
 
   SECTION("RawJson(char*)") {
-    DynamicJsonBuffer jb2;
-    JsonArray &arr = jb2.createArray();
-
     char tmp[] = "{\"key\":\"value\"}";
-    arr.add(RawJson(tmp));
+    array.add(RawJson(tmp));
 
-    check(arr, "[{\"key\":\"value\"}]");
+    check(array, "[{\"key\":\"value\"}]");
   }
 
   SECTION("OneIntegerOverCapacity") {

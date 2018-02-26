@@ -6,10 +6,8 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::operator[]") {
-  DynamicJsonBuffer _jsonBuffer;
-
   SECTION("Array") {
-    JsonArray &array = _jsonBuffer.createArray();
+    DynamicJsonArray array;
     array.add("element at index 0");
     array.add("element at index 1");
 
@@ -26,7 +24,7 @@ TEST_CASE("JsonVariant::operator[]") {
   }
 
   SECTION("Object") {
-    JsonObject &object = _jsonBuffer.createObject();
+    DynamicJsonObject object;
     object["a"] = "element at key \"a\"";
     object["b"] = "element at key \"b\"";
 
@@ -54,21 +52,24 @@ TEST_CASE("JsonVariant::operator[]") {
   }
 
   SECTION("ObjectSetValue") {
-    JsonVariant var = _jsonBuffer.createObject();
+    DynamicJsonObject obj;
+    JsonVariant var = obj;
     var["hello"] = "world";
     REQUIRE(1 == var.size());
     REQUIRE(std::string("world") == var["hello"]);
   }
 
   SECTION("ArraySetValue") {
-    JsonVariant var = _jsonBuffer.parseArray("[\"hello\"]");
+    DynamicJsonVariant var;
+    deserializeJson(var, "[\"hello\"]");
     var[0] = "world";
     REQUIRE(1 == var.size());
     REQUIRE(std::string("world") == var[0]);
   }
 
   SECTION("NestedObjectSetValue") {
-    JsonVariant var = _jsonBuffer.parseArray("[{}]");
+    DynamicJsonVariant var;
+    deserializeJson(var, "[{}]");
     var[0]["hello"] = "world";
     REQUIRE(1 == var.size());
     REQUIRE(1 == var[0].size());

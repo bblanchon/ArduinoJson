@@ -22,10 +22,10 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "[42]");
 
-    StaticJsonBuffer<JSON_ARRAY_SIZE(1)> jsonBuffer;
-    JsonArray& arr = jsonBuffer.parseArray(vla);
+    StaticJsonArray<JSON_ARRAY_SIZE(1)> arr;
+    bool success = deserializeJson(arr, vla);
 
-    REQUIRE(true == arr.success());
+    REQUIRE(true == success);
   }
 
   SECTION("ParseObject") {
@@ -33,8 +33,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "{\"a\":42}");
 
-    StaticJsonBuffer<JSON_OBJECT_SIZE(1)> jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject(vla);
+    StaticJsonObject<JSON_OBJECT_SIZE(1)> obj;
+    deserializeJson(obj, vla);
 
     REQUIRE(true == obj.success());
   }
@@ -44,8 +44,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "42");
 
-    StaticJsonBuffer<1> jsonBuffer;
-    JsonVariant variant = jsonBuffer.parse(vla);
+    StaticJsonVariant<> variant;
+    deserializeJson(variant, vla);
 
     REQUIRE(42 == variant.as<int>());
   }
@@ -77,8 +77,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonVariant variant = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonVariant variant;
+    deserializeJson(variant, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == variant[vla]);
   }
@@ -90,8 +90,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonVariant variant = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonVariant variant;
+    deserializeJson(variant, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == variant[vla]);
   }
@@ -102,8 +102,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonVariant variant = "hello";
+    DynamicJsonVariant variant;
+    variant = "hello";
 
     REQUIRE((vla == variant));
     REQUIRE((variant == vla));
@@ -116,8 +116,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonVariant variant = "world";
+    DynamicJsonVariant variant;
+    variant = "world";
 
     REQUIRE((vla != variant));
     REQUIRE((variant != vla));
@@ -131,8 +131,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj[vla] = "world";
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -144,8 +143,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj["hello"] = vla;
 
     REQUIRE(std::string("world") == obj["hello"].as<char*>());
@@ -156,8 +154,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj["hello"].set(vla);
 
     REQUIRE(std::string("world") == obj["hello"].as<char*>());
@@ -169,8 +166,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == obj[vla]);
   }
@@ -181,8 +178,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == obj.get<char*>(vla));
   }
@@ -192,8 +189,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set(vla, "world");
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -204,8 +200,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set("hello", vla);
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -216,8 +211,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set(vla, vla);
 
     REQUIRE(std::string("world") == obj["world"]);
@@ -228,8 +222,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
 
     REQUIRE(true == obj.containsKey(vla));
   }
@@ -239,8 +233,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
     obj.remove(vla);
 
     REQUIRE(0 == obj.size());
@@ -251,8 +245,8 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject("{\"hello\":42}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":42}");
 
     REQUIRE(true == obj.is<int>(vla));
   }
@@ -262,8 +256,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.createNestedArray(vla);
   }
 
@@ -272,8 +265,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.createNestedObject(vla);
   }
 
@@ -282,8 +274,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add(vla);
 
     REQUIRE(std::string("world") == arr[0]);
@@ -294,8 +285,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add("hello");
     arr.set(0, vla);
 
@@ -307,8 +297,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add("hello");
     arr[0].set(vla);
 
@@ -320,8 +309,7 @@ TEST_CASE("Variable Length Array") {
     char vla[i];
     strcpy(vla, "world");
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add("hello");
     arr[0] = vla;
 

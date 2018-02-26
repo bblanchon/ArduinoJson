@@ -97,8 +97,8 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("StringLiteral") {
-    DynamicJsonBuffer jsonBuffer;
-    JsonVariant variant = jsonBuffer.parse("\"hello\"");
+    DynamicJsonVariant variant;
+    deserializeJson(variant, "\"hello\"");
 
     REQUIRE(variant == "hello");
     REQUIRE_FALSE(variant != "hello");
@@ -114,8 +114,8 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("String") {
-    DynamicJsonBuffer jsonBuffer;
-    JsonVariant variant = jsonBuffer.parse("\"hello\"");
+    DynamicJsonVariant variant;
+    deserializeJson(variant, "\"hello\"");
 
     REQUIRE(variant == std::string("hello"));
     REQUIRE_FALSE(variant != std::string("hello"));
@@ -179,9 +179,7 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("ArrayInVariant") {
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& array1 = jsonBuffer.createArray();
-    JsonArray& array2 = jsonBuffer.createArray();
+    DynamicJsonArray array1, array2;
 
     JsonVariant variant1 = array1;
     JsonVariant variant2 = array1;
@@ -195,9 +193,8 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("ObjectInVariant") {
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj1 = jsonBuffer.createObject();
-    JsonObject& obj2 = jsonBuffer.createObject();
+    DynamicJsonObject obj1;
+    DynamicJsonObject obj2;
 
     JsonVariant variant1 = obj1;
     JsonVariant variant2 = obj1;
@@ -211,14 +208,10 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("VariantsOfDifferentTypes") {
-    DynamicJsonBuffer jsonBuffer;
+    DynamicJsonObject obj;
+    DynamicJsonArray arr;
     JsonVariant variants[] = {
-        true,
-        42,
-        666.667,
-        "hello",
-        jsonBuffer.createArray(),
-        jsonBuffer.createObject(),
+        true, 42, 666.667, "hello", arr, obj,
     };
     size_t n = sizeof(variants) / sizeof(variants[0]);
 

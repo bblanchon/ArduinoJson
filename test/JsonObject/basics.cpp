@@ -6,8 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject basics") {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.createObject();
+  DynamicJsonObject _object;
 
   SECTION("InitialSizeIsZero") {
     REQUIRE(0 == _object.size());

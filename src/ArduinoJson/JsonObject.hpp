@@ -31,12 +31,6 @@ template <typename>
 class JsonObjectSubscript;
 }
 
-// A dictionary of JsonVariant indexed by string (char*)
-//
-// The constructor is private, instances must be created via
-// JsonBuffer::createObject() or JsonBuffer::parseObject().
-// A JsonObject can be serialized to a JSON string via JsonObject::printTo().
-// It can also be deserialized from a JSON string via JsonBuffer::parseObject().
 class JsonObject : public Internals::JsonPrintable<JsonObject>,
                    public Internals::ReferenceType,
                    public Internals::NonCopyable,
@@ -45,9 +39,8 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
  public:
   // Create an empty JsonArray attached to the specified JsonBuffer.
   // You should not use this constructor directly.
-  // Instead, use JsonBuffer::createObject() or JsonBuffer.parseObject().
-  explicit JsonObject(JsonBuffer* buffer) throw()
-      : Internals::List<JsonPair>(buffer) {}
+  explicit JsonObject(JsonBuffer* buf) throw()
+      : Internals::List<JsonPair>(buf) {}
 
   // Gets or sets the value associated with the specified key.
   //
@@ -318,5 +311,5 @@ struct JsonVariantDefault<JsonObject> {
     return JsonObject::invalid();
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

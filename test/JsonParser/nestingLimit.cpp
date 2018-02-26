@@ -6,13 +6,13 @@
 #include <catch.hpp>
 
 bool tryParseArray(const char *json, uint8_t nestingLimit) {
-  DynamicJsonBuffer buffer;
-  return buffer.parseArray(json, nestingLimit).success();
+  DynamicJsonArray array;
+  return deserializeJson(array, json, nestingLimit);
 }
 
 bool tryParseObject(const char *json, uint8_t nestingLimit) {
-  DynamicJsonBuffer buffer;
-  return buffer.parseObject(json, nestingLimit).success();
+  DynamicJsonObject obj;
+  return deserializeJson(obj, json, nestingLimit);
 }
 
 TEST_CASE("JsonParser nestingLimit") {

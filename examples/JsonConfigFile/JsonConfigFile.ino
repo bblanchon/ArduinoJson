@@ -32,12 +32,12 @@ void loadConfiguration(const char *filename, Config &config) {
   // Allocate the memory pool on the stack.
   // Don't forget to change the capacity to match your JSON document.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonBuffer<512> jsonBuffer;
+  StaticJsonObject<512> root;
 
   // Parse the root object
-  JsonObject &root = jsonBuffer.parseObject(file);
+  bool success = deserializeJson(root, file);
 
-  if (!root.success())
+  if (!success)
     Serial.println(F("Failed to read file, using default configuration"));
 
   // Copy values from the JsonObject to the Config
@@ -65,10 +65,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   // Allocate the memory pool on the stack
   // Don't forget to change the capacity to match your JSON document.
   // Use https://arduinojson.org/assistant/ to compute the capacity.
-  StaticJsonBuffer<256> jsonBuffer;
-
-  // Parse the root object
-  JsonObject &root = jsonBuffer.createObject();
+  StaticJsonObject<256> root;
 
   // Set the values
   root["hostname"] = config.hostname;

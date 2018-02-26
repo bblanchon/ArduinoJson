@@ -7,9 +7,7 @@
 
 template <typename TIterator>
 static void run_iterator_test() {
-  StaticJsonBuffer<JSON_ARRAY_SIZE(2)> jsonBuffer;
-
-  JsonArray &array = jsonBuffer.createArray();
+  StaticJsonArray<JSON_ARRAY_SIZE(2)> array;
   array.add(12);
   array.add(34);
 

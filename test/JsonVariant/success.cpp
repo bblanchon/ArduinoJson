@@ -17,16 +17,16 @@ TEST_CASE("JsonVariant::success()") {
   }
 
   SECTION("ReturnsTrue_WhenEmptyArray") {
-    DynamicJsonBuffer jsonBuffer;
+    DynamicJsonArray array;
 
-    JsonVariant variant = jsonBuffer.createArray();
+    JsonVariant variant = array;
     REQUIRE(true == variant.success());
   }
 
   SECTION("ReturnsTrue_WhenEmptyObject") {
-    DynamicJsonBuffer jsonBuffer;
+    DynamicJsonObject obj;
 
-    JsonVariant variant = jsonBuffer.createObject();
+    JsonVariant variant = obj;
     REQUIRE(true == variant.success());
   }
 

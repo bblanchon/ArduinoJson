@@ -6,8 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::add()") {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonArray& _array = _jsonBuffer.createArray();
+  DynamicJsonArray _array;
 
   SECTION("int") {
     _array.add(123);
@@ -39,7 +38,7 @@ TEST_CASE("JsonArray::add()") {
   }
 
   SECTION("nested array") {
-    JsonArray& arr = _jsonBuffer.createArray();
+    DynamicJsonArray arr;
 
     _array.add(arr);
 
@@ -49,7 +48,7 @@ TEST_CASE("JsonArray::add()") {
   }
 
   SECTION("nested object") {
-    JsonObject& obj = _jsonBuffer.createObject();
+    DynamicJsonObject obj;
 
     _array.add(obj);
 
@@ -60,7 +59,7 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("array subscript") {
     const char* str = "hello";
-    JsonArray& arr = _jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add(str);
 
     _array.add(arr[0]);
@@ -70,7 +69,7 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("object subscript") {
     const char* str = "hello";
-    JsonObject& obj = _jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj["x"] = str;
 
     _array.add(obj["x"]);
@@ -81,30 +80,30 @@ TEST_CASE("JsonArray::add()") {
   SECTION("should not duplicate const char*") {
     _array.add("world");
     const size_t expectedSize = JSON_ARRAY_SIZE(1);
-    REQUIRE(expectedSize == _jsonBuffer.size());
+    REQUIRE(expectedSize == _array.memoryUsage());
   }
 
   SECTION("should duplicate char*") {
     _array.add(const_cast<char*>("world"));
     const size_t expectedSize = JSON_ARRAY_SIZE(1) + 6;
-    REQUIRE(expectedSize == _jsonBuffer.size());
+    REQUIRE(expectedSize == _array.memoryUsage());
   }
 
   SECTION("should duplicate std::string") {
     _array.add(std::string("world"));
     const size_t expectedSize = JSON_ARRAY_SIZE(1) + 6;
-    REQUIRE(expectedSize == _jsonBuffer.size());
+    REQUIRE(expectedSize == _array.memoryUsage());
   }
 
   SECTION("should not duplicate RawJson(const char*)") {
     _array.add(RawJson("{}"));
     const size_t expectedSize = JSON_ARRAY_SIZE(1);
-    REQUIRE(expectedSize == _jsonBuffer.size());
+    REQUIRE(expectedSize == _array.memoryUsage());
   }
 
   SECTION("should duplicate RawJson(char*)") {
     _array.add(RawJson(const_cast<char*>("{}")));
     const size_t expectedSize = JSON_ARRAY_SIZE(1) + 3;
-    REQUIRE(expectedSize == _jsonBuffer.size());
+    REQUIRE(expectedSize == _array.memoryUsage());
   }
 }

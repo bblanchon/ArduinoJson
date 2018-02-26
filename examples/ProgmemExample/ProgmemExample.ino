@@ -14,14 +14,13 @@
 void setup() {
 #ifdef PROGMEM  // <- check that Flash strings are supported
 
-  DynamicJsonBuffer jsonBuffer;
+  DynamicJsonObject root;
 
   // You can use a Flash String as your JSON input.
   // WARNING: the content of the Flash String will be duplicated in the
   // JsonBuffer.
-  JsonObject& root =
-      jsonBuffer.parseObject(F("{\"sensor\":\"gps\",\"time\":1351824120,"
-                               "\"data\":[48.756080,2.302038]}"));
+  deserializeJson(root, F("{\"sensor\":\"gps\",\"time\":1351824120,"
+                          "\"data\":[48.756080,2.302038]}"));
 
   // You can use a Flash String to get an element of a JsonObject
   // No duplication is done.

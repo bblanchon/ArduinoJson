@@ -11,13 +11,13 @@
 #include <ArduinoJson.h>
 
 void setup() {
-  DynamicJsonBuffer jsonBuffer;
+  DynamicJsonObject root;
 
   // You can use a String as your JSON input.
   // WARNING: the content of the String will be duplicated in the JsonBuffer.
   String input =
       "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
-  JsonObject& root = jsonBuffer.parseObject(input);
+  deserializeJson(root, input);
 
   // You can use a String to get an element of a JsonObject
   // No duplication is done.

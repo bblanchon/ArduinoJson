@@ -7,8 +7,7 @@
 
 TEST_CASE("JsonArray::copyFrom()") {
   SECTION("OneDimension") {
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& array = jsonBuffer.createArray();
+    DynamicJsonArray array;
     char json[32];
     int source[] = {1, 2, 3};
 
@@ -21,8 +20,7 @@ TEST_CASE("JsonArray::copyFrom()") {
 
   SECTION("OneDimension_JsonBufferTooSmall") {
     const size_t SIZE = JSON_ARRAY_SIZE(2);
-    StaticJsonBuffer<SIZE> jsonBuffer;
-    JsonArray& array = jsonBuffer.createArray();
+    StaticJsonArray<SIZE> array;
     char json[32];
     int source[] = {1, 2, 3};
 
@@ -34,8 +32,7 @@ TEST_CASE("JsonArray::copyFrom()") {
   }
 
   SECTION("TwoDimensions") {
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& array = jsonBuffer.createArray();
+    DynamicJsonArray array;
     char json[32];
     int source[][3] = {{1, 2, 3}, {4, 5, 6}};
 
@@ -49,8 +46,7 @@ TEST_CASE("JsonArray::copyFrom()") {
   SECTION("TwoDimensions_JsonBufferTooSmall") {
     const size_t SIZE =
         JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(2);
-    StaticJsonBuffer<SIZE> jsonBuffer;
-    JsonArray& array = jsonBuffer.createArray();
+    StaticJsonArray<SIZE> array;
     char json[32];
     int source[][3] = {{1, 2, 3}, {4, 5, 6}};
 

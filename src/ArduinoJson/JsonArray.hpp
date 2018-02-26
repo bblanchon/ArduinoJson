@@ -30,23 +30,14 @@ namespace Internals {
 class JsonArraySubscript;
 }
 
-// An array of JsonVariant.
-//
-// The constructor is private, instances must be created via
-// JsonBuffer::createArray() or JsonBuffer::parseArray().
-// A JsonArray can be serialized to a JSON string via JsonArray::printTo().
-// It can also be deserialized from a JSON string via JsonBuffer::parseArray().
 class JsonArray : public Internals::JsonPrintable<JsonArray>,
                   public Internals::ReferenceType,
                   public Internals::NonCopyable,
                   public Internals::List<JsonVariant>,
                   public Internals::JsonBufferAllocated {
  public:
-  // Create an empty JsonArray attached to the specified JsonBuffer.
-  // You should not call this constructor directly.
-  // Instead, use JsonBuffer::createArray() or JsonBuffer::parseArray().
-  explicit JsonArray(JsonBuffer *buffer) throw()
-      : Internals::List<JsonVariant>(buffer) {}
+  explicit JsonArray(JsonBuffer *buf) throw()
+      : Internals::List<JsonVariant>(buf) {}
 
   // Gets the value at the specified index
   const Internals::JsonArraySubscript operator[](size_t index) const;
@@ -119,11 +110,9 @@ class JsonArray : public Internals::JsonPrintable<JsonArray>,
   }
 
   // Creates a JsonArray and adds a reference at the end of the array.
-  // It's a shortcut for JsonBuffer::createArray() and JsonArray::add()
   JsonArray &createNestedArray();
 
   // Creates a JsonObject and adds a reference at the end of the array.
-  // It's a shortcut for JsonBuffer::createObject() and JsonArray::add()
   JsonObject &createNestedObject();
 
   // Removes element at specified index.
@@ -223,5 +212,5 @@ struct JsonVariantDefault<JsonArray> {
     return JsonArray::invalid();
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

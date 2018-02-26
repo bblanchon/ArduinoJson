@@ -6,8 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray basics") {
-  DynamicJsonBuffer jb;
-  JsonArray& array = jb.createArray();
+  DynamicJsonArray array;
 
   SECTION("SuccessIsTrue") {
     REQUIRE(array.success());

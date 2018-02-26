@@ -24,18 +24,6 @@ class JsonObject;
 // fixed memory allocation.
 class JsonBuffer : Internals::NonCopyable {
  public:
-  // Allocates an empty JsonArray.
-  //
-  // Returns a reference to the new JsonArray or JsonArray::invalid() if the
-  // allocation fails.
-  JsonArray &createArray();
-
-  // Allocates an empty JsonObject.
-  //
-  // Returns a reference to the new JsonObject or JsonObject::invalid() if the
-  // allocation fails.
-  JsonObject &createObject();
-
   // Duplicates a string
   //
   // const char* strdup(TValue);
@@ -75,4 +63,4 @@ class JsonBuffer : Internals::NonCopyable {
 #endif
   }
 };
-}
+}  // namespace ArduinoJson

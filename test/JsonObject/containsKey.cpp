@@ -6,8 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::containsKey()") {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject& _object = _jsonBuffer.createObject();
+  DynamicJsonObject _object;
 
   SECTION("ContainsKeyReturnsFalseForNonExistingKey") {
     _object.set("hello", 42);

@@ -51,12 +51,9 @@ void loop() {
   // Read the request (we ignore the content in this example)
   while (client.available()) client.read();
 
-  // Allocate JsonBuffer
+  // Allocate the root JsonObject
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonBuffer<500> jsonBuffer;
-
-  // Create the root object
-  JsonObject& root = jsonBuffer.createObject();
+  StaticJsonObject<500> root;
 
   // Create the "analog" array
   JsonArray& analogValues = root.createNestedArray("analog");

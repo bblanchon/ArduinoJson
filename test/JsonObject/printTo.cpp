@@ -16,8 +16,7 @@ void check(const JsonObject &obj, const std::string &expected) {
   REQUIRE(expected.size() == measuredLen);
 }
 TEST_CASE("JsonObject::printTo()") {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonObject &obj = _jsonBuffer.createObject();
+  DynamicJsonObject obj;
 
   SECTION("EmptyObject") {
     check(obj, "{}");
@@ -92,17 +91,22 @@ TEST_CASE("JsonObject::printTo()") {
   }
 
   SECTION("ThreeNestedArrays") {
+    DynamicJsonArray b, c;
+
     obj.createNestedArray("a");
-    obj["b"] = _jsonBuffer.createArray();
-    obj.set("c", _jsonBuffer.createArray());
+    obj["b"] = b;
+    obj.set("c", c);
 
     check(obj, "{\"a\":[],\"b\":[],\"c\":[]}");
   }
 
   SECTION("ThreeNestedObjects") {
+    DynamicJsonObject b;
+    DynamicJsonObject c;
+
     obj.createNestedObject("a");
-    obj["b"] = _jsonBuffer.createObject();
-    obj.set("c", _jsonBuffer.createObject());
+    obj["b"] = b;
+    obj.set("c", c);
 
     check(obj, "{\"a\":{},\"b\":{},\"c\":{}}");
   }

@@ -134,6 +134,16 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   // if the variant is converted back to a JsonObject&
   JsonVariant(const JsonObject &object);
 
+  JsonVariant(JsonArray *array) {
+    _content.asArray = array;
+    _type = Internals::JSON_ARRAY;
+  }
+
+  JsonVariant(JsonObject *object) {
+    _content.asObject = object;
+    _type = Internals::JSON_OBJECT;
+  }
+
   // Get the variant as the specified type.
   //
   // char as<char>() const;
@@ -352,4 +362,4 @@ DEPRECATED("Decimal places are ignored, use the double value instead")
 inline JsonVariant double_with_n_digits(double value, uint8_t) {
   return JsonVariant(value);
 }
-}
+}  // namespace ArduinoJson

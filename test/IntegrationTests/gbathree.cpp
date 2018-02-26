@@ -6,9 +6,10 @@
 #include <catch.hpp>
 
 TEST_CASE("Gbathree") {
-  DynamicJsonBuffer _buffer;
+  DynamicJsonObject _object;
 
-  const JsonObject& _object = _buffer.parseObject(
+  bool success = deserializeJson(
+      _object,
       "{\"protocol_name\":\"fluorescence\",\"repeats\":1,\"wait\":0,"
       "\"averages\":1,\"measurements\":3,\"meas2_light\":15,\"meas1_"
       "baseline\":0,\"act_light\":20,\"pulsesize\":25,\"pulsedistance\":"
@@ -21,7 +22,7 @@ TEST_CASE("Gbathree") {
       "[15,15,15,15]],\"altc\":[2,2,2,2],\"altd\":[2,2,2,2]}");
 
   SECTION("Success") {
-    REQUIRE(_object.success());
+    REQUIRE(success == true);
   }
 
   SECTION("ProtocolName") {

@@ -7,73 +7,83 @@
 
 using namespace Catch::Matchers;
 
-TEST_CASE("JsonBuffer::parse()") {
-  DynamicJsonBuffer jb;
+TEST_CASE("deserializeJson(JsonVariant&)") {
+  DynamicJsonVariant variant;
 
   SECTION("EmptyObject") {
-    JsonVariant variant = jb.parse("{}");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "{}");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<JsonObject>());
   }
 
   SECTION("EmptyArray") {
-    JsonVariant variant = jb.parse("[]");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "[]");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<JsonArray>());
   }
 
   SECTION("Integer") {
-    JsonVariant variant = jb.parse("-42");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "-42");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<int>());
     REQUIRE_FALSE(variant.is<bool>());
     REQUIRE(variant == -42);
   }
 
   SECTION("Double") {
-    JsonVariant variant = jb.parse("-1.23e+4");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "-1.23e+4");
+
+    REQUIRE(success == true);
     REQUIRE_FALSE(variant.is<int>());
     REQUIRE(variant.is<double>());
     REQUIRE(variant.as<double>() == Approx(-1.23e+4));
   }
 
   SECTION("Double quoted string") {
-    JsonVariant variant = jb.parse("\"hello world\"");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "\"hello world\"");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<char*>());
     REQUIRE_THAT(variant.as<char*>(), Equals("hello world"));
   }
 
   SECTION("Single quoted string") {
-    JsonVariant variant = jb.parse("\'hello world\'");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "\'hello world\'");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<char*>());
     REQUIRE_THAT(variant.as<char*>(), Equals("hello world"));
   }
 
   SECTION("True") {
-    JsonVariant variant = jb.parse("true");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "true");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<bool>());
     REQUIRE(variant == true);
   }
 
   SECTION("False") {
-    JsonVariant variant = jb.parse("false");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "false");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<bool>());
     REQUIRE(variant == false);
   }
 
   SECTION("OpenBrace") {
-    JsonVariant variant = jb.parse("{");
-    REQUIRE_FALSE(variant.success());
+    bool success = deserializeJson(variant, "{");
+
+    REQUIRE(success == false);
   }
 
   SECTION("Incomplete string") {
-    JsonVariant variant = jb.parse("\"hello");
-    REQUIRE(variant.success());
+    bool success = deserializeJson(variant, "\"hello");
+
+    REQUIRE(success == true);
     REQUIRE(variant.is<char*>());
     REQUIRE_THAT(variant.as<char*>(), Equals("hello"));
   }

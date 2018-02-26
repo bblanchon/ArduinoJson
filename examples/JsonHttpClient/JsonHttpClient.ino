@@ -73,10 +73,10 @@ void setup() {
   // Allocate JsonBuffer
   // Use arduinojson.org/assistant to compute the capacity.
   const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
-  DynamicJsonBuffer jsonBuffer(capacity);
+  DynamicJsonObject root(capacity);
 
   // Parse JSON object
-  JsonObject& root = jsonBuffer.parseObject(client);
+  bool success = deserializeJson(root, client);
   if (!root.success()) {
     Serial.println(F("Parsing failed!"));
     return;

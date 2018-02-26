@@ -46,11 +46,8 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingToUnsafe(
 }
 
 template <typename TReader, typename TWriter>
-inline ArduinoJson::JsonArray &
-ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseArray() {
-  // Create an empty array
-  JsonArray &array = _buffer->createArray();
-
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parse(
+    JsonArray &array) {
   // Check opening braket
   if (!eat('[')) goto ERROR_MISSING_BRACKET;
   if (eat(']')) goto SUCCESS_EMPTY_ARRAY;
@@ -69,31 +66,18 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseArray() {
 
 SUCCESS_EMPTY_ARRAY:
 SUCCES_NON_EMPTY_ARRAY:
-  return array;
+  return true;
 
 ERROR_INVALID_VALUE:
 ERROR_MISSING_BRACKET:
 ERROR_MISSING_COMMA:
 ERROR_NO_MEMORY:
-  return JsonArray::invalid();
+  return false;
 }
 
 template <typename TReader, typename TWriter>
-inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseArrayTo(
-    JsonVariant *destination) {
-  JsonArray &array = parseArray();
-  if (!array.success()) return false;
-
-  *destination = array;
-  return true;
-}
-
-template <typename TReader, typename TWriter>
-inline ArduinoJson::JsonObject &
-ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObject() {
-  // Create an empty object
-  JsonObject &object = _buffer->createObject();
-
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parse(
+    JsonObject &object) {
   // Check opening brace
   if (!eat('{')) goto ERROR_MISSING_BRACE;
   if (eat('}')) goto SUCCESS_EMPTY_OBJECT;
@@ -117,7 +101,7 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObject() {
 
 SUCCESS_EMPTY_OBJECT:
 SUCCESS_NON_EMPTY_OBJECT:
-  return object;
+  return true;
 
 ERROR_INVALID_KEY:
 ERROR_INVALID_VALUE:
@@ -125,17 +109,31 @@ ERROR_MISSING_BRACE:
 ERROR_MISSING_COLON:
 ERROR_MISSING_COMMA:
 ERROR_NO_MEMORY:
-  return JsonObject::invalid();
+  return false;
+}
+
+template <typename TReader, typename TWriter>
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parse(
+    JsonVariant &variant) {
+  return parseAnythingTo(&variant);
+}
+
+template <typename TReader, typename TWriter>
+inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseArrayTo(
+    JsonVariant *destination) {
+  JsonArray *array = new (_buffer) JsonArray(_buffer);
+  if (!array) return false;
+  *destination = array;
+  return parse(*array);
 }
 
 template <typename TReader, typename TWriter>
 inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObjectTo(
     JsonVariant *destination) {
-  JsonObject &object = parseObject();
-  if (!object.success()) return false;
-
+  JsonObject *object = new (_buffer) JsonObject(_buffer);
+  if (!object) return false;
   *destination = object;
-  return true;
+  return parse(*object);
 }
 
 template <typename TReader, typename TWriter>

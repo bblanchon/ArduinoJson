@@ -13,19 +13,19 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonBuffer::parseArray") {
     unsigned char json[] = "[42]";
 
-    StaticJsonBuffer<JSON_ARRAY_SIZE(1)> jsonBuffer;
-    JsonArray& arr = jsonBuffer.parseArray(json);
+    StaticJsonArray<JSON_ARRAY_SIZE(1)> arr;
+    bool success = deserializeJson(arr, json);
 
-    REQUIRE(true == arr.success());
+    REQUIRE(true == success);
   }
 
   SECTION("JsonBuffer::parseObject") {
     unsigned char json[] = "{\"a\":42}";
 
-    StaticJsonBuffer<JSON_OBJECT_SIZE(1)> jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject(json);
+    StaticJsonObject<JSON_OBJECT_SIZE(1)> obj;
+    bool success = deserializeJson(obj, json);
 
-    REQUIRE(true == obj.success());
+    REQUIRE(true == success);
   }
 
   SECTION("JsonVariant constructor") {
@@ -49,8 +49,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonVariant::operator[]") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonVariant variant = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonVariant variant;
+    deserializeJson(variant, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == variant[key]);
   }
@@ -60,8 +60,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonVariant::operator[] const") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonVariant variant = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonVariant variant;
+    deserializeJson(variant, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == variant[key]);
   }
@@ -70,8 +70,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonVariant::operator==") {
     unsigned char comparand[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonVariant variant = "hello";
+    DynamicJsonVariant variant;
+    variant = "hello";
 
     REQUIRE(comparand == variant);
     REQUIRE(variant == comparand);
@@ -82,8 +82,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonVariant::operator!=") {
     unsigned char comparand[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonVariant variant = "world";
+    DynamicJsonVariant variant;
+    variant = "world";
 
     REQUIRE(comparand != variant);
     REQUIRE(variant != comparand);
@@ -95,8 +95,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::operator[]") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj[key] = "world";
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -106,8 +105,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObjectSubscript::operator=") {  // issue #416
     unsigned char value[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj["hello"] = value;
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -116,8 +114,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObjectSubscript::set()") {
     unsigned char value[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj["hello"].set(value);
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -127,8 +124,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::operator[] const") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == obj[key]);
   }
@@ -137,8 +134,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::get()") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
 
     REQUIRE(std::string("world") == obj.get<char*>(key));
   }
@@ -146,8 +143,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::set() key") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set(key, "world");
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -156,8 +152,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::set() value") {
     unsigned char value[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set("hello", value);
 
     REQUIRE(std::string("world") == obj["hello"]);
@@ -166,8 +161,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::set key&value") {
     unsigned char key[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set(key, key);
 
     REQUIRE(std::string("world") == obj["world"]);
@@ -176,8 +170,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::containsKey()") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    const JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
 
     REQUIRE(true == obj.containsKey(key));
   }
@@ -185,8 +179,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::remove()") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject("{\"hello\":\"world\"}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":\"world\"}");
     obj.remove(key);
 
     REQUIRE(0 == obj.size());
@@ -195,8 +189,8 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::is()") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.parseObject("{\"hello\":42}");
+    DynamicJsonObject obj;
+    deserializeJson(obj, "{\"hello\":42}");
 
     REQUIRE(true == obj.is<int>(key));
   }
@@ -204,24 +198,21 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonObject::createNestedArray()") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.createNestedArray(key);
   }
 
   SECTION("JsonObject::createNestedObject()") {
     unsigned char key[] = "hello";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.createNestedObject(key);
   }
 
   SECTION("JsonArray::add()") {
     unsigned char value[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add(value);
 
     REQUIRE(std::string("world") == arr[0]);
@@ -230,8 +221,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonArray::set()") {
     unsigned char value[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add("hello");
     arr.set(0, value);
 
@@ -241,8 +231,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonArraySubscript::set()") {
     unsigned char value[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add("hello");
     arr[0].set(value);
 
@@ -252,8 +241,7 @@ TEST_CASE("unsigned char string") {
   SECTION("JsonArraySubscript::operator=") {
     unsigned char value[] = "world";
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add("hello");
     arr[0] = value;
 

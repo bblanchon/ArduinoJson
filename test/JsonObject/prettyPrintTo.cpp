@@ -18,8 +18,7 @@ void check(const JsonObject &obj, const std::string expected) {
 }
 
 TEST_CASE("JsonObject::prettyPrintTo()") {
-  DynamicJsonBuffer jb;
-  JsonObject &obj = jb.createObject();
+  DynamicJsonObject obj;
 
   SECTION("EmptyObject") {
     check(obj, "{}");

@@ -1,6 +1,59 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added DynamicJsonArray and StaticJsonArray
+* Added DynamicJsonObject and StaticJsonObject
+* Added DynamicJsonVariant and StaticJsonVariant
+* Added deserializeJson()
+* Removed JsonBuffer::parseArray(), parseObject() and parse()
+* Removed JsonBuffer::createArray() and createObject()
+
+> ### BREAKING CHANGES
+> 
+> #### Deserialization
+> 
+> Old code:
+> 
+> ```c++
+> DynamicJsonBuffer jb;
+> JsonObject& obj = jb.parseObject(json);
+> if (obj.success()) {
+> 
+> }
+> ```
+> 
+> New code:
+> 
+> ```c++
+> DynamicJsonObject obj;
+> bool success = deserializeJson(obj, json);
+> if (success) {
+> 
+> }
+> ```
+> 
+> #### Serialization
+> 
+> Old code:
+> 
+> ```c++
+> DynamicJsonBuffer jb;
+> JsonObject& obj = jb.createObject();
+> obj["key"] = "value";
+> obj.printTo(Serial);
+> ```
+> 
+> New code:
+> 
+> ```c++
+> DynamicJsonObject obj;
+> obj["key"] = "value";
+> obj.printTo(Serial);
+> ```
+
 v5.13.1
 -------
 

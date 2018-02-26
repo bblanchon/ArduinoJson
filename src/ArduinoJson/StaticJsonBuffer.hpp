@@ -4,12 +4,13 @@
 
 #pragma once
 
-#include "JsonBufferBase.hpp"
+#include "JsonBuffer.hpp"
+#include "TypeTraits/Max.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
+class StaticJsonBufferBase : public JsonBuffer {
  public:
   class String {
    public:
@@ -91,7 +92,7 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
   size_t _capacity;
   size_t _size;
 };
-}
+}  // namespace Internals
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -108,14 +109,16 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
 // bytes.
 template <size_t CAPACITY>
 class StaticJsonBuffer : public Internals::StaticJsonBufferBase {
+  static const size_t ACTUAL_CAPACITY = Internals::Max<1, CAPACITY>::value;
+
  public:
   explicit StaticJsonBuffer()
-      : Internals::StaticJsonBufferBase(_buffer, CAPACITY) {}
+      : Internals::StaticJsonBufferBase(_buffer, ACTUAL_CAPACITY) {}
 
  private:
-  char _buffer[CAPACITY];
+  char _buffer[ACTUAL_CAPACITY];
 };
-}
+}  // namespace ArduinoJson
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

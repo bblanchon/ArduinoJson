@@ -7,8 +7,7 @@
 #include <string>
 
 TEST_CASE("JsonObject::size()") {
-  DynamicJsonBuffer jb;
-  JsonObject& _object = jb.createObject();
+  DynamicJsonObject _object;
 
   SECTION("increases when values are added") {
     _object.set("hello", 42);

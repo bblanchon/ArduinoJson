@@ -15,8 +15,7 @@ static void check(JsonArray& array, std::string expected) {
 }
 
 TEST_CASE("JsonArray::prettyPrintTo()") {
-  DynamicJsonBuffer jb;
-  JsonArray& array = jb.createArray();
+  DynamicJsonArray array;
 
   SECTION("Empty") {
     check(array, "[]");

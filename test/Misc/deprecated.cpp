@@ -16,15 +16,15 @@
 #endif
 
 TEST_CASE("Deprecated functions") {
-  DynamicJsonBuffer jsonBuffer;
-
   SECTION("JsonVariant::asArray()") {
-    JsonVariant variant = jsonBuffer.createArray();
+    DynamicJsonArray array;
+    JsonVariant variant = array;
     REQUIRE(variant.asArray().success());
   }
 
   SECTION("JsonVariant::asObject()") {
-    JsonVariant variant = jsonBuffer.createObject();
+    DynamicJsonObject obj;
+    JsonVariant variant = obj;
     REQUIRE(variant.asObject().success());
   }
 
@@ -34,7 +34,7 @@ TEST_CASE("Deprecated functions") {
   }
 
   SECTION("JsonArray::removeAt()") {
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.removeAt(0);
   }
 
@@ -59,7 +59,7 @@ TEST_CASE("Deprecated functions") {
   }
 
   SECTION("JsonArraySubscript::set(double, uint8_t)") {
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add(666);
     arr[0].set(123.45, 2);
     REQUIRE(123.45 == arr[0].as<double>());
@@ -68,26 +68,26 @@ TEST_CASE("Deprecated functions") {
   }
 
   SECTION("JsonArray::add(double, uint8_t)") {
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add(3.14159265358979323846, 4);
   }
 
   SECTION("JsonArray::add(float, uint8_t)") {
-    JsonArray& arr = jsonBuffer.createArray();
+    DynamicJsonArray arr;
     arr.add(3.14159265358979323846f, 4);
   }
 
   SECTION("JsonObject::set(unsigned char[], double, uint8_t)") {
     unsigned char key[] = "hello";
 
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set(key, 3.14, 2);
 
     REQUIRE(3.14 == obj["hello"]);
   }
 
   SECTION("JsonObject::set(const char*, double, uint8_t)") {
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj.set("hello", 123.45, 2);
 
     REQUIRE(123.45 == obj["hello"].as<double>());
@@ -96,7 +96,7 @@ TEST_CASE("Deprecated functions") {
   }
 
   SECTION("JsonObjectSubscript::set(double, uint8_t)") {
-    JsonObject& obj = jsonBuffer.createObject();
+    DynamicJsonObject obj;
     obj["hello"].set(123.45, 2);
 
     REQUIRE(true == obj["hello"].is<double>());

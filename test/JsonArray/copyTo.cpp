@@ -6,11 +6,12 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::copyTo()") {
-  DynamicJsonBuffer jsonBuffer;
+  DynamicJsonArray array;
 
   SECTION("BiggerOneDimensionIntegerArray") {
     char json[] = "[1,2,3]";
-    JsonArray& array = jsonBuffer.parseArray(json);
+    bool success = deserializeJson(array, json);
+    REQUIRE(success == true);
 
     int destination[4] = {0};
     size_t result = array.copyTo(destination);
@@ -24,7 +25,8 @@ TEST_CASE("JsonArray::copyTo()") {
 
   SECTION("SmallerOneDimensionIntegerArray") {
     char json[] = "[1,2,3]";
-    JsonArray& array = jsonBuffer.parseArray(json);
+    bool success = deserializeJson(array, json);
+    REQUIRE(success == true);
 
     int destination[2] = {0};
     size_t result = array.copyTo(destination);
@@ -37,7 +39,8 @@ TEST_CASE("JsonArray::copyTo()") {
   SECTION("TwoOneDimensionIntegerArray") {
     char json[] = "[[1,2],[3],[4]]";
 
-    JsonArray& array = jsonBuffer.parseArray(json);
+    bool success = deserializeJson(array, json);
+    REQUIRE(success == true);
 
     int destination[3][2] = {{0}};
     array.copyTo(destination);

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "JsonBufferBase.hpp"
+#include "JsonBuffer.hpp"
 
 #include <stdlib.h>
 
@@ -31,8 +31,7 @@ class DefaultAllocator {
 };
 
 template <typename TAllocator>
-class DynamicJsonBufferBase
-    : public JsonBufferBase<DynamicJsonBufferBase<TAllocator> > {
+class DynamicJsonBufferBase : public JsonBuffer {
   struct Block;
   struct EmptyBlock {
     Block* next;
@@ -152,7 +151,7 @@ class DynamicJsonBufferBase
   Block* _head;
   size_t _nextBlockCapacity;
 };
-}
+}  // namespace Internals
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -167,4 +166,4 @@ class DynamicJsonBufferBase
 // more suitable for embedded systems.
 typedef Internals::DynamicJsonBufferBase<Internals::DefaultAllocator>
     DynamicJsonBuffer;
-}
+}  // namespace ArduinoJson

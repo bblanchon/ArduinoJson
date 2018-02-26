@@ -6,8 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::size()") {
-  DynamicJsonBuffer _jsonBuffer;
-  JsonArray& _array = _jsonBuffer.createArray();
+  DynamicJsonArray _array;
 
   SECTION("increases after add()") {
     _array.add("hello");

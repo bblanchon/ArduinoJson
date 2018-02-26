@@ -11,24 +11,17 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) continue;
 
-  // Memory pool for JSON object tree.
+  // Root JSON object
   //
-  // Inside the brackets, 200 is the size of the pool in bytes.
+  // Inside the brackets, 200 is the size of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonBuffer<200> jsonBuffer;
+  StaticJsonObject<200> root;
 
-  // StaticJsonBuffer allocates memory on the stack, it can be
-  // replaced by DynamicJsonBuffer which allocates in the heap.
+  // StaticJsonObject allocates memory on the stack, it can be
+  // replaced by DynamicJsonObject which allocates in the heap.
   //
-  // DynamicJsonBuffer  jsonBuffer(200);
-
-  // Create the root of the object tree.
-  //
-  // It's a reference to the JsonObject, the actual bytes are inside the
-  // JsonBuffer with all the other nodes of the object tree.
-  // Memory is freed when jsonBuffer goes out of scope.
-  JsonObject& root = jsonBuffer.createObject();
+  // DynamicJsonObject  root(200);
 
   // Add values in the object
   //

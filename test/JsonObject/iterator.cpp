@@ -8,8 +8,7 @@
 using namespace Catch::Matchers;
 
 TEST_CASE("JsonObject::begin()/end()") {
-  StaticJsonBuffer<JSON_OBJECT_SIZE(2)> jb;
-  JsonObject& obj = jb.createObject();
+  StaticJsonObject<JSON_OBJECT_SIZE(2)> obj;
   obj["ab"] = 12;
   obj["cd"] = 34;
 
