@@ -60,7 +60,7 @@ Here is a program that parses a JSON document with ArduinoJson.
 char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
 DynamicJsonObject root;
-derserializeJson(root, json);
+deserializeJson(root, json);
 
 const char* sensor = root["sensor"];
 long time          = root["time"];
@@ -83,7 +83,7 @@ JsonArray& data = root.createNestedArray("data");
 data.add(48.756080);
 data.add(2.302038);
 
-root.printTo(Serial);
+serializeJson(root, Serial);
 // This prints:
 // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 ```

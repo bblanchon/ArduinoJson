@@ -28,7 +28,7 @@ TEST_CASE("JsonArray::invalid()") {
 
   SECTION("PrintToWritesBrackets") {
     char buffer[32];
-    JsonArray::invalid().printTo(buffer, sizeof(buffer));
+    serializeJson(JsonArray::invalid(), buffer, sizeof(buffer));
     REQUIRE_THAT(buffer, Equals("[]"));
   }
 }

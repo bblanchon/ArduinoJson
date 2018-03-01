@@ -8,8 +8,6 @@ add_executable(JsonObjectTests
 	get.cpp
 	invalid.cpp
 	iterator.cpp
-	prettyPrintTo.cpp
-	printTo.cpp
 	remove.cpp
 	set.cpp
 	size.cpp

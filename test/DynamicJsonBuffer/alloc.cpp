@@ -18,7 +18,8 @@ std::stringstream allocatorLog;
 
 struct SpyingAllocator : DefaultAllocator {
   void* allocate(size_t n) {
-    allocatorLog << "A" << (n - DynamicJsonBuffer::EmptyBlockSize);
+    allocatorLog << static_cast<const char*>("A")
+                 << (n - DynamicJsonBuffer::EmptyBlockSize);
     return DefaultAllocator::allocate(n);
   }
   void deallocate(void* p) {

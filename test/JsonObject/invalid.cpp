@@ -29,7 +29,7 @@ TEST_CASE("JsonObject::invalid()") {
 
   SECTION("PrintToWritesBraces") {
     char buffer[32];
-    obj.printTo(buffer, sizeof(buffer));
+    serializeJson(obj, buffer, sizeof(buffer));
     REQUIRE_THAT(buffer, Equals("{}"));
   }
 }

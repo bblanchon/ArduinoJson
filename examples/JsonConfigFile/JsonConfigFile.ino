@@ -72,7 +72,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   root["port"] = config.port;
 
   // Serialize JSON to file
-  if (root.printTo(file) == 0) {
+  if (serializeJson(root, file) == 0) {
     Serial.println(F("Failed to write to file"));
   }
 

@@ -38,13 +38,13 @@ void setup() {
   data.add(48.756080);
   data.add(2.302038);
 
-  root.printTo(Serial);
+  serializeJson(root, Serial);
   // This prints:
   // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 
   Serial.println();
 
-  root.prettyPrintTo(Serial);
+  serializeJsonPretty(root, Serial);
   // This prints:
   // {
   //   "sensor": "gps",

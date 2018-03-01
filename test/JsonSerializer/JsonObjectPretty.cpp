@@ -9,15 +9,15 @@
 void check(const JsonObject &obj, const std::string expected) {
   char json[256];
 
-  size_t actualLen = obj.prettyPrintTo(json);
-  size_t measuredLen = obj.measurePrettyLength();
+  size_t actualLen = serializeJsonPretty(obj, json);
+  size_t measuredLen = measureJsonPretty(obj);
 
   REQUIRE(json == expected);
   REQUIRE(expected.size() == actualLen);
   REQUIRE(expected.size() == measuredLen);
 }
 
-TEST_CASE("JsonObject::prettyPrintTo()") {
+TEST_CASE("serializeJsonPretty(JsonObject)") {
   DynamicJsonObject obj;
 
   SECTION("EmptyObject") {

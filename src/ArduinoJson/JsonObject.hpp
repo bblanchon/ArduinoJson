@@ -9,7 +9,6 @@
 #include "Data/ReferenceType.hpp"
 #include "Data/ValueSaver.hpp"
 #include "JsonPair.hpp"
-#include "Serialization/JsonPrintable.hpp"
 #include "StringTraits/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsArray.hpp"
@@ -31,8 +30,7 @@ template <typename>
 class JsonObjectSubscript;
 }
 
-class JsonObject : public Internals::JsonPrintable<JsonObject>,
-                   public Internals::ReferenceType,
+class JsonObject : public Internals::ReferenceType,
                    public Internals::NonCopyable,
                    public Internals::List<JsonPair>,
                    public Internals::JsonBufferAllocated {

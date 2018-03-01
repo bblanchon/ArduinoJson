@@ -54,7 +54,7 @@ void setup() {
 
   // Lastly, you can print the resulting JSON to a String
   String output;
-  root.printTo(output);
+  serializeJson(root, output);
 }
 
 void loop() {

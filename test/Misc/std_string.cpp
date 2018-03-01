@@ -49,19 +49,19 @@ TEST_CASE("std::string") {
       REQUIRE(std::string("world") == array[0]);
     }
 
-    SECTION("printTo()") {
+    SECTION("serializeJson()") {
       array.add(4);
       array.add(2);
       std::string json;
-      array.printTo(json);
+      serializeJson(array, json);
       REQUIRE(std::string("[4,2]") == json);
     }
 
-    SECTION("prettyPrintTo") {
+    SECTION("serializeJsonPretty()") {
       array.add(4);
       array.add(2);
       std::string json;
-      array.prettyPrintTo(json);
+      serializeJsonPretty(array, json);
       REQUIRE(std::string("[\r\n  4,\r\n  2\r\n]") == json);
     }
   }
@@ -69,7 +69,7 @@ TEST_CASE("std::string") {
   SECTION("JsonObject") {
     DynamicJsonObject object;
 
-    SECTION("deserializeJson") {
+    SECTION("deserializeJson()") {
       std::string json("{\"hello\":\"world\"}");
 
       bool success = deserializeJson(object, json);
@@ -156,7 +156,7 @@ TEST_CASE("std::string") {
       char json[64];
       object.createNestedObject(key);
       eraseString(key);
-      object.printTo(json, sizeof(json));
+      serializeJson(object, json, sizeof(json));
       REQUIRE(std::string("{\"key\":{}}") == json);
     }
 
@@ -165,7 +165,7 @@ TEST_CASE("std::string") {
       char json[64];
       object.createNestedArray(key);
       eraseString(key);
-      object.printTo(json, sizeof(json));
+      serializeJson(object, json, sizeof(json));
       REQUIRE(std::string("{\"key\":[]}") == json);
     }
 
@@ -197,17 +197,17 @@ TEST_CASE("std::string") {
       REQUIRE(std::string("world") == object["hello"]);
     }
 
-    SECTION("printTo") {
+    SECTION("serializeJson()") {
       object["key"] = "value";
       std::string json;
-      object.printTo(json);
+      serializeJson(object, json);
       REQUIRE(std::string("{\"key\":\"value\"}") == json);
     }
 
-    SECTION("prettyPrintTo") {
+    SECTION("serializeJsonPretty()") {
       object["key"] = "value";
       std::string json;
-      object.prettyPrintTo(json);
+      serializeJsonPretty(object, json);
       REQUIRE(std::string("{\r\n  \"key\": \"value\"\r\n}") == json);
     }
 

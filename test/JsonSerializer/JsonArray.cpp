@@ -7,14 +7,14 @@
 
 static void check(JsonArray &array, std::string expected) {
   std::string actual;
-  size_t actualLen = array.printTo(actual);
+  size_t actualLen = serializeJson(array, actual);
   REQUIRE(expected == actual);
   REQUIRE(actualLen == expected.size());
-  size_t measuredLen = array.measureLength();
+  size_t measuredLen = measureJson(array);
   REQUIRE(measuredLen == expected.size());
 }
 
-TEST_CASE("JsonArray::printTo()") {
+TEST_CASE("serializeJson(JsonArray)") {
   StaticJsonArray<JSON_ARRAY_SIZE(2)> array;
 
   SECTION("Empty") {

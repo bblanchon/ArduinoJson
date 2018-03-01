@@ -26,8 +26,6 @@ class JsonWriter {
   explicit JsonWriter(Print &sink) : _sink(sink), _length(0) {}
 
   // Returns the number of bytes sent to the Print implementation.
-  // This is very handy for implementations of printTo() that must return the
-  // number of bytes written.
   size_t bytesWritten() const {
     return _length;
   }
@@ -151,5 +149,5 @@ class JsonWriter {
  private:
   JsonWriter &operator=(const JsonWriter &);  // cannot be assigned
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

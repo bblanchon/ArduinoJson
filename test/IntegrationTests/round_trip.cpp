@@ -10,11 +10,11 @@ void check(std::string originalJson) {
 
   std::string prettyJson;
   deserializeJson(obj, originalJson);
-  obj.prettyPrintTo(prettyJson);
+  serializeJsonPretty(obj, prettyJson);
 
   std::string finalJson;
   deserializeJson(obj, originalJson);
-  obj.printTo(finalJson);
+  serializeJson(obj, finalJson);
 
   REQUIRE(originalJson == finalJson);
 }

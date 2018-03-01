@@ -94,16 +94,8 @@ class JsonObjectSubscript
   JsonObject& _object;
   TStringRef _key;
 };
-
-#if ARDUINOJSON_ENABLE_STD_STREAM
-template <typename TStringRef>
-inline std::ostream& operator<<(std::ostream& os,
-                                const JsonObjectSubscript<TStringRef>& source) {
-  return source.printTo(os);
-}
-#endif
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
 
 #ifdef _MSC_VER
 #pragma warning(pop)

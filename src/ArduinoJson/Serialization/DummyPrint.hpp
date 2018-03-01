@@ -7,7 +7,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
-// A dummy Print implementation used in JsonPrintable::measureLength()
+// A dummy Print implementation used in measureJson()
 class DummyPrint {
  public:
   size_t print(char) {
@@ -18,5 +18,5 @@ class DummyPrint {
     return strlen(s);
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

@@ -9,7 +9,6 @@
 #include "Data/ReferenceType.hpp"
 #include "Data/ValueSaver.hpp"
 #include "JsonVariant.hpp"
-#include "Serialization/JsonPrintable.hpp"
 #include "StringTraits/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsArray.hpp"
@@ -30,8 +29,7 @@ namespace Internals {
 class JsonArraySubscript;
 }
 
-class JsonArray : public Internals::JsonPrintable<JsonArray>,
-                  public Internals::ReferenceType,
+class JsonArray : public Internals::ReferenceType,
                   public Internals::NonCopyable,
                   public Internals::List<JsonVariant>,
                   public Internals::JsonBufferAllocated {

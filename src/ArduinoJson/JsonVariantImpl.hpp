@@ -117,10 +117,4 @@ inline bool JsonVariant::variantIsFloat() const {
          (_type == JSON_UNPARSED && isFloat(_content.asString));
 }
 
-#if ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream &operator<<(std::ostream &os, const JsonVariant &source) {
-  return source.printTo(os);
-}
-#endif
-
 }  // namespace ArduinoJson

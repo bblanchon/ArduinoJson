@@ -33,7 +33,7 @@ TEST_CASE("JsonObject::remove()") {
     }
 
     std::string result;
-    obj.printTo(result);
+    serializeJson(obj, result);
     REQUIRE("{\"a\":0,\"c\":2}" == result);
   }
 }

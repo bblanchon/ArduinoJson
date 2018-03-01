@@ -12,7 +12,6 @@
 #include "Data/JsonVariantType.hpp"
 #include "JsonVariantBase.hpp"
 #include "RawJson.hpp"
-#include "Serialization/JsonPrintable.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsChar.hpp"
 #include "TypeTraits/IsFloatingPoint.hpp"
@@ -28,6 +27,10 @@ namespace ArduinoJson {
 // Forward declarations.
 class JsonArray;
 class JsonObject;
+namespace Internals {
+template <typename Print>
+class JsonSerializer;
+}
 
 // A variant that can be a any value serializable to a JSON value.
 //
@@ -194,7 +197,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
     const char *cstr = variantAsString();
     if (cstr) return T(cstr);
     T s;
-    printTo(s);
+    serializeJson(*this, s);
     return s;
   }
   //

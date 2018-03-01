@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "../Data/Encoding.hpp"
 #include "Comments.hpp"
 #include "JsonParser.hpp"
 

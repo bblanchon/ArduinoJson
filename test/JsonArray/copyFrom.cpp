@@ -14,7 +14,7 @@ TEST_CASE("JsonArray::copyFrom()") {
     bool ok = array.copyFrom(source);
     REQUIRE(ok);
 
-    array.printTo(json, sizeof(json));
+    serializeJson(array, json, sizeof(json));
     REQUIRE(std::string("[1,2,3]") == json);
   }
 
@@ -27,7 +27,7 @@ TEST_CASE("JsonArray::copyFrom()") {
     bool ok = array.copyFrom(source);
     REQUIRE_FALSE(ok);
 
-    array.printTo(json, sizeof(json));
+    serializeJson(array, json, sizeof(json));
     REQUIRE(std::string("[1,2]") == json);
   }
 
@@ -39,7 +39,7 @@ TEST_CASE("JsonArray::copyFrom()") {
     bool ok = array.copyFrom(source);
     REQUIRE(ok);
 
-    array.printTo(json, sizeof(json));
+    serializeJson(array, json, sizeof(json));
     REQUIRE(std::string("[[1,2,3],[4,5,6]]") == json);
   }
 
@@ -53,7 +53,7 @@ TEST_CASE("JsonArray::copyFrom()") {
     bool ok = array.copyFrom(source);
     REQUIRE_FALSE(ok);
 
-    array.printTo(json, sizeof(json));
+    serializeJson(array, json, sizeof(json));
     REQUIRE(std::string("[[1,2,3],[4,5]]") == json);
   }
 }

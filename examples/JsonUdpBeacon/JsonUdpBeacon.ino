@@ -72,11 +72,11 @@ void loop() {
   Serial.print(remoteIp);
   Serial.print(F(" on port "));
   Serial.println(remotePort);
-  root.printTo(Serial);
+  serializeJson(root, Serial);
 
   // Send UDP packet
   udp.beginPacket(remoteIp, remotePort);
-  root.printTo(udp);
+  serializeJson(root, udp);
   udp.println();
   udp.endPacket();
 
