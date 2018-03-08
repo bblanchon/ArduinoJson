@@ -20,17 +20,6 @@ template <typename TReader, typename TWriter>
 inline bool
 ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingTo(
     JsonVariant *destination) {
-  if (_nestingLimit == 0) return false;
-  _nestingLimit--;
-  bool success = parseAnythingToUnsafe(destination);
-  _nestingLimit++;
-  return success;
-}
-
-template <typename TReader, typename TWriter>
-inline bool
-ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseAnythingToUnsafe(
-    JsonVariant *destination) {
   skipSpacesAndComments(_reader);
 
   switch (_reader.current()) {
@@ -81,7 +70,12 @@ ERROR_NO_MEMORY:
 template <typename TReader, typename TWriter>
 inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseArrayTo(
     JsonVariant *destination) {
+  if (_nestingLimit == 0) return false;
+  _nestingLimit--;
+
   JsonArray &array = parseArray();
+
+  _nestingLimit++;
   if (!array.success()) return false;
 
   *destination = array;
@@ -131,7 +125,12 @@ ERROR_NO_MEMORY:
 template <typename TReader, typename TWriter>
 inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObjectTo(
     JsonVariant *destination) {
+  if (_nestingLimit == 0) return false;
+  _nestingLimit--;
+
   JsonObject &object = parseObject();
+
+  _nestingLimit++;
   if (!object.success()) return false;
 
   *destination = object;

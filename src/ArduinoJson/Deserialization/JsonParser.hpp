@@ -30,7 +30,7 @@ class JsonParser {
 
   JsonVariant parseVariant() {
     JsonVariant result;
-    parseAnythingToUnsafe(&result);
+    parseAnythingTo(&result);
     return result;
   }
 
@@ -44,7 +44,7 @@ class JsonParser {
 
   const char *parseString();
   bool parseAnythingTo(JsonVariant *destination);
-  FORCE_INLINE bool parseAnythingToUnsafe(JsonVariant *destination);
+  //FORCE_INLINE bool parseAnythingToUnsafe(JsonVariant *destination);
 
   inline bool parseArrayTo(JsonVariant *destination);
   inline bool parseObjectTo(JsonVariant *destination);
