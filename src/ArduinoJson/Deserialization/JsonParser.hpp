@@ -30,7 +30,7 @@ class JsonParser {
 
   JsonVariant parseVariant() {
     JsonVariant result;
-    parseAnythingTo(&result);
+    parseAnythingToUnsafe(&result);
     return result;
   }
 
