@@ -5,70 +5,60 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-bool tryParse(const char *json, uint8_t nestingLimit) {
-  DynamicJsonBuffer buffer;
-  return buffer.parse(json, nestingLimit).success();
-}
-
-bool tryParseArray(const char *json, uint8_t nestingLimit) {
-  DynamicJsonBuffer buffer;
-  return buffer.parseArray(json, nestingLimit).success();
-}
-
-bool tryParseObject(const char *json, uint8_t nestingLimit) {
-  DynamicJsonBuffer buffer;
-  return buffer.parseObject(json, nestingLimit).success();
-}
+#define SHOULD_WORK(expression) REQUIRE(true == expression.success());
+#define SHOULD_FAIL(expression) REQUIRE(false == expression.success());
 
 TEST_CASE("JsonParser nestingLimit") {
+  DynamicJsonBuffer jb;
+
   SECTION("parseArray()") {
     SECTION("limit = 0") {
-      REQUIRE(true == tryParseArray("[]", 0));
-      REQUIRE(false == tryParseArray("[[]]", 0));
+      SHOULD_WORK(jb.parseArray("[]", 0));
+      SHOULD_FAIL(jb.parseArray("[[]]", 0));
     }
 
     SECTION("limit = 1") {
-      REQUIRE(true == tryParseArray("[[]]", 1));
-      REQUIRE(false == tryParseArray("[[[]]]", 1));
+      SHOULD_WORK(jb.parseArray("[[]]", 1));
+      SHOULD_FAIL(jb.parseArray("[[[]]]", 1));
     }
 
     SECTION("limit = 2") {
-      REQUIRE(true == tryParseArray("[[[]]]", 2));
-      REQUIRE(false == tryParseArray("[[[[]]]]", 2));
+      SHOULD_WORK(jb.parseArray("[[[]]]", 2));
+      SHOULD_FAIL(jb.parseArray("[[[[]]]]", 2));
     }
   }
 
   SECTION("parseObject()") {
     SECTION("limit = 0") {
-      REQUIRE(true == tryParseObject("{}", 0));
-      REQUIRE(false == tryParseObject("{\"key\":{}}", 0));
+      SHOULD_WORK(jb.parseObject("{}", 0));
+      SHOULD_FAIL(jb.parseObject("{\"key\":{}}", 0));
     }
 
     SECTION("limit = 1") {
-      REQUIRE(true == tryParseObject("{\"key\":{}}", 1));
-      REQUIRE(false == tryParseObject("{\"key\":{\"key\":{}}}", 1));
+      SHOULD_WORK(jb.parseObject("{\"key\":{}}", 1));
+      SHOULD_FAIL(jb.parseObject("{\"key\":{\"key\":{}}}", 1));
     }
 
     SECTION("limit = 2") {
-      REQUIRE(true == tryParseObject("{\"key\":{\"key\":{}}}", 2));
-      REQUIRE(false == tryParseObject("{\"key\":{\"key\":{\"key\":{}}}}", 2));
+      SHOULD_WORK(jb.parseObject("{\"key\":{\"key\":{}}}", 2));
+      SHOULD_FAIL(jb.parseObject("{\"key\":{\"key\":{\"key\":{}}}}", 2));
     }
   }
 
   SECTION("parse()") {
     SECTION("limit = 0") {
-      REQUIRE(true == tryParse("\"toto\"", 0));
-      REQUIRE(true == tryParse("[]", 0));
-      REQUIRE(true == tryParse("{}", 0));
-      REQUIRE(false == tryParse("[\"toto\"]", 0));
-      REQUIRE(false == tryParse("{\"toto\":1}", 0));
+      SHOULD_WORK(jb.parse("\"toto\"", 0));
+      SHOULD_WORK(jb.parse("[]", 0));
+      SHOULD_WORK(jb.parse("{}", 0));
+      SHOULD_FAIL(jb.parse("[\"toto\"]", 0));
+      SHOULD_FAIL(jb.parse("{\"toto\":1}", 0));
     }
 
     SECTION("limit = 1") {
-      REQUIRE(true == tryParse("[\"toto\"]", 1));
-      REQUIRE(true == tryParse("{\"toto\":1}", 1));
-      REQUIRE(false == tryParse("[[\"toto\"]]", 1));
-      REQUIRE(false == tryParse("[{\"toto\":1}]", 1));
+      SHOULD_WORK(jb.parse("[\"toto\"]", 1));
+      SHOULD_WORK(jb.parse("{\"toto\":1}", 1));
+      SHOULD_FAIL(jb.parse("[[\"toto\"]]", 1));
+      SHOULD_FAIL(jb.parse("[{\"toto\":1}]", 1));
     }
   }
 }
