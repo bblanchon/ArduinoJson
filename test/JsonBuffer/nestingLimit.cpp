@@ -21,14 +21,6 @@ bool tryParseObject(const char *json, uint8_t nestingLimit) {
 }
 
 TEST_CASE("JsonParser nestingLimit") {
-  SECTION("parse()") {
-    SECTION("limit = 0") {
-      REQUIRE(true == tryParse("\"toto\"", 0));
-      REQUIRE(true == tryParse("[]", 0));
-      REQUIRE(false == tryParse("[\"toto\"]", 0));
-    }
-  }
-
   SECTION("parseArray()") {
     SECTION("limit = 0") {
       REQUIRE(true == tryParseArray("[]", 0));
@@ -60,6 +52,23 @@ TEST_CASE("JsonParser nestingLimit") {
     SECTION("limit = 2") {
       REQUIRE(true == tryParseObject("{\"key\":{\"key\":{}}}", 2));
       REQUIRE(false == tryParseObject("{\"key\":{\"key\":{\"key\":{}}}}", 2));
+    }
+  }
+
+  SECTION("parse()") {
+    SECTION("limit = 0") {
+      REQUIRE(true == tryParse("\"toto\"", 0));
+      REQUIRE(true == tryParse("[]", 0));
+      REQUIRE(true == tryParse("{}", 0));
+      REQUIRE(false == tryParse("[\"toto\"]", 0));
+      REQUIRE(false == tryParse("{\"toto\":1}", 0));
+    }
+
+    SECTION("limit = 1") {
+      REQUIRE(true == tryParse("[\"toto\"]", 1));
+      REQUIRE(true == tryParse("{\"toto\":1}", 1));
+      REQUIRE(false == tryParse("[[\"toto\"]]", 1));
+      REQUIRE(false == tryParse("[{\"toto\":1}]", 1));
     }
   }
 }
