@@ -9,36 +9,36 @@ TEST_CASE("deserializeJson(JsonObject&)") {
   DynamicJsonObject obj;
 
   SECTION("An empty object") {
-    bool success = deserializeJson(obj, "{}");
-    REQUIRE(success == true);
+    JsonError err = deserializeJson(obj, "{}");
+    REQUIRE(err == JsonError::Ok);
     REQUIRE(obj.size() == 0);
   }
 
   SECTION("Quotes") {
     SECTION("Double quotes") {
-      bool success = deserializeJson(obj, "{\"key\":\"value\"}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key\":\"value\"}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["key"] == "value");
     }
 
     SECTION("Single quotes") {
-      bool success = deserializeJson(obj, "{'key':'value'}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{'key':'value'}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["key"] == "value");
     }
 
     SECTION("No quotes") {
-      bool success = deserializeJson(obj, "{key:value}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{key:value}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["key"] == "value");
     }
 
     SECTION("No quotes, allow underscore in key") {
-      bool success = deserializeJson(obj, "{_k_e_y_:42}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{_k_e_y_:42}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["_k_e_y_"] == 42);
     }
@@ -46,46 +46,46 @@ TEST_CASE("deserializeJson(JsonObject&)") {
 
   SECTION("Spaces") {
     SECTION("Before the key") {
-      bool success = deserializeJson(obj, "{ \"key\":\"value\"}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{ \"key\":\"value\"}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["key"] == "value");
     }
 
     SECTION("After the key") {
-      bool success = deserializeJson(obj, "{\"key\" :\"value\"}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key\" :\"value\"}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["key"] == "value");
     }
 
     SECTION("Before the value") {
-      bool success = deserializeJson(obj, "{\"key\": \"value\"}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key\": \"value\"}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["key"] == "value");
     }
 
     SECTION("After the value") {
-      bool success = deserializeJson(obj, "{\"key\":\"value\" }");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key\":\"value\" }");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 1);
       REQUIRE(obj["key"] == "value");
     }
 
     SECTION("Before the colon") {
-      bool success =
+      JsonError err =
           deserializeJson(obj, "{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
-      REQUIRE(success == true);
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"] == "value1");
       REQUIRE(obj["key2"] == "value2");
     }
 
     SECTION("After the colon") {
-      bool success =
+      JsonError err =
           deserializeJson(obj, "{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
-      REQUIRE(success == true);
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"] == "value1");
       REQUIRE(obj["key2"] == "value2");
@@ -94,41 +94,41 @@ TEST_CASE("deserializeJson(JsonObject&)") {
 
   SECTION("Values types") {
     SECTION("String") {
-      bool success =
+      JsonError err =
           deserializeJson(obj, "{\"key1\":\"value1\",\"key2\":\"value2\"}");
-      REQUIRE(success == true);
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"] == "value1");
       REQUIRE(obj["key2"] == "value2");
     }
 
     SECTION("Integer") {
-      bool success = deserializeJson(obj, "{\"key1\":42,\"key2\":-42}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key1\":42,\"key2\":-42}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"] == 42);
       REQUIRE(obj["key2"] == -42);
     }
 
     SECTION("Double") {
-      bool success = deserializeJson(obj, "{\"key1\":12.345,\"key2\":-7E89}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key1\":12.345,\"key2\":-7E89}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"] == 12.345);
       REQUIRE(obj["key2"] == -7E89);
     }
 
     SECTION("Booleans") {
-      bool success = deserializeJson(obj, "{\"key1\":true,\"key2\":false}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key1\":true,\"key2\":false}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"] == true);
       REQUIRE(obj["key2"] == false);
     }
 
     SECTION("Null") {
-      bool success = deserializeJson(obj, "{\"key1\":null,\"key2\":null}");
-      REQUIRE(success == true);
+      JsonError err = deserializeJson(obj, "{\"key1\":null,\"key2\":null}");
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"].as<char *>() == 0);
       REQUIRE(obj["key2"].as<char *>() == 0);
@@ -137,13 +137,13 @@ TEST_CASE("deserializeJson(JsonObject&)") {
     SECTION("Array") {
       char jsonString[] = " { \"ab\" : [ 1 , 2 ] , \"cd\" : [ 3 , 4 ] } ";
 
-      bool success = deserializeJson(obj, jsonString);
+      JsonError err = deserializeJson(obj, jsonString);
 
       JsonArray &array1 = obj["ab"];
       const JsonArray &array2 = obj["cd"];
       JsonArray &array3 = obj["ef"];
 
-      REQUIRE(true == success);
+      REQUIRE(err == JsonError::Ok);
 
       REQUIRE(true == array1.success());
       REQUIRE(true == array2.success());
@@ -165,33 +165,33 @@ TEST_CASE("deserializeJson(JsonObject&)") {
 
   SECTION("Misc") {
     SECTION("The opening brace is missing") {
-      bool success = deserializeJson(obj, "}");
-      REQUIRE(success == false);
+      JsonError err = deserializeJson(obj, "}");
+      REQUIRE(err == JsonError::OpeningBraceExpected);
     }
 
     SECTION("The closing brace is missing") {
-      bool success = deserializeJson(obj, "{");
-      REQUIRE(success == false);
+      JsonError err = deserializeJson(obj, "{\"hello\":\"world\"");
+      REQUIRE(err == JsonError::ClosingBraceExpected);
     }
 
     SECTION("A quoted key without value") {
-      bool success = deserializeJson(obj, "{\"key\"}");
-      REQUIRE(success == false);
+      JsonError err = deserializeJson(obj, "{\"key\"}");
+      REQUIRE(err == JsonError::ColonExpected);
     }
 
     SECTION("A non-quoted key without value") {
-      bool success = deserializeJson(obj, "{key}");
-      REQUIRE(success == false);
+      JsonError err = deserializeJson(obj, "{key}");
+      REQUIRE(err == JsonError::ColonExpected);
     }
 
     SECTION("A dangling comma") {
-      bool success = deserializeJson(obj, "{\"key1\":\"value1\",}");
-      REQUIRE(success == false);
+      JsonError err = deserializeJson(obj, "{\"key1\":\"value1\",}");
+      REQUIRE(err == JsonError::ColonExpected);
     }
 
     SECTION("null as a key") {
-      bool success = deserializeJson(obj, "null:\"value\"}");
-      REQUIRE(success == false);
+      JsonError err = deserializeJson(obj, "{null:\"value\"}");
+      REQUIRE(err == JsonError::Ok);
     }
   }
 }

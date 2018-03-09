@@ -10,61 +10,61 @@ TEST_CASE("deserializeJson(StaticJsonArray&)") {
     StaticJsonArray<JSON_ARRAY_SIZE(0)> arr;
     char input[] = "[]";
 
-    bool success = deserializeJson(arr, input);
+    JsonError err = deserializeJson(arr, input);
 
-    REQUIRE(success == true);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("TooSmallBufferForArrayWithOneValue") {
     StaticJsonArray<JSON_ARRAY_SIZE(1) - 1> arr;
     char input[] = "[1]";
 
-    bool success = deserializeJson(arr, input);
+    JsonError err = deserializeJson(arr, input);
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("BufferOfTheRightSizeForArrayWithOneValue") {
     StaticJsonArray<JSON_ARRAY_SIZE(1)> arr;
     char input[] = "[1]";
 
-    bool success = deserializeJson(arr, input);
+    JsonError err = deserializeJson(arr, input);
 
-    REQUIRE(success == true);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("TooSmallBufferForArrayWithNestedObject") {
     StaticJsonArray<JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0) - 1> arr;
     char input[] = "[{}]";
 
-    bool success = deserializeJson(arr, input);
+    JsonError err = deserializeJson(arr, input);
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("BufferOfTheRightSizeForArrayWithNestedObject") {
     StaticJsonArray<JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0)> arr;
     char input[] = "[{}]";
 
-    bool success = deserializeJson(arr, input);
+    JsonError err = deserializeJson(arr, input);
 
-    REQUIRE(success == true);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("CharPtrNull") {
     StaticJsonArray<100> arr;
 
-    bool success = deserializeJson(arr, static_cast<char*>(0));
+    JsonError err = deserializeJson(arr, static_cast<char*>(0));
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("ConstCharPtrNull") {
     StaticJsonArray<100> arr;
 
-    bool success = deserializeJson(arr, static_cast<const char*>(0));
+    JsonError err = deserializeJson(arr, static_cast<const char*>(0));
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("CopyStringNotSpaces") {

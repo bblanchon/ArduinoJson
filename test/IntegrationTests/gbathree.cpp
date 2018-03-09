@@ -8,7 +8,7 @@
 TEST_CASE("Gbathree") {
   DynamicJsonObject _object;
 
-  bool success = deserializeJson(
+  JsonError error = deserializeJson(
       _object,
       "{\"protocol_name\":\"fluorescence\",\"repeats\":1,\"wait\":0,"
       "\"averages\":1,\"measurements\":3,\"meas2_light\":15,\"meas1_"
@@ -22,7 +22,7 @@ TEST_CASE("Gbathree") {
       "[15,15,15,15]],\"altc\":[2,2,2,2],\"altd\":[2,2,2,2]}");
 
   SECTION("Success") {
-    REQUIRE(success == true);
+    REQUIRE(error == JsonError::Ok);
   }
 
   SECTION("ProtocolName") {

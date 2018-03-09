@@ -19,10 +19,10 @@ TEST_CASE("std::string") {
     SECTION("deserializeJson") {
       std::string json("[\"hello\"]");
 
-      bool success = deserializeJson(array, json);
+      JsonError err = deserializeJson(array, json);
       eraseString(json);
 
-      REQUIRE(true == success);
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(std::string("hello") == array[0]);
     }
 
@@ -72,10 +72,10 @@ TEST_CASE("std::string") {
     SECTION("deserializeJson()") {
       std::string json("{\"hello\":\"world\"}");
 
-      bool success = deserializeJson(object, json);
+      JsonError err = deserializeJson(object, json);
       eraseString(json);
 
-      REQUIRE(true == success);
+      REQUIRE(err == JsonError::Ok);
       REQUIRE(std::string("world") == object["hello"]);
     }
 

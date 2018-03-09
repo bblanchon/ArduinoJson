@@ -76,8 +76,8 @@ void setup() {
   DynamicJsonObject root(capacity);
 
   // Parse JSON object
-  bool success = deserializeJson(root, client);
-  if (!root.success()) {
+  JsonError error = deserializeJson(root, client);
+  if (error) {
     Serial.println(F("Parsing failed!"));
     return;
   }

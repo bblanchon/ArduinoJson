@@ -27,9 +27,9 @@ TEST_CASE("DynamicJsonBuffer no memory") {
   //   char json[] = "[{}]";
   //   DynamicJsonArray arr;
 
-  //   bool success = deserializeJson(arr, json);
+  //   JsonError err = deserializeJson(arr, json);
 
-  //   REQUIRE(success == false);
+  //   REQUIRE(err != JsonError::Ok);
   // }
 
   // TODO: uncomment
@@ -37,9 +37,9 @@ TEST_CASE("DynamicJsonBuffer no memory") {
   //   char json[] = "{[]}";
   //   DynamicJsonObject obj;
 
-  //   bool success = deserializeJson(obj, json);
+  //   JsonError err = deserializeJson(obj, json);
 
-  //   REQUIRE(success == false);
+  //   REQUIRE(err != JsonError::Ok);
   // }
 
   SECTION("startString()") {

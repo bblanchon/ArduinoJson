@@ -10,8 +10,8 @@ TEST_CASE("JsonArray::copyTo()") {
 
   SECTION("BiggerOneDimensionIntegerArray") {
     char json[] = "[1,2,3]";
-    bool success = deserializeJson(array, json);
-    REQUIRE(success == true);
+    JsonError err = deserializeJson(array, json);
+    REQUIRE(err == JsonError::Ok);
 
     int destination[4] = {0};
     size_t result = array.copyTo(destination);
@@ -25,8 +25,8 @@ TEST_CASE("JsonArray::copyTo()") {
 
   SECTION("SmallerOneDimensionIntegerArray") {
     char json[] = "[1,2,3]";
-    bool success = deserializeJson(array, json);
-    REQUIRE(success == true);
+    JsonError err = deserializeJson(array, json);
+    REQUIRE(err == JsonError::Ok);
 
     int destination[2] = {0};
     size_t result = array.copyTo(destination);
@@ -39,8 +39,8 @@ TEST_CASE("JsonArray::copyTo()") {
   SECTION("TwoOneDimensionIntegerArray") {
     char json[] = "[[1,2],[3],[4]]";
 
-    bool success = deserializeJson(array, json);
-    REQUIRE(success == true);
+    JsonError err = deserializeJson(array, json);
+    REQUIRE(err == JsonError::Ok);
 
     int destination[3][2] = {{0}};
     array.copyTo(destination);

@@ -56,9 +56,9 @@ TEST_CASE("std::stream") {
   SECTION("ParseArray") {
     std::istringstream json(" [ 42 /* comment */ ] ");
     DynamicJsonArray arr;
-    bool success = deserializeJson(arr, json);
+    JsonError err = deserializeJson(arr, json);
 
-    REQUIRE(true == success);
+    REQUIRE(err == JsonError::Ok);
     REQUIRE(1 == arr.size());
     REQUIRE(42 == arr[0]);
   }
@@ -66,9 +66,9 @@ TEST_CASE("std::stream") {
   SECTION("ParseObject") {
     std::istringstream json(" { hello : world // comment\n }");
     DynamicJsonObject obj;
-    bool success = deserializeJson(obj, json);
+    JsonError err = deserializeJson(obj, json);
 
-    REQUIRE(true == success);
+    REQUIRE(err == JsonError::Ok);
     REQUIRE(1 == obj.size());
     REQUIRE(std::string("world") == obj["hello"]);
   }

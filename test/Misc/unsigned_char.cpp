@@ -14,18 +14,18 @@ TEST_CASE("unsigned char string") {
     unsigned char json[] = "[42]";
 
     StaticJsonArray<JSON_ARRAY_SIZE(1)> arr;
-    bool success = deserializeJson(arr, json);
+    JsonError err = deserializeJson(arr, json);
 
-    REQUIRE(true == success);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("JsonBuffer::parseObject") {
     unsigned char json[] = "{\"a\":42}";
 
     StaticJsonObject<JSON_OBJECT_SIZE(1)> obj;
-    bool success = deserializeJson(obj, json);
+    JsonError err = deserializeJson(obj, json);
 
-    REQUIRE(true == success);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("JsonVariant constructor") {

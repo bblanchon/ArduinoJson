@@ -35,9 +35,9 @@ void loadConfiguration(const char *filename, Config &config) {
   StaticJsonObject<512> root;
 
   // Parse the root object
-  bool success = deserializeJson(root, file);
+  JsonError error = deserializeJson(root, file);
 
-  if (!success)
+  if (error)
     Serial.println(F("Failed to read file, using default configuration"));
 
   // Copy values from the JsonObject to the Config

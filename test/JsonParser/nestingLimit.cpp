@@ -5,44 +5,45 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-bool tryParseArray(const char *json, uint8_t nestingLimit) {
+JsonError tryParseArray(const char *json, uint8_t nestingLimit) {
   DynamicJsonArray array;
   return deserializeJson(array, json, nestingLimit);
 }
 
-bool tryParseObject(const char *json, uint8_t nestingLimit) {
+JsonError tryParseObject(const char *json, uint8_t nestingLimit) {
   DynamicJsonObject obj;
   return deserializeJson(obj, json, nestingLimit);
 }
 
 TEST_CASE("JsonParser nestingLimit") {
   SECTION("ParseArrayWithNestingLimit0") {
-    REQUIRE(true == tryParseArray("[]", 0));
-    REQUIRE(false == tryParseArray("[[]]", 0));
+    REQUIRE(tryParseArray("[]", 0) == JsonError::Ok);
+    REQUIRE(tryParseArray("[[]]", 0) == JsonError::TooDeep);
   }
 
   SECTION("ParseArrayWithNestingLimit1") {
-    REQUIRE(true == tryParseArray("[[]]", 1));
-    REQUIRE(false == tryParseArray("[[[]]]", 1));
+    REQUIRE(tryParseArray("[[]]", 1) == JsonError::Ok);
+    REQUIRE(tryParseArray("[[[]]]", 1) == JsonError::TooDeep);
   }
 
   SECTION("ParseArrayWithNestingLimit2") {
-    REQUIRE(true == tryParseArray("[[[]]]", 2));
-    REQUIRE(false == tryParseArray("[[[[]]]]", 2));
+    REQUIRE(tryParseArray("[[[]]]", 2) == JsonError::Ok);
+    REQUIRE(tryParseArray("[[[[]]]]", 2) == JsonError::TooDeep);
   }
 
   SECTION("ParseObjectWithNestingLimit0") {
-    REQUIRE(true == tryParseObject("{}", 0));
-    REQUIRE(false == tryParseObject("{\"key\":{}}", 0));
+    REQUIRE(tryParseObject("{}", 0) == JsonError::Ok);
+    REQUIRE(tryParseObject("{\"key\":{}}", 0) == JsonError::TooDeep);
   }
 
   SECTION("ParseObjectWithNestingLimit1") {
-    REQUIRE(true == tryParseObject("{\"key\":{}}", 1));
-    REQUIRE(false == tryParseObject("{\"key\":{\"key\":{}}}", 1));
+    REQUIRE(tryParseObject("{\"key\":{}}", 1) == JsonError::Ok);
+    REQUIRE(tryParseObject("{\"key\":{\"key\":{}}}", 1) == JsonError::TooDeep);
   }
 
   SECTION("ParseObjectWithNestingLimit2") {
-    REQUIRE(true == tryParseObject("{\"key\":{\"key\":{}}}", 2));
-    REQUIRE(false == tryParseObject("{\"key\":{\"key\":{\"key\":{}}}}", 2));
+    REQUIRE(tryParseObject("{\"key\":{\"key\":{}}}", 2) == JsonError::Ok);
+    REQUIRE(tryParseObject("{\"key\":{\"key\":{\"key\":{}}}}", 2) ==
+            JsonError::TooDeep);
   }
 }

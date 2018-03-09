@@ -33,8 +33,8 @@ HEAD
 > 
 > ```c++
 > DynamicJsonObject obj;
-> bool success = deserializeJson(obj, json);
-> if (success) {
+> JsonError error = deserializeJson(obj, json);
+> if (error) {
 > 
 > }
 > ```

@@ -36,10 +36,10 @@ void setup() {
   // It's a reference to the JsonObject, the actual bytes are inside the
   // JsonBuffer with all the other nodes of the object tree.
   // Memory is freed when jsonBuffer goes out of scope.
-  bool success = deserializeJson(root, json);
+  JsonError error = deserializeJson(root, json);
 
   // Test if parsing succeeds.
-  if (!success) {
+  if (error) {
     Serial.println("parseObject() failed");
     return;
   }

@@ -10,60 +10,60 @@ TEST_CASE("deserializeJson(StaticJsonObject&)") {
     StaticJsonObject<JSON_OBJECT_SIZE(0)> obj;
     char input[] = "{}";
 
-    bool success = deserializeJson(obj, input);
+    JsonError err = deserializeJson(obj, input);
 
-    REQUIRE(success == true);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("TooSmallBufferForObjectWithOneValue") {
     StaticJsonObject<JSON_OBJECT_SIZE(1) - 1> obj;
     char input[] = "{\"a\":1}";
 
-    bool success = deserializeJson(obj, input);
+    JsonError err = deserializeJson(obj, input);
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("BufferOfTheRightSizeForObjectWithOneValue") {
     StaticJsonObject<JSON_OBJECT_SIZE(1)> obj;
     char input[] = "{\"a\":1}";
 
-    bool success = deserializeJson(obj, input);
+    JsonError err = deserializeJson(obj, input);
 
-    REQUIRE(success == true);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("TooSmallBufferForObjectWithNestedObject") {
     StaticJsonObject<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0) - 1> obj;
     char input[] = "{\"a\":[]}";
 
-    bool success = deserializeJson(obj, input);
+    JsonError err = deserializeJson(obj, input);
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("BufferOfTheRightSizeForObjectWithNestedObject") {
     StaticJsonObject<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0)> obj;
     char input[] = "{\"a\":[]}";
 
-    bool success = deserializeJson(obj, input);
+    JsonError err = deserializeJson(obj, input);
 
-    REQUIRE(success == true);
+    REQUIRE(err == JsonError::Ok);
   }
 
   SECTION("CharPtrNull") {
     StaticJsonObject<100> obj;
 
-    bool success = deserializeJson(obj, static_cast<char*>(0));
+    JsonError err = deserializeJson(obj, static_cast<char*>(0));
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("ConstCharPtrNull") {
     StaticJsonObject<100> obj;
 
-    bool success = deserializeJson(obj, static_cast<const char*>(0));
+    JsonError err = deserializeJson(obj, static_cast<const char*>(0));
 
-    REQUIRE(success == false);
+    REQUIRE(err != JsonError::Ok);
   }
 }

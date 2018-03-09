@@ -4,6 +4,7 @@
 
 add_executable(JsonParserTests
 	JsonArray.cpp
+	JsonError.cpp
 	JsonObject.cpp
 	JsonVariant.cpp
 	nestingLimit.cpp
