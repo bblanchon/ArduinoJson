@@ -7,6 +7,7 @@
 #include "JsonBufferBase.hpp"
 
 #include <stdlib.h>
+#include <utility>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -48,6 +49,10 @@ class DynamicJsonBufferBase
 
   DynamicJsonBufferBase(size_t initialSize = 256)
       : _head(NULL), _nextBlockCapacity(initialSize) {}
+
+  DynamicJsonBufferBase(TAllocator && allocator, size_t initialSize = 256)
+      : _head(NULL), _nextBlockCapacity(initialSize)
+      , _allocator(std::move(allocator))  {}
 
   ~DynamicJsonBufferBase() {
     clear();
