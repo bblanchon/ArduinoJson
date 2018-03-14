@@ -38,12 +38,9 @@ class JsonParser {
   }
 
   const char *parseString();
-  JsonError parseAnythingTo(JsonVariant *destination);
-  FORCE_INLINE JsonError parseAnythingToUnsafe(JsonVariant *destination);
-
-  inline JsonError parseArrayTo(JsonVariant *destination);
-  inline JsonError parseObjectTo(JsonVariant *destination);
-  inline JsonError parseStringTo(JsonVariant *destination);
+  JsonError parseArray(JsonVariant &variant);
+  JsonError parseObject(JsonVariant &variant);
+  JsonError parseValue(JsonVariant &variant);
 
   static inline bool isBetween(char c, char min, char max) {
     return min <= c && c <= max;

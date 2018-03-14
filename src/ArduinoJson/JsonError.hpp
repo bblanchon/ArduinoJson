@@ -21,12 +21,20 @@ class JsonError {
 
   JsonError(Code code) : _code(code) {}
 
-  bool operator==(Code code) const {
-    return _code == code;
+  friend bool operator==(const JsonError& err, Code code) {
+    return err._code == code;
   }
 
-  bool operator!=(Code code) const {
-    return _code != code;
+  friend bool operator==(Code code, const JsonError& err) {
+    return err._code == code;
+  }
+
+  friend bool operator!=(const JsonError& err, Code code) {
+    return err._code != code;
+  }
+
+  friend bool operator!=(Code code, const JsonError& err) {
+    return err._code != code;
   }
 
   operator bool() const {
