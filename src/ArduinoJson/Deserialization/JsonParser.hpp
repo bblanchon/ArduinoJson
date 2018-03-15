@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "../JsonBuffer.hpp"
 #include "../JsonError.hpp"
 #include "../JsonVariant.hpp"
+#include "../Memory/JsonBuffer.hpp"
 #include "../TypeTraits/IsConst.hpp"
 #include "StringWriter.hpp"
 

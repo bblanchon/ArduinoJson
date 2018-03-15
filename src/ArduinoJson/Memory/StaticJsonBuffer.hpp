@@ -4,8 +4,8 @@
 
 #pragma once
 
+#include "../TypeTraits/Max.hpp"
 #include "JsonBuffer.hpp"
-#include "TypeTraits/Max.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

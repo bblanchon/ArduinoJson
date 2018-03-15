@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "Data/JsonBufferAllocated.hpp"
 #include "Data/List.hpp"
 #include "Data/ReferenceType.hpp"
 #include "Data/ValueSaver.hpp"
 #include "JsonVariant.hpp"
+#include "Memory/JsonBufferAllocated.hpp"
 #include "StringTraits/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsArray.hpp"
@@ -34,7 +34,7 @@ class JsonArray : public Internals::ReferenceType,
                   public Internals::List<JsonVariant>,
                   public Internals::JsonBufferAllocated {
  public:
-  explicit JsonArray(JsonBuffer *buf) throw()
+  explicit JsonArray(Internals::JsonBuffer *buf) throw()
       : Internals::List<JsonVariant>(buf) {}
 
   // Gets the value at the specified index

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "../JsonBuffer.hpp"
 #include "../JsonVariant.hpp"
+#include "../Memory/JsonBuffer.hpp"
 #include "../StringTraits/StringTraits.hpp"
 #include "../TypeTraits/EnableIf.hpp"
 
@@ -48,5 +48,5 @@ struct ValueSaver<
     return true;
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

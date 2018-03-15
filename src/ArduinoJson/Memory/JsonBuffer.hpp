@@ -8,21 +8,16 @@
 #include <stdint.h>  // for uint8_t
 #include <string.h>
 
-#include "Data/NonCopyable.hpp"
-#include "JsonVariant.hpp"
-#include "TypeTraits/EnableIf.hpp"
-#include "TypeTraits/IsArray.hpp"
+#include "../Configuration.hpp"
+#include "../Polyfills/NonCopyable.hpp"
+#include "../Polyfills/attributes.hpp"
 
 namespace ArduinoJson {
-class JsonArray;
-class JsonObject;
-
-// Entry point for using the library.
-//
+namespace Internals {
 // Handle the memory management (done in derived classes) and calls the parser.
 // This abstract class is implemented by StaticJsonBuffer which implements a
 // fixed memory allocation.
-class JsonBuffer : Internals::NonCopyable {
+class JsonBuffer : NonCopyable {
  public:
   // Allocates n bytes in the JsonBuffer.
   // Return a pointer to the allocated memory or NULL if allocation fails.
@@ -44,4 +39,5 @@ class JsonBuffer : Internals::NonCopyable {
 #endif
   }
 };
+}  // namespace Internals
 }  // namespace ArduinoJson

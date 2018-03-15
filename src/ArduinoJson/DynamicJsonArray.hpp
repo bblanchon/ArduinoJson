@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "DynamicJsonBuffer.hpp"
 #include "JsonArray.hpp"
+#include "Memory/DynamicJsonBuffer.hpp"
 
 namespace ArduinoJson {
 class DynamicJsonArray : public JsonArray {

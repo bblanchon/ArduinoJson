@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "Data/JsonBufferAllocated.hpp"
 #include "Data/List.hpp"
 #include "Data/ReferenceType.hpp"
 #include "Data/ValueSaver.hpp"
 #include "JsonPair.hpp"
+#include "Memory/JsonBufferAllocated.hpp"
 #include "StringTraits/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsArray.hpp"
@@ -37,7 +37,7 @@ class JsonObject : public Internals::ReferenceType,
  public:
   // Create an empty JsonArray attached to the specified JsonBuffer.
   // You should not use this constructor directly.
-  explicit JsonObject(JsonBuffer* buf) throw()
+  explicit JsonObject(Internals::JsonBuffer* buf) throw()
       : Internals::List<JsonPair>(buf) {}
 
   // Gets or sets the value associated with the specified key.

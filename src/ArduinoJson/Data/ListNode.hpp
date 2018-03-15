@@ -6,7 +6,7 @@
 
 #include <stddef.h>  // for NULL
 
-#include "JsonBufferAllocated.hpp"
+#include "../Memory/JsonBufferAllocated.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -20,5 +20,5 @@ struct ListNode : public Internals::JsonBufferAllocated {
   ListNode<T> *next;
   T content;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

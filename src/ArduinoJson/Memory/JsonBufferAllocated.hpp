@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../JsonBuffer.hpp"
+#include "JsonBuffer.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -18,5 +18,5 @@ class JsonBufferAllocated {
 
   void operator delete(void *, JsonBuffer *)throw();
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
