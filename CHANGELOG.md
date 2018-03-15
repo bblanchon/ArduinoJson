@@ -16,6 +16,7 @@ HEAD
 * Removed `JsonBuffer::createArray()` and `createObject()`
 * Removed `printTo()` and `prettyPrintTo()`
 * Removed `measureLength()` and `measurePrettyLength()`
+* Removed all deprecated features
 
 > ### BREAKING CHANGES
 > 

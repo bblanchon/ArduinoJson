@@ -112,29 +112,6 @@ class JsonObject : public Internals::ReferenceType,
   bool set(TString* key, TValue* value) {
     return set_impl<TString*, TValue*>(key, value);
   }
-  //
-  // bool set(TKey, TValue, uint8_t decimals);
-  // TKey = const std::string&, const String&
-  // TValue = float, double
-  template <typename TValue, typename TString>
-  DEPRECATED("Second argument is not supported anymore")
-  typename Internals::EnableIf<Internals::IsFloatingPoint<TValue>::value,
-                               bool>::type
-      set(const TString& key, TValue value, uint8_t) {
-    return set_impl<const TString&, const JsonVariant&>(key,
-                                                        JsonVariant(value));
-  }
-  //
-  // bool set(TKey, TValue, uint8_t decimals);
-  // TKey = char*, const char*, const FlashStringHelper*
-  // TValue = float, double
-  template <typename TValue, typename TString>
-  DEPRECATED("Second argument is not supported anymore")
-  typename Internals::EnableIf<Internals::IsFloatingPoint<TValue>::value,
-                               bool>::type
-      set(TString* key, TValue value, uint8_t) {
-    return set_impl<TString*, const JsonVariant&>(key, JsonVariant(value));
-  }
 
   // Gets the value associated with the specified key.
   //

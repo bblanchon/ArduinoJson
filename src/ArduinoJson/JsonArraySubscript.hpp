@@ -73,14 +73,6 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   FORCE_INLINE bool set(TValue* value) {
     return _array.set(_index, value);
   }
-  //
-  // bool set(TValue, uint8_t decimals);
-  // TValue = float, double
-  template <typename TValue>
-  DEPRECATED("Second argument is not supported anymore")
-  FORCE_INLINE bool set(const TValue& value, uint8_t) {
-    return _array.set(_index, value);
-  }
 
  private:
   JsonArray& _array;

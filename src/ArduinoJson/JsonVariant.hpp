@@ -65,15 +65,6 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
     _type = JSON_FLOAT;
     _content.asFloat = static_cast<JsonFloat>(value);
   }
-  template <typename T>
-  DEPRECATED("Second argument is not supported anymore")
-  JsonVariant(T value, uint8_t,
-              typename Internals::EnableIf<
-                  Internals::IsFloatingPoint<T>::value>::type * = 0) {
-    using namespace Internals;
-    _type = JSON_FLOAT;
-    _content.asFloat = static_cast<JsonFloat>(value);
-  }
 
   // Create a JsonVariant containing an integer value.
   // JsonVariant(char)
@@ -355,14 +346,4 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   // The various alternatives for the value of the variant.
   Internals::JsonVariantContent _content;
 };
-
-DEPRECATED("Decimal places are ignored, use the float value instead")
-inline JsonVariant float_with_n_digits(float value, uint8_t) {
-  return JsonVariant(value);
-}
-
-DEPRECATED("Decimal places are ignored, use the double value instead")
-inline JsonVariant double_with_n_digits(double value, uint8_t) {
-  return JsonVariant(value);
-}
 }  // namespace ArduinoJson

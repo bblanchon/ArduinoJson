@@ -130,11 +130,6 @@
 #endif
 #endif
 
-// Enable deprecated functions by default
-#ifndef ARDUINOJSON_ENABLE_DEPRECATED
-#define ARDUINOJSON_ENABLE_DEPRECATED 1
-#endif
-
 // Control the exponentiation threshold for big numbers
 // CAUTION: cannot be more that 1e9 !!!!
 #ifndef ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD

@@ -180,13 +180,6 @@ class JsonArray : public Internals::ReferenceType,
     }
   }
 
-#if ARDUINOJSON_ENABLE_DEPRECATED
-  DEPRECATED("use remove() instead")
-  FORCE_INLINE void removeAt(size_t index) {
-    return remove(index);
-  }
-#endif
-
  private:
   template <typename TValueRef>
   bool set_impl(size_t index, TValueRef value) {
