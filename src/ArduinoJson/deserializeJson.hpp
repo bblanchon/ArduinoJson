@@ -15,6 +15,7 @@ typename Internals::EnableIf<!Internals::IsArray<TString>::value,
                              JsonError>::type
 deserializeJson(TDestination &destination, const TString &json,
                 uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
+  destination.clear();
   return Internals::makeParser(&destination.buffer(), json, nestingLimit)
       .parse(destination);
 }
@@ -26,6 +27,7 @@ template <typename TDestination, typename TString>
 JsonError deserializeJson(
     TDestination &destination, TString *json,
     uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
+  destination.clear();
   return Internals::makeParser(&destination.buffer(), json, nestingLimit)
       .parse(destination);
 }
@@ -37,6 +39,7 @@ template <typename TDestination, typename TString>
 JsonError deserializeJson(
     TDestination &destination, TString &json,
     uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
+  destination.clear();
   return Internals::makeParser(&destination.buffer(), json, nestingLimit)
       .parse(destination);
 }

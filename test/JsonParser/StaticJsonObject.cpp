@@ -66,4 +66,15 @@ TEST_CASE("deserializeJson(StaticJsonObject&)") {
 
     REQUIRE(err != JsonError::Ok);
   }
+
+  SECTION("Should clear the JsonObject") {
+    StaticJsonObject<JSON_OBJECT_SIZE(1)> obj;
+    char input[] = "{\"hello\":\"world\"}";
+
+    deserializeJson(obj, input);
+    deserializeJson(obj, "{}");
+
+    REQUIRE(obj.size() == 0);
+    REQUIRE(obj.memoryUsage() == JSON_OBJECT_SIZE(0));
+  }
 }

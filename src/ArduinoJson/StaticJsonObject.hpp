@@ -16,6 +16,11 @@ class StaticJsonObject : public JsonObject {
  public:
   StaticJsonObject() : JsonObject(&_buffer) {}
 
+  void clear() {
+    Internals::List<JsonPair>::clear();
+    _buffer.clear();
+  }
+
   size_t memoryUsage() const {
     return _buffer.size() + sizeof(JsonObject);
   }

@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("deserializeJson(JsonArray&)") {
+TEST_CASE("deserializeJson(DynamicJsonArray&)") {
   DynamicJsonArray arr;
 
   SECTION("An empty array") {
@@ -349,5 +349,13 @@ TEST_CASE("deserializeJson(JsonArray&)") {
       REQUIRE(4 == object2["d"].as<int>());
       REQUIRE(0 == object3["e"].as<int>());
     }
+  }
+
+  SECTION("Should clear the JsonArray") {
+    deserializeJson(arr, "[1,2,3,4]");
+    deserializeJson(arr, "[]");
+
+    REQUIRE(arr.size() == 0);
+    REQUIRE(arr.memoryUsage() == JSON_ARRAY_SIZE(0));
   }
 }

@@ -16,6 +16,11 @@ class StaticJsonArray : public JsonArray {
  public:
   StaticJsonArray() : JsonArray(&_buffer) {}
 
+  void clear() {
+    Internals::List<JsonVariant>::clear();
+    _buffer.clear();
+  }
+
   size_t memoryUsage() const {
     return _buffer.size() + sizeof(JsonArray);
   }

@@ -76,4 +76,15 @@ TEST_CASE("deserializeJson(StaticJsonArray&)") {
     // note: we use a string of 8 bytes to be sure that the StaticJsonBuffer
     // will not insert bytes to enforce alignement
   }
+
+  SECTION("Should clear the JsonArray") {
+    StaticJsonArray<JSON_ARRAY_SIZE(4)> arr;
+    char input[] = "[1,2,3,4]";
+
+    deserializeJson(arr, input);
+    deserializeJson(arr, "[]");
+
+    REQUIRE(arr.size() == 0);
+    REQUIRE(arr.memoryUsage() == JSON_ARRAY_SIZE(0));
+  }
 }

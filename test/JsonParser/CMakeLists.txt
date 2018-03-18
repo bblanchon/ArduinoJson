@@ -3,13 +3,14 @@
 # MIT License
 
 add_executable(JsonParserTests
-	JsonArray.cpp
+	DynamicJsonArray.cpp
+	DynamicJsonObject.cpp
+	DynamicJsonVariant.cpp
 	JsonError.cpp
-	JsonObject.cpp
-	JsonVariant.cpp
 	nestingLimit.cpp
 	StaticJsonArray.cpp
 	StaticJsonObject.cpp
+	StaticJsonVariant.cpp
 )
 
 target_link_libraries(JsonParserTests catch)

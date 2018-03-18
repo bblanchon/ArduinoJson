@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("deserializeJson(JsonObject&)") {
+TEST_CASE("deserializeJson(DynamicJsonObject&)") {
   DynamicJsonObject obj;
 
   SECTION("An empty object") {
@@ -193,5 +193,12 @@ TEST_CASE("deserializeJson(JsonObject&)") {
       JsonError err = deserializeJson(obj, "{null:\"value\"}");
       REQUIRE(err == JsonError::Ok);
     }
+  }
+
+  SECTION("Should clear the JsonObject") {
+    deserializeJson(obj, "{\"hello\":\"world\"}");
+    deserializeJson(obj, "{}");
+    REQUIRE(obj.size() == 0);
+    REQUIRE(obj.memoryUsage() == JSON_OBJECT_SIZE(0));
   }
 }

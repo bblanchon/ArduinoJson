@@ -7,7 +7,7 @@
 
 using namespace Catch::Matchers;
 
-TEST_CASE("deserializeJson(JsonVariant&)") {
+TEST_CASE("deserializeJson(DynamicJsonVariant&)") {
   DynamicJsonVariant variant;
 
   SECTION("EmptyObject") {
@@ -86,5 +86,13 @@ TEST_CASE("deserializeJson(JsonVariant&)") {
     REQUIRE(err == JsonError::Ok);
     REQUIRE(variant.is<char*>());
     REQUIRE_THAT(variant.as<char*>(), Equals("hello"));
+  }
+
+  SECTION("Should clear the JsonVariant") {
+    deserializeJson(variant, "[1,2,3]");
+    deserializeJson(variant, "{}");
+
+    REQUIRE(variant.is<JsonObject>());
+    REQUIRE(variant.memoryUsage() == JSON_OBJECT_SIZE(0));
   }
 }

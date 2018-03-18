@@ -14,6 +14,7 @@ class DynamicJsonVariant : public JsonVariant {
 
  public:
   DynamicJsonVariant() : JsonVariant() {}
+  DynamicJsonVariant(size_t capacity) : JsonVariant(), _buffer(capacity) {}
 
   template <typename T>
   DynamicJsonVariant& operator=(const T& value) {
@@ -33,8 +34,12 @@ class DynamicJsonVariant : public JsonVariant {
     return _buffer;
   }
 
+  void clear() {
+    _buffer.clear();
+  }
+
   size_t memoryUsage() const {
-    return _buffer.size() + sizeof(JsonVariant);
+    return _buffer.size();
   }
 };
 }  // namespace ArduinoJson

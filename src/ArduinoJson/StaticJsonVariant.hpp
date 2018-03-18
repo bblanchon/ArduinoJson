@@ -11,7 +11,7 @@ namespace ArduinoJson {
 
 template <size_t CAPACITY = sizeof(JsonVariant)>
 class StaticJsonVariant : public JsonVariant {
-  StaticJsonBuffer<CAPACITY - sizeof(JsonVariant)> _buffer;
+  StaticJsonBuffer<CAPACITY> _buffer;
 
  public:
   template <typename T>
@@ -32,8 +32,12 @@ class StaticJsonVariant : public JsonVariant {
     return _buffer;
   }
 
+  void clear() {
+    _buffer.clear();
+  }
+
   size_t memoryUsage() const {
-    return _buffer.size() + sizeof(JsonVariant);
+    return _buffer.size();
   }
 };
 }  // namespace ArduinoJson

@@ -89,6 +89,10 @@ class List {
   }
 
  protected:
+  void clear() {
+    _firstNode = 0;
+  }
+
   JsonBuffer *_buffer;
 
  private:
