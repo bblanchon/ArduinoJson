@@ -27,10 +27,6 @@ namespace ArduinoJson {
 // Forward declarations.
 class JsonArray;
 class JsonObject;
-namespace Internals {
-template <typename Print>
-class JsonSerializer;
-}
 
 // A variant that can be a any value serializable to a JSON value.
 //
@@ -40,9 +36,6 @@ class JsonSerializer;
 // - a string (const char*)
 // - a reference to a JsonArray or JsonObject
 class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
-  template <typename Print>
-  friend class Internals::JsonSerializer;
-
  public:
   // Creates an uninitialized JsonVariant
   JsonVariant() : _type(Internals::JSON_UNDEFINED) {}
@@ -315,6 +308,39 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   // Returns true if the variant has a value
   bool success() const {
     return _type != Internals::JSON_UNDEFINED;
+  }
+
+  template <typename Visitor>
+  void visit(Visitor visitor) const {
+    using namespace Internals;
+    switch (_type) {
+      case JSON_FLOAT:
+        return visitor.acceptFloat(_content.asFloat);
+
+      case JSON_ARRAY:
+        return visitor.acceptArray(*_content.asArray);
+
+      case JSON_OBJECT:
+        return visitor.acceptObject(*_content.asObject);
+
+      case JSON_STRING:
+        return visitor.acceptString(_content.asString);
+
+      case JSON_UNPARSED:
+        return visitor.acceptRawJson(_content.asString);
+
+      case JSON_NEGATIVE_INTEGER:
+        return visitor.acceptNegativeInteger(_content.asInteger);
+
+      case JSON_POSITIVE_INTEGER:
+        return visitor.acceptPositiveInteger(_content.asInteger);
+
+      case JSON_BOOLEAN:
+        return visitor.acceptBoolean(_content.asInteger != 0);
+
+      default:  // JSON_UNDEFINED
+        return visitor.acceptUndefined();
+    }
   }
 
  private:

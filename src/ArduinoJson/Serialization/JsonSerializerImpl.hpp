@@ -65,39 +65,5 @@ inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
 template <typename Writer>
 inline void ArduinoJson::Internals::JsonSerializer<Writer>::serialize(
     const JsonVariant& variant, Writer& writer) {
-  switch (variant._type) {
-    case JSON_FLOAT:
-      writer.writeFloat(variant._content.asFloat);
-      return;
-
-    case JSON_ARRAY:
-      serialize(*variant._content.asArray, writer);
-      return;
-
-    case JSON_OBJECT:
-      serialize(*variant._content.asObject, writer);
-      return;
-
-    case JSON_STRING:
-      writer.writeString(variant._content.asString);
-      return;
-
-    case JSON_UNPARSED:
-      writer.writeRaw(variant._content.asString);
-      return;
-
-    case JSON_NEGATIVE_INTEGER:
-      writer.writeRaw('-');  // Falls through.
-
-    case JSON_POSITIVE_INTEGER:
-      writer.writeInteger(variant._content.asInteger);
-      return;
-
-    case JSON_BOOLEAN:
-      writer.writeBoolean(variant._content.asInteger != 0);
-      return;
-
-    default:  // JSON_UNDEFINED
-      return;
-  }
+  variant.visit(Visitor(&writer));
 }

@@ -36,6 +36,47 @@ class JsonSerializer {
   template <typename TKey>
   static void serialize(const JsonObjectSubscript<TKey> &, Writer &);
   static void serialize(const JsonVariant &, Writer &);
+
+  struct Visitor {
+    Visitor(Writer *writer) : _writer(writer) {}
+
+    void acceptFloat(JsonFloat value) {
+      _writer->writeFloat(value);
+    }
+
+    void acceptArray(const JsonArray &value) {
+      serialize(value, *_writer);
+    }
+
+    void acceptObject(const JsonObject &value) {
+      serialize(value, *_writer);
+    }
+
+    void acceptString(const char *value) {
+      _writer->writeString(value);
+    }
+
+    void acceptRawJson(const char *value) {
+      _writer->writeRaw(value);
+    }
+
+    void acceptNegativeInteger(JsonUInt value) {
+      _writer->writeRaw('-');
+      _writer->writeInteger(value);
+    }
+
+    void acceptPositiveInteger(JsonUInt value) {
+      _writer->writeInteger(value);
+    }
+
+    void acceptBoolean(bool value) {
+      _writer->writeBoolean(value);
+    }
+
+    void acceptUndefined() {}
+
+    Writer *_writer;
+  };
 };
 }  // namespace Internals
 
