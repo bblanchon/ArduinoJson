@@ -113,7 +113,7 @@ class StaticJsonBuffer : public Internals::StaticJsonBufferBase {
       : Internals::StaticJsonBufferBase(_buffer, CAPACITY) {}
 
  private:
-  char _buffer[CAPACITY];
+  char _buffer[CAPACITY] ARDUINOJSON_STATIC_STORAGE_DECORATION;
 };
 }
 

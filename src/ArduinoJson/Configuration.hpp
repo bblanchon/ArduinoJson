@@ -149,3 +149,9 @@
 #if ARDUINOJSON_USE_LONG_LONG && ARDUINOJSON_USE_INT64
 #error ARDUINOJSON_USE_LONG_LONG and ARDUINOJSON_USE_INT64 cannot be set together
 #endif
+
+// add attributes to buffers
+// e.g. alignment
+#ifndef ARDUINOJSON_STATIC_STORAGE_DECORATION
+#define ARDUINOJSON_STATIC_STORAGE_DECORATION
+#endif
