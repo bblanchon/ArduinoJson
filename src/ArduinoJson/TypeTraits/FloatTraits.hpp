@@ -17,7 +17,7 @@ struct FloatTraits {};
 
 template <typename T>
 struct FloatTraits<T, 8 /*64bits*/> {
-  typedef int64_t mantissa_type;
+  typedef int64_t mantissa_type;  // I found error in this line in IAR-IDE: "Error[Pe020]: identifier "int64_t" is undefined"
   static const short mantissa_bits = 52;
   static const mantissa_type mantissa_max =
       (static_cast<mantissa_type>(1) << mantissa_bits) - 1;
@@ -79,10 +79,11 @@ struct FloatTraits<T, 8 /*64bits*/> {
 
   static T forge(uint32_t msb, uint32_t lsb) {
     union {
-      uint64_t integerBits;
+      uint64_t integerBits; // I found error in this line in IAR-IDE: "Error[Pe020]: identifier "uint64_t" is undefined"
       T floatBits;
     };
-    integerBits = (uint64_t(msb) << 32) | lsb;
+    integerBits = (uint64_t(msb) << 32) | lsb; // I found error in this line in IAR-IDE: "Error[Pe020]: identifier "uint64_t" is undefined"
+                                               // I found warrning in this line in IAR-IDE: "Error[Pe063]: shift count is too large"
     return floatBits;
   }
 };
@@ -92,7 +93,7 @@ struct FloatTraits<T, 4 /*32bits*/> {
   typedef int32_t mantissa_type;
   static const short mantissa_bits = 23;
   static const mantissa_type mantissa_max =
-      (static_cast<mantissa_type>(1) << mantissa_bits) - 1;
+      (static_cast<mantissa_type>(1) << mantissa_bits) - 1; // I found error in this line in IAR-IDE: "Error[Pe063]: shift count is too large"
 
   typedef int8_t exponent_type;
   static const exponent_type exponent_max = 38;
