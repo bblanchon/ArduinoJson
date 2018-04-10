@@ -40,7 +40,7 @@ void setup() {
 
   // Test if parsing succeeds.
   if (error) {
-    Serial.println("parseObject() failed");
+    Serial.println("deserializeJson() failed");
     return;
   }
 

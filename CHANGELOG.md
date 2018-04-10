@@ -13,6 +13,7 @@ HEAD
 * Added `serializeJson()` and `serializeJsonPretty()`
 * Added `measureJson()` and `measureJsonPretty()`
 * Added `deserializeMsgPack()` (issue #358)
+* Added example `MsgPackParser.ino` (issue #358)
 * Removed `JsonBuffer::parseArray()`, `parseObject()` and `parse()`
 * Removed `JsonBuffer::createArray()` and `createObject()`
 * Removed `printTo()` and `prettyPrintTo()`
