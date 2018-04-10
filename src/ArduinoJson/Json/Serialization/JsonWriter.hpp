@@ -5,10 +5,10 @@
 #pragma once
 
 #include <stdint.h>
-#include "../Data/Encoding.hpp"
-#include "../Data/JsonInteger.hpp"
-#include "../Polyfills/attributes.hpp"
-#include "../Serialization/FloatParts.hpp"
+#include "../../Data/JsonInteger.hpp"
+#include "../../Polyfills/attributes.hpp"
+#include "../Encoding.hpp"
+#include "./FloatParts.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

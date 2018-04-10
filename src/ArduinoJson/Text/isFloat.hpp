@@ -5,7 +5,7 @@
 #pragma once
 
 #include <string.h>  // for strcmp
-#include "./ctype.hpp"
+#include "../Polyfills/ctype.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -34,5 +34,5 @@ inline bool isFloat(const char* s) {
 
   return *s == '\0';
 }
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

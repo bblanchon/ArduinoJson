@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "StringTraits/StringTraits.hpp"
+#include "Strings/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsVariant.hpp"
 
@@ -134,5 +134,5 @@ class JsonVariantComparisons {
     return false;
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

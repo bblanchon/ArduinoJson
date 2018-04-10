@@ -6,7 +6,7 @@
 
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
-#include "../StringTraits/StringTraits.hpp"
+#include "../Strings/StringTraits.hpp"
 #include "../TypeTraits/EnableIf.hpp"
 
 namespace ArduinoJson {

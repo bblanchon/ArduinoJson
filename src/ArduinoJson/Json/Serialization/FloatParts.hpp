@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "../Configuration.hpp"
-#include "../Polyfills/math.hpp"
-#include "../TypeTraits/FloatTraits.hpp"
+#include "../../Configuration.hpp"
+#include "../../Polyfills/math.hpp"
+#include "../../TypeTraits/FloatTraits.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -85,5 +85,5 @@ struct FloatParts {
     return powersOf10;
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

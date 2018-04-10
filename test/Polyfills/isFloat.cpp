@@ -2,7 +2,7 @@
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
 
-#include <ArduinoJson/Polyfills/isFloat.hpp>
+#include <ArduinoJson/Text/isFloat.hpp>
 #include <catch.hpp>
 
 using namespace ArduinoJson::Internals;

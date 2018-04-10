@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include "DummyPrint.hpp"
-#include "DynamicStringBuilder.hpp"
-#include "IndentedPrint.hpp"
-#include "JsonWriter.hpp"
-#include "Prettyfier.hpp"
-#include "StaticStringBuilder.hpp"
+#include "../../Print/DummyPrint.hpp"
+#include "../../Print/DynamicStringBuilder.hpp"
+#include "../../Print/StaticStringBuilder.hpp"
+#include "./IndentedPrint.hpp"
+#include "./JsonWriter.hpp"
+#include "./Prettyfier.hpp"
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-#include "StreamPrintAdapter.hpp"
+#include "../../Print/StreamPrintAdapter.hpp"
 #endif
 
 namespace ArduinoJson {

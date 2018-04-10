@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "../Configuration.hpp"
-#include "./ctype.hpp"
+#include "../Polyfills/ctype.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -37,5 +37,5 @@ T parseInteger(const char *s) {
 
   return negative_result ? T(~result + 1) : result;
 }
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

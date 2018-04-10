@@ -42,15 +42,7 @@ class JsonError {
   }
 
   const char* c_str() const {
-    return to_string(_code);
-  }
-
-  friend const char* to_string(const JsonError err) {
-    return to_string(err._code);
-  }
-
-  friend const char* to_string(JsonError::Code code) {
-    switch (code) {
+    switch (_code) {
       case Ok:
         return "Ok";
       case OpeningBraceExpected:
@@ -78,12 +70,7 @@ class JsonError {
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 inline std::ostream& operator<<(std::ostream& s, const JsonError& e) {
-  s << to_string(e);
-  return s;
-}
-
-inline std::ostream& operator<<(std::ostream& s, JsonError::Code e) {
-  s << to_string(e);
+  s << e.c_str();
   return s;
 }
 #endif

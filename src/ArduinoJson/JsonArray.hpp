@@ -9,7 +9,7 @@
 #include "Data/ValueSaver.hpp"
 #include "JsonVariant.hpp"
 #include "Memory/JsonBufferAllocated.hpp"
-#include "StringTraits/StringTraits.hpp"
+#include "Strings/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 #include "TypeTraits/IsArray.hpp"
 #include "TypeTraits/IsFloatingPoint.hpp"

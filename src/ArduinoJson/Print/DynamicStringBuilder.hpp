@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../StringTraits/StringTraits.hpp"
+#include "../Strings/StringTraits.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -31,5 +31,5 @@ class DynamicStringBuilder {
 
   TString &_str;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

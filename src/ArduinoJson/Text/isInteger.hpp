@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "./ctype.hpp"
+#include "../Polyfills/ctype.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -15,5 +15,5 @@ inline bool isInteger(const char* s) {
   while (isdigit(*s)) s++;
   return *s == '\0';
 }
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

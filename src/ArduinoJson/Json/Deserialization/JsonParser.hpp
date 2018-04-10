@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "../JsonError.hpp"
-#include "../JsonVariant.hpp"
-#include "../Memory/JsonBuffer.hpp"
-#include "../TypeTraits/IsConst.hpp"
-#include "StringWriter.hpp"
+#include "../../JsonError.hpp"
+#include "../../JsonVariant.hpp"
+#include "../../Memory/JsonBuffer.hpp"
+#include "../../Strings/StringWriter.hpp"
+#include "../../TypeTraits/IsConst.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

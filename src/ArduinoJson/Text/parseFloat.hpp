@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "../Polyfills/ctype.hpp"
+#include "../Polyfills/math.hpp"
 #include "../TypeTraits/FloatTraits.hpp"
-#include "./ctype.hpp"
-#include "./math.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -86,5 +86,5 @@ inline T parseFloat(const char* s) {
 
   return negative_result ? -result : result;
 }
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

@@ -6,7 +6,7 @@
 
 #include "Data/JsonVariantAs.hpp"
 #include "Polyfills/attributes.hpp"
-#include "StringTraits/StringTraits.hpp"
+#include "Strings/StringTraits.hpp"
 #include "TypeTraits/EnableIf.hpp"
 
 namespace ArduinoJson {
@@ -82,5 +82,5 @@ class JsonVariantSubscripts {
     return static_cast<const TImpl *>(this);
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
