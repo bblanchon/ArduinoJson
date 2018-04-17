@@ -23,19 +23,9 @@ TEST_CASE("DynamicJsonBuffer no memory") {
   }
 
   // TODO: uncomment
-  // SECTION("parseArray()") {
-  //   char json[] = "[{}]";
-  //   DynamicJsonArray arr;
-
-  //   JsonError err = deserializeJson(arr, json);
-
-  //   REQUIRE(err != JsonError::Ok);
-  // }
-
-  // TODO: uncomment
-  // SECTION("parseObject()") {
+  // SECTION("deserializeJson()") {
   //   char json[] = "{[]}";
-  //   DynamicJsonObject obj;
+  //   DynamicJsonDocument obj;
 
   //   JsonError err = deserializeJson(obj, json);
 

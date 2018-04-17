@@ -11,17 +11,20 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) continue;
 
-  // Root JSON object
+  // The JSON document
   //
-  // Inside the brackets, 200 is the size of the memory pool in bytes.
-  // Don't forget to change this value to match your JSON document.
+  // Inside the brackets, 200 is the RAM allocated to this document.
+  // Don't forget to change this value to match your requirement.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonObject<200> root;
+  StaticJsonDocument<200> doc;
 
   // StaticJsonObject allocates memory on the stack, it can be
-  // replaced by DynamicJsonObject which allocates in the heap.
+  // replaced by DynamicJsonDocument which allocates in the heap.
   //
-  // DynamicJsonObject  root(200);
+  // DynamicJsonDocument  doc(200);
+
+  // Make our document be an object
+  JsonObject& root = doc.to<JsonObject>();
 
   // Add values in the object
   //
@@ -30,10 +33,8 @@ void setup() {
   root["sensor"] = "gps";
   root["time"] = 1351824120;
 
-  // Add a nested array.
+  // Add an array.
   //
-  // It's also possible to create the array separately and add it to the
-  // JsonObject but it's less efficient.
   JsonArray& data = root.createNestedArray("data");
   data.add(48.756080);
   data.add(2.302038);

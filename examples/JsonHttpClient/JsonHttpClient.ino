@@ -70,19 +70,21 @@ void setup() {
     return;
   }
 
-  // Allocate JsonBuffer
+  // Allocate the JSON document
   // Use arduinojson.org/assistant to compute the capacity.
   const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
-  DynamicJsonObject root(capacity);
+  DynamicJsonDocument doc(capacity);
 
   // Parse JSON object
-  JsonError error = deserializeJson(root, client);
+  JsonError error = deserializeJson(doc, client);
   if (error) {
-    Serial.println(F("Parsing failed!"));
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.c_str());
     return;
   }
 
   // Extract values
+  JsonObject& root = doc.as<JsonObject>();
   Serial.println(F("Response:"));
   Serial.println(root["sensor"].as<char*>());
   Serial.println(root["time"].as<char*>());

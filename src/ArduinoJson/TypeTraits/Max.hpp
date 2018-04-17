@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <stdlib.h>  // for size_t
+
 namespace ArduinoJson {
 namespace Internals {
 

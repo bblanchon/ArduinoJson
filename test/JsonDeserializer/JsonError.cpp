@@ -22,23 +22,21 @@ void testBoolification(JsonError error, bool expected) {
 TEST_CASE("JsonError") {
   SECTION("c_str()") {
     TEST_STRINGIFICATION(Ok);
-    TEST_STRINGIFICATION(OpeningBraceExpected);
-    TEST_STRINGIFICATION(ClosingBraceExpected);
-    TEST_STRINGIFICATION(OpeningBracketExpected);
-    TEST_STRINGIFICATION(ClosingBracketExpected);
-    TEST_STRINGIFICATION(ColonExpected);
     TEST_STRINGIFICATION(TooDeep);
     TEST_STRINGIFICATION(NoMemory);
+    TEST_STRINGIFICATION(InvalidInput);
   }
 
   SECTION("as boolean") {
     TEST_BOOLIFICATION(Ok, false);
-    TEST_BOOLIFICATION(OpeningBraceExpected, true);
-    TEST_BOOLIFICATION(ClosingBraceExpected, true);
-    TEST_BOOLIFICATION(OpeningBracketExpected, true);
-    TEST_BOOLIFICATION(ClosingBracketExpected, true);
-    TEST_BOOLIFICATION(ColonExpected, true);
     TEST_BOOLIFICATION(TooDeep, true);
     TEST_BOOLIFICATION(NoMemory, true);
+    TEST_BOOLIFICATION(InvalidInput, true);
+  }
+
+  SECTION("ostream") {
+    std::stringstream s;
+    s << JsonError::InvalidInput;
+    REQUIRE(s.str() == "InvalidInput");
   }
 }

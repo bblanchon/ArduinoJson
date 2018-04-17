@@ -6,9 +6,7 @@ HEAD
 
 * Fixed `JsonBuffer::parse()` not respecting nesting limit correctly (issue #693)
 * Fixed inconsistencies in nesting level counting (PR #695 from Zhenyu Wu)
-* Added `DynamicJsonArray` and `StaticJsonArray`
-* Added `DynamicJsonObject` and `StaticJsonObject`
-* Added `DynamicJsonVariant` and `StaticJsonVariant`
+* Added `DynamicJsonDocument` and `StaticJsonDocument`
 * Added `deserializeJson()`
 * Added `serializeJson()` and `serializeJsonPretty()`
 * Added `measureJson()` and `measureJsonPretty()`
@@ -37,11 +35,12 @@ HEAD
 > New code:
 > 
 > ```c++
-> DynamicJsonObject obj;
-> JsonError error = deserializeJson(obj, json);
+> DynamicJsonDocument doc;
+> JsonError error = deserializeJson(doc, json);
 > if (error) {
 > 
 > }
+> JsonObject& obj = doc.as<JsonObject>();
 > ```
 > 
 > #### Serialization
@@ -58,9 +57,10 @@ HEAD
 > New code:
 > 
 > ```c++
-> DynamicJsonObject obj;
+> DynamicJsonDocument obj;
+> JsonObject& obj = doc.to<JsonObject>();
 > obj["key"] = "value";
-> serializeJson(obj, Serial);
+> serializeJson(doc, Serial);
 > ```
 
 v5.13.1

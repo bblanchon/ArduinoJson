@@ -16,12 +16,12 @@ void setup() {
   // Inside the brackets, 200 is the size of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonObject<200> root;
+  StaticJsonDocument<200> doc;
 
-  // StaticJsonObject allocates memory on the stack, it can be
+  // StaticJsonDocument<N> allocates memory on the stack, it can be
   // replaced by DynamicJsonObject which allocates in the heap.
   //
-  // DynamicJsonObject  root(200);
+  // DynamicJsonObject doc(200);
 
   // JSON input string.
   //
@@ -31,23 +31,23 @@ void setup() {
   char json[] =
       "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
-  // Root of the object tree.
-  //
-  // It's a reference to the JsonObject, the actual bytes are inside the
-  // JsonBuffer with all the other nodes of the object tree.
-  // Memory is freed when jsonBuffer goes out of scope.
-  JsonError error = deserializeJson(root, json);
+  // Deserialize the JSON document
+  JsonError error = deserializeJson(doc, json);
 
   // Test if parsing succeeds.
   if (error) {
-    Serial.println("deserializeJson() failed");
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.c_str());
     return;
   }
+
+  // Get the root object in the document
+  JsonObject& root = doc.as<JsonObject>();
 
   // Fetch values.
   //
   // Most of the time, you can rely on the implicit casts.
-  // In other case, you can do root["time"].as<long>();
+  // In other case, you can do doc["time"].as<long>();
   const char* sensor = root["sensor"];
   long time = root["time"];
   double latitude = root["data"][0];

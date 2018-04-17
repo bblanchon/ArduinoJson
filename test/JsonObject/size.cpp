@@ -7,16 +7,21 @@
 #include <string>
 
 TEST_CASE("JsonObject::size()") {
-  DynamicJsonObject _object;
+  DynamicJsonDocument doc;
+  JsonObject& obj = doc.to<JsonObject>();
+
+  SECTION("initial size is zero") {
+    REQUIRE(0 == obj.size());
+  }
 
   SECTION("increases when values are added") {
-    _object.set("hello", 42);
-    REQUIRE(1 == _object.size());
+    obj.set("hello", 42);
+    REQUIRE(1 == obj.size());
   }
 
   SECTION("doesn't increase when the smae key is added twice") {
-    _object["hello"] = 1;
-    _object["hello"] = 2;
-    REQUIRE(1 == _object.size());
+    obj["hello"] = 1;
+    obj["hello"] = 2;
+    REQUIRE(1 == obj.size());
   }
 }

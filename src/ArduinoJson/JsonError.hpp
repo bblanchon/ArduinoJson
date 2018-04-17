@@ -8,16 +8,7 @@ namespace ArduinoJson {
 
 class JsonError {
  public:
-  enum Code {
-    Ok,
-    OpeningBraceExpected,
-    ClosingBraceExpected,
-    OpeningBracketExpected,
-    ClosingBracketExpected,
-    ColonExpected,
-    TooDeep,
-    NoMemory
-  };
+  enum Code { Ok, TooDeep, NoMemory, InvalidInput };
 
   JsonError(Code code) : _code(code) {}
 
@@ -45,20 +36,12 @@ class JsonError {
     switch (_code) {
       case Ok:
         return "Ok";
-      case OpeningBraceExpected:
-        return "OpeningBraceExpected";
-      case ClosingBraceExpected:
-        return "ClosingBraceExpected";
-      case OpeningBracketExpected:
-        return "OpeningBracketExpected";
-      case ClosingBracketExpected:
-        return "ClosingBracketExpected";
-      case ColonExpected:
-        return "ColonExpected";
       case TooDeep:
         return "TooDeep";
       case NoMemory:
         return "NoMemory";
+      case InvalidInput:
+        return "InvalidInput";
       default:
         return "???";
     }
@@ -71,6 +54,11 @@ class JsonError {
 #if ARDUINOJSON_ENABLE_STD_STREAM
 inline std::ostream& operator<<(std::ostream& s, const JsonError& e) {
   s << e.c_str();
+  return s;
+}
+
+inline std::ostream& operator<<(std::ostream& s, JsonError::Code c) {
+  s << JsonError(c).c_str();
   return s;
 }
 #endif

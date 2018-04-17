@@ -6,12 +6,13 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::copyTo()") {
-  DynamicJsonArray array;
+  DynamicJsonDocument doc;
 
   SECTION("BiggerOneDimensionIntegerArray") {
     char json[] = "[1,2,3]";
-    JsonError err = deserializeJson(array, json);
+    JsonError err = deserializeJson(doc, json);
     REQUIRE(err == JsonError::Ok);
+    JsonArray& array = doc.as<JsonArray>();
 
     int destination[4] = {0};
     size_t result = array.copyTo(destination);
@@ -25,8 +26,9 @@ TEST_CASE("JsonArray::copyTo()") {
 
   SECTION("SmallerOneDimensionIntegerArray") {
     char json[] = "[1,2,3]";
-    JsonError err = deserializeJson(array, json);
+    JsonError err = deserializeJson(doc, json);
     REQUIRE(err == JsonError::Ok);
+    JsonArray& array = doc.as<JsonArray>();
 
     int destination[2] = {0};
     size_t result = array.copyTo(destination);
@@ -39,8 +41,9 @@ TEST_CASE("JsonArray::copyTo()") {
   SECTION("TwoOneDimensionIntegerArray") {
     char json[] = "[[1,2],[3],[4]]";
 
-    JsonError err = deserializeJson(array, json);
+    JsonError err = deserializeJson(doc, json);
     REQUIRE(err == JsonError::Ok);
+    JsonArray& array = doc.as<JsonArray>();
 
     int destination[3][2] = {{0}};
     array.copyTo(destination);

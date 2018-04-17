@@ -8,7 +8,8 @@
 using namespace Catch::Matchers;
 
 TEST_CASE("JsonObject::begin()/end()") {
-  StaticJsonObject<JSON_OBJECT_SIZE(2)> obj;
+  StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
+  JsonObject& obj = doc.to<JsonObject>();
   obj["ab"] = 12;
   obj["cd"] = 34;
 

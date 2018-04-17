@@ -16,26 +16,15 @@
 #endif
 
 namespace ArduinoJson {
-
-class JsonArray;
-class JsonObject;
-class JsonVariant;
-
 namespace Internals {
-
-class JsonArraySubscript;
-template <typename TKey>
-class JsonObjectSubscript;
 
 template <typename Writer>
 class JsonSerializer {
  public:
-  static void serialize(const JsonArray &, Writer &);
-  static void serialize(const JsonArraySubscript &, Writer &);
-  static void serialize(const JsonObject &, Writer &);
-  template <typename TKey>
-  static void serialize(const JsonObjectSubscript<TKey> &, Writer &);
-  static void serialize(const JsonVariant &, Writer &);
+  template <typename TSource>
+  static void serialize(const TSource &source, Writer &writer) {
+    source.visit(Visitor(&writer));
+  }
 
   struct Visitor {
     Visitor(Writer *writer) : _writer(writer) {}
@@ -44,12 +33,38 @@ class JsonSerializer {
       _writer->writeFloat(value);
     }
 
-    void acceptArray(const JsonArray &value) {
-      serialize(value, *_writer);
+    void acceptArray(const JsonArray &array) {
+      _writer->beginArray();
+
+      JsonArray::const_iterator it = array.begin();
+      while (it != array.end()) {
+        it->visit(*this);
+
+        ++it;
+        if (it == array.end()) break;
+
+        _writer->writeComma();
+      }
+
+      _writer->endArray();
     }
 
-    void acceptObject(const JsonObject &value) {
-      serialize(value, *_writer);
+    void acceptObject(const JsonObject &object) {
+      _writer->beginObject();
+
+      JsonObject::const_iterator it = object.begin();
+      while (it != object.end()) {
+        _writer->writeString(it->key);
+        _writer->writeColon();
+        it->value.visit(*this);
+
+        ++it;
+        if (it == object.end()) break;
+
+        _writer->writeComma();
+      }
+
+      _writer->endObject();
     }
 
     void acceptString(const char *value) {

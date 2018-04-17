@@ -6,15 +6,15 @@
 #include <catch.hpp>
 
 void check(std::string originalJson) {
-  DynamicJsonObject obj;
+  DynamicJsonDocument doc;
 
   std::string prettyJson;
-  deserializeJson(obj, originalJson);
-  serializeJsonPretty(obj, prettyJson);
+  deserializeJson(doc, originalJson);
+  serializeJsonPretty(doc, prettyJson);
 
   std::string finalJson;
-  deserializeJson(obj, originalJson);
-  serializeJson(obj, finalJson);
+  deserializeJson(doc, originalJson);
+  serializeJson(doc, finalJson);
 
   REQUIRE(originalJson == finalJson);
 }

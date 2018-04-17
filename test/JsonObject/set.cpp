@@ -7,129 +7,136 @@
 #include <string>
 
 TEST_CASE("JsonObject::set()") {
-  DynamicJsonObject _object;
+  DynamicJsonDocument doc;
+  JsonObject& obj = doc.to<JsonObject>();
 
   SECTION("int") {
-    _object.set("hello", 123);
+    obj.set("hello", 123);
 
-    REQUIRE(123 == _object["hello"].as<int>());
-    REQUIRE(_object["hello"].is<int>());
-    REQUIRE_FALSE(_object["hello"].is<bool>());
+    REQUIRE(123 == obj["hello"].as<int>());
+    REQUIRE(obj["hello"].is<int>());
+    REQUIRE_FALSE(obj["hello"].is<bool>());
   }
 
   SECTION("double") {
-    _object.set("hello", 123.45);
+    obj.set("hello", 123.45);
 
-    REQUIRE(123.45 == _object["hello"].as<double>());
-    REQUIRE(_object["hello"].is<double>());
-    REQUIRE_FALSE(_object["hello"].is<bool>());
+    REQUIRE(123.45 == obj["hello"].as<double>());
+    REQUIRE(obj["hello"].is<double>());
+    REQUIRE_FALSE(obj["hello"].is<bool>());
   }
 
   SECTION("bool") {
-    _object.set("hello", true);
+    obj.set("hello", true);
 
-    REQUIRE(_object["hello"].as<bool>());
-    REQUIRE(_object["hello"].is<bool>());
-    REQUIRE_FALSE(_object["hello"].is<long>());
+    REQUIRE(obj["hello"].as<bool>());
+    REQUIRE(obj["hello"].is<bool>());
+    REQUIRE_FALSE(obj["hello"].is<long>());
   }
 
   SECTION("const char*") {
-    _object.set("hello", "h3110");
+    obj.set("hello", "h3110");
 
-    REQUIRE(std::string("h3110") == _object["hello"].as<const char*>());
-    REQUIRE(_object["hello"].is<const char*>());
-    REQUIRE_FALSE(_object["hello"].is<long>());
+    REQUIRE(std::string("h3110") == obj["hello"].as<const char*>());
+    REQUIRE(obj["hello"].is<const char*>());
+    REQUIRE_FALSE(obj["hello"].is<long>());
   }
 
   SECTION("nested array") {
-    DynamicJsonArray arr;
+    DynamicJsonDocument doc2;
+    JsonArray& arr = doc2.to<JsonArray>();
 
-    _object.set("hello", arr);
+    obj.set("hello", arr);
 
-    REQUIRE(&arr == &_object["hello"].as<JsonArray>());
-    REQUIRE(_object["hello"].is<JsonArray&>());
-    REQUIRE_FALSE(_object["hello"].is<JsonObject&>());
+    REQUIRE(&arr == &obj["hello"].as<JsonArray>());
+    REQUIRE(obj["hello"].is<JsonArray&>());
+    REQUIRE_FALSE(obj["hello"].is<JsonObject&>());
   }
 
   SECTION("nested object") {
-    DynamicJsonObject obj;
+    DynamicJsonDocument doc2;
+    JsonObject& obj2 = doc2.to<JsonObject>();
 
-    _object.set("hello", obj);
+    obj.set("hello", obj2);
 
-    REQUIRE(&obj == &_object["hello"].as<JsonObject>());
-    REQUIRE(_object["hello"].is<JsonObject&>());
-    REQUIRE_FALSE(_object["hello"].is<JsonArray&>());
+    REQUIRE(&obj2 == &obj["hello"].as<JsonObject>());
+    REQUIRE(obj["hello"].is<JsonObject&>());
+    REQUIRE_FALSE(obj["hello"].is<JsonArray&>());
   }
 
   SECTION("array subscript") {
-    DynamicJsonArray arr;
+    DynamicJsonDocument doc2;
+    JsonArray& arr = doc2.to<JsonArray>();
     arr.add(42);
 
-    _object.set("a", arr[0]);
+    obj.set("a", arr[0]);
 
-    REQUIRE(42 == _object["a"]);
+    REQUIRE(42 == obj["a"]);
   }
 
   SECTION("object subscript") {
-    DynamicJsonObject obj;
-    obj.set("x", 42);
+    DynamicJsonDocument doc2;
+    JsonObject& obj2 = doc2.to<JsonObject>();
+    obj2.set("x", 42);
 
-    _object.set("a", obj["x"]);
+    obj.set("a", obj2["x"]);
 
-    REQUIRE(42 == _object["a"]);
+    REQUIRE(42 == obj["a"]);
   }
 
   SECTION("returns true when allocation succeeds") {
-    StaticJsonObject<JSON_OBJECT_SIZE(1) + 15> obj;
+    StaticJsonDocument<JSON_OBJECT_SIZE(1) + 15> doc2;
+    JsonObject& obj2 = doc2.to<JsonObject>();
 
-    REQUIRE(true == obj.set(std::string("hello"), std::string("world")));
+    REQUIRE(true == obj2.set(std::string("hello"), std::string("world")));
   }
 
   SECTION("returns false when allocation fails") {
-    StaticJsonObject<JSON_OBJECT_SIZE(1) + 10> obj;
+    StaticJsonDocument<JSON_OBJECT_SIZE(1) + 10> doc2;
+    JsonObject& obj2 = doc2.to<JsonObject>();
 
-    REQUIRE(false == obj.set(std::string("hello"), std::string("world")));
+    REQUIRE(false == obj2.set(std::string("hello"), std::string("world")));
   }
 
   SECTION("should not duplicate const char*") {
-    _object.set("hello", "world");
+    obj.set("hello", "world");
     const size_t expectedSize = JSON_OBJECT_SIZE(1);
-    REQUIRE(expectedSize == _object.memoryUsage());
+    REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate char* value") {
-    _object.set("hello", const_cast<char*>("world"));
+    obj.set("hello", const_cast<char*>("world"));
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
-    REQUIRE(expectedSize == _object.memoryUsage());
+    REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate char* key") {
-    _object.set(const_cast<char*>("hello"), "world");
+    obj.set(const_cast<char*>("hello"), "world");
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
-    REQUIRE(expectedSize == _object.memoryUsage());
+    REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate char* key&value") {
-    _object.set(const_cast<char*>("hello"), const_cast<char*>("world"));
+    obj.set(const_cast<char*>("hello"), const_cast<char*>("world"));
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + 12;
-    REQUIRE(expectedSize <= _object.memoryUsage());
+    REQUIRE(expectedSize <= doc.memoryUsage());
   }
 
   SECTION("should duplicate std::string value") {
-    _object.set("hello", std::string("world"));
+    obj.set("hello", std::string("world"));
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
-    REQUIRE(expectedSize == _object.memoryUsage());
+    REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate std::string key") {
-    _object.set(std::string("hello"), "world");
+    obj.set(std::string("hello"), "world");
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + 6;
-    REQUIRE(expectedSize == _object.memoryUsage());
+    REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate std::string key&value") {
-    _object.set(std::string("hello"), std::string("world"));
+    obj.set(std::string("hello"), std::string("world"));
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + 12;
-    REQUIRE(expectedSize <= _object.memoryUsage());
+    REQUIRE(expectedSize <= doc.memoryUsage());
   }
 }

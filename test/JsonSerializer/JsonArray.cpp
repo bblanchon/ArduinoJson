@@ -15,7 +15,8 @@ static void check(JsonArray &array, std::string expected) {
 }
 
 TEST_CASE("serializeJson(JsonArray)") {
-  StaticJsonArray<JSON_ARRAY_SIZE(2)> array;
+  StaticJsonDocument<JSON_ARRAY_SIZE(2)> doc;
+  JsonArray &array = doc.to<JsonArray>();
 
   SECTION("Empty") {
     check(array, "[]");

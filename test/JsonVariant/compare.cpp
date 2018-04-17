@@ -97,8 +97,9 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("StringLiteral") {
-    DynamicJsonVariant variant;
-    deserializeJson(variant, "\"hello\"");
+    DynamicJsonDocument doc;
+    deserializeJson(doc, "\"hello\"");
+    JsonVariant variant = doc.as<JsonVariant>();
 
     REQUIRE(variant == "hello");
     REQUIRE_FALSE(variant != "hello");
@@ -114,8 +115,7 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("String") {
-    DynamicJsonVariant variant;
-    deserializeJson(variant, "\"hello\"");
+    JsonVariant variant = "hello";
 
     REQUIRE(variant == std::string("hello"));
     REQUIRE_FALSE(variant != std::string("hello"));
@@ -179,7 +179,10 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("ArrayInVariant") {
-    DynamicJsonArray array1, array2;
+    DynamicJsonDocument doc1;
+    JsonArray& array1 = doc1.to<JsonArray>();
+    DynamicJsonDocument doc2;
+    JsonArray& array2 = doc2.to<JsonArray>();
 
     JsonVariant variant1 = array1;
     JsonVariant variant2 = array1;
@@ -193,8 +196,10 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("ObjectInVariant") {
-    DynamicJsonObject obj1;
-    DynamicJsonObject obj2;
+    DynamicJsonDocument doc1;
+    JsonObject& obj1 = doc1.to<JsonObject>();
+    DynamicJsonDocument doc2;
+    JsonObject& obj2 = doc2.to<JsonObject>();
 
     JsonVariant variant1 = obj1;
     JsonVariant variant2 = obj1;
@@ -208,8 +213,11 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("VariantsOfDifferentTypes") {
-    DynamicJsonObject obj;
-    DynamicJsonArray arr;
+    DynamicJsonDocument doc1;
+    JsonObject& obj = doc1.to<JsonObject>();
+
+    DynamicJsonDocument doc2;
+    JsonArray& arr = doc2.to<JsonArray>();
     JsonVariant variants[] = {
         true, 42, 666.667, "hello", arr, obj,
     };

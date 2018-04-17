@@ -4,18 +4,14 @@
 
 #pragma once
 
-#include "ArduinoJson/DynamicJsonArray.hpp"
-#include "ArduinoJson/DynamicJsonObject.hpp"
-#include "ArduinoJson/DynamicJsonVariant.hpp"
+#include "ArduinoJson/DynamicJsonDocument.hpp"
 #include "ArduinoJson/MsgPack/MsgPackDeserializer.hpp"
-#include "ArduinoJson/StaticJsonArray.hpp"
-#include "ArduinoJson/StaticJsonObject.hpp"
-#include "ArduinoJson/StaticJsonVariant.hpp"
+#include "ArduinoJson/StaticJsonDocument.hpp"
 #include "ArduinoJson/deserializeJson.hpp"
 #include "ArduinoJson/deserializeMsgPack.hpp"
 
-#include "ArduinoJson/Json/Deserialization/JsonParserImpl.hpp"
-#include "ArduinoJson/Json/Serialization/JsonSerializerImpl.hpp"
+#include "ArduinoJson/Json/Deserialization/JsonDeserializer.hpp"
+#include "ArduinoJson/Json/Serialization/JsonSerializer.hpp"
 #include "ArduinoJson/JsonArrayImpl.hpp"
 #include "ArduinoJson/JsonObjectImpl.hpp"
 #include "ArduinoJson/JsonVariantImpl.hpp"

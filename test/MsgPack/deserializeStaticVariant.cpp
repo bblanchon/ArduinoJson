@@ -9,14 +9,14 @@ static const size_t epsilon = sizeof(void*);
 
 template <size_t Capacity>
 static void check(const char* input, MsgPackError expected) {
-  StaticJsonVariant<Capacity> variant;
+  StaticJsonDocument<Capacity> variant;
 
   MsgPackError error = deserializeMsgPack(variant, input);
 
   REQUIRE(error == expected);
 }
 
-TEST_CASE("deserializeMsgPack(StaticJsonVariant&)") {
+TEST_CASE("deserializeMsgPack(StaticJsonDocument&)") {
   SECTION("single values always fit") {
     check<0>("\xc0", MsgPackError::Ok);                  // nil
     check<0>("\xc2", MsgPackError::Ok);                  // false
@@ -82,15 +82,14 @@ TEST_CASE("deserializeMsgPack(StaticJsonVariant&)") {
       check<JSON_OBJECT_SIZE(0)>("\x80", MsgPackError::Ok);
     }
     SECTION("{H:1}") {
-      check<JSON_OBJECT_SIZE(0)>("\x81\xA1H\x01",
-                                 MsgPackError::NoMemory);
+      check<JSON_OBJECT_SIZE(0)>("\x81\xA1H\x01", MsgPackError::NoMemory);
       check<JSON_OBJECT_SIZE(1) + epsilon>("\x81\xA1H\x01", MsgPackError::Ok);
     }
     SECTION("{H:1,W:2}") {
       check<JSON_OBJECT_SIZE(1) + epsilon>("\x82\xA1H\x01\xA1W\x02",
-                                     MsgPackError::NoMemory);
-      check<JSON_OBJECT_SIZE(2) + 2*epsilon>("\x82\xA1H\x01\xA1W\x02",
-                                     MsgPackError::Ok);
+                                           MsgPackError::NoMemory);
+      check<JSON_OBJECT_SIZE(2) + 2 * epsilon>("\x82\xA1H\x01\xA1W\x02",
+                                               MsgPackError::Ok);
     }
   }
 
@@ -101,13 +100,14 @@ TEST_CASE("deserializeMsgPack(StaticJsonVariant&)") {
     SECTION("{H:1}") {
       check<JSON_OBJECT_SIZE(0)>("\xDE\x00\x01\xA1H\x01",
                                  MsgPackError::NoMemory);
-      check<JSON_OBJECT_SIZE(1) + epsilon>("\xDE\x00\x01\xA1H\x01", MsgPackError::Ok);
+      check<JSON_OBJECT_SIZE(1) + epsilon>("\xDE\x00\x01\xA1H\x01",
+                                           MsgPackError::Ok);
     }
     SECTION("{H:1,W:2}") {
       check<JSON_OBJECT_SIZE(1) + epsilon>("\xDE\x00\x02\xA1H\x01\xA1W\x02",
-                                     MsgPackError::NoMemory);
-      check<JSON_OBJECT_SIZE(2) + 2*epsilon>("\xDE\x00\x02\xA1H\x01\xA1W\x02",
-                                     MsgPackError::Ok);
+                                           MsgPackError::NoMemory);
+      check<JSON_OBJECT_SIZE(2) + 2 * epsilon>("\xDE\x00\x02\xA1H\x01\xA1W\x02",
+                                               MsgPackError::Ok);
     }
   }
 
@@ -119,13 +119,13 @@ TEST_CASE("deserializeMsgPack(StaticJsonVariant&)") {
       check<JSON_OBJECT_SIZE(0)>("\xDF\x00\x00\x00\x01\xA1H\x01",
                                  MsgPackError::NoMemory);
       check<JSON_OBJECT_SIZE(1) + epsilon>("\xDF\x00\x00\x00\x01\xA1H\x01",
-                                     MsgPackError::Ok);
+                                           MsgPackError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      check<JSON_OBJECT_SIZE(1) + epsilon>("\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
-                                     MsgPackError::NoMemory);
-      check<JSON_OBJECT_SIZE(2) + 2*epsilon>("\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
-                                     MsgPackError::Ok);
+      check<JSON_OBJECT_SIZE(1) + epsilon>(
+          "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02", MsgPackError::NoMemory);
+      check<JSON_OBJECT_SIZE(2) + 2 * epsilon>(
+          "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02", MsgPackError::Ok);
     }
   }
 }

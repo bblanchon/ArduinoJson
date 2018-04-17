@@ -8,7 +8,7 @@ namespace ArduinoJson {
 
 class MsgPackError {
  public:
-  enum Code { Ok, NotSupported, NoMemory, NotAnArray, NotAnObject, TooDeep };
+  enum Code { Ok, NotSupported, NoMemory, TooDeep };
 
   MsgPackError() {}
 
@@ -42,10 +42,6 @@ class MsgPackError {
         return "NotSupported";
       case NoMemory:
         return "NoMemory";
-      case NotAnArray:
-        return "NotAnArray";
-      case NotAnObject:
-        return "NotAnObject";
       case TooDeep:
         return "TooDeep";
       default:
@@ -60,6 +56,11 @@ class MsgPackError {
 #if ARDUINOJSON_ENABLE_STD_STREAM
 inline std::ostream& operator<<(std::ostream& os, const MsgPackError& err) {
   os << err.c_str();
+  return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, MsgPackError::Code code) {
+  os << MsgPackError(code).c_str();
   return os;
 }
 #endif

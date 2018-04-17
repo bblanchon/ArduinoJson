@@ -6,13 +6,10 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject basics") {
-  DynamicJsonObject _object;
-
-  SECTION("InitialSizeIsZero") {
-    REQUIRE(0 == _object.size());
-  }
+  DynamicJsonDocument doc;
+  JsonObject& obj = doc.to<JsonObject>();
 
   SECTION("SuccessIsTrue") {
-    REQUIRE(_object.success());
+    REQUIRE(obj.success());
   }
 }

@@ -7,7 +7,8 @@
 #include <string>
 
 TEST_CASE("JsonObject::remove()") {
-  DynamicJsonObject obj;
+  DynamicJsonDocument doc;
+  JsonObject& obj = doc.to<JsonObject>();
 
   SECTION("SizeDecreased_WhenValuesAreRemoved") {
     obj["hello"] = 1;
@@ -26,7 +27,9 @@ TEST_CASE("JsonObject::remove()") {
   }
 
   SECTION("RemoveByIterator") {
-    deserializeJson(obj, "{\"a\":0,\"b\":1,\"c\":2}");
+    obj["a"] = 0;
+    obj["b"] = 1;
+    obj["c"] = 2;
 
     for (JsonObject::iterator it = obj.begin(); it != obj.end(); ++it) {
       if (it->value == 1) obj.remove(it);

@@ -7,7 +7,7 @@
 
 static void check(const char* input, MsgPackError expected,
                   uint8_t nestingLimit = 10) {
-  DynamicJsonVariant variant;
+  DynamicJsonDocument variant;
 
   MsgPackError error = deserializeMsgPack(variant, input, nestingLimit);
 

@@ -28,40 +28,6 @@ class MsgPackDeserializer {
         _writer(writer),
         _nestingLimit(nestingLimit) {}
 
-  MsgPackError parse(JsonArray &array) {
-    uint8_t c = readOne();
-    size_t n;
-
-    if ((c & 0xF0) == 0x90) {
-      n = c & 0x0F;
-    } else if (c == 0xdc) {
-      n = readInteger<uint16_t>();
-    } else if (c == 0xdd) {
-      n = readInteger<uint32_t>();
-    } else {
-      return MsgPackError::NotAnArray;
-    }
-
-    return readArray(array, n);
-  }
-
-  MsgPackError parse(JsonObject &object) {
-    uint8_t c = readOne();
-    size_t n;
-
-    if ((c & 0xf0) == 0x80) {
-      n = c & 0x0f;
-    } else if (c == 0xde) {
-      n = readInteger<uint16_t>();
-    } else if (c == 0xdf) {
-      n = readInteger<uint32_t>();
-    } else {
-      return MsgPackError::NotAnObject;
-    }
-
-    return readObject(object, n);
-  }
-
   MsgPackError parse(JsonVariant &variant) {
     uint8_t c = readOne();
 

@@ -23,7 +23,8 @@ TEST_CASE("std::stream") {
 
   SECTION("JsonObject") {
     std::ostringstream os;
-    DynamicJsonObject object;
+    DynamicJsonDocument doc;
+    JsonObject& object = doc.to<JsonObject>();
     object["key"] = "value";
     os << object;
     REQUIRE("{\"key\":\"value\"}" == os.str());
@@ -31,7 +32,8 @@ TEST_CASE("std::stream") {
 
   SECTION("JsonObjectSubscript") {
     std::ostringstream os;
-    DynamicJsonObject object;
+    DynamicJsonDocument doc;
+    JsonObject& object = doc.to<JsonObject>();
     object["key"] = "value";
     os << object["key"];
     REQUIRE("\"value\"" == os.str());
@@ -39,7 +41,8 @@ TEST_CASE("std::stream") {
 
   SECTION("JsonArray") {
     std::ostringstream os;
-    DynamicJsonArray array;
+    DynamicJsonDocument doc;
+    JsonArray& array = doc.to<JsonArray>();
     array.add("value");
     os << array;
     REQUIRE("[\"value\"]" == os.str());
@@ -47,7 +50,8 @@ TEST_CASE("std::stream") {
 
   SECTION("JsonArraySubscript") {
     std::ostringstream os;
-    DynamicJsonArray array;
+    DynamicJsonDocument doc;
+    JsonArray& array = doc.to<JsonArray>();
     array.add("value");
     os << array[0];
     REQUIRE("\"value\"" == os.str());
@@ -55,8 +59,9 @@ TEST_CASE("std::stream") {
 
   SECTION("ParseArray") {
     std::istringstream json(" [ 42 /* comment */ ] ");
-    DynamicJsonArray arr;
-    JsonError err = deserializeJson(arr, json);
+    DynamicJsonDocument doc;
+    JsonError err = deserializeJson(doc, json);
+    JsonArray& arr = doc.as<JsonArray>();
 
     REQUIRE(err == JsonError::Ok);
     REQUIRE(1 == arr.size());
@@ -65,8 +70,9 @@ TEST_CASE("std::stream") {
 
   SECTION("ParseObject") {
     std::istringstream json(" { hello : world // comment\n }");
-    DynamicJsonObject obj;
-    JsonError err = deserializeJson(obj, json);
+    DynamicJsonDocument doc;
+    JsonError err = deserializeJson(doc, json);
+    JsonObject& obj = doc.as<JsonObject>();
 
     REQUIRE(err == JsonError::Ok);
     REQUIRE(1 == obj.size());
@@ -75,8 +81,8 @@ TEST_CASE("std::stream") {
 
   SECTION("ShouldNotReadPastTheEnd") {
     std::istringstream json("{}123");
-    DynamicJsonObject obj;
-    deserializeJson(obj, json);
+    DynamicJsonDocument doc;
+    deserializeJson(doc, json);
     REQUIRE('1' == json.get());
   }
 }

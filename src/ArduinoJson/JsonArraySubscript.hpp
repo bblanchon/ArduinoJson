@@ -74,6 +74,11 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return _array.set(_index, value);
   }
 
+  template <typename Visitor>
+  void visit(Visitor visitor) const {
+    return _array.get<JsonVariant>(_index).visit(visitor);
+  }
+
  private:
   JsonArray& _array;
   const size_t _index;

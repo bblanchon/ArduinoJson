@@ -7,43 +7,37 @@
 #include "MsgPack/MsgPackDeserializer.hpp"
 
 namespace ArduinoJson {
-// MsgPackError deserializeMsgPack(TDestination& destination, TString json);
-// TDestination = JsonArray, JsonObject, JsonVariant
+// MsgPackError deserializeMsgPack(TDocument& doc, TString json);
+// TDocument = DynamicJsonArray | StaticJsonArray
 // TString = const std::string&, const String&
-template <typename TDestination, typename TString>
+template <typename TDocument, typename TString>
 typename Internals::EnableIf<!Internals::IsArray<TString>::value,
                              MsgPackError>::type
-deserializeMsgPack(TDestination &destination, const TString &json,
+deserializeMsgPack(TDocument &doc, const TString &json,
                    uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  destination.clear();
-  return Internals::makeMsgPackDeserializer(&destination.buffer(), json,
-                                            nestingLimit)
-      .parse(destination);
+  return Internals::makeMsgPackDeserializer(&doc.buffer(), json, nestingLimit)
+      .parse(doc.template to<JsonVariant>());
 }
 //
-// MsgPackError deserializeMsgPack(TDestination& destination, TString json);
-// TDestination = JsonArray, JsonObject, JsonVariant
+// MsgPackError deserializeMsgPack(TDocument& doc, TString json);
+// TDocument = DynamicJsonArray | StaticJsonArray
 // TString = const char*, const char[N], const FlashStringHelper*
-template <typename TDestination, typename TString>
+template <typename TDocument, typename TString>
 MsgPackError deserializeMsgPack(
-    TDestination &destination, TString *json,
+    TDocument &doc, TString *json,
     uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  destination.clear();
-  return Internals::makeMsgPackDeserializer(&destination.buffer(), json,
-                                            nestingLimit)
-      .parse(destination);
+  return Internals::makeMsgPackDeserializer(&doc.buffer(), json, nestingLimit)
+      .parse(doc.template to<JsonVariant>());
 }
 //
-// MsgPackError deserializeMsgPack(TDestination& destination, TString json);
-// TDestination = JsonArray, JsonObject, JsonVariant
+// MsgPackError deserializeMsgPack(TDocument& doc, TString json);
+// TDocument = DynamicJsonArray | StaticJsonArray
 // TString = std::istream&, Stream&
-template <typename TDestination, typename TString>
+template <typename TDocument, typename TString>
 MsgPackError deserializeMsgPack(
-    TDestination &destination, TString &json,
+    TDocument &doc, TString &json,
     uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  destination.clear();
-  return Internals::makeMsgPackDeserializer(&destination.buffer(), json,
-                                            nestingLimit)
-      .parse(destination);
+  return Internals::makeMsgPackDeserializer(&doc.buffer(), json, nestingLimit)
+      .parse(doc.template to<JsonVariant>());
 }
 }  // namespace ArduinoJson

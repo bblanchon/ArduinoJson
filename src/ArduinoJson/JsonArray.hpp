@@ -180,6 +180,11 @@ class JsonArray : public Internals::ReferenceType,
     }
   }
 
+  template <typename Visitor>
+  void visit(Visitor visitor) const {
+    return visitor.acceptArray(*this);
+  }
+
  private:
   template <typename TValueRef>
   bool set_impl(size_t index, TValueRef value) {

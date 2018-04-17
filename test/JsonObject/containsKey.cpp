@@ -6,24 +6,25 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::containsKey()") {
-  DynamicJsonObject _object;
+  DynamicJsonDocument doc;
+  JsonObject& obj = doc.to<JsonObject>();
 
   SECTION("ContainsKeyReturnsFalseForNonExistingKey") {
-    _object.set("hello", 42);
+    obj.set("hello", 42);
 
-    REQUIRE(false == _object.containsKey("world"));
+    REQUIRE(false == obj.containsKey("world"));
   }
 
   SECTION("ContainsKeyReturnsTrueForDefinedValue") {
-    _object.set("hello", 42);
+    obj.set("hello", 42);
 
-    REQUIRE(true == _object.containsKey("hello"));
+    REQUIRE(true == obj.containsKey("hello"));
   }
 
   SECTION("ContainsKeyReturnsFalseAfterRemove") {
-    _object.set("hello", 42);
-    _object.remove("hello");
+    obj.set("hello", 42);
+    obj.remove("hello");
 
-    REQUIRE(false == _object.containsKey("hello"));
+    REQUIRE(false == obj.containsKey("hello"));
   }
 }

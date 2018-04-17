@@ -92,7 +92,6 @@ class StaticJsonBufferBase : public JsonBuffer {
   size_t _capacity;
   size_t _size;
 };
-}  // namespace Internals
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -118,6 +117,7 @@ class StaticJsonBuffer : public Internals::StaticJsonBufferBase {
  private:
   char _buffer[ACTUAL_CAPACITY];
 };
+}  // namespace Internals
 }  // namespace ArduinoJson
 
 #if defined(__clang__)

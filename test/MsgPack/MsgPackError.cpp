@@ -24,8 +24,6 @@ TEST_CASE("MsgPackError") {
     TEST_STRINGIFICATION(Ok);
     TEST_STRINGIFICATION(NotSupported);
     TEST_STRINGIFICATION(NoMemory);
-    TEST_STRINGIFICATION(NotAnArray);
-    TEST_STRINGIFICATION(NotAnObject);
     TEST_STRINGIFICATION(TooDeep);
   }
 
@@ -33,8 +31,12 @@ TEST_CASE("MsgPackError") {
     TEST_BOOLIFICATION(Ok, false);
     TEST_BOOLIFICATION(NotSupported, true);
     TEST_BOOLIFICATION(NoMemory, true);
-    TEST_BOOLIFICATION(NotAnArray, true);
-    TEST_BOOLIFICATION(NotAnObject, true);
     TEST_BOOLIFICATION(TooDeep, true);
+  }
+
+  SECTION("ostream") {
+    std::stringstream s;
+    s << MsgPackError::NotSupported;
+    REQUIRE(s.str() == "NotSupported");
   }
 }

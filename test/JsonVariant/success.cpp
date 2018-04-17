@@ -17,14 +17,16 @@ TEST_CASE("JsonVariant::success()") {
   }
 
   SECTION("ReturnsTrue_WhenEmptyArray") {
-    DynamicJsonArray array;
+    DynamicJsonDocument doc;
+    JsonArray& array = doc.to<JsonArray>();
 
     JsonVariant variant = array;
     REQUIRE(true == variant.success());
   }
 
   SECTION("ReturnsTrue_WhenEmptyObject") {
-    DynamicJsonObject obj;
+    DynamicJsonDocument doc;
+    JsonObject& obj = doc.to<JsonObject>();
 
     JsonVariant variant = obj;
     REQUIRE(true == variant.success());

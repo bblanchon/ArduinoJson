@@ -4,43 +4,40 @@
 
 #pragma once
 
-#include "Json/Deserialization/JsonParser.hpp"
+#include "Json/Deserialization/JsonDeserializer.hpp"
 
 namespace ArduinoJson {
-// JsonError deserializeJson(TDestination& destination, TString json);
-// TDestination = JsonArray, JsonObject, JsonVariant
+// JsonError deserializeJson(TDocument& doc, TString json);
+// TDocument = DynamicJsonDocument, StaticJsonDocument
 // TString = const std::string&, const String&
-template <typename TDestination, typename TString>
+template <typename TDocument, typename TString>
 typename Internals::EnableIf<!Internals::IsArray<TString>::value,
                              JsonError>::type
-deserializeJson(TDestination &destination, const TString &json,
+deserializeJson(TDocument &doc, const TString &json,
                 uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  destination.clear();
-  return Internals::makeParser(&destination.buffer(), json, nestingLimit)
-      .parse(destination);
+  return Internals::makeParser(&doc.buffer(), json, nestingLimit)
+      .parse(doc.template to<JsonVariant>());
 }
 //
-// JsonError deserializeJson(TDestination& destination, TString json);
-// TDestination = JsonArray, JsonObject, JsonVariant
+// JsonError deserializeJson(TDocument& doc, TString json);
+// TDocument = DynamicJsonDocument, StaticJsonDocument
 // TString = const char*, const char[N], const FlashStringHelper*
-template <typename TDestination, typename TString>
+template <typename TDocument, typename TString>
 JsonError deserializeJson(
-    TDestination &destination, TString *json,
+    TDocument &doc, TString *json,
     uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  destination.clear();
-  return Internals::makeParser(&destination.buffer(), json, nestingLimit)
-      .parse(destination);
+  return Internals::makeParser(&doc.buffer(), json, nestingLimit)
+      .parse(doc.template to<JsonVariant>());
 }
 //
-// JsonError deserializeJson(TDestination& destination, TString json);
-// TDestination = JsonArray, JsonObject, JsonVariant
+// JsonError deserializeJson(TDocument& doc, TString json);
+// TDocument = DynamicJsonDocument, StaticJsonDocument
 // TString = std::istream&, Stream&
-template <typename TDestination, typename TString>
+template <typename TDocument, typename TString>
 JsonError deserializeJson(
-    TDestination &destination, TString &json,
+    TDocument &doc, TString &json,
     uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  destination.clear();
-  return Internals::makeParser(&destination.buffer(), json, nestingLimit)
-      .parse(destination);
+  return Internals::makeParser(&doc.buffer(), json, nestingLimit)
+      .parse(doc.template to<JsonVariant>());
 }
 }  // namespace ArduinoJson

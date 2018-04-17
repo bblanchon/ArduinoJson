@@ -151,6 +151,12 @@ class DynamicJsonBufferBase : public JsonBuffer {
   Block* _head;
   size_t _nextBlockCapacity;
 };
+
+// Implements a JsonBuffer with dynamic memory allocation.
+// You are strongly encouraged to consider using StaticJsonBuffer which is much
+// more suitable for embedded systems.
+typedef Internals::DynamicJsonBufferBase<Internals::DefaultAllocator>
+    DynamicJsonBuffer;
 }  // namespace Internals
 
 #if defined(__clang__)
@@ -160,10 +166,4 @@ class DynamicJsonBufferBase : public JsonBuffer {
 #pragma GCC diagnostic pop
 #endif
 #endif
-
-// Implements a JsonBuffer with dynamic memory allocation.
-// You are strongly encouraged to consider using StaticJsonBuffer which is much
-// more suitable for embedded systems.
-typedef Internals::DynamicJsonBufferBase<Internals::DefaultAllocator>
-    DynamicJsonBuffer;
 }  // namespace ArduinoJson
