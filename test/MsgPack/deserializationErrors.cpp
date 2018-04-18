@@ -7,9 +7,10 @@
 
 static void check(const char* input, MsgPackError expected,
                   uint8_t nestingLimit = 10) {
-  DynamicJsonDocument variant;
+  DynamicJsonDocument doc;
+  doc.nestingLimit = nestingLimit;
 
-  MsgPackError error = deserializeMsgPack(variant, input, nestingLimit);
+  MsgPackError error = deserializeMsgPack(doc, input);
 
   REQUIRE(error == expected);
 }

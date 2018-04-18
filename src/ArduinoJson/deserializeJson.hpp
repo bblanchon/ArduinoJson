@@ -13,9 +13,8 @@ namespace ArduinoJson {
 template <typename TDocument, typename TString>
 typename Internals::EnableIf<!Internals::IsArray<TString>::value,
                              JsonError>::type
-deserializeJson(TDocument &doc, const TString &json,
-                uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  return Internals::makeParser(&doc.buffer(), json, nestingLimit)
+deserializeJson(TDocument &doc, const TString &json) {
+  return Internals::makeParser(&doc.buffer(), json, doc.nestingLimit)
       .parse(doc.template to<JsonVariant>());
 }
 //
@@ -23,10 +22,8 @@ deserializeJson(TDocument &doc, const TString &json,
 // TDocument = DynamicJsonDocument, StaticJsonDocument
 // TString = const char*, const char[N], const FlashStringHelper*
 template <typename TDocument, typename TString>
-JsonError deserializeJson(
-    TDocument &doc, TString *json,
-    uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  return Internals::makeParser(&doc.buffer(), json, nestingLimit)
+JsonError deserializeJson(TDocument &doc, TString *json) {
+  return Internals::makeParser(&doc.buffer(), json, doc.nestingLimit)
       .parse(doc.template to<JsonVariant>());
 }
 //
@@ -34,10 +31,8 @@ JsonError deserializeJson(
 // TDocument = DynamicJsonDocument, StaticJsonDocument
 // TString = std::istream&, Stream&
 template <typename TDocument, typename TString>
-JsonError deserializeJson(
-    TDocument &doc, TString &json,
-    uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  return Internals::makeParser(&doc.buffer(), json, nestingLimit)
+JsonError deserializeJson(TDocument &doc, TString &json) {
+  return Internals::makeParser(&doc.buffer(), json, doc.nestingLimit)
       .parse(doc.template to<JsonVariant>());
 }
 }  // namespace ArduinoJson

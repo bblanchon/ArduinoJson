@@ -15,6 +15,10 @@ class StaticJsonDocument {
   JsonVariant _root;
 
  public:
+  uint8_t nestingLimit;
+
+  StaticJsonDocument() : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
+
   Internals::StaticJsonBufferBase& buffer() {
     return _buffer;
   }

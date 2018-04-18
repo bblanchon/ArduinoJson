@@ -16,8 +16,11 @@ class DynamicJsonDocument {
   JsonVariant _root;
 
  public:
-  DynamicJsonDocument() {}
-  DynamicJsonDocument(size_t capacity) : _buffer(capacity) {}
+  uint8_t nestingLimit;
+
+  DynamicJsonDocument() : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
+  DynamicJsonDocument(size_t capacity)
+      : _buffer(capacity), nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
 
   template <typename T>
   bool is() const {

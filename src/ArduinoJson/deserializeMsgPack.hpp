@@ -13,9 +13,9 @@ namespace ArduinoJson {
 template <typename TDocument, typename TString>
 typename Internals::EnableIf<!Internals::IsArray<TString>::value,
                              MsgPackError>::type
-deserializeMsgPack(TDocument &doc, const TString &json,
-                   uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  return Internals::makeMsgPackDeserializer(&doc.buffer(), json, nestingLimit)
+deserializeMsgPack(TDocument &doc, const TString &json) {
+  return Internals::makeMsgPackDeserializer(&doc.buffer(), json,
+                                            doc.nestingLimit)
       .parse(doc.template to<JsonVariant>());
 }
 //
@@ -23,10 +23,9 @@ deserializeMsgPack(TDocument &doc, const TString &json,
 // TDocument = DynamicJsonArray | StaticJsonArray
 // TString = const char*, const char[N], const FlashStringHelper*
 template <typename TDocument, typename TString>
-MsgPackError deserializeMsgPack(
-    TDocument &doc, TString *json,
-    uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  return Internals::makeMsgPackDeserializer(&doc.buffer(), json, nestingLimit)
+MsgPackError deserializeMsgPack(TDocument &doc, TString *json) {
+  return Internals::makeMsgPackDeserializer(&doc.buffer(), json,
+                                            doc.nestingLimit)
       .parse(doc.template to<JsonVariant>());
 }
 //
@@ -34,10 +33,9 @@ MsgPackError deserializeMsgPack(
 // TDocument = DynamicJsonArray | StaticJsonArray
 // TString = std::istream&, Stream&
 template <typename TDocument, typename TString>
-MsgPackError deserializeMsgPack(
-    TDocument &doc, TString &json,
-    uint8_t nestingLimit = ARDUINOJSON_DEFAULT_NESTING_LIMIT) {
-  return Internals::makeMsgPackDeserializer(&doc.buffer(), json, nestingLimit)
+MsgPackError deserializeMsgPack(TDocument &doc, TString &json) {
+  return Internals::makeMsgPackDeserializer(&doc.buffer(), json,
+                                            doc.nestingLimit)
       .parse(doc.template to<JsonVariant>());
 }
 }  // namespace ArduinoJson
