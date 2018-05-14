@@ -3,13 +3,17 @@
 # MIT License
 
 add_executable(MsgPackTests
-	deserializationErrors.cpp
+	MsgPackError.cpp
 	deserializeArray.cpp
 	deserializeObject.cpp
-	deserializeVariant.cpp
 	deserializeStaticVariant.cpp
+	deserializeVariant.cpp
 	doubleToFloat.cpp
-	MsgPackError.cpp
+	incompleteInput.cpp
+	nestingLimit.cpp
+	notSupported.cpp
+	std_string.cpp
+	std_istream.cpp
 )
 
 target_link_libraries(MsgPackTests catch)

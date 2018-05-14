@@ -10,26 +10,6 @@ namespace ArduinoJson {
 namespace Internals {
 template <>
 struct StringTraits<const __FlashStringHelper*, void> {
-  class Reader {
-    const char* _ptr;
-
-   public:
-    Reader(const __FlashStringHelper* ptr)
-        : _ptr(reinterpret_cast<const char*>(ptr)) {}
-
-    void move() {
-      _ptr++;
-    }
-
-    char current() const {
-      return pgm_read_byte_near(_ptr);
-    }
-
-    char next() const {
-      return pgm_read_byte_near(_ptr + 1);
-    }
-  };
-
   static bool equals(const __FlashStringHelper* str, const char* expected) {
     return strcmp_P(expected, (const char*)str) == 0;
   }

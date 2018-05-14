@@ -9,26 +9,6 @@ namespace Internals {
 
 template <typename TChar>
 struct CharPointerTraits {
-  class Reader {
-    const TChar* _ptr;
-
-   public:
-    Reader(const TChar* ptr)
-        : _ptr(ptr ? ptr : reinterpret_cast<const TChar*>("")) {}
-
-    void move() {
-      ++_ptr;
-    }
-
-    char current() const {
-      return char(_ptr[0]);
-    }
-
-    char next() const {
-      return char(_ptr[1]);
-    }
-  };
-
   static bool equals(const TChar* str, const char* expected) {
     return strcmp(reinterpret_cast<const char*>(str), expected) == 0;
   }

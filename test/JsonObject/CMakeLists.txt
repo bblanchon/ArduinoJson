@@ -11,6 +11,7 @@ add_executable(JsonObjectTests
 	remove.cpp
 	set.cpp
 	size.cpp
+	std_string.cpp
 	subscript.cpp
 )
 

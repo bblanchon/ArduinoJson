@@ -25,6 +25,7 @@ TEST_CASE("JsonError") {
     TEST_STRINGIFICATION(TooDeep);
     TEST_STRINGIFICATION(NoMemory);
     TEST_STRINGIFICATION(InvalidInput);
+    TEST_STRINGIFICATION(IncompleteInput);
   }
 
   SECTION("as boolean") {
@@ -32,6 +33,7 @@ TEST_CASE("JsonError") {
     TEST_BOOLIFICATION(TooDeep, true);
     TEST_BOOLIFICATION(NoMemory, true);
     TEST_BOOLIFICATION(InvalidInput, true);
+    TEST_BOOLIFICATION(IncompleteInput, true);
   }
 
   SECTION("ostream") {

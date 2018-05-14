@@ -7,10 +7,9 @@
 #include "../../JsonError.hpp"
 #include "../../JsonVariant.hpp"
 #include "../../Memory/JsonBuffer.hpp"
-#include "../../Strings/StringWriter.hpp"
+#include "../../Reading/Reader.hpp"
 #include "../../TypeTraits/IsConst.hpp"
 #include "../Encoding.hpp"
-#include "./Comments.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -23,11 +22,13 @@ class JsonDeserializer {
       : _buffer(buffer),
         _reader(reader),
         _writer(writer),
-        _nestingLimit(nestingLimit) {}
+        _nestingLimit(nestingLimit),
+        _loaded(false) {}
   JsonError parse(JsonVariant &variant) {
-    skipSpacesAndComments(_reader);
+    JsonError err = skipSpacesAndComments();
+    if (err) return err;
 
-    switch (_reader.current()) {
+    switch (current()) {
       case '[':
         return parseArray(variant);
 
@@ -42,15 +43,25 @@ class JsonDeserializer {
  private:
   JsonDeserializer &operator=(const JsonDeserializer &);  // non-copiable
 
-  static bool eat(TReader &reader, char charToSkip) {
-    skipSpacesAndComments(reader);
-    if (reader.current() != charToSkip) return false;
-    reader.move();
-    return true;
+  char current() {
+    if (!_loaded) {
+      if (_reader.ended())
+        _current = 0;
+      else
+        _current = _reader.read();
+      _loaded = true;
+    }
+    return _current;
+  }
+
+  void move() {
+    _loaded = false;
   }
 
   FORCE_INLINE bool eat(char charToSkip) {
-    return eat(_reader, charToSkip);
+    if (current() != charToSkip) return false;
+    move();
+    return true;
   }
 
   JsonError parseArray(JsonVariant &variant) {
@@ -62,6 +73,12 @@ class JsonDeserializer {
 
     // Check opening braket
     if (!eat('[')) return JsonError::InvalidInput;
+
+    // Skip spaces
+    JsonError err = skipSpacesAndComments();
+    if (err) return err;
+
+    // Empty array?
     if (eat(']')) return JsonError::Ok;
 
     // Read each value
@@ -69,12 +86,16 @@ class JsonDeserializer {
       // 1 - Parse value
       JsonVariant value;
       _nestingLimit--;
-      JsonError error = parse(value);
+      err = parse(value);
       _nestingLimit++;
-      if (error != JsonError::Ok) return error;
+      if (err) return err;
       if (!array->add(value)) return JsonError::NoMemory;
 
-      // 2 - More values?
+      // 2 - Skip spaces
+      err = skipSpacesAndComments();
+      if (err) return err;
+
+      // 3 - More values?
       if (eat(']')) return JsonError::Ok;
       if (!eat(',')) return JsonError::InvalidInput;
     }
@@ -89,31 +110,52 @@ class JsonDeserializer {
 
     // Check opening brace
     if (!eat('{')) return JsonError::InvalidInput;
+
+    // Skip spaces
+    JsonError err = skipSpacesAndComments();
+    if (err) return err;
+
+    // Empty object?
     if (eat('}')) return JsonError::Ok;
 
     // Read each key value pair
     for (;;) {
-      // 1 - Parse key
+      // Parse key
       const char *key;
-      JsonError error = parseString(&key);
-      if (error) return error;
+      err = parseString(&key);
+      if (err) return err;
+
+      // Skip spaces
+      err = skipSpacesAndComments();
+      if (err) return err;
+
+      // Colon
       if (!eat(':')) return JsonError::InvalidInput;
 
-      // 2 - Parse value
+      // Parse value
       JsonVariant value;
       _nestingLimit--;
-      error = parse(value);
+      err = parse(value);
       _nestingLimit++;
-      if (error != JsonError::Ok) return error;
+      if (err) return err;
       if (!object->set(key, value)) return JsonError::NoMemory;
 
-      // 3 - More keys/values?
+      // Skip spaces
+      err = skipSpacesAndComments();
+      if (err) return err;
+
+      // More keys/values?
       if (eat('}')) return JsonError::Ok;
       if (!eat(',')) return JsonError::InvalidInput;
+
+      // Skip spaces
+      err = skipSpacesAndComments();
+      if (err) return err;
     }
   }
+
   JsonError parseValue(JsonVariant &variant) {
-    bool hasQuotes = isQuote(_reader.current());
+    bool hasQuotes = isQuote(current());
     const char *value;
     JsonError error = parseString(&value);
     if (error) return error;
@@ -128,33 +170,35 @@ class JsonDeserializer {
   JsonError parseString(const char **result) {
     typename RemoveReference<TWriter>::type::String str = _writer.startString();
 
-    skipSpacesAndComments(_reader);
-    char c = _reader.current();
+    char c = current();
+    if (c == '\0') return JsonError::IncompleteInput;
 
     if (isQuote(c)) {  // quotes
-      _reader.move();
+      move();
       char stopChar = c;
       for (;;) {
-        c = _reader.current();
-        if (c == '\0') break;
-        _reader.move();
-
+        c = current();
+        move();
         if (c == stopChar) break;
 
+        if (c == '\0') return JsonError::IncompleteInput;
+
         if (c == '\\') {
+          c = current();
+          if (c == 0) return JsonError::IncompleteInput;
           // replace char
-          c = Encoding::unescapeChar(_reader.current());
+          c = Encoding::unescapeChar(c);
           if (c == '\0') return JsonError::InvalidInput;
-          _reader.move();
+          move();
         }
 
         str.append(c);
       }
     } else if (canBeInNonQuotedString(c)) {  // no quotes
       do {
-        _reader.move();
+        move();
         str.append(c);
-        c = _reader.current();
+        c = current();
       } while (canBeInNonQuotedString(c));
     } else {
       return JsonError::InvalidInput;
@@ -178,41 +222,80 @@ class JsonDeserializer {
     return c == '\'' || c == '\"';
   }
 
+  JsonError skipSpacesAndComments() {
+    for (;;) {
+      switch (current()) {
+        // end of string
+        case '\0':
+          return JsonError::IncompleteInput;
+
+        // spaces
+        case ' ':
+        case '\t':
+        case '\r':
+        case '\n':
+          move();
+          continue;
+
+        // comments
+        case '/':
+          move();  // skip '/'
+          switch (current()) {
+            // block comment
+            case '*': {
+              move();  // skip '*'
+              bool wasStar = false;
+              for (;;) {
+                char c = current();
+                if (c == '\0') return JsonError::IncompleteInput;
+                if (c == '/' && wasStar) {
+                  move();
+                  break;
+                }
+                wasStar = c == '*';
+                move();
+              }
+              break;
+            }
+
+            // trailing comment
+            case '/':
+              // no need to skip "//"
+              for (;;) {
+                move();
+                char c = current();
+                if (c == '\0') return JsonError::IncompleteInput;
+                if (c == '\n') break;
+              }
+              break;
+
+            // not a comment, just a '/'
+            default:
+              return JsonError::InvalidInput;
+          }
+          break;
+
+        default:
+          return JsonError::Ok;
+      }
+    }
+  }
+
   JsonBuffer *_buffer;
   TReader _reader;
   TWriter _writer;
   uint8_t _nestingLimit;
+  char _current;
+  bool _loaded;
 };
 
-template <typename TJsonBuffer, typename TString, typename Enable = void>
-struct JsonParserBuilder {
-  typedef typename StringTraits<TString>::Reader InputReader;
-  typedef JsonDeserializer<InputReader, TJsonBuffer &> TParser;
-
-  static TParser makeParser(TJsonBuffer *buffer, TString &json,
-                            uint8_t nestingLimit) {
-    return TParser(buffer, InputReader(json), *buffer, nestingLimit);
-  }
-};
-
-template <typename TJsonBuffer, typename TChar>
-struct JsonParserBuilder<TJsonBuffer, TChar *,
-                         typename EnableIf<!IsConst<TChar>::value>::type> {
-  typedef typename StringTraits<TChar *>::Reader TReader;
-  typedef StringWriter<TChar> TWriter;
-  typedef JsonDeserializer<TReader, TWriter> TParser;
-
-  static TParser makeParser(TJsonBuffer *buffer, TChar *json,
-                            uint8_t nestingLimit) {
-    return TParser(buffer, TReader(json), TWriter(json), nestingLimit);
-  }
-};
-
-template <typename TJsonBuffer, typename TString>
-inline typename JsonParserBuilder<TJsonBuffer, TString>::TParser makeParser(
-    TJsonBuffer *buffer, TString &json, uint8_t nestingLimit) {
-  return JsonParserBuilder<TJsonBuffer, TString>::makeParser(buffer, json,
-                                                             nestingLimit);
+template <typename TJsonBuffer, typename TReader, typename TWriter>
+JsonDeserializer<TReader, TWriter> makeJsonDeserializer(TJsonBuffer *buffer,
+                                                        TReader reader,
+                                                        TWriter writer,
+                                                        uint8_t nestingLimit) {
+  return JsonDeserializer<TReader, TWriter>(buffer, reader, writer,
+                                            nestingLimit);
 }
 }  // namespace Internals
 }  // namespace ArduinoJson

@@ -29,8 +29,6 @@ struct StringTraits<TString&, void> : StringTraits<TString> {};
 }
 }
 
-#include "ArduinoStream.hpp"
 #include "CharPointer.hpp"
 #include "FlashString.hpp"
-#include "StdStream.hpp"
 #include "StdString.hpp"

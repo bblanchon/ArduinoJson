@@ -4,11 +4,15 @@
 
 #pragma once
 
+#if ARDUINOJSON_ENABLE_STD_STREAM
+#include <ostream>
+#endif
+
 namespace ArduinoJson {
 
 class JsonError {
  public:
-  enum Code { Ok, TooDeep, NoMemory, InvalidInput };
+  enum Code { Ok, TooDeep, NoMemory, InvalidInput, IncompleteInput };
 
   JsonError(Code code) : _code(code) {}
 
@@ -42,6 +46,8 @@ class JsonError {
         return "NoMemory";
       case InvalidInput:
         return "InvalidInput";
+      case IncompleteInput:
+        return "IncompleteInput";
       default:
         return "???";
     }

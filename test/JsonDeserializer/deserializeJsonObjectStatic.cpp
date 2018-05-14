@@ -21,7 +21,7 @@ TEST_CASE("deserialize JSON object with StaticJsonDocument") {
 
     JsonError err = deserializeJson(doc, input);
 
-    REQUIRE(err != JsonError::Ok);
+    REQUIRE(err == JsonError::NoMemory);
   }
 
   SECTION("BufferOfTheRightSizeForObjectWithOneValue") {
@@ -39,7 +39,7 @@ TEST_CASE("deserialize JSON object with StaticJsonDocument") {
 
     JsonError err = deserializeJson(doc, input);
 
-    REQUIRE(err != JsonError::Ok);
+    REQUIRE(err == JsonError::NoMemory);
   }
 
   SECTION("BufferOfTheRightSizeForObjectWithNestedObject") {
@@ -49,22 +49,6 @@ TEST_CASE("deserialize JSON object with StaticJsonDocument") {
     JsonError err = deserializeJson(doc, input);
 
     REQUIRE(err == JsonError::Ok);
-  }
-
-  SECTION("CharPtrNull") {
-    StaticJsonDocument<100> doc;
-
-    JsonError err = deserializeJson(doc, static_cast<char*>(0));
-
-    REQUIRE(err != JsonError::Ok);
-  }
-
-  SECTION("ConstCharPtrNull") {
-    StaticJsonDocument<100> doc;
-
-    JsonError err = deserializeJson(doc, static_cast<const char*>(0));
-
-    REQUIRE(err != JsonError::Ok);
   }
 
   SECTION("Should clear the JsonObject") {

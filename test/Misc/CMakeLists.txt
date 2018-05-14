@@ -2,10 +2,8 @@
 # Copyright Benoit Blanchon 2014-2018
 # MIT License
 
-add_executable(MiscTests 
+add_executable(MiscTests
 	FloatParts.cpp
-	std_stream.cpp
-	std_string.cpp
 	StringBuilder.cpp
 	StringTraits.cpp
 	TypeTraits.cpp

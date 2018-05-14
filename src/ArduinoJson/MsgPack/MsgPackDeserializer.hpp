@@ -6,8 +6,9 @@
 
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
-#include "../Strings/StringWriter.hpp"
+#include "../Reading/Reader.hpp"
 #include "../TypeTraits/IsConst.hpp"
+#include "../Writing/Writer.hpp"
 #include "./MsgPackError.hpp"
 #include "./endianess.hpp"
 #include "./ieee754.hpp"
@@ -29,27 +30,28 @@ class MsgPackDeserializer {
         _nestingLimit(nestingLimit) {}
 
   MsgPackError parse(JsonVariant &variant) {
-    uint8_t c = readOne();
+    uint8_t code;
+    if (!readByte(code)) return MsgPackError::IncompleteInput;
 
-    if ((c & 0x80) == 0) {
-      variant = c;
+    if ((code & 0x80) == 0) {
+      variant = code;
       return MsgPackError::Ok;
     }
 
-    if ((c & 0xe0) == 0xe0) {
-      variant = static_cast<int8_t>(c);
+    if ((code & 0xe0) == 0xe0) {
+      variant = static_cast<int8_t>(code);
       return MsgPackError::Ok;
     }
 
-    if ((c & 0xe0) == 0xa0) {
-      return readString(variant, c & 0x1f);
+    if ((code & 0xe0) == 0xa0) {
+      return readString(variant, code & 0x1f);
     }
 
-    if ((c & 0xf0) == 0x90) return readArray(variant, c & 0x0F);
+    if ((code & 0xf0) == 0x90) return readArray(variant, code & 0x0F);
 
-    if ((c & 0xf0) == 0x80) return readObject(variant, c & 0x0F);
+    if ((code & 0xf0) == 0x80) return readObject(variant, code & 0x0F);
 
-    switch (c) {
+    switch (code) {
       case 0xc0:
         variant = static_cast<char *>(0);
         return MsgPackError::Ok;
@@ -63,81 +65,65 @@ class MsgPackDeserializer {
         return MsgPackError::Ok;
 
       case 0xcc:
-        variant = readInteger<uint8_t>();
-        return MsgPackError::Ok;
+        return readInteger<uint8_t>(variant);
 
       case 0xcd:
-        variant = readInteger<uint16_t>();
-        return MsgPackError::Ok;
+        return readInteger<uint16_t>(variant);
 
       case 0xce:
-        variant = readInteger<uint32_t>();
-        return MsgPackError::Ok;
+        return readInteger<uint32_t>(variant);
 
       case 0xcf:
 #if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
-        variant = readInteger<uint64_t>();
+        return readInteger<uint64_t>(variant);
 #else
         readInteger<uint32_t>();
-        variant = readInteger<uint32_t>();
+        return readInteger<uint32_t>(variant);
 #endif
-        return MsgPackError::Ok;
 
       case 0xd0:
-        variant = readInteger<int8_t>();
-        return MsgPackError::Ok;
+        return readInteger<int8_t>(variant);
 
       case 0xd1:
-        variant = readInteger<int16_t>();
-        return MsgPackError::Ok;
+        return readInteger<int16_t>(variant);
 
       case 0xd2:
-        variant = readInteger<int32_t>();
-        return MsgPackError::Ok;
+        return readInteger<int32_t>(variant);
 
       case 0xd3:
 #if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
-        variant = readInteger<int64_t>();
+        return readInteger<int64_t>(variant);
 #else
-        readInteger<int32_t>();
-        variant = readInteger<int32_t>();
+        if (!skip(4)) return MsgPackError::IncompleteInput;
+        return readInteger<int32_t>(variant);
 #endif
-        return MsgPackError::Ok;
 
       case 0xca:
-        variant = readFloat<float>();
-        return MsgPackError::Ok;
+        return readFloat<float>(variant);
 
       case 0xcb:
-        variant = readDouble<double>();
-        return MsgPackError::Ok;
+        return readDouble<double>(variant);
 
-      case 0xd9: {
-        uint8_t n = readInteger<uint8_t>();
-        return readString(variant, n);
-      }
+      case 0xd9:
+        return readString<uint8_t>(variant);
 
-      case 0xda: {
-        uint16_t n = readInteger<uint16_t>();
-        return readString(variant, n);
-      }
+      case 0xda:
+        return readString<uint16_t>(variant);
 
-      case 0xdb: {
-        uint32_t n = readInteger<uint32_t>();
-        return readString(variant, n);
-      }
+      case 0xdb:
+        return readString<uint32_t>(variant);
 
       case 0xdc:
-        return readArray(variant, readInteger<uint16_t>());
+        return readArray<uint16_t>(variant);
 
       case 0xdd:
-        return readArray(variant, readInteger<uint32_t>());
+        return readArray<uint32_t>(variant);
 
       case 0xde:
-        return readObject(variant, readInteger<uint16_t>());
+        return readObject<uint16_t>(variant);
 
       case 0xdf:
-        return readObject(variant, readInteger<uint32_t>());
+        return readObject<uint32_t>(variant);
 
       default:
         return MsgPackError::NotSupported;
@@ -148,63 +134,113 @@ class MsgPackDeserializer {
   // Prevent VS warning "assignment operator could not be generated"
   MsgPackDeserializer &operator=(const MsgPackDeserializer &);
 
-  uint8_t readOne() {
-    char c = _reader.current();
-    _reader.move();
-    return static_cast<uint8_t>(c);
+  bool skip(uint8_t n) {
+    while (n--) {
+      if (_reader.ended()) return false;
+      _reader.read();
+    }
+    return true;
   }
 
-  void read(uint8_t *p, size_t n) {
-    for (size_t i = 0; i < n; i++) p[i] = readOne();
+  bool readByte(uint8_t &value) {
+    if (_reader.ended()) return false;
+    value = static_cast<uint8_t>(_reader.read());
+    return true;
+  }
+
+  bool readBytes(uint8_t *p, size_t n) {
+    for (size_t i = 0; i < n; i++) {
+      if (!readByte(p[i])) return false;
+    }
+    return true;
   }
 
   template <typename T>
-  void read(T &value) {
-    read(reinterpret_cast<uint8_t *>(&value), sizeof(value));
+  bool readBytes(T &value) {
+    return readBytes(reinterpret_cast<uint8_t *>(&value), sizeof(value));
   }
 
   template <typename T>
   T readInteger() {
     T value;
-    read(value);
+    readBytes(value);
     fixEndianess(value);
     return value;
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 4, T>::type readFloat() {
+  bool readInteger(T &value) {
+    if (!readBytes(value)) return false;
+    fixEndianess(value);
+    return true;
+  }
+
+  template <typename T>
+  MsgPackError readInteger(JsonVariant &variant) {
     T value;
-    read(value);
-    fixEndianess(value);
-    return value;
+    if (!readInteger(value)) return MsgPackError::IncompleteInput;
+    variant = value;
+    return MsgPackError::Ok;
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 8, T>::type readDouble() {
+  typename EnableIf<sizeof(T) == 4, MsgPackError>::type readFloat(
+      JsonVariant &variant) {
     T value;
-    read(value);
+    if (!readBytes(value)) return MsgPackError::IncompleteInput;
     fixEndianess(value);
-    return value;
+    variant = value;
+    return MsgPackError::Ok;
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 4, T>::type readDouble() {
+  typename EnableIf<sizeof(T) == 8, MsgPackError>::type readDouble(
+      JsonVariant &variant) {
+    T value;
+    if (!readBytes(value)) return MsgPackError::IncompleteInput;
+    fixEndianess(value);
+    variant = value;
+    return MsgPackError::Ok;
+  }
+
+  template <typename T>
+  typename EnableIf<sizeof(T) == 4, MsgPackError>::type readDouble(
+      JsonVariant &variant) {
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
     uint8_t *o = reinterpret_cast<uint8_t *>(&value);
-    read(i, 8);
+    if (!readBytes(i, 8)) return MsgPackError::IncompleteInput;
     doubleToFloat(i, o);
     fixEndianess(value);
-    return value;
+    variant = value;
+    return MsgPackError::Ok;
+  }
+
+  template <typename T>
+  MsgPackError readString(JsonVariant &variant) {
+    T size;
+    if (!readInteger(size)) return MsgPackError::IncompleteInput;
+    return readString(variant, size);
   }
 
   MsgPackError readString(JsonVariant &variant, size_t n) {
     typename RemoveReference<TWriter>::type::String str = _writer.startString();
-    for (; n; --n) str.append(static_cast<char>(readOne()));
+    for (; n; --n) {
+      uint8_t c;
+      if (!readBytes(c)) return MsgPackError::IncompleteInput;
+      str.append(static_cast<char>(c));
+    }
     const char *s = str.c_str();
     if (s == NULL) return MsgPackError::NoMemory;
     variant = s;
     return MsgPackError::Ok;
+  }
+
+  template <typename TSize>
+  MsgPackError readArray(JsonVariant &variant) {
+    TSize size;
+    if (!readInteger(size)) return MsgPackError::IncompleteInput;
+    return readArray(variant, size);
   }
 
   MsgPackError readArray(JsonVariant &variant, size_t n) {
@@ -225,6 +261,13 @@ class MsgPackDeserializer {
     }
     ++_nestingLimit;
     return MsgPackError::Ok;
+  }
+
+  template <typename TSize>
+  MsgPackError readObject(JsonVariant &variant) {
+    TSize size;
+    if (!readInteger(size)) return MsgPackError::IncompleteInput;
+    return readObject(variant, size);
   }
 
   MsgPackError readObject(JsonVariant &variant, size_t n) {
@@ -258,37 +301,11 @@ class MsgPackDeserializer {
   uint8_t _nestingLimit;
 };
 
-template <typename TJsonBuffer, typename TString, typename Enable = void>
-struct MsgPackDeserializerBuilder {
-  typedef typename StringTraits<TString>::Reader InputReader;
-  typedef MsgPackDeserializer<InputReader, TJsonBuffer &> TParser;
-
-  static TParser makeMsgPackDeserializer(TJsonBuffer *buffer, TString &json,
-                                         uint8_t nestingLimit) {
-    return TParser(buffer, InputReader(json), *buffer, nestingLimit);
-  }
-};
-
-template <typename TJsonBuffer, typename TChar>
-struct MsgPackDeserializerBuilder<
-    TJsonBuffer, TChar *, typename EnableIf<!IsConst<TChar>::value>::type> {
-  typedef typename StringTraits<TChar *>::Reader TReader;
-  typedef StringWriter<TChar> TWriter;
-  typedef MsgPackDeserializer<TReader, TWriter> TParser;
-
-  static TParser makeMsgPackDeserializer(TJsonBuffer *buffer, TChar *json,
-                                         uint8_t nestingLimit) {
-    return TParser(buffer, TReader(json), TWriter(json), nestingLimit);
-  }
-};
-
-template <typename TJsonBuffer, typename TString>
-inline typename MsgPackDeserializerBuilder<TJsonBuffer, TString>::TParser
-makeMsgPackDeserializer(TJsonBuffer *buffer, TString &json,
-                        uint8_t nestingLimit) {
-  return MsgPackDeserializerBuilder<
-      TJsonBuffer, TString>::makeMsgPackDeserializer(buffer, json,
-                                                     nestingLimit);
+template <typename TJsonBuffer, typename TReader, typename TWriter>
+MsgPackDeserializer<TReader, TWriter> makeMsgPackDeserializer(
+    TJsonBuffer *buffer, TReader reader, TWriter writer, uint8_t nestingLimit) {
+  return MsgPackDeserializer<TReader, TWriter>(buffer, reader, writer,
+                                               nestingLimit);
 }
 }  // namespace Internals
 }  // namespace ArduinoJson

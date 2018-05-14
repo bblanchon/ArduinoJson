@@ -10,6 +10,8 @@ add_executable(JsonDeserializerTests
 	deserializeJsonValue.cpp
 	JsonError.cpp
 	nestingLimit.cpp
+	std_istream.cpp
+	std_string.cpp
 )
 
 target_link_libraries(JsonDeserializerTests catch)

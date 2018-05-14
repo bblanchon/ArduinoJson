@@ -25,6 +25,7 @@ TEST_CASE("MsgPackError") {
     TEST_STRINGIFICATION(NotSupported);
     TEST_STRINGIFICATION(NoMemory);
     TEST_STRINGIFICATION(TooDeep);
+    TEST_STRINGIFICATION(IncompleteInput);
   }
 
   SECTION("as boolean") {
@@ -32,6 +33,7 @@ TEST_CASE("MsgPackError") {
     TEST_BOOLIFICATION(NotSupported, true);
     TEST_BOOLIFICATION(NoMemory, true);
     TEST_BOOLIFICATION(TooDeep, true);
+    TEST_BOOLIFICATION(IncompleteInput, true);
   }
 
   SECTION("ostream") {
