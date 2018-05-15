@@ -76,7 +76,7 @@ void setup() {
   DynamicJsonDocument doc(capacity);
 
   // Parse JSON object
-  JsonError error = deserializeJson(doc, client);
+  DeserializationError error = deserializeJson(doc, client);
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.c_str());

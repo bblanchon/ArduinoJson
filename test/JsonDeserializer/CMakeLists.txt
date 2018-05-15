@@ -8,7 +8,7 @@ add_executable(JsonDeserializerTests
 	deserializeJsonObject.cpp
 	deserializeJsonObjectStatic.cpp
 	deserializeJsonValue.cpp
-	JsonError.cpp
+	DeserializationError.cpp
 	nestingLimit.cpp
 	std_istream.cpp
 	std_string.cpp

@@ -27,9 +27,9 @@ TEST_CASE("DynamicJsonBuffer no memory") {
   //   char json[] = "{[]}";
   //   DynamicJsonDocument obj;
 
-  //   JsonError err = deserializeJson(obj, json);
+  //   DeserializationError err = deserializeJson(obj, json);
 
-  //   REQUIRE(err != JsonError::Ok);
+  //   REQUIRE(err != DeserializationError::Ok);
   // }
 
   SECTION("startString()") {

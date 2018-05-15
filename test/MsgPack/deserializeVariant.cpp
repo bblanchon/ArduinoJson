@@ -9,9 +9,9 @@ template <typename T, typename U>
 static void check(const char* input, U expected) {
   DynamicJsonDocument variant;
 
-  MsgPackError error = deserializeMsgPack(variant, input);
+  DeserializationError error = deserializeMsgPack(variant, input);
 
-  REQUIRE(error == MsgPackError::Ok);
+  REQUIRE(error == DeserializationError::Ok);
   REQUIRE(variant.is<T>());
   REQUIRE(variant.as<T>() == expected);
 }

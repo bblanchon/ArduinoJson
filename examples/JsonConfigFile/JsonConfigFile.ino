@@ -35,7 +35,7 @@ void loadConfiguration(const char *filename, Config &config) {
   StaticJsonDocument<512> doc;
 
   // Deserialize the JSON document
-  JsonError error = deserializeJson(doc, file);
+  DeserializationError error = deserializeJson(doc, file);
   if (error)
     Serial.println(F("Failed to read file, using default configuration"));
 

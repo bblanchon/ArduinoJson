@@ -4,21 +4,18 @@
 
 #pragma once
 
+#include "../DeserializationError.hpp"
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
 #include "../Reading/Reader.hpp"
 #include "../TypeTraits/IsConst.hpp"
 #include "../Writing/Writer.hpp"
-#include "./MsgPackError.hpp"
 #include "./endianess.hpp"
 #include "./ieee754.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-// Parse JSON string to create JsonArrays and JsonObjects
-// This internal class is not indended to be used directly.
-// Instead, use JsonBuffer.parseArray() or .parseObject()
 template <typename TReader, typename TWriter>
 class MsgPackDeserializer {
  public:
@@ -29,18 +26,18 @@ class MsgPackDeserializer {
         _writer(writer),
         _nestingLimit(nestingLimit) {}
 
-  MsgPackError parse(JsonVariant &variant) {
+  DeserializationError parse(JsonVariant &variant) {
     uint8_t code;
-    if (!readByte(code)) return MsgPackError::IncompleteInput;
+    if (!readByte(code)) return DeserializationError::IncompleteInput;
 
     if ((code & 0x80) == 0) {
       variant = code;
-      return MsgPackError::Ok;
+      return DeserializationError::Ok;
     }
 
     if ((code & 0xe0) == 0xe0) {
       variant = static_cast<int8_t>(code);
-      return MsgPackError::Ok;
+      return DeserializationError::Ok;
     }
 
     if ((code & 0xe0) == 0xa0) {
@@ -54,15 +51,15 @@ class MsgPackDeserializer {
     switch (code) {
       case 0xc0:
         variant = static_cast<char *>(0);
-        return MsgPackError::Ok;
+        return DeserializationError::Ok;
 
       case 0xc2:
         variant = false;
-        return MsgPackError::Ok;
+        return DeserializationError::Ok;
 
       case 0xc3:
         variant = true;
-        return MsgPackError::Ok;
+        return DeserializationError::Ok;
 
       case 0xcc:
         return readInteger<uint8_t>(variant);
@@ -94,7 +91,7 @@ class MsgPackDeserializer {
 #if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
         return readInteger<int64_t>(variant);
 #else
-        if (!skip(4)) return MsgPackError::IncompleteInput;
+        if (!skip(4)) return DeserializationError::IncompleteInput;
         return readInteger<int32_t>(variant);
 #endif
 
@@ -126,7 +123,7 @@ class MsgPackDeserializer {
         return readObject<uint32_t>(variant);
 
       default:
-        return MsgPackError::NotSupported;
+        return DeserializationError::NotSupported;
     }
   }
 
@@ -176,123 +173,123 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  MsgPackError readInteger(JsonVariant &variant) {
+  DeserializationError readInteger(JsonVariant &variant) {
     T value;
-    if (!readInteger(value)) return MsgPackError::IncompleteInput;
+    if (!readInteger(value)) return DeserializationError::IncompleteInput;
     variant = value;
-    return MsgPackError::Ok;
+    return DeserializationError::Ok;
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 4, MsgPackError>::type readFloat(
+  typename EnableIf<sizeof(T) == 4, DeserializationError>::type readFloat(
       JsonVariant &variant) {
     T value;
-    if (!readBytes(value)) return MsgPackError::IncompleteInput;
+    if (!readBytes(value)) return DeserializationError::IncompleteInput;
     fixEndianess(value);
     variant = value;
-    return MsgPackError::Ok;
+    return DeserializationError::Ok;
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 8, MsgPackError>::type readDouble(
+  typename EnableIf<sizeof(T) == 8, DeserializationError>::type readDouble(
       JsonVariant &variant) {
     T value;
-    if (!readBytes(value)) return MsgPackError::IncompleteInput;
+    if (!readBytes(value)) return DeserializationError::IncompleteInput;
     fixEndianess(value);
     variant = value;
-    return MsgPackError::Ok;
+    return DeserializationError::Ok;
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 4, MsgPackError>::type readDouble(
+  typename EnableIf<sizeof(T) == 4, DeserializationError>::type readDouble(
       JsonVariant &variant) {
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
     uint8_t *o = reinterpret_cast<uint8_t *>(&value);
-    if (!readBytes(i, 8)) return MsgPackError::IncompleteInput;
+    if (!readBytes(i, 8)) return DeserializationError::IncompleteInput;
     doubleToFloat(i, o);
     fixEndianess(value);
     variant = value;
-    return MsgPackError::Ok;
+    return DeserializationError::Ok;
   }
 
   template <typename T>
-  MsgPackError readString(JsonVariant &variant) {
+  DeserializationError readString(JsonVariant &variant) {
     T size;
-    if (!readInteger(size)) return MsgPackError::IncompleteInput;
+    if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readString(variant, size);
   }
 
-  MsgPackError readString(JsonVariant &variant, size_t n) {
+  DeserializationError readString(JsonVariant &variant, size_t n) {
     typename RemoveReference<TWriter>::type::String str = _writer.startString();
     for (; n; --n) {
       uint8_t c;
-      if (!readBytes(c)) return MsgPackError::IncompleteInput;
+      if (!readBytes(c)) return DeserializationError::IncompleteInput;
       str.append(static_cast<char>(c));
     }
     const char *s = str.c_str();
-    if (s == NULL) return MsgPackError::NoMemory;
+    if (s == NULL) return DeserializationError::NoMemory;
     variant = s;
-    return MsgPackError::Ok;
+    return DeserializationError::Ok;
   }
 
   template <typename TSize>
-  MsgPackError readArray(JsonVariant &variant) {
+  DeserializationError readArray(JsonVariant &variant) {
     TSize size;
-    if (!readInteger(size)) return MsgPackError::IncompleteInput;
+    if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readArray(variant, size);
   }
 
-  MsgPackError readArray(JsonVariant &variant, size_t n) {
+  DeserializationError readArray(JsonVariant &variant, size_t n) {
     JsonArray *array = new (_buffer) JsonArray(_buffer);
-    if (!array) return MsgPackError::NoMemory;
+    if (!array) return DeserializationError::NoMemory;
     variant = array;
     return readArray(*array, n);
   }
 
-  MsgPackError readArray(JsonArray &array, size_t n) {
-    if (_nestingLimit == 0) return MsgPackError::TooDeep;
+  DeserializationError readArray(JsonArray &array, size_t n) {
+    if (_nestingLimit == 0) return DeserializationError::TooDeep;
     --_nestingLimit;
     for (; n; --n) {
       JsonVariant variant;
-      MsgPackError err = parse(variant);
+      DeserializationError err = parse(variant);
       if (err) return err;
-      if (!array.add(variant)) return MsgPackError::NoMemory;
+      if (!array.add(variant)) return DeserializationError::NoMemory;
     }
     ++_nestingLimit;
-    return MsgPackError::Ok;
+    return DeserializationError::Ok;
   }
 
   template <typename TSize>
-  MsgPackError readObject(JsonVariant &variant) {
+  DeserializationError readObject(JsonVariant &variant) {
     TSize size;
-    if (!readInteger(size)) return MsgPackError::IncompleteInput;
+    if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readObject(variant, size);
   }
 
-  MsgPackError readObject(JsonVariant &variant, size_t n) {
+  DeserializationError readObject(JsonVariant &variant, size_t n) {
     JsonObject *object = new (_buffer) JsonObject(_buffer);
-    if (!object) return MsgPackError::NoMemory;
+    if (!object) return DeserializationError::NoMemory;
     variant = object;
     return readObject(*object, n);
   }
 
-  MsgPackError readObject(JsonObject &object, size_t n) {
-    if (_nestingLimit == 0) return MsgPackError::TooDeep;
+  DeserializationError readObject(JsonObject &object, size_t n) {
+    if (_nestingLimit == 0) return DeserializationError::TooDeep;
     --_nestingLimit;
     for (; n; --n) {
-      MsgPackError err;
+      DeserializationError err;
       JsonVariant variant;
       err = parse(variant);
       if (err) return err;
       const char *key = variant.as<char *>();
-      if (!key) return MsgPackError::NotSupported;
+      if (!key) return DeserializationError::NotSupported;
       err = parse(variant);
       if (err) return err;
-      if (!object.set(key, variant)) return MsgPackError::NoMemory;
+      if (!object.set(key, variant)) return DeserializationError::NoMemory;
     }
     ++_nestingLimit;
-    return MsgPackError::Ok;
+    return DeserializationError::Ok;
   }
 
   JsonBuffer *_buffer;

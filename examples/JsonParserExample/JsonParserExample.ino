@@ -32,7 +32,7 @@ void setup() {
       "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
   // Deserialize the JSON document
-  JsonError error = deserializeJson(doc, json);
+  DeserializationError error = deserializeJson(doc, json);
 
   // Test if parsing succeeds.
   if (error) {

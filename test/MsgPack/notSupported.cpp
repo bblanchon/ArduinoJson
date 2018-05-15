@@ -8,9 +8,9 @@
 static void checkNotSupported(const char* input) {
   DynamicJsonDocument doc;
 
-  MsgPackError error = deserializeMsgPack(doc, input);
+  DeserializationError error = deserializeMsgPack(doc, input);
 
-  REQUIRE(error == MsgPackError::NotSupported);
+  REQUIRE(error == DeserializationError::NotSupported);
 }
 
 TEST_CASE("deserializeMsgPack() return NotSupported") {

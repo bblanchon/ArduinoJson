@@ -37,7 +37,7 @@ HEAD
 > 
 > ```c++
 > DynamicJsonDocument doc;
-> JsonError error = deserializeJson(doc, json);
+> DeserializationError error = deserializeJson(doc, json);
 > if (error) {
 > 
 > }

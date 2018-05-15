@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../../JsonError.hpp"
+#include "../../DeserializationError.hpp"
 #include "../../JsonVariant.hpp"
 #include "../../Memory/JsonBuffer.hpp"
 #include "../../Reading/Reader.hpp"
@@ -24,8 +24,8 @@ class JsonDeserializer {
         _writer(writer),
         _nestingLimit(nestingLimit),
         _loaded(false) {}
-  JsonError parse(JsonVariant &variant) {
-    JsonError err = skipSpacesAndComments();
+  DeserializationError parse(JsonVariant &variant) {
+    DeserializationError err = skipSpacesAndComments();
     if (err) return err;
 
     switch (current()) {
@@ -64,22 +64,22 @@ class JsonDeserializer {
     return true;
   }
 
-  JsonError parseArray(JsonVariant &variant) {
-    if (_nestingLimit == 0) return JsonError::TooDeep;
+  DeserializationError parseArray(JsonVariant &variant) {
+    if (_nestingLimit == 0) return DeserializationError::TooDeep;
 
     JsonArray *array = new (_buffer) JsonArray(_buffer);
-    if (!array) return JsonError::NoMemory;
+    if (!array) return DeserializationError::NoMemory;
     variant = array;
 
     // Check opening braket
-    if (!eat('[')) return JsonError::InvalidInput;
+    if (!eat('[')) return DeserializationError::InvalidInput;
 
     // Skip spaces
-    JsonError err = skipSpacesAndComments();
+    DeserializationError err = skipSpacesAndComments();
     if (err) return err;
 
     // Empty array?
-    if (eat(']')) return JsonError::Ok;
+    if (eat(']')) return DeserializationError::Ok;
 
     // Read each value
     for (;;) {
@@ -89,34 +89,34 @@ class JsonDeserializer {
       err = parse(value);
       _nestingLimit++;
       if (err) return err;
-      if (!array->add(value)) return JsonError::NoMemory;
+      if (!array->add(value)) return DeserializationError::NoMemory;
 
       // 2 - Skip spaces
       err = skipSpacesAndComments();
       if (err) return err;
 
       // 3 - More values?
-      if (eat(']')) return JsonError::Ok;
-      if (!eat(',')) return JsonError::InvalidInput;
+      if (eat(']')) return DeserializationError::Ok;
+      if (!eat(',')) return DeserializationError::InvalidInput;
     }
   }
 
-  JsonError parseObject(JsonVariant &variant) {
-    if (_nestingLimit == 0) return JsonError::TooDeep;
+  DeserializationError parseObject(JsonVariant &variant) {
+    if (_nestingLimit == 0) return DeserializationError::TooDeep;
 
     JsonObject *object = new (_buffer) JsonObject(_buffer);
-    if (!object) return JsonError::NoMemory;
+    if (!object) return DeserializationError::NoMemory;
     variant = object;
 
     // Check opening brace
-    if (!eat('{')) return JsonError::InvalidInput;
+    if (!eat('{')) return DeserializationError::InvalidInput;
 
     // Skip spaces
-    JsonError err = skipSpacesAndComments();
+    DeserializationError err = skipSpacesAndComments();
     if (err) return err;
 
     // Empty object?
-    if (eat('}')) return JsonError::Ok;
+    if (eat('}')) return DeserializationError::Ok;
 
     // Read each key value pair
     for (;;) {
@@ -130,7 +130,7 @@ class JsonDeserializer {
       if (err) return err;
 
       // Colon
-      if (!eat(':')) return JsonError::InvalidInput;
+      if (!eat(':')) return DeserializationError::InvalidInput;
 
       // Parse value
       JsonVariant value;
@@ -138,15 +138,15 @@ class JsonDeserializer {
       err = parse(value);
       _nestingLimit++;
       if (err) return err;
-      if (!object->set(key, value)) return JsonError::NoMemory;
+      if (!object->set(key, value)) return DeserializationError::NoMemory;
 
       // Skip spaces
       err = skipSpacesAndComments();
       if (err) return err;
 
       // More keys/values?
-      if (eat('}')) return JsonError::Ok;
-      if (!eat(',')) return JsonError::InvalidInput;
+      if (eat('}')) return DeserializationError::Ok;
+      if (!eat(',')) return DeserializationError::InvalidInput;
 
       // Skip spaces
       err = skipSpacesAndComments();
@@ -154,24 +154,24 @@ class JsonDeserializer {
     }
   }
 
-  JsonError parseValue(JsonVariant &variant) {
+  DeserializationError parseValue(JsonVariant &variant) {
     bool hasQuotes = isQuote(current());
     const char *value;
-    JsonError error = parseString(&value);
+    DeserializationError error = parseString(&value);
     if (error) return error;
     if (hasQuotes) {
       variant = value;
     } else {
       variant = RawJson(value);
     }
-    return JsonError::Ok;
+    return DeserializationError::Ok;
   }
 
-  JsonError parseString(const char **result) {
+  DeserializationError parseString(const char **result) {
     typename RemoveReference<TWriter>::type::String str = _writer.startString();
 
     char c = current();
-    if (c == '\0') return JsonError::IncompleteInput;
+    if (c == '\0') return DeserializationError::IncompleteInput;
 
     if (isQuote(c)) {  // quotes
       move();
@@ -181,14 +181,15 @@ class JsonDeserializer {
         move();
         if (c == stopChar) break;
 
-        if (c == '\0') return JsonError::IncompleteInput;
+        if (c == '\0') return DeserializationError::IncompleteInput;
 
         if (c == '\\') {
           c = current();
-          if (c == 0) return JsonError::IncompleteInput;
+          if (c == '\0') return DeserializationError::IncompleteInput;
+          if (c == 'u') return DeserializationError::NotSupported;
           // replace char
           c = Encoding::unescapeChar(c);
-          if (c == '\0') return JsonError::InvalidInput;
+          if (c == '\0') return DeserializationError::InvalidInput;
           move();
         }
 
@@ -201,12 +202,12 @@ class JsonDeserializer {
         c = current();
       } while (canBeInNonQuotedString(c));
     } else {
-      return JsonError::InvalidInput;
+      return DeserializationError::InvalidInput;
     }
 
     *result = str.c_str();
-    if (*result == NULL) return JsonError::NoMemory;
-    return JsonError::Ok;
+    if (*result == NULL) return DeserializationError::NoMemory;
+    return DeserializationError::Ok;
   }
 
   static inline bool isBetween(char c, char min, char max) {
@@ -222,12 +223,12 @@ class JsonDeserializer {
     return c == '\'' || c == '\"';
   }
 
-  JsonError skipSpacesAndComments() {
+  DeserializationError skipSpacesAndComments() {
     for (;;) {
       switch (current()) {
         // end of string
         case '\0':
-          return JsonError::IncompleteInput;
+          return DeserializationError::IncompleteInput;
 
         // spaces
         case ' ':
@@ -247,7 +248,7 @@ class JsonDeserializer {
               bool wasStar = false;
               for (;;) {
                 char c = current();
-                if (c == '\0') return JsonError::IncompleteInput;
+                if (c == '\0') return DeserializationError::IncompleteInput;
                 if (c == '/' && wasStar) {
                   move();
                   break;
@@ -264,19 +265,19 @@ class JsonDeserializer {
               for (;;) {
                 move();
                 char c = current();
-                if (c == '\0') return JsonError::IncompleteInput;
+                if (c == '\0') return DeserializationError::IncompleteInput;
                 if (c == '\n') break;
               }
               break;
 
             // not a comment, just a '/'
             default:
-              return JsonError::InvalidInput;
+              return DeserializationError::InvalidInput;
           }
           break;
 
         default:
-          return JsonError::Ok;
+          return DeserializationError::Ok;
       }
     }
   }

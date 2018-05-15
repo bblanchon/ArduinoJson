@@ -5,8 +5,9 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-#define SHOULD_WORK(expression) REQUIRE(JsonError::Ok == expression);
-#define SHOULD_FAIL(expression) REQUIRE(JsonError::TooDeep == expression);
+#define SHOULD_WORK(expression) REQUIRE(DeserializationError::Ok == expression);
+#define SHOULD_FAIL(expression) \
+  REQUIRE(DeserializationError::TooDeep == expression);
 
 TEST_CASE("JsonDeserializer nestingLimit") {
   DynamicJsonDocument doc;

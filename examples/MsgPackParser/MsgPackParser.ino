@@ -45,7 +45,7 @@ void setup() {
   // It's a reference to the JsonObject, the actual bytes are inside the
   // JsonBuffer with all the other nodes of the object tree.
   // Memory is freed when jsonBuffer goes out of scope.
-  MsgPackError error = deserializeMsgPack(doc, input);
+  DeserializationError error = deserializeMsgPack(doc, input);
 
   // Test if parsing succeeds.
   if (error) {

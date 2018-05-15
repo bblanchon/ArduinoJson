@@ -23,9 +23,9 @@ TEST_CASE("Variable Length Array") {
     strcpy(vla, "{\"a\":42}");
 
     StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
-    JsonError err = deserializeJson(doc, vla);
+    DeserializationError err = deserializeJson(doc, vla);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("deserializeMsgPack()") {
@@ -34,9 +34,9 @@ TEST_CASE("Variable Length Array") {
     memcpy(vla, "\xDE\x00\x01\xA5Hello\xA5world", 15);
 
     StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
-    MsgPackError err = deserializeMsgPack(doc, vla);
+    DeserializationError err = deserializeMsgPack(doc, vla);
 
-    REQUIRE(err == MsgPackError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("JsonVariant") {

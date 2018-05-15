@@ -10,25 +10,33 @@
 
 namespace ArduinoJson {
 
-class JsonError {
+class DeserializationError {
  public:
-  enum Code { Ok, TooDeep, NoMemory, InvalidInput, IncompleteInput };
+  enum Code {
+    Ok,
+    IncompleteInput,
+    InvalidInput,
+    NoMemory,
+    NotSupported,
+    TooDeep
+  };
 
-  JsonError(Code code) : _code(code) {}
+  DeserializationError() {}
+  DeserializationError(Code code) : _code(code) {}
 
-  friend bool operator==(const JsonError& err, Code code) {
+  friend bool operator==(const DeserializationError& err, Code code) {
     return err._code == code;
   }
 
-  friend bool operator==(Code code, const JsonError& err) {
+  friend bool operator==(Code code, const DeserializationError& err) {
     return err._code == code;
   }
 
-  friend bool operator!=(const JsonError& err, Code code) {
+  friend bool operator!=(const DeserializationError& err, Code code) {
     return err._code != code;
   }
 
-  friend bool operator!=(Code code, const JsonError& err) {
+  friend bool operator!=(Code code, const DeserializationError& err) {
     return err._code != code;
   }
 
@@ -48,6 +56,8 @@ class JsonError {
         return "InvalidInput";
       case IncompleteInput:
         return "IncompleteInput";
+      case NotSupported:
+        return "NotSupported";
       default:
         return "???";
     }
@@ -58,13 +68,14 @@ class JsonError {
 };
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream& operator<<(std::ostream& s, const JsonError& e) {
+inline std::ostream& operator<<(std::ostream& s,
+                                const DeserializationError& e) {
   s << e.c_str();
   return s;
 }
 
-inline std::ostream& operator<<(std::ostream& s, JsonError::Code c) {
-  s << JsonError(c).c_str();
+inline std::ostream& operator<<(std::ostream& s, DeserializationError::Code c) {
+  s << DeserializationError(c).c_str();
   return s;
 }
 #endif

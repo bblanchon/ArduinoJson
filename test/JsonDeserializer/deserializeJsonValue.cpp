@@ -11,71 +11,78 @@ TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
   DynamicJsonDocument doc;
 
   SECTION("null char*") {
-    JsonError err = deserializeJson(doc, static_cast<char*>(0));
+    DeserializationError err = deserializeJson(doc, static_cast<char*>(0));
 
-    REQUIRE(err != JsonError::Ok);
+    REQUIRE(err != DeserializationError::Ok);
   }
 
   SECTION("null const char*") {
-    JsonError err = deserializeJson(doc, static_cast<const char*>(0));
+    DeserializationError err =
+        deserializeJson(doc, static_cast<const char*>(0));
 
-    REQUIRE(err != JsonError::Ok);
+    REQUIRE(err != DeserializationError::Ok);
   }
 
   SECTION("Integer") {
-    JsonError err = deserializeJson(doc, "-42");
+    DeserializationError err = deserializeJson(doc, "-42");
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<int>());
     REQUIRE_FALSE(doc.is<bool>());
     REQUIRE(doc.as<int>() == -42);
   }
 
   SECTION("Double") {
-    JsonError err = deserializeJson(doc, "-1.23e+4");
+    DeserializationError err = deserializeJson(doc, "-1.23e+4");
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE_FALSE(doc.is<int>());
     REQUIRE(doc.is<double>());
     REQUIRE(doc.as<double>() == Approx(-1.23e+4));
   }
 
   SECTION("Double quoted string") {
-    JsonError err = deserializeJson(doc, "\"hello world\"");
+    DeserializationError err = deserializeJson(doc, "\"hello world\"");
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<char*>());
     REQUIRE_THAT(doc.as<char*>(), Equals("hello world"));
   }
 
   SECTION("Single quoted string") {
-    JsonError err = deserializeJson(doc, "\'hello world\'");
+    DeserializationError err = deserializeJson(doc, "\'hello world\'");
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<char*>());
     REQUIRE_THAT(doc.as<char*>(), Equals("hello world"));
   }
 
   SECTION("Escape sequences") {
-    JsonError err =
+    DeserializationError err =
         deserializeJson(doc, "\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"");
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "1\"2\\3/4\b5\f6\n7\r8\t9");
   }
 
-  SECTION("True") {
-    JsonError err = deserializeJson(doc, "true");
+  SECTION("UTF-16 surrogate") {
+    DeserializationError err = deserializeJson(doc, "\"\\uD834\\uDD1E\"");
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::NotSupported);
+  }
+
+  SECTION("True") {
+    DeserializationError err = deserializeJson(doc, "true");
+
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<bool>());
     REQUIRE(doc.as<bool>() == true);
   }
 
   SECTION("False") {
-    JsonError err = deserializeJson(doc, "false");
+    DeserializationError err = deserializeJson(doc, "false");
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<bool>());
     REQUIRE(doc.as<bool>() == false);
   }
@@ -89,84 +96,84 @@ TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
   }
 
   SECTION("Empty input") {
-    JsonError err = deserializeJson(doc, "");
+    DeserializationError err = deserializeJson(doc, "");
 
-    REQUIRE(err == JsonError::IncompleteInput);
+    REQUIRE(err == DeserializationError::IncompleteInput);
   }
 
   SECTION("Just a trailing comment") {
-    JsonError err = deserializeJson(doc, "// comment");
+    DeserializationError err = deserializeJson(doc, "// comment");
 
-    REQUIRE(err == JsonError::IncompleteInput);
+    REQUIRE(err == DeserializationError::IncompleteInput);
   }
 
   SECTION("Just a block comment") {
-    JsonError err = deserializeJson(doc, "/*comment*/");
+    DeserializationError err = deserializeJson(doc, "/*comment*/");
 
-    REQUIRE(err == JsonError::IncompleteInput);
+    REQUIRE(err == DeserializationError::IncompleteInput);
   }
 
   SECTION("Just a slash") {
-    JsonError err = deserializeJson(doc, "/");
+    DeserializationError err = deserializeJson(doc, "/");
 
-    REQUIRE(err == JsonError::InvalidInput);
+    REQUIRE(err == DeserializationError::InvalidInput);
   }
 
   SECTION("Garbage") {
-    JsonError err = deserializeJson(doc, "%*$£¤");
+    DeserializationError err = deserializeJson(doc, "%*$£¤");
 
-    REQUIRE(err == JsonError::InvalidInput);
+    REQUIRE(err == DeserializationError::InvalidInput);
   }
 
   SECTION("Premature null-terminator") {
     SECTION("In escape sequence") {
-      JsonError err = deserializeJson(doc, "\"\\");
+      DeserializationError err = deserializeJson(doc, "\"\\");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("In block comment") {
-      JsonError err = deserializeJson(doc, "/* comment");
+      DeserializationError err = deserializeJson(doc, "/* comment");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("In double quoted string") {
-      JsonError err = deserializeJson(doc, "\"hello");
+      DeserializationError err = deserializeJson(doc, "\"hello");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("In single quoted string") {
-      JsonError err = deserializeJson(doc, "'hello");
+      DeserializationError err = deserializeJson(doc, "'hello");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
   SECTION("Premature end of input") {
     SECTION("In escape sequence") {
-      JsonError err = deserializeJson(doc, "\"\\n\"", 2);
+      DeserializationError err = deserializeJson(doc, "\"\\n\"", 2);
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("In block comment") {
-      JsonError err = deserializeJson(doc, "/* comment */", 10);
+      DeserializationError err = deserializeJson(doc, "/* comment */", 10);
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("In double quoted string") {
-      JsonError err = deserializeJson(doc, "\"hello\"", 6);
+      DeserializationError err = deserializeJson(doc, "\"hello\"", 6);
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("In single quoted string") {
-      JsonError err = deserializeJson(doc, "'hello'", 6);
+      DeserializationError err = deserializeJson(doc, "'hello'", 6);
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 }

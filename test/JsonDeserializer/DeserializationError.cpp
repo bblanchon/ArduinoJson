@@ -5,27 +5,28 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-void testStringification(JsonError error, std::string expected) {
+void testStringification(DeserializationError error, std::string expected) {
   REQUIRE(error.c_str() == expected);
 }
 
-void testBoolification(JsonError error, bool expected) {
+void testBoolification(DeserializationError error, bool expected) {
   CHECK(error == expected);
 }
 
 #define TEST_STRINGIFICATION(symbol) \
-  testStringification(JsonError::symbol, #symbol)
+  testStringification(DeserializationError::symbol, #symbol)
 
 #define TEST_BOOLIFICATION(symbol, expected) \
-  testBoolification(JsonError::symbol, expected)
+  testBoolification(DeserializationError::symbol, expected)
 
-TEST_CASE("JsonError") {
+TEST_CASE("DeserializationError") {
   SECTION("c_str()") {
     TEST_STRINGIFICATION(Ok);
     TEST_STRINGIFICATION(TooDeep);
     TEST_STRINGIFICATION(NoMemory);
     TEST_STRINGIFICATION(InvalidInput);
     TEST_STRINGIFICATION(IncompleteInput);
+    TEST_STRINGIFICATION(NotSupported);
   }
 
   SECTION("as boolean") {
@@ -34,11 +35,12 @@ TEST_CASE("JsonError") {
     TEST_BOOLIFICATION(NoMemory, true);
     TEST_BOOLIFICATION(InvalidInput, true);
     TEST_BOOLIFICATION(IncompleteInput, true);
+    TEST_BOOLIFICATION(NotSupported, true);
   }
 
   SECTION("ostream") {
     std::stringstream s;
-    s << JsonError::InvalidInput;
+    s << DeserializationError::InvalidInput;
     REQUIRE(s.str() == "InvalidInput");
   }
 }

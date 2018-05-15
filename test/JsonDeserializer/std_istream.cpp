@@ -12,10 +12,10 @@ TEST_CASE("deserializeJson(std::istream&)") {
   SECTION("array") {
     std::istringstream json(" [ 42 /* comment */ ] ");
 
-    JsonError err = deserializeJson(doc, json);
+    DeserializationError err = deserializeJson(doc, json);
     JsonArray& arr = doc.as<JsonArray>();
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(1 == arr.size());
     REQUIRE(42 == arr[0]);
   }
@@ -23,10 +23,10 @@ TEST_CASE("deserializeJson(std::istream&)") {
   SECTION("object") {
     std::istringstream json(" { hello : world // comment\n }");
 
-    JsonError err = deserializeJson(doc, json);
+    DeserializationError err = deserializeJson(doc, json);
     JsonObject& obj = doc.as<JsonObject>();
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(1 == obj.size());
     REQUIRE(std::string("world") == obj["hello"]);
   }

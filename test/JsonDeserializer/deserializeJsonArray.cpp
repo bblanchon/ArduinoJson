@@ -9,36 +9,36 @@ TEST_CASE("deserialize JSON array") {
   DynamicJsonDocument doc;
 
   SECTION("An empty array") {
-    JsonError err = deserializeJson(doc, "[]");
+    DeserializationError err = deserializeJson(doc, "[]");
     JsonArray& arr = doc.as<JsonArray>();
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(0 == arr.size());
   }
 
   SECTION("Spaces") {
     SECTION("Before the opening bracket") {
-      JsonError err = deserializeJson(doc, "  []");
+      DeserializationError err = deserializeJson(doc, "  []");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(0 == arr.size());
     }
 
     SECTION("Before first value") {
-      JsonError err = deserializeJson(doc, "[ \t\r\n42]");
+      DeserializationError err = deserializeJson(doc, "[ \t\r\n42]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == 42);
     }
 
     SECTION("After first value") {
-      JsonError err = deserializeJson(doc, "[42 \t\r\n]");
+      DeserializationError err = deserializeJson(doc, "[42 \t\r\n]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == 42);
     }
@@ -46,58 +46,58 @@ TEST_CASE("deserialize JSON array") {
 
   SECTION("Values types") {
     SECTION("On integer") {
-      JsonError err = deserializeJson(doc, "[42]");
+      DeserializationError err = deserializeJson(doc, "[42]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == 42);
     }
 
     SECTION("Two integers") {
-      JsonError err = deserializeJson(doc, "[42,84]");
+      DeserializationError err = deserializeJson(doc, "[42,84]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == 42);
       REQUIRE(arr[1] == 84);
     }
 
     SECTION("Double") {
-      JsonError err = deserializeJson(doc, "[4.2,1e2]");
+      DeserializationError err = deserializeJson(doc, "[4.2,1e2]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == 4.2);
       REQUIRE(arr[1] == 1e2);
     }
 
     SECTION("Unsigned long") {
-      JsonError err = deserializeJson(doc, "[4294967295]");
+      DeserializationError err = deserializeJson(doc, "[4294967295]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == 4294967295UL);
     }
 
     SECTION("Boolean") {
-      JsonError err = deserializeJson(doc, "[true,false]");
+      DeserializationError err = deserializeJson(doc, "[true,false]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == true);
       REQUIRE(arr[1] == false);
     }
 
     SECTION("Null") {
-      JsonError err = deserializeJson(doc, "[null,null]");
+      DeserializationError err = deserializeJson(doc, "[null,null]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0].as<char*>() == 0);
       REQUIRE(arr[1].as<char*>() == 0);
@@ -106,232 +106,241 @@ TEST_CASE("deserialize JSON array") {
 
   SECTION("Quotes") {
     SECTION("Double quotes") {
-      JsonError err = deserializeJson(doc, "[ \"hello\" , \"world\" ]");
+      DeserializationError err =
+          deserializeJson(doc, "[ \"hello\" , \"world\" ]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "hello");
       REQUIRE(arr[1] == "world");
     }
 
     SECTION("Single quotes") {
-      JsonError err = deserializeJson(doc, "[ 'hello' , 'world' ]");
+      DeserializationError err = deserializeJson(doc, "[ 'hello' , 'world' ]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "hello");
       REQUIRE(arr[1] == "world");
     }
 
     SECTION("No quotes") {
-      JsonError err = deserializeJson(doc, "[ hello , world ]");
+      DeserializationError err = deserializeJson(doc, "[ hello , world ]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "hello");
       REQUIRE(arr[1] == "world");
     }
 
     SECTION("Double quotes (empty strings)") {
-      JsonError err = deserializeJson(doc, "[\"\",\"\"]");
+      DeserializationError err = deserializeJson(doc, "[\"\",\"\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "");
       REQUIRE(arr[1] == "");
     }
 
     SECTION("Single quotes (empty strings)") {
-      JsonError err = deserializeJson(doc, "[\'\',\'\']");
+      DeserializationError err = deserializeJson(doc, "[\'\',\'\']");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "");
       REQUIRE(arr[1] == "");
     }
 
     SECTION("No quotes (empty strings)") {
-      JsonError err = deserializeJson(doc, "[,]");
+      DeserializationError err = deserializeJson(doc, "[,]");
 
-      REQUIRE(err == JsonError::InvalidInput);
+      REQUIRE(err == DeserializationError::InvalidInput);
     }
 
     SECTION("Closing single quotes missing") {
-      JsonError err = deserializeJson(doc, "[\"]");
+      DeserializationError err = deserializeJson(doc, "[\"]");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("Closing double quotes missing") {
-      JsonError err = deserializeJson(doc, "[\']");
+      DeserializationError err = deserializeJson(doc, "[\']");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
   SECTION("Block comments") {
     SECTION("Before opening bracket") {
-      JsonError err = deserializeJson(doc, "/*COMMENT*/  [\"hello\"]");
+      DeserializationError err =
+          deserializeJson(doc, "/*COMMENT*/  [\"hello\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("After opening bracket") {
-      JsonError err = deserializeJson(doc, "[/*COMMENT*/ \"hello\"]");
+      DeserializationError err =
+          deserializeJson(doc, "[/*COMMENT*/ \"hello\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("Before closing bracket") {
-      JsonError err = deserializeJson(doc, "[\"hello\"/*COMMENT*/]");
+      DeserializationError err = deserializeJson(doc, "[\"hello\"/*COMMENT*/]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("After closing bracket") {
-      JsonError err = deserializeJson(doc, "[\"hello\"]/*COMMENT*/");
+      DeserializationError err = deserializeJson(doc, "[\"hello\"]/*COMMENT*/");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("Before comma") {
-      JsonError err = deserializeJson(doc, "[\"hello\"/*COMMENT*/,\"world\"]");
+      DeserializationError err =
+          deserializeJson(doc, "[\"hello\"/*COMMENT*/,\"world\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "hello");
       REQUIRE(arr[1] == "world");
     }
 
     SECTION("After comma") {
-      JsonError err = deserializeJson(doc, "[\"hello\",/*COMMENT*/ \"world\"]");
+      DeserializationError err =
+          deserializeJson(doc, "[\"hello\",/*COMMENT*/ \"world\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "hello");
       REQUIRE(arr[1] == "world");
     }
 
     SECTION("/*/") {
-      JsonError err = deserializeJson(doc, "[/*/\n]");
-      REQUIRE(err == JsonError::IncompleteInput);
+      DeserializationError err = deserializeJson(doc, "[/*/\n]");
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("Unfinished comment") {
-      JsonError err = deserializeJson(doc, "[/*COMMENT]");
-      REQUIRE(err == JsonError::IncompleteInput);
+      DeserializationError err = deserializeJson(doc, "[/*COMMENT]");
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("Final slash missing") {
-      JsonError err = deserializeJson(doc, "[/*COMMENT*]");
-      REQUIRE(err == JsonError::IncompleteInput);
+      DeserializationError err = deserializeJson(doc, "[/*COMMENT*]");
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
   SECTION("Trailing comments") {
     SECTION("Before opening bracket") {
-      JsonError err = deserializeJson(doc, "//COMMENT\n\t[\"hello\"]");
+      DeserializationError err =
+          deserializeJson(doc, "//COMMENT\n\t[\"hello\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("After opening bracket") {
-      JsonError err = deserializeJson(doc, "[//COMMENT\n\"hello\"]");
+      DeserializationError err = deserializeJson(doc, "[//COMMENT\n\"hello\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("Before closing bracket") {
-      JsonError err = deserializeJson(doc, "[\"hello\"//COMMENT\r\n]");
+      DeserializationError err =
+          deserializeJson(doc, "[\"hello\"//COMMENT\r\n]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("After closing bracket") {
-      JsonError err = deserializeJson(doc, "[\"hello\"]//COMMENT\n");
+      DeserializationError err = deserializeJson(doc, "[\"hello\"]//COMMENT\n");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(1 == arr.size());
       REQUIRE(arr[0] == "hello");
     }
 
     SECTION("Before comma") {
-      JsonError err = deserializeJson(doc, "[\"hello\"//COMMENT\n,\"world\"]");
+      DeserializationError err =
+          deserializeJson(doc, "[\"hello\"//COMMENT\n,\"world\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "hello");
       REQUIRE(arr[1] == "world");
     }
 
     SECTION("After comma") {
-      JsonError err = deserializeJson(doc, "[\"hello\",//COMMENT\n\"world\"]");
+      DeserializationError err =
+          deserializeJson(doc, "[\"hello\",//COMMENT\n\"world\"]");
       JsonArray& arr = doc.as<JsonArray>();
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0] == "hello");
       REQUIRE(arr[1] == "world");
     }
 
     SECTION("Invalid comment") {
-      JsonError err = deserializeJson(doc, "[/COMMENT\n]");
-      REQUIRE(err == JsonError::InvalidInput);
+      DeserializationError err = deserializeJson(doc, "[/COMMENT\n]");
+      REQUIRE(err == DeserializationError::InvalidInput);
     }
 
     SECTION("End document with comment") {
-      JsonError err = deserializeJson(doc, "[//COMMENT");
-      REQUIRE(err == JsonError::IncompleteInput);
+      DeserializationError err = deserializeJson(doc, "[//COMMENT");
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
   SECTION("Premature null-terminator") {
     SECTION("After opening bracket") {
-      JsonError err = deserializeJson(doc, "[");
+      DeserializationError err = deserializeJson(doc, "[");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("After value") {
-      JsonError err = deserializeJson(doc, "[1");
+      DeserializationError err = deserializeJson(doc, "[1");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("After comma") {
-      JsonError err = deserializeJson(doc, "[1,");
+      DeserializationError err = deserializeJson(doc, "[1,");
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
@@ -339,21 +348,21 @@ TEST_CASE("deserialize JSON array") {
     const char* input = "[1,2]";
 
     SECTION("After opening bracket") {
-      JsonError err = deserializeJson(doc, input, 1);
+      DeserializationError err = deserializeJson(doc, input, 1);
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("After value") {
-      JsonError err = deserializeJson(doc, input, 2);
+      DeserializationError err = deserializeJson(doc, input, 2);
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
     SECTION("After comma") {
-      JsonError err = deserializeJson(doc, input, 3);
+      DeserializationError err = deserializeJson(doc, input, 3);
 
-      REQUIRE(err == JsonError::IncompleteInput);
+      REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
@@ -362,14 +371,14 @@ TEST_CASE("deserialize JSON array") {
       char jsonString[] =
           " [ { \"a\" : 1 , \"b\" : 2 } , { \"c\" : 3 , \"d\" : 4 } ] ";
 
-      JsonError err = deserializeJson(doc, jsonString);
+      DeserializationError err = deserializeJson(doc, jsonString);
       JsonArray& arr = doc.as<JsonArray>();
 
       JsonObject& object1 = arr[0];
       const JsonObject& object2 = arr[1];
       JsonObject& object3 = arr[2];
 
-      REQUIRE(err == JsonError::Ok);
+      REQUIRE(err == DeserializationError::Ok);
 
       REQUIRE(true == object1.success());
       REQUIRE(true == object2.success());

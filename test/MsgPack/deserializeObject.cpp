@@ -12,10 +12,10 @@ TEST_CASE("deserialize MsgPack object") {
     SECTION("empty") {
       const char* input = "\x80";
 
-      MsgPackError error = deserializeMsgPack(doc, input);
+      DeserializationError error = deserializeMsgPack(doc, input);
       JsonObject& obj = doc.as<JsonObject>();
 
-      REQUIRE(error == MsgPackError::Ok);
+      REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 0);
     }
@@ -23,10 +23,10 @@ TEST_CASE("deserialize MsgPack object") {
     SECTION("two integers") {
       const char* input = "\x82\xA3one\x01\xA3two\x02";
 
-      MsgPackError error = deserializeMsgPack(doc, input);
+      DeserializationError error = deserializeMsgPack(doc, input);
       JsonObject& obj = doc.as<JsonObject>();
 
-      REQUIRE(error == MsgPackError::Ok);
+      REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["one"] == 1);
@@ -38,10 +38,10 @@ TEST_CASE("deserialize MsgPack object") {
     SECTION("empty") {
       const char* input = "\xDE\x00\x00";
 
-      MsgPackError error = deserializeMsgPack(doc, input);
+      DeserializationError error = deserializeMsgPack(doc, input);
       JsonObject& obj = doc.as<JsonObject>();
 
-      REQUIRE(error == MsgPackError::Ok);
+      REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 0);
     }
@@ -49,10 +49,10 @@ TEST_CASE("deserialize MsgPack object") {
     SECTION("two strings") {
       const char* input = "\xDE\x00\x02\xA1H\xA5hello\xA1W\xA5world";
 
-      MsgPackError error = deserializeMsgPack(doc, input);
+      DeserializationError error = deserializeMsgPack(doc, input);
       JsonObject& obj = doc.as<JsonObject>();
 
-      REQUIRE(error == MsgPackError::Ok);
+      REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["H"] == "hello");
@@ -64,10 +64,10 @@ TEST_CASE("deserialize MsgPack object") {
     SECTION("empty") {
       const char* input = "\xDF\x00\x00\x00\x00";
 
-      MsgPackError error = deserializeMsgPack(doc, input);
+      DeserializationError error = deserializeMsgPack(doc, input);
       JsonObject& obj = doc.as<JsonObject>();
 
-      REQUIRE(error == MsgPackError::Ok);
+      REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 0);
     }
@@ -77,10 +77,10 @@ TEST_CASE("deserialize MsgPack object") {
           "\xDF\x00\x00\x00\x02\xA4zero\xCA\x00\x00\x00\x00\xA2pi\xCA\x40\x48"
           "\xF5\xC3";
 
-      MsgPackError error = deserializeMsgPack(doc, input);
+      DeserializationError error = deserializeMsgPack(doc, input);
       JsonObject& obj = doc.as<JsonObject>();
 
-      REQUIRE(error == MsgPackError::Ok);
+      REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["zero"] == 0.0f);

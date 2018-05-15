@@ -11,9 +11,9 @@ TEST_CASE("deserializeMsgPack(std::istream&)") {
   SECTION("should accept a zero in input") {
     std::istringstream input(std::string("\x92\x00\x02", 3));
 
-    MsgPackError err = deserializeMsgPack(doc, input);
+    DeserializationError err = deserializeMsgPack(doc, input);
 
-    REQUIRE(err == MsgPackError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     JsonArray& arr = doc.as<JsonArray>();
     REQUIRE(arr[0] == 0);
     REQUIRE(arr[1] == 2);
@@ -22,8 +22,8 @@ TEST_CASE("deserializeMsgPack(std::istream&)") {
   SECTION("should detect incomplete input") {
     std::istringstream input("\x92\x00\x02");
 
-    MsgPackError err = deserializeMsgPack(doc, input);
+    DeserializationError err = deserializeMsgPack(doc, input);
 
-    REQUIRE(err == MsgPackError::IncompleteInput);
+    REQUIRE(err == DeserializationError::IncompleteInput);
   }
 }

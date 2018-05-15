@@ -11,25 +11,25 @@ TEST_CASE("deserializeJson(const std::string&)") {
   SECTION("should accept const string") {
     const std::string input("[42]");
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("should accept temporary string") {
-    JsonError err = deserializeJson(doc, std::string("[42]"));
+    DeserializationError err = deserializeJson(doc, std::string("[42]"));
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("should duplicate content") {
     std::string input("[\"hello\"]");
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
     input[2] = 'X';  // alter the string tomake sure we made a copy
 
     JsonArray &array = doc.as<JsonArray>();
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(std::string("hello") == array[0]);
   }
 }

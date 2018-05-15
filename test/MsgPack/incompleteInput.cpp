@@ -5,17 +5,17 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-MsgPackError deserialize(const char* input, size_t len) {
+DeserializationError deserialize(const char* input, size_t len) {
   DynamicJsonDocument doc;
 
   return deserializeMsgPack(doc, input, len);
 }
 
 void checkAllSizes(const char* input, size_t len) {
-  REQUIRE(deserialize(input, len) == MsgPackError::Ok);
+  REQUIRE(deserialize(input, len) == DeserializationError::Ok);
 
   while (--len) {
-    REQUIRE(deserialize(input, len) == MsgPackError::IncompleteInput);
+    REQUIRE(deserialize(input, len) == DeserializationError::IncompleteInput);
   }
 }
 

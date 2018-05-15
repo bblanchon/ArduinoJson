@@ -8,7 +8,7 @@
 TEST_CASE("Gbathree") {
   DynamicJsonDocument doc;
 
-  JsonError error = deserializeJson(
+  DeserializationError error = deserializeJson(
       doc,
       "{\"protocol_name\":\"fluorescence\",\"repeats\":1,\"wait\":0,"
       "\"averages\":1,\"measurements\":3,\"meas2_light\":15,\"meas1_"
@@ -23,7 +23,7 @@ TEST_CASE("Gbathree") {
   JsonObject& root = doc.as<JsonObject>();
 
   SECTION("Success") {
-    REQUIRE(error == JsonError::Ok);
+    REQUIRE(error == DeserializationError::Ok);
   }
 
   SECTION("ProtocolName") {

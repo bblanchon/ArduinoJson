@@ -10,45 +10,45 @@ TEST_CASE("deserialize JSON array with a StaticJsonDocument") {
     StaticJsonDocument<JSON_ARRAY_SIZE(0)> doc;
     char input[] = "[]";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("TooSmallBufferForArrayWithOneValue") {
     StaticJsonDocument<JSON_ARRAY_SIZE(1) - 1> doc;
     char input[] = "[1]";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::NoMemory);
+    REQUIRE(err == DeserializationError::NoMemory);
   }
 
   SECTION("BufferOfTheRightSizeForArrayWithOneValue") {
     StaticJsonDocument<JSON_ARRAY_SIZE(1)> doc;
     char input[] = "[1]";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("TooSmallBufferForArrayWithNestedObject") {
     StaticJsonDocument<JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0) - 1> doc;
     char input[] = "[{}]";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::NoMemory);
+    REQUIRE(err == DeserializationError::NoMemory);
   }
 
   SECTION("BufferOfTheRightSizeForArrayWithNestedObject") {
     StaticJsonDocument<JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0)> doc;
     char input[] = "[{}]";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("CopyStringNotSpaces") {
@@ -77,10 +77,10 @@ TEST_CASE("deserialize JSON array with a StaticJsonDocument") {
     StaticJsonDocument<JSON_ARRAY_SIZE(2)> doc;
     char input[] = "[1,2]";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
     JsonArray& arr = doc.as<JsonArray>();
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<JsonArray>());
     REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(2));
     REQUIRE(arr[0] == 1);

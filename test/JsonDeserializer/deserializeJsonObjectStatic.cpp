@@ -10,45 +10,45 @@ TEST_CASE("deserialize JSON object with StaticJsonDocument") {
     StaticJsonDocument<JSON_OBJECT_SIZE(0)> doc;
     char input[] = "{}";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("TooSmallBufferForObjectWithOneValue") {
     StaticJsonDocument<JSON_OBJECT_SIZE(1) - 1> doc;
     char input[] = "{\"a\":1}";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::NoMemory);
+    REQUIRE(err == DeserializationError::NoMemory);
   }
 
   SECTION("BufferOfTheRightSizeForObjectWithOneValue") {
     StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
     char input[] = "{\"a\":1}";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("TooSmallBufferForObjectWithNestedObject") {
     StaticJsonDocument<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0) - 1> doc;
     char input[] = "{\"a\":[]}";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::NoMemory);
+    REQUIRE(err == DeserializationError::NoMemory);
   }
 
   SECTION("BufferOfTheRightSizeForObjectWithNestedObject") {
     StaticJsonDocument<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0)> doc;
     char input[] = "{\"a\":[]}";
 
-    JsonError err = deserializeJson(doc, input);
+    DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == JsonError::Ok);
+    REQUIRE(err == DeserializationError::Ok);
   }
 
   SECTION("Should clear the JsonObject") {
