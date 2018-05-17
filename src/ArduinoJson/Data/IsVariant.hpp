@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "IsBaseOf.hpp"
+#include "../Polyfills/type_traits.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -12,6 +12,6 @@ namespace Internals {
 class JsonVariantTag {};
 
 template <typename T>
-struct IsVariant : IsBaseOf<JsonVariantTag, T> {};
-}
-}
+struct IsVariant : is_base_of<JsonVariantTag, T> {};
+}  // namespace Internals
+}  // namespace ArduinoJson

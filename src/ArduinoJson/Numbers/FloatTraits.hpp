@@ -146,5 +146,5 @@ struct FloatTraits<T, 4 /*32bits*/> {
     return forge(0x7f800000);
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

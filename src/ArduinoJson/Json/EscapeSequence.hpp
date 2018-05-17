@@ -7,7 +7,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
-class Encoding {
+class EscapeSequence {
  public:
   // Optimized for code size on a 8-bit AVR
   static char escapeChar(char c) {
@@ -33,5 +33,5 @@ class Encoding {
     return &"\"\"\\\\b\bf\fn\nr\rt\t"[excludeIdenticals ? 4 : 0];
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

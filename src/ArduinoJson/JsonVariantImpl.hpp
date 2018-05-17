@@ -8,10 +8,10 @@
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
 #include "JsonVariant.hpp"
-#include "Text/isFloat.hpp"
-#include "Text/isInteger.hpp"
-#include "Text/parseFloat.hpp"
-#include "Text/parseInteger.hpp"
+#include "Numbers/isFloat.hpp"
+#include "Numbers/isInteger.hpp"
+#include "Numbers/parseFloat.hpp"
+#include "Numbers/parseInteger.hpp"
 
 #include <string.h>  // for strcmp
 

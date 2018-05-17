@@ -2,7 +2,7 @@
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
 
-#include <ArduinoJson/Text/isFloat.hpp>
+#include <ArduinoJson/Numbers/isFloat.hpp>
 #include <catch.hpp>
 
 using namespace ArduinoJson::Internals;

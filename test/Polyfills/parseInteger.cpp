@@ -3,7 +3,7 @@
 // MIT License
 
 #include <stdint.h>
-#include <ArduinoJson/Text/parseInteger.hpp>
+#include <ArduinoJson/Numbers/parseInteger.hpp>
 #include <catch.hpp>
 
 using namespace ArduinoJson::Internals;

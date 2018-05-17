@@ -9,11 +9,8 @@
 #include "Data/ValueSaver.hpp"
 #include "JsonPair.hpp"
 #include "Memory/JsonBufferAllocated.hpp"
+#include "Polyfills/type_traits.hpp"
 #include "Strings/StringTraits.hpp"
-#include "TypeTraits/EnableIf.hpp"
-#include "TypeTraits/IsArray.hpp"
-#include "TypeTraits/IsFloatingPoint.hpp"
-#include "TypeTraits/IsSame.hpp"
 
 // Returns the size (in bytes) of an object with n elements.
 // Can be very handy to determine the size of a StaticJsonBuffer.

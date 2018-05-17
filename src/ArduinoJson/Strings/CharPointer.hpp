@@ -30,13 +30,13 @@ struct CharPointerTraits {
 
   static const bool has_append = false;
   static const bool has_equals = true;
-  static const bool should_duplicate = !IsConst<TChar>::value;
+  static const bool should_duplicate = !is_const<TChar>::value;
 };
 
 // char*, unsigned char*, signed char*
 // const char*, const unsigned char*, const signed char*
 template <typename TChar>
-struct StringTraits<TChar*, typename EnableIf<IsChar<TChar>::value>::type>
+struct StringTraits<TChar*, typename enable_if<sizeof(TChar) == 1>::type>
     : CharPointerTraits<TChar> {};
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

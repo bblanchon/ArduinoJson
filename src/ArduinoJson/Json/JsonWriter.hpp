@@ -5,10 +5,10 @@
 #pragma once
 
 #include <stdint.h>
-#include "../../Data/JsonInteger.hpp"
-#include "../../Polyfills/attributes.hpp"
-#include "../Encoding.hpp"
-#include "./FloatParts.hpp"
+#include "../Data/JsonInteger.hpp"
+#include "../Numbers/FloatParts.hpp"
+#include "../Polyfills/attributes.hpp"
+#include "./EscapeSequence.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -66,7 +66,7 @@ class JsonWriter {
   }
 
   void writeChar(char c) {
-    char specialChar = Encoding::escapeChar(c);
+    char specialChar = EscapeSequence::escapeChar(c);
     if (specialChar) {
       writeRaw('\\');
       writeRaw(specialChar);
@@ -77,14 +77,14 @@ class JsonWriter {
 
   template <typename TFloat>
   void writeFloat(TFloat value) {
-    if (isNaN(value)) return writeRaw("NaN");
+    if (isnan(value)) return writeRaw("NaN");
 
     if (value < 0.0) {
       writeRaw('-');
       value = -value;
     }
 
-    if (isInfinity(value)) return writeRaw("Infinity");
+    if (isinf(value)) return writeRaw("Infinity");
 
     FloatParts<TFloat> parts(value);
 

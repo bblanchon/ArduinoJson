@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "../../Configuration.hpp"
-#include "../../Polyfills/math.hpp"
-#include "../../TypeTraits/FloatTraits.hpp"
+#include "../Configuration.hpp"
+#include "../Polyfills/math.hpp"
+#include "./FloatTraits.hpp"
 
 namespace ArduinoJson {
 namespace Internals {

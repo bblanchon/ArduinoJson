@@ -7,8 +7,8 @@
 #include "../DeserializationError.hpp"
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
+#include "../Polyfills/type_traits.hpp"
 #include "../Reading/Reader.hpp"
-#include "../TypeTraits/IsConst.hpp"
 #include "../Writing/Writer.hpp"
 #include "./endianess.hpp"
 #include "./ieee754.hpp"
@@ -181,7 +181,7 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 4, DeserializationError>::type readFloat(
+  typename enable_if<sizeof(T) == 4, DeserializationError>::type readFloat(
       JsonVariant &variant) {
     T value;
     if (!readBytes(value)) return DeserializationError::IncompleteInput;
@@ -191,7 +191,7 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 8, DeserializationError>::type readDouble(
+  typename enable_if<sizeof(T) == 8, DeserializationError>::type readDouble(
       JsonVariant &variant) {
     T value;
     if (!readBytes(value)) return DeserializationError::IncompleteInput;
@@ -201,7 +201,7 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  typename EnableIf<sizeof(T) == 4, DeserializationError>::type readDouble(
+  typename enable_if<sizeof(T) == 4, DeserializationError>::type readDouble(
       JsonVariant &variant) {
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
@@ -221,7 +221,8 @@ class MsgPackDeserializer {
   }
 
   DeserializationError readString(JsonVariant &variant, size_t n) {
-    typename RemoveReference<TWriter>::type::String str = _writer.startString();
+    typename remove_reference<TWriter>::type::String str =
+        _writer.startString();
     for (; n; --n) {
       uint8_t c;
       if (!readBytes(c)) return DeserializationError::IncompleteInput;

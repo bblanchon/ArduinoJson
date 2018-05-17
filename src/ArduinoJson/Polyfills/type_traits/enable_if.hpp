@@ -9,11 +9,11 @@ namespace Internals {
 
 // A meta-function that return the type T if Condition is true.
 template <bool Condition, typename T = void>
-struct EnableIf {};
+struct enable_if {};
 
 template <typename T>
-struct EnableIf<true, T> {
+struct enable_if<true, T> {
   typedef T type;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

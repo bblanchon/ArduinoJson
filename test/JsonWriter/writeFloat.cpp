@@ -6,7 +6,7 @@
 #include <limits>
 #include <string>
 
-#include <ArduinoJson/Json/Serialization/JsonWriter.hpp>
+#include <ArduinoJson/Json/JsonWriter.hpp>
 #include <ArduinoJson/Print/DynamicStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;

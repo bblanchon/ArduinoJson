@@ -9,11 +9,8 @@
 #include "Data/ValueSaver.hpp"
 #include "JsonVariant.hpp"
 #include "Memory/JsonBufferAllocated.hpp"
+#include "Polyfills/type_traits.hpp"
 #include "Strings/StringTraits.hpp"
-#include "TypeTraits/EnableIf.hpp"
-#include "TypeTraits/IsArray.hpp"
-#include "TypeTraits/IsFloatingPoint.hpp"
-#include "TypeTraits/IsSame.hpp"
 
 // Returns the size (in bytes) of an array with n elements.
 // Can be very handy to determine the size of a StaticJsonBuffer.
@@ -88,7 +85,8 @@ class JsonArray : public Internals::ReferenceType,
   // bool set(size_t index, TValue value, uint8_t decimals);
   // TValue = float, double
   template <typename T>
-  typename Internals::EnableIf<Internals::IsFloatingPoint<T>::value, bool>::type
+  typename Internals::enable_if<Internals::is_floating_point<T>::value,
+                                bool>::type
   set(size_t index, T value, uint8_t decimals) {
     return set_impl<const JsonVariant &>(index, JsonVariant(value, decimals));
   }

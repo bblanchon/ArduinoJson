@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include "../../Print/DummyPrint.hpp"
-#include "../../Print/DynamicStringBuilder.hpp"
-#include "../../Print/StaticStringBuilder.hpp"
+#include "../Print/DummyPrint.hpp"
+#include "../Print/DynamicStringBuilder.hpp"
+#include "../Print/StaticStringBuilder.hpp"
 #include "./IndentedPrint.hpp"
 #include "./JsonWriter.hpp"
 #include "./Prettyfier.hpp"
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-#include "../../Print/StreamPrintAdapter.hpp"
+#include "../Print/StreamPrintAdapter.hpp"
 #endif
 
 namespace ArduinoJson {
@@ -96,8 +96,8 @@ class JsonSerializer {
 }  // namespace Internals
 
 template <typename TSource, typename TDestination>
-typename Internals::EnableIf<!Internals::StringTraits<TDestination>::has_append,
-                             size_t>::type
+typename Internals::enable_if<
+    !Internals::StringTraits<TDestination>::has_append, size_t>::type
 serializeJson(const TSource &source, TDestination &destination) {
   Internals::JsonWriter<TDestination> writer(destination);
   Internals::JsonSerializer<Internals::JsonWriter<TDestination> >::serialize(
@@ -126,8 +126,8 @@ size_t serializeJson(const TSource &source, char (&buffer)[N]) {
 }
 
 template <typename TSource, typename TDestination>
-typename Internals::EnableIf<Internals::StringTraits<TDestination>::has_append,
-                             size_t>::type
+typename Internals::enable_if<Internals::StringTraits<TDestination>::has_append,
+                              size_t>::type
 serializeJson(const TSource &source, TDestination &str) {
   Internals::DynamicStringBuilder<TDestination> sb(str);
   return serializeJson(source, sb);
@@ -153,16 +153,16 @@ size_t serializeJsonPretty(const TSource &source, char (&buffer)[N]) {
 }
 
 template <typename TSource, typename TDestination>
-typename Internals::EnableIf<!Internals::StringTraits<TDestination>::has_append,
-                             size_t>::type
+typename Internals::enable_if<
+    !Internals::StringTraits<TDestination>::has_append, size_t>::type
 serializeJsonPretty(const TSource &source, TDestination &print) {
   Internals::IndentedPrint<TDestination> indentedPrint(print);
   return serializeJsonPretty(source, indentedPrint);
 }
 
 template <typename TSource, typename TDestination>
-typename Internals::EnableIf<Internals::StringTraits<TDestination>::has_append,
-                             size_t>::type
+typename Internals::enable_if<Internals::StringTraits<TDestination>::has_append,
+                              size_t>::type
 serializeJsonPretty(const TSource &source, TDestination &str) {
   Internals::DynamicStringBuilder<TDestination> sb(str);
   return serializeJsonPretty(source, sb);

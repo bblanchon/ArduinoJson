@@ -13,8 +13,8 @@ namespace ArduinoJson {
 // TDocument = DynamicJsonDocument, StaticJsonDocument
 // TString = const std::string&, const String&
 template <typename TDocument, typename TString>
-typename Internals::EnableIf<!Internals::IsArray<TString>::value,
-                             DeserializationError>::type
+typename Internals::enable_if<!Internals::is_array<TString>::value,
+                              DeserializationError>::type
 deserializeMsgPack(TDocument &doc, const TString &input) {
   using namespace Internals;
   return makeMsgPackDeserializer(&doc.buffer(), makeReader(input),

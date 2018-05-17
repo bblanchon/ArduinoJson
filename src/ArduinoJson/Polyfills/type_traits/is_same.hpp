@@ -4,18 +4,16 @@
 
 #pragma once
 
+#include "integral_constant.hpp"
+
 namespace ArduinoJson {
 namespace Internals {
 
 // A meta-function that returns true if types T and U are the same.
 template <typename T, typename U>
-struct IsSame {
-  static const bool value = false;
-};
+struct is_same : false_type {};
 
 template <typename T>
-struct IsSame<T, T> {
-  static const bool value = true;
-};
-}
-}
+struct is_same<T, T> : true_type {};
+}  // namespace Internals
+}  // namespace ArduinoJson

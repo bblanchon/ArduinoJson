@@ -2,7 +2,7 @@
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
 
-#include <ArduinoJson/Text/isInteger.hpp>
+#include <ArduinoJson/Numbers/isInteger.hpp>
 #include <catch.hpp>
 
 using namespace ArduinoJson::Internals;

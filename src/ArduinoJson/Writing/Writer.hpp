@@ -21,7 +21,7 @@ struct Writer {
 
 template <typename TJsonBuffer, typename TChar>
 struct Writer<TJsonBuffer, TChar*,
-              typename EnableIf<!IsConst<TChar>::value>::type> {
+              typename enable_if<!is_const<TChar>::value>::type> {
   typedef StringWriter<TChar> type;
 
   static type create(TJsonBuffer&, TChar* input) {

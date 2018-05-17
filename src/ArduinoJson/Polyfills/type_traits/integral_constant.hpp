@@ -6,14 +6,14 @@
 
 namespace ArduinoJson {
 namespace Internals {
-template <typename T>
-bool isnan(T x) {
-  return x != x;
-}
 
-template <typename T>
-bool isinf(T x) {
-  return x != 0.0 && x * 2 == x;
-}
+template <typename T, T v>
+struct integral_constant {
+  static const T value = v;
+};
+
+typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, false> false_type;
+
 }  // namespace Internals
 }  // namespace ArduinoJson

@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "Data/IsVariant.hpp"
+#include "Polyfills/type_traits.hpp"
 #include "Strings/StringTraits.hpp"
-#include "TypeTraits/EnableIf.hpp"
-#include "TypeTraits/IsVariant.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -21,7 +21,7 @@ class JsonVariantComparisons {
   }
 
   template <typename TComparand>
-  friend typename EnableIf<!IsVariant<TComparand>::value, bool>::type
+  friend typename enable_if<!IsVariant<TComparand>::value, bool>::type
   operator==(TComparand comparand, const JsonVariantComparisons &variant) {
     return variant.equals(comparand);
   }
@@ -33,7 +33,7 @@ class JsonVariantComparisons {
   }
 
   template <typename TComparand>
-  friend typename EnableIf<!IsVariant<TComparand>::value, bool>::type
+  friend typename enable_if<!IsVariant<TComparand>::value, bool>::type
   operator!=(TComparand comparand, const JsonVariantComparisons &variant) {
     return !variant.equals(comparand);
   }
@@ -101,16 +101,16 @@ class JsonVariantComparisons {
   }
 
   template <typename TString>
-  typename EnableIf<StringTraits<TString>::has_equals, bool>::type equals(
+  typename enable_if<StringTraits<TString>::has_equals, bool>::type equals(
       const TString &comparand) const {
     const char *value = as<const char *>();
     return StringTraits<TString>::equals(comparand, value);
   }
 
   template <typename TComparand>
-  typename EnableIf<!IsVariant<TComparand>::value &&
-                        !StringTraits<TComparand>::has_equals,
-                    bool>::type
+  typename enable_if<!IsVariant<TComparand>::value &&
+                         !StringTraits<TComparand>::has_equals,
+                     bool>::type
   equals(const TComparand &comparand) const {
     return as<TComparand>() == comparand;
   }

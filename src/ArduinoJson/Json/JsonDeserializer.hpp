@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "../../DeserializationError.hpp"
-#include "../../JsonVariant.hpp"
-#include "../../Memory/JsonBuffer.hpp"
-#include "../../Reading/Reader.hpp"
-#include "../../TypeTraits/IsConst.hpp"
-#include "../Encoding.hpp"
+#include "../DeserializationError.hpp"
+#include "../JsonVariant.hpp"
+#include "../Memory/JsonBuffer.hpp"
+#include "../Polyfills/type_traits.hpp"
+#include "../Reading/Reader.hpp"
+#include "./EscapeSequence.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -168,7 +168,8 @@ class JsonDeserializer {
   }
 
   DeserializationError parseString(const char **result) {
-    typename RemoveReference<TWriter>::type::String str = _writer.startString();
+    typename remove_reference<TWriter>::type::String str =
+        _writer.startString();
 
     char c = current();
     if (c == '\0') return DeserializationError::IncompleteInput;
@@ -188,7 +189,7 @@ class JsonDeserializer {
           if (c == '\0') return DeserializationError::IncompleteInput;
           if (c == 'u') return DeserializationError::NotSupported;
           // replace char
-          c = Encoding::unescapeChar(c);
+          c = EscapeSequence::unescapeChar(c);
           if (c == '\0') return DeserializationError::InvalidInput;
           move();
         }

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Json/Deserialization/JsonDeserializer.hpp"
+#include "Json/JsonDeserializer.hpp"
 #include "Reading/Reader.hpp"
 #include "Writing/Writer.hpp"
 
@@ -13,8 +13,8 @@ namespace ArduinoJson {
 // TDocument = DynamicJsonDocument, StaticJsonDocument
 // TString = const std::string&, const String&
 template <typename TDocument, typename TString>
-typename Internals::EnableIf<!Internals::IsArray<TString>::value,
-                             DeserializationError>::type
+typename Internals::enable_if<!Internals::is_array<TString>::value,
+                              DeserializationError>::type
 deserializeJson(TDocument &doc, const TString &input) {
   using namespace Internals;
   return makeJsonDeserializer(&doc.buffer(), makeReader(input),

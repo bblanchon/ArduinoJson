@@ -6,8 +6,8 @@
 
 #include "Data/JsonVariantAs.hpp"
 #include "Polyfills/attributes.hpp"
+#include "Polyfills/type_traits.hpp"
 #include "Strings/StringTraits.hpp"
-#include "TypeTraits/EnableIf.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -43,8 +43,8 @@ class JsonVariantSubscripts {
   // TKey = const std::string&, const String&
   template <typename TString>
   FORCE_INLINE
-      typename EnableIf<StringTraits<TString>::has_equals,
-                        const JsonObjectSubscript<const TString &> >::type
+      typename enable_if<StringTraits<TString>::has_equals,
+                         const JsonObjectSubscript<const TString &> >::type
       operator[](const TString &key) const {
     return impl()->template as<JsonObject>()[key];
   }
@@ -52,8 +52,8 @@ class JsonVariantSubscripts {
   // const JsonObjectSubscript operator[](TKey) const;
   // TKey = const std::string&, const String&
   template <typename TString>
-  FORCE_INLINE typename EnableIf<StringTraits<TString>::has_equals,
-                                 JsonObjectSubscript<const TString &> >::type
+  FORCE_INLINE typename enable_if<StringTraits<TString>::has_equals,
+                                  JsonObjectSubscript<const TString &> >::type
   operator[](const TString &key) {
     return impl()->template as<JsonObject>()[key];
   }
@@ -61,8 +61,8 @@ class JsonVariantSubscripts {
   // JsonObjectSubscript operator[](TKey);
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  FORCE_INLINE typename EnableIf<StringTraits<const TString *>::has_equals,
-                                 JsonObjectSubscript<const TString *> >::type
+  FORCE_INLINE typename enable_if<StringTraits<const TString *>::has_equals,
+                                  JsonObjectSubscript<const TString *> >::type
   operator[](const TString *key) {
     return impl()->template as<JsonObject>()[key];
   }
@@ -71,8 +71,8 @@ class JsonVariantSubscripts {
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
   FORCE_INLINE
-      typename EnableIf<StringTraits<TString *>::has_equals,
-                        const JsonObjectSubscript<const TString *> >::type
+      typename enable_if<StringTraits<TString *>::has_equals,
+                         const JsonObjectSubscript<const TString *> >::type
       operator[](const TString *key) const {
     return impl()->template as<JsonObject>()[key];
   }

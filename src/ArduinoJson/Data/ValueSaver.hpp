@@ -6,8 +6,8 @@
 
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
+#include "../Polyfills/type_traits.hpp"
 #include "../Strings/StringTraits.hpp"
-#include "../TypeTraits/EnableIf.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -23,7 +23,7 @@ struct ValueSaver {
 
 template <typename Source>
 struct ValueSaver<
-    Source, typename EnableIf<StringTraits<Source>::should_duplicate>::type> {
+    Source, typename enable_if<StringTraits<Source>::should_duplicate>::type> {
   template <typename Destination>
   static bool save(JsonBuffer* buffer, Destination& dest, Source source) {
     if (!StringTraits<Source>::is_null(source)) {
@@ -41,7 +41,7 @@ struct ValueSaver<
 // const char*, const signed char*, const unsigned char*
 template <typename Char>
 struct ValueSaver<
-    Char*, typename EnableIf<!StringTraits<Char*>::should_duplicate>::type> {
+    Char*, typename enable_if<!StringTraits<Char*>::should_duplicate>::type> {
   template <typename Destination>
   static bool save(JsonBuffer*, Destination& dest, Char* source) {
     dest = reinterpret_cast<const char*>(source);

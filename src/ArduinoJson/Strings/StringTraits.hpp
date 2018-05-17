@@ -6,11 +6,7 @@
 
 #include <string.h>
 #include "../Configuration.hpp"
-#include "../TypeTraits/EnableIf.hpp"
-#include "../TypeTraits/IsBaseOf.hpp"
-#include "../TypeTraits/IsChar.hpp"
-#include "../TypeTraits/IsConst.hpp"
-#include "../TypeTraits/RemoveReference.hpp"
+#include "../Polyfills/type_traits.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -26,8 +22,8 @@ struct StringTraits<const TString, void> : StringTraits<TString> {};
 
 template <typename TString>
 struct StringTraits<TString&, void> : StringTraits<TString> {};
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
 
 #include "CharPointer.hpp"
 #include "FlashString.hpp"

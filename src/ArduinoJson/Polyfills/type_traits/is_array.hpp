@@ -6,14 +6,14 @@
 
 namespace ArduinoJson {
 namespace Internals {
-template <typename T>
-bool isnan(T x) {
-  return x != x;
-}
 
 template <typename T>
-bool isinf(T x) {
-  return x != 0.0 && x * 2 == x;
-}
+struct is_array : false_type {};
+
+template <typename T>
+struct is_array<T[]> : true_type {};
+
+template <typename T, size_t N>
+struct is_array<T[N]> : true_type {};
 }  // namespace Internals
 }  // namespace ArduinoJson

@@ -4,11 +4,10 @@
 
 #pragma once
 
+#include "../Polyfills/type_traits.hpp"
+
 namespace ArduinoJson {
 namespace Internals {
-
-template <class T, T v>
-struct integral_constant {};
 
 template <typename T>
 inline void swap(T& a, T& b) {

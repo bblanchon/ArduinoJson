@@ -34,8 +34,8 @@ class DynamicJsonDocument {
 
   // JsonObject& to<JsonObject>()
   template <typename T>
-  typename Internals::EnableIf<Internals::IsSame<T, JsonObject>::value,
-                               JsonObject&>::type
+  typename Internals::enable_if<Internals::is_same<T, JsonObject>::value,
+                                JsonObject&>::type
   to() {
     clear();
     JsonObject* object = new (&_buffer) JsonObject(&_buffer);
@@ -46,8 +46,8 @@ class DynamicJsonDocument {
 
   // JsonArray& to<JsonArray>()
   template <typename T>
-  typename Internals::EnableIf<Internals::IsSame<T, JsonArray>::value,
-                               JsonArray&>::type
+  typename Internals::enable_if<Internals::is_same<T, JsonArray>::value,
+                                JsonArray&>::type
   to() {
     clear();
     JsonArray* array = new (&_buffer) JsonArray(&_buffer);
@@ -58,8 +58,8 @@ class DynamicJsonDocument {
 
   // JsonVariant& to<JsonVariant>()
   template <typename T>
-  typename Internals::EnableIf<Internals::IsSame<T, JsonVariant>::value,
-                               T&>::type
+  typename Internals::enable_if<Internals::is_same<T, JsonVariant>::value,
+                                T&>::type
   to() {
     clear();
     return _root;

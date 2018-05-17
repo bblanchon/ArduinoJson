@@ -7,14 +7,14 @@
 namespace ArduinoJson {
 namespace Internals {
 
-// A meta-function that return the type T without the reference modifier.
+// A meta-function that return the type T without the const modifier
 template <typename T>
-struct RemoveReference {
+struct remove_const {
   typedef T type;
 };
 template <typename T>
-struct RemoveReference<T&> {
+struct remove_const<const T> {
   typedef T type;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
