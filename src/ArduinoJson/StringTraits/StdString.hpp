@@ -40,6 +40,7 @@ struct StdStringTraits {
   };
 
   static bool equals(const TString& str, const char* expected) {
+    if (!str.c_str() || !expected) return false;
     return 0 == strcmp(str.c_str(), expected);
   }
 

@@ -31,6 +31,7 @@ struct StringTraits<const __FlashStringHelper*, void> {
   };
 
   static bool equals(const __FlashStringHelper* str, const char* expected) {
+    if (!str || !expected) return false;
     return strcmp_P(expected, (const char*)str) == 0;
   }
 
