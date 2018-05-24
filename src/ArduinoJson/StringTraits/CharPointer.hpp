@@ -30,6 +30,7 @@ struct CharPointerTraits {
   };
 
   static bool equals(const TChar* str, const char* expected) {
+    if (!str || !expected) return false;
     return strcmp(reinterpret_cast<const char*>(str), expected) == 0;
   }
 
