@@ -2,7 +2,7 @@
 # Copyright Benoit Blanchon 2014-2018
 # MIT License
 
-add_executable(MsgPackTests
+add_executable(MsgPackDeserializerTests
 	deserializeArray.cpp
 	deserializeObject.cpp
 	deserializeStaticVariant.cpp
@@ -15,5 +15,5 @@ add_executable(MsgPackTests
 	std_istream.cpp
 )
 
-target_link_libraries(MsgPackTests catch)
-add_test(MsgPack MsgPackTests)
+target_link_libraries(MsgPackDeserializerTests catch)
+add_test(MsgPackDeserializer MsgPackDeserializerTests)

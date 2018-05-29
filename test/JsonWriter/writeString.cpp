@@ -5,7 +5,7 @@
 #include <catch.hpp>
 
 #include <ArduinoJson/Json/JsonWriter.hpp>
-#include <ArduinoJson/Print/StaticStringBuilder.hpp>
+#include <ArduinoJson/Serialization/StaticStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 

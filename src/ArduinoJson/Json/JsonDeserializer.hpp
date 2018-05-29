@@ -4,24 +4,23 @@
 
 #pragma once
 
-#include "../DeserializationError.hpp"
+#include "../Deserialization/deserialize.hpp"
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
 #include "../Polyfills/type_traits.hpp"
-#include "../Reading/Reader.hpp"
 #include "./EscapeSequence.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename TReader, typename TWriter>
+template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
  public:
-  JsonDeserializer(JsonBuffer *buffer, TReader reader, TWriter writer,
-                   uint8_t nestingLimit)
+  JsonDeserializer(JsonBuffer *buffer, TReader reader,
+                   TStringStorage stringStorage, uint8_t nestingLimit)
       : _buffer(buffer),
         _reader(reader),
-        _writer(writer),
+        _stringStorage(stringStorage),
         _nestingLimit(nestingLimit),
         _loaded(false) {}
   DeserializationError parse(JsonVariant &variant) {
@@ -168,8 +167,8 @@ class JsonDeserializer {
   }
 
   DeserializationError parseString(const char **result) {
-    typename remove_reference<TWriter>::type::String str =
-        _writer.startString();
+    typename remove_reference<TStringStorage>::type::String str =
+        _stringStorage.startString();
 
     char c = current();
     if (c == '\0') return DeserializationError::IncompleteInput;
@@ -285,19 +284,35 @@ class JsonDeserializer {
 
   JsonBuffer *_buffer;
   TReader _reader;
-  TWriter _writer;
+  TStringStorage _stringStorage;
   uint8_t _nestingLimit;
   char _current;
   bool _loaded;
 };
-
-template <typename TJsonBuffer, typename TReader, typename TWriter>
-JsonDeserializer<TReader, TWriter> makeJsonDeserializer(TJsonBuffer *buffer,
-                                                        TReader reader,
-                                                        TWriter writer,
-                                                        uint8_t nestingLimit) {
-  return JsonDeserializer<TReader, TWriter>(buffer, reader, writer,
-                                            nestingLimit);
-}
 }  // namespace Internals
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeJson(TDocument &doc, const TInput &input) {
+  using namespace Internals;
+  return deserialize<JsonDeserializer>(doc, input);
+}
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeJson(TDocument &doc, TInput *input) {
+  using namespace Internals;
+  return deserialize<JsonDeserializer>(doc, input);
+}
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeJson(TDocument &doc, TInput *input,
+                                     size_t inputSize) {
+  using namespace Internals;
+  return deserialize<JsonDeserializer>(doc, input, inputSize);
+}
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeJson(TDocument &doc, TInput &input) {
+  using namespace Internals;
+  return deserialize<JsonDeserializer>(doc, input);
+}
 }  // namespace ArduinoJson

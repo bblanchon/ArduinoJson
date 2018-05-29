@@ -76,7 +76,7 @@ class StaticJsonDocument {
   }
 
   template <typename Visitor>
-  void visit(Visitor visitor) const {
+  void visit(Visitor& visitor) const {
     return _root.visit(visitor);
   }
 };

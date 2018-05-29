@@ -70,7 +70,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
       _content.asInteger = static_cast<JsonUInt>(value);
     } else {
       _type = JSON_NEGATIVE_INTEGER;
-      _content.asInteger = static_cast<JsonUInt>(-value);
+      _content.asInteger = ~static_cast<JsonUInt>(value) + 1;
     }
   }
   // JsonVariant(unsigned short)
@@ -308,7 +308,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   }
 
   template <typename Visitor>
-  void visit(Visitor visitor) const {
+  void visit(Visitor &visitor) const {
     using namespace Internals;
     switch (_type) {
       case JSON_FLOAT:

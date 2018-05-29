@@ -38,7 +38,13 @@ TEST_CASE("DeserializationError") {
     TEST_BOOLIFICATION(NotSupported, true);
   }
 
-  SECTION("ostream") {
+  SECTION("ostream code") {
+    std::stringstream s;
+    s << DeserializationError(DeserializationError::InvalidInput);
+    REQUIRE(s.str() == "InvalidInput");
+  }
+
+  SECTION("ostream code") {
     std::stringstream s;
     s << DeserializationError::InvalidInput;
     REQUIRE(s.str() == "InvalidInput");

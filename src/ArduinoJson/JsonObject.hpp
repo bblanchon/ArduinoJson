@@ -227,7 +227,7 @@ class JsonObject : public Internals::ReferenceType,
   }
 
   template <typename Visitor>
-  void visit(Visitor visitor) const {
+  void visit(Visitor& visitor) const {
     return visitor.acceptObject(*this);
   }
 

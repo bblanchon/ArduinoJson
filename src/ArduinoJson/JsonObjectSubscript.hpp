@@ -83,7 +83,7 @@ class JsonObjectSubscript
   }
 
   template <typename Visitor>
-  void visit(Visitor visitor) const {
+  void visit(Visitor& visitor) const {
     return _object.get<JsonVariant>(_key).visit(visitor);
   }
 

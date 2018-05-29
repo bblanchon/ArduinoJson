@@ -32,5 +32,5 @@ class StaticStringBuilder {
   char *end;
   char *p;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

@@ -4,180 +4,105 @@
 
 #pragma once
 
-#include "../Print/DummyPrint.hpp"
-#include "../Print/DynamicStringBuilder.hpp"
-#include "../Print/StaticStringBuilder.hpp"
-#include "./IndentedPrint.hpp"
+#include "../Serialization/measure.hpp"
+#include "../Serialization/serialize.hpp"
 #include "./JsonWriter.hpp"
-#include "./Prettyfier.hpp"
-
-#if ARDUINOJSON_ENABLE_STD_STREAM
-#include "../Print/StreamPrintAdapter.hpp"
-#endif
 
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename Writer>
+template <typename TPrint>
 class JsonSerializer {
  public:
-  template <typename TSource>
-  static void serialize(const TSource &source, Writer &writer) {
-    source.visit(Visitor(&writer));
+  JsonSerializer(TPrint &destination) : _writer(destination) {}
+
+  void acceptFloat(JsonFloat value) {
+    _writer.writeFloat(value);
   }
 
-  struct Visitor {
-    Visitor(Writer *writer) : _writer(writer) {}
+  void acceptArray(const JsonArray &array) {
+    _writer.beginArray();
 
-    void acceptFloat(JsonFloat value) {
-      _writer->writeFloat(value);
+    JsonArray::const_iterator it = array.begin();
+    while (it != array.end()) {
+      it->visit(*this);
+
+      ++it;
+      if (it == array.end()) break;
+
+      _writer.writeComma();
     }
 
-    void acceptArray(const JsonArray &array) {
-      _writer->beginArray();
+    _writer.endArray();
+  }
 
-      JsonArray::const_iterator it = array.begin();
-      while (it != array.end()) {
-        it->visit(*this);
+  void acceptObject(const JsonObject &object) {
+    _writer.beginObject();
 
-        ++it;
-        if (it == array.end()) break;
+    JsonObject::const_iterator it = object.begin();
+    while (it != object.end()) {
+      _writer.writeString(it->key);
+      _writer.writeColon();
+      it->value.visit(*this);
 
-        _writer->writeComma();
-      }
+      ++it;
+      if (it == object.end()) break;
 
-      _writer->endArray();
+      _writer.writeComma();
     }
 
-    void acceptObject(const JsonObject &object) {
-      _writer->beginObject();
+    _writer.endObject();
+  }
 
-      JsonObject::const_iterator it = object.begin();
-      while (it != object.end()) {
-        _writer->writeString(it->key);
-        _writer->writeColon();
-        it->value.visit(*this);
+  void acceptString(const char *value) {
+    _writer.writeString(value);
+  }
 
-        ++it;
-        if (it == object.end()) break;
+  void acceptRawJson(const char *value) {
+    _writer.writeRaw(value);
+  }
 
-        _writer->writeComma();
-      }
+  void acceptNegativeInteger(JsonUInt value) {
+    _writer.writeRaw('-');
+    _writer.writeInteger(value);
+  }
 
-      _writer->endObject();
-    }
+  void acceptPositiveInteger(JsonUInt value) {
+    _writer.writeInteger(value);
+  }
 
-    void acceptString(const char *value) {
-      _writer->writeString(value);
-    }
+  void acceptBoolean(bool value) {
+    _writer.writeBoolean(value);
+  }
 
-    void acceptRawJson(const char *value) {
-      _writer->writeRaw(value);
-    }
+  void acceptUndefined() {}
 
-    void acceptNegativeInteger(JsonUInt value) {
-      _writer->writeRaw('-');
-      _writer->writeInteger(value);
-    }
+  size_t bytesWritten() const {
+    return _writer.bytesWritten();
+  }
 
-    void acceptPositiveInteger(JsonUInt value) {
-      _writer->writeInteger(value);
-    }
-
-    void acceptBoolean(bool value) {
-      _writer->writeBoolean(value);
-    }
-
-    void acceptUndefined() {}
-
-    Writer *_writer;
-  };
+ private:
+  JsonWriter<TPrint> _writer;
 };
+
 }  // namespace Internals
 
 template <typename TSource, typename TDestination>
-typename Internals::enable_if<
-    !Internals::StringTraits<TDestination>::has_append, size_t>::type
-serializeJson(const TSource &source, TDestination &destination) {
-  Internals::JsonWriter<TDestination> writer(destination);
-  Internals::JsonSerializer<Internals::JsonWriter<TDestination> >::serialize(
-      source, writer);
-  return writer.bytesWritten();
+size_t serializeJson(TSource &source, TDestination &destination) {
+  using namespace Internals;
+  return serialize<JsonSerializer>(source, destination);
 }
-
-#if ARDUINOJSON_ENABLE_STD_STREAM
-template <typename TSource>
-std::ostream &serializeJson(const TSource &source, std::ostream &os) {
-  Internals::StreamPrintAdapter adapter(os);
-  serializeJson(source, adapter);
-  return os;
-}
-#endif
 
 template <typename TSource>
 size_t serializeJson(const TSource &source, char *buffer, size_t bufferSize) {
-  Internals::StaticStringBuilder sb(buffer, bufferSize);
-  return serializeJson(source, sb);
-}
-
-template <typename TSource, size_t N>
-size_t serializeJson(const TSource &source, char (&buffer)[N]) {
-  return serializeJson(source, buffer, N);
-}
-
-template <typename TSource, typename TDestination>
-typename Internals::enable_if<Internals::StringTraits<TDestination>::has_append,
-                              size_t>::type
-serializeJson(const TSource &source, TDestination &str) {
-  Internals::DynamicStringBuilder<TDestination> sb(str);
-  return serializeJson(source, sb);
-}
-
-template <typename TSource, typename TDestination>
-size_t serializeJsonPretty(const TSource &source,
-                           Internals::IndentedPrint<TDestination> &print) {
-  Internals::Prettyfier<TDestination> p(print);
-  return serializeJson(source, p);
-}
-
-template <typename TSource>
-size_t serializeJsonPretty(const TSource &source, char *buffer,
-                           size_t bufferSize) {
-  Internals::StaticStringBuilder sb(buffer, bufferSize);
-  return serializeJsonPretty(source, sb);
-}
-
-template <typename TSource, size_t N>
-size_t serializeJsonPretty(const TSource &source, char (&buffer)[N]) {
-  return serializeJsonPretty(source, buffer, N);
-}
-
-template <typename TSource, typename TDestination>
-typename Internals::enable_if<
-    !Internals::StringTraits<TDestination>::has_append, size_t>::type
-serializeJsonPretty(const TSource &source, TDestination &print) {
-  Internals::IndentedPrint<TDestination> indentedPrint(print);
-  return serializeJsonPretty(source, indentedPrint);
-}
-
-template <typename TSource, typename TDestination>
-typename Internals::enable_if<Internals::StringTraits<TDestination>::has_append,
-                              size_t>::type
-serializeJsonPretty(const TSource &source, TDestination &str) {
-  Internals::DynamicStringBuilder<TDestination> sb(str);
-  return serializeJsonPretty(source, sb);
+  using namespace Internals;
+  return serialize<JsonSerializer>(source, buffer, bufferSize);
 }
 
 template <typename TSource>
 size_t measureJson(const TSource &source) {
-  Internals::DummyPrint dp;
-  return serializeJson(source, dp);
-}
-
-template <typename TSource>
-size_t measureJsonPretty(const TSource &source) {
-  Internals::DummyPrint dp;
-  return serializeJsonPretty(source, dp);
+  using namespace Internals;
+  return measure<JsonSerializer>(source);
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM

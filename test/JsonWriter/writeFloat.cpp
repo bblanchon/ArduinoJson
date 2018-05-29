@@ -7,7 +7,7 @@
 #include <string>
 
 #include <ArduinoJson/Json/JsonWriter.hpp>
-#include <ArduinoJson/Print/DynamicStringBuilder.hpp>
+#include <ArduinoJson/Serialization/DynamicStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 

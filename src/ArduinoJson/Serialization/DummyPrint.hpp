@@ -7,7 +7,6 @@
 namespace ArduinoJson {
 namespace Internals {
 
-// A dummy Print implementation used in measureJson()
 class DummyPrint {
  public:
   size_t print(char) {

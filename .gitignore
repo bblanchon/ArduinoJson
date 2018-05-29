@@ -9,3 +9,4 @@
 /fuzzing/*_fuzzer
 /fuzzing/*_fuzzer.options
 /fuzzing/*_fuzzer_seed_corpus.zip
+.vs/

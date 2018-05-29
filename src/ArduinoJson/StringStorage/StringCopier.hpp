@@ -4,15 +4,13 @@
 
 #pragma once
 
-#include "./StringWriter.hpp"
-
 namespace ArduinoJson {
 namespace Internals {
 
 template <typename TJsonBuffer>
-class JsonBufferWriter {
+class StringCopier {
  public:
-  JsonBufferWriter(TJsonBuffer& jb) : _jb(&jb) {}
+  StringCopier(TJsonBuffer& jb) : _jb(&jb) {}
 
   typedef typename TJsonBuffer::String String;
 

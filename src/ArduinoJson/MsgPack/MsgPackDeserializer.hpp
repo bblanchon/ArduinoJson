@@ -4,26 +4,24 @@
 
 #pragma once
 
-#include "../DeserializationError.hpp"
+#include "../Deserialization/deserialize.hpp"
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
 #include "../Polyfills/type_traits.hpp"
-#include "../Reading/Reader.hpp"
-#include "../Writing/Writer.hpp"
 #include "./endianess.hpp"
 #include "./ieee754.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename TReader, typename TWriter>
+template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
  public:
-  MsgPackDeserializer(JsonBuffer *buffer, TReader reader, TWriter writer,
-                      uint8_t nestingLimit)
+  MsgPackDeserializer(JsonBuffer *buffer, TReader reader,
+                      TStringStorage stringStorage, uint8_t nestingLimit)
       : _buffer(buffer),
         _reader(reader),
-        _writer(writer),
+        _stringStorage(stringStorage),
         _nestingLimit(nestingLimit) {}
 
   DeserializationError parse(JsonVariant &variant) {
@@ -221,8 +219,8 @@ class MsgPackDeserializer {
   }
 
   DeserializationError readString(JsonVariant &variant, size_t n) {
-    typename remove_reference<TWriter>::type::String str =
-        _writer.startString();
+    typename remove_reference<TStringStorage>::type::String str =
+        _stringStorage.startString();
     for (; n; --n) {
       uint8_t c;
       if (!readBytes(c)) return DeserializationError::IncompleteInput;
@@ -295,15 +293,33 @@ class MsgPackDeserializer {
 
   JsonBuffer *_buffer;
   TReader _reader;
-  TWriter _writer;
+  TStringStorage _stringStorage;
   uint8_t _nestingLimit;
 };
-
-template <typename TJsonBuffer, typename TReader, typename TWriter>
-MsgPackDeserializer<TReader, TWriter> makeMsgPackDeserializer(
-    TJsonBuffer *buffer, TReader reader, TWriter writer, uint8_t nestingLimit) {
-  return MsgPackDeserializer<TReader, TWriter>(buffer, reader, writer,
-                                               nestingLimit);
-}
 }  // namespace Internals
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeMsgPack(TDocument &doc, const TInput &input) {
+  using namespace Internals;
+  return deserialize<MsgPackDeserializer>(doc, input);
+}
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeMsgPack(TDocument &doc, TInput *input) {
+  using namespace Internals;
+  return deserialize<MsgPackDeserializer>(doc, input);
+}
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeMsgPack(TDocument &doc, TInput *input,
+                                        size_t inputSize) {
+  using namespace Internals;
+  return deserialize<MsgPackDeserializer>(doc, input, inputSize);
+}
+
+template <typename TDocument, typename TInput>
+DeserializationError deserializeMsgPack(TDocument &doc, TInput &input) {
+  using namespace Internals;
+  return deserialize<MsgPackDeserializer>(doc, input);
+}
 }  // namespace ArduinoJson

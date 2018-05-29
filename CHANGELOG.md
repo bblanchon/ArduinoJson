@@ -10,7 +10,7 @@ HEAD
 * Added `deserializeJson()`
 * Added `serializeJson()` and `serializeJsonPretty()`
 * Added `measureJson()` and `measureJsonPretty()`
-* Added `deserializeMsgPack()` (issue #358)
+* Added `serializeMsgPack()`, `deserializeMsgPack()` and `measureMsgPack()` (issue #358)
 * Added example `MsgPackParser.ino` (issue #358)
 * Added support for non zero-terminated strings (issue #704)
 * Removed `JsonBuffer::parseArray()`, `parseObject()` and `parse()`

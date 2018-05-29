@@ -15,14 +15,14 @@ TEST_CASE("serialize JsonArray to std::string") {
     std::string json;
     serializeJson(array, json);
 
-    REQUIRE(std::string("[4,2]") == json);
+    REQUIRE("[4,2]" == json);
   }
 
   SECTION("serializeJsonPretty") {
     std::string json;
     serializeJsonPretty(array, json);
 
-    REQUIRE(std::string("[\r\n  4,\r\n  2\r\n]") == json);
+    REQUIRE("[\r\n  4,\r\n  2\r\n]" == json);
   }
 }
 
@@ -35,13 +35,13 @@ TEST_CASE("serialize JsonObject to std::string") {
     std::string json;
     serializeJson(doc, json);
 
-    REQUIRE(std::string("{\"key\":\"value\"}") == json);
+    REQUIRE("{\"key\":\"value\"}" == json);
   }
 
   SECTION("serializeJsonPretty") {
     std::string json;
     serializeJsonPretty(doc, json);
 
-    REQUIRE(std::string("{\r\n  \"key\": \"value\"\r\n}") == json);
+    REQUIRE("{\r\n  \"key\": \"value\"\r\n}" == json);
   }
 }

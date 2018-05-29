@@ -8,7 +8,7 @@ namespace ArduinoJson {
 namespace Internals {
 
 template <typename TChar>
-class StringWriter {
+class StringMover {
  public:
   class String {
    public:
@@ -28,7 +28,7 @@ class StringWriter {
     TChar* _startPtr;
   };
 
-  StringWriter(TChar* buffer) : _ptr(buffer) {}
+  StringMover(TChar* buffer) : _ptr(buffer) {}
 
   String startString() {
     return String(&_ptr);
@@ -37,5 +37,5 @@ class StringWriter {
  private:
   TChar* _ptr;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

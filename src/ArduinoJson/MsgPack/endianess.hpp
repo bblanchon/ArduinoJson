@@ -5,16 +5,10 @@
 #pragma once
 
 #include "../Polyfills/type_traits.hpp"
+#include "../Polyfills/utility.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
-
-template <typename T>
-inline void swap(T& a, T& b) {
-  T t(a);
-  a = b;
-  b = t;
-}
 
 inline void fixEndianess(uint8_t* p, integral_constant<size_t, 8>) {
   swap(p[0], p[7]);
