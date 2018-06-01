@@ -11,6 +11,7 @@ add_executable(MiscTests
 	StringTraits.cpp
 	TypeTraits.cpp
 	unsigned_char.cpp
+	version.cpp
 	vla.cpp
 )
 

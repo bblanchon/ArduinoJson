@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "ArduinoJson/version.hpp"
+
 #include "ArduinoJson/DynamicJsonBuffer.hpp"
 #include "ArduinoJson/JsonArray.hpp"
 #include "ArduinoJson/JsonObject.hpp"
