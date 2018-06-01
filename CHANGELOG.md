@@ -6,6 +6,7 @@ HEAD
 
 * Fixed `JsonBuffer::parse()` not respecting nesting limit correctly (issue #693)
 * Fixed inconsistencies in nesting level counting (PR #695 from Zhenyu Wu)
+* Fixed null values that could be pass to `strcmp()` (PR #745 from Mike Karlesky)
 
 v5.13.1
 -------

@@ -37,7 +37,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
-      env: SCRIPT=cmake GCC=5 SANITIZE=undefined
+      env: SCRIPT=cmake GCC=5
     - compiler: gcc
       addons:
         apt:

@@ -129,10 +129,11 @@ class JsonVariantComparisons {
     if (is<JsonObject>() && right.template is<JsonObject>())
       return as<JsonObject>() == right.template as<JsonObject>();
     if (is<char *>() && right.template is<char *>())
-      return strcmp(as<char *>(), right.template as<char *>()) == 0;
+      return StringTraits<const char *>::equals(as<char *>(),
+                                                right.template as<char *>());
 
     return false;
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

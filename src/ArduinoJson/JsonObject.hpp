@@ -286,15 +286,21 @@ class JsonObject : public Internals::JsonPrintable<JsonObject>,
 
   template <typename TStringRef, typename TValueRef>
   bool set_impl(TStringRef key, TValueRef value) {
+    // ignore null key
+    if (Internals::StringTraits<TStringRef>::is_null(key)) return false;
+
+    // search a matching key
     iterator it = findKey<TStringRef>(key);
     if (it == end()) {
+      // add the key
       it = Internals::List<JsonPair>::add();
       if (it == end()) return false;
-
       bool key_ok =
           Internals::ValueSaver<TStringRef>::save(_buffer, it->key, key);
       if (!key_ok) return false;
     }
+
+    // save the value
     return Internals::ValueSaver<TValueRef>::save(_buffer, it->value, value);
   }
 
@@ -318,5 +324,5 @@ struct JsonVariantDefault<JsonObject> {
     return JsonObject::invalid();
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

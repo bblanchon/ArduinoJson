@@ -40,7 +40,10 @@ struct StdStringTraits {
   };
 
   static bool equals(const TString& str, const char* expected) {
-    return 0 == strcmp(str.c_str(), expected);
+    // Arduino's String::c_str() can return NULL
+    const char* actual = str.c_str();
+    if (!actual || !expected) return actual == expected;
+    return 0 == strcmp(actual, expected);
   }
 
   static void append(TString& str, char c) {
@@ -68,7 +71,7 @@ struct StringTraits<StringSumHelper, void> : StdStringTraits<StringSumHelper> {
 template <>
 struct StringTraits<std::string, void> : StdStringTraits<std::string> {};
 #endif
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
 
 #endif
