@@ -9,6 +9,7 @@ get	KEYWORD2
 JsonArray	KEYWORD1
 JsonObject	KEYWORD1
 JsonVariant	KEYWORD1
+serializeMsgPack	KEYWORD2
 serializeJson	KEYWORD2
 serializeJsonPretty	KEYWORD2
 set	KEYWORD2

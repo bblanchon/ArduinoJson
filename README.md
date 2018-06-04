@@ -10,6 +10,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
 
 * JSON decoding (comments are supported)
 * JSON encoding (with optional indentation)
+* MessagePack
 * Elegant API, easy to use
 * Fixed memory allocation (zero malloc)
 * No data duplication (zero copy)
