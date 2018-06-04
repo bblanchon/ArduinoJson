@@ -152,4 +152,15 @@ TEST_CASE("JsonObject::operator[]") {
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + 12;
     REQUIRE(expectedSize <= doc.memoryUsage());
   }
+
+  SECTION("should ignore null key") {
+    // object must have a value to make a call to strcmp()
+    obj["dummy"] = 42;
+
+    const char* null = 0;
+    obj[null] = 666;
+
+    REQUIRE(obj.size() == 1);
+    REQUIRE(obj[null] == 0);
+  }
 }

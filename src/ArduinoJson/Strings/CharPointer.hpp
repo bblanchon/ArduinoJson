@@ -10,7 +10,9 @@ namespace Internals {
 template <typename TChar>
 struct CharPointerTraits {
   static bool equals(const TChar* str, const char* expected) {
-    return strcmp(reinterpret_cast<const char*>(str), expected) == 0;
+    const char* actual = reinterpret_cast<const char*>(str);
+    if (!actual || !expected) return actual == expected;
+    return strcmp(actual, expected) == 0;
   }
 
   static bool is_null(const TChar* str) {

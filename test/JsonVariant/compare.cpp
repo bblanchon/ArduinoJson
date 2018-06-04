@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+static const char* null = 0;
+
 template <typename T>
 void checkEquals(JsonVariant a, T b) {
   REQUIRE(b == a);
@@ -96,10 +98,26 @@ TEST_CASE("JsonVariant comparisons") {
     checkComparisons<unsigned short>(122, 123, 124);
   }
 
+  SECTION("null") {
+    JsonVariant variant = null;
+
+    REQUIRE(variant == variant);
+    REQUIRE_FALSE(variant != variant);
+
+    REQUIRE(variant == null);
+    REQUIRE_FALSE(variant != null);
+
+    REQUIRE(variant != "null");
+    REQUIRE_FALSE(variant == "null");
+  }
+
   SECTION("StringLiteral") {
     DynamicJsonDocument doc;
     deserializeJson(doc, "\"hello\"");
     JsonVariant variant = doc.as<JsonVariant>();
+
+    REQUIRE(variant == variant);
+    REQUIRE_FALSE(variant != variant);
 
     REQUIRE(variant == "hello");
     REQUIRE_FALSE(variant != "hello");
@@ -107,15 +125,24 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE(variant != "world");
     REQUIRE_FALSE(variant == "world");
 
+    REQUIRE(variant != null);
+    REQUIRE_FALSE(variant == null);
+
     REQUIRE("hello" == variant);
     REQUIRE_FALSE("hello" != variant);
 
     REQUIRE("world" != variant);
     REQUIRE_FALSE("world" == variant);
+
+    REQUIRE(null != variant);
+    REQUIRE_FALSE(null == variant);
   }
 
   SECTION("String") {
     JsonVariant variant = "hello";
+
+    REQUIRE(variant == variant);
+    REQUIRE_FALSE(variant != variant);
 
     REQUIRE(variant == std::string("hello"));
     REQUIRE_FALSE(variant != std::string("hello"));
@@ -123,11 +150,17 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE(variant != std::string("world"));
     REQUIRE_FALSE(variant == std::string("world"));
 
+    REQUIRE(variant != null);
+    REQUIRE_FALSE(variant == null);
+
     REQUIRE(std::string("hello") == variant);
     REQUIRE_FALSE(std::string("hello") != variant);
 
     REQUIRE(std::string("world") != variant);
     REQUIRE_FALSE(std::string("world") == variant);
+
+    REQUIRE(null != variant);
+    REQUIRE_FALSE(null == variant);
   }
 
   SECTION("IntegerInVariant") {
