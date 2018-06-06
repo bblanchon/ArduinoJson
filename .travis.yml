@@ -114,6 +114,12 @@ matrix:
     - env: SCRIPT=arduino VERSION=1.8.2 BOARD=arduino:avr:uno
     - env: SCRIPT=platformio BOARD=uno
     - env: SCRIPT=platformio BOARD=esp01
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-6.0']
+          packages: ['clang-6.0','llvm-6.0']
+      env: SCRIPT=fuzz CLANG=6.0
 cache:
   directories:
     - "~/.platformio"
