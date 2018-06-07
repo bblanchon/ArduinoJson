@@ -70,6 +70,30 @@ matrix:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-precise-3.8']
           packages: ['clang-3.8']
       env: SCRIPT=cmake CLANG=3.8 SANITIZE=undefined
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-3.9']
+          packages: ['clang-3.9']
+      env: SCRIPT=cmake CLANG=3.9
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-4.0']
+          packages: ['clang-4.0']
+      env: SCRIPT=cmake CLANG=4.0
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-5.0']
+          packages: ['clang-5.0']
+      env: SCRIPT=cmake CLANG=5.0
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-6.0']
+          packages: ['clang-6.0']
+      env: SCRIPT=cmake CLANG=6.0
     - compiler: gcc
       env: SCRIPT=coverage
     - os: osx
@@ -84,6 +108,12 @@ matrix:
     - env: SCRIPT=arduino VERSION=1.8.2 BOARD=arduino:avr:uno
     - env: SCRIPT=platformio BOARD=uno
     - env: SCRIPT=platformio BOARD=esp01
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-6.0']
+          packages: ['clang-6.0','llvm-6.0']
+      env: SCRIPT=fuzz CLANG=6.0
 cache:
   directories:
     - "~/.platformio"
