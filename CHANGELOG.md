@@ -1,6 +1,9 @@
 ArduinoJson: change log
 =======================
 
+v6.0.0-beta
+-----------
+
 * Added `DynamicJsonDocument` and `StaticJsonDocument`
 * Added `deserializeJson()`
 * Added `serializeJson()` and `serializeJsonPretty()`
