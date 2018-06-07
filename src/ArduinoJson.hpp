@@ -12,8 +12,10 @@
 #include "ArduinoJson/StaticJsonBuffer.hpp"
 
 #include "ArduinoJson/Deserialization/JsonParserImpl.hpp"
+#include "ArduinoJson/Deserialization/JsonBinaryParserImpl.hpp"
 #include "ArduinoJson/JsonArrayImpl.hpp"
 #include "ArduinoJson/JsonBufferImpl.hpp"
 #include "ArduinoJson/JsonObjectImpl.hpp"
 #include "ArduinoJson/JsonVariantImpl.hpp"
 #include "ArduinoJson/Serialization/JsonSerializerImpl.hpp"
+#include "ArduinoJson/Serialization/JsonBinarySerializerImpl.hpp"
