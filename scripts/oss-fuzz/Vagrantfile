@@ -2,10 +2,15 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/xenial64"
 
-  config.vm.synced_folder "E:\\Git\\Arduino\\libraries\\ArduinoJson", "/host/ArduinoJson"
+  config.vm.synced_folder "../..", "/host/ArduinoJson"
   config.vm.synced_folder "E:\\Git\\oss-fuzz", "/host/oss-fuzz"
 
   config.vm.network "forwarded_port", guest: 8001, host: 8001
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 2
+  end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     set -x
@@ -18,10 +23,6 @@ Vagrant.configure(2) do |config|
     git clone https://github.com/google/fuzzer-test-suite.git FTS
     ./FTS/tutorial/install-deps.sh  # Get deps
     ./FTS/tutorial/install-clang.sh # Get fresh clang binaries
-    # Get libFuzzer sources and build it
-    svn co http://llvm.org/svn/llvm-project/llvm/trunk/lib/Fuzzer
-    Fuzzer/build.sh
-    sudo mv libFuzzer.a /usr/local/lib/
 
     echo "export PROJECT_NAME='arduinojson'" >> $HOME/.profile
     echo "export CC='clang'" >> $HOME/.profile
