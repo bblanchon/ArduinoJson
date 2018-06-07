@@ -11,7 +11,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) continue;
 
-  // Root JSON object
+  // Allocate the JSON document
   //
   // Inside the brackets, 200 is the size of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
@@ -47,7 +47,7 @@ void setup() {
   // Fetch values.
   //
   // Most of the time, you can rely on the implicit casts.
-  // In other case, you can do doc["time"].as<long>();
+  // In other case, you can do root["time"].as<long>();
   const char* sensor = root["sensor"];
   long time = root["time"];
   double latitude = root["data"][0];

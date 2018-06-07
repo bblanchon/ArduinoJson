@@ -60,7 +60,7 @@ void setup() {
   // Fetch values.
   //
   // Most of the time, you can rely on the implicit casts.
-  // In other case, you can do doc["time"].as<long>();
+  // In other case, you can do root["time"].as<long>();
   const char* sensor = root["sensor"];
   long time = root["time"];
   double latitude = root["data"][0];

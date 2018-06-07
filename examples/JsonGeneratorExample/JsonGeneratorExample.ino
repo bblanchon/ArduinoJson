@@ -11,7 +11,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) continue;
 
-  // The JSON document
+  // Allocate the JSON document
   //
   // Inside the brackets, 200 is the RAM allocated to this document.
   // Don't forget to change this value to match your requirement.
