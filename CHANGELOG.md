@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed conflicts with `isnan()` and `isinf()` macros (issue #752)
+
 v6.0.0-beta
 -----------
 
