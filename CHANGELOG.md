@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.0.1-beta
+-----------
 
 * Fixed conflicts with `isnan()` and `isinf()` macros (issue #752)
 
@@ -486,52 +486,3 @@ However, you should not see this as an invitation to use the `String` class.
 The `String` class is **bad** because it uses dynamic memory allocation.
 Compared to static allocation, it compiles to a bigger, slower program, and is less predictable.
 You certainly don't want that in an embedded environment!
-
-v4.6
-----
-
-* Fixed segmentation fault in `DynamicJsonBuffer` when memory allocation fails (issue #92)
-
-v4.5
-----
-
-* Fixed buffer overflow when input contains a backslash followed by a terminator (issue #81)
-
-**Upgrading is recommended** since previous versions contain a potential security risk.
-
-Special thanks to [Giancarlo Canales Barreto](https://github.com/gcanalesb) for finding this nasty bug.
-
-v4.4
-----
-
-* Added `JsonArray::measureLength()` and `JsonObject::measureLength()` (issue #75)
-
-v4.3
-----
-
-* Added `JsonArray::removeAt()` to remove an element of an array (issue #58)
-* Fixed stack-overflow in `DynamicJsonBuffer` when parsing huge JSON files (issue #65)
-* Fixed wrong return value of `parseArray()` and `parseObject()` when allocation fails (issue #68)
-
-v4.2
-----
-
-* Switched back to old library layout (issues #39, #43 and #45)
-* Removed global new operator overload (issue #40, #45 and #46)
-* Added an example with EthernetServer
-
-v4.1
-----
-
-* Added DynamicJsonBuffer (issue #19)
-
-v4.0
-----
-
-* Unified parser and generator API (issue #23)
-* Updated library layout, now requires Arduino 1.0.6 or newer
-
-> ### BREAKING CHANGES :warning:
->
-> API changed significantly since v3, see [Migrating code to the new API](https://arduinojson.org/doc/migration/).
-
