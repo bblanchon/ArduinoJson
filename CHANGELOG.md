@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.1.0-beta
+-----------
 
 * Return `JsonArray` and `JsonObject` by value instead of reference (issue #309)
 * Replaced `success()` with `isNull()`
