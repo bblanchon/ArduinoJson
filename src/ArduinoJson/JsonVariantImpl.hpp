@@ -5,8 +5,8 @@
 #pragma once
 
 #include "Configuration.hpp"
-#include "JsonArray.hpp"
-#include "JsonObject.hpp"
+#include "JsonArrayData.hpp"
+#include "JsonObjectData.hpp"
 #include "JsonVariant.hpp"
 #include "Numbers/isFloat.hpp"
 #include "Numbers/isInteger.hpp"
@@ -17,32 +17,50 @@
 
 namespace ArduinoJson {
 
-inline JsonVariant::JsonVariant(const JsonArray &array) {
-  if (array.success()) {
+inline JsonVariant::JsonVariant(JsonArray array) {
+  if (!array.isNull()) {
     _type = Internals::JSON_ARRAY;
-    _content.asArray = const_cast<JsonArray *>(&array);
+    _content.asArray = array._data;
   } else {
     _type = Internals::JSON_UNDEFINED;
   }
 }
 
-inline JsonVariant::JsonVariant(const JsonObject &object) {
-  if (object.success()) {
+inline JsonVariant::JsonVariant(JsonObject object) {
+  if (!object.isNull()) {
     _type = Internals::JSON_OBJECT;
-    _content.asObject = const_cast<JsonObject *>(&object);
+    _content.asObject = object._data;
   } else {
     _type = Internals::JSON_UNDEFINED;
   }
 }
 
-inline JsonArray &JsonVariant::variantAsArray() const {
-  if (_type == Internals::JSON_ARRAY) return *_content.asArray;
-  return JsonArray::invalid();
+template <typename T>
+inline typename Internals::enable_if<
+    Internals::is_same<typename Internals::remove_const<T>::type,
+                       JsonArray>::value,
+    JsonArray>::type
+JsonVariant::as() const {
+  return variantAsArray();
 }
 
-inline JsonObject &JsonVariant::variantAsObject() const {
-  if (_type == Internals::JSON_OBJECT) return *_content.asObject;
-  return JsonObject::invalid();
+template <typename T>
+inline typename Internals::enable_if<
+    Internals::is_same<typename Internals::remove_const<T>::type,
+                       JsonObject>::value,
+    T>::type
+JsonVariant::as() const {
+  return variantAsObject();
+}
+
+inline JsonArray JsonVariant::variantAsArray() const {
+  if (_type == Internals::JSON_ARRAY) return _content.asArray;
+  return JsonArray();
+}
+
+inline JsonObject JsonVariant::variantAsObject() const {
+  if (_type == Internals::JSON_OBJECT) return _content.asObject;
+  return JsonObject();
 }
 
 template <typename T>

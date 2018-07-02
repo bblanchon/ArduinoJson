@@ -8,9 +8,9 @@
 
 namespace ArduinoJson {
 
-// A key value pair for JsonObject.
+// A key value pair for JsonObjectData.
 struct JsonPair {
   const char* key;
   JsonVariant value;
 };
-}
+}  // namespace ArduinoJson

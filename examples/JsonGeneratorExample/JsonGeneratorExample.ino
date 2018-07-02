@@ -24,7 +24,7 @@ void setup() {
   // DynamicJsonDocument  doc(200);
 
   // Make our document be an object
-  JsonObject& root = doc.to<JsonObject>();
+  JsonObject root = doc.to<JsonObject>();
 
   // Add values in the object
   //
@@ -35,7 +35,7 @@ void setup() {
 
   // Add an array.
   //
-  JsonArray& data = root.createNestedArray("data");
+  JsonArray data = root.createNestedArray("data");
   data.add(48.756080);
   data.add(2.302038);
 
@@ -61,15 +61,4 @@ void loop() {
   // not used in this example
 }
 
-// See also
-// --------
-//
-// The website arduinojson.org contains the documentation for all the functions
-// used above. It also includes an FAQ that will help you solve any
-// serialization problem.
-// Please check it out at: https://arduinojson.org/
-//
-// The book "Mastering ArduinoJson" contains a tutorial on serialization.
-// It begins with a simple example, like the one above, and then adds more
-// features like serializing directly to a file or an HTTP request.
-// Please check it out at: https://arduinojson.org/book/
+// Visit https://arduinojson.org/v6/example/generator/ for more.

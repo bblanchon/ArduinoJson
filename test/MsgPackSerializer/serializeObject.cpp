@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <catch.hpp>
 
-static void check(const JsonObject& object, const char* expected_data,
+static void check(const JsonObject object, const char* expected_data,
                   size_t expected_len) {
   std::string expected(expected_data, expected_data + expected_len);
   std::string actual;
@@ -17,19 +17,19 @@ static void check(const JsonObject& object, const char* expected_data,
 }
 
 template <size_t N>
-static void check(const JsonObject& object, const char (&expected_data)[N]) {
+static void check(const JsonObject object, const char (&expected_data)[N]) {
   const size_t expected_len = N - 1;
   check(object, expected_data, expected_len);
 }
 
 // TODO: used by the commented test
-// static void check(const JsonObject& object, const std::string& expected) {
+// static void check(const JsonObject object, const std::string& expected) {
 //  check(object, expected.data(), expected.length());
 //}
 
 TEST_CASE("serialize MsgPack object") {
   DynamicJsonDocument doc;
-  JsonObject& object = doc.to<JsonObject>();
+  JsonObject object = doc.to<JsonObject>();
 
   SECTION("empty") {
     check(object, "\x80");

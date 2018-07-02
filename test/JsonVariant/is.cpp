@@ -7,9 +7,9 @@
 
 void checkIsArray(JsonVariant var) {
   REQUIRE(var.is<JsonArray>());
-  REQUIRE(var.is<JsonArray&>());
+  REQUIRE(var.is<JsonArray>());
   REQUIRE(var.is<const JsonArray>());
-  REQUIRE(var.is<const JsonArray&>());
+  REQUIRE(var.is<const JsonArray>());
 
   REQUIRE_FALSE(var.is<bool>());
   REQUIRE_FALSE(var.is<double>());
@@ -71,7 +71,7 @@ void checkIsString(JsonVariant var) {
 TEST_CASE("JsonVariant::is()") {
   SECTION("JsonArray") {
     DynamicJsonDocument doc;
-    JsonArray& array = doc.to<JsonArray>();
+    JsonArray array = doc.to<JsonArray>();
     checkIsArray(array);
   }
 

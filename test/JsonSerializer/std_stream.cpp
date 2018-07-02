@@ -27,7 +27,7 @@ TEST_CASE("operator<<(std::ostream)") {
   }
 
   SECTION("JsonObject") {
-    JsonObject& object = doc.to<JsonObject>();
+    JsonObject object = doc.to<JsonObject>();
     object["key"] = "value";
 
     os << object;
@@ -36,7 +36,7 @@ TEST_CASE("operator<<(std::ostream)") {
   }
 
   SECTION("JsonObjectSubscript") {
-    JsonObject& object = doc.to<JsonObject>();
+    JsonObject object = doc.to<JsonObject>();
     object["key"] = "value";
 
     os << object["key"];
@@ -45,7 +45,7 @@ TEST_CASE("operator<<(std::ostream)") {
   }
 
   SECTION("JsonArray") {
-    JsonArray& array = doc.to<JsonArray>();
+    JsonArray array = doc.to<JsonArray>();
     array.add("value");
 
     os << array;
@@ -54,7 +54,7 @@ TEST_CASE("operator<<(std::ostream)") {
   }
 
   SECTION("JsonArraySubscript") {
-    JsonArray& array = doc.to<JsonArray>();
+    JsonArray array = doc.to<JsonArray>();
     array.add("value");
 
     os << array[0];

@@ -13,7 +13,7 @@ TEST_CASE("deserialize MsgPack array") {
       const char* input = "\x90";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonArray& array = doc.as<JsonArray>();
+      JsonArray array = doc.as<JsonArray>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(array.size() == 0);
@@ -23,7 +23,7 @@ TEST_CASE("deserialize MsgPack array") {
       const char* input = "\x92\x01\x02";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonArray& array = doc.as<JsonArray>();
+      JsonArray array = doc.as<JsonArray>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(array.size() == 2);
@@ -37,7 +37,7 @@ TEST_CASE("deserialize MsgPack array") {
       const char* input = "\xDC\x00\x00";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonArray& array = doc.as<JsonArray>();
+      JsonArray array = doc.as<JsonArray>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(array.size() == 0);
@@ -47,7 +47,7 @@ TEST_CASE("deserialize MsgPack array") {
       const char* input = "\xDC\x00\x02\xA5hello\xA5world";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonArray& array = doc.as<JsonArray>();
+      JsonArray array = doc.as<JsonArray>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(array.size() == 2);
@@ -61,7 +61,7 @@ TEST_CASE("deserialize MsgPack array") {
       const char* input = "\xDD\x00\x00\x00\x00";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonArray& array = doc.as<JsonArray>();
+      JsonArray array = doc.as<JsonArray>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(array.size() == 0);
@@ -72,7 +72,7 @@ TEST_CASE("deserialize MsgPack array") {
           "\xDD\x00\x00\x00\x02\xCA\x00\x00\x00\x00\xCA\x40\x48\xF5\xC3";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonArray& array = doc.as<JsonArray>();
+      JsonArray array = doc.as<JsonArray>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(array.size() == 2);

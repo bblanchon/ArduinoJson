@@ -6,7 +6,7 @@
 #include <catch.hpp>
 #include <string>
 
-void check(const JsonObject &obj, const std::string &expected) {
+void check(const JsonObject obj, const std::string &expected) {
   char actual[256];
   size_t actualLen = serializeJson(obj, actual);
   size_t measuredLen = measureJson(obj);
@@ -18,7 +18,7 @@ void check(const JsonObject &obj, const std::string &expected) {
 
 TEST_CASE("serializeJson(JsonObject)") {
   DynamicJsonDocument doc;
-  JsonObject &obj = doc.to<JsonObject>();
+  JsonObject obj = doc.to<JsonObject>();
 
   SECTION("EmptyObject") {
     check(obj, "{}");

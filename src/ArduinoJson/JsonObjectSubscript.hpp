@@ -22,10 +22,10 @@ class JsonObjectSubscript
   typedef JsonObjectSubscript<TStringRef> this_type;
 
  public:
-  FORCE_INLINE JsonObjectSubscript(JsonObject& object, TStringRef key)
+  FORCE_INLINE JsonObjectSubscript(JsonObject object, TStringRef key)
       : _object(object), _key(key) {}
 
-  FORCE_INLINE this_type& operator=(const this_type& src) {
+  FORCE_INLINE this_type &operator=(const this_type &src) {
     _object.set(_key, src);
     return *this;
   }
@@ -36,8 +36,8 @@ class JsonObjectSubscript
   // TValue = bool, char, long, int, short, float, double,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
-  FORCE_INLINE typename enable_if<!is_array<TValue>::value, this_type&>::type
-  operator=(const TValue& src) {
+  FORCE_INLINE typename enable_if<!is_array<TValue>::value, this_type &>::type
+  operator=(const TValue &src) {
     _object.set(_key, src);
     return *this;
   }
@@ -45,13 +45,13 @@ class JsonObjectSubscript
   // operator=(TValue);
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename TValue>
-  FORCE_INLINE this_type& operator=(TValue* src) {
+  FORCE_INLINE this_type &operator=(TValue *src) {
     _object.set(_key, src);
     return *this;
   }
 
-  FORCE_INLINE bool success() const {
-    return _object.containsKey(_key);
+  FORCE_INLINE bool isNull() const {
+    return !_object.containsKey(_key);
   }
 
   template <typename TValue>
@@ -71,26 +71,59 @@ class JsonObjectSubscript
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, bool>::type set(
-      const TValue& value) {
+      const TValue &value) {
     return _object.set(_key, value);
   }
   //
   // bool set(TValue);
   // TValue = char*, const char, const FlashStringHelper*
   template <typename TValue>
-  FORCE_INLINE bool set(const TValue* value) {
+  FORCE_INLINE bool set(const TValue *value) {
     return _object.set(_key, value);
   }
 
   template <typename Visitor>
-  void visit(Visitor& visitor) const {
+  void visit(Visitor &visitor) const {
     return _object.get<JsonVariant>(_key).visit(visitor);
   }
 
  private:
-  JsonObject& _object;
+  JsonObject _object;
   TStringRef _key;
 };
+
+template <typename TImpl>
+template <typename TString>
+inline typename enable_if<StringTraits<TString>::has_equals,
+                          const JsonObjectSubscript<const TString &> >::type
+    JsonVariantSubscripts<TImpl>::operator[](const TString &key) const {
+  return impl()->template as<JsonObject>()[key];
+}
+
+template <typename TImpl>
+template <typename TString>
+inline typename enable_if<StringTraits<TString>::has_equals,
+                          JsonObjectSubscript<const TString &> >::type
+    JsonVariantSubscripts<TImpl>::operator[](const TString &key) {
+  return impl()->template as<JsonObject>()[key];
+}
+
+template <typename TImpl>
+template <typename TString>
+inline typename enable_if<StringTraits<const TString *>::has_equals,
+                          JsonObjectSubscript<const TString *> >::type
+    JsonVariantSubscripts<TImpl>::operator[](const TString *key) {
+  return impl()->template as<JsonObject>()[key];
+}
+
+template <typename TImpl>
+template <typename TString>
+inline typename enable_if<StringTraits<TString *>::has_equals,
+                          const JsonObjectSubscript<const TString *> >::type
+    JsonVariantSubscripts<TImpl>::operator[](const TString *key) const {
+  return impl()->template as<JsonObject>()[key];
+}
+
 }  // namespace Internals
 }  // namespace ArduinoJson
 

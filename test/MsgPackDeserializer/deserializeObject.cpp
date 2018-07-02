@@ -13,7 +13,7 @@ TEST_CASE("deserialize MsgPack object") {
       const char* input = "\x80";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
@@ -24,7 +24,7 @@ TEST_CASE("deserialize MsgPack object") {
       const char* input = "\x82\xA3one\x01\xA3two\x02";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
@@ -39,7 +39,7 @@ TEST_CASE("deserialize MsgPack object") {
       const char* input = "\xDE\x00\x00";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
@@ -50,7 +50,7 @@ TEST_CASE("deserialize MsgPack object") {
       const char* input = "\xDE\x00\x02\xA1H\xA5hello\xA1W\xA5world";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
@@ -65,7 +65,7 @@ TEST_CASE("deserialize MsgPack object") {
       const char* input = "\xDF\x00\x00\x00\x00";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
@@ -78,7 +78,7 @@ TEST_CASE("deserialize MsgPack object") {
           "\xF5\xC3";
 
       DeserializationError error = deserializeMsgPack(doc, input);
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(error == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());

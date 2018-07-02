@@ -5,24 +5,21 @@
 #pragma once
 
 #include "JsonArray.hpp"
-#include "JsonArraySubscript.hpp"
 #include "JsonObject.hpp"
 
 namespace ArduinoJson {
 
-inline JsonArray &JsonArray::createNestedArray() {
-  JsonArray *array = new (_buffer) JsonArray(_buffer);
-  if (!array) return JsonArray::invalid();
-
-  add(array);
-  return *array;
+inline JsonArray JsonArray::createNestedArray() {
+  if (!_data) return JsonArray();
+  JsonArray array(_data->_buffer);
+  if (!array.isNull()) add(array);
+  return array;
 }
 
-inline JsonObject &JsonArray::createNestedObject() {
-  JsonObject *object = new (_buffer) JsonObject(_buffer);
-  if (!object) return JsonObject::invalid();
-
-  add(object);
-  return *object;
+inline JsonObject JsonArray::createNestedObject() {
+  if (!_data) return JsonObject();
+  JsonObject object(_data->_buffer);
+  if (!object.isNull()) add(object);
+  return object;
 }
 }  // namespace ArduinoJson

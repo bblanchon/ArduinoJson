@@ -7,10 +7,10 @@ add_executable(JsonVariantTests
 	compare.cpp
 	copy.cpp
 	is.cpp
+	isnull.cpp
 	or.cpp
 	set_get.cpp
 	subscript.cpp
-	success.cpp
 	undefined.cpp
 )
 

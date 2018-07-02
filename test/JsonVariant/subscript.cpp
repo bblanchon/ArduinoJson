@@ -8,7 +8,7 @@
 TEST_CASE("JsonVariant::operator[]") {
   SECTION("Array") {
     DynamicJsonDocument doc;
-    JsonArray& array = doc.to<JsonArray>();
+    JsonArray array = doc.to<JsonArray>();
     array.add("element at index 0");
     array.add("element at index 1");
 
@@ -19,14 +19,14 @@ TEST_CASE("JsonVariant::operator[]") {
     REQUIRE(std::string("element at index 1") == var[1]);
     REQUIRE(std::string("element at index 0") ==
             var[static_cast<unsigned char>(0)]);  // issue #381
-    REQUIRE_FALSE(var[666].success());
-    REQUIRE_FALSE(var[3].success());
-    REQUIRE_FALSE(var["0"].success());
+    REQUIRE(var[666].isNull());
+    REQUIRE(var[3].isNull());
+    REQUIRE(var["0"].isNull());
   }
 
   SECTION("Object") {
     DynamicJsonDocument doc;
-    JsonObject& object = doc.to<JsonObject>();
+    JsonObject object = doc.to<JsonObject>();
     object["a"] = "element at key \"a\"";
     object["b"] = "element at key \"b\"";
 
@@ -35,27 +35,27 @@ TEST_CASE("JsonVariant::operator[]") {
     REQUIRE(2 == var.size());
     REQUIRE(std::string("element at key \"a\"") == var["a"]);
     REQUIRE(std::string("element at key \"b\"") == var["b"]);
-    REQUIRE_FALSE(var["c"].success());
-    REQUIRE_FALSE(var[0].success());
+    REQUIRE(var["c"].isNull());
+    REQUIRE(var[0].isNull());
   }
 
   SECTION("Undefined") {
     JsonVariant var = JsonVariant();
     REQUIRE(0 == var.size());
-    REQUIRE_FALSE(var["0"].success());
-    REQUIRE_FALSE(var[0].success());
+    REQUIRE(var["0"].isNull());
+    REQUIRE(var[0].isNull());
   }
 
   SECTION("String") {
     JsonVariant var = "hello world";
     REQUIRE(0 == var.size());
-    REQUIRE_FALSE(var["0"].success());
-    REQUIRE_FALSE(var[0].success());
+    REQUIRE(var["0"].isNull());
+    REQUIRE(var[0].isNull());
   }
 
   SECTION("ObjectSetValue") {
     DynamicJsonDocument doc;
-    JsonObject& obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     JsonVariant var = obj;
     var["hello"] = "world";
     REQUIRE(1 == var.size());
@@ -64,7 +64,7 @@ TEST_CASE("JsonVariant::operator[]") {
 
   SECTION("ArraySetValue") {
     DynamicJsonDocument doc;
-    JsonArray& arr = doc.to<JsonArray>();
+    JsonArray arr = doc.to<JsonArray>();
     arr.add("hello");
     JsonVariant var = arr;
     var[0] = "world";

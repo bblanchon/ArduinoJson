@@ -7,7 +7,7 @@
 
 TEST_CASE("JsonArray::remove()") {
   DynamicJsonDocument doc;
-  JsonArray& _array = doc.to<JsonArray>();
+  JsonArray _array = doc.to<JsonArray>();
   _array.add(1);
   _array.add(2);
   _array.add(3);

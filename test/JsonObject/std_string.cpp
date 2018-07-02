@@ -17,7 +17,7 @@ TEST_CASE("std::string") {
     char json[] = "{\"key\":\"value\"}";
 
     deserializeJson(doc, json);
-    JsonObject &obj = doc.as<JsonObject>();
+    JsonObject obj = doc.as<JsonObject>();
 
     REQUIRE(std::string("value") == obj[std::string("key")]);
   }
@@ -26,13 +26,13 @@ TEST_CASE("std::string") {
     char json[] = "{\"key\":\"value\"}";
 
     deserializeJson(doc, json);
-    JsonObject &obj = doc.as<JsonObject>();
+    JsonObject obj = doc.as<JsonObject>();
 
     REQUIRE(std::string("value") == obj[std::string("key")]);
   }
 
   SECTION("set(key)") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     std::string key("hello");
     obj.set(key, "world");
     eraseString(key);
@@ -40,7 +40,7 @@ TEST_CASE("std::string") {
   }
 
   SECTION("set(value)") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     std::string value("world");
     obj.set("hello", value);
     eraseString(value);
@@ -48,7 +48,7 @@ TEST_CASE("std::string") {
   }
 
   SECTION("set(key,value)") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     std::string key("hello");
     std::string value("world");
     obj.set(key, value);
@@ -58,9 +58,9 @@ TEST_CASE("std::string") {
   }
 
   SECTION("set(JsonArraySubscript)") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     DynamicJsonDocument doc2;
-    JsonArray &arr = doc2.to<JsonArray>();
+    JsonArray arr = doc2.to<JsonArray>();
     arr.add("world");
 
     obj.set(std::string("hello"), arr[0]);
@@ -69,9 +69,9 @@ TEST_CASE("std::string") {
   }
 
   SECTION("set(JsonObjectSubscript)") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     DynamicJsonDocument doc2;
-    JsonObject &obj2 = doc2.to<JsonObject>();
+    JsonObject obj2 = doc2.to<JsonObject>();
     obj2.set("x", "world");
 
     obj.set(std::string("hello"), obj2["x"]);
@@ -82,7 +82,7 @@ TEST_CASE("std::string") {
   SECTION("get<T>()") {
     char json[] = "{\"key\":\"value\"}";
     deserializeJson(doc, json);
-    JsonObject &obj = doc.as<JsonObject>();
+    JsonObject obj = doc.as<JsonObject>();
 
     REQUIRE(std::string("value") == obj.get<const char *>(std::string("key")));
   }
@@ -90,13 +90,13 @@ TEST_CASE("std::string") {
   SECTION("is<T>()") {
     char json[] = "{\"key\":\"value\"}";
     deserializeJson(doc, json);
-    JsonObject &obj = doc.as<JsonObject>();
+    JsonObject obj = doc.as<JsonObject>();
 
     REQUIRE(true == obj.is<const char *>(std::string("key")));
   }
 
   SECTION("createNestedObject()") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     std::string key = "key";
     char json[64];
     obj.createNestedObject(key);
@@ -106,7 +106,7 @@ TEST_CASE("std::string") {
   }
 
   SECTION("createNestedArray()") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     std::string key = "key";
     char json[64];
     obj.createNestedArray(key);
@@ -118,12 +118,12 @@ TEST_CASE("std::string") {
   SECTION("containsKey()") {
     char json[] = "{\"key\":\"value\"}";
     deserializeJson(doc, json);
-    JsonObject &obj = doc.as<JsonObject>();
+    JsonObject obj = doc.as<JsonObject>();
     REQUIRE(true == obj.containsKey(std::string("key")));
   }
 
   SECTION("remove()") {
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     obj["key"] = "value";
 
     obj.remove(std::string("key"));
@@ -133,7 +133,7 @@ TEST_CASE("std::string") {
 
   SECTION("operator[], set key") {
     std::string key("hello");
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     obj[key] = "world";
     eraseString(key);
     REQUIRE(std::string("world") == obj["hello"]);
@@ -141,7 +141,7 @@ TEST_CASE("std::string") {
 
   SECTION("operator[], set value") {
     std::string value("world");
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
     obj["hello"] = value;
     eraseString(value);
     REQUIRE(std::string("world") == obj["hello"]);
@@ -149,7 +149,7 @@ TEST_CASE("std::string") {
 
   SECTION("memoryUsage() increases when adding a new key") {
     std::string key1("hello"), key2("world");
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
 
     obj[key1] = 1;
     size_t sizeBefore = doc.memoryUsage();
@@ -161,7 +161,7 @@ TEST_CASE("std::string") {
 
   SECTION("memoryUsage() remains when adding the same key") {
     std::string key("hello");
-    JsonObject &obj = doc.to<JsonObject>();
+    JsonObject obj = doc.to<JsonObject>();
 
     obj[key] = 1;
     size_t sizeBefore = doc.memoryUsage();

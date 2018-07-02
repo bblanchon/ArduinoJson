@@ -7,28 +7,29 @@
 
 using namespace Catch::Matchers;
 
-TEST_CASE("JsonArray::invalid()") {
+TEST_CASE("Undefined JsonArray") {
+  JsonArray array;
+
   SECTION("SubscriptFails") {
-    REQUIRE_FALSE(JsonArray::invalid()[0].success());
+    REQUIRE(array[0].isNull());
   }
 
   SECTION("AddFails") {
-    JsonArray& array = JsonArray::invalid();
     array.add(1);
     REQUIRE(0 == array.size());
   }
 
   SECTION("CreateNestedArrayFails") {
-    REQUIRE_FALSE(JsonArray::invalid().createNestedArray().success());
+    REQUIRE(array.createNestedArray().isNull());
   }
 
   SECTION("CreateNestedObjectFails") {
-    REQUIRE_FALSE(JsonArray::invalid().createNestedObject().success());
+    REQUIRE(array.createNestedObject().isNull());
   }
 
   SECTION("PrintToWritesBrackets") {
     char buffer[32];
-    serializeJson(JsonArray::invalid(), buffer, sizeof(buffer));
-    REQUIRE_THAT(buffer, Equals("[]"));
+    serializeJson(array, buffer, sizeof(buffer));
+    REQUIRE_THAT(buffer, Equals("null"));
   }
 }

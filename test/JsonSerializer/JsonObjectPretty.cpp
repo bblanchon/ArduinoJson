@@ -6,7 +6,7 @@
 #include <catch.hpp>
 #include <string>
 
-void check(const JsonObject &obj, const std::string expected) {
+void check(const JsonObject obj, const std::string expected) {
   char json[256];
 
   size_t actualLen = serializeJsonPretty(obj, json);
@@ -19,7 +19,7 @@ void check(const JsonObject &obj, const std::string expected) {
 
 TEST_CASE("serializeJsonPretty(JsonObject)") {
   DynamicJsonDocument doc;
-  JsonObject &obj = doc.to<JsonObject>();
+  JsonObject obj = doc.to<JsonObject>();
 
   SECTION("EmptyObject") {
     check(obj, "{}");
@@ -57,10 +57,10 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
   }
 
   SECTION("NestedContainers") {
-    JsonObject &nested1 = obj.createNestedObject("key1");
+    JsonObject nested1 = obj.createNestedObject("key1");
     nested1["a"] = 1;
 
-    JsonArray &nested2 = obj.createNestedArray("key2");
+    JsonArray nested2 = obj.createNestedArray("key2");
     nested2.add(2);
 
     check(obj,

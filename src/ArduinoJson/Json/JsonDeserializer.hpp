@@ -66,8 +66,8 @@ class JsonDeserializer {
   DeserializationError parseArray(JsonVariant &variant) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
 
-    JsonArray *array = new (_buffer) JsonArray(_buffer);
-    if (!array) return DeserializationError::NoMemory;
+    JsonArray array(_buffer);
+    if (array.isNull()) return DeserializationError::NoMemory;
     variant = array;
 
     // Check opening braket
@@ -88,7 +88,7 @@ class JsonDeserializer {
       err = parse(value);
       _nestingLimit++;
       if (err) return err;
-      if (!array->add(value)) return DeserializationError::NoMemory;
+      if (!array.add(value)) return DeserializationError::NoMemory;
 
       // 2 - Skip spaces
       err = skipSpacesAndComments();
@@ -103,8 +103,8 @@ class JsonDeserializer {
   DeserializationError parseObject(JsonVariant &variant) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
 
-    JsonObject *object = new (_buffer) JsonObject(_buffer);
-    if (!object) return DeserializationError::NoMemory;
+    JsonObject object(_buffer);
+    if (object.isNull()) return DeserializationError::NoMemory;
     variant = object;
 
     // Check opening brace
@@ -126,9 +126,7 @@ class JsonDeserializer {
 
       // Skip spaces
       err = skipSpacesAndComments();
-      if (err) return err;
-
-      // Colon
+      if (err) return err;  // Colon
       if (!eat(':')) return DeserializationError::InvalidInput;
 
       // Parse value
@@ -137,7 +135,7 @@ class JsonDeserializer {
       err = parse(value);
       _nestingLimit++;
       if (err) return err;
-      if (!object->set(key, value)) return DeserializationError::NoMemory;
+      if (!object.set(key, value)) return DeserializationError::NoMemory;
 
       // Skip spaces
       err = skipSpacesAndComments();

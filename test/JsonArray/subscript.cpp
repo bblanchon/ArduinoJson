@@ -8,7 +8,7 @@
 
 TEST_CASE("JsonArray::operator[]") {
   DynamicJsonDocument doc;
-  JsonArray& _array = doc.to<JsonArray>();
+  JsonArray _array = doc.to<JsonArray>();
   _array.add(0);
 
   SECTION("int") {
@@ -53,35 +53,33 @@ TEST_CASE("JsonArray::operator[]") {
 
   SECTION("nested array") {
     DynamicJsonDocument doc2;
-    JsonArray& arr = doc2.to<JsonArray>();
+    JsonArray arr = doc2.to<JsonArray>();
 
     _array[0] = arr;
 
-    REQUIRE(&arr == &_array[0].as<JsonArray&>());
-    REQUIRE(&arr == &_array[0].as<JsonArray>());  // <- short hand
-    REQUIRE(&arr == &_array[0].as<const JsonArray&>());
-    REQUIRE(&arr == &_array[0].as<const JsonArray>());  // <- short hand
-    REQUIRE(true == _array[0].is<JsonArray&>());
+    REQUIRE(arr == _array[0].as<JsonArray>());
+    REQUIRE(arr == _array[0].as<JsonArray>());  // <- short hand
+    // REQUIRE(arr == _array[0].as<const JsonArray>());
+    // REQUIRE(arr == _array[0].as<const JsonArray>());  // <- short hand
+    REQUIRE(true == _array[0].is<JsonArray>());
     REQUIRE(false == _array[0].is<int>());
   }
 
   SECTION("nested object") {
     DynamicJsonDocument doc2;
-    JsonObject& obj = doc2.to<JsonObject>();
+    JsonObject obj = doc2.to<JsonObject>();
 
     _array[0] = obj;
 
-    REQUIRE(&obj == &_array[0].as<JsonObject&>());
-    REQUIRE(&obj == &_array[0].as<JsonObject>());  // <- short hand
-    REQUIRE(&obj == &_array[0].as<const JsonObject&>());
-    REQUIRE(&obj == &_array[0].as<const JsonObject>());  // <- short hand
-    REQUIRE(true == _array[0].is<JsonObject&>());
+    REQUIRE(obj == _array[0].as<JsonObject>());
+    REQUIRE(obj == _array[0].as<const JsonObject>());  // <- short hand
+    REQUIRE(true == _array[0].is<JsonObject>());
     REQUIRE(false == _array[0].is<int>());
   }
 
   SECTION("array subscript") {
     DynamicJsonDocument doc2;
-    JsonArray& arr = doc2.to<JsonArray>();
+    JsonArray arr = doc2.to<JsonArray>();
     const char* str = "hello";
 
     arr.add(str);
@@ -94,7 +92,7 @@ TEST_CASE("JsonArray::operator[]") {
   SECTION("object subscript") {
     const char* str = "hello";
     DynamicJsonDocument doc2;
-    JsonObject& obj = doc2.to<JsonObject>();
+    JsonObject obj = doc2.to<JsonObject>();
 
     obj["x"] = str;
 

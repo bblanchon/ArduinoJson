@@ -1,6 +1,36 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Return `JsonArray` and `JsonObject` by value instead of reference (issue #309)
+* Replaced `success()` with `isNull()`
+
+> ### BREAKING CHANGES
+> 
+> Old code:
+>
+> ```c++
+> JsonObject& obj = doc.to<JsonObject>();
+> JsonArray& arr = obj.createNestedArray("key");
+> if (!arr.success()) {
+>   Serial.println("No enough memory");
+>   return;
+> }
+> ```
+> 
+> New code:
+> 
+> ```c++
+> JsonObject obj = doc.to<JsonObject>();
+> JsonArray arr = obj.createNestedArray("key");
+> if (arr.isNull()) {
+>   Serial.println("No enough memory");
+>   return;
+> }
+> ```
+
 v6.0.1-beta
 -----------
 

@@ -7,7 +7,7 @@
 
 TEST_CASE("serialize JsonArray to std::string") {
   DynamicJsonDocument doc;
-  JsonArray &array = doc.to<JsonArray>();
+  JsonArray array = doc.to<JsonArray>();
   array.add(4);
   array.add(2);
 
@@ -28,7 +28,7 @@ TEST_CASE("serialize JsonArray to std::string") {
 
 TEST_CASE("serialize JsonObject to std::string") {
   DynamicJsonDocument doc;
-  JsonObject &obj = doc.to<JsonObject>();
+  JsonObject obj = doc.to<JsonObject>();
   obj["key"] = "value";
 
   SECTION("object") {

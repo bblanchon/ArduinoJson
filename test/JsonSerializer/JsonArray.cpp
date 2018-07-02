@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-static void check(JsonArray &array, std::string expected) {
+static void check(JsonArray array, std::string expected) {
   std::string actual;
   size_t actualLen = serializeJson(array, actual);
   REQUIRE(expected == actual);
@@ -16,7 +16,7 @@ static void check(JsonArray &array, std::string expected) {
 
 TEST_CASE("serializeJson(JsonArray)") {
   StaticJsonDocument<JSON_ARRAY_SIZE(2)> doc;
-  JsonArray &array = doc.to<JsonArray>();
+  JsonArray array = doc.to<JsonArray>();
 
   SECTION("Empty") {
     check(array, "[]");

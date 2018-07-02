@@ -7,7 +7,7 @@
 
 TEST_CASE("JsonArray::add()") {
   DynamicJsonDocument doc;
-  JsonArray& _array = doc.to<JsonArray>();
+  JsonArray _array = doc.to<JsonArray>();
 
   SECTION("int") {
     _array.add(123);
@@ -40,30 +40,30 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("nested array") {
     DynamicJsonDocument doc2;
-    JsonArray& arr = doc2.to<JsonArray>();
+    JsonArray arr = doc2.to<JsonArray>();
 
     _array.add(arr);
 
-    REQUIRE(&arr == &_array[0].as<JsonArray&>());
-    REQUIRE(_array[0].is<JsonArray&>());
+    REQUIRE(arr == _array[0].as<JsonArray>());
+    REQUIRE(_array[0].is<JsonArray>());
     REQUIRE_FALSE(_array[0].is<int>());
   }
 
   SECTION("nested object") {
     DynamicJsonDocument doc2;
-    JsonObject& obj = doc2.to<JsonObject>();
+    JsonObject obj = doc2.to<JsonObject>();
 
     _array.add(obj);
 
-    REQUIRE(&obj == &_array[0].as<JsonObject&>());
-    REQUIRE(_array[0].is<JsonObject&>());
+    REQUIRE(obj == _array[0].as<JsonObject>());
+    REQUIRE(_array[0].is<JsonObject>());
     REQUIRE_FALSE(_array[0].is<int>());
   }
 
   SECTION("array subscript") {
     const char* str = "hello";
     DynamicJsonDocument doc2;
-    JsonArray& arr = doc2.to<JsonArray>();
+    JsonArray arr = doc2.to<JsonArray>();
     arr.add(str);
 
     _array.add(arr[0]);
@@ -74,7 +74,7 @@ TEST_CASE("JsonArray::add()") {
   SECTION("object subscript") {
     const char* str = "hello";
     DynamicJsonDocument doc2;
-    JsonObject& obj = doc2.to<JsonObject>();
+    JsonObject obj = doc2.to<JsonObject>();
     obj["x"] = str;
 
     _array.add(obj["x"]);

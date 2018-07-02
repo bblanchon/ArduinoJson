@@ -13,21 +13,6 @@ namespace Internals {
 template <typename TImpl>
 class JsonVariantCasts {
  public:
-  // Gets the variant as an array.
-  // Returns a reference to the JsonArray or JsonArray::invalid() if the
-  // variant
-  // is not an array.
-  FORCE_INLINE operator JsonArray &() const {
-    return impl()->template as<JsonArray &>();
-  }
-
-  // Gets the variant as an object.
-  // Returns a reference to the JsonObject or JsonObject::invalid() if the
-  // variant is not an object.
-  FORCE_INLINE operator JsonObject &() const {
-    return impl()->template as<JsonObject &>();
-  }
-
   template <typename T>
   FORCE_INLINE operator T() const {
     return impl()->template as<T>();

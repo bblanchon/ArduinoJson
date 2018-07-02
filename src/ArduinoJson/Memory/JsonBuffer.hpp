@@ -9,7 +9,6 @@
 #include <string.h>
 
 #include "../Configuration.hpp"
-#include "../Polyfills/NonCopyable.hpp"
 #include "../Polyfills/attributes.hpp"
 
 namespace ArduinoJson {
@@ -17,7 +16,7 @@ namespace Internals {
 // Handle the memory management (done in derived classes) and calls the parser.
 // This abstract class is implemented by StaticJsonBuffer which implements a
 // fixed memory allocation.
-class JsonBuffer : NonCopyable {
+class JsonBuffer {
  public:
   // Allocates n bytes in the JsonBuffer.
   // Return a pointer to the allocated memory or NULL if allocation fails.

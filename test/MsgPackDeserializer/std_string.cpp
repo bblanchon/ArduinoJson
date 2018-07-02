@@ -29,7 +29,7 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
     DeserializationError err = deserializeMsgPack(doc, input);
     input[2] = 'X';  // alter the string tomake sure we made a copy
 
-    JsonArray& array = doc.as<JsonArray>();
+    JsonArray array = doc.as<JsonArray>();
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(std::string("hello") == array[0]);
   }
@@ -39,7 +39,7 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
         deserializeMsgPack(doc, std::string("\x92\x00\x02", 3));
 
     REQUIRE(err == DeserializationError::Ok);
-    JsonArray& arr = doc.as<JsonArray>();
+    JsonArray arr = doc.as<JsonArray>();
     REQUIRE(arr[0] == 0);
     REQUIRE(arr[1] == 2);
   }

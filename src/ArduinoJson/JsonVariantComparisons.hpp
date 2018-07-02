@@ -9,6 +9,9 @@
 #include "Strings/StringTraits.hpp"
 
 namespace ArduinoJson {
+class JsonArray;
+class JsonObject;
+
 namespace Internals {
 
 template <typename TImpl>

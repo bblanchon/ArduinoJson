@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-static void check(JsonArray& array, std::string expected) {
+static void check(JsonArray array, std::string expected) {
   std::string actual;
   size_t actualLen = serializeJsonPretty(array, actual);
   size_t measuredLen = measureJsonPretty(array);
@@ -16,7 +16,7 @@ static void check(JsonArray& array, std::string expected) {
 
 TEST_CASE("serializeJsonPretty(JsonArray)") {
   DynamicJsonDocument doc;
-  JsonArray& array = doc.to<JsonArray>();
+  JsonArray array = doc.to<JsonArray>();
 
   SECTION("Empty") {
     check(array, "[]");
@@ -54,11 +54,11 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
   }
 
   SECTION("NestedArrays") {
-    JsonArray& nested1 = array.createNestedArray();
+    JsonArray nested1 = array.createNestedArray();
     nested1.add(1);
     nested1.add(2);
 
-    JsonObject& nested2 = array.createNestedObject();
+    JsonObject nested2 = array.createNestedObject();
     nested2["key"] = 3;
 
     check(array,

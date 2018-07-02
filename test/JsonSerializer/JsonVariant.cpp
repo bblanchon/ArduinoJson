@@ -14,11 +14,11 @@ void check(JsonVariant variant, const std::string &expected) {
 }
 
 TEST_CASE("serializeJson(JsonVariant)") {
-  SECTION("Empty") {
-    check(JsonVariant(), "");
+  SECTION("Undefined") {
+    check(JsonVariant(), "null");
   }
 
-  SECTION("Null") {
+  SECTION("Null string") {
     check(static_cast<char *>(0), "null");
   }
 

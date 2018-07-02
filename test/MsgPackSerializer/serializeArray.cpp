@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-static void check(const JsonArray& array, const char* expected_data,
+static void check(const JsonArray array, const char* expected_data,
                   size_t expected_len) {
   std::string expected(expected_data, expected_data + expected_len);
   std::string actual;
@@ -16,19 +16,19 @@ static void check(const JsonArray& array, const char* expected_data,
 }
 
 template <size_t N>
-static void check(const JsonArray& array, const char (&expected_data)[N]) {
+static void check(const JsonArray array, const char (&expected_data)[N]) {
   const size_t expected_len = N - 1;
   check(array, expected_data, expected_len);
 }
 
 // TODO: this function is used by the commented test
-// static void check(const JsonArray& array, const std::string& expected) {
+// static void check(const JsonArray array, const std::string& expected) {
 //   check(array, expected.data(), expected.length());
 // }
 
 TEST_CASE("serialize MsgPack array") {
   DynamicJsonDocument doc;
-  JsonArray& array = doc.to<JsonArray>();
+  JsonArray array = doc.to<JsonArray>();
 
   SECTION("empty") {
     check(array, "\x90");

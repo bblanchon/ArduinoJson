@@ -84,7 +84,7 @@ void setup() {
   }
 
   // Extract values
-  JsonObject& root = doc.as<JsonObject>();
+  JsonObject root = doc.as<JsonObject>();
   Serial.println(F("Response:"));
   Serial.println(root["sensor"].as<char*>());
   Serial.println(root["time"].as<char*>());
@@ -99,16 +99,4 @@ void loop() {
   // not used in this example
 }
 
-// See also
-// --------
-//
-// The website arduinojson.org contains the documentation for all the functions
-// used above. It also includes an FAQ that will help you solve any
-// serialization  problem.
-// Please check it out at: https://arduinojson.org/
-//
-// The book "Mastering ArduinoJson" contains a tutorial on deserialization
-// showing how to parse the response from Yahoo Weather. In the last chapter,
-// it shows how to parse the huge documents from OpenWeatherMap
-// and Weather Underground.
-// Please check it out at: https://arduinojson.org/book/
+// Visit https://arduinojson.org/v6/example/http-client/ for more.

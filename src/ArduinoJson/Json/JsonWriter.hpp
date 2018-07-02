@@ -13,13 +13,6 @@
 namespace ArduinoJson {
 namespace Internals {
 
-// Writes the JSON tokens to a Print implementation
-// This class is used by:
-// - JsonArray::writeTo()
-// - JsonObject::writeTo()
-// - JsonVariant::writeTo()
-// Its derived by PrettyJsonWriter that overrides some members to add
-// indentation.
 template <typename Print>
 class JsonWriter {
  public:

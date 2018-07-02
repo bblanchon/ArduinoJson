@@ -32,28 +32,26 @@ class DynamicJsonDocument {
     return _root.as<T>();
   }
 
-  // JsonObject& to<JsonObject>()
+  // JsonObject to<JsonObject>()
   template <typename T>
   typename Internals::enable_if<Internals::is_same<T, JsonObject>::value,
-                                JsonObject&>::type
+                                JsonObject>::type
   to() {
     clear();
-    JsonObject* object = new (&_buffer) JsonObject(&_buffer);
-    if (!object) return JsonObject::invalid();
+    JsonObject object(&_buffer);
     _root = object;
-    return *object;
+    return object;
   }
 
-  // JsonArray& to<JsonArray>()
+  // JsonArray to<JsonArray>()
   template <typename T>
   typename Internals::enable_if<Internals::is_same<T, JsonArray>::value,
-                                JsonArray&>::type
+                                JsonArray>::type
   to() {
     clear();
-    JsonArray* array = new (&_buffer) JsonArray(&_buffer);
-    if (!array) return JsonArray::invalid();
+    JsonArray array(&_buffer);
     _root = array;
-    return *array;
+    return array;
   }
 
   // JsonVariant& to<JsonVariant>()

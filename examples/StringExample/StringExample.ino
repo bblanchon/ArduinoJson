@@ -18,7 +18,7 @@ void setup() {
   String input =
       "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
   deserializeJson(doc, input);
-  JsonObject& obj = doc.as<JsonObject>();
+  JsonObject obj = doc.as<JsonObject>();
 
   // You can use a String to get an element of a JsonObject
   // No duplication is done.
@@ -62,14 +62,4 @@ void loop() {
   // not used in this example
 }
 
-// See also
-// --------
-//
-// The website arduinojson.org contains the documentation for all the functions
-// used above. It also includes an FAQ that will help you solve any problem.
-// Please check it out at: https://arduinojson.org/
-//
-// The book "Mastering ArduinoJson" contains a quick C++ course that explains
-// how your microcontroller stores strings in memory. On several occasions, it
-// shows how you can avoid String in your program.
-// Please check it out at: https://arduinojson.org/book/
+// Visit https://arduinojson.org/v6/example/string/ for more.

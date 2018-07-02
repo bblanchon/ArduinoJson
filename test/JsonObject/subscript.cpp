@@ -7,7 +7,7 @@
 
 TEST_CASE("JsonObject::operator[]") {
   DynamicJsonDocument doc;
-  JsonObject& obj = doc.to<JsonObject>();
+  JsonObject obj = doc.to<JsonObject>();
 
   SECTION("int") {
     obj["hello"] = 123;
@@ -53,41 +53,37 @@ TEST_CASE("JsonObject::operator[]") {
 
   SECTION("array") {
     DynamicJsonDocument doc2;
-    JsonArray& arr = doc2.to<JsonArray>();
+    JsonArray arr = doc2.to<JsonArray>();
 
     obj["hello"] = arr;
 
-    REQUIRE(&arr == &obj["hello"].as<JsonArray&>());
-    REQUIRE(&arr == &obj["hello"].as<JsonArray>());  // <- short hand
-    REQUIRE(&arr == &obj["hello"].as<const JsonArray&>());
-    REQUIRE(&arr == &obj["hello"].as<const JsonArray>());  // <- short hand
-    REQUIRE(true == obj["hello"].is<JsonArray&>());
+    REQUIRE(arr == obj["hello"].as<JsonArray>());
+    REQUIRE(arr == obj["hello"].as<JsonArray>());  // <- short hand
+    // REQUIRE(arr == obj["hello"].as<const JsonArray>());
+    // REQUIRE(arr == obj["hello"].as<const JsonArray>());  // <- short hand
     REQUIRE(true == obj["hello"].is<JsonArray>());
-    REQUIRE(true == obj["hello"].is<const JsonArray&>());
+    REQUIRE(true == obj["hello"].is<JsonArray>());
     REQUIRE(true == obj["hello"].is<const JsonArray>());
-    REQUIRE(false == obj["hello"].is<JsonObject&>());
+    REQUIRE(true == obj["hello"].is<const JsonArray>());
+    REQUIRE(false == obj["hello"].is<JsonObject>());
   }
 
   SECTION("object") {
     DynamicJsonDocument doc2;
-    JsonObject& obj2 = doc2.to<JsonObject>();
+    JsonObject obj2 = doc2.to<JsonObject>();
 
     obj["hello"] = obj2;
 
-    REQUIRE(&obj2 == &obj["hello"].as<JsonObject&>());
-    REQUIRE(&obj2 == &obj["hello"].as<JsonObject>());  // <- short hand
-    REQUIRE(&obj2 == &obj["hello"].as<const JsonObject&>());
-    REQUIRE(&obj2 == &obj["hello"].as<const JsonObject>());  // <- short hand
-    REQUIRE(true == obj["hello"].is<JsonObject&>());
+    REQUIRE(obj2 == obj["hello"].as<JsonObject>());
+    REQUIRE(obj2 == obj["hello"].as<const JsonObject>());
     REQUIRE(true == obj["hello"].is<JsonObject>());
-    REQUIRE(true == obj["hello"].is<const JsonObject&>());
     REQUIRE(true == obj["hello"].is<const JsonObject>());
-    REQUIRE(false == obj["hello"].is<JsonArray&>());
+    REQUIRE(false == obj["hello"].is<JsonArray>());
   }
 
   SECTION("array subscript") {
     DynamicJsonDocument doc2;
-    JsonArray& arr = doc2.to<JsonArray>();
+    JsonArray arr = doc2.to<JsonArray>();
     arr.add(42);
 
     obj["a"] = arr[0];
@@ -97,7 +93,7 @@ TEST_CASE("JsonObject::operator[]") {
 
   SECTION("object subscript") {
     DynamicJsonDocument doc2;
-    JsonObject& obj2 = doc2.to<JsonObject>();
+    JsonObject obj2 = doc2.to<JsonObject>();
     obj2.set("x", 42);
 
     obj["a"] = obj2["x"];

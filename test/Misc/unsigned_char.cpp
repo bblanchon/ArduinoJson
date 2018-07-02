@@ -101,7 +101,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char key[] = "hello";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj[key] = "world";
 
       REQUIRE(std::string("world") == obj["hello"]);
@@ -113,7 +113,7 @@ TEST_CASE("unsigned char[]") {
       DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
 
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
       REQUIRE(std::string("world") == obj[key]);
     }
 #endif
@@ -123,7 +123,7 @@ TEST_CASE("unsigned char[]") {
 
       DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
       REQUIRE(std::string("world") == obj.get<char*>(key));
     }
 
@@ -131,7 +131,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char key[] = "hello";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj.set(key, "world");
 
       REQUIRE(std::string("world") == obj["hello"]);
@@ -141,7 +141,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char value[] = "world";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj.set("hello", value);
 
       REQUIRE(std::string("world") == obj["hello"]);
@@ -151,7 +151,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char key[] = "world";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj.set(key, key);
 
       REQUIRE(std::string("world") == obj["world"]);
@@ -162,7 +162,7 @@ TEST_CASE("unsigned char[]") {
 
       DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
       REQUIRE(true == obj.containsKey(key));
     }
 
@@ -171,7 +171,7 @@ TEST_CASE("unsigned char[]") {
 
       DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
       obj.remove(key);
 
       REQUIRE(0 == obj.size());
@@ -182,7 +182,7 @@ TEST_CASE("unsigned char[]") {
 
       DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":42}");
-      JsonObject& obj = doc.as<JsonObject>();
+      JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(true == obj.is<int>(key));
     }
@@ -191,7 +191,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char key[] = "hello";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj.createNestedArray(key);
     }
 
@@ -199,7 +199,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char key[] = "hello";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj.createNestedObject(key);
     }
   }
@@ -209,7 +209,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char value[] = "world";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj["hello"] = value;
 
       REQUIRE(std::string("world") == obj["hello"]);
@@ -219,7 +219,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char value[] = "world";
 
       DynamicJsonDocument doc;
-      JsonObject& obj = doc.to<JsonObject>();
+      JsonObject obj = doc.to<JsonObject>();
       obj["hello"].set(value);
 
       REQUIRE(std::string("world") == obj["hello"]);
@@ -231,7 +231,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char value[] = "world";
 
       DynamicJsonDocument doc;
-      JsonArray& arr = doc.to<JsonArray>();
+      JsonArray arr = doc.to<JsonArray>();
       arr.add(value);
 
       REQUIRE(std::string("world") == arr[0]);
@@ -241,7 +241,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char value[] = "world";
 
       DynamicJsonDocument doc;
-      JsonArray& arr = doc.to<JsonArray>();
+      JsonArray arr = doc.to<JsonArray>();
       arr.add("hello");
       arr.set(0, value);
 
@@ -254,7 +254,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char value[] = "world";
 
       DynamicJsonDocument doc;
-      JsonArray& arr = doc.to<JsonArray>();
+      JsonArray arr = doc.to<JsonArray>();
       arr.add("hello");
       arr[0].set(value);
 
@@ -265,7 +265,7 @@ TEST_CASE("unsigned char[]") {
       unsigned char value[] = "world";
 
       DynamicJsonDocument doc;
-      JsonArray& arr = doc.to<JsonArray>();
+      JsonArray arr = doc.to<JsonArray>();
       arr.add("hello");
       arr[0] = value;
 

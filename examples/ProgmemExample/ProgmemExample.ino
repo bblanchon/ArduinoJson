@@ -21,7 +21,7 @@ void setup() {
   // JsonBuffer.
   deserializeJson(doc, F("{\"sensor\":\"gps\",\"time\":1351824120,"
                          "\"data\":[48.756080,2.302038]}"));
-  JsonObject& obj = doc.as<JsonObject>();
+  JsonObject obj = doc.as<JsonObject>();
 
   // You can use a Flash String to get an element of a JsonObject
   // No duplication is done.
@@ -56,15 +56,4 @@ void loop() {
   // not used in this example
 }
 
-// See also
-// --------
-//
-// The website arduinojson.org contains the documentation for all the functions
-// used above. It also includes an FAQ that will help you solve any memory
-// problem.
-// Please check it out at: https://arduinojson.org/
-//
-// The book "Mastering ArduinoJson" contains a quick C++ course that explains
-// how your microcontroller stores strings in memory. It also tells why you
-// should not abuse Flash strings with ArduinoJson.
-// Please check it out at: https://arduinojson.org/book/
+// Visit https://arduinojson.org/v6/example/progmem/ for more.

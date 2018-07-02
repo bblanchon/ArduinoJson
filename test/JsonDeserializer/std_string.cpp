@@ -28,7 +28,7 @@ TEST_CASE("deserializeJson(const std::string&)") {
     DeserializationError err = deserializeJson(doc, input);
     input[2] = 'X';  // alter the string tomake sure we made a copy
 
-    JsonArray &array = doc.as<JsonArray>();
+    JsonArray array = doc.as<JsonArray>();
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(std::string("hello") == array[0]);
   }

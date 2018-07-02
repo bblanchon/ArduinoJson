@@ -40,7 +40,7 @@ void loadConfiguration(const char *filename, Config &config) {
     Serial.println(F("Failed to read file, using default configuration"));
 
   // Get the root object in the document
-  JsonObject &root = doc.as<JsonObject>();
+  JsonObject root = doc.as<JsonObject>();
 
   // Copy values from the JsonObject to the Config
   config.port = root["port"] | 2731;
@@ -70,7 +70,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   StaticJsonDocument<256> doc;
 
   // Make our document contain an object
-  JsonObject &root = doc.to<JsonObject>();
+  JsonObject root = doc.to<JsonObject>();
 
   // Set the values in the object
   root["hostname"] = config.hostname;
@@ -132,15 +132,4 @@ void loop() {
   // not used in this example
 }
 
-// See also
-// --------
-//
-// The website arduinojson.org contains the documentation for all the functions
-// used above. It also includes an FAQ that will help you solve any
-// serialization or deserialization problem.
-// Please check it out at: https://arduinojson.org/
-//
-// The book "Mastering ArduinoJson" contains a case study of a project that has
-// a complex configuration with nested members.
-// Contrary to this example, the project in the book uses the SPIFFS filesystem.
-// Please check it out at: https://arduinojson.org/book/
+// Visit https://arduinojson.org/v6/example/config/ for more.

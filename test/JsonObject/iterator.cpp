@@ -9,7 +9,7 @@ using namespace Catch::Matchers;
 
 TEST_CASE("JsonObject::begin()/end()") {
   StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
-  JsonObject& obj = doc.to<JsonObject>();
+  JsonObject obj = doc.to<JsonObject>();
   obj["ab"] = 12;
   obj["cd"] = 34;
 
@@ -35,7 +35,7 @@ TEST_CASE("JsonObject::begin()/end()") {
   }
 
   SECTION("ConstIterator") {
-    const JsonObject& const_object = obj;
+    const JsonObject const_object = obj;
     JsonObject::const_iterator it = const_object.begin();
 
     REQUIRE(const_object.end() != it);

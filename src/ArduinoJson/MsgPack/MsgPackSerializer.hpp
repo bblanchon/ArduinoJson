@@ -140,7 +140,7 @@ class MsgPackSerializer {
     writeByte(value ? 0xC3 : 0xC2);
   }
 
-  void acceptUndefined() {
+  void acceptNull() {
     writeByte(0xC0);
   }
 

@@ -6,23 +6,32 @@
 
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
-#include "JsonObjectSubscript.hpp"
 
 namespace ArduinoJson {
 
-template <typename TStringRef>
-inline JsonArray &JsonObject::createNestedArray_impl(TStringRef key) {
-  JsonArray *array = new (_buffer) JsonArray(_buffer);
-  if (!array) return JsonArray::invalid();
-  set(key, array);
-  return *array;
+template <typename TString>
+inline JsonArray JsonObject::createNestedArray(const TString& key) {
+  return createNestedArray_impl<const TString&>(key);
+}
+
+template <typename TString>
+inline JsonArray JsonObject::createNestedArray(TString* key) {
+  return createNestedArray_impl<TString*>(key);
 }
 
 template <typename TStringRef>
-inline JsonObject &JsonObject::createNestedObject_impl(TStringRef key) {
-  JsonObject *object = new (_buffer) JsonObject(_buffer);
-  if (!object) return JsonObject::invalid();
-  set(key, object);
-  return *object;
+inline JsonArray JsonObject::createNestedArray_impl(TStringRef key) {
+  if (!_data) return JsonArray();
+  JsonArray array(_data->_buffer);
+  if (!array.isNull()) set(key, array);
+  return array;
+}
+
+template <typename TStringRef>
+inline JsonObject JsonObject::createNestedObject_impl(TStringRef key) {
+  if (!_data) return JsonObject();
+  JsonObject object(_data->_buffer);
+  if (!object.isNull()) set(key, object);
+  return object;
 }
 }  // namespace ArduinoJson
