@@ -128,12 +128,7 @@ TEST_CASE("deserialize JSON array") {
 
     SECTION("No quotes") {
       DeserializationError err = deserializeJson(doc, "[ hello , world ]");
-      JsonArray arr = doc.as<JsonArray>();
-
-      REQUIRE(err == DeserializationError::Ok);
-      REQUIRE(2 == arr.size());
-      REQUIRE(arr[0] == "hello");
-      REQUIRE(arr[1] == "world");
+      REQUIRE(err == DeserializationError::InvalidInput);
     }
 
     SECTION("Double quotes (empty strings)") {

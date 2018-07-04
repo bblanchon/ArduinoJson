@@ -1,6 +1,16 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Disabled lazy number deserialization (issue #772)
+
+> ### BREAKING CHANGES
+>
+> Non quoted strings are now forbidden in values, but they are still allowed in keys.
+> For example, `{key:"value"}` is accepted, but `{key:value}` is not.
+
 v6.1.0-beta
 -----------
 
@@ -15,7 +25,7 @@ v6.1.0-beta
 > JsonObject& obj = doc.to<JsonObject>();
 > JsonArray& arr = obj.createNestedArray("key");
 > if (!arr.success()) {
->   Serial.println("No enough memory");
+>   Serial.println("Not enough memory");
 >   return;
 > }
 > ```
@@ -26,7 +36,7 @@ v6.1.0-beta
 > JsonObject obj = doc.to<JsonObject>();
 > JsonArray arr = obj.createNestedArray("key");
 > if (arr.isNull()) {
->   Serial.println("No enough memory");
+>   Serial.println("Not enough memory");
 >   return;
 > }
 > ```

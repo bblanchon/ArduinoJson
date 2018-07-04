@@ -39,7 +39,7 @@ TEST_CASE("deserialize JSON object") {
     }
 
     SECTION("No quotes") {
-      DeserializationError err = deserializeJson(doc, "{key:value}");
+      DeserializationError err = deserializeJson(doc, "{key:'value'}");
       JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(err == DeserializationError::Ok);

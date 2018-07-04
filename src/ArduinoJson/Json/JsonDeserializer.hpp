@@ -121,7 +121,7 @@ class JsonDeserializer {
     for (;;) {
       // Parse key
       const char *key;
-      err = parseString(&key);
+      err = parseKey(&key);
       if (err) return err;
 
       // Skip spaces
@@ -152,48 +152,69 @@ class JsonDeserializer {
   }
 
   DeserializationError parseValue(JsonVariant &variant) {
-    bool hasQuotes = isQuote(current());
-    const char *value;
-    DeserializationError error = parseString(&value);
-    if (error) return error;
-    if (hasQuotes) {
-      variant = value;
+    if (isQuote(current())) {
+      return parseStringValue(variant);
     } else {
-      variant = RawJson(value);
+      return parseNumericValue(variant);
     }
+  }
+
+  DeserializationError parseKey(const char **key) {
+    if (isQuote(current())) {
+      return parseQuotedString(key);
+    } else {
+      return parseNonQuotedString(key);
+    }
+  }
+
+  DeserializationError parseStringValue(JsonVariant &variant) {
+    const char *value;
+    DeserializationError err = parseQuotedString(&value);
+    if (err) return err;
+    variant = value;
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseString(const char **result) {
+  DeserializationError parseQuotedString(const char **result) {
+    typename remove_reference<TStringStorage>::type::String str =
+        _stringStorage.startString();
+
+    char stopChar = current();
+
+    move();
+    for (;;) {
+      char c = current();
+      move();
+      if (c == stopChar) break;
+
+      if (c == '\0') return DeserializationError::IncompleteInput;
+
+      if (c == '\\') {
+        c = current();
+        if (c == '\0') return DeserializationError::IncompleteInput;
+        if (c == 'u') return DeserializationError::NotSupported;
+        // replace char
+        c = EscapeSequence::unescapeChar(c);
+        if (c == '\0') return DeserializationError::InvalidInput;
+        move();
+      }
+
+      str.append(c);
+    }
+
+    *result = str.c_str();
+    if (*result == NULL) return DeserializationError::NoMemory;
+    return DeserializationError::Ok;
+  }
+
+  DeserializationError parseNonQuotedString(const char **result) {
     typename remove_reference<TStringStorage>::type::String str =
         _stringStorage.startString();
 
     char c = current();
     if (c == '\0') return DeserializationError::IncompleteInput;
 
-    if (isQuote(c)) {  // quotes
-      move();
-      char stopChar = c;
-      for (;;) {
-        c = current();
-        move();
-        if (c == stopChar) break;
-
-        if (c == '\0') return DeserializationError::IncompleteInput;
-
-        if (c == '\\') {
-          c = current();
-          if (c == '\0') return DeserializationError::IncompleteInput;
-          if (c == 'u') return DeserializationError::NotSupported;
-          // replace char
-          c = EscapeSequence::unescapeChar(c);
-          if (c == '\0') return DeserializationError::InvalidInput;
-          move();
-        }
-
-        str.append(c);
-      }
-    } else if (canBeInNonQuotedString(c)) {  // no quotes
+    if (canBeInNonQuotedString(c)) {  // no quotes
       do {
         move();
         str.append(c);
@@ -205,6 +226,34 @@ class JsonDeserializer {
 
     *result = str.c_str();
     if (*result == NULL) return DeserializationError::NoMemory;
+    return DeserializationError::Ok;
+  }
+
+  DeserializationError parseNumericValue(JsonVariant &result) {
+    char buffer[64];
+    uint8_t n = 0;
+
+    char c = current();
+    while (canBeInNonQuotedString(c) && n < 63) {
+      move();
+      buffer[n++] = c;
+      c = current();
+    }
+    buffer[n] = 0;
+
+    if (isInteger(buffer)) {
+      result = parseInteger<JsonInteger>(buffer);
+    } else if (isFloat(buffer)) {
+      result = parseFloat<JsonFloat>(buffer);
+    } else if (!strcmp(buffer, "true")) {
+      result = true;
+    } else if (!strcmp(buffer, "false")) {
+      result = false;
+    } else if (!strcmp(buffer, "null")) {
+      result = static_cast<const char *>(0);
+    } else {
+      return DeserializationError::InvalidInput;
+    }
     return DeserializationError::Ok;
   }
 
@@ -286,7 +335,7 @@ class JsonDeserializer {
   uint8_t _nestingLimit;
   char _current;
   bool _loaded;
-};
+};  // namespace Internals
 }  // namespace Internals
 
 template <typename TDocument, typename TInput>
