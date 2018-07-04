@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Improved float serialization when `-fsingle-precision-constant` is used
+
 v5.13.2
 -------
 
