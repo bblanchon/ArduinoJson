@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Disabled lazy number deserialization (issue #772)
+* Improved float serialization when `-fsingle-precision-constant` is used
 
 > ### BREAKING CHANGES
 >
