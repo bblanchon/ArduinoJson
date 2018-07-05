@@ -12,6 +12,10 @@ TEST_CASE("isInteger()") {
     REQUIRE_FALSE(isInteger(NULL));
   }
 
+  SECTION("Empty String") {
+    REQUIRE_FALSE(isInteger(""));
+  }
+
   SECTION("FloatNotInteger") {
     REQUIRE_FALSE(isInteger("3.14"));
     REQUIRE_FALSE(isInteger("-3.14"));

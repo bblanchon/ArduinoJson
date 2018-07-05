@@ -10,10 +10,10 @@ namespace ArduinoJson {
 namespace Internals {
 
 inline bool isInteger(const char* s) {
-  if (!s) return false;
+  if (!s || !*s) return false;
   if (issign(*s)) s++;
   while (isdigit(*s)) s++;
   return *s == '\0';
 }
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
