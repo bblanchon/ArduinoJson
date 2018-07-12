@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.2.0-beta
+-----------
 
 * Disabled lazy number deserialization (issue #772)
 * Improved float serialization when `-fsingle-precision-constant` is used
