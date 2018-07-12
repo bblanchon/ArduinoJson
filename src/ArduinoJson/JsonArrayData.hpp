@@ -9,7 +9,6 @@
 #include "JsonVariant.hpp"
 #include "Memory/JsonBufferAllocated.hpp"
 #include "Polyfills/type_traits.hpp"
-#include "Strings/StringTraits.hpp"
 
 // Returns the size (in bytes) of an array with n elements.
 // Can be very handy to determine the size of a StaticJsonBuffer.

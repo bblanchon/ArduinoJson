@@ -37,8 +37,9 @@ void setup() {
   // JsonBuffer.
   obj["sensor"] = F("gps");
 
-  // It works with RawJson too:
-  obj["sensor"] = RawJson(F("\"gps\""));
+  // It works with serialized() too:
+  obj["sensor"] = serialized(F("\"gps\""));
+  obj["sensor"] = serialized(F("\xA3gps"), 3);
 
   // You can compare the content of a JsonVariant to a Flash String
   if (obj["sensor"] == F("gps")) {

@@ -188,7 +188,7 @@ class JsonObject {
   //
   // bool set(TKey, TValue);
   // TKey = const std::string&, const String&
-  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue, typename TString>
   bool set(const TString& key, const TValue& value) {
@@ -205,7 +205,7 @@ class JsonObject {
   //
   // bool set(TKey, const TValue&);
   // TKey = char*, const char*, const FlashStringHelper*
-  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue, typename TString>
   bool set(TString* key, const TValue& value) {
@@ -254,7 +254,7 @@ class JsonObject {
   iterator findKey(TStringRef key) {
     iterator it;
     for (it = begin(); it != end(); ++it) {
-      if (Internals::StringTraits<TStringRef>::equals(key, it->key)) break;
+      if (Internals::makeString(key).equals(it->key)) break;
     }
     return it;
   }
@@ -288,7 +288,7 @@ class JsonObject {
     if (!_data) return false;
 
     // ignore null key
-    if (Internals::StringTraits<TStringRef>::is_null(key)) return false;
+    if (Internals::makeString(key).is_null()) return false;
 
     // search a matching key
     iterator it = findKey<TStringRef>(key);

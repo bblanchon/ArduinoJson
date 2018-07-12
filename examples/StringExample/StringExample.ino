@@ -41,8 +41,8 @@ void setup() {
   // WARNING: the content of the String will be duplicated in the JsonBuffer.
   obj["sensor"] = sensor;
 
-  // It works with RawJson too:
-  obj["sensor"] = RawJson(sensor);
+  // It works with serialized() too:
+  obj["sensor"] = serialized(sensor);
 
   // You can also concatenate strings
   // WARNING: the content of the String will be duplicated in the JsonBuffer.

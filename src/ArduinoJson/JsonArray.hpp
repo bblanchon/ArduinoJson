@@ -29,7 +29,7 @@ class JsonArray {
   // Adds the specified value at the end of the array.
   //
   // bool add(TValue);
-  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArrayData, JsonObject
   template <typename T>
   bool add(const T& value) {
@@ -154,7 +154,7 @@ class JsonArray {
   // Sets the value at specified index.
   //
   // bool add(size_t index, const TValue&);
-  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArrayData, JsonObject
   template <typename T>
   bool set(size_t index, const T& value) {

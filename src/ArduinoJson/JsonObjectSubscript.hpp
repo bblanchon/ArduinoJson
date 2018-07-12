@@ -67,7 +67,8 @@ class JsonObjectSubscript
   // Sets the specified value.
   //
   // bool set(const TValue&);
-  // TValue = bool, char, long, int, short, float, double, RawJson, JsonVariant,
+  // TValue = bool, char, long, int, short, float, double, serialized,
+  // JsonVariant,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, bool>::type set(
@@ -94,7 +95,7 @@ class JsonObjectSubscript
 
 template <typename TImpl>
 template <typename TString>
-inline typename enable_if<StringTraits<TString>::has_equals,
+inline typename enable_if<IsString<TString>::value,
                           const JsonObjectSubscript<const TString &> >::type
     JsonVariantSubscripts<TImpl>::operator[](const TString &key) const {
   return impl()->template as<JsonObject>()[key];
@@ -102,7 +103,7 @@ inline typename enable_if<StringTraits<TString>::has_equals,
 
 template <typename TImpl>
 template <typename TString>
-inline typename enable_if<StringTraits<TString>::has_equals,
+inline typename enable_if<IsString<TString>::value,
                           JsonObjectSubscript<const TString &> >::type
     JsonVariantSubscripts<TImpl>::operator[](const TString &key) {
   return impl()->template as<JsonObject>()[key];
@@ -110,7 +111,7 @@ inline typename enable_if<StringTraits<TString>::has_equals,
 
 template <typename TImpl>
 template <typename TString>
-inline typename enable_if<StringTraits<const TString *>::has_equals,
+inline typename enable_if<IsString<const TString *>::value,
                           JsonObjectSubscript<const TString *> >::type
     JsonVariantSubscripts<TImpl>::operator[](const TString *key) {
   return impl()->template as<JsonObject>()[key];
@@ -118,7 +119,7 @@ inline typename enable_if<StringTraits<const TString *>::has_equals,
 
 template <typename TImpl>
 template <typename TString>
-inline typename enable_if<StringTraits<TString *>::has_equals,
+inline typename enable_if<IsString<TString *>::value,
                           const JsonObjectSubscript<const TString *> >::type
     JsonVariantSubscripts<TImpl>::operator[](const TString *key) const {
   return impl()->template as<JsonObject>()[key];

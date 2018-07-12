@@ -7,29 +7,33 @@
 
 TEST_CASE("JsonArray::size()") {
   DynamicJsonDocument doc;
-  JsonArray _array = doc.to<JsonArray>();
+  JsonArray array = doc.to<JsonArray>();
+
+  SECTION("InitialSizeIsZero") {
+    REQUIRE(0U == array.size());
+  }
 
   SECTION("increases after add()") {
-    _array.add("hello");
-    REQUIRE(1U == _array.size());
+    array.add("hello");
+    REQUIRE(1U == array.size());
 
-    _array.add("world");
-    REQUIRE(2U == _array.size());
+    array.add("world");
+    REQUIRE(2U == array.size());
   }
 
   SECTION("remains the same after set()") {
-    _array.add("hello");
-    REQUIRE(1U == _array.size());
+    array.add("hello");
+    REQUIRE(1U == array.size());
 
-    _array.set(0, "hello");
-    REQUIRE(1U == _array.size());
+    array.set(0, "hello");
+    REQUIRE(1U == array.size());
   }
 
   SECTION("remains the same after assigment") {
-    _array.add("hello");
-    REQUIRE(1U == _array.size());
+    array.add("hello");
+    REQUIRE(1U == array.size());
 
-    _array[0] = "hello";
-    REQUIRE(1U == _array.size());
+    array[0] = "hello";
+    REQUIRE(1U == array.size());
   }
 }

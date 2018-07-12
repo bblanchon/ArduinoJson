@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include "./DummyPrint.hpp"
+#include "./DummyWriter.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
 template <template <typename> class TSerializer, typename TSource>
 size_t measure(const TSource &source) {
-  DummyPrint dp;
-  TSerializer<DummyPrint> serializer(dp);
+  DummyWriter dp;
+  TSerializer<DummyWriter> serializer(dp);
   source.visit(serializer);
   return serializer.bytesWritten();
 }

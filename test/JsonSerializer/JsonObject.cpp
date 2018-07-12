@@ -68,9 +68,9 @@ TEST_CASE("serializeJson(JsonObject)") {
     check(obj, "{\"a\":1,\"b\":2}");
   }
 
-  SECTION("RawJson") {
-    obj["a"] = RawJson("[1,2]");
-    obj.set("b", RawJson("[4,5]"));
+  SECTION("serialized(const char*)") {
+    obj["a"] = serialized("[1,2]");
+    obj.set("b", serialized("[4,5]"));
     check(obj, "{\"a\":[1,2],\"b\":[4,5]}");
   }
 

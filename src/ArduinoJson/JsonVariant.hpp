@@ -12,7 +12,8 @@
 #include "Data/JsonVariantType.hpp"
 #include "JsonVariantBase.hpp"
 #include "Polyfills/type_traits.hpp"
-#include "RawJson.hpp"
+#include "Serialization/DynamicStringWriter.hpp"
+#include "SerializedValue.hpp"
 
 namespace ArduinoJson {
 
@@ -99,9 +100,10 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   }
 
   // Create a JsonVariant containing an unparsed string
-  JsonVariant(Internals::RawJsonString<const char *> value) {
+  JsonVariant(Internals::SerializedValue<const char *> value) {
     _type = Internals::JSON_UNPARSED;
-    _content.asString = value;
+    _content.asRaw.data = value.data();
+    _content.asRaw.size = value.size();
   }
 
   JsonVariant(JsonArray array);
@@ -153,7 +155,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   // std::string as<std::string>() const;
   // String as<String>() const;
   template <typename T>
-  typename Internals::enable_if<Internals::StringTraits<T>::has_append, T>::type
+  typename Internals::enable_if<Internals::IsWriteableString<T>::value, T>::type
   as() const {
     const char *cstr = variantAsString();
     if (cstr) return T(cstr);
@@ -276,7 +278,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
         return visitor.acceptString(_content.asString);
 
       case JSON_UNPARSED:
-        return visitor.acceptRawJson(_content.asString);
+        return visitor.acceptRawJson(_content.asRaw.data, _content.asRaw.size);
 
       case JSON_NEGATIVE_INTEGER:
         return visitor.acceptNegativeInteger(_content.asInteger);
@@ -310,9 +312,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
     return _type == Internals::JSON_OBJECT;
   }
   bool variantIsString() const {
-    return _type == Internals::JSON_STRING ||
-           (_type == Internals::JSON_UNPARSED && _content.asString &&
-            !strcmp("null", _content.asString));
+    return _type == Internals::JSON_STRING;
   }
 
   // The current type of the variant

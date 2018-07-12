@@ -4,16 +4,17 @@
 
 add_executable(JsonArrayTests 
 	add.cpp
-	basics.cpp
 	copyFrom.cpp
 	copyTo.cpp
-	invalid.cpp
+	createNested.cpp
+	isNull.cpp
 	iterator.cpp
 	remove.cpp
 	set.cpp
 	size.cpp
 	std_string.cpp
 	subscript.cpp
+	undefined.cpp
 )
 
 target_link_libraries(JsonArrayTests catch)

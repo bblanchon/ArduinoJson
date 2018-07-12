@@ -7,7 +7,7 @@
 #include "../JsonVariant.hpp"
 #include "../Memory/JsonBuffer.hpp"
 #include "../Polyfills/type_traits.hpp"
-#include "../Strings/StringTraits.hpp"
+#include "../Strings/StringTypes.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -21,30 +21,31 @@ struct ValueSaver {
   }
 };
 
-template <typename Source>
+// We duplicate all strings except const char*
+template <typename TString>
 struct ValueSaver<
-    Source, typename enable_if<StringTraits<Source>::should_duplicate>::type> {
+    TString, typename enable_if<IsString<TString>::value &&
+                                !is_same<const char*, TString>::value>::type> {
   template <typename Destination>
-  static bool save(JsonBuffer* buffer, Destination& dest, Source source) {
-    if (!StringTraits<Source>::is_null(source)) {
-      typename StringTraits<Source>::duplicate_t dup =
-          StringTraits<Source>::duplicate(source, buffer);
-      if (!dup) return false;
-      dest = dup;
-    } else {
-      dest = reinterpret_cast<const char*>(0);
-    }
+  static bool save(JsonBuffer* buffer, Destination& dest, TString source) {
+    const char* dup = makeString(source).save(buffer);
+    if (!dup) return false;
+    dest = dup;
     return true;
   }
 };
 
-// const char*, const signed char*, const unsigned char*
-template <typename Char>
+// We duplicate all SerializedValue<T> except SerializedValue<const char*>
+template <typename TString>
 struct ValueSaver<
-    Char*, typename enable_if<!StringTraits<Char*>::should_duplicate>::type> {
+    const SerializedValue<TString>&,
+    typename enable_if<!is_same<const char*, TString>::value>::type> {
   template <typename Destination>
-  static bool save(JsonBuffer*, Destination& dest, Char* source) {
-    dest = reinterpret_cast<const char*>(source);
+  static bool save(JsonBuffer* buffer, Destination& dest,
+                   const SerializedValue<TString>& source) {
+    const char* dup = makeString(source.data(), source.size()).save(buffer);
+    if (!dup) return false;
+    dest = SerializedValue<const char*>(dup, source.size());
     return true;
   }
 };

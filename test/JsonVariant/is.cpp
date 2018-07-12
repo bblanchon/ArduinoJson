@@ -95,21 +95,4 @@ TEST_CASE("JsonVariant::is()") {
   SECTION("string") {
     checkIsString("42");
   }
-
-  SECTION("unparsed bool") {
-    checkIsBool(RawJson("true"));
-    checkIsBool(RawJson("false"));
-  }
-
-  SECTION("unparsed int") {
-    checkIsInteger(RawJson("42"));
-  }
-
-  SECTION("unparsed float") {
-    checkIsFloat(RawJson("4.2e-10"));
-  }
-
-  SECTION("unparsed null") {
-    checkIsString(RawJson("null"));
-  }
 }

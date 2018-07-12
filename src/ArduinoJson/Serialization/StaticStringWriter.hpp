@@ -8,22 +8,25 @@ namespace ArduinoJson {
 namespace Internals {
 
 // A Print implementation that allows to write in a char[]
-class StaticStringBuilder {
+class StaticStringWriter {
  public:
-  StaticStringBuilder(char *buf, size_t size) : end(buf + size - 1), p(buf) {
+  StaticStringWriter(char *buf, size_t size) : end(buf + size - 1), p(buf) {
     *p = '\0';
   }
 
-  size_t print(char c) {
+  size_t write(uint8_t c) {
     if (p >= end) return 0;
-    *p++ = c;
+    *p++ = static_cast<char>(c);
     *p = '\0';
     return 1;
   }
 
-  size_t print(const char *s) {
+  size_t write(const uint8_t *s, size_t n) {
     char *begin = p;
-    while (p < end && *s) *p++ = *s++;
+    while (p < end && n > 0) {
+      *p++ = static_cast<char>(*s++);
+      n--;
+    }
     *p = '\0';
     return size_t(p - begin);
   }

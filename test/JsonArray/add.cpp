@@ -100,14 +100,26 @@ TEST_CASE("JsonArray::add()") {
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
-  SECTION("should not duplicate RawJson(const char*)") {
-    _array.add(RawJson("{}"));
+  SECTION("should not duplicate serialized(const char*)") {
+    _array.add(serialized("{}"));
     const size_t expectedSize = JSON_ARRAY_SIZE(1);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
-  SECTION("should duplicate RawJson(char*)") {
-    _array.add(RawJson(const_cast<char*>("{}")));
+  SECTION("should duplicate serialized(char*)") {
+    _array.add(serialized(const_cast<char*>("{}")));
+    const size_t expectedSize = JSON_ARRAY_SIZE(1) + 2;
+    REQUIRE(expectedSize == doc.memoryUsage());
+  }
+
+  SECTION("should duplicate serialized(std::string)") {
+    _array.add(serialized(std::string("{}")));
+    const size_t expectedSize = JSON_ARRAY_SIZE(1) + 2;
+    REQUIRE(expectedSize == doc.memoryUsage());
+  }
+
+  SECTION("should duplicate serialized(std::string)") {
+    _array.add(serialized(std::string("\0XX", 3)));
     const size_t expectedSize = JSON_ARRAY_SIZE(1) + 3;
     REQUIRE(expectedSize == doc.memoryUsage());
   }

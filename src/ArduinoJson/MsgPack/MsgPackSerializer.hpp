@@ -13,10 +13,10 @@
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename TPrint>
+template <typename TWriter>
 class MsgPackSerializer {
  public:
-  MsgPackSerializer(TPrint& output) : _output(&output), _bytesWritten(0) {}
+  MsgPackSerializer(TWriter& writer) : _writer(&writer), _bytesWritten(0) {}
 
   template <typename T>
   typename enable_if<sizeof(T) == 4>::type acceptFloat(T value32) {
@@ -91,7 +91,9 @@ class MsgPackSerializer {
     writeBytes(reinterpret_cast<const uint8_t*>(value), n);
   }
 
-  void acceptRawJson(const char* /*value*/) {}
+  void acceptRawJson(const char* data, size_t size) {
+    writeBytes(reinterpret_cast<const uint8_t*>(data), size);
+  }
 
   void acceptNegativeInteger(JsonUInt value) {
     JsonUInt negated = JsonUInt(~value + 1);
@@ -150,12 +152,11 @@ class MsgPackSerializer {
 
  private:
   void writeByte(uint8_t c) {
-    _output->print(char(c));
-    _bytesWritten++;
+    _bytesWritten += _writer->write(c);
   }
 
-  void writeBytes(const uint8_t* c, size_t n) {
-    for (; n > 0; --n, ++c) writeByte(*c);
+  void writeBytes(const uint8_t* p, size_t n) {
+    _bytesWritten += _writer->write(p, n);
   }
 
   template <typename T>
@@ -164,7 +165,7 @@ class MsgPackSerializer {
     writeBytes(reinterpret_cast<uint8_t*>(&value), sizeof(value));
   }
 
-  TPrint* _output;
+  TWriter* _writer;
   size_t _bytesWritten;
 };
 }  // namespace Internals

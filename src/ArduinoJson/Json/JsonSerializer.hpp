@@ -11,10 +11,10 @@
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename TPrint>
+template <typename TWriter>
 class JsonSerializer {
  public:
-  JsonSerializer(TPrint &destination) : _writer(destination) {}
+  JsonSerializer(TWriter &writer) : _writer(writer) {}
 
   void acceptFloat(JsonFloat value) {
     _writer.writeFloat(value);
@@ -58,8 +58,9 @@ class JsonSerializer {
     _writer.writeString(value);
   }
 
-  void acceptRawJson(const char *value) {
-    _writer.writeRaw(value);
+  void acceptRawJson(const char *data, size_t n) {
+    // TODO
+    for (size_t i = 0; i < n; i++) _writer.writeRaw(data[i]);
   }
 
   void acceptNegativeInteger(JsonUInt value) {
@@ -84,7 +85,7 @@ class JsonSerializer {
   }
 
  private:
-  JsonWriter<TPrint> _writer;
+  JsonWriter<TWriter> _writer;
 };
 
 }  // namespace Internals

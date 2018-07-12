@@ -70,4 +70,14 @@ TEST_CASE("serialize MsgPack object") {
   //
   //   check(object, expected);
   // }
+
+  SECTION("serialized(const char*)") {
+    object["hello"] = serialized("\xDB\x00\x01\x00\x00", 5);
+    check(object, "\x81\xA5hello\xDB\x00\x01\x00\x00");
+  }
+
+  SECTION("serialized(std::string)") {
+    object["hello"] = serialized(std::string("\xDB\x00\x01\x00\x00", 5));
+    check(object, "\x81\xA5hello\xDB\x00\x01\x00\x00");
+  }
 }

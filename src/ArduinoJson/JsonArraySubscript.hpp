@@ -27,7 +27,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   // Replaces the value
   //
   // operator=(const TValue&)
-  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArray, JsonObject
   template <typename T>
   FORCE_INLINE JsonArraySubscript& operator=(const T& src) {
@@ -60,7 +60,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   // Replaces the value
   //
   // bool set(const TValue&)
-  // TValue = bool, long, int, short, float, double, RawJson, JsonVariant,
+  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
   FORCE_INLINE bool set(const TValue& value) {

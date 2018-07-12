@@ -4,8 +4,7 @@
 
 add_executable(MiscTests
 	FloatParts.cpp
-	StringBuilder.cpp
-	StringTraits.cpp
+	StringWriter.cpp
 	TypeTraits.cpp
 	unsigned_char.cpp
 	version.cpp

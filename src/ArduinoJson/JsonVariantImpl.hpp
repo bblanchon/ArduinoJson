@@ -68,6 +68,7 @@ inline T JsonVariant::variantAsInteger() const {
   using namespace Internals;
   switch (_type) {
     case JSON_UNDEFINED:
+    case JSON_UNPARSED:
       return 0;
     case JSON_POSITIVE_INTEGER:
     case JSON_BOOLEAN:
@@ -75,7 +76,6 @@ inline T JsonVariant::variantAsInteger() const {
     case JSON_NEGATIVE_INTEGER:
       return T(~_content.asInteger + 1);
     case JSON_STRING:
-    case JSON_UNPARSED:
       return parseInteger<T>(_content.asString);
     default:
       return T(_content.asFloat);
@@ -84,11 +84,7 @@ inline T JsonVariant::variantAsInteger() const {
 
 inline const char *JsonVariant::variantAsString() const {
   using namespace Internals;
-  if (_type == JSON_UNPARSED && _content.asString &&
-      !strcmp("null", _content.asString))
-    return NULL;
-  if (_type == JSON_STRING || _type == JSON_UNPARSED) return _content.asString;
-  return NULL;
+  return _type == JSON_STRING ? _content.asString : NULL;
 }
 
 template <typename T>
@@ -96,6 +92,7 @@ inline T JsonVariant::variantAsFloat() const {
   using namespace Internals;
   switch (_type) {
     case JSON_UNDEFINED:
+    case JSON_UNPARSED:
       return 0;
     case JSON_POSITIVE_INTEGER:
     case JSON_BOOLEAN:
@@ -103,7 +100,6 @@ inline T JsonVariant::variantAsFloat() const {
     case JSON_NEGATIVE_INTEGER:
       return -static_cast<T>(_content.asInteger);
     case JSON_STRING:
-    case JSON_UNPARSED:
       return parseFloat<T>(_content.asString);
     default:
       return static_cast<T>(_content.asFloat);
@@ -112,27 +108,20 @@ inline T JsonVariant::variantAsFloat() const {
 
 inline bool JsonVariant::variantIsBoolean() const {
   using namespace Internals;
-  if (_type == JSON_BOOLEAN) return true;
-
-  if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
-
-  return !strcmp(_content.asString, "true") ||
-         !strcmp(_content.asString, "false");
+  return _type == JSON_BOOLEAN;
 }
 
 inline bool JsonVariant::variantIsInteger() const {
   using namespace Internals;
 
-  return _type == JSON_POSITIVE_INTEGER || _type == JSON_NEGATIVE_INTEGER ||
-         (_type == JSON_UNPARSED && isInteger(_content.asString));
+  return _type == JSON_POSITIVE_INTEGER || _type == JSON_NEGATIVE_INTEGER;
 }
 
 inline bool JsonVariant::variantIsFloat() const {
   using namespace Internals;
 
   return _type == JSON_FLOAT || _type == JSON_POSITIVE_INTEGER ||
-         _type == JSON_NEGATIVE_INTEGER ||
-         (_type == JSON_UNPARSED && isFloat(_content.asString));
+         _type == JSON_NEGATIVE_INTEGER;
 }
 
 }  // namespace ArduinoJson

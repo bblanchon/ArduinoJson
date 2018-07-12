@@ -19,19 +19,22 @@ class IndentedPrint {
     isNewLine = true;
   }
 
-  size_t print(char c) {
+  size_t write(uint8_t c) {
     size_t n = 0;
     if (isNewLine) n += writeTabs();
-    n += sink->print(c);
+    n += sink->write(c);
     isNewLine = c == '\n';
     return n;
   }
 
-  size_t print(const char *s) {
+  size_t write(const uint8_t *s, size_t n) {
     // TODO: optimize
-    size_t n = 0;
-    while (*s) n += print(*s++);
-    return n;
+    size_t bytesWritten = 0;
+    while (n > 0) {
+      bytesWritten += write(*s++);
+      n--;
+    }
+    return bytesWritten;
   }
 
   // Adds one level of indentation
@@ -57,7 +60,7 @@ class IndentedPrint {
 
   size_t writeTabs() {
     size_t n = 0;
-    for (int i = 0; i < level * tabSize; i++) n += sink->print(' ');
+    for (int i = 0; i < level * tabSize; i++) n += sink->write(' ');
     return n;
   }
 

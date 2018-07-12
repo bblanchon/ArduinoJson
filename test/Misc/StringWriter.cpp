@@ -7,44 +7,49 @@
 
 using namespace ArduinoJson::Internals;
 
-template <typename StringBuilder, typename String>
-void common_tests(StringBuilder& sb, const String& output) {
+template <typename StringWriter>
+static size_t print(StringWriter& sb, const char* s) {
+  return sb.write(reinterpret_cast<const uint8_t*>(s), strlen(s));
+}
+
+template <typename StringWriter, typename String>
+void common_tests(StringWriter& sb, const String& output) {
   SECTION("InitialState") {
     REQUIRE(std::string("") == output);
   }
 
   SECTION("EmptyString") {
-    REQUIRE(0 == sb.print(""));
+    REQUIRE(0 == print(sb, ""));
     REQUIRE(std::string("") == output);
   }
 
   SECTION("OneString") {
-    REQUIRE(4 == sb.print("ABCD"));
+    REQUIRE(4 == print(sb, "ABCD"));
     REQUIRE(std::string("ABCD") == output);
   }
 
   SECTION("TwoStrings") {
-    REQUIRE(4 == sb.print("ABCD"));
-    REQUIRE(4 == sb.print("EFGH"));
+    REQUIRE(4 == print(sb, "ABCD"));
+    REQUIRE(4 == print(sb, "EFGH"));
     REQUIRE(std::string("ABCDEFGH") == output);
   }
 }
 
-TEST_CASE("StaticStringBuilder") {
+TEST_CASE("StaticStringWriter") {
   char output[20];
-  StaticStringBuilder sb(output, sizeof(output));
+  StaticStringWriter sb(output, sizeof(output));
 
   common_tests(sb, static_cast<const char*>(output));
 
   SECTION("OverCapacity") {
-    REQUIRE(19 == sb.print("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
-    REQUIRE(0 == sb.print("ABC"));
+    REQUIRE(19 == print(sb, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+    REQUIRE(0 == print(sb, "ABC"));
     REQUIRE(std::string("ABCDEFGHIJKLMNOPQRS") == output);
   }
 }
 
-TEST_CASE("DynamicStringBuilder") {
+TEST_CASE("DynamicStringWriter") {
   std::string output;
-  DynamicStringBuilder<std::string> sb(output);
+  DynamicStringWriter<std::string> sb(output);
   common_tests(sb, output);
 }

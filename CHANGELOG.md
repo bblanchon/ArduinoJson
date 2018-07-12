@@ -6,11 +6,29 @@ HEAD
 
 * Disabled lazy number deserialization (issue #772)
 * Improved float serialization when `-fsingle-precision-constant` is used
+* Renamed function `RawJson()` to `serialized()`
+* `serializeMsgPack()` now supports values marked with `serialized()`
 
 > ### BREAKING CHANGES
 >
+> #### Non quoted strings
+>
 > Non quoted strings are now forbidden in values, but they are still allowed in keys.
 > For example, `{key:"value"}` is accepted, but `{key:value}` is not.
+>
+> #### Preformatted values
+>
+> Old code:
+>
+> ```c++
+> object["values"] = RawJson("[1,2,3,4]");
+> ```
+> 
+> New code:
+> 
+> ```c++
+> object["values"] = serialized("[1,2,3,4]");
+> ```
 
 v6.1.0-beta
 -----------

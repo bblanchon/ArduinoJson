@@ -67,15 +67,15 @@ TEST_CASE("serializeJson(JsonArray)") {
     check(array, "[1,2]");
   }
 
-  SECTION("RawJson(const char*)") {
-    array.add(RawJson("{\"key\":\"value\"}"));
+  SECTION("serialized(const char*)") {
+    array.add(serialized("{\"key\":\"value\"}"));
 
     check(array, "[{\"key\":\"value\"}]");
   }
 
-  SECTION("RawJson(char*)") {
+  SECTION("serialized(char*)") {
     char tmp[] = "{\"key\":\"value\"}";
-    array.add(RawJson(tmp));
+    array.add(serialized(tmp));
 
     check(array, "[{\"key\":\"value\"}]");
   }

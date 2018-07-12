@@ -7,14 +7,14 @@
 namespace ArduinoJson {
 namespace Internals {
 
-class DummyPrint {
+class DummyWriter {
  public:
-  size_t print(char) {
+  size_t write(uint8_t) {
     return 1;
   }
 
-  size_t print(const char* s) {
-    return strlen(s);
+  size_t write(const uint8_t*, size_t n) {
+    return n;
   }
 };
 }  // namespace Internals

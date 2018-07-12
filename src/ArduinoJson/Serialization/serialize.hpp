@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "./DynamicStringBuilder.hpp"
-#include "./StaticStringBuilder.hpp"
+#include "./DynamicStringWriter.hpp"
+#include "./StaticStringWriter.hpp"
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-#include "./StreamPrintAdapter.hpp"
+#include "./StreamWriter.hpp"
 #endif
 
 namespace ArduinoJson {
@@ -16,7 +16,7 @@ namespace Internals {
 
 template <template <typename> class TSerializer, typename TSource,
           typename TPrint>
-typename enable_if<!StringTraits<TPrint>::has_append, size_t>::type serialize(
+typename enable_if<!IsWriteableString<TPrint>::value, size_t>::type serialize(
     const TSource &source, TPrint &destination) {
   TSerializer<TPrint> serializer(destination);
   source.visit(serializer);
@@ -26,29 +26,29 @@ typename enable_if<!StringTraits<TPrint>::has_append, size_t>::type serialize(
 #if ARDUINOJSON_ENABLE_STD_STREAM
 template <template <typename> class TSerializer, typename TSource>
 size_t serialize(const TSource &source, std::ostream &os) {
-  StreamPrintAdapter adapter(os);
-  return serialize<TSerializer>(source, adapter);
+  StreamWriter writer(os);
+  return serialize<TSerializer>(source, writer);
 }
 #endif
 
 template <template <typename> class TSerializer, typename TSource>
 size_t serialize(const TSource &source, char *buffer, size_t bufferSize) {
-  StaticStringBuilder sb(buffer, bufferSize);
-  return serialize<TSerializer>(source, sb);
+  StaticStringWriter writer(buffer, bufferSize);
+  return serialize<TSerializer>(source, writer);
 }
 
 template <template <typename> class TSerializer, typename TSource, size_t N>
 size_t serialize(const TSource &source, char (&buffer)[N]) {
-  StaticStringBuilder sb(buffer, N);
-  return serialize<TSerializer>(source, sb);
+  StaticStringWriter writer(buffer, N);
+  return serialize<TSerializer>(source, writer);
 }
 
 template <template <typename> class TSerializer, typename TSource,
           typename TString>
-typename enable_if<StringTraits<TString>::has_append, size_t>::type serialize(
+typename enable_if<IsWriteableString<TString>::value, size_t>::type serialize(
     const TSource &source, TString &str) {
-  DynamicStringBuilder<TString> sb(str);
-  return serialize<TSerializer>(source, sb);
+  DynamicStringWriter<TString> writer(str);
+  return serialize<TSerializer>(source, writer);
 }
 
 }  // namespace Internals

@@ -7,7 +7,7 @@
 #include "Data/JsonVariantAs.hpp"
 #include "Polyfills/attributes.hpp"
 #include "Polyfills/type_traits.hpp"
-#include "Strings/StringTraits.hpp"
+#include "Strings/StringTypes.hpp"
 
 namespace ArduinoJson {
 class JsonArray;
@@ -43,21 +43,21 @@ class JsonVariantSubscripts {
   // TKey = const std::string&, const String&
   template <typename TString>
   FORCE_INLINE
-      typename enable_if<StringTraits<TString>::has_equals,
+      typename enable_if<IsString<TString>::value,
                          const JsonObjectSubscript<const TString &> >::type
       operator[](const TString &key) const;
   //
   // const JsonObjectSubscript operator[](TKey) const;
   // TKey = const std::string&, const String&
   template <typename TString>
-  FORCE_INLINE typename enable_if<StringTraits<TString>::has_equals,
+  FORCE_INLINE typename enable_if<IsString<TString>::value,
                                   JsonObjectSubscript<const TString &> >::type
   operator[](const TString &key);
   //
   // JsonObjectSubscript operator[](TKey);
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  FORCE_INLINE typename enable_if<StringTraits<const TString *>::has_equals,
+  FORCE_INLINE typename enable_if<IsString<const TString *>::value,
                                   JsonObjectSubscript<const TString *> >::type
   operator[](const TString *key);
   //
@@ -65,7 +65,7 @@ class JsonVariantSubscripts {
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
   FORCE_INLINE
-      typename enable_if<StringTraits<TString *>::has_equals,
+      typename enable_if<IsString<TString *>::value,
                          const JsonObjectSubscript<const TString *> >::type
       operator[](const TString *key) const;
 
