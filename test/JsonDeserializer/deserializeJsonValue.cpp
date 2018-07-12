@@ -87,6 +87,40 @@ TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
     REQUIRE(doc.as<bool>() == false);
   }
 
+  SECTION("NaN") {
+    DeserializationError err = deserializeJson(doc, "NaN");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.is<float>() == true);
+    REQUIRE(Internals::isnan(doc.as<float>()));
+  }
+
+  SECTION("Infinity") {
+    DeserializationError err = deserializeJson(doc, "Infinity");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.is<float>() == true);
+    REQUIRE(Internals::isinf(doc.as<float>()));
+  }
+
+  SECTION("+Infinity") {
+    DeserializationError err = deserializeJson(doc, "+Infinity");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.is<float>() == true);
+    REQUIRE(Internals::isinf(doc.as<float>()));
+  }
+
+  SECTION("-Infinity") {
+    DeserializationError err = deserializeJson(doc, "-Infinity");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.is<float>() == true);
+    REQUIRE(Internals::isinf(doc.as<float>()));
+  }
+
+  SECTION("issue #628") {
+    DeserializationError err = deserializeJson(doc, "null");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.is<float>() == false);
+  }
+
   SECTION("Should clear the JsonVariant") {
     deserializeJson(doc, "[1,2,3]");
     deserializeJson(doc, "{}");
