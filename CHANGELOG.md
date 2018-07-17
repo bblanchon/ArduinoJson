@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.2.1-beta
+-----------
 
 * Fixed `JsonObject` not inserting keys of type `String` (issue #782)
 
