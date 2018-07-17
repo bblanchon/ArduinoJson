@@ -15,7 +15,7 @@ class ArduinoString {
 
   template <typename Buffer>
   const char* save(Buffer* buffer) const {
-    if (!_str->c_str()) return NULL;  // <- Arduino string can return NULL
+    if (is_null()) return NULL;
     size_t n = _str->length() + 1;
     void* dup = buffer->alloc(n);
     if (dup != NULL) memcpy(dup, _str->c_str(), n);
@@ -24,7 +24,7 @@ class ArduinoString {
 
   bool is_null() const {
     // Arduino's String::c_str() can return NULL
-    return _str->c_str();
+    return !_str->c_str();
   }
 
   bool equals(const char* expected) const {
