@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.2.2-beta
+-----------
 
 * Fixed `invalid application of 'sizeof' to incomplete type '__FlashStringHelper'` (issue #783)
 * Fixed `char[]` not duplicated when passed to `JsonVariant::operator[]`
