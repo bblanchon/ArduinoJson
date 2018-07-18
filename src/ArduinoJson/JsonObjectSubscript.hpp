@@ -111,17 +111,17 @@ inline typename enable_if<IsString<TString>::value,
 
 template <typename TImpl>
 template <typename TString>
-inline typename enable_if<IsString<const TString *>::value,
-                          JsonObjectSubscript<const TString *> >::type
-    JsonVariantSubscripts<TImpl>::operator[](const TString *key) {
+inline typename enable_if<IsString<TString *>::value,
+                          JsonObjectSubscript<TString *> >::type
+    JsonVariantSubscripts<TImpl>::operator[](TString *key) {
   return impl()->template as<JsonObject>()[key];
 }
 
 template <typename TImpl>
 template <typename TString>
 inline typename enable_if<IsString<TString *>::value,
-                          const JsonObjectSubscript<const TString *> >::type
-    JsonVariantSubscripts<TImpl>::operator[](const TString *key) const {
+                          const JsonObjectSubscript<TString *> >::type
+    JsonVariantSubscripts<TImpl>::operator[](TString *key) const {
   return impl()->template as<JsonObject>()[key];
 }
 

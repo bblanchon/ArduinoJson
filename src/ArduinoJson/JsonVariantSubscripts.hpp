@@ -57,17 +57,16 @@ class JsonVariantSubscripts {
   // JsonObjectSubscript operator[](TKey);
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<const TString *>::value,
-                                  JsonObjectSubscript<const TString *> >::type
-  operator[](const TString *key);
+  FORCE_INLINE typename enable_if<IsString<TString *>::value,
+                                  JsonObjectSubscript<TString *> >::type
+  operator[](TString *key);
   //
   // JsonObjectSubscript operator[](TKey);
   // TKey = const char*, const char[N], const FlashStringHelper*
   template <typename TString>
-  FORCE_INLINE
-      typename enable_if<IsString<TString *>::value,
-                         const JsonObjectSubscript<const TString *> >::type
-      operator[](const TString *key) const;
+  FORCE_INLINE typename enable_if<IsString<TString *>::value,
+                                  const JsonObjectSubscript<TString *> >::type
+  operator[](TString *key) const;
 
  private:
   const TImpl *impl() const {
