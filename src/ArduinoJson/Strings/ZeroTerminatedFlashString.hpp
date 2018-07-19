@@ -14,7 +14,7 @@ class ZeroTerminatedFlashString {
   bool equals(const char* expected) const {
     const char* actual = reinterpret_cast<const char*>(_str);
     if (!actual || !expected) return actual == expected;
-    return strcmp_P(actual, expected) == 0;
+    return strcmp_P(expected, actual) == 0;
   }
 
   bool is_null() const {

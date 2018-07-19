@@ -15,7 +15,7 @@ class FixedSizeFlashString {
   bool equals(const char* expected) const {
     const char* actual = reinterpret_cast<const char*>(_str);
     if (!actual || !expected) return actual == expected;
-    return strcmp_P(actual, expected) == 0;
+    return strncmp_P(expected, actual, _size) == 0;
   }
 
   bool is_null() const {
