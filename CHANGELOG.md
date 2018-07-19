@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.2.3-beta
+-----------
 
 * Fixed exception when using Flash strings as object keys (issue #784)
 
