@@ -135,6 +135,29 @@ inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObjectTo(
   return true;
 }
 
+template <typename Str>
+static inline void encode_to_utf8(int codepoint, Str &str) {
+  if (codepoint >= 0x00000800) {
+    str.append((char)(0b11100000 | (codepoint >> 12)));
+    str.append((char)(((codepoint >> 6) & 0b00111111) | 0x80));
+    str.append((char)((codepoint & 0b00111111) | 0x80));
+  } else if (codepoint >= 0x00000080) {
+    str.append((char)(0b11000000 | (codepoint >> 6)));
+    str.append((char)((codepoint & 0b00111111) | 0x80));
+  } else {
+    str.append((char)(codepoint));
+  }
+}
+
+char parse_hexdigit(char c) {
+  if (c >= '0' && c <= '9') return c - '0';
+  c &= ~0x20;
+  if (c >= 'A' && c <= 'F')
+    return c - 'A' + 10;
+  else
+    return 0;
+}
+
 template <typename TReader, typename TWriter>
 inline const char *
 ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseString() {
@@ -155,8 +178,21 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseString() {
 
       if (c == '\\') {
         // replace char
-        c = Encoding::unescapeChar(_reader.current());
-        if (c == '\0') break;
+        const char escaped = _reader.current();
+        if (escaped == 'u') {
+          uint16_t codepoint = 0;
+          for (unsigned int i = 0; i < 4; ++i) {
+            _reader.move();
+            codepoint <<= 4;
+            codepoint += parse_hexdigit(_reader.current());
+          }
+          _reader.move();
+          encode_to_utf8(codepoint, str);
+          continue;
+        } else {
+          c = Encoding::unescapeChar(escaped);
+          if (c == '\0') break;
+        }
         _reader.move();
       }
 
