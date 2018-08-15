@@ -136,7 +136,7 @@ inline bool ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseObjectTo(
 }
 
 template <typename Str>
-static inline void encode_to_utf8(int codepoint, Str &str) {
+static inline void encode_to_utf8(const uint16_t codepoint, Str &str) {
   if (codepoint >= 0x00000800) {
     str.append(static_cast<char>(0xe0 /*0b11100000*/ | (codepoint >> 12)));
     str.append(static_cast<char>(((codepoint >> 6) & 0x3f /*0b00111111*/) | 0x80));
@@ -180,14 +180,17 @@ ArduinoJson::Internals::JsonParser<TReader, TWriter>::parseString() {
         // replace char
         const char escaped = _reader.current();
         if (escaped == 'u') {
-          int codepoint = 0;
-          for (unsigned int i = 0; i < 4; ++i) {
-            _reader.move();
-            codepoint <<= 4;
-            codepoint += parse_hexdigit(_reader.current());
+          uint16_t codepoint = 0;
+          char i=0;
+          while(1)
+          {
+              _reader.move();
+              if (i >=4)
+                  break;
+              codepoint = static_cast<uint16_t>((codepoint << 4) | parse_hexdigit(_reader.current()));
+              ++i;
           }
-          _reader.move();
-          encode_to_utf8(static_cast<uint16_t>(codepoint), str);
+          encode_to_utf8(codepoint, str);
           continue;
         } else {
           c = Encoding::unescapeChar(escaped);
