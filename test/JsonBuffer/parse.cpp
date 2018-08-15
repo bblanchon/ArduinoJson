@@ -77,4 +77,25 @@ TEST_CASE("JsonBuffer::parse()") {
     REQUIRE(variant.is<char*>());
     REQUIRE_THAT(variant.as<char*>(), Equals("hello"));
   }
+
+  SECTION("\\uxxxx escape: 1 byte") {
+    JsonVariant variant = jb.parse("\'\\u0041\'");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<char*>());
+    REQUIRE_THAT(variant.as<char*>(), Equals("A"));
+  }
+
+  SECTION("\\uxxxx escape: 2 bytes") {
+    JsonVariant variant = jb.parse("\'\\u00e4\'");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<char*>());
+    REQUIRE_THAT(variant.as<char*>(), Equals("\xc3\xa4")); // ä
+  }
+
+  SECTION("\\uxxxx escape: 3 bytes") {
+    JsonVariant variant = jb.parse("\'\\u3042\'");
+    REQUIRE(variant.success());
+    REQUIRE(variant.is<char*>());
+    REQUIRE_THAT(variant.as<char*>(), Equals("\xe3\x81\x82")); // あ
+  }
 }
