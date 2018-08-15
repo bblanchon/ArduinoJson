@@ -149,13 +149,11 @@ static inline void encode_to_utf8(const uint16_t codepoint, Str &str) {
   }
 }
 
-inline char parse_hexdigit(char c) {
-  if (c >= '0' && c <= '9') return static_cast<char>(c - '0');
+static inline char parse_hexdigit(char c) {
+  if (c < 'A')
+      return static_cast<char>(c - '0');
   c &= ~0x20;
-  if (c >= 'A' && c <= 'F')
-    return static_cast<char>(c - 'A' + 10);
-  else
-    return 0;
+  return static_cast<char>(c - 'A' + 10);
 }
 
 template <typename TReader, typename TWriter>
