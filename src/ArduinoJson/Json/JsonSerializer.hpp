@@ -91,7 +91,7 @@ class JsonSerializer {
 }  // namespace Internals
 
 template <typename TSource, typename TDestination>
-size_t serializeJson(TSource &source, TDestination &destination) {
+size_t serializeJson(const TSource &source, TDestination &destination) {
   using namespace Internals;
   return serialize<JsonSerializer>(source, destination);
 }

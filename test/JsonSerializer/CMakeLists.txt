@@ -8,6 +8,7 @@ add_executable(JsonSerializerTests
 	JsonObject.cpp
 	JsonObjectPretty.cpp
 	JsonVariant.cpp
+	misc.cpp
 	std_stream.cpp
 	std_string.cpp
 )

@@ -6,6 +6,7 @@ HEAD
 
 * Implemented reference semantics for `JsonVariant`
 * Replace `JsonPair`'s `key` and `value` with `key()` and `value()`
+* Fixed `serializeJson(obj[key], dst)` (issue #794)
 
 > ### BREAKING CHANGES
 >
