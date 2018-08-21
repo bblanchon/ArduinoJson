@@ -6,39 +6,42 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::isNull()") {
-  SECTION("ReturnsFalse_WhenUndefined") {
-    JsonVariant variant;
+  DynamicJsonDocument doc;
+  JsonVariant variant = doc.to<JsonVariant>();
+
+  SECTION("return true when Undefined") {
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("ReturnsTrue_WhenInteger") {
-    JsonVariant variant = 0;
+  SECTION("return false when Integer") {
+    variant.set(42);
+
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("ReturnsTrue_WhenEmptyArray") {
-    DynamicJsonDocument doc;
-    JsonArray array = doc.to<JsonArray>();
+  SECTION("return false when EmptyArray") {
+    DynamicJsonDocument doc2;
+    JsonArray array = doc2.to<JsonArray>();
 
-    JsonVariant variant = array;
+    variant.set(array);
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("ReturnsTrue_WhenEmptyObject") {
-    DynamicJsonDocument doc;
-    JsonObject obj = doc.to<JsonObject>();
+  SECTION("return false when EmptyObject") {
+    DynamicJsonDocument doc2;
+    JsonObject obj = doc2.to<JsonObject>();
 
-    JsonVariant variant = obj;
+    variant.set(obj);
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("ReturnsFalse_WhenInvalidArray") {
-    JsonVariant variant = JsonArray();
+  SECTION("return true when InvalidArray") {
+    variant.set(JsonArray());
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("ReturnsFalse_WhenInvalidObject") {
-    JsonVariant variant = JsonObject();
+  SECTION("return true when InvalidObject") {
+    variant.set(JsonObject());
     REQUIRE(variant.isNull() == true);
   }
 }

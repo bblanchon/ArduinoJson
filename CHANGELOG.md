@@ -1,6 +1,56 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Implemented reference semantics for `JsonVariant`
+* Replace `JsonPair`'s `key` and `value` with `key()` and `value()`
+
+> ### BREAKING CHANGES
+>
+> #### JsonVariant
+> 
+> `JsonVariant` now has a semantic similar to `JsonObject` and `JsonArray`.
+> It's a reference to a value stored in the `JsonDocument`.
+> As a consequence, a `JsonVariant` cannot be used as a standalone variable anymore.
+>
+> Old code:
+>
+> ```c++
+> JsonVariant myValue = 42;
+> ```
+>
+> New code:
+>
+> ```c++
+> DynamicJsonDocument doc;
+> JsonVariant myValue = doc.to<JsonVariant>();
+> myValue.set(42);
+> ```
+>
+> #### JsonPair
+>
+> Old code:
+>
+> ```c++
+> for(JsonPair p : myObject) {
+>   Serial.println(p.key);
+>   Serial.println(p.value.as<int>());
+> }
+> ```
+>
+> New code:
+>
+> ```c++
+> for(JsonPair p : myObject) {
+>   Serial.println(p.key());
+>   Serial.println(p.value().as<int>());
+> }
+> ```
+>
+> CAUTION: the key is now read only!
+
 v6.2.3-beta
 -----------
 

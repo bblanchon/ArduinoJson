@@ -32,7 +32,7 @@ TEST_CASE("JsonObject::remove()") {
     obj["c"] = 2;
 
     for (JsonObject::iterator it = obj.begin(); it != obj.end(); ++it) {
-      if (it->value == 1) obj.remove(it);
+      if (it->value() == 1) obj.remove(it);
     }
 
     std::string result;

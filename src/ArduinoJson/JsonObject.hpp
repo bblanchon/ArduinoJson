@@ -5,29 +5,27 @@
 #pragma once
 
 #include "./JsonObjectData.hpp"
+#include "./JsonObjectIterator.hpp"
 
 namespace ArduinoJson {
 
 class JsonObject {
   friend class JsonVariant;
+  typedef Internals::JsonObjectData::iterator internal_iterator;
 
  public:
-  typedef Internals::JsonObjectData::iterator iterator;
-  typedef Internals::JsonObjectData::const_iterator const_iterator;
+  typedef JsonObjectIterator iterator;
 
-  JsonObject() : _data(0) {}
-  JsonObject(Internals::JsonObjectData* object) : _data(object) {}
-  JsonObject(Internals::JsonBuffer* buf)
-      : _data(new (buf) Internals::JsonObjectData(buf)) {}
+  JsonObject() : _buffer(0), _data(0) {}
+  explicit JsonObject(Internals::JsonBuffer* buf,
+                      Internals::JsonObjectData* object)
+      : _buffer(buf), _data(object) {}
+  explicit JsonObject(Internals::JsonBuffer* buf)
+      : _buffer(buf), _data(new (buf) Internals::JsonObjectData()) {}
 
-  iterator begin() {
+  iterator begin() const {
     if (!_data) return iterator();
-    return _data->begin();
-  }
-
-  const_iterator begin() const {
-    if (!_data) return const_iterator();
-    return _data->begin();
+    return iterator(_buffer, _data->begin());
   }
 
   // Tells weither the specified key is present and associated with a value.
@@ -46,12 +44,8 @@ class JsonObject {
     return containsKey_impl<TString*>(key);
   }
 
-  iterator end() {
+  iterator end() const {
     return iterator();
-  }
-
-  const_iterator end() const {
-    return const_iterator();
   }
 
   // Creates and adds a JsonArray.
@@ -165,7 +159,7 @@ class JsonObject {
 
   void remove(iterator it) {
     if (!_data) return;
-    _data->remove(it);
+    _data->remove(it.internal());
   }
 
   // Removes the specified key and the associated value.
@@ -232,15 +226,15 @@ class JsonObject {
   template <typename Visitor>
   void visit(Visitor& visitor) const {
     if (_data)
-      visitor.acceptObject(*this);
+      visitor.acceptObject(*_data);
     else
-      return visitor.acceptNull();
+      visitor.acceptNull();
   }
 
  private:
   template <typename TStringRef>
   bool containsKey_impl(TStringRef key) const {
-    return findKey<TStringRef>(key) != end();
+    return findKey<TStringRef>(key) != _data->end();
   }
 
   template <typename TStringRef>
@@ -251,30 +245,32 @@ class JsonObject {
 
   // Returns the list node that matches the specified key.
   template <typename TStringRef>
-  iterator findKey(TStringRef key) {
-    iterator it;
-    for (it = begin(); it != end(); ++it) {
+  internal_iterator findKey(TStringRef key) {
+    if (!_data) return internal_iterator();
+    internal_iterator it;
+    for (it = _data->begin(); it != _data->end(); ++it) {
       if (Internals::makeString(key).equals(it->key)) break;
     }
     return it;
   }
   template <typename TStringRef>
-  const_iterator findKey(TStringRef key) const {
+  internal_iterator findKey(TStringRef key) const {
     return const_cast<JsonObject*>(this)->findKey<TStringRef>(key);
   }
 
   template <typename TStringRef, typename TValue>
   typename Internals::JsonVariantAs<TValue>::type get_impl(
       TStringRef key) const {
-    const_iterator it = findKey<TStringRef>(key);
-    return it != end() ? it->value.as<TValue>()
-                       : Internals::JsonVariantDefault<TValue>::get();
+    internal_iterator it = findKey<TStringRef>(key);
+    return it != _data->end() ? JsonVariant(_buffer, &it->value).as<TValue>()
+                              : TValue();
   }
 
   template <typename TStringRef, typename TValue>
   bool is_impl(TStringRef key) const {
-    const_iterator it = findKey<TStringRef>(key);
-    return it != end() ? it->value.is<TValue>() : false;
+    internal_iterator it = findKey<TStringRef>(key);
+    return it != _data->end() ? JsonVariant(_buffer, &it->value).is<TValue>()
+                              : false;
   }
 
   template <typename TStringRef>
@@ -291,21 +287,33 @@ class JsonObject {
     if (Internals::makeString(key).is_null()) return false;
 
     // search a matching key
-    iterator it = findKey<TStringRef>(key);
-    if (it == end()) {
+    internal_iterator it = findKey<TStringRef>(key);
+    if (it == _data->end()) {
       // add the key
-      it = _data->add();
-      if (it == end()) return false;
-      bool key_ok =
-          Internals::ValueSaver<TStringRef>::save(_data->_buffer, it->key, key);
-      if (!key_ok) return false;
+      // TODO: use JsonPairData directly, we don't need an iterator
+      it = _data->add(_buffer);
+      if (it == _data->end()) return false;
+      if (!set_key(it, key)) return false;
     }
 
     // save the value
-    return Internals::ValueSaver<TValueRef>::save(_data->_buffer, it->value,
-                                                  value);
+    return JsonVariant(_buffer, &it->value).set(value);
   }
 
-  Internals::JsonObjectData* _data;
+  bool set_key(internal_iterator& it, const char* key) {
+    it->key = key;
+    return true;
+  }
+
+  template <typename T>
+  bool set_key(internal_iterator& it, const T& key) {
+    const char* dup = Internals::makeString(key).save(_buffer);
+    if (!dup) return false;
+    it->key = dup;
+    return true;
+  }
+
+  mutable Internals::JsonBuffer* _buffer;
+  mutable Internals::JsonObjectData* _data;
 };
 }  // namespace ArduinoJson

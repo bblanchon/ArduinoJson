@@ -11,16 +11,18 @@ TEST_CASE("operator<<(std::ostream)") {
   std::ostringstream os;
 
   SECTION("JsonVariant containing false") {
-    JsonVariant variant = false;
+    JsonVariant variant = doc.to<JsonVariant>();
 
+    variant.set(false);
     os << variant;
 
     REQUIRE("false" == os.str());
   }
 
   SECTION("JsonVariant containing string") {
-    JsonVariant variant = "coucou";
+    JsonVariant variant = doc.to<JsonVariant>();
 
+    variant.set("coucou");
     os << variant;
 
     REQUIRE("\"coucou\"" == os.str());

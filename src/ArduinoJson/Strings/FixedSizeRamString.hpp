@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <string.h>  // strcmp
+
 namespace ArduinoJson {
 namespace Internals {
 

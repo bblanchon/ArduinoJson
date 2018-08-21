@@ -29,19 +29,13 @@ TEST_CASE("unsigned char[]") {
   }
 
   SECTION("JsonVariant") {
-    SECTION("constructor") {
+    DynamicJsonDocument doc;
+
+    SECTION("set") {
       unsigned char value[] = "42";
 
-      JsonVariant variant(value);
-
-      REQUIRE(42 == variant.as<int>());
-    }
-
-    SECTION("operator=") {
-      unsigned char value[] = "42";
-
-      JsonVariant variant(666);
-      variant = value;
+      JsonVariant variant = doc.to<JsonVariant>();
+      variant.set(value);
 
       REQUIRE(42 == variant.as<int>());
     }
@@ -50,7 +44,6 @@ TEST_CASE("unsigned char[]") {
     SECTION("operator[]") {
       unsigned char key[] = "hello";
 
-      DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
       JsonVariant variant = doc.as<JsonVariant>();
 
@@ -62,7 +55,6 @@ TEST_CASE("unsigned char[]") {
     SECTION("operator[] const") {
       unsigned char key[] = "hello";
 
-      DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
       const JsonVariant variant = doc.as<JsonVariant>();
 
@@ -73,8 +65,8 @@ TEST_CASE("unsigned char[]") {
     SECTION("operator==") {
       unsigned char comparand[] = "hello";
 
-      JsonVariant variant;
-      variant = "hello";
+      JsonVariant variant = doc.to<JsonVariant>();
+      variant.set("hello");
 
       REQUIRE(comparand == variant);
       REQUIRE(variant == comparand);
@@ -85,8 +77,8 @@ TEST_CASE("unsigned char[]") {
     SECTION("operator!=") {
       unsigned char comparand[] = "hello";
 
-      JsonVariant variant;
-      variant = "world";
+      JsonVariant variant = doc.to<JsonVariant>();
+      variant.set("world");
 
       REQUIRE(comparand != variant);
       REQUIRE(variant != comparand);

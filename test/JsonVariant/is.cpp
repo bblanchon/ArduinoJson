@@ -5,7 +5,11 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-void checkIsArray(JsonVariant var) {
+void checkIsArray(JsonArray value) {
+  DynamicJsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+  var.set(value);
+
   REQUIRE(var.is<JsonArray>());
   REQUIRE(var.is<JsonArray>());
   REQUIRE(var.is<const JsonArray>());
@@ -16,48 +20,65 @@ void checkIsArray(JsonVariant var) {
   REQUIRE_FALSE(var.is<float>());
   REQUIRE_FALSE(var.is<int>());
   REQUIRE_FALSE(var.is<long>());
-  REQUIRE_FALSE(var.is<const char*>());
+  REQUIRE_FALSE(var.is<const char *>());
   REQUIRE_FALSE(var.is<JsonObject>());
 }
 
-void checkIsBool(JsonVariant var) {
+void checkIsBool(bool value) {
+  DynamicJsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+  var.set(value);
+
   REQUIRE(var.is<bool>());
 
   REQUIRE_FALSE(var.is<double>());
   REQUIRE_FALSE(var.is<float>());
   REQUIRE_FALSE(var.is<int>());
   REQUIRE_FALSE(var.is<long>());
-  REQUIRE_FALSE(var.is<const char*>());
+  REQUIRE_FALSE(var.is<const char *>());
   REQUIRE_FALSE(var.is<JsonArray>());
   REQUIRE_FALSE(var.is<JsonObject>());
 }
 
-void checkIsFloat(JsonVariant var) {
+void checkIsFloat(double value) {
+  DynamicJsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+  var.set(value);
+
   REQUIRE(var.is<double>());
   REQUIRE(var.is<float>());
 
   REQUIRE_FALSE(var.is<bool>());
   REQUIRE_FALSE(var.is<int>());
   REQUIRE_FALSE(var.is<long>());
-  REQUIRE_FALSE(var.is<const char*>());
+  REQUIRE_FALSE(var.is<const char *>());
   REQUIRE_FALSE(var.is<JsonArray>());
   REQUIRE_FALSE(var.is<JsonObject>());
 }
 
-void checkIsInteger(JsonVariant var) {
+template <typename T>
+void checkIsInteger(T value) {
+  DynamicJsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+  var.set(value);
+
   REQUIRE(var.is<long>());
   REQUIRE(var.is<int>());
   REQUIRE(var.is<float>());
   REQUIRE(var.is<double>());
 
   REQUIRE_FALSE(var.is<bool>());
-  REQUIRE_FALSE(var.is<const char*>());
+  REQUIRE_FALSE(var.is<const char *>());
   REQUIRE_FALSE(var.is<JsonArray>());
   REQUIRE_FALSE(var.is<JsonObject>());
 }
 
-void checkIsString(JsonVariant var) {
-  REQUIRE(var.is<const char*>());
+void checkIsString(const char *value) {
+  DynamicJsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+  var.set(value);
+
+  REQUIRE(var.is<const char *>());
 
   REQUIRE_FALSE(var.is<bool>());
   REQUIRE_FALSE(var.is<int>());

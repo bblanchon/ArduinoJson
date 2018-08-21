@@ -12,24 +12,21 @@
 namespace ArduinoJson {
 
 class DynamicJsonDocument {
-  Internals::DynamicJsonBuffer _buffer;
-  JsonVariant _root;
-
  public:
   uint8_t nestingLimit;
 
   DynamicJsonDocument() : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
   DynamicJsonDocument(size_t capacity)
-      : _buffer(capacity), nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
+      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT), _buffer(capacity) {}
 
   template <typename T>
   bool is() const {
-    return _root.is<T>();
+    return getVariant().is<T>();
   }
 
   template <typename T>
   typename Internals::JsonVariantAs<T>::type as() const {
-    return _root.as<T>();
+    return getVariant().as<T>();
   }
 
   // JsonObject to<JsonObject>()
@@ -39,7 +36,7 @@ class DynamicJsonDocument {
   to() {
     clear();
     JsonObject object(&_buffer);
-    _root = object;
+    getVariant().set(object);
     return object;
   }
 
@@ -50,17 +47,27 @@ class DynamicJsonDocument {
   to() {
     clear();
     JsonArray array(&_buffer);
-    _root = array;
+    getVariant().set(array);
     return array;
   }
 
-  // JsonVariant& to<JsonVariant>()
+  // JsonVariant to<JsonVariant>()
   template <typename T>
   typename Internals::enable_if<Internals::is_same<T, JsonVariant>::value,
-                                T&>::type
+                                JsonVariant>::type
   to() {
     clear();
-    return _root;
+    return getVariant();
+  }
+
+  // JsonVariantData& to<JsonVariantData>()
+  template <typename T>
+  typename Internals::enable_if<
+      Internals::is_same<T, Internals::JsonVariantData>::value,
+      Internals::JsonVariantData&>::type
+  to() {
+    clear();
+    return _rootData;
   }
 
   Internals::DynamicJsonBuffer& buffer() {
@@ -69,7 +76,7 @@ class DynamicJsonDocument {
 
   void clear() {
     _buffer.clear();
-    _root = JsonVariant();
+    _rootData.setNull();
   }
 
   size_t memoryUsage() const {
@@ -78,7 +85,15 @@ class DynamicJsonDocument {
 
   template <typename Visitor>
   void visit(Visitor& visitor) const {
-    return _root.visit(visitor);
+    return _rootData.visit(visitor);
   }
+
+ private:
+  JsonVariant getVariant() const {
+    return JsonVariant(&_buffer, &_rootData);
+  }
+
+  mutable Internals::DynamicJsonBuffer _buffer;
+  mutable Internals::JsonVariantData _rootData;
 };
 }  // namespace ArduinoJson

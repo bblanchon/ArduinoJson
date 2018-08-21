@@ -20,10 +20,10 @@ class JsonSerializer {
     _writer.writeFloat(value);
   }
 
-  void acceptArray(const JsonArray &array) {
+  void acceptArray(const JsonArrayData &array) {
     _writer.beginArray();
 
-    JsonArray::const_iterator it = array.begin();
+    JsonArrayData::const_iterator it = array.begin();
     while (it != array.end()) {
       it->visit(*this);
 
@@ -36,10 +36,10 @@ class JsonSerializer {
     _writer.endArray();
   }
 
-  void acceptObject(const JsonObject &object) {
+  void acceptObject(const JsonObjectData &object) {
     _writer.beginObject();
 
-    JsonObject::const_iterator it = object.begin();
+    JsonObjectData::const_iterator it = object.begin();
     while (it != object.end()) {
       _writer.writeString(it->key);
       _writer.writeColon();

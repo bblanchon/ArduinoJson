@@ -26,6 +26,7 @@ class StlString {
   }
 
   bool equals(const char* expected) const {
+    if (!expected) return false;
     return *_str == expected;
   }
 

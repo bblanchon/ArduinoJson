@@ -16,10 +16,18 @@ static void check(const char* input, U expected) {
   REQUIRE(variant.as<T>() == expected);
 }
 
+static void checkIsNull(const char* input) {
+  DynamicJsonDocument variant;
+
+  DeserializationError error = deserializeMsgPack(variant, input);
+
+  REQUIRE(error == DeserializationError::Ok);
+  REQUIRE(variant.as<JsonVariant>().isNull());
+}
+
 TEST_CASE("deserialize MsgPack value") {
   SECTION("nil") {
-    const char* nil = 0;  // ArduinoJson uses a string for null
-    check<const char*>("\xc0", nil);
+    checkIsNull("\xc0");
   }
 
   SECTION("bool") {

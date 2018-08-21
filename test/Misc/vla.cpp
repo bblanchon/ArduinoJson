@@ -40,23 +40,15 @@ TEST_CASE("Variable Length Array") {
   }
 
   SECTION("JsonVariant") {
-    SECTION("constructor") {
+    DynamicJsonDocument doc;
+
+    SECTION("set()") {
       int i = 16;
       char vla[i];
       strcpy(vla, "42");
 
-      JsonVariant variant(vla);
-
-      REQUIRE(42 == variant.as<int>());
-    }
-
-    SECTION("operator=") {
-      int i = 16;
-      char vla[i];
-      strcpy(vla, "42");
-
-      JsonVariant variant(666);
-      variant = vla;
+      JsonVariant variant = doc.to<JsonVariant>();
+      variant.set(vla);
 
       REQUIRE(42 == variant.as<int>());
     }
@@ -67,7 +59,6 @@ TEST_CASE("Variable Length Array") {
       char vla[i];
       strcpy(vla, "hello");
 
-      DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
       JsonVariant variant = doc.as<JsonVariant>();
 
@@ -81,7 +72,6 @@ TEST_CASE("Variable Length Array") {
       char vla[i];
       strcpy(vla, "hello");
 
-      DynamicJsonDocument doc;
       deserializeJson(doc, "{\"hello\":\"world\"}");
       const JsonVariant variant = doc.as<JsonVariant>();
 
@@ -94,8 +84,8 @@ TEST_CASE("Variable Length Array") {
       char vla[i];
       strcpy(vla, "hello");
 
-      JsonVariant variant;
-      variant = "hello";
+      JsonVariant variant = doc.to<JsonVariant>();
+      variant.set("hello");
 
       REQUIRE((vla == variant));
       REQUIRE((variant == vla));
@@ -109,7 +99,7 @@ TEST_CASE("Variable Length Array") {
       strcpy(vla, "hello");
 
       JsonVariant variant;
-      variant = "world";
+      variant.set("world");
 
       REQUIRE((vla != variant));
       REQUIRE((variant != vla));

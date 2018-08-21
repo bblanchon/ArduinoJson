@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include "./JsonArrayData.hpp"
+#include "JsonArrayData.hpp"
+#include "JsonArrayIterator.hpp"
 
 namespace ArduinoJson {
 
@@ -18,13 +19,13 @@ class JsonArray {
   friend class JsonVariant;
 
  public:
-  typedef Internals::JsonArrayData::iterator iterator;
-  typedef Internals::JsonArrayData::const_iterator const_iterator;
+  typedef JsonArrayIterator iterator;
 
-  JsonArray() : _data(0) {}
-  JsonArray(Internals::JsonArrayData* arr) : _data(arr) {}
-  JsonArray(Internals::JsonBuffer* buf)
-      : _data(new (buf) Internals::JsonArrayData(buf)) {}
+  JsonArray() : _buffer(0), _data(0) {}
+  explicit JsonArray(Internals::JsonBuffer* buf, Internals::JsonArrayData* arr)
+      : _buffer(buf), _data(arr) {}
+  explicit JsonArray(Internals::JsonBuffer* buf)
+      : _buffer(buf), _data(new (buf) Internals::JsonArrayData()) {}
 
   // Adds the specified value at the end of the array.
   //
@@ -43,22 +44,13 @@ class JsonArray {
     return add_impl<T*>(value);
   }
 
-  iterator begin() {
+  iterator begin() const {
     if (!_data) return iterator();
-    return _data->begin();
+    return iterator(_buffer, _data->begin());
   }
 
-  const_iterator begin() const {
-    if (!_data) return const_iterator();
-    return _data->begin();
-  }
-
-  iterator end() {
+  iterator end() const {
     return iterator();
-  }
-
-  const_iterator end() const {
-    return const_iterator();
   }
 
   // Imports a 1D array
@@ -100,8 +92,7 @@ class JsonArray {
   template <typename T>
   size_t copyTo(T* array, size_t len) const {
     size_t i = 0;
-    for (const_iterator it = begin(); it != end() && i < len; ++it)
-      array[i++] = *it;
+    for (iterator it = begin(); it != end() && i < len; ++it) array[i++] = *it;
     return i;
   }
 
@@ -110,7 +101,7 @@ class JsonArray {
   void copyTo(T (&array)[N1][N2]) const {
     if (!_data) return;
     size_t i = 0;
-    for (const_iterator it = begin(); it != end() && i < N1; ++it) {
+    for (iterator it = begin(); it != end() && i < N1; ++it) {
       it->as<JsonArray>().copyTo(array[i++]);
     }
   }
@@ -129,21 +120,21 @@ class JsonArray {
   // Gets the value at the specified index.
   template <typename T>
   typename Internals::JsonVariantAs<T>::type get(size_t index) const {
-    const_iterator it = begin() += index;
-    return it != end() ? it->as<T>() : Internals::JsonVariantDefault<T>::get();
+    iterator it = begin() += index;
+    return it != end() ? it->as<T>() : T();
   }
 
   // Check the type of the value at specified index.
   template <typename T>
   bool is(size_t index) const {
-    const_iterator it = begin() += index;
+    iterator it = begin() += index;
     return it != end() ? it->is<T>() : false;
   }
 
   // Removes element at specified position.
   void remove(iterator it) {
     if (!_data) return;
-    _data->remove(it);
+    _data->remove(it.internal());
   }
 
   // Removes element at specified index.
@@ -182,7 +173,7 @@ class JsonArray {
   template <typename Visitor>
   void visit(Visitor& visitor) const {
     if (_data)
-      return visitor.acceptArray(*this);
+      visitor.acceptArray(*_data);
     else
       visitor.acceptNull();
   }
@@ -192,17 +183,18 @@ class JsonArray {
   bool set_impl(size_t index, TValueRef value) {
     iterator it = begin() += index;
     if (it == end()) return false;
-    return Internals::ValueSaver<TValueRef>::save(_data->_buffer, *it, value);
+    return it->set(value);
   }
 
   template <typename TValueRef>
   bool add_impl(TValueRef value) {
     if (!_data) return false;
-    iterator it = _data->add();
+    iterator it = iterator(_buffer, _data->add(_buffer));
     if (it == end()) return false;
-    return Internals::ValueSaver<TValueRef>::save(_data->_buffer, *it, value);
+    return it->set(value);
   }
 
+  Internals::JsonBuffer* _buffer;
   Internals::JsonArrayData* _data;
 };
 }  // namespace ArduinoJson

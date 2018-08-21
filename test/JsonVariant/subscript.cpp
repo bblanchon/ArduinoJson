@@ -6,24 +6,26 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::operator[]") {
+  DynamicJsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+
   SECTION("The JsonVariant is undefined") {
-    JsonVariant var = JsonVariant();
     REQUIRE(0 == var.size());
     REQUIRE(var["0"].isNull());
     REQUIRE(var[0].isNull());
   }
 
   SECTION("The JsonVariant is a string") {
-    JsonVariant var = "hello world";
+    var.set("hello world");
     REQUIRE(0 == var.size());
     REQUIRE(var["0"].isNull());
     REQUIRE(var[0].isNull());
   }
 
   SECTION("The JsonVariant is a JsonArray") {
-    DynamicJsonDocument doc;
-    JsonArray array = doc.to<JsonArray>();
-    JsonVariant var = array;
+    DynamicJsonDocument doc2;
+    JsonArray array = doc2.to<JsonArray>();
+    var.set(array);
 
     SECTION("get value") {
       array.add("element at index 0");
@@ -60,9 +62,9 @@ TEST_CASE("JsonVariant::operator[]") {
   }
 
   SECTION("The JsonVariant is a JsonObject") {
-    DynamicJsonDocument doc;
-    JsonObject object = doc.to<JsonObject>();
-    JsonVariant var = object;
+    DynamicJsonDocument doc2;
+    JsonObject object = doc2.to<JsonObject>();
+    var.set(object);
 
     SECTION("get value") {
       object["a"] = "element at key \"a\"";

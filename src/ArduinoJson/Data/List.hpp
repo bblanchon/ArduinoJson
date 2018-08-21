@@ -22,7 +22,7 @@ class List {
   typedef ListIterator<T> iterator;
   typedef ListConstIterator<T> const_iterator;
 
-  explicit List(JsonBuffer *buf) : _buffer(buf), _firstNode(NULL) {}
+  List() : _firstNode(NULL) {}
 
   // Returns the numbers of elements in the list.
   // For a JsonObjectData, it would return the number of key-value pairs
@@ -32,8 +32,8 @@ class List {
     return nodeCount;
   }
 
-  iterator add() {
-    node_type *newNode = new (_buffer) node_type();
+  iterator add(JsonBuffer *buffer) {
+    node_type *newNode = new (buffer) node_type();
 
     if (_firstNode) {
       node_type *lastNode = _firstNode;
@@ -70,11 +70,6 @@ class List {
         if (node->next == nodeToRemove) node->next = nodeToRemove->next;
     }
   }
-
-  JsonBuffer &buffer() const {
-    return *_buffer;
-  }
-  JsonBuffer *_buffer;  // TODO!!
 
  protected:
   void clear() {

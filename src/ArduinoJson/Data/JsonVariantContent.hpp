@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <stdlib.h>  // size_t
+
 #include "JsonFloat.hpp"
 #include "JsonInteger.hpp"
 

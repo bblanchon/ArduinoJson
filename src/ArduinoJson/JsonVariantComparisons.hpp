@@ -5,6 +5,8 @@
 #pragma once
 
 #include "Data/IsVariant.hpp"
+#include "Data/JsonFloat.hpp"
+#include "Data/JsonInteger.hpp"
 #include "Polyfills/type_traits.hpp"
 #include "Strings/StringTypes.hpp"
 

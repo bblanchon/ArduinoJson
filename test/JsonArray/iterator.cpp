@@ -30,8 +30,4 @@ TEST_CASE("JsonArray::begin()/end()") {
   SECTION("Mutable") {
     run_iterator_test<JsonArray::iterator>();
   }
-
-  SECTION("Const") {
-    run_iterator_test<JsonArray::const_iterator>();
-  }
 }

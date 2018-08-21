@@ -5,7 +5,6 @@
 add_executable(JsonVariantTests
 	as.cpp
 	compare.cpp
-	copy.cpp
 	is.cpp
 	isnull.cpp
 	or.cpp

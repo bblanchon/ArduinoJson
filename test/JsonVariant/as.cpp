@@ -9,222 +9,225 @@
 static const char* null = 0;
 
 TEST_CASE("JsonVariant::as()") {
+  DynamicJsonDocument doc;
+  JsonVariant variant = doc.to<JsonVariant>();
+
   SECTION("DoubleAsBool") {
-    JsonVariant variant = 4.2;
+    variant.set(4.2);
     REQUIRE(variant.as<bool>());
   }
 
   SECTION("DoubleAsCstr") {
-    JsonVariant variant = 4.2;
+    variant.set(4.2);
     REQUIRE_FALSE(variant.as<const char*>());
   }
 
   SECTION("DoubleAsString") {
-    JsonVariant variant = 4.2;
+    variant.set(4.2);
     REQUIRE(std::string("4.2") == variant.as<std::string>());
   }
 
   SECTION("DoubleAsLong") {
-    JsonVariant variant = 4.2;
+    variant.set(4.2);
     REQUIRE(4L == variant.as<long>());
   }
 
   SECTION("DoubleAsUnsigned") {
-    JsonVariant variant = 4.2;
+    variant.set(4.2);
     REQUIRE(4U == variant.as<unsigned>());
   }
 
   SECTION("DoubleZeroAsBool") {
-    JsonVariant variant = 0.0;
+    variant.set(0.0);
     REQUIRE_FALSE(variant.as<bool>());
   }
 
   SECTION("DoubleZeroAsLong") {
-    JsonVariant variant = 0.0;
+    variant.set(0.0);
     REQUIRE(0L == variant.as<long>());
   }
 
   SECTION("FalseAsBool") {
-    JsonVariant variant = false;
+    variant.set(false);
     REQUIRE_FALSE(variant.as<bool>());
   }
 
   SECTION("FalseAsDouble") {
-    JsonVariant variant = false;
+    variant.set(false);
     REQUIRE(0.0 == variant.as<double>());
   }
 
   SECTION("FalseAsLong") {
-    JsonVariant variant = false;
+    variant.set(false);
     REQUIRE(0L == variant.as<long>());
   }
 
   SECTION("FalseAsString") {
-    JsonVariant variant = false;
+    variant.set(false);
     REQUIRE(std::string("false") == variant.as<std::string>());
   }
 
   SECTION("TrueAsBool") {
-    JsonVariant variant = true;
+    variant.set(true);
     REQUIRE(variant.as<bool>());
   }
 
   SECTION("TrueAsDouble") {
-    JsonVariant variant = true;
+    variant.set(true);
     REQUIRE(1.0 == variant.as<double>());
   }
 
   SECTION("TrueAsLong") {
-    JsonVariant variant = true;
+    variant.set(true);
     REQUIRE(1L == variant.as<long>());
   }
 
   SECTION("TrueAsString") {
-    JsonVariant variant = true;
+    variant.set(true);
     REQUIRE(std::string("true") == variant.as<std::string>());
   }
 
   SECTION("LongAsBool") {
-    JsonVariant variant = 42L;
+    variant.set(42L);
     REQUIRE(variant.as<bool>());
   }
 
   SECTION("LongZeroAsBool") {
-    JsonVariant variant = 0L;
+    variant.set(0L);
     REQUIRE_FALSE(variant.as<bool>());
   }
 
   SECTION("PositiveLongAsDouble") {
-    JsonVariant variant = 42L;
+    variant.set(42L);
     REQUIRE(42.0 == variant.as<double>());
   }
 
   SECTION("NegativeLongAsDouble") {
-    JsonVariant variant = -42L;
+    variant.set(-42L);
     REQUIRE(-42.0 == variant.as<double>());
   }
 
   SECTION("LongAsString") {
-    JsonVariant variant = 42L;
+    variant.set(42L);
     REQUIRE(std::string("42") == variant.as<std::string>());
   }
 
   SECTION("LongZeroAsDouble") {
-    JsonVariant variant = 0L;
+    variant.set(0L);
     REQUIRE(0.0 == variant.as<double>());
   }
 
   SECTION("NullAsBool") {
-    JsonVariant variant = null;
+    variant.set(null);
     REQUIRE_FALSE(variant.as<bool>());
   }
 
   SECTION("NullAsDouble") {
-    JsonVariant variant = null;
+    variant.set(null);
     REQUIRE(0.0 == variant.as<double>());
   }
 
   SECTION("NullAsLong") {
-    JsonVariant variant = null;
+    variant.set(null);
     REQUIRE(0L == variant.as<long>());
   }
 
   SECTION("NullAsString") {
-    JsonVariant variant = null;
+    variant.set(null);
     REQUIRE(std::string("null") == variant.as<std::string>());
   }
 
   SECTION("NumberStringAsBool") {
-    JsonVariant variant = "42";
+    variant.set("42");
     REQUIRE(variant.as<bool>());
   }
 
   SECTION("NumberStringAsLong") {
-    JsonVariant variant = "42";
+    variant.set("42");
     REQUIRE(42L == variant.as<long>());
   }
 
 #if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
   SECTION("NumberStringAsInt64Negative") {
-    JsonVariant variant = "-9223372036854775808";
+    variant.set("-9223372036854775808");
     REQUIRE(-9223372036854775807 - 1 == variant.as<long long>());
   }
 
   SECTION("NumberStringAsInt64Positive") {
-    JsonVariant variant = "9223372036854775807";
+    variant.set("9223372036854775807");
     REQUIRE(9223372036854775807 == variant.as<long long>());
   }
 #endif
 
   SECTION("RandomStringAsBool") {
-    JsonVariant variant = "hello";
+    variant.set("hello");
     REQUIRE_FALSE(variant.as<bool>());
   }
 
   SECTION("RandomStringAsLong") {
-    JsonVariant variant = "hello";
+    variant.set("hello");
     REQUIRE(0L == variant.as<long>());
   }
 
   SECTION("RandomStringAsConstCharPtr") {
-    JsonVariant variant = "hello";
+    variant.set("hello");
     REQUIRE(std::string("hello") == variant.as<const char*>());
   }
 
   SECTION("RandomStringAsCharPtr") {
-    JsonVariant variant = "hello";
+    variant.set("hello");
     REQUIRE(std::string("hello") == variant.as<char*>());
   }
 
   SECTION("RandomStringAsString") {
-    JsonVariant variant = "hello";
+    variant.set("hello");
     REQUIRE(std::string("hello") == variant.as<std::string>());
   }
 
   SECTION("TrueStringAsBool") {
-    JsonVariant variant = "true";
+    variant.set("true");
     REQUIRE(variant.as<bool>());
   }
 
   SECTION("TrueStringAsLong") {
-    JsonVariant variant = "true";
+    variant.set("true");
     REQUIRE(1L == variant.as<long>());
   }
 
   SECTION("ObjectAsString") {
-    DynamicJsonDocument doc;
-    JsonObject obj = doc.to<JsonObject>();
+    DynamicJsonDocument doc2;
+    JsonObject obj = doc2.to<JsonObject>();
 
     obj["key"] = "value";
 
-    JsonVariant variant = obj;
+    variant.set(obj);
     REQUIRE(std::string("{\"key\":\"value\"}") == variant.as<std::string>());
   }
 
   SECTION("ArrayAsString") {
-    DynamicJsonDocument doc;
-    JsonArray arr = doc.to<JsonArray>();
+    DynamicJsonDocument doc2;
+    JsonArray arr = doc2.to<JsonArray>();
     arr.add(4);
     arr.add(2);
 
-    JsonVariant variant = arr;
+    variant.set(arr);
     REQUIRE(std::string("[4,2]") == variant.as<std::string>());
   }
 
   SECTION("ArrayAsJsonArray") {
-    DynamicJsonDocument doc;
-    JsonArray arr = doc.to<JsonArray>();
+    DynamicJsonDocument doc2;
+    JsonArray arr = doc2.to<JsonArray>();
 
-    JsonVariant variant = arr;
+    variant.set(arr);
     REQUIRE(arr == variant.as<JsonArray>());
     REQUIRE(arr == variant.as<JsonArray>());  // <- shorthand
   }
 
   SECTION("ObjectAsJsonObject") {
-    DynamicJsonDocument doc;
-    JsonObject obj = doc.to<JsonObject>();
+    DynamicJsonDocument doc2;
+    JsonObject obj = doc2.to<JsonObject>();
 
-    JsonVariant variant = obj;
+    variant.set(obj);
     REQUIRE(obj == variant.as<JsonObject>());
     REQUIRE(obj == variant.as<JsonObject>());  // <- shorthand
   }

@@ -9,11 +9,8 @@
 
 namespace ArduinoJson {
 
-template <size_t CAPACITY = sizeof(JsonVariant)>
+template <size_t CAPACITY>
 class StaticJsonDocument {
-  Internals::StaticJsonBuffer<CAPACITY> _buffer;
-  JsonVariant _root;
-
  public:
   uint8_t nestingLimit;
 
@@ -25,12 +22,12 @@ class StaticJsonDocument {
 
   template <typename T>
   bool is() const {
-    return _root.is<T>();
+    return getVariant().template is<T>();
   }
 
   template <typename T>
   typename Internals::JsonVariantAs<T>::type as() const {
-    return _root.as<T>();
+    return getVariant().template as<T>();
   }
 
   // JsonObject to<JsonObject>()
@@ -40,7 +37,7 @@ class StaticJsonDocument {
   to() {
     clear();
     JsonObject object(&_buffer);
-    _root = object;
+    getVariant().set(object);
     return object;
   }
 
@@ -51,22 +48,32 @@ class StaticJsonDocument {
   to() {
     clear();
     JsonArray array(&_buffer);
-    _root = array;
+    getVariant().set(array);
     return array;
   }
 
   // JsonVariant to<JsonVariant>()
   template <typename T>
   typename Internals::enable_if<Internals::is_same<T, JsonVariant>::value,
-                                T&>::type
+                                JsonVariant>::type
   to() {
     clear();
-    return _root;
+    return getVariant();
+  }
+
+  // JsonVariantData& to<JsonVariantData>()
+  template <typename T>
+  typename Internals::enable_if<
+      Internals::is_same<T, Internals::JsonVariantData>::value,
+      Internals::JsonVariantData&>::type
+  to() {
+    clear();
+    return _rootData;
   }
 
   void clear() {
     _buffer.clear();
-    _root = JsonVariant();
+    _rootData.setNull();
   }
 
   size_t memoryUsage() const {
@@ -75,8 +82,16 @@ class StaticJsonDocument {
 
   template <typename Visitor>
   void visit(Visitor& visitor) const {
-    return _root.visit(visitor);
+    return getVariant().visit(visitor);
   }
+
+ private:
+  JsonVariant getVariant() const {
+    return JsonVariant(&_buffer, &_rootData);
+  }
+
+  mutable Internals::StaticJsonBuffer<CAPACITY> _buffer;
+  mutable Internals::JsonVariantData _rootData;
 };
 
 }  // namespace ArduinoJson

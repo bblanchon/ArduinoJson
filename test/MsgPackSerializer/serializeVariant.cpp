@@ -5,8 +5,11 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-void check(JsonVariant variant, const char* expected_data,
-           size_t expected_len) {
+template <typename T>
+void check(T value, const char* expected_data, size_t expected_len) {
+  DynamicJsonDocument doc;
+  JsonVariant variant = doc.to<JsonVariant>();
+  variant.set(value);
   std::string expected(expected_data, expected_data + expected_len);
   std::string actual;
   size_t len = serializeMsgPack(variant, actual);
@@ -15,14 +18,15 @@ void check(JsonVariant variant, const char* expected_data,
   REQUIRE(actual == expected);
 }
 
-template <size_t N>
-void check(JsonVariant variant, const char (&expected_data)[N]) {
+template <typename T, size_t N>
+void check(T value, const char (&expected_data)[N]) {
   const size_t expected_len = N - 1;
-  check(variant, expected_data, expected_len);
+  check(value, expected_data, expected_len);
 }
 
-void check(JsonVariant variant, const std::string& expected) {
-  check(variant, expected.data(), expected.length());
+template <typename T>
+void check(T value, const std::string& expected) {
+  check(value, expected.data(), expected.length());
 }
 
 TEST_CASE("serialize MsgPack value") {

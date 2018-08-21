@@ -5,7 +5,6 @@
 #pragma once
 
 #include "Data/List.hpp"
-#include "Data/ValueSaver.hpp"
 #include "JsonPair.hpp"
 #include "Memory/JsonBufferAllocated.hpp"
 #include "Polyfills/type_traits.hpp"
@@ -19,8 +18,13 @@
 
 namespace ArduinoJson {
 namespace Internals {
-struct JsonObjectData : List<JsonPair>, JsonBufferAllocated {
-  explicit JsonObjectData(JsonBuffer* buf) throw() : List<JsonPair>(buf) {}
+struct JsonObjectData : List<JsonPairData>, JsonBufferAllocated {
+  JsonVariantData* addSlot(JsonBuffer* buffer, const char* key) {
+    iterator it = add(buffer);
+    if (it == end()) return 0;
+    it->key = key;
+    return &it->value;
+  }
 };
 }  // namespace Internals
 }  // namespace ArduinoJson

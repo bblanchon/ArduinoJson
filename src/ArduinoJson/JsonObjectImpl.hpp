@@ -22,7 +22,7 @@ inline JsonArray JsonObject::createNestedArray(TString* key) {
 template <typename TStringRef>
 inline JsonArray JsonObject::createNestedArray_impl(TStringRef key) {
   if (!_data) return JsonArray();
-  JsonArray array(_data->_buffer);
+  JsonArray array(_buffer);
   if (!array.isNull()) set(key, array);
   return array;
 }
@@ -30,7 +30,7 @@ inline JsonArray JsonObject::createNestedArray_impl(TStringRef key) {
 template <typename TStringRef>
 inline JsonObject JsonObject::createNestedObject_impl(TStringRef key) {
   if (!_data) return JsonObject();
-  JsonObject object(_data->_buffer);
+  JsonObject object(_buffer);
   if (!object.isNull()) set(key, object);
   return object;
 }
