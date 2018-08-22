@@ -44,3 +44,39 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
     REQUIRE(arr[1] == 2);
   }
 }
+
+TEST_CASE("deserializeMsgPack(std::istream&)") {
+  DynamicJsonDocument doc;
+
+  SECTION("should accept a zero in input") {
+    std::istringstream input(std::string("\x92\x00\x02", 3));
+
+    DeserializationError err = deserializeMsgPack(doc, input);
+
+    REQUIRE(err == DeserializationError::Ok);
+    JsonArray arr = doc.as<JsonArray>();
+    REQUIRE(arr[0] == 0);
+    REQUIRE(arr[1] == 2);
+  }
+
+  SECTION("should detect incomplete input") {
+    std::istringstream input("\x92\x00\x02");
+
+    DeserializationError err = deserializeMsgPack(doc, input);
+
+    REQUIRE(err == DeserializationError::IncompleteInput);
+  }
+}
+
+#ifdef HAS_VARIABLE_LENGTH_ARRAY
+TEST_CASE("deserializeMsgPack(VLA)") {
+  int i = 16;
+  char vla[i];
+  memcpy(vla, "\xDE\x00\x01\xA5Hello\xA5world", 15);
+
+  StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
+  DeserializationError err = deserializeMsgPack(doc, vla);
+
+  REQUIRE(err == DeserializationError::Ok);
+}
+#endif

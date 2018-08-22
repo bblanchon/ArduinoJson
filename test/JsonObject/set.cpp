@@ -42,6 +42,38 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE_FALSE(obj["hello"].is<long>());
   }
 
+#ifdef HAS_VARIABLE_LENGTH_ARRAY
+  SECTION("key is a VLA") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    obj.set(vla, "world");
+
+    REQUIRE(std::string("world") == obj["hello"]);
+  }
+
+  SECTION("value is a VLA") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "world");
+
+    obj.set("hello", vla);
+
+    REQUIRE(std::string("world") == obj["hello"]);
+  }
+
+  SECTION("key and value are VLAs") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "world");
+
+    obj.set(vla, vla);
+
+    REQUIRE(std::string("world") == obj["world"]);
+  }
+#endif
+
   SECTION("nested array") {
     DynamicJsonDocument doc2;
     JsonArray arr = doc2.to<JsonArray>();

@@ -159,4 +159,58 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(obj.size() == 1);
     REQUIRE(obj[null] == 0);
   }
+
+#if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
+    !defined(SUBSCRIPT_CONFLICTS_WITH_BUILTIN_OPERATOR)
+  SECTION("obj[VLA] = str") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    obj[vla] = "world";
+
+    REQUIRE(std::string("world") == obj["hello"]);
+  }
+
+  SECTION("obj[str] = VLA") {  // issue #416
+    int i = 32;
+    char vla[i];
+    strcpy(vla, "world");
+
+    obj["hello"] = vla;
+
+    REQUIRE(std::string("world") == obj["hello"].as<char*>());
+  }
+
+  SECTION("obj.set(VLA, str)") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    obj[vla] = "world";
+
+    REQUIRE(std::string("world") == obj["hello"]);
+  }
+
+  SECTION("obj.set(str, VLA)") {
+    int i = 32;
+    char vla[i];
+    strcpy(vla, "world");
+
+    obj["hello"].set(vla);
+
+    REQUIRE(std::string("world") == obj["hello"].as<char*>());
+  }
+
+  SECTION("obj[VLA]") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    deserializeJson(doc, "{\"hello\":\"world\"}");
+
+    obj = doc.as<JsonObject>();
+    REQUIRE(std::string("world") == obj[vla]);
+  }
+#endif
 }

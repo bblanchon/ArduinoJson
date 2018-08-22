@@ -179,6 +179,38 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE_FALSE(null == variant);
   }
 
+#ifdef HAS_VARIABLE_LENGTH_ARRAY
+  SECTION("VLA equals") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    DynamicJsonDocument doc;
+    JsonVariant variant = doc.to<JsonVariant>();
+    variant.set("hello");
+
+    REQUIRE((vla == variant));
+    REQUIRE((variant == vla));
+    REQUIRE_FALSE((vla != variant));
+    REQUIRE_FALSE((variant != vla));
+  }
+
+  SECTION("VLA differs") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    DynamicJsonDocument doc;
+    JsonVariant variant = doc.to<JsonVariant>();
+    variant.set("world");
+
+    REQUIRE((vla != variant));
+    REQUIRE((variant != vla));
+    REQUIRE_FALSE((vla == variant));
+    REQUIRE_FALSE((variant == vla));
+  }
+#endif
+
   DynamicJsonDocument doc1, doc2, doc3;
   JsonVariant variant1 = doc1.to<JsonVariant>();
   JsonVariant variant2 = doc2.to<JsonVariant>();

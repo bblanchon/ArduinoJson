@@ -93,4 +93,29 @@ TEST_CASE("JsonVariant::operator[]") {
       REQUIRE(std::string("world") == var["hello"]);
     }
   }
+
+#if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
+    !defined(SUBSCRIPT_CONFLICTS_WITH_BUILTIN_OPERATOR)
+  SECTION("key is a VLA") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    deserializeJson(doc, "{\"hello\":\"world\"}");
+    JsonVariant variant = doc.as<JsonVariant>();
+
+    REQUIRE(std::string("world") == variant[vla]);
+  }
+
+  SECTION("key is a VLA, const JsonVariant") {
+    int i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    deserializeJson(doc, "{\"hello\":\"world\"}");
+    const JsonVariant variant = doc.as<JsonVariant>();
+
+    REQUIRE(std::string("world") == variant[vla]);
+  }
+#endif
 }

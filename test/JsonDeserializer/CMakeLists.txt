@@ -3,15 +3,14 @@
 # MIT License
 
 add_executable(JsonDeserializerTests
+	DeserializationError.cpp
 	deserializeJsonArray.cpp
 	deserializeJsonArrayStatic.cpp
 	deserializeJsonObject.cpp
 	deserializeJsonObjectStatic.cpp
 	deserializeJsonValue.cpp
-	DeserializationError.cpp
+	input_types.cpp
 	nestingLimit.cpp
-	std_istream.cpp
-	std_string.cpp
 )
 
 target_link_libraries(JsonDeserializerTests catch)

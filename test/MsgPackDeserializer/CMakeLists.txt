@@ -9,10 +9,9 @@ add_executable(MsgPackDeserializerTests
 	deserializeVariant.cpp
 	doubleToFloat.cpp
 	incompleteInput.cpp
+	input_types.cpp
 	nestingLimit.cpp
 	notSupported.cpp
-	std_string.cpp
-	std_istream.cpp
 )
 
 target_link_libraries(MsgPackDeserializerTests catch)
