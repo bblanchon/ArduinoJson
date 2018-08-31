@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-set -eux
+set -eu
 
 cd "$(dirname $0)/.."
 
 VERSION="$1"
+DATE=$(date +%F)
 IFS=".-" read MAJOR MINOR REVISION EXTRA < <(echo "$VERSION")
 TAG="v$VERSION"
 UNDERLINE=$(printf -- '-%.0s' $(seq 1 ${#TAG}))
 
-sed -i~ -bE "4s/HEAD/$TAG/; 5s/-+/$UNDERLINE/" CHANGELOG.md
+sed -i~ -bE "4s/HEAD/$TAG ($DATE)/; 5s/-+/$UNDERLINE/" CHANGELOG.md
 rm CHANGELOG.md*~
 sed -i~ -bE "s/\"version\":.*$/\"version\": \"$VERSION\",/" library.json
 rm library.json*~

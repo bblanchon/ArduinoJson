@@ -52,23 +52,23 @@ HEAD
 >
 > CAUTION: the key is now read only!
 
-v6.2.3-beta
+v6.2.3-beta (2018-07-19)
 -----------
 
 * Fixed exception when using Flash strings as object keys (issue #784)
 
-v6.2.2-beta
+v6.2.2-beta (2018-07-18)
 -----------
 
 * Fixed `invalid application of 'sizeof' to incomplete type '__FlashStringHelper'` (issue #783)
 * Fixed `char[]` not duplicated when passed to `JsonVariant::operator[]`
 
-v6.2.1-beta
+v6.2.1-beta (2018-07-17)
 -----------
 
 * Fixed `JsonObject` not inserting keys of type `String` (issue #782)
 
-v6.2.0-beta
+v6.2.0-beta (2018-07-12)
 -----------
 
 * Disabled lazy number deserialization (issue #772)
@@ -97,7 +97,7 @@ v6.2.0-beta
 > object["values"] = serialized("[1,2,3,4]");
 > ```
 
-v6.1.0-beta
+v6.1.0-beta (2018-07-02)
 -----------
 
 * Return `JsonArray` and `JsonObject` by value instead of reference (issue #309)
@@ -127,12 +127,12 @@ v6.1.0-beta
 > }
 > ```
 
-v6.0.1-beta
+v6.0.1-beta (2018-06-11)
 -----------
 
 * Fixed conflicts with `isnan()` and `isinf()` macros (issue #752)
 
-v6.0.0-beta
+v6.0.0-beta (2018-06-07)
 -----------
 
 * Added `DynamicJsonDocument` and `StaticJsonDocument`
