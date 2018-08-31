@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eux
+set -eu
 
 cd "$(dirname "$0")/.."
 
@@ -36,9 +36,14 @@ commit_new_version () {
 
 add_tag () {
 	CHANGES=$(awk '/\* /{ FOUND=1; print; next } { if (FOUND) exit}' CHANGELOG.md)
-	git tag -m "ArduinoJson $VERSION\n$CHANGES" $TAG
+	git tag -m "ArduinoJson $VERSION"$'\n'"$CHANGES" "$TAG"
+}
+
+push () {
+	git push --follow-tags
 }
 
 update_version_in_source
 commit_new_version
 add_tag
+push
