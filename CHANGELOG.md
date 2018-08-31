@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.3.0-beta (2018-08-31)
+-----------
 
 * Implemented reference semantics for `JsonVariant`
 * Replace `JsonPair`'s `key` and `value` with `key()` and `value()`
