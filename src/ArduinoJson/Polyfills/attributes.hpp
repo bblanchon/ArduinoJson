@@ -27,3 +27,9 @@
 #define DEPRECATED(msg)
 
 #endif
+
+#if __cplusplus >= 201103L
+#define NOEXCEPT noexcept
+#else
+#define NOEXCEPT throw()
+#endif

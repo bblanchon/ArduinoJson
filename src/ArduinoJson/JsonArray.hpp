@@ -21,10 +21,11 @@ class JsonArray {
  public:
   typedef JsonArrayIterator iterator;
 
-  JsonArray() : _buffer(0), _data(0) {}
-  explicit JsonArray(Internals::JsonBuffer* buf, Internals::JsonArrayData* arr)
+  FORCE_INLINE JsonArray() : _buffer(0), _data(0) {}
+  FORCE_INLINE JsonArray(Internals::JsonBuffer* buf,
+                         Internals::JsonArrayData* arr)
       : _buffer(buf), _data(arr) {}
-  explicit JsonArray(Internals::JsonBuffer* buf)
+  FORCE_INLINE explicit JsonArray(Internals::JsonBuffer* buf)
       : _buffer(buf), _data(new (buf) Internals::JsonArrayData()) {}
 
   // Adds the specified value at the end of the array.
@@ -33,29 +34,29 @@ class JsonArray {
   // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArrayData, JsonObject
   template <typename T>
-  bool add(const T& value) {
+  FORCE_INLINE bool add(const T& value) {
     return add_impl<const T&>(value);
   }
   //
   // bool add(TValue);
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename T>
-  bool add(T* value) {
+  FORCE_INLINE bool add(T* value) {
     return add_impl<T*>(value);
   }
 
-  iterator begin() const {
+  FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
     return iterator(_buffer, _data->begin());
   }
 
-  iterator end() const {
+  FORCE_INLINE iterator end() const {
     return iterator();
   }
 
   // Imports a 1D array
   template <typename T, size_t N>
-  bool copyFrom(T (&array)[N]) {
+  FORCE_INLINE bool copyFrom(T (&array)[N]) {
     return copyFrom(array, N);
   }
 
@@ -84,7 +85,7 @@ class JsonArray {
 
   // Exports a 1D array
   template <typename T, size_t N>
-  size_t copyTo(T (&array)[N]) const {
+  FORCE_INLINE size_t copyTo(T (&array)[N]) const {
     return copyTo(array, N);
   }
 
@@ -106,39 +107,41 @@ class JsonArray {
     }
   }
 
-  JsonArray createNestedArray();
-  JsonObject createNestedObject();
+  FORCE_INLINE JsonArray createNestedArray();
+  FORCE_INLINE JsonObject createNestedObject();
 
-  Internals::JsonArraySubscript operator[](size_t index);
+  FORCE_INLINE Internals::JsonArraySubscript operator[](size_t index);
 
-  const Internals::JsonArraySubscript operator[](size_t index) const;
+  FORCE_INLINE const Internals::JsonArraySubscript operator[](
+      size_t index) const;
 
-  bool operator==(const JsonArray& rhs) const {
+  FORCE_INLINE bool operator==(const JsonArray& rhs) const {
     return _data == rhs._data;
   }
 
   // Gets the value at the specified index.
   template <typename T>
-  typename Internals::JsonVariantAs<T>::type get(size_t index) const {
+  FORCE_INLINE typename Internals::JsonVariantAs<T>::type get(
+      size_t index) const {
     iterator it = begin() += index;
     return it != end() ? it->as<T>() : T();
   }
 
   // Check the type of the value at specified index.
   template <typename T>
-  bool is(size_t index) const {
+  FORCE_INLINE bool is(size_t index) const {
     iterator it = begin() += index;
     return it != end() ? it->is<T>() : false;
   }
 
   // Removes element at specified position.
-  void remove(iterator it) {
+  FORCE_INLINE void remove(iterator it) {
     if (!_data) return;
     _data->remove(it.internal());
   }
 
   // Removes element at specified index.
-  void remove(size_t index) {
+  FORCE_INLINE void remove(size_t index) {
     remove(begin() += index);
   }
 
@@ -148,7 +151,7 @@ class JsonArray {
   // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArrayData, JsonObject
   template <typename T>
-  bool set(size_t index, const T& value) {
+  FORCE_INLINE bool set(size_t index, const T& value) {
     if (!_data) return false;
     return set_impl<const T&>(index, value);
   }
@@ -156,22 +159,22 @@ class JsonArray {
   // bool add(size_t index, TValue);
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename T>
-  bool set(size_t index, T* value) {
+  FORCE_INLINE bool set(size_t index, T* value) {
     if (!_data) return false;
     return set_impl<T*>(index, value);
   }
 
-  size_t size() const {
+  FORCE_INLINE size_t size() const {
     if (!_data) return 0;
     return _data->size();
   }
 
-  bool isNull() const {
+  FORCE_INLINE bool isNull() const {
     return _data == 0;
   }
 
   template <typename Visitor>
-  void visit(Visitor& visitor) const {
+  FORCE_INLINE void visit(Visitor& visitor) const {
     if (_data)
       visitor.acceptArray(*_data);
     else
@@ -180,14 +183,14 @@ class JsonArray {
 
  private:
   template <typename TValueRef>
-  bool set_impl(size_t index, TValueRef value) {
+  FORCE_INLINE bool set_impl(size_t index, TValueRef value) {
     iterator it = begin() += index;
     if (it == end()) return false;
     return it->set(value);
   }
 
   template <typename TValueRef>
-  bool add_impl(TValueRef value) {
+  FORCE_INLINE bool add_impl(TValueRef value) {
     if (!_data) return false;
     iterator it = iterator(_buffer, _data->add(_buffer));
     if (it == end()) return false;
