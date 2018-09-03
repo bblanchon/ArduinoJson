@@ -7,11 +7,11 @@
 
 using namespace ArduinoJson::Internals;
 
-TEST_CASE("StaticJsonBuffer::startString()") {
+TEST_CASE("StaticMemoryPool::startString()") {
   SECTION("WorksWhenBufferIsBigEnough") {
-    StaticJsonBuffer<6> jsonBuffer;
+    StaticMemoryPool<6> memoryPool;
 
-    StaticJsonBufferBase::String str = jsonBuffer.startString();
+    StaticMemoryPoolBase::String str = memoryPool.startString();
     str.append('h');
     str.append('e');
     str.append('l');
@@ -22,9 +22,9 @@ TEST_CASE("StaticJsonBuffer::startString()") {
   }
 
   SECTION("ReturnsNullWhenTooSmall") {
-    StaticJsonBuffer<5> jsonBuffer;
+    StaticMemoryPool<5> memoryPool;
 
-    StaticJsonBufferBase::String str = jsonBuffer.startString();
+    StaticMemoryPoolBase::String str = memoryPool.startString();
     str.append('h');
     str.append('e');
     str.append('l');
@@ -35,15 +35,15 @@ TEST_CASE("StaticJsonBuffer::startString()") {
   }
 
   SECTION("SizeIncreases") {
-    StaticJsonBuffer<5> jsonBuffer;
+    StaticMemoryPool<5> memoryPool;
 
-    StaticJsonBufferBase::String str = jsonBuffer.startString();
-    REQUIRE(0 == jsonBuffer.size());
+    StaticMemoryPoolBase::String str = memoryPool.startString();
+    REQUIRE(0 == memoryPool.size());
 
     str.append('h');
-    REQUIRE(1 == jsonBuffer.size());
+    REQUIRE(1 == memoryPool.size());
 
     str.c_str();
-    REQUIRE(2 == jsonBuffer.size());
+    REQUIRE(2 == memoryPool.size());
   }
 }

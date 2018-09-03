@@ -19,8 +19,8 @@ struct JsonPairData {
 // A key value pair for JsonObjectData.
 class JsonPair {
  public:
-  JsonPair(Internals::JsonBuffer* buffer, Internals::JsonPairData* data)
-      : _key(data->key), _value(buffer, &data->value) {}
+  JsonPair(Internals::MemoryPool* memoryPool, Internals::JsonPairData* data)
+      : _key(data->key), _value(memoryPool, &data->value) {}
 
   const char* key() const {
     return _key;

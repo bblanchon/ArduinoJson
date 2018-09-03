@@ -19,7 +19,7 @@ TEST_CASE("JsonArray::copyFrom()") {
     REQUIRE(std::string("[1,2,3]") == json);
   }
 
-  SECTION("OneDimension_JsonBufferTooSmall") {
+  SECTION("OneDimension_MemoryPoolTooSmall") {
     const size_t SIZE = JSON_ARRAY_SIZE(2);
     StaticJsonDocument<SIZE> doc;
     JsonArray array = doc.to<JsonArray>();
@@ -46,7 +46,7 @@ TEST_CASE("JsonArray::copyFrom()") {
     REQUIRE(std::string("[[1,2,3],[4,5,6]]") == json);
   }
 
-  SECTION("TwoDimensions_JsonBufferTooSmall") {
+  SECTION("TwoDimensions_MemoryPoolTooSmall") {
     const size_t SIZE =
         JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(2);
     StaticJsonDocument<SIZE> doc;

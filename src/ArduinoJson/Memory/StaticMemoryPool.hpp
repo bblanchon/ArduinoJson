@@ -5,16 +5,16 @@
 #pragma once
 
 #include "../Polyfills/mpl/max.hpp"
-#include "JsonBuffer.hpp"
+#include "MemoryPool.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
 
-class StaticJsonBufferBase : public JsonBuffer {
+class StaticMemoryPoolBase : public MemoryPool {
  public:
   class String {
    public:
-    String(StaticJsonBufferBase* parent) : _parent(parent) {
+    String(StaticMemoryPoolBase* parent) : _parent(parent) {
       _start = parent->_buffer + parent->_size;
     }
 
@@ -36,31 +36,31 @@ class StaticJsonBufferBase : public JsonBuffer {
     }
 
    private:
-    StaticJsonBufferBase* _parent;
+    StaticMemoryPoolBase* _parent;
     char* _start;
   };
 
-  StaticJsonBufferBase(char* buffer, size_t capa)
-      : _buffer(buffer), _capacity(capa), _size(0) {}
+  StaticMemoryPoolBase(char* memoryPool, size_t capa)
+      : _buffer(memoryPool), _capacity(capa), _size(0) {}
 
-  // Gets the capacity of the buffer in bytes
+  // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
     return _capacity;
   }
 
-  // Gets the current usage of the buffer in bytes
+  // Gets the current usage of the memoryPool in bytes
   size_t size() const {
     return _size;
   }
 
-  // Allocates the specified amount of bytes in the buffer
+  // Allocates the specified amount of bytes in the memoryPool
   virtual void* alloc(size_t bytes) {
     alignNextAlloc();
     if (!canAlloc(bytes)) return NULL;
     return doAlloc(bytes);
   }
 
-  // Resets the buffer.
+  // Resets the memoryPool.
   // USE WITH CAUTION: this invalidates all previously allocated data
   void clear() {
     _size = 0;
@@ -71,7 +71,7 @@ class StaticJsonBufferBase : public JsonBuffer {
   }
 
  protected:
-  ~StaticJsonBufferBase() {}
+  ~StaticMemoryPoolBase() {}
 
  private:
   void alignNextAlloc() {
@@ -103,16 +103,16 @@ class StaticJsonBufferBase : public JsonBuffer {
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 
-// Implements a JsonBuffer with fixed memory allocation.
-// The template paramenter CAPACITY specifies the capacity of the buffer in
+// Implements a MemoryPool with fixed memory allocation.
+// The template paramenter CAPACITY specifies the capacity of the memoryPool in
 // bytes.
 template <size_t CAPACITY>
-class StaticJsonBuffer : public Internals::StaticJsonBufferBase {
+class StaticMemoryPool : public Internals::StaticMemoryPoolBase {
   static const size_t ACTUAL_CAPACITY = Internals::Max<1, CAPACITY>::value;
 
  public:
-  explicit StaticJsonBuffer()
-      : Internals::StaticJsonBufferBase(_buffer, ACTUAL_CAPACITY) {}
+  explicit StaticMemoryPool()
+      : Internals::StaticMemoryPoolBase(_buffer, ACTUAL_CAPACITY) {}
 
  private:
   char _buffer[ACTUAL_CAPACITY];

@@ -24,9 +24,9 @@ class FixedSizeRamString {
   }
 
   template <typename Buffer>
-  const char* save(Buffer* buffer) const {
+  const char* save(Buffer* memoryPool) const {
     if (!_str) return NULL;
-    void* dup = buffer->alloc(_size);
+    void* dup = memoryPool->alloc(_size);
     if (!dup) return NULL;
     memcpy(dup, _str, _size);
     return static_cast<const char*>(dup);

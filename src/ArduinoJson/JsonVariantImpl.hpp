@@ -49,7 +49,7 @@ inline typename Internals::enable_if<
                        JsonArray>::value,
     JsonArray>::type
 JsonVariant::as() const {
-  return _data ? JsonArray(_buffer, _data->asArray()) : JsonArray();
+  return _data ? JsonArray(_memoryPool, _data->asArray()) : JsonArray();
 }
 
 template <typename T>
@@ -58,6 +58,6 @@ inline typename Internals::enable_if<
                        JsonObject>::value,
     T>::type
 JsonVariant::as() const {
-  return _data ? JsonObject(_buffer, _data->asObject()) : JsonObject();
+  return _data ? JsonObject(_memoryPool, _data->asObject()) : JsonObject();
 }
 }  // namespace ArduinoJson

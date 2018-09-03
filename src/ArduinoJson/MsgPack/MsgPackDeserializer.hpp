@@ -6,7 +6,7 @@
 
 #include "../Deserialization/deserialize.hpp"
 #include "../JsonVariant.hpp"
-#include "../Memory/JsonBuffer.hpp"
+#include "../Memory/MemoryPool.hpp"
 #include "../Polyfills/type_traits.hpp"
 #include "./endianess.hpp"
 #include "./ieee754.hpp"
@@ -17,9 +17,9 @@ namespace Internals {
 template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
  public:
-  MsgPackDeserializer(JsonBuffer *buffer, TReader reader,
+  MsgPackDeserializer(MemoryPool &memoryPool, TReader reader,
                       TStringStorage stringStorage, uint8_t nestingLimit)
-      : _buffer(buffer),
+      : _memoryPool(&memoryPool),
         _reader(reader),
         _stringStorage(stringStorage),
         _nestingLimit(nestingLimit) {}
@@ -240,7 +240,7 @@ class MsgPackDeserializer {
   }
 
   DeserializationError readArray(JsonVariantData &variant, size_t n) {
-    JsonArrayData *array = new (_buffer) JsonArrayData;
+    JsonArrayData *array = new (_memoryPool) JsonArrayData;
     if (!array) return DeserializationError::NoMemory;
 
     variant.setArray(*array);
@@ -251,7 +251,7 @@ class MsgPackDeserializer {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
     --_nestingLimit;
     for (; n; --n) {
-      JsonVariantData *value = array.addSlot(_buffer);
+      JsonVariantData *value = array.addSlot(_memoryPool);
       if (!value) return DeserializationError::NoMemory;
 
       DeserializationError err = parse(*value);
@@ -269,7 +269,7 @@ class MsgPackDeserializer {
   }
 
   DeserializationError readObject(JsonVariantData &variant, size_t n) {
-    JsonObjectData *object = new (_buffer) JsonObjectData;
+    JsonObjectData *object = new (_memoryPool) JsonObjectData;
     if (!object) return DeserializationError::NoMemory;
     variant.setObject(*object);
 
@@ -285,7 +285,7 @@ class MsgPackDeserializer {
       if (err) return err;
       if (!key.isString()) return DeserializationError::NotSupported;
 
-      JsonVariantData *value = object.addSlot(_buffer, key.asString());
+      JsonVariantData *value = object.addSlot(_memoryPool, key.asString());
       if (!value) return DeserializationError::NoMemory;
 
       err = parse(*value);
@@ -295,7 +295,7 @@ class MsgPackDeserializer {
     return DeserializationError::Ok;
   }
 
-  JsonBuffer *_buffer;
+  MemoryPool *_memoryPool;
   TReader _reader;
   TStringStorage _stringStorage;
   uint8_t _nestingLimit;

@@ -16,11 +16,12 @@ namespace ArduinoJson {
 namespace Internals {
 
 template <template <typename, typename> class TDeserializer,
-          typename TJsonBuffer, typename TReader, typename TWriter>
-TDeserializer<TReader, TWriter> makeDeserializer(TJsonBuffer *buffer,
+          typename TMemoryPool, typename TReader, typename TWriter>
+TDeserializer<TReader, TWriter> makeDeserializer(TMemoryPool &memoryPool,
                                                  TReader reader, TWriter writer,
                                                  uint8_t nestingLimit) {
-  return TDeserializer<TReader, TWriter>(buffer, reader, writer, nestingLimit);
+  return TDeserializer<TReader, TWriter>(memoryPool, reader, writer,
+                                         nestingLimit);
 }
 
 // DeserializationError deserialize(TDocument& doc, TString input);
@@ -32,9 +33,9 @@ typename Internals::enable_if<!Internals::is_array<TString>::value,
                               DeserializationError>::type
 deserialize(TDocument &doc, const TString &input) {
   using namespace Internals;
-  return makeDeserializer<TDeserializer>(&doc.buffer(), makeReader(input),
-                                         makeStringStorage(doc.buffer(), input),
-                                         doc.nestingLimit)
+  return makeDeserializer<TDeserializer>(
+             doc.memoryPool(), makeReader(input),
+             makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
       .parse(doc.template to<JsonVariantData>());
 }
 //
@@ -45,9 +46,9 @@ template <template <typename, typename> class TDeserializer, typename TDocument,
           typename TChar>
 DeserializationError deserialize(TDocument &doc, TChar *input) {
   using namespace Internals;
-  return makeDeserializer<TDeserializer>(&doc.buffer(), makeReader(input),
-                                         makeStringStorage(doc.buffer(), input),
-                                         doc.nestingLimit)
+  return makeDeserializer<TDeserializer>(
+             doc.memoryPool(), makeReader(input),
+             makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
       .parse(doc.template to<JsonVariantData>());
 }
 //
@@ -61,8 +62,8 @@ DeserializationError deserialize(TDocument &doc, TChar *input,
                                  size_t inputSize) {
   using namespace Internals;
   return makeDeserializer<TDeserializer>(
-             &doc.buffer(), makeReader(input, inputSize),
-             makeStringStorage(doc.buffer(), input), doc.nestingLimit)
+             doc.memoryPool(), makeReader(input, inputSize),
+             makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
       .parse(doc.template to<JsonVariantData>());
 }
 //
@@ -73,9 +74,9 @@ template <template <typename, typename> class TDeserializer, typename TDocument,
           typename TStream>
 DeserializationError deserialize(TDocument &doc, TStream &input) {
   using namespace Internals;
-  return makeDeserializer<TDeserializer>(&doc.buffer(), makeReader(input),
-                                         makeStringStorage(doc.buffer(), input),
-                                         doc.nestingLimit)
+  return makeDeserializer<TDeserializer>(
+             doc.memoryPool(), makeReader(input),
+             makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
       .parse(doc.template to<JsonVariantData>());
 }
 }  // namespace Internals

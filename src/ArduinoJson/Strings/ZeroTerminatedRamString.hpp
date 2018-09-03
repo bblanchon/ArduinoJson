@@ -22,10 +22,10 @@ class ZeroTerminatedRamString {
   }
 
   template <typename Buffer>
-  const char* save(Buffer* buffer) const {
+  const char* save(Buffer* memoryPool) const {
     if (!_str) return NULL;
     size_t n = size() + 1;
-    void* dup = buffer->alloc(n);
+    void* dup = memoryPool->alloc(n);
     if (!dup) return NULL;
     memcpy(dup, _str, n);
     return static_cast<const char*>(dup);

@@ -16,16 +16,16 @@ class JsonObject {
  public:
   typedef JsonObjectIterator iterator;
 
-  FORCE_INLINE JsonObject() : _buffer(0), _data(0) {}
-  FORCE_INLINE JsonObject(Internals::JsonBuffer* buf,
+  FORCE_INLINE JsonObject() : _memoryPool(0), _data(0) {}
+  FORCE_INLINE JsonObject(Internals::MemoryPool* buf,
                           Internals::JsonObjectData* object)
-      : _buffer(buf), _data(object) {}
-  FORCE_INLINE explicit JsonObject(Internals::JsonBuffer* buf)
-      : _buffer(buf), _data(new (buf) Internals::JsonObjectData()) {}
+      : _memoryPool(buf), _data(object) {}
+  FORCE_INLINE explicit JsonObject(Internals::MemoryPool* buf)
+      : _memoryPool(buf), _data(new (buf) Internals::JsonObjectData()) {}
 
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
-    return iterator(_buffer, _data->begin());
+    return iterator(_memoryPool, _data->begin());
   }
 
   // Tells weither the specified key is present and associated with a value.
@@ -264,15 +264,17 @@ class JsonObject {
   FORCE_INLINE typename Internals::JsonVariantAs<TValue>::type get_impl(
       TStringRef key) const {
     internal_iterator it = findKey<TStringRef>(key);
-    return it != _data->end() ? JsonVariant(_buffer, &it->value).as<TValue>()
-                              : TValue();
+    return it != _data->end()
+               ? JsonVariant(_memoryPool, &it->value).as<TValue>()
+               : TValue();
   }
 
   template <typename TStringRef, typename TValue>
   FORCE_INLINE bool is_impl(TStringRef key) const {
     internal_iterator it = findKey<TStringRef>(key);
-    return it != _data->end() ? JsonVariant(_buffer, &it->value).is<TValue>()
-                              : false;
+    return it != _data->end()
+               ? JsonVariant(_memoryPool, &it->value).is<TValue>()
+               : false;
   }
 
   template <typename TStringRef>
@@ -293,13 +295,13 @@ class JsonObject {
     if (it == _data->end()) {
       // add the key
       // TODO: use JsonPairData directly, we don't need an iterator
-      it = _data->add(_buffer);
+      it = _data->add(_memoryPool);
       if (it == _data->end()) return false;
       if (!set_key(it, key)) return false;
     }
 
     // save the value
-    return JsonVariant(_buffer, &it->value).set(value);
+    return JsonVariant(_memoryPool, &it->value).set(value);
   }
 
   FORCE_INLINE bool set_key(internal_iterator& it, const char* key) {
@@ -309,13 +311,13 @@ class JsonObject {
 
   template <typename T>
   FORCE_INLINE bool set_key(internal_iterator& it, const T& key) {
-    const char* dup = Internals::makeString(key).save(_buffer);
+    const char* dup = Internals::makeString(key).save(_memoryPool);
     if (!dup) return false;
     it->key = dup;
     return true;
   }
 
-  mutable Internals::JsonBuffer* _buffer;
+  mutable Internals::MemoryPool* _memoryPool;
   mutable Internals::JsonObjectData* _data;
 };
 }  // namespace ArduinoJson

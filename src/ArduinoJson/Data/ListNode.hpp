@@ -6,7 +6,7 @@
 
 #include <stddef.h>  // for NULL
 
-#include "../Memory/JsonBufferAllocated.hpp"
+#include "../Memory/AllocableInMemoryPool.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -14,7 +14,7 @@ namespace Internals {
 // A node for a singly-linked list.
 // Used by List<T> and its iterators.
 template <typename T>
-struct ListNode : public Internals::JsonBufferAllocated {
+struct ListNode : public Internals::AllocableInMemoryPool {
   ListNode() NOEXCEPT : next(NULL) {}
 
   ListNode<T> *next;

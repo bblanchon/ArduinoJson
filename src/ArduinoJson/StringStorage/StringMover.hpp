@@ -28,7 +28,7 @@ class StringMover {
     TChar* _startPtr;
   };
 
-  StringMover(TChar* buffer) : _ptr(buffer) {}
+  StringMover(TChar* ptr) : _ptr(ptr) {}
 
   String startString() {
     return String(&_ptr);

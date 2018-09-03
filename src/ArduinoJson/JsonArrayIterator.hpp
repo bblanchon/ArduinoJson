@@ -11,9 +11,9 @@ namespace ArduinoJson {
 
 class JsonVariantPtr {
  public:
-  JsonVariantPtr(Internals::JsonBuffer *buffer,
+  JsonVariantPtr(Internals::MemoryPool *memoryPool,
                  Internals::JsonVariantData *data)
-      : _variant(buffer, data) {}
+      : _variant(memoryPool, data) {}
 
   JsonVariant *operator->() {
     return &_variant;
@@ -32,15 +32,15 @@ class JsonArrayIterator {
 
  public:
   JsonArrayIterator() {}
-  explicit JsonArrayIterator(Internals::JsonBuffer *buffer,
+  explicit JsonArrayIterator(Internals::MemoryPool *memoryPool,
                              internal_iterator iterator)
-      : _iterator(iterator), _buffer(buffer) {}
+      : _iterator(iterator), _memoryPool(memoryPool) {}
 
   JsonVariant operator*() const {
-    return JsonVariant(_buffer, &*_iterator);
+    return JsonVariant(_memoryPool, &*_iterator);
   }
   JsonVariantPtr operator->() {
-    return JsonVariantPtr(_buffer, &*_iterator);
+    return JsonVariantPtr(_memoryPool, &*_iterator);
   }
 
   bool operator==(const JsonArrayIterator &other) const {
@@ -67,6 +67,6 @@ class JsonArrayIterator {
 
  private:
   internal_iterator _iterator;
-  Internals::JsonBuffer *_buffer;
+  Internals::MemoryPool *_memoryPool;
 };
 }  // namespace ArduinoJson

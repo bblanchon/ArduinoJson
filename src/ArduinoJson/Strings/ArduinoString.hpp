@@ -14,10 +14,10 @@ class ArduinoString {
   ArduinoString(const ::String& str) : _str(&str) {}
 
   template <typename Buffer>
-  const char* save(Buffer* buffer) const {
+  const char* save(Buffer* memoryPool) const {
     if (is_null()) return NULL;
     size_t n = _str->length() + 1;
-    void* dup = buffer->alloc(n);
+    void* dup = memoryPool->alloc(n);
     if (dup != NULL) memcpy(dup, _str->c_str(), n);
     return static_cast<const char*>(dup);
   }

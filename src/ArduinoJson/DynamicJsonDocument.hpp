@@ -7,7 +7,7 @@
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
 #include "JsonVariant.hpp"
-#include "Memory/DynamicJsonBuffer.hpp"
+#include "Memory/DynamicMemoryPool.hpp"
 
 namespace ArduinoJson {
 
@@ -17,7 +17,8 @@ class DynamicJsonDocument {
 
   DynamicJsonDocument() : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
   DynamicJsonDocument(size_t capacity)
-      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT), _buffer(capacity) {}
+      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT),
+        _memoryPool(capacity) {}
 
   template <typename T>
   bool is() const {
@@ -35,7 +36,7 @@ class DynamicJsonDocument {
                                 JsonObject>::type
   to() {
     clear();
-    JsonObject object(&_buffer);
+    JsonObject object(&_memoryPool);
     getVariant().set(object);
     return object;
   }
@@ -46,7 +47,7 @@ class DynamicJsonDocument {
                                 JsonArray>::type
   to() {
     clear();
-    JsonArray array(&_buffer);
+    JsonArray array(&_memoryPool);
     getVariant().set(array);
     return array;
   }
@@ -70,17 +71,17 @@ class DynamicJsonDocument {
     return _rootData;
   }
 
-  Internals::DynamicJsonBuffer& buffer() {
-    return _buffer;
+  Internals::DynamicMemoryPool& memoryPool() {
+    return _memoryPool;
   }
 
   void clear() {
-    _buffer.clear();
+    _memoryPool.clear();
     _rootData.setNull();
   }
 
   size_t memoryUsage() const {
-    return _buffer.size();
+    return _memoryPool.size();
   }
 
   template <typename Visitor>
@@ -90,10 +91,10 @@ class DynamicJsonDocument {
 
  private:
   JsonVariant getVariant() const {
-    return JsonVariant(&_buffer, &_rootData);
+    return JsonVariant(&_memoryPool, &_rootData);
   }
 
-  mutable Internals::DynamicJsonBuffer _buffer;
+  mutable Internals::DynamicMemoryPool _memoryPool;
   mutable Internals::JsonVariantData _rootData;
 };
 }  // namespace ArduinoJson

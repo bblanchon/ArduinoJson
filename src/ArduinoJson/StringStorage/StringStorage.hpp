@@ -10,35 +10,35 @@
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename TJsonBuffer, typename TInput, typename Enable = void>
+template <typename TMemoryPool, typename TInput, typename Enable = void>
 struct StringStorage {
-  typedef StringCopier<TJsonBuffer> type;
+  typedef StringCopier<TMemoryPool> type;
 
-  static type create(TJsonBuffer& jb, TInput&) {
+  static type create(TMemoryPool& jb, TInput&) {
     return type(jb);
   }
 };
 
-template <typename TJsonBuffer, typename TChar>
-struct StringStorage<TJsonBuffer, TChar*,
+template <typename TMemoryPool, typename TChar>
+struct StringStorage<TMemoryPool, TChar*,
                      typename enable_if<!is_const<TChar>::value>::type> {
   typedef StringMover<TChar> type;
 
-  static type create(TJsonBuffer&, TChar* input) {
+  static type create(TMemoryPool&, TChar* input) {
     return type(input);
   }
 };
 
-template <typename TJsonBuffer, typename TInput>
-typename StringStorage<TJsonBuffer, TInput>::type makeStringStorage(
-    TJsonBuffer& jb, TInput& input) {
-  return StringStorage<TJsonBuffer, TInput>::create(jb, input);
+template <typename TMemoryPool, typename TInput>
+typename StringStorage<TMemoryPool, TInput>::type makeStringStorage(
+    TMemoryPool& jb, TInput& input) {
+  return StringStorage<TMemoryPool, TInput>::create(jb, input);
 }
 
-template <typename TJsonBuffer, typename TChar>
-typename StringStorage<TJsonBuffer, TChar*>::type makeStringStorage(
-    TJsonBuffer& jb, TChar* input) {
-  return StringStorage<TJsonBuffer, TChar*>::create(jb, input);
+template <typename TMemoryPool, typename TChar>
+typename StringStorage<TMemoryPool, TChar*>::type makeStringStorage(
+    TMemoryPool& jb, TChar* input) {
+  return StringStorage<TMemoryPool, TChar*>::create(jb, input);
 }
 }  // namespace Internals
 }  // namespace ArduinoJson

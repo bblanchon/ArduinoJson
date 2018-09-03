@@ -10,7 +10,7 @@
 #include "Data/JsonVariantData.hpp"
 #include "JsonVariant.hpp"
 #include "JsonVariantBase.hpp"
-#include "Memory/JsonBuffer.hpp"
+#include "Memory/MemoryPool.hpp"
 #include "Polyfills/type_traits.hpp"
 #include "Serialization/DynamicStringWriter.hpp"
 #include "SerializedValue.hpp"
@@ -31,12 +31,12 @@ class JsonObject;
 class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
  public:
   // Intenal use only
-  FORCE_INLINE JsonVariant(Internals::JsonBuffer *buffer,
+  FORCE_INLINE JsonVariant(Internals::MemoryPool *memoryPool,
                            Internals::JsonVariantData *data)
-      : _buffer(buffer), _data(data) {}
+      : _memoryPool(memoryPool), _data(data) {}
 
   // Creates an uninitialized JsonVariant
-  FORCE_INLINE JsonVariant() : _buffer(0), _data(0) {}
+  FORCE_INLINE JsonVariant() : _memoryPool(0), _data(0) {}
 
   // set(bool value)
   FORCE_INLINE bool set(bool value) {
@@ -106,7 +106,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
           !Internals::is_same<const char *, T>::value>::type * = 0) {
     if (!_data) return false;
     const char *dup =
-        Internals::makeString(value.data(), value.size()).save(_buffer);
+        Internals::makeString(value.data(), value.size()).save(_memoryPool);
     if (dup)
       _data->setRaw(dup, value.size());
     else
@@ -122,7 +122,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
       typename Internals::enable_if<Internals::IsString<T>::value>::type * =
           0) {
     if (!_data) return false;
-    const char *dup = Internals::makeString(value).save(_buffer);
+    const char *dup = Internals::makeString(value).save(_memoryPool);
     if (dup) {
       _data->setString(dup);
       return true;
@@ -139,7 +139,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
       typename Internals::enable_if<Internals::IsString<T *>::value>::type * =
           0) {
     if (!_data) return false;
-    const char *dup = Internals::makeString(value).save(_buffer);
+    const char *dup = Internals::makeString(value).save(_memoryPool);
     if (dup) {
       _data->setString(dup);
       return true;
@@ -341,7 +341,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   }
 
  private:
-  Internals::JsonBuffer *_buffer;
+  Internals::MemoryPool *_memoryPool;
   Internals::JsonVariantData *_data;
 };  // namespace ArduinoJson
 }  // namespace ArduinoJson

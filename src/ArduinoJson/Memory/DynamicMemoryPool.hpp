@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "JsonBuffer.hpp"
+#include "MemoryPool.hpp"
 
 #include <stdlib.h>
 
@@ -31,7 +31,7 @@ class DefaultAllocator {
 };
 
 template <typename TAllocator>
-class DynamicJsonBufferBase : public JsonBuffer {
+class DynamicMemoryPoolBase : public MemoryPool {
   struct Block;
   struct EmptyBlock {
     Block* next;
@@ -45,27 +45,27 @@ class DynamicJsonBufferBase : public JsonBuffer {
  public:
   enum { EmptyBlockSize = sizeof(EmptyBlock) };
 
-  DynamicJsonBufferBase(size_t initialSize = 256)
+  DynamicMemoryPoolBase(size_t initialSize = 256)
       : _head(NULL), _nextBlockCapacity(initialSize) {}
 
-  ~DynamicJsonBufferBase() {
+  ~DynamicMemoryPoolBase() {
     clear();
   }
 
-  // Gets the number of bytes occupied in the buffer
+  // Gets the number of bytes occupied in the memoryPool
   size_t size() const {
     size_t total = 0;
     for (const Block* b = _head; b; b = b->next) total += b->size;
     return total;
   }
 
-  // Allocates the specified amount of bytes in the buffer
+  // Allocates the specified amount of bytes in the memoryPool
   virtual void* alloc(size_t bytes) {
     alignNextAlloc();
     return canAllocInHead(bytes) ? allocInHead(bytes) : allocInNewBlock(bytes);
   }
 
-  // Resets the buffer.
+  // Resets the memoryPool.
   // USE WITH CAUTION: this invalidates all previously allocated data
   void clear() {
     Block* currentBlock = _head;
@@ -80,7 +80,7 @@ class DynamicJsonBufferBase : public JsonBuffer {
 
   class String {
    public:
-    String(DynamicJsonBufferBase* parent)
+    String(DynamicMemoryPoolBase* parent)
         : _parent(parent), _start(NULL), _length(0) {}
 
     void append(char c) {
@@ -104,7 +104,7 @@ class DynamicJsonBufferBase : public JsonBuffer {
     }
 
    private:
-    DynamicJsonBufferBase* _parent;
+    DynamicMemoryPoolBase* _parent;
     char* _start;
     size_t _length;
   };
@@ -152,11 +152,11 @@ class DynamicJsonBufferBase : public JsonBuffer {
   size_t _nextBlockCapacity;
 };
 
-// Implements a JsonBuffer with dynamic memory allocation.
-// You are strongly encouraged to consider using StaticJsonBuffer which is much
+// Implements a MemoryPool with dynamic memory allocation.
+// You are strongly encouraged to consider using StaticMemoryPool which is much
 // more suitable for embedded systems.
-typedef Internals::DynamicJsonBufferBase<Internals::DefaultAllocator>
-    DynamicJsonBuffer;
+typedef Internals::DynamicMemoryPoolBase<Internals::DefaultAllocator>
+    DynamicMemoryPool;
 }  // namespace Internals
 
 #if defined(__clang__)

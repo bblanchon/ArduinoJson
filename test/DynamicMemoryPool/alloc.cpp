@@ -18,7 +18,7 @@ std::stringstream allocatorLog;
 
 struct SpyingAllocator : DefaultAllocator {
   void* allocate(size_t n) {
-    allocatorLog << "A" << (n - DynamicJsonBuffer::EmptyBlockSize);
+    allocatorLog << "A" << (n - DynamicMemoryPool::EmptyBlockSize);
     return DefaultAllocator::allocate(n);
   }
   void deallocate(void* p) {
@@ -27,20 +27,20 @@ struct SpyingAllocator : DefaultAllocator {
   }
 };
 
-TEST_CASE("DynamicJsonBuffer::alloc()") {
+TEST_CASE("DynamicMemoryPool::alloc()") {
   SECTION("Returns different pointers") {
-    DynamicJsonBuffer buffer;
-    void* p1 = buffer.alloc(1);
-    void* p2 = buffer.alloc(2);
+    DynamicMemoryPool memoryPool;
+    void* p1 = memoryPool.alloc(1);
+    void* p2 = memoryPool.alloc(2);
     REQUIRE(p1 != p2);
   }
 
   SECTION("Doubles allocation size when full") {
     allocatorLog.str("");
     {
-      DynamicJsonBufferBase<SpyingAllocator> buffer(1);
-      buffer.alloc(1);
-      buffer.alloc(1);
+      DynamicMemoryPoolBase<SpyingAllocator> memoryPool(1);
+      memoryPool.alloc(1);
+      memoryPool.alloc(1);
     }
     REQUIRE(allocatorLog.str() == "A1A2FF");
   }
@@ -48,11 +48,11 @@ TEST_CASE("DynamicJsonBuffer::alloc()") {
   SECTION("Resets allocation size after clear()") {
     allocatorLog.str("");
     {
-      DynamicJsonBufferBase<SpyingAllocator> buffer(1);
-      buffer.alloc(1);
-      buffer.alloc(1);
-      buffer.clear();
-      buffer.alloc(1);
+      DynamicMemoryPoolBase<SpyingAllocator> memoryPool(1);
+      memoryPool.alloc(1);
+      memoryPool.alloc(1);
+      memoryPool.clear();
+      memoryPool.alloc(1);
     }
     REQUIRE(allocatorLog.str() == "A1A2FFA1F");
   }
@@ -60,15 +60,15 @@ TEST_CASE("DynamicJsonBuffer::alloc()") {
   SECTION("Makes a big allocation when needed") {
     allocatorLog.str("");
     {
-      DynamicJsonBufferBase<SpyingAllocator> buffer(1);
-      buffer.alloc(42);
+      DynamicMemoryPoolBase<SpyingAllocator> memoryPool(1);
+      memoryPool.alloc(42);
     }
     REQUIRE(allocatorLog.str() == "A42F");
   }
 
   SECTION("Alignment") {
     // make room for two but not three
-    DynamicJsonBuffer tinyBuf(2 * sizeof(void*) + 1);
+    DynamicMemoryPool tinyBuf(2 * sizeof(void*) + 1);
 
     REQUIRE(isAligned(tinyBuf.alloc(1)));  // this on is aligned by design
     REQUIRE(isAligned(tinyBuf.alloc(1)));  // this one fits in the first block

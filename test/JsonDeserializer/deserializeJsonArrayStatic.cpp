@@ -57,7 +57,7 @@ TEST_CASE("deserialize JSON array with a StaticJsonDocument") {
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
     REQUIRE(JSON_ARRAY_SIZE(1) + sizeof("1234567") == doc.memoryUsage());
-    // note: we use a string of 8 bytes to be sure that the StaticJsonBuffer
+    // note: we use a string of 8 bytes to be sure that the StaticMemoryPool
     // will not insert bytes to enforce alignement
   }
 

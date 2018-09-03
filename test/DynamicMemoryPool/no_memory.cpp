@@ -14,8 +14,8 @@ struct NoMemoryAllocator {
   void deallocate(void*) {}
 };
 
-TEST_CASE("DynamicJsonBuffer no memory") {
-  DynamicJsonBufferBase<NoMemoryAllocator> _jsonBuffer;
+TEST_CASE("DynamicMemoryPool no memory") {
+  DynamicMemoryPoolBase<NoMemoryAllocator> _memoryPool;
 
   SECTION("FixCodeCoverage") {
     // call this function to fix code coverage
@@ -33,8 +33,8 @@ TEST_CASE("DynamicJsonBuffer no memory") {
   // }
 
   SECTION("startString()") {
-    DynamicJsonBufferBase<NoMemoryAllocator>::String str =
-        _jsonBuffer.startString();
+    DynamicMemoryPoolBase<NoMemoryAllocator>::String str =
+        _memoryPool.startString();
     str.append('!');
     REQUIRE(0 == str.c_str());
   }

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Memory/JsonBuffer.hpp"
+#include "../Memory/MemoryPool.hpp"
 #include "ListConstIterator.hpp"
 #include "ListIterator.hpp"
 
@@ -32,8 +32,8 @@ class List {
     return nodeCount;
   }
 
-  iterator add(JsonBuffer *buffer) {
-    node_type *newNode = new (buffer) node_type();
+  iterator add(MemoryPool *memoryPool) {
+    node_type *newNode = new (memoryPool) node_type();
 
     if (_firstNode) {
       node_type *lastNode = _firstNode;

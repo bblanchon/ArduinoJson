@@ -6,11 +6,11 @@
 
 #include "Data/JsonVariantData.hpp"
 #include "Data/List.hpp"
-#include "Memory/JsonBufferAllocated.hpp"
+#include "Memory/AllocableInMemoryPool.hpp"
 #include "Polyfills/type_traits.hpp"
 
 // Returns the size (in bytes) of an array with n elements.
-// Can be very handy to determine the size of a StaticJsonBuffer.
+// Can be very handy to determine the size of a StaticMemoryPool.
 #define JSON_ARRAY_SIZE(NUMBER_OF_ELEMENTS)        \
   (sizeof(ArduinoJson::Internals::JsonArrayData) + \
    (NUMBER_OF_ELEMENTS) *                          \
@@ -18,9 +18,9 @@
 
 namespace ArduinoJson {
 namespace Internals {
-struct JsonArrayData : List<JsonVariantData>, JsonBufferAllocated {
-  JsonVariantData* addSlot(JsonBuffer* buffer) {
-    iterator it = add(buffer);
+struct JsonArrayData : List<JsonVariantData>, AllocableInMemoryPool {
+  JsonVariantData* addSlot(MemoryPool* memoryPool) {
+    iterator it = add(memoryPool);
     return it != end() ? &*it : 0;
   }
 };

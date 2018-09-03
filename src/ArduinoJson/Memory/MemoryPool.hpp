@@ -14,11 +14,11 @@
 namespace ArduinoJson {
 namespace Internals {
 // Handle the memory management (done in derived classes) and calls the parser.
-// This abstract class is implemented by StaticJsonBuffer which implements a
+// This abstract class is implemented by StaticMemoryPool which implements a
 // fixed memory allocation.
-class JsonBuffer {
+class MemoryPool {
  public:
-  // Allocates n bytes in the JsonBuffer.
+  // Allocates n bytes in the MemoryPool.
   // Return a pointer to the allocated memory or NULL if allocation fails.
   virtual void *alloc(size_t size) = 0;
 
@@ -26,7 +26,7 @@ class JsonBuffer {
   // CAUTION: NO VIRTUAL DESTRUCTOR!
   // If we add a virtual constructor the Arduino compiler will add malloc()
   // and free() to the binary, adding 706 useless bytes.
-  ~JsonBuffer() {}
+  ~MemoryPool() {}
 
   // Preserve aligment if necessary
   static FORCE_INLINE size_t round_size_up(size_t bytes) {
