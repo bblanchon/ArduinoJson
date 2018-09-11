@@ -24,17 +24,17 @@ class MsgPackDeserializer {
         _stringStorage(stringStorage),
         _nestingLimit(nestingLimit) {}
 
-  DeserializationError parse(JsonVariantData &variant) {
+  DeserializationError parse(JsonVariant variant) {
     uint8_t code;
     if (!readByte(code)) return DeserializationError::IncompleteInput;
 
     if ((code & 0x80) == 0) {
-      variant.setInteger(code);
+      variant.set(code);
       return DeserializationError::Ok;
     }
 
     if ((code & 0xe0) == 0xe0) {
-      variant.setInteger(static_cast<int8_t>(code));
+      variant.set(static_cast<int8_t>(code));
       return DeserializationError::Ok;
     }
 
@@ -48,15 +48,15 @@ class MsgPackDeserializer {
 
     switch (code) {
       case 0xc0:
-        variant.setNull();
+        // already null
         return DeserializationError::Ok;
 
       case 0xc2:
-        variant.setBoolean(false);
+        variant.set(false);
         return DeserializationError::Ok;
 
       case 0xc3:
-        variant.setBoolean(true);
+        variant.set(true);
         return DeserializationError::Ok;
 
       case 0xcc:
@@ -171,54 +171,54 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  DeserializationError readInteger(JsonVariantData &variant) {
+  DeserializationError readInteger(JsonVariant variant) {
     T value;
     if (!readInteger(value)) return DeserializationError::IncompleteInput;
-    variant.setInteger(value);
+    variant.set(value);
     return DeserializationError::Ok;
   }
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, DeserializationError>::type readFloat(
-      JsonVariantData &variant) {
+      JsonVariant variant) {
     T value;
     if (!readBytes(value)) return DeserializationError::IncompleteInput;
     fixEndianess(value);
-    variant.setFloat(value);
+    variant.set(value);
     return DeserializationError::Ok;
   }
 
   template <typename T>
   typename enable_if<sizeof(T) == 8, DeserializationError>::type readDouble(
-      JsonVariantData &variant) {
+      JsonVariant variant) {
     T value;
     if (!readBytes(value)) return DeserializationError::IncompleteInput;
     fixEndianess(value);
-    variant.setFloat(value);
+    variant.set(value);
     return DeserializationError::Ok;
   }
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, DeserializationError>::type readDouble(
-      JsonVariantData &variant) {
+      JsonVariant variant) {
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
     uint8_t *o = reinterpret_cast<uint8_t *>(&value);
     if (!readBytes(i, 8)) return DeserializationError::IncompleteInput;
     doubleToFloat(i, o);
     fixEndianess(value);
-    variant.setFloat(value);
+    variant.set(value);
     return DeserializationError::Ok;
   }
 
   template <typename T>
-  DeserializationError readString(JsonVariantData &variant) {
+  DeserializationError readString(JsonVariant variant) {
     T size;
     if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readString(variant, size);
   }
 
-  DeserializationError readString(JsonVariantData &variant, size_t n) {
+  DeserializationError readString(JsonVariant variant, size_t n) {
     typename remove_reference<TStringStorage>::type::String str =
         _stringStorage.startString();
     for (; n; --n) {
@@ -228,33 +228,31 @@ class MsgPackDeserializer {
     }
     const char *s = str.c_str();
     if (s == NULL) return DeserializationError::NoMemory;
-    variant.setString(s);
+    variant.set(s);
     return DeserializationError::Ok;
   }
 
   template <typename TSize>
-  DeserializationError readArray(JsonVariantData &variant) {
+  DeserializationError readArray(JsonVariant variant) {
     TSize size;
     if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readArray(variant, size);
   }
 
-  DeserializationError readArray(JsonVariantData &variant, size_t n) {
-    JsonArrayData *array = new (_memoryPool) JsonArrayData;
-    if (!array) return DeserializationError::NoMemory;
-
-    variant.setArray(*array);
-    return readArray(*array, n);
+  DeserializationError readArray(JsonVariant variant, size_t n) {
+    JsonArray array = variant.to<JsonArray>();
+    if (array.isNull()) return DeserializationError::NoMemory;
+    return readArray(array, n);
   }
 
-  DeserializationError readArray(JsonArrayData &array, size_t n) {
+  DeserializationError readArray(JsonArray array, size_t n) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
     --_nestingLimit;
     for (; n; --n) {
-      JsonVariantData *value = array.addSlot(_memoryPool);
-      if (!value) return DeserializationError::NoMemory;
+      JsonVariant value = array.add();
+      if (value.isInvalid()) return DeserializationError::NoMemory;
 
-      DeserializationError err = parse(*value);
+      DeserializationError err = parse(value);
       if (err) return err;
     }
     ++_nestingLimit;
@@ -262,33 +260,33 @@ class MsgPackDeserializer {
   }
 
   template <typename TSize>
-  DeserializationError readObject(JsonVariantData &variant) {
+  DeserializationError readObject(JsonVariant variant) {
     TSize size;
     if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readObject(variant, size);
   }
 
-  DeserializationError readObject(JsonVariantData &variant, size_t n) {
-    JsonObjectData *object = new (_memoryPool) JsonObjectData;
-    if (!object) return DeserializationError::NoMemory;
-    variant.setObject(*object);
+  DeserializationError readObject(JsonVariant variant, size_t n) {
+    JsonObject object = variant.to<JsonObject>();
+    if (object.isNull()) return DeserializationError::NoMemory;
 
-    return readObject(*object, n);
+    return readObject(object, n);
   }
 
-  DeserializationError readObject(JsonObjectData &object, size_t n) {
+  DeserializationError readObject(JsonObject object, size_t n) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
     --_nestingLimit;
     for (; n; --n) {
-      JsonVariantData key;
+      JsonVariantData keyData;
+      JsonVariant key(_memoryPool, &keyData);
       DeserializationError err = parse(key);
       if (err) return err;
-      if (!key.isString()) return DeserializationError::NotSupported;
+      if (!keyData.isString()) return DeserializationError::NotSupported;
 
-      JsonVariantData *value = object.addSlot(_memoryPool, key.asString());
-      if (!value) return DeserializationError::NoMemory;
+      JsonVariant value = object.set(keyData.asString());
+      if (value.isInvalid()) return DeserializationError::NoMemory;
 
-      err = parse(*value);
+      err = parse(value);
       if (err) return err;
     }
     ++_nestingLimit;

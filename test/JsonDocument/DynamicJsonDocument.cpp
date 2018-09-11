@@ -17,4 +17,25 @@ TEST_CASE("DynamicJsonDocument") {
 
     REQUIRE(json == "{\"hello\":\"world\"}");
   }
+
+  SECTION("memoryUsage()") {
+    SECTION("starts at zero") {
+      REQUIRE(doc.memoryUsage() == 0);
+    }
+
+    SECTION("JSON_ARRAY_SIZE(0)") {
+      doc.to<JsonArray>();
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
+    }
+
+    SECTION("JSON_ARRAY_SIZE(1)") {
+      doc.to<JsonArray>().add(42);
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1));
+    }
+
+    SECTION("JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(0)") {
+      doc.to<JsonArray>().createNestedArray();
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(0));
+    }
+  }
 }

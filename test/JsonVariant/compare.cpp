@@ -265,13 +265,11 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("ArrayInVariant") {
-    DynamicJsonDocument docArr1, docArr2;
-    JsonArray array1 = docArr1.to<JsonArray>();
-    JsonArray array2 = docArr2.to<JsonArray>();
+    JsonArray array1 = variant1.to<JsonArray>();
+    JsonArray array2 = variant2.to<JsonArray>();
 
-    variant1.set(array1);
-    variant2.set(array1);
-    variant3.set(array2);
+    array1.add(42);
+    array2.add(42);
 
     REQUIRE(variant1 == variant2);
     REQUIRE_FALSE(variant1 != variant2);
@@ -281,13 +279,11 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("ObjectInVariant") {
-    DynamicJsonDocument docObj1, docObj2;
-    JsonObject obj1 = docObj1.to<JsonObject>();
-    JsonObject obj2 = docObj2.to<JsonObject>();
+    JsonObject obj1 = variant1.to<JsonObject>();
+    JsonObject obj2 = variant2.to<JsonObject>();
 
-    variant1.set(obj1);
-    variant2.set(obj1);
-    variant3.set(obj2);
+    obj1["hello"] = "world";
+    obj2["hello"] = "world";
 
     REQUIRE(variant1 == variant2);
     REQUIRE_FALSE(variant1 != variant2);

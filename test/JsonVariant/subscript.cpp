@@ -23,9 +23,7 @@ TEST_CASE("JsonVariant::operator[]") {
   }
 
   SECTION("The JsonVariant is a JsonArray") {
-    DynamicJsonDocument doc2;
-    JsonArray array = doc2.to<JsonArray>();
-    var.set(array);
+    JsonArray array = var.to<JsonArray>();
 
     SECTION("get value") {
       array.add("element at index 0");
@@ -62,9 +60,7 @@ TEST_CASE("JsonVariant::operator[]") {
   }
 
   SECTION("The JsonVariant is a JsonObject") {
-    DynamicJsonDocument doc2;
-    JsonObject object = doc2.to<JsonObject>();
-    var.set(object);
+    JsonObject object = var.to<JsonObject>();
 
     SECTION("get value") {
       object["a"] = "element at key \"a\"";
@@ -91,6 +87,11 @@ TEST_CASE("JsonVariant::operator[]") {
 
       REQUIRE(1 == var.size());
       REQUIRE(std::string("world") == var["hello"]);
+    }
+
+    SECTION("var[key].to<JsonArray>()") {
+      JsonArray arr = var["hello"].to<JsonArray>();
+      REQUIRE(arr.isNull() == false);
     }
   }
 

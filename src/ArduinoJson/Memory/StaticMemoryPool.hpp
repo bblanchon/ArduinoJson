@@ -107,12 +107,12 @@ class StaticMemoryPoolBase : public MemoryPool {
 // The template paramenter CAPACITY specifies the capacity of the memoryPool in
 // bytes.
 template <size_t CAPACITY>
-class StaticMemoryPool : public Internals::StaticMemoryPoolBase {
-  static const size_t ACTUAL_CAPACITY = Internals::Max<1, CAPACITY>::value;
+class StaticMemoryPool : public StaticMemoryPoolBase {
+  static const size_t ACTUAL_CAPACITY = Max<1, CAPACITY>::value;
 
  public:
   explicit StaticMemoryPool()
-      : Internals::StaticMemoryPoolBase(_buffer, ACTUAL_CAPACITY) {}
+      : StaticMemoryPoolBase(_buffer, ACTUAL_CAPACITY) {}
 
  private:
   char _buffer[ACTUAL_CAPACITY];

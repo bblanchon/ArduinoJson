@@ -4,15 +4,14 @@
 
 #pragma once
 
-#include "Data/ListIterator.hpp"
 #include "JsonPair.hpp"
 
 namespace ArduinoJson {
 
 class JsonPairPtr {
  public:
-  JsonPairPtr(Internals::MemoryPool *memoryPool, Internals::JsonPairData *data)
-      : _pair(memoryPool, data) {}
+  JsonPairPtr(Internals::MemoryPool *memoryPool, Internals::Slot *slot)
+      : _pair(memoryPool, slot) {}
 
   const JsonPair *operator->() const {
     return &_pair;
@@ -26,47 +25,48 @@ class JsonPairPtr {
   JsonPair _pair;
 };
 
-// A read-write forward iterator for JsonArray
 class JsonObjectIterator {
-  typedef Internals::ListIterator<Internals::JsonPairData> internal_iterator;
-
  public:
-  JsonObjectIterator() {}
+  JsonObjectIterator() : _slot(0) {}
+
   explicit JsonObjectIterator(Internals::MemoryPool *memoryPool,
-                              internal_iterator iterator)
-      : _memoryPool(memoryPool), _iterator(iterator) {}
+                              Internals::Slot *slot)
+      : _memoryPool(memoryPool), _slot(slot) {}
 
   JsonPair operator*() const {
-    return JsonPair(_memoryPool, &*_iterator);
+    return JsonPair(_memoryPool, _slot);
   }
   JsonPairPtr operator->() {
-    return JsonPairPtr(_memoryPool, &*_iterator);
+    return JsonPairPtr(_memoryPool, _slot);
   }
 
   bool operator==(const JsonObjectIterator &other) const {
-    return _iterator == other._iterator;
+    return _slot == other._slot;
   }
 
   bool operator!=(const JsonObjectIterator &other) const {
-    return _iterator != other._iterator;
+    return _slot != other._slot;
   }
 
   JsonObjectIterator &operator++() {
-    ++_iterator;
+    if (_slot) _slot = _slot->next;
     return *this;
   }
 
   JsonObjectIterator &operator+=(size_t distance) {
-    _iterator += distance;
+    while (_slot && distance > 0) {
+      _slot = _slot->next;
+      distance--;
+    }
     return *this;
   }
 
-  internal_iterator internal() {
-    return _iterator;
+  Internals::Slot *internal() {
+    return _slot;
   }
 
  private:
   Internals::MemoryPool *_memoryPool;
-  internal_iterator _iterator;
+  Internals::Slot *_slot;
 };
 }  // namespace ArduinoJson

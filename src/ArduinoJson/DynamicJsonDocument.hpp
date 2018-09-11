@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include "JsonArray.hpp"
-#include "JsonObject.hpp"
+#include "Data/JsonVariantTo.hpp"
 #include "JsonVariant.hpp"
 #include "Memory/DynamicMemoryPool.hpp"
 
@@ -30,49 +29,10 @@ class DynamicJsonDocument {
     return getVariant().as<T>();
   }
 
-  // JsonObject to<JsonObject>()
   template <typename T>
-  typename Internals::enable_if<Internals::is_same<T, JsonObject>::value,
-                                JsonObject>::type
-  to() {
-    clear();
-    JsonObject object(&_memoryPool);
-    getVariant().set(object);
-    return object;
-  }
-
-  // JsonArray to<JsonArray>()
-  template <typename T>
-  typename Internals::enable_if<Internals::is_same<T, JsonArray>::value,
-                                JsonArray>::type
-  to() {
-    clear();
-    JsonArray array(&_memoryPool);
-    getVariant().set(array);
-    return array;
-  }
-
-  // JsonVariant to<JsonVariant>()
-  template <typename T>
-  typename Internals::enable_if<Internals::is_same<T, JsonVariant>::value,
-                                JsonVariant>::type
-  to() {
-    clear();
-    return getVariant();
-  }
-
-  // JsonVariantData& to<JsonVariantData>()
-  template <typename T>
-  typename Internals::enable_if<
-      Internals::is_same<T, Internals::JsonVariantData>::value,
-      Internals::JsonVariantData&>::type
-  to() {
-    clear();
-    return _rootData;
-  }
-
-  Internals::DynamicMemoryPool& memoryPool() {
-    return _memoryPool;
+  typename Internals::JsonVariantTo<T>::type to() {
+    _memoryPool.clear();
+    return getVariant().to<T>();
   }
 
   void clear() {
@@ -85,8 +45,12 @@ class DynamicJsonDocument {
   }
 
   template <typename Visitor>
-  void visit(Visitor& visitor) const {
-    return _rootData.visit(visitor);
+  void accept(Visitor& visitor) const {
+    return getVariant().accept(visitor);
+  }
+
+  Internals::DynamicMemoryPool& memoryPool() {
+    return _memoryPool;
   }
 
  private:

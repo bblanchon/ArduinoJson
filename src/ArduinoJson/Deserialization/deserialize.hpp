@@ -36,7 +36,7 @@ deserialize(TDocument &doc, const TString &input) {
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<JsonVariantData>());
+      .parse(doc.template to<JsonVariant>());
 }
 //
 // DeserializationError deserialize(TDocument& doc, TChar* input);
@@ -49,7 +49,7 @@ DeserializationError deserialize(TDocument &doc, TChar *input) {
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<JsonVariantData>());
+      .parse(doc.template to<JsonVariant>());
 }
 //
 // DeserializationError deserialize(TDocument& doc, TChar* input, size_t
@@ -64,7 +64,7 @@ DeserializationError deserialize(TDocument &doc, TChar *input,
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input, inputSize),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<JsonVariantData>());
+      .parse(doc.template to<JsonVariant>());
 }
 //
 // DeserializationError deserialize(TDocument& doc, TStream input);
@@ -77,7 +77,7 @@ DeserializationError deserialize(TDocument &doc, TStream &input) {
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<JsonVariantData>());
+      .parse(doc.template to<JsonVariant>());
 }
 }  // namespace Internals
 }  // namespace ArduinoJson

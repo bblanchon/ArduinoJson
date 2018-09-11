@@ -12,7 +12,6 @@ namespace Internals {
 class AllocableInMemoryPool {
  public:
   void *operator new(size_t n, MemoryPool *memoryPool) NOEXCEPT {
-    if (!memoryPool) return NULL;
     return memoryPool->alloc(n);
   }
 

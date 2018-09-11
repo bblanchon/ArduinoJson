@@ -12,223 +12,150 @@ TEST_CASE("JsonVariant::as()") {
   DynamicJsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("DoubleAsBool") {
+  SECTION("not set") {
+    REQUIRE(false == variant.as<bool>());
+    REQUIRE(0 == variant.as<int>());
+    REQUIRE(0.0f == variant.as<float>());
+    REQUIRE(0 == variant.as<char*>());
+    REQUIRE("null" == variant.as<std::string>());
+  }
+
+  SECTION("set(4.2)") {
     variant.set(4.2);
+
     REQUIRE(variant.as<bool>());
+    REQUIRE(0 == variant.as<const char*>());
+    REQUIRE(variant.as<std::string>() == "4.2");
+    REQUIRE(variant.as<long>() == 4L);
+    REQUIRE(variant.as<unsigned>() == 4U);
   }
 
-  SECTION("DoubleAsCstr") {
-    variant.set(4.2);
-    REQUIRE_FALSE(variant.as<const char*>());
-  }
-
-  SECTION("DoubleAsString") {
-    variant.set(4.2);
-    REQUIRE(std::string("4.2") == variant.as<std::string>());
-  }
-
-  SECTION("DoubleAsLong") {
-    variant.set(4.2);
-    REQUIRE(4L == variant.as<long>());
-  }
-
-  SECTION("DoubleAsUnsigned") {
-    variant.set(4.2);
-    REQUIRE(4U == variant.as<unsigned>());
-  }
-
-  SECTION("DoubleZeroAsBool") {
+  SECTION("set(0.0)") {
     variant.set(0.0);
-    REQUIRE_FALSE(variant.as<bool>());
+
+    REQUIRE(variant.as<bool>() == false);
+    REQUIRE(variant.as<long>() == 0L);
   }
 
-  SECTION("DoubleZeroAsLong") {
-    variant.set(0.0);
-    REQUIRE(0L == variant.as<long>());
-  }
-
-  SECTION("FalseAsBool") {
+  SECTION("set(false)") {
     variant.set(false);
-    REQUIRE_FALSE(variant.as<bool>());
+
+    REQUIRE(false == variant.as<bool>());
+    REQUIRE(variant.as<double>() == 0.0);
+    REQUIRE(variant.as<long>() == 0L);
+    REQUIRE(variant.as<std::string>() == "false");
   }
 
-  SECTION("FalseAsDouble") {
-    variant.set(false);
-    REQUIRE(0.0 == variant.as<double>());
-  }
-
-  SECTION("FalseAsLong") {
-    variant.set(false);
-    REQUIRE(0L == variant.as<long>());
-  }
-
-  SECTION("FalseAsString") {
-    variant.set(false);
-    REQUIRE(std::string("false") == variant.as<std::string>());
-  }
-
-  SECTION("TrueAsBool") {
+  SECTION("set(true)") {
     variant.set(true);
+
     REQUIRE(variant.as<bool>());
+    REQUIRE(variant.as<double>() == 1.0);
+    REQUIRE(variant.as<long>() == 1L);
+    REQUIRE(variant.as<std::string>() == "true");
   }
 
-  SECTION("TrueAsDouble") {
-    variant.set(true);
-    REQUIRE(1.0 == variant.as<double>());
-  }
-
-  SECTION("TrueAsLong") {
-    variant.set(true);
-    REQUIRE(1L == variant.as<long>());
-  }
-
-  SECTION("TrueAsString") {
-    variant.set(true);
-    REQUIRE(std::string("true") == variant.as<std::string>());
-  }
-
-  SECTION("LongAsBool") {
+  SECTION("set(42L)") {
     variant.set(42L);
-    REQUIRE(variant.as<bool>());
+
+    REQUIRE(variant.as<bool>() == true);
+    REQUIRE(variant.as<double>() == 42.0);
+    REQUIRE(variant.as<std::string>() == "42");
   }
 
-  SECTION("LongZeroAsBool") {
-    variant.set(0L);
-    REQUIRE_FALSE(variant.as<bool>());
-  }
-
-  SECTION("PositiveLongAsDouble") {
-    variant.set(42L);
-    REQUIRE(42.0 == variant.as<double>());
-  }
-
-  SECTION("NegativeLongAsDouble") {
+  SECTION("set(-42L)") {
     variant.set(-42L);
-    REQUIRE(-42.0 == variant.as<double>());
+
+    REQUIRE(variant.as<double>() == -42.0);
+    REQUIRE(variant.as<std::string>() == "-42");
   }
 
-  SECTION("LongAsString") {
-    variant.set(42L);
-    REQUIRE(std::string("42") == variant.as<std::string>());
-  }
-
-  SECTION("LongZeroAsDouble") {
+  SECTION("set(0L)") {
     variant.set(0L);
-    REQUIRE(0.0 == variant.as<double>());
+
+    SECTION("as<bool>()") {
+      REQUIRE(false == variant.as<bool>());
+    }
+
+    SECTION("as<double>()") {
+      REQUIRE(variant.as<double>() == 0.0);
+    }
   }
 
-  SECTION("NullAsBool") {
+  SECTION("set(null)") {
     variant.set(null);
-    REQUIRE_FALSE(variant.as<bool>());
+
+    REQUIRE(variant.as<bool>() == false);
+    REQUIRE(variant.as<double>() == 0.0);
+    REQUIRE(variant.as<long>() == 0L);
+    REQUIRE(variant.as<std::string>() == "null");
   }
 
-  SECTION("NullAsDouble") {
-    variant.set(null);
-    REQUIRE(0.0 == variant.as<double>());
-  }
-
-  SECTION("NullAsLong") {
-    variant.set(null);
-    REQUIRE(0L == variant.as<long>());
-  }
-
-  SECTION("NullAsString") {
-    variant.set(null);
-    REQUIRE(std::string("null") == variant.as<std::string>());
-  }
-
-  SECTION("NumberStringAsBool") {
+  SECTION("set(\"42\")") {
     variant.set("42");
+
     REQUIRE(variant.as<bool>());
+    REQUIRE(variant.as<long>() == 42L);
   }
 
-  SECTION("NumberStringAsLong") {
-    variant.set("42");
-    REQUIRE(42L == variant.as<long>());
-  }
-
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
-  SECTION("NumberStringAsInt64Negative") {
-    variant.set("-9223372036854775808");
-    REQUIRE(-9223372036854775807 - 1 == variant.as<long long>());
-  }
-
-  SECTION("NumberStringAsInt64Positive") {
-    variant.set("9223372036854775807");
-    REQUIRE(9223372036854775807 == variant.as<long long>());
-  }
-#endif
-
-  SECTION("RandomStringAsBool") {
+  SECTION("set(\"hello\")") {
     variant.set("hello");
-    REQUIRE_FALSE(variant.as<bool>());
+
+    REQUIRE(variant.as<bool>() == false);
+    REQUIRE(variant.as<long>() == 0L);
+    REQUIRE(variant.as<const char*>() == std::string("hello"));
+    REQUIRE(variant.as<char*>() == std::string("hello"));
+    REQUIRE(variant.as<std::string>() == std::string("hello"));
   }
 
-  SECTION("RandomStringAsLong") {
-    variant.set("hello");
-    REQUIRE(0L == variant.as<long>());
-  }
-
-  SECTION("RandomStringAsConstCharPtr") {
-    variant.set("hello");
-    REQUIRE(std::string("hello") == variant.as<const char*>());
-  }
-
-  SECTION("RandomStringAsCharPtr") {
-    variant.set("hello");
-    REQUIRE(std::string("hello") == variant.as<char*>());
-  }
-
-  SECTION("RandomStringAsString") {
-    variant.set("hello");
-    REQUIRE(std::string("hello") == variant.as<std::string>());
-  }
-
-  SECTION("TrueStringAsBool") {
+  SECTION("set(\"true\")") {
     variant.set("true");
+
     REQUIRE(variant.as<bool>());
+    REQUIRE(variant.as<long>() == 1L);
   }
 
-  SECTION("TrueStringAsLong") {
-    variant.set("true");
-    REQUIRE(1L == variant.as<long>());
-  }
-
-  SECTION("ObjectAsString") {
-    DynamicJsonDocument doc2;
-    JsonObject obj = doc2.to<JsonObject>();
-
+  SECTION("to<JsonObject>()") {
+    JsonObject obj = variant.to<JsonObject>();
     obj["key"] = "value";
 
-    variant.set(obj);
-    REQUIRE(std::string("{\"key\":\"value\"}") == variant.as<std::string>());
+    SECTION("as<std::string>()") {
+      REQUIRE(variant.as<std::string>() == std::string("{\"key\":\"value\"}"));
+    }
+
+    SECTION("ObjectAsJsonObject") {
+      JsonObject o = variant.as<JsonObject>();
+      REQUIRE(o.size() == 1);
+      REQUIRE(o["key"] == std::string("value"));
+    }
   }
 
-  SECTION("ArrayAsString") {
-    DynamicJsonDocument doc2;
-    JsonArray arr = doc2.to<JsonArray>();
+  SECTION("to<JsonArray>()") {
+    JsonArray arr = variant.to<JsonArray>();
     arr.add(4);
     arr.add(2);
 
-    variant.set(arr);
-    REQUIRE(std::string("[4,2]") == variant.as<std::string>());
+    SECTION("as<std::string>()") {
+      REQUIRE(variant.as<std::string>() == std::string("[4,2]"));
+    }
+
+    SECTION("as<JsonArray>()") {
+      JsonArray a = variant.as<JsonArray>();
+      REQUIRE(a.size() == 2);
+      REQUIRE(a[0] == 4);
+      REQUIRE(a[1] == 2);
+    }
   }
 
-  SECTION("ArrayAsJsonArray") {
-    DynamicJsonDocument doc2;
-    JsonArray arr = doc2.to<JsonArray>();
-
-    variant.set(arr);
-    REQUIRE(arr == variant.as<JsonArray>());
-    REQUIRE(arr == variant.as<JsonArray>());  // <- shorthand
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+  SECTION("Smallest int64 negative") {
+    variant.set("-9223372036854775808");
+    REQUIRE(variant.as<long long>() == -9223372036854775807 - 1);
   }
 
-  SECTION("ObjectAsJsonObject") {
-    DynamicJsonDocument doc2;
-    JsonObject obj = doc2.to<JsonObject>();
-
-    variant.set(obj);
-    REQUIRE(obj == variant.as<JsonObject>());
-    REQUIRE(obj == variant.as<JsonObject>());  // <- shorthand
+  SECTION("Biggerst int64 positive") {
+    variant.set("9223372036854775807");
+    REQUIRE(variant.as<long long>() == 9223372036854775807);
   }
+#endif
 }

@@ -16,16 +16,16 @@ class JsonSerializer {
  public:
   JsonSerializer(TWriter &writer) : _writer(writer) {}
 
-  void acceptFloat(JsonFloat value) {
+  void visitFloat(JsonFloat value) {
     _writer.writeFloat(value);
   }
 
-  void acceptArray(const JsonArrayData &array) {
+  void visitArray(JsonArray array) {
     _writer.beginArray();
 
-    JsonArrayData::const_iterator it = array.begin();
+    JsonArray::iterator it = array.begin();
     while (it != array.end()) {
-      it->visit(*this);
+      it->accept(*this);
 
       ++it;
       if (it == array.end()) break;
@@ -36,14 +36,14 @@ class JsonSerializer {
     _writer.endArray();
   }
 
-  void acceptObject(const JsonObjectData &object) {
+  void visitObject(JsonObject object) {
     _writer.beginObject();
 
-    JsonObjectData::const_iterator it = object.begin();
+    JsonObject::iterator it = object.begin();
     while (it != object.end()) {
-      _writer.writeString(it->key);
+      _writer.writeString(it->key());
       _writer.writeColon();
-      it->value.visit(*this);
+      it->value().accept(*this);
 
       ++it;
       if (it == object.end()) break;
@@ -54,29 +54,29 @@ class JsonSerializer {
     _writer.endObject();
   }
 
-  void acceptString(const char *value) {
+  void visitString(const char *value) {
     _writer.writeString(value);
   }
 
-  void acceptRawJson(const char *data, size_t n) {
+  void visitRawJson(const char *data, size_t n) {
     // TODO
     for (size_t i = 0; i < n; i++) _writer.writeRaw(data[i]);
   }
 
-  void acceptNegativeInteger(JsonUInt value) {
+  void visitNegativeInteger(JsonUInt value) {
     _writer.writeRaw('-');
     _writer.writeInteger(value);
   }
 
-  void acceptPositiveInteger(JsonUInt value) {
+  void visitPositiveInteger(JsonUInt value) {
     _writer.writeInteger(value);
   }
 
-  void acceptBoolean(bool value) {
+  void visitBoolean(bool value) {
     _writer.writeBoolean(value);
   }
 
-  void acceptNull() {
+  void visitNull() {
     _writer.writeRaw("null");
   }
 

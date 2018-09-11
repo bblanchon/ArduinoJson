@@ -19,7 +19,7 @@ template <template <typename> class TSerializer, typename TSource,
 typename enable_if<!IsWriteableString<TPrint>::value, size_t>::type serialize(
     const TSource &source, TPrint &destination) {
   TSerializer<TPrint> serializer(destination);
-  source.visit(serializer);
+  source.accept(serializer);
   return serializer.bytesWritten();
 }
 

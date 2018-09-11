@@ -40,4 +40,9 @@ TEST_CASE("JsonObject::begin()/end()") {
   //   ++it;
   //   REQUIRE(const_object.end() == it);
   // }
+
+  SECTION("Dereferencing end() is safe") {
+    REQUIRE(obj.end()->key() == 0);
+    REQUIRE(obj.end()->value().isNull());
+  }
 }

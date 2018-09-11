@@ -160,6 +160,12 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(obj[null] == 0);
   }
 
+  SECTION("obj[key].to<JsonArray>()") {
+    JsonArray arr = obj["hello"].to<JsonArray>();
+
+    REQUIRE(arr.isNull() == false);
+  }
+
 #if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
     !defined(SUBSCRIPT_CONFLICTS_WITH_BUILTIN_OPERATOR)
   SECTION("obj[VLA] = str") {

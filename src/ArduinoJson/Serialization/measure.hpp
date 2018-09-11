@@ -13,7 +13,7 @@ template <template <typename> class TSerializer, typename TSource>
 size_t measure(const TSource &source) {
   DummyWriter dp;
   TSerializer<DummyWriter> serializer(dp);
-  source.visit(serializer);
+  source.accept(serializer);
   return serializer.bytesWritten();
 }
 

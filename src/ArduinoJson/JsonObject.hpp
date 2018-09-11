@@ -4,14 +4,17 @@
 
 #pragma once
 
-#include "./JsonObjectData.hpp"
 #include "./JsonObjectIterator.hpp"
+
+// Returns the size (in bytes) of an object with n elements.
+// Can be very handy to determine the size of a StaticMemoryPool.
+#define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
+  ((NUMBER_OF_ELEMENTS) * sizeof(ArduinoJson::Internals::Slot))
 
 namespace ArduinoJson {
 
 class JsonObject {
   friend class JsonVariant;
-  typedef Internals::JsonObjectData::iterator internal_iterator;
 
  public:
   typedef JsonObjectIterator iterator;
@@ -20,12 +23,15 @@ class JsonObject {
   FORCE_INLINE JsonObject(Internals::MemoryPool* buf,
                           Internals::JsonObjectData* object)
       : _memoryPool(buf), _data(object) {}
-  FORCE_INLINE explicit JsonObject(Internals::MemoryPool* buf)
-      : _memoryPool(buf), _data(new (buf) Internals::JsonObjectData()) {}
 
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
-    return iterator(_memoryPool, _data->begin());
+    return iterator(_memoryPool, _data->head);
+  }
+
+  void clear() {
+    _data->head = 0;
+    _data->tail = 0;
   }
 
   // Tells weither the specified key is present and associated with a value.
@@ -42,6 +48,15 @@ class JsonObject {
   template <typename TString>
   FORCE_INLINE bool containsKey(TString* key) const {
     return containsKey_impl<TString*>(key);
+  }
+
+  bool copyFrom(JsonObject src) {
+    bool ok = _data != 0;
+    clear();
+    for (iterator it = src.begin(); it != src.end(); ++it) {
+      ok &= set(it->key(), it->value());
+    }
+    return ok;
   }
 
   FORCE_INLINE iterator end() const {
@@ -155,13 +170,26 @@ class JsonObject {
     return Internals::JsonObjectSubscript<TString*>(*this, key);
   }
 
-  FORCE_INLINE bool operator==(const JsonObject& rhs) const {
-    return _data == rhs._data;
+  FORCE_INLINE bool operator==(JsonObject rhs) const {
+    if (size() != rhs.size()) return false;
+    for (iterator it = begin(); it != end(); ++it) {
+      if (rhs.get<JsonVariant>(it->key()) != it->value()) return false;
+    }
+    return true;
   }
 
   FORCE_INLINE void remove(iterator it) {
     if (!_data) return;
-    _data->remove(it.internal());
+    Internals::Slot* slot = it.internal();
+    if (!slot) return;
+    if (slot->prev)
+      slot->prev->next = slot->next;
+    else
+      _data->head = slot->next;
+    if (slot->next)
+      slot->next->prev = slot->prev;
+    else
+      _data->tail = slot->prev;
   }
 
   // Removes the specified key and the associated value.
@@ -188,7 +216,7 @@ class JsonObject {
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue, typename TString>
   FORCE_INLINE bool set(const TString& key, const TValue& value) {
-    return set_impl<const TString&, const TValue&>(key, value);
+    return set(key).set(value);
   }
   //
   // bool set(TKey, TValue);
@@ -196,7 +224,7 @@ class JsonObject {
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename TValue, typename TString>
   FORCE_INLINE bool set(const TString& key, TValue* value) {
-    return set_impl<const TString&, TValue*>(key, value);
+    return set(key).set(value);
   }
   //
   // bool set(TKey, const TValue&);
@@ -205,7 +233,7 @@ class JsonObject {
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue, typename TString>
   FORCE_INLINE bool set(TString* key, const TValue& value) {
-    return set_impl<TString*, const TValue&>(key, value);
+    return set(key).set(value);
   }
   //
   // bool set(TKey, TValue);
@@ -213,12 +241,28 @@ class JsonObject {
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename TValue, typename TString>
   FORCE_INLINE bool set(TString* key, TValue* value) {
-    return set_impl<TString*, TValue*>(key, value);
+    return set(key).set(value);
+  }
+
+  template <typename TString>
+  FORCE_INLINE JsonVariant set(TString* key) {
+    return set_impl<TString*>(key);
+  }
+
+  template <typename TString>
+  FORCE_INLINE JsonVariant set(const TString& key) {
+    return set_impl<const TString&>(key);
   }
 
   FORCE_INLINE size_t size() const {
     if (!_data) return 0;
-    return _data->size();
+    size_t n = 0;
+    Internals::Slot* slot = _data->head;
+    while (slot) {
+      n++;
+      slot = slot->next;
+    }
+    return n;
   }
 
   FORCE_INLINE bool isNull() const {
@@ -226,17 +270,17 @@ class JsonObject {
   }
 
   template <typename Visitor>
-  FORCE_INLINE void visit(Visitor& visitor) const {
+  FORCE_INLINE void accept(Visitor& visitor) const {
     if (_data)
-      visitor.acceptObject(*_data);
+      visitor.visitObject(*this);
     else
-      visitor.acceptNull();
+      visitor.visitNull();
   }
 
  private:
   template <typename TStringRef>
   FORCE_INLINE bool containsKey_impl(TStringRef key) const {
-    return findKey<TStringRef>(key) != _data->end();
+    return findSlot<TStringRef>(key) != 0;
   }
 
   template <typename TStringRef>
@@ -247,77 +291,95 @@ class JsonObject {
 
   // Returns the list node that matches the specified key.
   template <typename TStringRef>
-  internal_iterator findKey(TStringRef key) {
-    if (!_data) return internal_iterator();
-    internal_iterator it;
-    for (it = _data->begin(); it != _data->end(); ++it) {
-      if (Internals::makeString(key).equals(it->key)) break;
+  Internals::Slot* findSlot(TStringRef key) {
+    if (!_data) return 0;
+    Internals::Slot* slot = _data->head;
+    while (slot) {
+      if (Internals::makeString(key).equals(slot->key)) break;
+      slot = slot->next;
     }
-    return it;
+    return slot;
   }
   template <typename TStringRef>
-  FORCE_INLINE internal_iterator findKey(TStringRef key) const {
-    return const_cast<JsonObject*>(this)->findKey<TStringRef>(key);
+  FORCE_INLINE Internals::Slot* findSlot(TStringRef key) const {
+    return const_cast<JsonObject*>(this)->findSlot<TStringRef>(key);
   }
 
   template <typename TStringRef, typename TValue>
   FORCE_INLINE typename Internals::JsonVariantAs<TValue>::type get_impl(
       TStringRef key) const {
-    internal_iterator it = findKey<TStringRef>(key);
-    return it != _data->end()
-               ? JsonVariant(_memoryPool, &it->value).as<TValue>()
-               : TValue();
+    Internals::Slot* slot = findSlot<TStringRef>(key);
+    return slot ? JsonVariant(_memoryPool, &slot->value).as<TValue>()
+                : TValue();
   }
 
   template <typename TStringRef, typename TValue>
   FORCE_INLINE bool is_impl(TStringRef key) const {
-    internal_iterator it = findKey<TStringRef>(key);
-    return it != _data->end()
-               ? JsonVariant(_memoryPool, &it->value).is<TValue>()
-               : false;
+    Internals::Slot* slot = findSlot<TStringRef>(key);
+    return slot ? JsonVariant(_memoryPool, &slot->value).is<TValue>() : false;
   }
 
   template <typename TStringRef>
   FORCE_INLINE void remove_impl(TStringRef key) {
     if (!_data) return;
-    _data->remove(findKey<TStringRef>(key));
+    Internals::Slot* slot = findSlot<TStringRef>(key);
+    if (!slot) return;
+    if (slot->prev)
+      slot->prev->next = slot->next;
+    else
+      _data->head = slot->next;
+    if (slot->next)
+      slot->next->prev = slot->prev;
+    else
+      _data->tail = slot->prev;
   }
 
-  template <typename TStringRef, typename TValueRef>
-  FORCE_INLINE bool set_impl(TStringRef key, TValueRef value) {
-    if (!_data) return false;
+  template <typename TStringRef>
+  FORCE_INLINE JsonVariant set_impl(TStringRef key) {
+    if (!_data) return JsonVariant();
 
     // ignore null key
-    if (Internals::makeString(key).is_null()) return false;
+    if (Internals::makeString(key).is_null()) return JsonVariant();
 
     // search a matching key
-    internal_iterator it = findKey<TStringRef>(key);
-    if (it == _data->end()) {
+    Internals::Slot* slot = findSlot<TStringRef>(key);
+    if (!slot) {
       // add the key
-      // TODO: use JsonPairData directly, we don't need an iterator
-      it = _data->add(_memoryPool);
-      if (it == _data->end()) return false;
-      if (!set_key(it, key)) return false;
+      slot = new (_memoryPool) Internals::Slot();
+      if (!slot) return JsonVariant();
+
+      slot->next = 0;
+
+      if (_data->tail) {
+        slot->prev = _data->tail;
+        _data->tail->next = slot;
+        _data->tail = slot;
+      } else {
+        slot->prev = 0;
+        _data->head = slot;
+        _data->tail = slot;
+      }
+
+      if (!set_key(slot, key)) return JsonVariant();
     }
 
-    // save the value
-    return JsonVariant(_memoryPool, &it->value).set(value);
+    return JsonVariant(_memoryPool, &slot->value);
   }
 
-  FORCE_INLINE bool set_key(internal_iterator& it, const char* key) {
-    it->key = key;
+  FORCE_INLINE bool set_key(Internals::Slot* slot, const char* key) {
+    slot->key = key;
     return true;
   }
 
   template <typename T>
-  FORCE_INLINE bool set_key(internal_iterator& it, const T& key) {
+  FORCE_INLINE bool set_key(Internals::Slot* slot, const T& key) {
     const char* dup = Internals::makeString(key).save(_memoryPool);
     if (!dup) return false;
-    it->key = dup;
+    slot->key = dup;
     return true;
   }
 
   mutable Internals::MemoryPool* _memoryPool;
   mutable Internals::JsonObjectData* _data;
-};
+};  // namespace ArduinoJson
 }  // namespace ArduinoJson

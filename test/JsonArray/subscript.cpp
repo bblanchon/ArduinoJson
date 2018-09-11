@@ -119,6 +119,11 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
+  SECTION("array[0].to<JsonObject>()") {
+    JsonObject obj = array[0].to<JsonObject>();
+    REQUIRE(obj.isNull() == false);
+  }
+
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
   SECTION("set(VLA)") {
     int i = 16;

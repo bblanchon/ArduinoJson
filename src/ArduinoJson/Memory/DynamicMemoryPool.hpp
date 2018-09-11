@@ -155,9 +155,9 @@ class DynamicMemoryPoolBase : public MemoryPool {
 // Implements a MemoryPool with dynamic memory allocation.
 // You are strongly encouraged to consider using StaticMemoryPool which is much
 // more suitable for embedded systems.
-typedef Internals::DynamicMemoryPoolBase<Internals::DefaultAllocator>
-    DynamicMemoryPool;
+typedef DynamicMemoryPoolBase<DefaultAllocator> DynamicMemoryPool;
 }  // namespace Internals
+}  // namespace ArduinoJson
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -166,4 +166,3 @@ typedef Internals::DynamicMemoryPoolBase<Internals::DefaultAllocator>
 #pragma GCC diagnostic pop
 #endif
 #endif
-}  // namespace ArduinoJson

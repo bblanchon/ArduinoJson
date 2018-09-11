@@ -16,6 +16,10 @@ struct JsonVariantData {
   JsonVariantType type;
   JsonVariantContent content;
 
+  JsonVariantData() {
+    type = JSON_NULL;
+  }
+
   void setBoolean(bool value) {
     type = JSON_BOOLEAN;
     content.asInteger = static_cast<JsonUInt>(value);
@@ -43,13 +47,24 @@ struct JsonVariantData {
     content.asInteger = value;
   }
 
-  void setString(const char *value) {
-    type = JSON_STRING;
+  void setOwnedString(const char *value) {
+    type = JSON_OWNED_STRING;
     content.asString = value;
   }
 
-  void setRaw(const char *data, size_t size) {
-    type = JSON_RAW;
+  void setLinkedString(const char *value) {
+    type = JSON_LINKED_STRING;
+    content.asString = value;
+  }
+
+  void setOwnedRaw(const char *data, size_t size) {
+    type = JSON_OWNED_RAW;
+    content.asRaw.data = data;
+    content.asRaw.size = size;
+  }
+
+  void setLinkedRaw(const char *data, size_t size) {
+    type = JSON_LINKED_RAW;
     content.asRaw.data = data;
     content.asRaw.size = size;
   }
@@ -58,66 +73,70 @@ struct JsonVariantData {
     type = JSON_NULL;
   }
 
-  void setArray(JsonArrayData &array) {
+  JsonArrayData *toArray() {
     type = JSON_ARRAY;
-    content.asArray = &array;
+    content.asArray.head = 0;
+    content.asArray.tail = 0;
+    return &content.asArray;
   }
 
-  void setObject(JsonObjectData &object) {
+  JsonObjectData *toObject() {
     type = JSON_OBJECT;
-    content.asObject = &object;
+    content.asObject.head = 0;
+    content.asObject.tail = 0;
+    return &content.asObject;
   }
 
-  JsonArrayData *asArray() const {
-    return type == JSON_ARRAY ? content.asArray : 0;
+  JsonArrayData *asArray() {
+    return type == JSON_ARRAY ? &content.asArray : 0;
   }
 
-  JsonObjectData *asObject() const {
-    return type == JSON_OBJECT ? content.asObject : 0;
+  JsonObjectData *asObject() {
+    return type == JSON_OBJECT ? &content.asObject : 0;
   }
 
   template <typename T>
   T asInteger() const {
     switch (type) {
-      case JSON_NULL:
-      case JSON_RAW:
-        return 0;
       case JSON_POSITIVE_INTEGER:
       case JSON_BOOLEAN:
         return T(content.asInteger);
       case JSON_NEGATIVE_INTEGER:
         return T(~content.asInteger + 1);
-      case JSON_STRING:
+      case JSON_LINKED_STRING:
+      case JSON_OWNED_STRING:
         return parseInteger<T>(content.asString);
-      default:
+      case JSON_FLOAT:
         return T(content.asFloat);
+      default:
+        return 0;
     }
   }
 
   template <typename T>
   T asFloat() const {
     switch (type) {
-      case JSON_NULL:
-      case JSON_RAW:
-        return 0;
       case JSON_POSITIVE_INTEGER:
       case JSON_BOOLEAN:
         return static_cast<T>(content.asInteger);
       case JSON_NEGATIVE_INTEGER:
         return -static_cast<T>(content.asInteger);
-      case JSON_STRING:
+      case JSON_LINKED_STRING:
+      case JSON_OWNED_STRING:
         return parseFloat<T>(content.asString);
-      default:
+      case JSON_FLOAT:
         return static_cast<T>(content.asFloat);
+      default:
+        return 0;
     }
   }
 
   const char *asString() const {
-    return type == JSON_STRING ? content.asString : NULL;
+    return isString() ? content.asString : NULL;
   }
 
   bool isArray() const {
-    return type == Internals::JSON_ARRAY;
+    return type == JSON_ARRAY;
   }
 
   bool isBoolean() const {
@@ -138,43 +157,11 @@ struct JsonVariantData {
   }
 
   bool isObject() const {
-    return type == Internals::JSON_OBJECT;
+    return type == JSON_OBJECT;
   }
 
   bool isString() const {
-    return type == Internals::JSON_STRING;
-  }
-
-  template <typename Visitor>
-  void visit(Visitor &visitor) const {
-    switch (type) {
-      case JSON_FLOAT:
-        return visitor.acceptFloat(content.asFloat);
-
-      case JSON_ARRAY:
-        return visitor.acceptArray(*content.asArray);
-
-      case JSON_OBJECT:
-        return visitor.acceptObject(*content.asObject);
-
-      case JSON_STRING:
-        return visitor.acceptString(content.asString);
-
-      case JSON_RAW:
-        return visitor.acceptRawJson(content.asRaw.data, content.asRaw.size);
-
-      case JSON_NEGATIVE_INTEGER:
-        return visitor.acceptNegativeInteger(content.asInteger);
-
-      case JSON_POSITIVE_INTEGER:
-        return visitor.acceptPositiveInteger(content.asInteger);
-
-      case JSON_BOOLEAN:
-        return visitor.acceptBoolean(content.asInteger != 0);
-
-      default:
-        return visitor.acceptNull();
-    }
+    return type == JSON_LINKED_STRING || type == JSON_OWNED_STRING;
   }
 };
 }  // namespace Internals

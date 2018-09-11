@@ -10,7 +10,8 @@ TEST_CASE("JsonObject::createNestedArray()") {
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("key is a const char*") {
-    obj.createNestedArray("hello");
+    JsonArray arr = obj.createNestedArray("hello");
+    REQUIRE(arr.isNull() == false);
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
@@ -19,7 +20,8 @@ TEST_CASE("JsonObject::createNestedArray()") {
     char vla[i];
     strcpy(vla, "hello");
 
-    obj.createNestedArray(vla);
+    JsonArray arr = obj.createNestedArray(vla);
+    REQUIRE(arr.isNull() == false);
   }
 #endif
 }

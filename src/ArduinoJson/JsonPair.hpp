@@ -8,19 +8,17 @@
 
 namespace ArduinoJson {
 
-namespace Internals {
-
-struct JsonPairData {
-  const char* key;
-  JsonVariantData value;
-};
-}  // namespace Internals
-
 // A key value pair for JsonObjectData.
 class JsonPair {
  public:
-  JsonPair(Internals::MemoryPool* memoryPool, Internals::JsonPairData* data)
-      : _key(data->key), _value(memoryPool, &data->value) {}
+  JsonPair(Internals::MemoryPool* memoryPool, Internals::Slot* slot) {
+    if (slot) {
+      _key = slot->key;
+      _value = JsonVariant(memoryPool, &slot->value);
+    } else {
+      _key = 0;
+    }
+  }
 
   const char* key() const {
     return _key;

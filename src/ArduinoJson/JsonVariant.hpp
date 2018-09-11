@@ -92,7 +92,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   // set(SerializedValue<const char *>)
   FORCE_INLINE bool set(Internals::SerializedValue<const char *> value) {
     if (!_data) return false;
-    _data->setRaw(value.data(), value.size());
+    _data->setLinkedRaw(value.data(), value.size());
     return true;
   }
 
@@ -108,7 +108,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
     const char *dup =
         Internals::makeString(value.data(), value.size()).save(_memoryPool);
     if (dup)
-      _data->setRaw(dup, value.size());
+      _data->setOwnedRaw(dup, value.size());
     else
       _data->setNull();
     return true;
@@ -124,7 +124,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
     if (!_data) return false;
     const char *dup = Internals::makeString(value).save(_memoryPool);
     if (dup) {
-      _data->setString(dup);
+      _data->setOwnedString(dup);
       return true;
     } else {
       _data->setNull();
@@ -141,7 +141,7 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
     if (!_data) return false;
     const char *dup = Internals::makeString(value).save(_memoryPool);
     if (dup) {
-      _data->setString(dup);
+      _data->setOwnedString(dup);
       return true;
     } else {
       _data->setNull();
@@ -152,22 +152,15 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   // set(const char*);
   FORCE_INLINE bool set(const char *value) {
     if (!_data) return false;
-    _data->setString(value);
+    _data->setLinkedString(value);
     return true;
   }
 
-  FORCE_INLINE bool set(const JsonVariant &value) {
-    if (!_data) return false;
-    if (value._data)
-      *_data = *value._data;
-    else
-      _data->setNull();
-    return true;
-  }
+  bool set(const JsonVariant &value);
 
-  FORCE_INLINE bool set(const JsonArray &array);
+  FORCE_INLINE bool set(JsonArray array);
   FORCE_INLINE bool set(const Internals::JsonArraySubscript &);
-  FORCE_INLINE bool set(const JsonObject &object);
+  FORCE_INLINE bool set(JsonObject object);
   template <typename TString>
   FORCE_INLINE bool set(const Internals::JsonObjectSubscript<TString> &);
 
@@ -327,18 +320,36 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
     return _data && _data->isObject();
   }
 
-  // Returns true if the variant has a value
   FORCE_INLINE bool isNull() const {
     return _data == 0 || _data->isNull();
   }
 
-  template <typename Visitor>
-  FORCE_INLINE void visit(Visitor &visitor) const {
-    if (_data)
-      _data->visit(visitor);
-    else
-      visitor.acceptNull();
+  FORCE_INLINE bool isInvalid() const {
+    return _data == 0;
   }
+
+  template <typename Visitor>
+  void accept(Visitor &visitor) const;
+
+  // Change the type of the variant
+  //
+  // JsonArray to<JsonArray>()
+  template <typename T>
+  typename Internals::enable_if<Internals::is_same<T, JsonArray>::value,
+                                JsonArray>::type
+  to();
+  //
+  // JsonObject to<JsonObject>()
+  template <typename T>
+  typename Internals::enable_if<Internals::is_same<T, JsonObject>::value,
+                                JsonObject>::type
+  to();
+  //
+  // JsonObject to<JsonVariant>()
+  template <typename T>
+  typename Internals::enable_if<Internals::is_same<T, JsonVariant>::value,
+                                JsonVariant>::type
+  to();
 
  private:
   Internals::MemoryPool *_memoryPool;

@@ -19,9 +19,21 @@ TEST_CASE("JsonObject::size()") {
     REQUIRE(1 == obj.size());
   }
 
-  SECTION("doesn't increase when the smae key is added twice") {
+  SECTION("decreases when values are removed") {
+    obj.set("hello", 42);
+    obj.remove("hello");
+    REQUIRE(0 == obj.size());
+  }
+
+  SECTION("doesn't increase when the same key is added twice") {
     obj["hello"] = 1;
     obj["hello"] = 2;
+    REQUIRE(1 == obj.size());
+  }
+
+  SECTION("doesn't decrease when another key is removed") {
+    obj["hello"] = 1;
+    obj.remove("world");
     REQUIRE(1 == obj.size());
   }
 }

@@ -64,6 +64,11 @@ class JsonObjectSubscript
     return _object.is<TValue>(_key);
   }
 
+  template <typename TValue>
+  FORCE_INLINE typename JsonVariantTo<TValue>::type to() {
+    return _object.set(_key).template to<TValue>();
+  }
+
   // Sets the specified value.
   //
   // bool set(const TValue&);
@@ -84,8 +89,8 @@ class JsonObjectSubscript
   }
 
   template <typename Visitor>
-  void visit(Visitor &visitor) const {
-    return _object.get<JsonVariant>(_key).visit(visitor);
+  void accept(Visitor &visitor) const {
+    return _object.get<JsonVariant>(_key).accept(visitor);
   }
 
  private:

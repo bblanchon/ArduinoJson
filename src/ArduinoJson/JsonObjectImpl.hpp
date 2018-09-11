@@ -22,16 +22,12 @@ inline JsonArray JsonObject::createNestedArray(TString* key) {
 template <typename TStringRef>
 inline JsonArray JsonObject::createNestedArray_impl(TStringRef key) {
   if (!_data) return JsonArray();
-  JsonArray array(_memoryPool);
-  if (!array.isNull()) set(key, array);
-  return array;
+  return set(key).template to<JsonArray>();
 }
 
 template <typename TStringRef>
 inline JsonObject JsonObject::createNestedObject_impl(TStringRef key) {
   if (!_data) return JsonObject();
-  JsonObject object(_memoryPool);
-  if (!object.isNull()) set(key, object);
-  return object;
+  return set(key).template to<JsonObject>();
 }
 }  // namespace ArduinoJson

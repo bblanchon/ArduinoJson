@@ -57,6 +57,11 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
     return _array.is<T>(_index);
   }
 
+  template <typename T>
+  FORCE_INLINE typename JsonVariantTo<T>::type to() {
+    return _array.get<JsonVariant>(_index).to<T>();
+  }
+
   // Replaces the value
   //
   // bool set(const TValue&)
@@ -75,8 +80,8 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   }
 
   template <typename Visitor>
-  void visit(Visitor& visitor) const {
-    return _array.get<JsonVariant>(_index).visit(visitor);
+  void accept(Visitor& visitor) const {
+    return _array.get<JsonVariant>(_index).accept(visitor);
   }
 
  private:

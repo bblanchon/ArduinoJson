@@ -35,13 +35,13 @@ TEST_CASE("JsonVariant::isNull()") {
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("return true when InvalidArray") {
-    variant.set(JsonArray());
-    REQUIRE(variant.isNull() == true);
-  }
-
-  SECTION("return true when InvalidObject") {
-    variant.set(JsonObject());
-    REQUIRE(variant.isNull() == true);
-  }
+  /*  SECTION("return true when InvalidArray") {
+      variant.set(JsonArray());
+      REQUIRE(variant.isNull() == true);
+    }
+  */
+  /*  SECTION("return true when InvalidObject") {
+      variant.set(JsonObject());
+      REQUIRE(variant.isNull() == true);
+    }*/
 }

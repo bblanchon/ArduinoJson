@@ -51,11 +51,14 @@ TEST_CASE("JsonArray::copyFrom()") {
         JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(2);
     StaticJsonDocument<SIZE> doc;
     JsonArray array = doc.to<JsonArray>();
-    char json[32];
+    char json[32] = "";
     int source[][3] = {{1, 2, 3}, {4, 5, 6}};
 
+    CAPTURE(SIZE)
+
     bool ok = array.copyFrom(source);
-    REQUIRE_FALSE(ok);
+    CAPTURE(doc.memoryUsage());
+    CHECK_FALSE(ok);
 
     serializeJson(array, json, sizeof(json));
     REQUIRE(std::string("[[1,2,3],[4,5]]") == json);

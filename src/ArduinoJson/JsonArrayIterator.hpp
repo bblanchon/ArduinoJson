@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Data/ListIterator.hpp"
+#include "Data/Slot.hpp"
 #include "JsonVariant.hpp"
 
 namespace ArduinoJson {
@@ -28,45 +28,46 @@ class JsonVariantPtr {
 };
 
 class JsonArrayIterator {
-  typedef Internals::ListIterator<Internals::JsonVariantData> internal_iterator;
-
  public:
-  JsonArrayIterator() {}
+  JsonArrayIterator() : _slot(0) {}
   explicit JsonArrayIterator(Internals::MemoryPool *memoryPool,
-                             internal_iterator iterator)
-      : _iterator(iterator), _memoryPool(memoryPool) {}
+                             Internals::Slot *iterator)
+      : _memoryPool(memoryPool), _slot(iterator) {}
 
   JsonVariant operator*() const {
-    return JsonVariant(_memoryPool, &*_iterator);
+    return JsonVariant(_memoryPool, &_slot->value);
   }
   JsonVariantPtr operator->() {
-    return JsonVariantPtr(_memoryPool, &*_iterator);
+    return JsonVariantPtr(_memoryPool, &_slot->value);
   }
 
   bool operator==(const JsonArrayIterator &other) const {
-    return _iterator == other._iterator;
+    return _slot == other._slot;
   }
 
   bool operator!=(const JsonArrayIterator &other) const {
-    return _iterator != other._iterator;
+    return _slot != other._slot;
   }
 
   JsonArrayIterator &operator++() {
-    ++_iterator;
+    _slot = _slot->next;
     return *this;
   }
 
   JsonArrayIterator &operator+=(size_t distance) {
-    _iterator += distance;
+    while (distance && _slot) {
+      _slot = _slot->next;
+      distance--;
+    }
     return *this;
   }
 
-  internal_iterator internal() {
-    return _iterator;
+  Internals::Slot *internal() {
+    return _slot;
   }
 
  private:
-  internal_iterator _iterator;
   Internals::MemoryPool *_memoryPool;
+  Internals::Slot *_slot;
 };
 }  // namespace ArduinoJson
