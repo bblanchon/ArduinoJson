@@ -87,6 +87,14 @@ TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
     REQUIRE(doc.as<bool>() == false);
   }
 
+  SECTION("0") {
+    DeserializationError err = deserializeJson(doc, "0");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.is<int>() == true);
+    REQUIRE(doc.as<int>() == 0);
+    REQUIRE(doc.as<std::string>() == "0");  // issue #808
+  }
+
   SECTION("NaN") {
     DeserializationError err = deserializeJson(doc, "NaN");
     REQUIRE(err == DeserializationError::Ok);

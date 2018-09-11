@@ -45,6 +45,10 @@ TEST_CASE("serializeJson(JsonVariant)") {
     check(3.1415927, "3.1415927");
   }
 
+  SECTION("Zero") {
+    check(0, "0");
+  }
+
   SECTION("Integer") {
     check(42, "42");
   }
