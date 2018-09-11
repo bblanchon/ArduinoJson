@@ -1,10 +1,11 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.4.0-beta (2018-09-11)
+-----------
 
 * Copy `JsonArray` and `JsonObject`, instead of storing pointers (issue #780)
+* Added `JsonVariant::to<JsonArray>()` and `JsonVariant::to<JsonObject>()`
 
 v6.3.0-beta (2018-08-31)
 -----------
