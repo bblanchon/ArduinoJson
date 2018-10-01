@@ -8,6 +8,7 @@ add_executable(JsonVariantTests
 	copy.cpp
 	is.cpp
 	isnull.cpp
+	misc.cpp
 	or.cpp
 	set_get.cpp
 	subscript.cpp

@@ -24,6 +24,11 @@ class JsonObject {
                           Internals::JsonObjectData* object)
       : _memoryPool(buf), _data(object) {}
 
+  operator JsonVariant() {
+    using namespace Internals;
+    return JsonVariant(_memoryPool, getVariantData(_data));
+  }
+
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
     return iterator(_memoryPool, _data->head);

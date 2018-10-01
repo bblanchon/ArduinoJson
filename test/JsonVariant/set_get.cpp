@@ -205,7 +205,20 @@ TEST_CASE("JsonVariant and strings") {
 
     REQUIRE(variant == "hello");
   }
+}
 
-  // TODO: string
-  // TODO: serialized()
+TEST_CASE("JsonVariant with not enough memory") {
+  StaticJsonDocument<1> doc;
+
+  JsonVariant v = doc.to<JsonVariant>();
+
+  SECTION("std::string") {
+    v.set(std::string("hello"));
+    REQUIRE(v.isNull());
+  }
+
+  SECTION("Serialized<std::string>") {
+    v.set(serialized(std::string("hello")));
+    REQUIRE(v.isNull());
+  }
 }

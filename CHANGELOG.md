@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added implicit conversion from `JsonArray` and `JsonObject` to `JsonVariant`
+
 v6.4.0-beta (2018-09-11)
 -----------
 

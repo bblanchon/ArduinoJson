@@ -39,7 +39,7 @@ class StaticJsonDocument {
 
   void clear() {
     _memoryPool.clear();
-    _rootData.setNull();
+    _rootData.type = Internals::JSON_NULL;
   }
 
   size_t memoryUsage() const {
