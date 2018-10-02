@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename T>
 struct is_array : false_type {};
@@ -15,5 +14,4 @@ struct is_array<T[]> : true_type {};
 
 template <typename T, size_t N>
 struct is_array<T[N]> : true_type {};
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

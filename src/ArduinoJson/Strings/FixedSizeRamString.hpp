@@ -6,8 +6,7 @@
 
 #include <string.h>  // strcmp
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class FixedSizeRamString {
  public:
@@ -46,5 +45,4 @@ inline FixedSizeRamString makeString(const TChar* str, size_t size) {
   return FixedSizeRamString(reinterpret_cast<const char*>(str), size);
 }
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

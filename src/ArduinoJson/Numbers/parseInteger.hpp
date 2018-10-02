@@ -9,8 +9,7 @@
 #include "../Configuration.hpp"
 #include "../Polyfills/ctype.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 template <typename T>
 T parseInteger(const char *s) {
   if (!s) return 0;  // NULL
@@ -37,5 +36,4 @@ T parseInteger(const char *s) {
 
   return negative_result ? T(~result + 1) : result;
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

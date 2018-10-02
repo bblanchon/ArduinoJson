@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A meta-function that return the type T if Condition is true.
 template <bool Condition, typename T = void>
@@ -15,5 +14,4 @@ template <typename T>
 struct enable_if<true, T> {
   typedef T type;
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

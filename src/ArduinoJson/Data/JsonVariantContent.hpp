@@ -9,8 +9,7 @@
 #include "JsonFloat.hpp"
 #include "JsonInteger.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 struct JsonObjectData {
   struct Slot* head;
   struct Slot* tail;
@@ -40,5 +39,4 @@ union JsonVariantContent {
   } asRaw;
 };
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

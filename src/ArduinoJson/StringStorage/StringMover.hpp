@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TChar>
 class StringMover {
@@ -37,5 +36,4 @@ class StringMover {
  private:
   TChar* _ptr;
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

@@ -6,8 +6,7 @@
 
 #include "../Polyfills/type_traits.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 template <typename>
 struct IsString : false_type {};
 
@@ -16,8 +15,7 @@ struct IsString<const T> : IsString<T> {};
 
 template <typename T>
 struct IsString<T&> : IsString<T> {};
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #include "FixedSizeRamString.hpp"
 #include "ZeroTerminatedRamString.hpp"

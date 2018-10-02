@@ -6,8 +6,7 @@
 
 #include "../Polyfills/ctype.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 inline bool isInteger(const char* s) {
   if (!s || !*s) return false;
@@ -15,5 +14,4 @@ inline bool isInteger(const char* s) {
   while (isdigit(*s)) s++;
   return *s == '\0';
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

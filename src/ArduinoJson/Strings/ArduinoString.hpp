@@ -6,8 +6,7 @@
 
 #include <WString.h>
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class ArduinoString {
  public:
@@ -56,5 +55,4 @@ inline ArduinoString makeString(const ::String& str) {
   return ArduinoString(str);
 }
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

@@ -11,8 +11,7 @@
 #include "./StreamWriter.hpp"
 #endif
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename> class TSerializer, typename TSource,
           typename TPrint>
@@ -51,5 +50,4 @@ typename enable_if<IsWriteableString<TString>::value, size_t>::type serialize(
   return serialize<TSerializer>(source, writer);
 }
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

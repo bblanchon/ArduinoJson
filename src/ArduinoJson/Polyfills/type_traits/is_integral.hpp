@@ -7,8 +7,7 @@
 #include "../../Configuration.hpp"
 #include "is_same.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A meta-function that returns true if T is an integral type.
 template <typename T>
@@ -18,19 +17,19 @@ struct is_integral {
       is_same<T, signed short>::value || is_same<T, unsigned short>::value ||
       is_same<T, signed int>::value || is_same<T, unsigned int>::value ||
       is_same<T, signed long>::value || is_same<T, unsigned long>::value ||
-#if ARDUINOJSON_USE_LONG_LONG
-      is_same<T, unsigned long long>::value ||
+#if ARDUINOJSON_HAS_LONG_LONG
       is_same<T, signed long long>::value ||
+      is_same<T, unsigned long long>::value ||
 #endif
-#if ARDUINOJSON_USE_INT64
-      is_same<T, unsigned __int64>::value ||
+#if ARDUINOJSON_HAS_INT64
       is_same<T, signed __int64>::value ||
+      is_same<T, unsigned __int64>::value ||
 #endif
       is_same<T, char>::value;
+
   // CAUTION: differs from std::is_integral as it doesn't include bool
 };
 
 template <typename T>
 struct is_integral<const T> : is_integral<T> {};
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

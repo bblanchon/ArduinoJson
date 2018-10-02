@@ -5,7 +5,7 @@
 #include <ArduinoJson/Memory/StaticMemoryPool.hpp>
 #include <catch.hpp>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("StaticMemoryPool::size()") {
   StaticMemoryPool<64> memoryPool;

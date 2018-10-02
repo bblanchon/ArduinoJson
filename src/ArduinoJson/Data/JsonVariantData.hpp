@@ -7,8 +7,7 @@
 #include "JsonVariantContent.hpp"
 #include "JsonVariantType.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // this struct must be a POD type to prevent error calling offsetof on clang
 struct JsonVariantData {
@@ -31,5 +30,4 @@ inline JsonVariantData *getVariantData(JsonObjectData *obj) {
   return reinterpret_cast<JsonVariantData *>(reinterpret_cast<char *>(obj) -
                                              offset);
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

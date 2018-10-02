@@ -10,8 +10,7 @@
 #include "./JsonSerializer.hpp"
 #include "./Prettyfier.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TPrint>
 class PrettyJsonSerializer_Base {
@@ -33,25 +32,21 @@ class PrettyJsonSerializer : PrettyJsonSerializer_Base<TPrint>,
         JsonSerializer<Prettyfier<TPrint> >(
             PrettyJsonSerializer_Base<TPrint>::_prettyfier) {}
 };
-}  // namespace Internals
 
 template <typename TSource, typename TDestination>
 size_t serializeJsonPretty(TSource &source, TDestination &destination) {
-  using namespace Internals;
   return serialize<PrettyJsonSerializer>(source, destination);
 }
 
 template <typename TSource>
 size_t serializeJsonPretty(const TSource &source, char *buffer,
                            size_t bufferSize) {
-  using namespace Internals;
   return serialize<PrettyJsonSerializer>(source, buffer, bufferSize);
 }
 
 template <typename TSource>
 size_t measureJsonPretty(const TSource &source) {
-  using namespace Internals;
   return measure<PrettyJsonSerializer>(source);
 }
 
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

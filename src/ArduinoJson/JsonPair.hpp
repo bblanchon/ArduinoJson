@@ -6,12 +6,12 @@
 
 #include "JsonVariant.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A key value pair for JsonObjectData.
 class JsonPair {
  public:
-  JsonPair(Internals::MemoryPool* memoryPool, Internals::Slot* slot) {
+  JsonPair(MemoryPool* memoryPool, Slot* slot) {
     if (slot) {
       _key = slot->key;
       _value = JsonVariant(memoryPool, &slot->value);
@@ -32,4 +32,4 @@ class JsonPair {
   const char* _key;
   JsonVariant _value;
 };
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

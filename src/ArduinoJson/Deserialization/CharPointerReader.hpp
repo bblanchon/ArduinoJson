@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TChar>
 class UnsafeCharPointerReader {
@@ -60,5 +59,4 @@ inline SafeCharPointerReader<char> makeReader(const String& input) {
 }
 #endif
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

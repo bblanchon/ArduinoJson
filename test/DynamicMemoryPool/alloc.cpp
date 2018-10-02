@@ -6,7 +6,7 @@
 #include <catch.hpp>
 #include <sstream>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 static bool isAligned(void* ptr) {
   const size_t mask = sizeof(void*) - 1;

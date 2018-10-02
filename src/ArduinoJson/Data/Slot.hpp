@@ -7,8 +7,7 @@
 #include "../Memory/AllocableInMemoryPool.hpp"
 #include "JsonVariantData.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 struct Slot : AllocableInMemoryPool {
   JsonVariantData value;
@@ -17,5 +16,4 @@ struct Slot : AllocableInMemoryPool {
   const char* key;
 };
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

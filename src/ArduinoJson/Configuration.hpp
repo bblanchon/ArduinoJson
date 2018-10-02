@@ -4,6 +4,18 @@
 
 #pragma once
 
+#if defined(_MSC_VER)
+#define ARDUINOJSON_HAS_INT64 1
+#else
+#define ARDUINOJSON_HAS_INT64 0
+#endif
+
+#if __cplusplus >= 201103L
+#define ARDUINOJSON_HAS_LONG_LONG 1
+#else
+#define ARDUINOJSON_HAS_LONG_LONG 0
+#endif
+
 // Small or big machine?
 #ifndef ARDUINOJSON_EMBEDDED_MODE
 #if defined(ARDUINO) || defined(__IAR_SYSTEMS_ICC__) || defined(__XC) || \
@@ -24,9 +36,6 @@
 // Store longs by default, because they usually match the size of a float.
 #ifndef ARDUINOJSON_USE_LONG_LONG
 #define ARDUINOJSON_USE_LONG_LONG 0
-#endif
-#ifndef ARDUINOJSON_USE_INT64
-#define ARDUINOJSON_USE_INT64 0
 #endif
 
 // Embedded systems usually don't have std::string
@@ -53,19 +62,10 @@
 
 // Use long long when available
 #ifndef ARDUINOJSON_USE_LONG_LONG
-#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
+#if ARDUINOJSON_HAS_LONG_LONG || ARDUINOJSON_HAS_INT64
 #define ARDUINOJSON_USE_LONG_LONG 1
 #else
 #define ARDUINOJSON_USE_LONG_LONG 0
-#endif
-#endif
-
-// Use _int64 on old versions of Visual Studio
-#ifndef ARDUINOJSON_USE_INT64
-#if defined(_MSC_VER) && _MSC_VER <= 1700
-#define ARDUINOJSON_USE_INT64 1
-#else
-#define ARDUINOJSON_USE_INT64 0
 #endif
 #endif
 
@@ -139,10 +139,6 @@
 // Control the exponentiation threshold for small numbers
 #ifndef ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD
 #define ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD 1e-5
-#endif
-
-#if ARDUINOJSON_USE_LONG_LONG && ARDUINOJSON_USE_INT64
-#error ARDUINOJSON_USE_LONG_LONG and ARDUINOJSON_USE_INT64 cannot be set together
 #endif
 
 #ifndef ARDUINOJSON_LITTLE_ENDIAN

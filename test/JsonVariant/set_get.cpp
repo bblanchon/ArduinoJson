@@ -39,9 +39,9 @@ void checkNumericType() {
 }
 
 TEST_CASE("JsonVariant set()/get()") {
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
   SECTION("SizeOfJsonInteger") {
-    REQUIRE(8 == sizeof(Internals::JsonInteger));
+    REQUIRE(8 == sizeof(JsonInteger));
   }
 #endif
 
@@ -95,7 +95,7 @@ TEST_CASE("JsonVariant set()/get()") {
   SECTION("UShort") {
     checkNumericType<unsigned short>();
   }
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
   SECTION("LongLong") {
     checkNumericType<unsigned long long>();
   }
@@ -122,7 +122,7 @@ TEST_CASE("JsonVariant set()/get()") {
   SECTION("Uint32") {
     checkNumericType<uint32_t>();
   }
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
   SECTION("Int64") {
     checkNumericType<int64_t>();
   }

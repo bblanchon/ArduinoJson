@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A meta-function that returns true if Derived inherits from TBase is an
 // integral type.
@@ -23,5 +22,4 @@ class is_base_of {
     value = sizeof(probe(reinterpret_cast<TDerived *>(0))) == sizeof(Yes)
   };
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

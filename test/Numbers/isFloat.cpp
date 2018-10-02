@@ -5,7 +5,7 @@
 #include <ArduinoJson/Numbers/isFloat.hpp>
 #include <catch.hpp>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("isFloat()") {
   SECTION("Input is NULL") {

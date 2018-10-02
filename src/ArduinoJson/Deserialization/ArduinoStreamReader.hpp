@@ -8,8 +8,7 @@
 
 #include <Stream.h>
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 struct ArduinoStreamReader {
   Stream& _stream;
@@ -35,7 +34,6 @@ struct ArduinoStreamReader {
 inline ArduinoStreamReader makeReader(Stream& input) {
   return ArduinoStreamReader(input);
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #endif

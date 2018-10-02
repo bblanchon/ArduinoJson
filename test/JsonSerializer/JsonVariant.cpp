@@ -69,7 +69,7 @@ TEST_CASE("serializeJson(JsonVariant)") {
     check(false, "false");
   }
 
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
   SECTION("NegativeInt64") {
     check(-9223372036854775807 - 1, "-9223372036854775808");
   }

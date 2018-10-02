@@ -8,8 +8,7 @@
 #include "../Serialization/serialize.hpp"
 #include "./JsonWriter.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TWriter>
 class JsonSerializer {
@@ -88,23 +87,18 @@ class JsonSerializer {
   JsonWriter<TWriter> _writer;
 };
 
-}  // namespace Internals
-
 template <typename TSource, typename TDestination>
 size_t serializeJson(const TSource &source, TDestination &destination) {
-  using namespace Internals;
   return serialize<JsonSerializer>(source, destination);
 }
 
 template <typename TSource>
 size_t serializeJson(const TSource &source, char *buffer, size_t bufferSize) {
-  using namespace Internals;
   return serialize<JsonSerializer>(source, buffer, bufferSize);
 }
 
 template <typename TSource>
 size_t measureJson(const TSource &source) {
-  using namespace Internals;
   return measure<JsonSerializer>(source);
 }
 
@@ -122,7 +116,6 @@ inline std::ostream &operator<<(std::ostream &os, const JsonVariant &source) {
   return os;
 }
 
-namespace Internals {
 inline std::ostream &operator<<(std::ostream &os,
                                 const JsonArraySubscript &source) {
   serializeJson(source, os);
@@ -135,8 +128,6 @@ inline std::ostream &operator<<(std::ostream &os,
   serializeJson(source, os);
   return os;
 }
-}  // namespace Internals
-
 #endif
 
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

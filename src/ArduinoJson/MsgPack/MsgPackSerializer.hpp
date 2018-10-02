@@ -10,8 +10,7 @@
 #include "../Serialization/serialize.hpp"
 #include "./endianess.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TWriter>
 class MsgPackSerializer {
@@ -107,7 +106,7 @@ class MsgPackSerializer {
       writeByte(0xD2);
       writeInteger(int32_t(negated));
     }
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
     else {
       writeByte(0xD3);
       writeInteger(int64_t(negated));
@@ -128,7 +127,7 @@ class MsgPackSerializer {
       writeByte(0xCE);
       writeInteger(uint32_t(value));
     }
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
     else {
       writeByte(0xCF);
       writeInteger(uint64_t(value));
@@ -166,25 +165,21 @@ class MsgPackSerializer {
   TWriter* _writer;
   size_t _bytesWritten;
 };
-}  // namespace Internals
 
 template <typename TSource, typename TDestination>
 inline size_t serializeMsgPack(const TSource& source, TDestination& output) {
-  using namespace Internals;
   return serialize<MsgPackSerializer>(source, output);
 }
 
 template <typename TSource, typename TDestination>
 inline size_t serializeMsgPack(const TSource& source, TDestination* output,
                                size_t size) {
-  using namespace Internals;
   return serialize<MsgPackSerializer>(source, output, size);
 }
 
 template <typename TSource>
 inline size_t measureMsgPack(const TSource& source) {
-  using namespace Internals;
   return measure<MsgPackSerializer>(source);
 }
 
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

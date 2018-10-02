@@ -13,8 +13,7 @@
 #pragma warning(disable : 4522)
 #endif
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TStringRef>
 class JsonObjectSubscript
@@ -130,8 +129,7 @@ inline typename enable_if<IsString<TString *>::value,
   return impl()->template as<JsonObject>()[key];
 }
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #ifdef _MSC_VER
 #pragma warning(pop)

@@ -10,11 +10,9 @@
 #include "Polyfills/type_traits.hpp"
 #include "Strings/StringTypes.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 class JsonArray;
 class JsonObject;
-
-namespace Internals {
 
 template <typename TImpl>
 class JsonVariantComparisons {
@@ -120,7 +118,6 @@ class JsonVariantComparisons {
 
   template <typename TVariant2>
   bool equals(const JsonVariantComparisons<TVariant2> &right) const {
-    using namespace Internals;
     if (is<bool>() && right.template is<bool>())
       return as<bool>() == right.template as<bool>();
     if (is<JsonInteger>() && right.template is<JsonInteger>())
@@ -137,5 +134,4 @@ class JsonVariantComparisons {
     return false;
   }
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

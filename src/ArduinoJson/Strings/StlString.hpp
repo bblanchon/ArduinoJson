@@ -6,8 +6,7 @@
 
 #include <string>
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class StlString {
  public:
@@ -49,5 +48,4 @@ inline StlString makeString(const std::string& str) {
   return StlString(str);
 }
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

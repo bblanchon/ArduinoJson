@@ -5,7 +5,7 @@
 #include <ArduinoJson/Memory/DynamicMemoryPool.hpp>
 #include <catch.hpp>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("DynamicMemoryPool::startString()") {
   SECTION("WorksWhenBufferIsBigEnough") {

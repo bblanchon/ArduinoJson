@@ -10,8 +10,7 @@
 
 #include <ostream>
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class StreamWriter {
  public:
@@ -34,7 +33,6 @@ class StreamWriter {
 
   std::ostream& _os;
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #endif  // ARDUINOJSON_ENABLE_STD_STREAM

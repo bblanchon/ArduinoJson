@@ -5,7 +5,7 @@
 #include <ArduinoJson/Numbers/isInteger.hpp>
 #include <catch.hpp>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("isInteger()") {
   SECTION("Null") {

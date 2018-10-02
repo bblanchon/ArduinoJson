@@ -7,8 +7,7 @@
 #include "Data/JsonVariantAs.hpp"
 #include "Polyfills/attributes.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TImpl>
 class JsonVariantCasts {
@@ -23,5 +22,4 @@ class JsonVariantCasts {
     return static_cast<const TImpl *>(this);
   }
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

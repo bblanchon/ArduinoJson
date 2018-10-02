@@ -18,10 +18,10 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(false == array[0].is<bool>());
   }
 
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
   SECTION("long long") {
     array[0] = 9223372036854775807;
-    REQUIRE(9223372036854775807 == array[0].as<long long>());
+    REQUIRE(9223372036854775807 == array[0].as<int64_t>());
     REQUIRE(true == array[0].is<int>());
     REQUIRE(false == array[0].is<bool>());
   }

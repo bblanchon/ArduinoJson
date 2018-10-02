@@ -6,13 +6,11 @@
 
 #include "../Configuration.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 #if ARDUINOJSON_USE_DOUBLE
 typedef double JsonFloat;
 #else
 typedef float JsonFloat;
 #endif
-}
-}
+}  // namespace ARDUINOJSON_NAMESPACE

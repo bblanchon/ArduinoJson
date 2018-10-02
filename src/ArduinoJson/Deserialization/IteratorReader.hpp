@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TIterator>
 class IteratorReader {
@@ -30,5 +29,4 @@ inline IteratorReader<typename TInput::const_iterator> makeReader(
   return IteratorReader<typename TInput::const_iterator>(input.begin(),
                                                          input.end());
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

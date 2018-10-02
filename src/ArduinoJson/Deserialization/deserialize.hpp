@@ -12,8 +12,7 @@
 #include "./IteratorReader.hpp"
 #include "./StdStreamReader.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename, typename> class TDeserializer,
           typename TMemoryPool, typename TReader, typename TWriter>
@@ -29,10 +28,8 @@ TDeserializer<TReader, TWriter> makeDeserializer(TMemoryPool &memoryPool,
 // TString = const std::string&, const String&
 template <template <typename, typename> class TDeserializer, typename TDocument,
           typename TString>
-typename Internals::enable_if<!Internals::is_array<TString>::value,
-                              DeserializationError>::type
+typename enable_if<!is_array<TString>::value, DeserializationError>::type
 deserialize(TDocument &doc, const TString &input) {
-  using namespace Internals;
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
@@ -45,7 +42,6 @@ deserialize(TDocument &doc, const TString &input) {
 template <template <typename, typename> class TDeserializer, typename TDocument,
           typename TChar>
 DeserializationError deserialize(TDocument &doc, TChar *input) {
-  using namespace Internals;
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
@@ -60,7 +56,6 @@ template <template <typename, typename> class TDeserializer, typename TDocument,
           typename TChar>
 DeserializationError deserialize(TDocument &doc, TChar *input,
                                  size_t inputSize) {
-  using namespace Internals;
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input, inputSize),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
@@ -73,11 +68,9 @@ DeserializationError deserialize(TDocument &doc, TChar *input,
 template <template <typename, typename> class TDeserializer, typename TDocument,
           typename TStream>
 DeserializationError deserialize(TDocument &doc, TStream &input) {
-  using namespace Internals;
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
       .parse(doc.template to<JsonVariant>());
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

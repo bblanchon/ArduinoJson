@@ -8,7 +8,7 @@
 #include <ostream>
 #endif
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 class DeserializationError {
  public:
@@ -80,4 +80,4 @@ inline std::ostream& operator<<(std::ostream& s, DeserializationError::Code c) {
 }
 #endif
 
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

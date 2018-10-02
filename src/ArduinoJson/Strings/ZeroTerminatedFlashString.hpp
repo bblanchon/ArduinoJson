@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class ZeroTerminatedFlashString {
  public:
@@ -44,5 +43,4 @@ inline ZeroTerminatedFlashString makeString(const __FlashStringHelper* str) {
 
 template <>
 struct IsString<const __FlashStringHelper*> : true_type {};
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

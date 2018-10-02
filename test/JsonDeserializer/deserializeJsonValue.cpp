@@ -7,6 +7,11 @@
 
 using namespace Catch::Matchers;
 
+namespace my {
+using ARDUINOJSON_NAMESPACE::isinf;
+using ARDUINOJSON_NAMESPACE::isnan;
+}
+
 TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
   DynamicJsonDocument doc;
 
@@ -99,28 +104,28 @@ TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
     DeserializationError err = deserializeJson(doc, "NaN");
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<float>() == true);
-    REQUIRE(Internals::isnan(doc.as<float>()));
+    REQUIRE(my::isnan(doc.as<float>()));
   }
 
   SECTION("Infinity") {
     DeserializationError err = deserializeJson(doc, "Infinity");
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<float>() == true);
-    REQUIRE(Internals::isinf(doc.as<float>()));
+    REQUIRE(my::isinf(doc.as<float>()));
   }
 
   SECTION("+Infinity") {
     DeserializationError err = deserializeJson(doc, "+Infinity");
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<float>() == true);
-    REQUIRE(Internals::isinf(doc.as<float>()));
+    REQUIRE(my::isinf(doc.as<float>()));
   }
 
   SECTION("-Infinity") {
     DeserializationError err = deserializeJson(doc, "-Infinity");
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<float>() == true);
-    REQUIRE(Internals::isinf(doc.as<float>()));
+    REQUIRE(my::isinf(doc.as<float>()));
   }
 
   SECTION("issue #628") {

@@ -6,8 +6,7 @@
 
 #include "MemoryPool.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class AllocableInMemoryPool {
  public:
@@ -17,5 +16,4 @@ class AllocableInMemoryPool {
 
   void operator delete(void *, MemoryPool *)NOEXCEPT {}
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

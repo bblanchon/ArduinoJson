@@ -8,7 +8,7 @@
 #include "JsonVariant.hpp"
 #include "Memory/DynamicMemoryPool.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 class DynamicJsonDocument {
  public:
@@ -25,19 +25,19 @@ class DynamicJsonDocument {
   }
 
   template <typename T>
-  typename Internals::JsonVariantAs<T>::type as() const {
+  typename JsonVariantAs<T>::type as() const {
     return getVariant().as<T>();
   }
 
   template <typename T>
-  typename Internals::JsonVariantTo<T>::type to() {
+  typename JsonVariantTo<T>::type to() {
     _memoryPool.clear();
     return getVariant().to<T>();
   }
 
   void clear() {
     _memoryPool.clear();
-    _rootData.type = Internals::JSON_NULL;
+    _rootData.type = JSON_NULL;
   }
 
   size_t memoryUsage() const {
@@ -49,7 +49,7 @@ class DynamicJsonDocument {
     return getVariant().accept(visitor);
   }
 
-  Internals::DynamicMemoryPool& memoryPool() {
+  DynamicMemoryPool& memoryPool() {
     return _memoryPool;
   }
 
@@ -58,7 +58,7 @@ class DynamicJsonDocument {
     return JsonVariant(&_memoryPool, &_rootData);
   }
 
-  mutable Internals::DynamicMemoryPool _memoryPool;
-  mutable Internals::JsonVariantData _rootData;
+  mutable DynamicMemoryPool _memoryPool;
+  mutable JsonVariantData _rootData;
 };
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

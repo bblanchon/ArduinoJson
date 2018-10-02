@@ -4,12 +4,10 @@
 
 #pragma once
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 class JsonArray;
 class JsonObject;
 class JsonVariant;
-
-namespace Internals {
 
 // A metafunction that returns the type of the value returned by
 // JsonVariant::to<T>()
@@ -29,5 +27,4 @@ struct JsonVariantTo<JsonVariant> {
   typedef JsonVariant type;
 };
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

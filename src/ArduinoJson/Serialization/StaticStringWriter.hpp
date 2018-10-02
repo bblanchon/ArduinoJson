@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A Print implementation that allows to write in a char[]
 class StaticStringWriter {
@@ -35,5 +34,4 @@ class StaticStringWriter {
   char *end;
   char *p;
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

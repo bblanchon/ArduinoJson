@@ -18,8 +18,7 @@
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 class DefaultAllocator {
  public:
   void* allocate(size_t size) {
@@ -156,8 +155,7 @@ class DynamicMemoryPoolBase : public MemoryPool {
 // You are strongly encouraged to consider using StaticMemoryPool which is much
 // more suitable for embedded systems.
 typedef DynamicMemoryPoolBase<DefaultAllocator> DynamicMemoryPool;
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

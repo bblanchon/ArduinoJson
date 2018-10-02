@@ -7,12 +7,11 @@
 #include "Data/Slot.hpp"
 #include "JsonVariant.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 class JsonVariantPtr {
  public:
-  JsonVariantPtr(Internals::MemoryPool *memoryPool,
-                 Internals::JsonVariantData *data)
+  JsonVariantPtr(MemoryPool *memoryPool, JsonVariantData *data)
       : _variant(memoryPool, data) {}
 
   JsonVariant *operator->() {
@@ -30,8 +29,7 @@ class JsonVariantPtr {
 class JsonArrayIterator {
  public:
   JsonArrayIterator() : _slot(0) {}
-  explicit JsonArrayIterator(Internals::MemoryPool *memoryPool,
-                             Internals::Slot *iterator)
+  explicit JsonArrayIterator(MemoryPool *memoryPool, Slot *iterator)
       : _memoryPool(memoryPool), _slot(iterator) {}
 
   JsonVariant operator*() const {
@@ -62,12 +60,12 @@ class JsonArrayIterator {
     return *this;
   }
 
-  Internals::Slot *internal() {
+  Slot *internal() {
     return _slot;
   }
 
  private:
-  Internals::MemoryPool *_memoryPool;
-  Internals::Slot *_slot;
+  MemoryPool *_memoryPool;
+  Slot *_slot;
 };
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

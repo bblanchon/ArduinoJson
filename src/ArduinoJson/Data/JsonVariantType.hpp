@@ -4,10 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-
-namespace Internals {
-
+namespace ARDUINOJSON_NAMESPACE {
 // Enumerated type to know the current type of a JsonVariant.
 // The value determines which member of JsonVariantContent is used.
 enum JsonVariantType {
@@ -23,5 +20,4 @@ enum JsonVariantType {
   JSON_OBJECT,
   JSON_FLOAT
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

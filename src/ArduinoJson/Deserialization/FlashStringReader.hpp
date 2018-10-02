@@ -6,8 +6,7 @@
 
 #if ARDUINOJSON_ENABLE_PROGMEM
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 class UnsafeFlashStringReader {
   const char* _ptr;
 
@@ -50,7 +49,6 @@ inline SafeFlashStringReader makeReader(const __FlashStringHelper* input,
                                         size_t size) {
   return SafeFlashStringReader(input, size);
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #endif

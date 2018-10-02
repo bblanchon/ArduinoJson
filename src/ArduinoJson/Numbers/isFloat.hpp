@@ -7,8 +7,7 @@
 #include <string.h>  // for strcmp
 #include "../Polyfills/ctype.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 inline bool isFloat(const char* s) {
   if (!s) return false;
@@ -34,5 +33,4 @@ inline bool isFloat(const char* s) {
 
   return *s == '\0';
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

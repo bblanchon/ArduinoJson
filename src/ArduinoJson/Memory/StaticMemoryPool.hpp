@@ -7,8 +7,7 @@
 #include "../Polyfills/mpl/max.hpp"
 #include "MemoryPool.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class StaticMemoryPoolBase : public MemoryPool {
  public:
@@ -117,8 +116,7 @@ class StaticMemoryPool : public StaticMemoryPoolBase {
  private:
   char _buffer[ACTUAL_CAPACITY];
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

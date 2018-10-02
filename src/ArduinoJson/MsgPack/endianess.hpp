@@ -7,8 +7,7 @@
 #include "../Polyfills/type_traits.hpp"
 #include "../Polyfills/utility.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 inline void fixEndianess(uint8_t* p, integral_constant<size_t, 8>) {
   swap(p[0], p[7]);
@@ -36,5 +35,4 @@ inline void fixEndianess(T& value) {
 #endif
 }
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

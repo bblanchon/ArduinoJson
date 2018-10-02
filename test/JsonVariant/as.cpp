@@ -147,7 +147,7 @@ TEST_CASE("JsonVariant::as()") {
     }
   }
 
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
   SECTION("Smallest int64 negative") {
     variant.set("-9223372036854775808");
     REQUIRE(variant.as<long long>() == -9223372036854775807 - 1);

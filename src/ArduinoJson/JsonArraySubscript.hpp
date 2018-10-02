@@ -12,8 +12,7 @@
 #pragma warning(disable : 4522)
 #endif
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
  public:
   FORCE_INLINE JsonArraySubscript(JsonArray array, size_t index)
@@ -100,17 +99,15 @@ inline const JsonArraySubscript JsonVariantSubscripts<TImpl>::operator[](
     size_t index) const {
   return impl()->template as<JsonArray>()[index];
 }
-}  // namespace Internals
 
-inline Internals::JsonArraySubscript JsonArray::operator[](size_t index) {
-  return Internals::JsonArraySubscript(*this, index);
+inline JsonArraySubscript JsonArray::operator[](size_t index) {
+  return JsonArraySubscript(*this, index);
 }
 
-inline const Internals::JsonArraySubscript JsonArray::operator[](
-    size_t index) const {
-  return Internals::JsonArraySubscript(*this, index);
+inline const JsonArraySubscript JsonArray::operator[](size_t index) const {
+  return JsonArraySubscript(*this, index);
 }
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #ifdef _MSC_VER
 #pragma warning(pop)

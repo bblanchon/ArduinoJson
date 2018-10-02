@@ -8,7 +8,7 @@
 #include "JsonVariant.hpp"
 #include "Memory/StaticMemoryPool.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <size_t CAPACITY>
 class StaticJsonDocument {
@@ -17,7 +17,7 @@ class StaticJsonDocument {
 
   StaticJsonDocument() : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
 
-  Internals::StaticMemoryPoolBase& memoryPool() {
+  StaticMemoryPoolBase& memoryPool() {
     return _memoryPool;
   }
 
@@ -27,19 +27,19 @@ class StaticJsonDocument {
   }
 
   template <typename T>
-  typename Internals::JsonVariantAs<T>::type as() const {
+  typename JsonVariantAs<T>::type as() const {
     return getVariant().template as<T>();
   }
 
   template <typename T>
-  typename Internals::JsonVariantTo<T>::type to() {
+  typename JsonVariantTo<T>::type to() {
     _memoryPool.clear();
     return getVariant().template to<T>();
   }
 
   void clear() {
     _memoryPool.clear();
-    _rootData.type = Internals::JSON_NULL;
+    _rootData.type = JSON_NULL;
   }
 
   size_t memoryUsage() const {
@@ -56,8 +56,8 @@ class StaticJsonDocument {
     return JsonVariant(&_memoryPool, &_rootData);
   }
 
-  mutable Internals::StaticMemoryPool<CAPACITY> _memoryPool;
-  mutable Internals::JsonVariantData _rootData;
+  mutable StaticMemoryPool<CAPACITY> _memoryPool;
+  mutable JsonVariantData _rootData;
 };
 
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

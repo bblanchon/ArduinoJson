@@ -9,10 +9,9 @@
 #include "Polyfills/type_traits.hpp"
 #include "Strings/StringTypes.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 class JsonArray;
 class JsonObject;
-namespace Internals {
 
 // Forward declarations.
 class JsonArraySubscript;
@@ -73,5 +72,4 @@ class JsonVariantSubscripts {
     return static_cast<const TImpl *>(this);
   }
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

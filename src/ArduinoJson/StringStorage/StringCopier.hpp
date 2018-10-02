@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TMemoryPool>
 class StringCopier {
@@ -21,5 +20,4 @@ class StringCopier {
  private:
   TMemoryPool* _memoryPool;
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

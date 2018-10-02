@@ -11,8 +11,7 @@
 #include "../Polyfills/attributes.hpp"
 #include "./EscapeSequence.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TWriter>
 class JsonWriter {
@@ -154,5 +153,4 @@ class JsonWriter {
  private:
   JsonWriter &operator=(const JsonWriter &);  // cannot be assigned
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

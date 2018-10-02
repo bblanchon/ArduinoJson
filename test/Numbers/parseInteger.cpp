@@ -6,7 +6,7 @@
 #include <ArduinoJson/Numbers/parseInteger.hpp>
 #include <catch.hpp>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 template <typename T>
 void check(const char* input, T expected) {

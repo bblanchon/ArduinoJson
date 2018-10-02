@@ -6,8 +6,7 @@
 
 #include "./DummyWriter.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename> class TSerializer, typename TSource>
 size_t measure(const TSource &source) {
@@ -17,5 +16,4 @@ size_t measure(const TSource &source) {
   return serializer.bytesWritten();
 }
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

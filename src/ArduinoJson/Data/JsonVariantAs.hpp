@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A metafunction that returns the type of the value returned by
 // JsonVariant::as<T>()
@@ -19,5 +18,4 @@ struct JsonVariantAs<char*> {
   typedef const char* type;
 };
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

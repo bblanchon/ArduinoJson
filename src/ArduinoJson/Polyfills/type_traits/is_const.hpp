@@ -6,8 +6,7 @@
 
 #include "integral_constant.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A meta-function that return the type T without the const modifier
 template <typename T>
@@ -15,5 +14,4 @@ struct is_const : false_type {};
 
 template <typename T>
 struct is_const<const T> : true_type {};
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

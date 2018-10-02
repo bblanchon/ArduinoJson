@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class ZeroTerminatedRamString {
  public:
@@ -49,5 +48,4 @@ struct IsString<TChar*> {
   static const bool value = sizeof(TChar) == 1;
 };
 
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

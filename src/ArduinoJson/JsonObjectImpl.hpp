@@ -7,7 +7,7 @@
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TString>
 inline JsonArray JsonObject::createNestedArray(const TString& key) {
@@ -30,4 +30,4 @@ inline JsonObject JsonObject::createNestedObject_impl(TStringRef key) {
   if (!_data) return JsonObject();
   return set(key).template to<JsonObject>();
 }
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

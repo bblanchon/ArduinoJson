@@ -7,8 +7,7 @@
 #include "./StringCopier.hpp"
 #include "./StringMover.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TMemoryPool, typename TInput, typename Enable = void>
 struct StringStorage {
@@ -40,5 +39,4 @@ typename StringStorage<TMemoryPool, TChar*>::type makeStringStorage(
     TMemoryPool& jb, TChar* input) {
   return StringStorage<TMemoryPool, TChar*>::create(jb, input);
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

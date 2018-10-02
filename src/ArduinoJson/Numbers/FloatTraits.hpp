@@ -9,8 +9,7 @@
 #include "../Configuration.hpp"
 #include "../Polyfills/math.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename T, size_t = sizeof(T)>
 struct FloatTraits {};
@@ -167,5 +166,4 @@ struct FloatTraits<T, 4 /*32bits*/> {
     return forge(0x7f800000);
   }
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

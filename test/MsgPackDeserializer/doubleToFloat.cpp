@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 template <typename T>
 static void check(const char* input, T expected) {
@@ -17,7 +17,7 @@ static void check(const char* input, T expected) {
   CHECK(actual == expected);
 }
 
-TEST_CASE("Internals::doubleToFloat()") {
+TEST_CASE("doubleToFloat()") {
   check("\x40\x09\x21\xCA\xC0\x83\x12\x6F", 3.1415f);
   check("\x00\x00\x00\x00\x00\x00\x00\x00", 0.0f);
   check("\x80\x00\x00\x00\x00\x00\x00\x00", -0.0f);

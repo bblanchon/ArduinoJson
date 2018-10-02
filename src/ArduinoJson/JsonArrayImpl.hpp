@@ -7,7 +7,7 @@
 #include "JsonArray.hpp"
 #include "JsonObject.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 inline JsonArray JsonArray::createNestedArray() {
   return add().to<JsonArray>();
@@ -16,4 +16,4 @@ inline JsonArray JsonArray::createNestedArray() {
 inline JsonObject JsonArray::createNestedObject() {
   return add().to<JsonObject>();
 }
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

@@ -14,8 +14,7 @@
 #include <string>
 #endif
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename>
 struct IsWriteableString : false_type {};
@@ -77,5 +76,4 @@ class DynamicStringWriter<std::string> {
   std::string *_str;
 };
 #endif
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

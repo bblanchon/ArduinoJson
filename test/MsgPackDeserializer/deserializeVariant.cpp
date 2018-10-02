@@ -63,7 +63,7 @@ TEST_CASE("deserialize MsgPack value") {
   }
 
   SECTION("uint 64") {
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
     check<uint64_t>("\xCF\x00\x00\x00\x00\x00\x00\x00\x00", 0U);
     check<uint64_t>("\xCF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF",
                     0xFFFFFFFFFFFFFFFFU);
@@ -94,7 +94,7 @@ TEST_CASE("deserialize MsgPack value") {
   }
 
   SECTION("int 64") {
-#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_INT64
+#if ARDUINOJSON_USE_LONG_LONG
     check<uint64_t>("\xD3\x00\x00\x00\x00\x00\x00\x00\x00", 0U);
     check<uint64_t>("\xD3\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF",
                     0xFFFFFFFFFFFFFFFFU);

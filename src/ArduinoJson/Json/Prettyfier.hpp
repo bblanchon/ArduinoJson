@@ -6,8 +6,7 @@
 
 #include "IndentedPrint.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // Converts a compact JSON string into an indented one.
 template <typename TWriter>
@@ -141,5 +140,4 @@ class Prettyfier {
   IndentedPrint<TWriter>& _sink;
   bool _inString;
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

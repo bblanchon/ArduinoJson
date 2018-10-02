@@ -6,12 +6,11 @@
 
 #include "JsonPair.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
 class JsonPairPtr {
  public:
-  JsonPairPtr(Internals::MemoryPool *memoryPool, Internals::Slot *slot)
-      : _pair(memoryPool, slot) {}
+  JsonPairPtr(MemoryPool *memoryPool, Slot *slot) : _pair(memoryPool, slot) {}
 
   const JsonPair *operator->() const {
     return &_pair;
@@ -29,8 +28,7 @@ class JsonObjectIterator {
  public:
   JsonObjectIterator() : _slot(0) {}
 
-  explicit JsonObjectIterator(Internals::MemoryPool *memoryPool,
-                              Internals::Slot *slot)
+  explicit JsonObjectIterator(MemoryPool *memoryPool, Slot *slot)
       : _memoryPool(memoryPool), _slot(slot) {}
 
   JsonPair operator*() const {
@@ -61,12 +59,12 @@ class JsonObjectIterator {
     return *this;
   }
 
-  Internals::Slot *internal() {
+  Slot *internal() {
     return _slot;
   }
 
  private:
-  Internals::MemoryPool *_memoryPool;
-  Internals::Slot *_slot;
+  MemoryPool *_memoryPool;
+  Slot *_slot;
 };
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

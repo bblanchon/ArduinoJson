@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // Decorator on top of Print to allow indented output.
 // This class is used by serializeJsonPretty() but can also be used
@@ -67,5 +66,4 @@ class IndentedPrint {
   static const int MAX_LEVEL = 15;    // because it's only 4 bits
   static const int MAX_TAB_SIZE = 7;  // because it's only 3 bits
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

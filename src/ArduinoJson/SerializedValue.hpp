@@ -6,9 +6,8 @@
 
 #include "Strings/StringTypes.hpp"
 
-namespace ArduinoJson {
+namespace ARDUINOJSON_NAMESPACE {
 
-namespace Internals {
 // A special type of data that can be used to insert pregenerated JSON portions.
 template <typename T>
 class SerializedValue {
@@ -51,20 +50,19 @@ class SerializedValue<TChar*> {
   TChar* _data;
   size_t _size;
 };
-}  // namespace Internals
 
 template <typename T>
-inline Internals::SerializedValue<T> serialized(T str) {
-  return Internals::SerializedValue<T>(str);
+inline SerializedValue<T> serialized(T str) {
+  return SerializedValue<T>(str);
 }
 
 template <typename TChar>
-inline Internals::SerializedValue<TChar*> serialized(TChar* p) {
-  return Internals::SerializedValue<TChar*>(p, Internals::makeString(p).size());
+inline SerializedValue<TChar*> serialized(TChar* p) {
+  return SerializedValue<TChar*>(p, makeString(p).size());
 }
 
 template <typename TChar>
-inline Internals::SerializedValue<TChar*> serialized(TChar* p, size_t n) {
-  return Internals::SerializedValue<TChar*>(p, n);
+inline SerializedValue<TChar*> serialized(TChar* p, size_t n) {
+  return SerializedValue<TChar*>(p, n);
 }
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

@@ -5,7 +5,7 @@
 #include <ArduinoJson/Numbers/FloatParts.hpp>
 #include <catch.hpp>
 
-using namespace ArduinoJson::Internals;
+using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("FloatParts<double>") {
   SECTION("1.7976931348623157E+308") {

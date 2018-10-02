@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 // A meta-function that return the type T without the reference modifier.
 template <typename T>
@@ -16,5 +15,4 @@ template <typename T>
 struct remove_reference<T&> {
   typedef T type;
 };
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

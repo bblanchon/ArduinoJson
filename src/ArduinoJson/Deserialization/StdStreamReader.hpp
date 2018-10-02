@@ -8,8 +8,7 @@
 
 #include <istream>
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class StdStreamReader {
   std::istream& _stream;
@@ -34,7 +33,6 @@ class StdStreamReader {
 inline StdStreamReader makeReader(std::istream& input) {
   return StdStreamReader(input);
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
 
 #endif

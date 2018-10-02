@@ -12,8 +12,7 @@
 #include "../Polyfills/type_traits.hpp"
 #include "./EscapeSequence.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
@@ -339,31 +338,26 @@ class JsonDeserializer {
   uint8_t _nestingLimit;
   char _current;
   bool _loaded;
-};  // namespace Internals
-}  // namespace Internals
+};
 
 template <typename TDocument, typename TInput>
 DeserializationError deserializeJson(TDocument &doc, const TInput &input) {
-  using namespace Internals;
   return deserialize<JsonDeserializer>(doc, input);
 }
 
 template <typename TDocument, typename TInput>
 DeserializationError deserializeJson(TDocument &doc, TInput *input) {
-  using namespace Internals;
   return deserialize<JsonDeserializer>(doc, input);
 }
 
 template <typename TDocument, typename TInput>
 DeserializationError deserializeJson(TDocument &doc, TInput *input,
                                      size_t inputSize) {
-  using namespace Internals;
   return deserialize<JsonDeserializer>(doc, input, inputSize);
 }
 
 template <typename TDocument, typename TInput>
 DeserializationError deserializeJson(TDocument &doc, TInput &input) {
-  using namespace Internals;
   return deserialize<JsonDeserializer>(doc, input);
 }
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

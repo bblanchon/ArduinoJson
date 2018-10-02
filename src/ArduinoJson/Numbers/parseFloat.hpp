@@ -8,8 +8,7 @@
 #include "../Polyfills/ctype.hpp"
 #include "../Polyfills/math.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename T>
 inline T parseFloat(const char* s) {
@@ -86,5 +85,4 @@ inline T parseFloat(const char* s) {
 
   return negative_result ? -result : result;
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

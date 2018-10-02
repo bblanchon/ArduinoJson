@@ -9,8 +9,7 @@
 #include "JsonVariantOr.hpp"
 #include "JsonVariantSubscripts.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TImpl>
 class JsonVariantBase : public JsonVariantCasts<TImpl>,
@@ -18,5 +17,4 @@ class JsonVariantBase : public JsonVariantCasts<TImpl>,
                         public JsonVariantOr<TImpl>,
                         public JsonVariantSubscripts<TImpl>,
                         public JsonVariantTag {};
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

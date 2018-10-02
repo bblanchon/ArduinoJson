@@ -4,8 +4,7 @@
 
 #pragma once
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class FixedSizeFlashString {
  public:
@@ -43,5 +42,4 @@ inline FixedSizeFlashString makeString(const __FlashStringHelper* str,
                                        size_t sz) {
   return FixedSizeFlashString(str, sz);
 }
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE

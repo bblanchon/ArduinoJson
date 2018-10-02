@@ -6,12 +6,10 @@
 
 #include "../Polyfills/type_traits.hpp"
 
-namespace ArduinoJson {
-namespace Internals {
+namespace ARDUINOJSON_NAMESPACE {
 
 class JsonVariantTag {};
 
 template <typename T>
 struct IsVariant : is_base_of<JsonVariantTag, T> {};
-}  // namespace Internals
-}  // namespace ArduinoJson
+}  // namespace ARDUINOJSON_NAMESPACE
