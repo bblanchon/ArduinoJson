@@ -15,6 +15,9 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
+  typedef typename remove_reference<TStringStorage>::type::StringBuilder
+      StringBuilder;
+
  public:
   MsgPackDeserializer(MemoryPool &memoryPool, TReader reader,
                       TStringStorage stringStorage, uint8_t nestingLimit)
@@ -218,15 +221,14 @@ class MsgPackDeserializer {
   }
 
   DeserializationError readString(JsonVariant variant, size_t n) {
-    typename remove_reference<TStringStorage>::type::String str =
-        _stringStorage.startString();
+    StringBuilder str = _stringStorage.startString();
     for (; n; --n) {
       uint8_t c;
       if (!readBytes(c)) return DeserializationError::IncompleteInput;
       str.append(static_cast<char>(c));
     }
-    const char *s = str.c_str();
-    if (s == NULL) return DeserializationError::NoMemory;
+    StringInMemoryPool s = str.complete();
+    if (s.isNull()) return DeserializationError::NoMemory;
     variant.set(s);
     return DeserializationError::Ok;
   }
@@ -281,7 +283,7 @@ class MsgPackDeserializer {
       if (err) return err;
       if (!key.is<char *>()) return DeserializationError::NotSupported;
 
-      JsonVariant value = object.set(key.as<char *>());
+      JsonVariant value = object.set(StringInMemoryPool(key.as<char *>()));
       if (value.isInvalid()) return DeserializationError::NoMemory;
 
       err = parse(value);

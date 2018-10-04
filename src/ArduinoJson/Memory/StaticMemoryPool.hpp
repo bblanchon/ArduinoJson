@@ -5,15 +5,16 @@
 #pragma once
 
 #include "../Polyfills/mpl/max.hpp"
+#include "../Strings/StringInMemoryPool.hpp"
 #include "MemoryPool.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
 class StaticMemoryPoolBase : public MemoryPool {
  public:
-  class String {
+  class StringBuilder {
    public:
-    String(StaticMemoryPoolBase* parent) : _parent(parent) {
+    explicit StringBuilder(StaticMemoryPoolBase* parent) : _parent(parent) {
       _start = parent->_buffer + parent->_size;
     }
 
@@ -24,7 +25,7 @@ class StaticMemoryPoolBase : public MemoryPool {
       }
     }
 
-    const char* c_str() const {
+    StringInMemoryPool complete() const {
       if (_parent->canAlloc(1)) {
         char* last = static_cast<char*>(_parent->doAlloc(1));
         *last = '\0';
@@ -65,8 +66,8 @@ class StaticMemoryPoolBase : public MemoryPool {
     _size = 0;
   }
 
-  String startString() {
-    return String(this);
+  StringBuilder startString() {
+    return StringBuilder(this);
   }
 
  protected:

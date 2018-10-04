@@ -17,6 +17,8 @@ struct NoMemoryAllocator {
 TEST_CASE("DynamicMemoryPool no memory") {
   DynamicMemoryPoolBase<NoMemoryAllocator> _memoryPool;
 
+  typedef DynamicMemoryPoolBase<NoMemoryAllocator>::StringBuilder StringBuilder;
+
   SECTION("FixCodeCoverage") {
     // call this function to fix code coverage
     NoMemoryAllocator().deallocate(NULL);
@@ -33,9 +35,8 @@ TEST_CASE("DynamicMemoryPool no memory") {
   // }
 
   SECTION("startString()") {
-    DynamicMemoryPoolBase<NoMemoryAllocator>::String str =
-        _memoryPool.startString();
+    StringBuilder str = _memoryPool.startString();
     str.append('!');
-    REQUIRE(0 == str.c_str());
+    REQUIRE(str.complete().isNull());
   }
 }

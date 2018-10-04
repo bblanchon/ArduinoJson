@@ -8,42 +8,44 @@
 using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("StaticMemoryPool::startString()") {
+  typedef StaticMemoryPoolBase::StringBuilder StringBuilder;
+
   SECTION("WorksWhenBufferIsBigEnough") {
     StaticMemoryPool<6> memoryPool;
 
-    StaticMemoryPoolBase::String str = memoryPool.startString();
+    StringBuilder str = memoryPool.startString();
     str.append('h');
     str.append('e');
     str.append('l');
     str.append('l');
     str.append('o');
 
-    REQUIRE(std::string("hello") == str.c_str());
+    REQUIRE(str.complete().equals("hello"));
   }
 
   SECTION("ReturnsNullWhenTooSmall") {
     StaticMemoryPool<5> memoryPool;
 
-    StaticMemoryPoolBase::String str = memoryPool.startString();
+    StringBuilder str = memoryPool.startString();
     str.append('h');
     str.append('e');
     str.append('l');
     str.append('l');
     str.append('o');
 
-    REQUIRE(0 == str.c_str());
+    REQUIRE(str.complete().isNull());
   }
 
   SECTION("SizeIncreases") {
     StaticMemoryPool<5> memoryPool;
 
-    StaticMemoryPoolBase::String str = memoryPool.startString();
+    StringBuilder str = memoryPool.startString();
     REQUIRE(0 == memoryPool.size());
 
     str.append('h');
     REQUIRE(1 == memoryPool.size());
 
-    str.c_str();
+    str.complete();
     REQUIRE(2 == memoryPool.size());
   }
 }

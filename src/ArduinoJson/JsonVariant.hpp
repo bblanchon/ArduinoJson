@@ -125,32 +125,14 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   template <typename T>
   FORCE_INLINE bool set(const T &value,
                         typename enable_if<IsString<T>::value>::type * = 0) {
-    if (!_data) return false;
-    const char *dup = makeString(value).save(_memoryPool);
-    if (dup) {
-      _data->type = JSON_OWNED_STRING;
-      _data->content.asString = dup;
-      return true;
-    } else {
-      _data->type = JSON_NULL;
-      return false;
-    }
+    return setString(makeString(value));
   }
 
   // set(char*)
   template <typename T>
   FORCE_INLINE bool set(T *value,
                         typename enable_if<IsString<T *>::value>::type * = 0) {
-    if (!_data) return false;
-    const char *dup = makeString(value).save(_memoryPool);
-    if (dup) {
-      _data->type = JSON_OWNED_STRING;
-      _data->content.asString = dup;
-      return true;
-    } else {
-      _data->type = JSON_NULL;
-      return false;
-    }
+    return setString(makeString(value));
   }
 
   // set(const char*);
@@ -158,6 +140,14 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
     if (!_data) return false;
     _data->type = JSON_LINKED_STRING;
     _data->content.asString = value;
+    return true;
+  }
+
+  // set(const char*);
+  FORCE_INLINE bool set(StringInMemoryPool value) {
+    if (!_data) return false;
+    _data->type = JSON_OWNED_STRING;
+    _data->content.asString = value.save(_memoryPool);
     return true;
   }
 
@@ -367,6 +357,20 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type to();
 
  private:
+  template <typename TStringRef>
+  bool setString(TStringRef value) {
+    if (!_data) return false;
+    const char *dup = value.save(_memoryPool);
+    if (dup) {
+      _data->type = JSON_OWNED_STRING;
+      _data->content.asString = dup;
+      return true;
+    } else {
+      _data->type = JSON_NULL;
+      return false;
+    }
+  }
+
   MemoryPool *_memoryPool;
   JsonVariantData *_data;
 };

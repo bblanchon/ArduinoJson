@@ -7,43 +7,45 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
+typedef DynamicMemoryPool::StringBuilder StringBuilder;
+
 TEST_CASE("DynamicMemoryPool::startString()") {
   SECTION("WorksWhenBufferIsBigEnough") {
     DynamicMemoryPool memoryPool(6);
 
-    DynamicMemoryPool::String str = memoryPool.startString();
+    StringBuilder str = memoryPool.startString();
     str.append('h');
     str.append('e');
     str.append('l');
     str.append('l');
     str.append('o');
 
-    REQUIRE(std::string("hello") == str.c_str());
+    REQUIRE(str.complete().equals("hello"));
   }
 
   SECTION("GrowsWhenBufferIsTooSmall") {
     DynamicMemoryPool memoryPool(5);
 
-    DynamicMemoryPool::String str = memoryPool.startString();
+    StringBuilder str = memoryPool.startString();
     str.append('h');
     str.append('e');
     str.append('l');
     str.append('l');
     str.append('o');
 
-    REQUIRE(std::string("hello") == str.c_str());
+    REQUIRE(str.complete().equals("hello"));
   }
 
   SECTION("SizeIncreases") {
     DynamicMemoryPool memoryPool(5);
 
-    DynamicMemoryPool::String str = memoryPool.startString();
+    StringBuilder str = memoryPool.startString();
     REQUIRE(0 == memoryPool.size());
 
     str.append('h');
     REQUIRE(1 == memoryPool.size());
 
-    str.c_str();
+    str.complete();
     REQUIRE(2 == memoryPool.size());
   }
 }

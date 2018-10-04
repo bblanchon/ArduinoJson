@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "../Strings/StringInMemoryPool.hpp"
 #include "MemoryPool.hpp"
 
 #include <stdlib.h>
@@ -77,9 +78,9 @@ class DynamicMemoryPoolBase : public MemoryPool {
     _head = 0;
   }
 
-  class String {
+  class StringBuilder {
    public:
-    String(DynamicMemoryPoolBase* parent)
+    explicit StringBuilder(DynamicMemoryPoolBase* parent)
         : _parent(parent), _start(NULL), _length(0) {}
 
     void append(char c) {
@@ -97,7 +98,7 @@ class DynamicMemoryPoolBase : public MemoryPool {
       _length++;
     }
 
-    const char* c_str() {
+    StringInMemoryPool complete() {
       append(0);
       return _start;
     }
@@ -108,8 +109,8 @@ class DynamicMemoryPoolBase : public MemoryPool {
     size_t _length;
   };
 
-  String startString() {
-    return String(this);
+  StringBuilder startString() {
+    return StringBuilder(this);
   }
 
  private:

@@ -9,15 +9,15 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TChar>
 class StringMover {
  public:
-  class String {
+  class StringBuilder {
    public:
-    String(TChar** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
+    StringBuilder(TChar** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
 
     void append(char c) {
       *(*_writePtr)++ = TChar(c);
     }
 
-    const char* c_str() const {
+    StringInMemoryPool complete() const {
       *(*_writePtr)++ = 0;
       return reinterpret_cast<const char*>(_startPtr);
     }
@@ -29,8 +29,8 @@ class StringMover {
 
   StringMover(TChar* ptr) : _ptr(ptr) {}
 
-  String startString() {
-    return String(&_ptr);
+  StringBuilder startString() {
+    return StringBuilder(&_ptr);
   }
 
  private:

@@ -6,6 +6,8 @@ HEAD
 
 * Added implicit conversion from `JsonArray` and `JsonObject` to `JsonVariant`
 * Allow mixed configuration in compilation units (issue #809)
+* Fixed object keys not being duplicated
+* `JsonPair::key()` now returns a `JsonKey`
 
 v6.4.0-beta (2018-09-11)
 -----------

@@ -4,24 +4,17 @@
 
 #pragma once
 
+#include "ZeroTerminatedRamStringConst.hpp"
+
 namespace ARDUINOJSON_NAMESPACE {
 
-class ZeroTerminatedRamString {
+class ZeroTerminatedRamString : public ZeroTerminatedRamStringConst {
  public:
-  ZeroTerminatedRamString(const char* str) : _str(str) {}
+  ZeroTerminatedRamString(const char* str)
+      : ZeroTerminatedRamStringConst(str) {}
 
-  bool equals(const char* expected) const {
-    const char* actual = reinterpret_cast<const char*>(_str);
-    if (!actual || !expected) return actual == expected;
-    return strcmp(actual, expected) == 0;
-  }
-
-  bool is_null() const {
-    return !_str;
-  }
-
-  template <typename Buffer>
-  const char* save(Buffer* memoryPool) const {
+  template <typename TMemoryPool>
+  const char* save(TMemoryPool* memoryPool) const {
     if (!_str) return NULL;
     size_t n = size() + 1;
     void* dup = memoryPool->alloc(n);
@@ -29,18 +22,15 @@ class ZeroTerminatedRamString {
     memcpy(dup, _str, n);
     return static_cast<const char*>(dup);
   }
-
-  size_t size() const {
-    return strlen(reinterpret_cast<const char*>(_str));
-  }
-
- private:
-  const char* _str;
 };
 
 template <typename TChar>
 inline ZeroTerminatedRamString makeString(const TChar* str) {
   return ZeroTerminatedRamString(reinterpret_cast<const char*>(str));
+}
+
+inline ZeroTerminatedRamString makeString(char* str) {
+  return ZeroTerminatedRamString(str);
 }
 
 template <typename TChar>

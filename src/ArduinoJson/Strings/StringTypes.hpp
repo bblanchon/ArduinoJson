@@ -18,7 +18,9 @@ struct IsString<T&> : IsString<T> {};
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #include "FixedSizeRamString.hpp"
+#include "StringInMemoryPool.hpp"
 #include "ZeroTerminatedRamString.hpp"
+#include "ZeroTerminatedRamStringConst.hpp"
 
 #if ARDUINOJSON_ENABLE_STD_STRING
 #include "StlString.hpp"

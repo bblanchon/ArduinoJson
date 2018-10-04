@@ -12,16 +12,16 @@ class ArduinoString {
  public:
   ArduinoString(const ::String& str) : _str(&str) {}
 
-  template <typename Buffer>
-  const char* save(Buffer* memoryPool) const {
-    if (is_null()) return NULL;
+  template <typename TMemoryPool>
+  const char* save(TMemoryPool* memoryPool) const {
+    if (isNull()) return NULL;
     size_t n = _str->length() + 1;
     void* dup = memoryPool->alloc(n);
     if (dup != NULL) memcpy(dup, _str->c_str(), n);
     return static_cast<const char*>(dup);
   }
 
-  bool is_null() const {
+  bool isNull() const {
     // Arduino's String::c_str() can return NULL
     return !_str->c_str();
   }

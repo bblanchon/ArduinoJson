@@ -18,12 +18,12 @@ class FixedSizeRamString {
     return strcmp(actual, expected) == 0;
   }
 
-  bool is_null() const {
+  bool isNull() const {
     return !_str;
   }
 
-  template <typename Buffer>
-  const char* save(Buffer* memoryPool) const {
+  template <typename TMemoryPool>
+  const char* save(TMemoryPool* memoryPool) const {
     if (!_str) return NULL;
     void* dup = memoryPool->alloc(_size);
     if (!dup) return NULL;

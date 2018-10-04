@@ -16,6 +16,9 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
+  typedef typename remove_reference<TStringStorage>::type::StringBuilder
+      StringBuilder;
+
  public:
   JsonDeserializer(MemoryPool &memoryPool, TReader reader,
                    TStringStorage stringStorage, uint8_t nestingLimit)
@@ -121,8 +124,8 @@ class JsonDeserializer {
     // Read each key value pair
     for (;;) {
       // Parse key
-      const char *key;
-      err = parseKey(&key);
+      StringInMemoryPool key;
+      err = parseKey(key);
       if (err) return err;
 
       // Skip spaces
@@ -162,7 +165,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseKey(const char **key) {
+  DeserializationError parseKey(StringInMemoryPool &key) {
     if (isQuote(current())) {
       return parseQuotedString(key);
     } else {
@@ -171,18 +174,16 @@ class JsonDeserializer {
   }
 
   DeserializationError parseStringValue(JsonVariant variant) {
-    const char *value;
-    DeserializationError err = parseQuotedString(&value);
+    StringInMemoryPool value;
+    DeserializationError err = parseQuotedString(value);
     if (err) return err;
     variant.set(value);
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseQuotedString(const char **result) {
-    typename remove_reference<TStringStorage>::type::String str =
-        _stringStorage.startString();
-
-    char stopChar = current();
+  DeserializationError parseQuotedString(StringInMemoryPool &result) {
+    StringBuilder str = _stringStorage.startString();
+    const char stopChar = current();
 
     move();
     for (;;) {
@@ -205,14 +206,13 @@ class JsonDeserializer {
       str.append(c);
     }
 
-    *result = str.c_str();
-    if (*result == NULL) return DeserializationError::NoMemory;
+    result = str.complete();
+    if (result.isNull()) return DeserializationError::NoMemory;
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseNonQuotedString(const char **result) {
-    typename remove_reference<TStringStorage>::type::String str =
-        _stringStorage.startString();
+  DeserializationError parseNonQuotedString(StringInMemoryPool &result) {
+    StringBuilder str = _stringStorage.startString();
 
     char c = current();
     if (c == '\0') return DeserializationError::IncompleteInput;
@@ -227,8 +227,8 @@ class JsonDeserializer {
       return DeserializationError::InvalidInput;
     }
 
-    *result = str.c_str();
-    if (*result == NULL) return DeserializationError::NoMemory;
+    result = str.complete();
+    if (result.isNull()) return DeserializationError::NoMemory;
     return DeserializationError::Ok;
   }
 

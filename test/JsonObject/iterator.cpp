@@ -16,11 +16,11 @@ TEST_CASE("JsonObject::begin()/end()") {
   SECTION("NonConstIterator") {
     JsonObject::iterator it = obj.begin();
     REQUIRE(obj.end() != it);
-    REQUIRE_THAT(it->key(), Equals("ab"));
+    REQUIRE(it->key() == "ab");
     REQUIRE(12 == it->value());
     ++it;
     REQUIRE(obj.end() != it);
-    REQUIRE_THAT(it->key(), Equals("cd"));
+    REQUIRE(it->key() == "cd");
     REQUIRE(34 == it->value());
     ++it;
     REQUIRE(obj.end() == it);
@@ -42,7 +42,7 @@ TEST_CASE("JsonObject::begin()/end()") {
   // }
 
   SECTION("Dereferencing end() is safe") {
-    REQUIRE(obj.end()->key() == 0);
+    REQUIRE(obj.end()->key().isNull());
     REQUIRE(obj.end()->value().isNull());
   }
 }

@@ -11,9 +11,9 @@ class StringCopier {
  public:
   StringCopier(TMemoryPool& memoryPool) : _memoryPool(&memoryPool) {}
 
-  typedef typename TMemoryPool::String String;
+  typedef typename TMemoryPool::StringBuilder StringBuilder;
 
-  String startString() {
+  StringBuilder startString() {
     return _memoryPool->startString();
   }
 

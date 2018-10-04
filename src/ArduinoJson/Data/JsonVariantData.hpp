@@ -4,14 +4,60 @@
 
 #pragma once
 
-#include "JsonVariantContent.hpp"
-#include "JsonVariantType.hpp"
+#include <stdlib.h>  // size_t
+
+#include "JsonFloat.hpp"
+#include "JsonInteger.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
+enum JsonVariantType {
+  JSON_NULL,
+  JSON_LINKED_RAW,
+  JSON_OWNED_RAW,
+  JSON_LINKED_STRING,
+  JSON_OWNED_STRING,
+  JSON_BOOLEAN,
+  JSON_POSITIVE_INTEGER,
+  JSON_NEGATIVE_INTEGER,
+  JSON_ARRAY,
+  JSON_OBJECT,
+  JSON_FLOAT
+};
+
+struct JsonObjectData {
+  struct Slot *head;
+  struct Slot *tail;
+};
+
+struct JsonArrayData {
+  struct Slot *head;
+  struct Slot *tail;
+};
+
+struct RawData {
+  const char *data;
+  size_t size;
+};
+
+// A union that defines the actual content of a JsonVariantData.
+// The enum JsonVariantType determines which member is in use.
+union JsonVariantContent {
+  JsonFloat asFloat;
+  JsonUInt asInteger;
+  JsonArrayData asArray;
+  JsonObjectData asObject;
+  const char *asString;
+  struct {
+    const char *data;
+    size_t size;
+  } asRaw;
+};
+
 // this struct must be a POD type to prevent error calling offsetof on clang
 struct JsonVariantData {
-  JsonVariantType type;
+  bool keyIsStatic : 1;
+  JsonVariantType type : 7;
   JsonVariantContent content;
 };
 

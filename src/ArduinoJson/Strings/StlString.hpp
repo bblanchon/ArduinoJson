@@ -12,15 +12,15 @@ class StlString {
  public:
   StlString(const std::string& str) : _str(&str) {}
 
-  template <typename Buffer>
-  const char* save(Buffer* memoryPool) const {
+  template <typename TMemoryPool>
+  const char* save(TMemoryPool* memoryPool) const {
     size_t n = _str->length() + 1;
     void* dup = memoryPool->alloc(n);
     if (dup != NULL) memcpy(dup, _str->c_str(), n);
     return static_cast<const char*>(dup);
   }
 
-  bool is_null() const {
+  bool isNull() const {
     return false;
   }
 

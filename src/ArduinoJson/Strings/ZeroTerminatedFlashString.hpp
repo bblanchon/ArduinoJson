@@ -16,12 +16,12 @@ class ZeroTerminatedFlashString {
     return strcmp_P(expected, actual) == 0;
   }
 
-  bool is_null() const {
+  bool isNull() const {
     return !_str;
   }
 
-  template <typename Buffer>
-  const char* save(Buffer* memoryPool) const {
+  template <typename TMemoryPool>
+  const char* save(TMemoryPool* memoryPool) const {
     if (!_str) return NULL;
     size_t n = size() + 1;  // copy the terminator
     void* dup = memoryPool->alloc(n);

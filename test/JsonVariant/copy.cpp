@@ -13,21 +13,21 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
   SECTION("stores JsonArray by copy") {
     JsonArray arr = doc2.to<JsonArray>();
-
     arr.add(42);
-    var1.set(doc2.as<JsonVariant>());
-    arr[0] = 666;
 
+    var1.set(arr);
+
+    arr[0] = 666;
     REQUIRE(var1.as<std::string>() == "[42]");
   }
 
   SECTION("stores JsonObject by copy") {
     JsonObject obj = doc2.to<JsonObject>();
-
     obj["value"] = 42;
-    var1.set(doc2.as<JsonVariant>());
-    obj["value"] = 666;
 
+    var1.set(obj);
+
+    obj["value"] = 666;
     REQUIRE(var1.as<std::string>() == "{\"value\":42}");
   }
 
