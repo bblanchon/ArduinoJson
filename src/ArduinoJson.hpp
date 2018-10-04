@@ -6,16 +6,13 @@
 
 #include "ArduinoJson/Namespace.hpp"
 
-#include "ArduinoJson/DynamicJsonDocument.hpp"
-#include "ArduinoJson/StaticJsonDocument.hpp"
-
-#include "ArduinoJson/JsonObjectImpl.hpp"
-
 #include "ArduinoJson/JsonArray.hpp"
+#include "ArduinoJson/JsonDocument.hpp"
 #include "ArduinoJson/JsonObject.hpp"
 
 #include "ArduinoJson/JsonArrayImpl.hpp"
 #include "ArduinoJson/JsonArraySubscript.hpp"
+#include "ArduinoJson/JsonObjectImpl.hpp"
 #include "ArduinoJson/JsonObjectSubscript.hpp"
 #include "ArduinoJson/JsonVariantImpl.hpp"
 

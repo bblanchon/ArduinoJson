@@ -7,7 +7,7 @@
 #include "../Strings/StringInMemoryPool.hpp"
 #include "MemoryPool.hpp"
 
-#include <stdlib.h>
+#include <stdlib.h>  // malloc, free
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -50,6 +50,10 @@ class DynamicMemoryPoolBase : public MemoryPool {
 
   ~DynamicMemoryPoolBase() {
     clear();
+  }
+
+  void reserve(size_t capacity) {
+    _nextBlockCapacity = capacity;
   }
 
   // Gets the number of bytes occupied in the memoryPool

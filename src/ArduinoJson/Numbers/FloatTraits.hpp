@@ -4,8 +4,8 @@
 
 #pragma once
 
+#include <stddef.h>  // for size_t
 #include <stdint.h>
-#include <stdlib.h>  // for size_t
 #include "../Configuration.hpp"
 #include "../Polyfills/math.hpp"
 

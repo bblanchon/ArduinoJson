@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <stdlib.h>
-
 #include "../Configuration.hpp"
 #include "../Polyfills/ctype.hpp"
 

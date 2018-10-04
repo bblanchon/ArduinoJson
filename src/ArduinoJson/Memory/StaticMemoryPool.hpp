@@ -40,9 +40,6 @@ class StaticMemoryPoolBase : public MemoryPool {
     char* _start;
   };
 
-  StaticMemoryPoolBase(char* memoryPool, size_t capa)
-      : _buffer(memoryPool), _capacity(capa), _size(0) {}
-
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
     return _capacity;
@@ -71,6 +68,9 @@ class StaticMemoryPoolBase : public MemoryPool {
   }
 
  protected:
+  StaticMemoryPoolBase(char* memoryPool, size_t capa)
+      : _buffer(memoryPool), _capacity(capa), _size(0) {}
+
   ~StaticMemoryPoolBase() {}
 
  private:

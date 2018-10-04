@@ -6,6 +6,8 @@
 
 #include "../Configuration.hpp"
 
+#include <stdint.h>  // int64_t
+
 namespace ARDUINOJSON_NAMESPACE {
 
 #if ARDUINOJSON_USE_LONG_LONG

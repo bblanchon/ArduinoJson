@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <stdlib.h>  // for size_t
+#include <stddef.h>  // for size_t
 
 namespace ARDUINOJSON_NAMESPACE {
 

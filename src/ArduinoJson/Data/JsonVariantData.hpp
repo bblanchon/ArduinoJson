@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <stdlib.h>  // size_t
+#include <stddef.h>  // ptrdiff_t, size_t
 
 #include "JsonFloat.hpp"
 #include "JsonInteger.hpp"
