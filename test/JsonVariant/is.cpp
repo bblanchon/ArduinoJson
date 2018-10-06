@@ -58,6 +58,7 @@ void checkIsInteger(JsonVariant var) {
 
 void checkIsString(JsonVariant var) {
   REQUIRE(var.is<const char*>());
+  REQUIRE(var.is<std::string>());
 
   REQUIRE_FALSE(var.is<bool>());
   REQUIRE_FALSE(var.is<int>());

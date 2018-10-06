@@ -274,9 +274,11 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   //
   // bool is<const char*>() const;
   // bool is<char*>() const;
+  // bool is<std::string>() const;
   template <typename T>
   typename Internals::EnableIf<Internals::IsSame<T, const char *>::value ||
-                                   Internals::IsSame<T, char *>::value,
+                                   Internals::IsSame<T, char *>::value ||
+                                   Internals::StringTraits<T>::has_append,
                                bool>::type
   is() const {
     return variantIsString();
@@ -352,4 +354,4 @@ DEPRECATED("Decimal places are ignored, use the double value instead")
 inline JsonVariant double_with_n_digits(double value, uint8_t) {
   return JsonVariant(value);
 }
-}
+}  // namespace ArduinoJson

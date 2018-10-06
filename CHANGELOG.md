@@ -6,6 +6,7 @@ HEAD
 
 * Improved float serialization when `-fsingle-precision-constant` is used
 * Fixed `JsonVariant::is<int>()` that returned true for empty strings
+* Fixed `JsonVariant::is<String>()` (closes #763)
 
 v5.13.2
 -------
