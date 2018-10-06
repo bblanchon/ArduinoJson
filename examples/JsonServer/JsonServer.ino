@@ -98,12 +98,12 @@ void loop() {
 // See also
 // --------
 //
-// The website arduinojson.org contains the documentation for all the functions
+// https://arduinojson.org/ contains the documentation for all the functions
 // used above. It also includes an FAQ that will help you solve any
 // serialization problem.
-// Please check it out at: https://arduinojson.org/
 //
 // The book "Mastering ArduinoJson" contains a tutorial on serialization.
 // It begins with a simple example, then adds more features like serializing
 // directly to a file or an HTTP client.
-// Please check it out at: https://arduinojson.org/book/
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤

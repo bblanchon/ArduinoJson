@@ -67,12 +67,12 @@ void loop() {
 // See also
 // --------
 //
-// The website arduinojson.org contains the documentation for all the functions
+// https://arduinojson.org/ contains the documentation for all the functions
 // used above. It also includes an FAQ that will help you solve any
 // deserialization problem.
-// Please check it out at: https://arduinojson.org/
 //
 // The book "Mastering ArduinoJson" contains a tutorial on deserialization.
 // It begins with a simple example, like the one above, and then adds more
 // features like deserializing directly from a file or an HTTP request.
-// Please check it out at: https://arduinojson.org/book/
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤

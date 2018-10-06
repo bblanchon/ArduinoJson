@@ -100,13 +100,13 @@ void loop() {
 // See also
 // --------
 //
-// The website arduinojson.org contains the documentation for all the functions
+// https://arduinojson.org/ contains the documentation for all the functions
 // used above. It also includes an FAQ that will help you solve any
 // serialization  problem.
-// Please check it out at: https://arduinojson.org/
 //
 // The book "Mastering ArduinoJson" contains a tutorial on deserialization
 // showing how to parse the response from Yahoo Weather. In the last chapter,
 // it shows how to parse the huge documents from OpenWeatherMap
 // and Weather Underground.
-// Please check it out at: https://arduinojson.org/book/
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤
