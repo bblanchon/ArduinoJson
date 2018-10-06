@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.13.3
+-------
 
 * Improved float serialization when `-fsingle-precision-constant` is used
 * Fixed `JsonVariant::is<int>()` that returned true for empty strings
