@@ -8,6 +8,7 @@ HEAD
 * Allow mixed configuration in compilation units (issue #809)
 * Fixed object keys not being duplicated
 * `JsonPair::key()` now returns a `JsonKey`
+* Increased the default capacity of `DynamicJsonDocument`
 
 v6.4.0-beta (2018-09-11)
 -----------

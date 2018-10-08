@@ -45,7 +45,7 @@ class DynamicMemoryPoolBase : public MemoryPool {
  public:
   enum { EmptyBlockSize = sizeof(EmptyBlock) };
 
-  DynamicMemoryPoolBase(size_t initialSize = 256)
+  DynamicMemoryPoolBase(size_t initialSize = ARDUINOJSON_DEFAULT_POOL_SIZE)
       : _head(NULL), _nextBlockCapacity(initialSize) {}
 
   ~DynamicMemoryPoolBase() {
