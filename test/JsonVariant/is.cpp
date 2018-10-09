@@ -79,6 +79,7 @@ void checkIsString(const char *value) {
   var.set(value);
 
   REQUIRE(var.is<const char *>());
+  REQUIRE(var.is<std::string>());
 
   REQUIRE_FALSE(var.is<bool>());
   REQUIRE_FALSE(var.is<int>());

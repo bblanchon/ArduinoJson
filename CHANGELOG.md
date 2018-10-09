@@ -9,6 +9,7 @@ HEAD
 * Fixed object keys not being duplicated
 * `JsonPair::key()` now returns a `JsonKey`
 * Increased the default capacity of `DynamicJsonDocument`
+* Fixed `JsonVariant::is<String>()` (closes #763)
 
 v6.4.0-beta (2018-09-11)
 -----------
@@ -87,6 +88,7 @@ v6.2.0-beta (2018-07-12)
 -----------
 
 * Disabled lazy number deserialization (issue #772)
+* Fixed `JsonVariant::is<int>()` that returned true for empty strings
 * Improved float serialization when `-fsingle-precision-constant` is used
 * Renamed function `RawJson()` to `serialized()`
 * `serializeMsgPack()` now supports values marked with `serialized()`

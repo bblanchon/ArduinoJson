@@ -305,9 +305,13 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   //
   // bool is<const char*>() const;
   // bool is<char*>() const;
+  // bool is<std::string>() const;
+  // bool is<String>() const;
   template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<T, const char *>::value || is_same<T, char *>::value, bool>::type
+  FORCE_INLINE typename enable_if<is_same<T, const char *>::value ||
+                                      is_same<T, char *>::value ||
+                                      IsWriteableString<T>::value,
+                                  bool>::type
   is() const {
     return _data && (_data->type == JSON_LINKED_STRING ||
                      _data->type == JSON_OWNED_STRING);
