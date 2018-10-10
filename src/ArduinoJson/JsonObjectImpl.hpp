@@ -11,23 +11,21 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TString>
 inline JsonArray JsonObject::createNestedArray(const TString& key) {
-  return createNestedArray_impl<const TString&>(key);
+  return createNestedArray_impl(makeString(key));
 }
 
 template <typename TString>
 inline JsonArray JsonObject::createNestedArray(TString* key) {
-  return createNestedArray_impl<TString*>(key);
+  return createNestedArray_impl(makeString(key));
 }
 
 template <typename TStringRef>
 inline JsonArray JsonObject::createNestedArray_impl(TStringRef key) {
-  if (!_data) return JsonArray();
-  return set(key).template to<JsonArray>();
+  return set_impl(key).template to<JsonArray>();
 }
 
 template <typename TStringRef>
 inline JsonObject JsonObject::createNestedObject_impl(TStringRef key) {
-  if (!_data) return JsonObject();
-  return set(key).template to<JsonObject>();
+  return set_impl(key).template to<JsonObject>();
 }
 }  // namespace ARDUINOJSON_NAMESPACE

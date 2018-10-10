@@ -43,14 +43,14 @@ class JsonObject {
   // TKey = const std::string&, const String&
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return containsKey_impl<const TString&>(key);
+    return containsKey_impl(makeString(key));
   }
   //
   // bool containsKey(TKey);
   // TKey = char*, const char*, char[], const char[], const FlashStringHelper*
   template <typename TString>
   FORCE_INLINE bool containsKey(TString* key) const {
-    return containsKey_impl<TString*>(key);
+    return containsKey_impl(makeString(key));
   }
 
   bool copyFrom(JsonObject src) {
@@ -87,14 +87,14 @@ class JsonObject {
   template <typename TString>
   FORCE_INLINE JsonObject createNestedObject(const TString& key) {
     if (!_data) return JsonObject();
-    return createNestedObject_impl<const TString&>(key);
+    return createNestedObject_impl(makeString(key));
   }
   //
   // JsonObject createNestedObject(TKey);
   // TKey = char*, const char*, char[], const char[], const FlashStringHelper*
   template <typename TString>
   FORCE_INLINE JsonObject createNestedObject(TString* key) {
-    return createNestedObject_impl<TString*>(key);
+    return createNestedObject_impl(makeString(key));
   }
 
   // Gets the value associated with the specified key.
@@ -127,7 +127,7 @@ class JsonObject {
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue, typename TString>
   FORCE_INLINE bool is(const TString& key) const {
-    return is_impl<const TString&, TValue>(key);
+    return is_impl<TValue>(makeString(key));
   }
   //
   // bool is<TValue>(TKey) const;
@@ -136,7 +136,7 @@ class JsonObject {
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue, typename TString>
   FORCE_INLINE bool is(TString* key) const {
-    return is_impl<TString*, TValue>(key);
+    return is_impl<TValue>(makeString(key));
   }
 
   // Gets or sets the value associated with the specified key.
@@ -288,7 +288,7 @@ class JsonObject {
  private:
   template <typename TStringRef>
   FORCE_INLINE bool containsKey_impl(TStringRef key) const {
-    return findSlot(makeString(key)) != 0;
+    return findSlot(key) != 0;
   }
 
   template <typename TStringRef>
@@ -321,9 +321,9 @@ class JsonObject {
                 : TValue();
   }
 
-  template <typename TStringRef, typename TValue>
+  template <typename TValue, typename TStringRef>
   FORCE_INLINE bool is_impl(TStringRef key) const {
-    Slot* slot = findSlot(makeString(key));
+    Slot* slot = findSlot(key);
     return slot ? JsonVariant(_memoryPool, &slot->value).is<TValue>() : false;
   }
 
