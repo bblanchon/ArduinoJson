@@ -321,4 +321,15 @@ class JsonVariantConst : public JsonVariantProxy<const JsonVariantData>,
     return JsonVariantConst(objectGet(variantAsObject(_data), makeString(key)));
   }
 };
+
+class JsonVariantLocal : public JsonVariant {
+ public:
+  explicit JsonVariantLocal(MemoryPool *memoryPool)
+      : JsonVariant(memoryPool, &_localData) {
+    _localData.type = JSON_NULL;
+  }
+
+ private:
+  JsonVariantData _localData;
+};
 }  // namespace ARDUINOJSON_NAMESPACE
