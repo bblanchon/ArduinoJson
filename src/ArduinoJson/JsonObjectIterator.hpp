@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Data/SlotFunctions.hpp"
 #include "JsonPair.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -52,10 +53,7 @@ class JsonObjectIterator {
   }
 
   JsonObjectIterator &operator+=(size_t distance) {
-    while (_slot && distance > 0) {
-      _slot = _slot->next;
-      distance--;
-    }
+    _slot = slotAdvance(_slot, distance);
     return *this;
   }
 
@@ -66,5 +64,60 @@ class JsonObjectIterator {
  private:
   MemoryPool *_memoryPool;
   Slot *_slot;
+};
+
+class JsonPairConstPtr {
+ public:
+  JsonPairConstPtr(const Slot *slot) : _pair(slot) {}
+
+  const JsonPairConst *operator->() const {
+    return &_pair;
+  }
+
+  const JsonPairConst &operator*() const {
+    return _pair;
+  }
+
+ private:
+  JsonPairConst _pair;
+};
+
+class JsonObjectConstIterator {
+ public:
+  JsonObjectConstIterator() : _slot(0) {}
+
+  explicit JsonObjectConstIterator(const Slot *slot) : _slot(slot) {}
+
+  JsonPairConst operator*() const {
+    return JsonPairConst(_slot);
+  }
+  JsonPairConstPtr operator->() {
+    return JsonPairConstPtr(_slot);
+  }
+
+  bool operator==(const JsonObjectConstIterator &other) const {
+    return _slot == other._slot;
+  }
+
+  bool operator!=(const JsonObjectConstIterator &other) const {
+    return _slot != other._slot;
+  }
+
+  JsonObjectConstIterator &operator++() {
+    if (_slot) _slot = _slot->next;
+    return *this;
+  }
+
+  JsonObjectConstIterator &operator+=(size_t distance) {
+    _slot = slotAdvance(_slot, distance);
+    return *this;
+  }
+
+  const Slot *internal() {
+    return _slot;
+  }
+
+ private:
+  const Slot *_slot;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

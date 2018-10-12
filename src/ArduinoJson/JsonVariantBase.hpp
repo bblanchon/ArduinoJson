@@ -15,6 +15,5 @@ template <typename TImpl>
 class JsonVariantBase : public JsonVariantCasts<TImpl>,
                         public JsonVariantComparisons<TImpl>,
                         public JsonVariantOr<TImpl>,
-                        public JsonVariantSubscripts<TImpl>,
-                        public JsonVariantTag {};
+                        public JsonVariantSubscripts<TImpl> {};
 }  // namespace ARDUINOJSON_NAMESPACE

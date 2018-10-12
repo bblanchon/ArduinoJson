@@ -56,4 +56,13 @@ TEST_CASE("JsonObject::copyFrom()") {
     REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
     REQUIRE(obj2["hello"] == std::string("world"));
   }
+
+  SECTION("should work with JsonObjectConst") {
+    obj1["hello"] = "world";
+
+    obj2.copyFrom(static_cast<JsonObjectConst>(obj1));
+
+    REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
+    REQUIRE(obj2["hello"] == std::string("world"));
+  }
 }

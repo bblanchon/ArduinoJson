@@ -27,4 +27,11 @@ TEST_CASE("JsonObject::get()") {
     REQUIRE(std::string("world") == obj.get<char*>(vla));
   }
 #endif
+
+  SECTION("works on JsonObjectConst") {
+    obj.set("hello", "world");
+    const char* value =
+        static_cast<JsonObjectConst>(obj).get<const char*>("hello");
+    REQUIRE_THAT(value, Equals("world"));
+  }
 }

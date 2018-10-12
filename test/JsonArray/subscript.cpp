@@ -58,9 +58,6 @@ TEST_CASE("JsonArray::operator[]") {
     array[0] = arr2;
 
     REQUIRE(arr2 == array[0].as<JsonArray>());
-    REQUIRE(arr2 == array[0].as<JsonArray>());  // <- short hand
-    // REQUIRE(arr2 == array[0].as<const JsonArray>());
-    // REQUIRE(arr2 == array[0].as<const JsonArray>());  // <- short hand
     REQUIRE(true == array[0].is<JsonArray>());
     REQUIRE(false == array[0].is<int>());
   }
@@ -72,7 +69,6 @@ TEST_CASE("JsonArray::operator[]") {
     array[0] = obj;
 
     REQUIRE(obj == array[0].as<JsonObject>());
-    REQUIRE(obj == array[0].as<const JsonObject>());  // <- short hand
     REQUIRE(true == array[0].is<JsonObject>());
     REQUIRE(false == array[0].is<int>());
   }
@@ -147,4 +143,19 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(std::string("world") == array[0]);
   }
 #endif
+}
+
+TEST_CASE("JsonArrayConst::operator[]") {
+  DynamicJsonDocument doc;
+  JsonArray array = doc.to<JsonArray>();
+  array.add(0);
+
+  SECTION("int") {
+    array[0] = 123;
+    JsonArrayConst carr = array;
+
+    REQUIRE(123 == carr[0].as<int>());
+    REQUIRE(true == carr[0].is<int>());
+    REQUIRE(false == carr[0].is<bool>());
+  }
 }

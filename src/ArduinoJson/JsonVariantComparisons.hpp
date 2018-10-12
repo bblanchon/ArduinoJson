@@ -4,134 +4,158 @@
 
 #pragma once
 
-#include "Data/IsVariant.hpp"
-#include "Data/JsonFloat.hpp"
-#include "Data/JsonInteger.hpp"
-#include "Polyfills/type_traits.hpp"
-#include "Strings/StringTypes.hpp"
+#include "JsonVariant.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
-class JsonArray;
-class JsonObject;
+template <typename T>
+struct is_simple_value {
+  static const bool value = is_integral<T>::value ||
+                            is_floating_point<T>::value ||
+                            is_same<T, bool>::value;
+};
 
-template <typename TImpl>
+template <typename TVariant>
 class JsonVariantComparisons {
  public:
-  template <typename TComparand>
-  friend bool operator==(const JsonVariantComparisons &variant,
-                         TComparand comparand) {
-    return variant.equals(comparand);
-  }
-
-  template <typename TComparand>
-  friend typename enable_if<!IsVariant<TComparand>::value, bool>::type
-  operator==(TComparand comparand, const JsonVariantComparisons &variant) {
-    return variant.equals(comparand);
-  }
-
-  template <typename TComparand>
-  friend bool operator!=(const JsonVariantComparisons &variant,
-                         TComparand comparand) {
-    return !variant.equals(comparand);
-  }
-
-  template <typename TComparand>
-  friend typename enable_if<!IsVariant<TComparand>::value, bool>::type
-  operator!=(TComparand comparand, const JsonVariantComparisons &variant) {
-    return !variant.equals(comparand);
-  }
-
-  template <typename TComparand>
-  friend bool operator<=(const JsonVariantComparisons &left, TComparand right) {
-    return left.as<TComparand>() <= right;
-  }
-
-  template <typename TComparand>
-  friend bool operator<=(TComparand comparand,
-                         const JsonVariantComparisons &variant) {
-    return comparand <= variant.as<TComparand>();
-  }
-
-  template <typename TComparand>
-  friend bool operator>=(const JsonVariantComparisons &variant,
-                         TComparand comparand) {
-    return variant.as<TComparand>() >= comparand;
-  }
-
-  template <typename TComparand>
-  friend bool operator>=(TComparand comparand,
-                         const JsonVariantComparisons &variant) {
-    return comparand >= variant.as<TComparand>();
-  }
-
-  template <typename TComparand>
-  friend bool operator<(const JsonVariantComparisons &varian,
-                        TComparand comparand) {
-    return varian.as<TComparand>() < comparand;
-  }
-
-  template <typename TComparand>
-  friend bool operator<(TComparand comparand,
-                        const JsonVariantComparisons &variant) {
-    return comparand < variant.as<TComparand>();
-  }
-
-  template <typename TComparand>
-  friend bool operator>(const JsonVariantComparisons &variant,
-                        TComparand comparand) {
-    return variant.as<TComparand>() > comparand;
-  }
-
-  template <typename TComparand>
-  friend bool operator>(TComparand comparand,
-                        const JsonVariantComparisons &variant) {
-    return comparand > variant.as<TComparand>();
-  }
-
- private:
-  const TImpl *impl() const {
-    return static_cast<const TImpl *>(this);
-  }
-
+  // const char* == TVariant
   template <typename T>
-  const typename JsonVariantAs<T>::type as() const {
-    return impl()->template as<T>();
+  friend typename enable_if<IsString<T *>::value, bool>::type operator==(
+      T *lhs, TVariant rhs) {
+    return makeString(lhs).equals(rhs.template as<const char *>());
   }
 
+  // std::string == TVariant
   template <typename T>
-  bool is() const {
-    return impl()->template is<T>();
+  friend typename enable_if<IsString<T>::value, bool>::type operator==(
+      const T &lhs, TVariant rhs) {
+    return makeString(lhs).equals(rhs.template as<const char *>());
   }
 
-  template <typename TString>
-  typename enable_if<IsString<TString>::value, bool>::type equals(
-      const TString &comparand) const {
-    return makeString(comparand).equals(as<const char *>());
+  // TVariant == const char*
+  template <typename T>
+  friend typename enable_if<IsString<T *>::value, bool>::type operator==(
+      TVariant lhs, T *rhs) {
+    return makeString(rhs).equals(lhs.template as<const char *>());
   }
 
-  template <typename TComparand>
-  typename enable_if<
-      !IsVariant<TComparand>::value && !IsString<TComparand>::value, bool>::type
-  equals(const TComparand &comparand) const {
-    return as<TComparand>() == comparand;
+  // TVariant == std::string
+  template <typename T>
+  friend typename enable_if<IsString<T>::value, bool>::type operator==(
+      TVariant lhs, const T &rhs) {
+    return makeString(rhs).equals(lhs.template as<const char *>());
   }
 
-  template <typename TVariant2>
-  bool equals(const JsonVariantComparisons<TVariant2> &right) const {
-    if (is<bool>() && right.template is<bool>())
-      return as<bool>() == right.template as<bool>();
-    if (is<JsonInteger>() && right.template is<JsonInteger>())
-      return as<JsonInteger>() == right.template as<JsonInteger>();
-    if (is<JsonFloat>() && right.template is<JsonFloat>())
-      return as<JsonFloat>() == right.template as<JsonFloat>();
-    if (is<JsonArray>() && right.template is<JsonArray>())
-      return as<JsonArray>() == right.template as<JsonArray>();
-    if (is<JsonObject>() && right.template is<JsonObject>())
-      return as<JsonObject>() == right.template as<JsonObject>();
-    if (is<char *>() && right.template is<char *>())
-      return makeString(as<char *>()).equals(right.template as<char *>());
+  // bool/int/float == TVariant
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator==(
+      const T &lhs, TVariant rhs) {
+    return lhs == rhs.template as<T>();
+  }
 
-    return false;
+  // TVariant == bool/int/float
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator==(
+      TVariant lhs, const T &rhs) {
+    return lhs.template as<T>() == rhs;
+  }
+
+  // const char* != TVariant
+  template <typename T>
+  friend typename enable_if<IsString<T *>::value, bool>::type operator!=(
+      T *lhs, TVariant rhs) {
+    return !makeString(lhs).equals(rhs.template as<const char *>());
+  }
+
+  // std::string != TVariant
+  template <typename T>
+  friend typename enable_if<IsString<T>::value, bool>::type operator!=(
+      const T &lhs, TVariant rhs) {
+    return !makeString(lhs).equals(rhs.template as<const char *>());
+  }
+
+  // TVariant != const char*
+  template <typename T>
+  friend typename enable_if<IsString<T *>::value, bool>::type operator!=(
+      TVariant lhs, T *rhs) {
+    return !makeString(rhs).equals(lhs.template as<const char *>());
+  }
+
+  // TVariant != std::string
+  template <typename T>
+  friend typename enable_if<IsString<T>::value, bool>::type operator!=(
+      TVariant lhs, const T &rhs) {
+    return !makeString(rhs).equals(lhs.template as<const char *>());
+  }
+
+  // bool/int/float != TVariant
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator!=(
+      const T &lhs, TVariant rhs) {
+    return lhs != rhs.template as<T>();
+  }
+
+  // TVariant != bool/int/float
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator!=(
+      TVariant lhs, const T &rhs) {
+    return lhs.template as<T>() != rhs;
+  }
+
+  // bool/int/float < TVariant
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator<(
+      const T &lhs, TVariant rhs) {
+    return lhs < rhs.template as<T>();
+  }
+
+  // TVariant < bool/int/float
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator<(
+      TVariant lhs, const T &rhs) {
+    return lhs.template as<T>() < rhs;
+  }
+
+  // bool/int/float <= TVariant
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator<=(
+      const T &lhs, TVariant rhs) {
+    return lhs <= rhs.template as<T>();
+  }
+
+  // TVariant <= bool/int/float
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator<=(
+      TVariant lhs, const T &rhs) {
+    return lhs.template as<T>() <= rhs;
+  }
+
+  // bool/int/float > TVariant
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator>(
+      const T &lhs, TVariant rhs) {
+    return lhs > rhs.template as<T>();
+  }
+
+  // TVariant > bool/int/float
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator>(
+      TVariant lhs, const T &rhs) {
+    return lhs.template as<T>() > rhs;
+  }
+
+  // bool/int/float >= TVariant
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator>=(
+      const T &lhs, TVariant rhs) {
+    return lhs >= rhs.template as<T>();
+  }
+
+  // TVariant >= bool/int/float
+  template <typename T>
+  friend typename enable_if<is_simple_value<T>::value, bool>::type operator>=(
+      TVariant lhs, const T &rhs) {
+    return lhs.template as<T>() >= rhs;
   }
 };
+
 }  // namespace ARDUINOJSON_NAMESPACE

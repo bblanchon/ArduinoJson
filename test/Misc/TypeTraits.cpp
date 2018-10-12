@@ -24,12 +24,6 @@ TEST_CASE("Polyfills/type_traits") {
     REQUIRE((is_array<const char[10]>::value));
   }
 
-  SECTION("IsVariant") {
-    REQUIRE(
-        static_cast<bool>(IsVariant<JsonObjectSubscript<const char*> >::value));
-    REQUIRE(static_cast<bool>(IsVariant<JsonVariant>::value));
-  }
-
   SECTION("is_const") {
     CHECK(is_const<char>::value == false);
     CHECK(is_const<const char>::value == true);

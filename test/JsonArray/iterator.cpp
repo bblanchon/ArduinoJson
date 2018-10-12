@@ -5,15 +5,16 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-template <typename TIterator>
+template <typename TArray>
 static void run_iterator_test() {
   StaticJsonDocument<JSON_ARRAY_SIZE(2)> doc;
-  JsonArray array = doc.to<JsonArray>();
-  array.add(12);
-  array.add(34);
+  JsonArray tmp = doc.to<JsonArray>();
+  tmp.add(12);
+  tmp.add(34);
 
-  TIterator it = array.begin();
-  TIterator end = array.end();
+  TArray array = tmp;
+  typename TArray::iterator it = array.begin();
+  typename TArray::iterator end = array.end();
 
   REQUIRE(end != it);
   REQUIRE(12 == it->template as<int>());
@@ -27,7 +28,9 @@ static void run_iterator_test() {
 }
 
 TEST_CASE("JsonArray::begin()/end()") {
-  SECTION("Mutable") {
-    run_iterator_test<JsonArray::iterator>();
-  }
+  run_iterator_test<JsonArray>();
+}
+
+TEST_CASE("JsonArrayConst::begin()/end()") {
+  run_iterator_test<JsonArrayConst>();
 }

@@ -23,3 +23,22 @@ TEST_CASE("JsonArray::isNull()") {
       REQUIRE(array.isNull() == true);
     }*/
 }
+
+TEST_CASE("JsonArrayConst::isNull()") {
+  SECTION("returns true for undefined JsonArray") {
+    JsonArrayConst array;
+    REQUIRE(array.isNull() == true);
+  }
+
+  SECTION("returns false when allocation succeeds") {
+    StaticJsonDocument<JSON_ARRAY_SIZE(0)> doc;
+    JsonArrayConst array = doc.to<JsonArray>();
+    REQUIRE(array.isNull() == false);
+  }
+
+  /*  SECTION("returns true when allocation fails") {
+      StaticJsonDocument<1> doc;
+      JsonArray array = doc.to<JsonArray>();
+      REQUIRE(array.isNull() == true);
+    }*/
+}

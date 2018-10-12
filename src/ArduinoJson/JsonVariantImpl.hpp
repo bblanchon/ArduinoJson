@@ -13,95 +13,65 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline bool JsonVariant::set(JsonArray array) {
+inline bool JsonVariant::set(JsonArray array) const {
   return to<JsonArray>().copyFrom(array);
 }
 
-inline bool JsonVariant::set(const JsonArraySubscript& value) {
+inline bool JsonVariant::set(const JsonArraySubscript& value) const {
   return set(value.as<JsonVariant>());
 }
 
-inline bool JsonVariant::set(JsonObject object) {
+inline bool JsonVariant::set(JsonObject object) const {
   return to<JsonObject>().copyFrom(object);
 }
 
 template <typename TString>
-inline bool JsonVariant::set(const JsonObjectSubscript<TString>& value) {
+inline bool JsonVariant::set(const JsonObjectSubscript<TString>& value) const {
   return set(value.template as<JsonVariant>());
 }
 
-inline bool JsonVariant::set(const JsonVariant& value) {
-  if (!_data) return false;
-  if (!value._data) {
-    _data->type = JSON_NULL;
-    return true;
-  }
-  switch (value._data->type) {
-    case JSON_ARRAY:
-      return set(value.as<JsonArray>());
-    case JSON_OBJECT:
-      return set(value.as<JsonObject>());
-    case JSON_OWNED_STRING:
-      return set(const_cast<char*>(value._data->content.asString));
-    case JSON_OWNED_RAW:
-      return set(serialized(const_cast<char*>(value._data->content.asRaw.data),
-                            value._data->content.asRaw.size));
-    default:
-      *_data = *value._data;
-      return true;
-  }
+inline bool JsonVariant::set(const JsonVariant& value) const {
+  return variantCopy(_data, value._data, _memoryPool);
 }
 
 template <typename T>
-inline typename enable_if<
-    is_same<typename remove_const<T>::type, JsonArray>::value, JsonArray>::type
+inline typename enable_if<is_same<T, JsonArray>::value, T>::type
 JsonVariant::as() const {
-  if (_data && _data->type == JSON_ARRAY)
-    return JsonArray(_memoryPool, &_data->content.asArray);
-  else
-    return JsonArray();
+  return JsonArray(_memoryPool, variantAsArray(_data));
 }
 
 template <typename T>
-inline typename enable_if<
-    is_same<typename remove_const<T>::type, JsonObject>::value, T>::type
+inline typename enable_if<is_same<T, JsonObject>::value, T>::type
 JsonVariant::as() const {
-  if (_data && _data->type == JSON_OBJECT)
-    return JsonObject(_memoryPool, &_data->content.asObject);
-  else
-    return JsonObject();
+  return JsonObject(_memoryPool, variantAsObject(_data));
 }
 
 template <typename T>
 inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
-JsonVariant::to() {
-  if (!_data) return JsonArray();
-  _data->type = JSON_ARRAY;
-  _data->content.asArray.head = 0;
-  _data->content.asArray.tail = 0;
-  return JsonArray(_memoryPool, &_data->content.asArray);
+JsonVariant::to() const {
+  return JsonArray(_memoryPool, variantToArray(_data));
 }
 
 template <typename T>
 typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
-JsonVariant::to() {
-  if (!_data) return JsonObject();
-  _data->type = JSON_OBJECT;
-  _data->content.asObject.head = 0;
-  _data->content.asObject.tail = 0;
-  return JsonObject(_memoryPool, &_data->content.asObject);
+JsonVariant::to() const {
+  return JsonObject(_memoryPool, variantToObject(_data));
 }
 
 template <typename T>
 typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
-JsonVariant::to() {
-  if (!_data) return JsonVariant();
-  _data->type = JSON_NULL;
+JsonVariant::to() const {
+  variantSetNull(_data);
   return *this;
 }
 
 template <typename Visitor>
 inline void JsonVariant::accept(Visitor& visitor) const {
+  return JsonVariantConst(_data).accept(visitor);
+}
+
+template <typename Visitor>
+inline void JsonVariantConst::accept(Visitor& visitor) const {
   if (!_data) return visitor.visitNull();
 
   switch (_data->type) {
@@ -109,12 +79,10 @@ inline void JsonVariant::accept(Visitor& visitor) const {
       return visitor.visitFloat(_data->content.asFloat);
 
     case JSON_ARRAY:
-      return visitor.visitArray(
-          JsonArray(_memoryPool, &_data->content.asArray));
+      return visitor.visitArray(JsonArrayConst(&_data->content.asArray));
 
     case JSON_OBJECT:
-      return visitor.visitObject(
-          JsonObject(_memoryPool, &_data->content.asObject));
+      return visitor.visitObject(JsonObjectConst(&_data->content.asObject));
 
     case JSON_LINKED_STRING:
     case JSON_OWNED_STRING:
@@ -138,4 +106,9 @@ inline void JsonVariant::accept(Visitor& visitor) const {
       return visitor.visitNull();
   }
 }
+
+inline JsonVariantConst JsonVariantConst::operator[](size_t index) const {
+  return JsonArrayConst(variantAsArray(_data))[index];
+}
+
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Data/ArrayFunctions.hpp"
 #include "Data/JsonVariantData.hpp"
 #include "JsonArrayIterator.hpp"
 
@@ -17,18 +18,66 @@ namespace ARDUINOJSON_NAMESPACE {
 class JsonObject;
 class JsonArraySubscript;
 
-class JsonArray {
-  friend class JsonVariant;
+template <typename TData>
+class JsonArrayProxy {
+ public:
+  FORCE_INLINE bool isNull() const {
+    return _data == 0;
+  }
+
+  FORCE_INLINE JsonVariantConst operator[](size_t index) const {
+    return JsonVariantConst(arrayGet(_data, index));
+  }
+
+  FORCE_INLINE size_t size() const {
+    return arraySize(_data);
+  }
+
+ protected:
+  JsonArrayProxy(TData* data) : _data(data) {}
+  TData* _data;
+};
+
+class JsonArrayConst : public JsonArrayProxy<const JsonArrayData> {
+  friend class JsonArray;
+  typedef JsonArrayProxy<const JsonArrayData> proxy_type;
+
+ public:
+  typedef JsonArrayConstIterator iterator;
+
+  FORCE_INLINE iterator begin() const {
+    if (!_data) return iterator();
+    return iterator(_data->head);
+  }
+
+  FORCE_INLINE iterator end() const {
+    return iterator();
+  }
+
+  FORCE_INLINE JsonArrayConst() : proxy_type(0) {}
+  FORCE_INLINE JsonArrayConst(const JsonArrayData* data) : proxy_type(data) {}
+
+  FORCE_INLINE bool operator==(JsonArrayConst rhs) const {
+    return arrayEquals(_data, rhs._data);
+  }
+};
+
+class JsonArray : public JsonArrayProxy<JsonArrayData> {
+  typedef JsonArrayProxy<JsonArrayData> proxy_type;
 
  public:
   typedef JsonArrayIterator iterator;
 
-  FORCE_INLINE JsonArray() : _memoryPool(0), _data(0) {}
-  FORCE_INLINE JsonArray(MemoryPool* pool, JsonArrayData* arr)
-      : _memoryPool(pool), _data(arr) {}
+  FORCE_INLINE JsonArray() : proxy_type(0), _memoryPool(0) {}
+  FORCE_INLINE JsonArray(MemoryPool* pool, JsonArrayData* data)
+      : proxy_type(data), _memoryPool(pool) {}
 
   operator JsonVariant() {
     return JsonVariant(_memoryPool, getVariantData(_data));
+  }
+
+  operator JsonArrayConst() const {
+    return JsonArrayConst(_data);
   }
 
   // Adds the specified value at the end of the array.
@@ -37,40 +86,23 @@ class JsonArray {
   // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonObject
   template <typename T>
-  FORCE_INLINE bool add(const T& value) {
+  FORCE_INLINE bool add(const T& value) const {
     return add().set(value);
   }
   // Adds the specified value at the end of the array.
-  FORCE_INLINE bool add(JsonArray value) {
+  FORCE_INLINE bool add(JsonArray value) const {
     return add().set(value);
   }
   //
   // bool add(TValue);
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename T>
-  FORCE_INLINE bool add(T* value) {
+  FORCE_INLINE bool add(T* value) const {
     return add().set(value);
   }
 
-  JsonVariant add() {
-    if (!_data) return JsonVariant();
-
-    Slot* slot = new (_memoryPool) Slot();
-    if (!slot) return JsonVariant();
-
-    slot->next = 0;
-
-    if (_data->tail) {
-      slot->prev = _data->tail;
-      _data->tail->next = slot;
-      _data->tail = slot;
-    } else {
-      slot->prev = 0;
-      _data->head = slot;
-      _data->tail = slot;
-    }
-
-    return JsonVariant(_memoryPool, &slot->value);
+  JsonVariant add() const {
+    return JsonVariant(_memoryPool, arrayAdd(_data, _memoryPool));
   }
 
   FORCE_INLINE iterator begin() const {
@@ -84,13 +116,13 @@ class JsonArray {
 
   // Imports a 1D array
   template <typename T, size_t N>
-  FORCE_INLINE bool copyFrom(T (&array)[N]) {
+  FORCE_INLINE bool copyFrom(T (&array)[N]) const {
     return copyFrom(array, N);
   }
 
   // Imports a 1D array
   template <typename T>
-  bool copyFrom(T* array, size_t len) {
+  bool copyFrom(T* array, size_t len) const {
     bool ok = true;
     for (size_t i = 0; i < len; i++) {
       ok &= add(array[i]);
@@ -100,7 +132,7 @@ class JsonArray {
 
   // Imports a 2D array
   template <typename T, size_t N1, size_t N2>
-  bool copyFrom(T (&array)[N1][N2]) {
+  bool copyFrom(T (&array)[N1][N2]) const {
     bool ok = true;
     for (size_t i = 0; i < N1; i++) {
       JsonArray nestedArray = createNestedArray();
@@ -112,12 +144,8 @@ class JsonArray {
   }
 
   // Copy a JsonArray
-  bool copyFrom(JsonArray src) {
-    bool ok = _data != 0;
-    for (iterator it = src.begin(); it != src.end(); ++it) {
-      ok &= add(*it);
-    }
-    return ok;
+  FORCE_INLINE bool copyFrom(JsonArray src) const {
+    return arrayCopy(_data, src._data, _memoryPool);
   }
 
   // Exports a 1D array
@@ -144,102 +172,54 @@ class JsonArray {
     }
   }
 
-  FORCE_INLINE JsonArray createNestedArray();
-  FORCE_INLINE JsonObject createNestedObject();
+  FORCE_INLINE JsonArray createNestedArray() const;
+  FORCE_INLINE JsonObject createNestedObject() const;
 
-  FORCE_INLINE JsonArraySubscript operator[](size_t index);
-
-  FORCE_INLINE const JsonArraySubscript operator[](size_t index) const;
+  FORCE_INLINE JsonArraySubscript operator[](size_t index) const;
 
   FORCE_INLINE bool operator==(JsonArray rhs) const {
-    iterator it1 = begin();
-    iterator it2 = rhs.begin();
-    for (;;) {
-      if (it1 == end() && it2 == rhs.end()) return true;
-      if (it1 == end()) return false;
-      if (it2 == end()) return false;
-      if (*it1 != *it2) return false;
-      ++it1;
-      ++it2;
-    }
+    return arrayEquals(_data, rhs._data);
   }
 
   // Gets the value at the specified index.
   template <typename T>
   FORCE_INLINE typename JsonVariantAs<T>::type get(size_t index) const {
-    iterator it = begin() += index;
-    return it != end() ? it->as<T>() : T();
+    return get_impl(index).as<T>();
   }
 
   // Check the type of the value at specified index.
   template <typename T>
   FORCE_INLINE bool is(size_t index) const {
-    iterator it = begin() += index;
-    return it != end() ? it->is<T>() : false;
+    return get_impl(index).is<T>();
   }
 
   // Removes element at specified position.
-  FORCE_INLINE void remove(iterator it) {
-    if (!_data) return;
-
-    Slot* slot = it.internal();
-    if (!slot) return;
-
-    if (slot->prev)
-      slot->prev->next = slot->next;
-    else
-      _data->head = slot->next;
-    if (slot->next)
-      slot->next->prev = slot->prev;
-    else
-      _data->tail = slot->prev;
+  FORCE_INLINE void remove(iterator it) const {
+    arrayRemove(_data, it.internal());
   }
 
   // Removes element at specified index.
-  FORCE_INLINE void remove(size_t index) {
-    remove(begin() += index);
+  FORCE_INLINE void remove(size_t index) const {
+    arrayRemove(_data, index);
   }
 
   // Sets the value at specified index.
   //
   // bool add(size_t index, const TValue&);
   // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
-  //          std::string, String, JsonArrayData, JsonObject
+  //          std::string, String, JsonArray, JsonObject
   template <typename T>
-  FORCE_INLINE bool set(size_t index, const T& value) {
+  FORCE_INLINE bool set(size_t index, const T& value) const {
     if (!_data) return false;
-    return set_impl<const T&>(index, value);
+    return get_impl(index).set(value);
   }
   //
   // bool add(size_t index, TValue);
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename T>
-  FORCE_INLINE bool set(size_t index, T* value) {
+  FORCE_INLINE bool set(size_t index, T* value) const {
     if (!_data) return false;
-    return set_impl<T*>(index, value);
-  }
-  // Sets the value at specified index.
-  //
-  // bool add(size_t index, JsonArray);
-  template <typename T>
-  FORCE_INLINE bool set(size_t index, JsonArray value) {
-    if (!_data) return false;
-    return get<JsonVariant>(index).set(value);
-  }
-
-  FORCE_INLINE size_t size() const {
-    if (!_data) return 0;
-    Slot* slot = _data->head;
-    size_t n = 0;
-    while (slot) {
-      slot = slot->next;
-      n++;
-    }
-    return n;
-  }
-
-  FORCE_INLINE bool isNull() const {
-    return _data == 0;
+    return get_impl(index).set(value);
   }
 
   template <typename Visitor>
@@ -252,18 +232,14 @@ class JsonArray {
 
  private:
   template <typename TValueRef>
-  FORCE_INLINE bool set_impl(size_t index, TValueRef value) {
-    iterator it = begin() += index;
-    if (it == end()) return false;
-    return it->set(value);
-  }
-
-  template <typename TValueRef>
-  FORCE_INLINE bool add_impl(TValueRef value) {
+  FORCE_INLINE bool add_impl(TValueRef value) const {
     return add().set(value);
   }
 
+  FORCE_INLINE JsonVariant get_impl(size_t index) const {
+    return JsonVariant(_memoryPool, arrayGet(_data, index));
+  }
+
   MemoryPool* _memoryPool;
-  JsonArrayData* _data;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

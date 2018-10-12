@@ -8,14 +8,14 @@
 #include <stdint.h>  // for uint8_t
 
 #include "Data/JsonVariantData.hpp"
+#include "Data/VariantAs.hpp"
+#include "Data/VariantFunctions.hpp"
 #include "JsonVariant.hpp"
 #include "JsonVariantBase.hpp"
 #include "Memory/MemoryPool.hpp"
 #include "Numbers/parseFloat.hpp"
 #include "Numbers/parseInteger.hpp"
 #include "Polyfills/type_traits.hpp"
-#include "Serialization/DynamicStringWriter.hpp"
-#include "SerializedValue.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -23,251 +23,11 @@ namespace ARDUINOJSON_NAMESPACE {
 class JsonArray;
 class JsonObject;
 
-// A variant that can be a any value serializable to a JSON value.
-//
-// It can be set to:
-// - a boolean
-// - a char, short, int or a long (signed or unsigned)
-// - a string (const char*)
-// - a reference to a JsonArray or JsonObject
-class JsonVariant : public JsonVariantBase<JsonVariant> {
+// Contains the methods shared by JsonVariant and JsonVariantConst
+template <typename TData>
+class JsonVariantProxy {
  public:
-  // Intenal use only
-  FORCE_INLINE JsonVariant(MemoryPool *memoryPool, JsonVariantData *data)
-      : _memoryPool(memoryPool), _data(data) {}
-
-  // Creates an uninitialized JsonVariant
-  FORCE_INLINE JsonVariant() : _memoryPool(0), _data(0) {}
-
-  // set(bool value)
-  FORCE_INLINE bool set(bool value) {
-    if (!_data) return false;
-    _data->type = JSON_BOOLEAN;
-    _data->content.asInteger = static_cast<JsonUInt>(value);
-    return true;
-  }
-
-  // set(double value);
-  // set(float value);
-  template <typename T>
-  FORCE_INLINE bool set(
-      T value, typename enable_if<is_floating_point<T>::value>::type * = 0) {
-    if (!_data) return false;
-    _data->type = JSON_FLOAT;
-    _data->content.asFloat = static_cast<JsonFloat>(value);
-    return true;
-  }
-
-  // set(char)
-  // set(signed short)
-  // set(signed int)
-  // set(signed long)
-  // set(signed char)
-  template <typename T>
-  FORCE_INLINE bool set(T value,
-                        typename enable_if<is_integral<T>::value &&
-                                           is_signed<T>::value>::type * = 0) {
-    if (!_data) return false;
-    if (value >= 0) {
-      _data->type = JSON_POSITIVE_INTEGER;
-      _data->content.asInteger = static_cast<JsonUInt>(value);
-    } else {
-      _data->type = JSON_NEGATIVE_INTEGER;
-      _data->content.asInteger = ~static_cast<JsonUInt>(value) + 1;
-    }
-    return true;
-  }
-
-  // set(unsigned short)
-  // set(unsigned int)
-  // set(unsigned long)
-  template <typename T>
-  FORCE_INLINE bool set(T value,
-                        typename enable_if<is_integral<T>::value &&
-                                           is_unsigned<T>::value>::type * = 0) {
-    if (!_data) return false;
-    _data->type = JSON_POSITIVE_INTEGER;
-    _data->content.asInteger = static_cast<JsonUInt>(value);
-    return true;
-  }
-
-  // set(SerializedValue<const char *>)
-  FORCE_INLINE bool set(SerializedValue<const char *> value) {
-    if (!_data) return false;
-    _data->type = JSON_LINKED_RAW;
-    _data->content.asRaw.data = value.data();
-    _data->content.asRaw.size = value.size();
-    return true;
-  }
-
-  // set(SerializedValue<std::string>)
-  // set(SerializedValue<String>)
-  // set(SerializedValue<const __FlashStringHelper*>)
-  template <typename T>
-  FORCE_INLINE bool set(
-      SerializedValue<T> value,
-      typename enable_if<!is_same<const char *, T>::value>::type * = 0) {
-    if (!_data) return false;
-    const char *dup = makeString(value.data(), value.size()).save(_memoryPool);
-    if (dup) {
-      _data->type = JSON_OWNED_RAW;
-      _data->content.asRaw.data = dup;
-      _data->content.asRaw.size = value.size();
-      return true;
-    } else {
-      _data->type = JSON_NULL;
-      return false;
-    }
-  }
-
-  // set(const std::string&)
-  // set(const String&)
-  template <typename T>
-  FORCE_INLINE bool set(const T &value,
-                        typename enable_if<IsString<T>::value>::type * = 0) {
-    return setString(makeString(value));
-  }
-
-  // set(char*)
-  template <typename T>
-  FORCE_INLINE bool set(T *value,
-                        typename enable_if<IsString<T *>::value>::type * = 0) {
-    return setString(makeString(value));
-  }
-
-  // set(const char*);
-  FORCE_INLINE bool set(const char *value) {
-    if (!_data) return false;
-    _data->type = JSON_LINKED_STRING;
-    _data->content.asString = value;
-    return true;
-  }
-
-  // set(const char*);
-  FORCE_INLINE bool set(StringInMemoryPool value) {
-    if (!_data) return false;
-    _data->type = JSON_OWNED_STRING;
-    _data->content.asString = value.save(_memoryPool);
-    return true;
-  }
-
-  bool set(const JsonVariant &value);
-
-  FORCE_INLINE bool set(JsonArray array);
-  FORCE_INLINE bool set(const JsonArraySubscript &);
-  FORCE_INLINE bool set(JsonObject object);
-  template <typename TString>
-  FORCE_INLINE bool set(const JsonObjectSubscript<TString> &);
-
-  // Get the variant as the specified type.
-  //
-  // char as<char>() const;
-  // signed char as<signed char>() const;
-  // signed short as<signed short>() const;
-  // signed int as<signed int>() const;
-  // signed long as<signed long>() const;
-  // unsigned char as<unsigned char>() const;
-  // unsigned short as<unsigned short>() const;
-  // unsigned int as<unsigned int>() const;
-  // unsigned long as<unsigned long>() const;
-  template <typename T>
-  FORCE_INLINE const typename enable_if<is_integral<T>::value, T>::type as()
-      const {
-    if (!_data) return 0;
-    switch (_data->type) {
-      case JSON_POSITIVE_INTEGER:
-      case JSON_BOOLEAN:
-        return T(_data->content.asInteger);
-      case JSON_NEGATIVE_INTEGER:
-        return T(~_data->content.asInteger + 1);
-      case JSON_LINKED_STRING:
-      case JSON_OWNED_STRING:
-        return parseInteger<T>(_data->content.asString);
-      case JSON_FLOAT:
-        return T(_data->content.asFloat);
-      default:
-        return 0;
-    }
-  }
-  // bool as<bool>() const
-  template <typename T>
-  FORCE_INLINE const typename enable_if<is_same<T, bool>::value, T>::type as()
-      const {
-    return as<int>() != 0;
-  }
-  //
-  // double as<double>() const;
-  // float as<float>() const;
-  template <typename T>
-  FORCE_INLINE const typename enable_if<is_floating_point<T>::value, T>::type
-  as() const {
-    if (!_data) return 0;
-    switch (_data->type) {
-      case JSON_POSITIVE_INTEGER:
-      case JSON_BOOLEAN:
-        return static_cast<T>(_data->content.asInteger);
-      case JSON_NEGATIVE_INTEGER:
-        return -static_cast<T>(_data->content.asInteger);
-      case JSON_LINKED_STRING:
-      case JSON_OWNED_STRING:
-        return parseFloat<T>(_data->content.asString);
-      case JSON_FLOAT:
-        return static_cast<T>(_data->content.asFloat);
-      default:
-        return 0;
-    }
-  }
-  //
-  // const char* as<const char*>() const;
-  // const char* as<char*>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, const char *>::value ||
-                                      is_same<T, char *>::value,
-                                  const char *>::type
-  as() const {
-    if (!_data) return 0;
-    if (_data &&
-        (_data->type == JSON_LINKED_STRING || _data->type == JSON_OWNED_STRING))
-      return _data->content.asString;
-    else
-      return 0;
-  }
-  //
-  // std::string as<std::string>() const;
-  // String as<String>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<IsWriteableString<T>::value, T>::type as()
-      const {
-    const char *cstr = as<const char *>();
-    if (cstr) return T(cstr);
-    T s;
-    serializeJson(*this, s);
-    return s;
-  }
-  //
-  // JsonArray as<JsonArray>() const;
-  // const JsonArray as<const JsonArray>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, JsonArray>::value,
-      JsonArray>::type
-  as() const;
-  //
-  // JsonObject as<JsonObject>() const;
-  // const JsonObject as<const JsonObject>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, JsonObject>::value, T>::type
-  as() const;
-  //
-  // JsonVariant as<JsonVariant> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, JsonVariant>::value, T>::type as()
-      const {
-    return *this;
-  }
-
-  // Tells weither the variant has the specified type.
+  // Tells wether the variant has the specified type.
   // Returns true if the variant has type type T, false otherwise.
   //
   // bool is<char>() const;
@@ -282,8 +42,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   template <typename T>
   FORCE_INLINE typename enable_if<is_integral<T>::value, bool>::type is()
       const {
-    return _data && (_data->type == JSON_POSITIVE_INTEGER ||
-                     _data->type == JSON_NEGATIVE_INTEGER);
+    return variantIsInteger(_data);
   }
   //
   // bool is<double>() const;
@@ -291,9 +50,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   template <typename T>
   FORCE_INLINE typename enable_if<is_floating_point<T>::value, bool>::type is()
       const {
-    return _data &&
-           (_data->type == JSON_FLOAT || _data->type == JSON_POSITIVE_INTEGER ||
-            _data->type == JSON_NEGATIVE_INTEGER);
+    return variantIsFloat(_data);
   }
   //
   // bool is<bool>() const
@@ -313,8 +70,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
                                       IsWriteableString<T>::value,
                                   bool>::type
   is() const {
-    return _data && (_data->type == JSON_LINKED_STRING ||
-                     _data->type == JSON_OWNED_STRING);
+    return variantIsString(_data);
   }
   //
   // bool is<JsonArray> const;
@@ -323,7 +79,7 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   FORCE_INLINE typename enable_if<
       is_same<typename remove_const<T>::type, JsonArray>::value, bool>::type
   is() const {
-    return _data && _data->type == JSON_ARRAY;
+    return variantIsArray(_data);
   }
   //
   // bool is<JsonObject> const;
@@ -332,51 +88,235 @@ class JsonVariant : public JsonVariantBase<JsonVariant> {
   FORCE_INLINE typename enable_if<
       is_same<typename remove_const<T>::type, JsonObject>::value, bool>::type
   is() const {
-    return _data && _data->type == JSON_OBJECT;
+    return variantIsObject(_data);
   }
 
   FORCE_INLINE bool isNull() const {
-    return _data == 0 || _data->type == JSON_NULL;
+    return variantIsNull(_data);
   }
 
   FORCE_INLINE bool isInvalid() const {
     return _data == 0;
   }
 
+  size_t size() const {
+    return objectSize(variantAsObject(_data)) +
+           arraySize(variantAsArray(_data));
+  }
+
+ protected:
+  JsonVariantProxy(TData *data) : _data(data) {}
+  TData *_data;
+};
+
+// A variant that can be a any value serializable to a JSON value.
+//
+// It can be set to:
+// - a boolean
+// - a char, short, int or a long (signed or unsigned)
+// - a string (const char*)
+// - a reference to a JsonArray or JsonObject
+class JsonVariant : public JsonVariantProxy<JsonVariantData>,
+                    public JsonVariantBase<JsonVariant> {
+  typedef JsonVariantProxy<JsonVariantData> proxy_type;
+  friend class JsonVariantConst;
+
+ public:
+  // Intenal use only
+  FORCE_INLINE JsonVariant(MemoryPool *memoryPool, JsonVariantData *data)
+      : proxy_type(data), _memoryPool(memoryPool) {}
+
+  // Creates an uninitialized JsonVariant
+  FORCE_INLINE JsonVariant() : proxy_type(0), _memoryPool(0) {}
+
+  // set(bool value)
+  FORCE_INLINE bool set(bool value) const {
+    return variantSetBoolean(_data, value);
+  }
+
+  // set(double value);
+  // set(float value);
+  template <typename T>
+  FORCE_INLINE bool set(
+      T value,
+      typename enable_if<is_floating_point<T>::value>::type * = 0) const {
+    return variantSetFloat(_data, static_cast<JsonFloat>(value));
+  }
+
+  // set(char)
+  // set(signed short)
+  // set(signed int)
+  // set(signed long)
+  // set(signed char)
+  template <typename T>
+  FORCE_INLINE bool set(
+      T value,
+      typename enable_if<is_integral<T>::value && is_signed<T>::value>::type * =
+          0) const {
+    return variantSetSignedInteger(_data, value);
+  }
+
+  // set(unsigned short)
+  // set(unsigned int)
+  // set(unsigned long)
+  template <typename T>
+  FORCE_INLINE bool set(
+      T value, typename enable_if<is_integral<T>::value &&
+                                  is_unsigned<T>::value>::type * = 0) const {
+    return variantSetSignedInteger(_data, static_cast<JsonUInt>(value));
+  }
+
+  // set(SerializedValue<const char *>)
+  FORCE_INLINE bool set(SerializedValue<const char *> value) const {
+    return variantSetLinkedRaw(_data, value);
+  }
+
+  // set(SerializedValue<std::string>)
+  // set(SerializedValue<String>)
+  // set(SerializedValue<const __FlashStringHelper*>)
+  template <typename T>
+  FORCE_INLINE bool set(
+      SerializedValue<T> value,
+      typename enable_if<!is_same<const char *, T>::value>::type * = 0) const {
+    return variantSetOwnedRaw(_data, value, _memoryPool);
+  }
+
+  // set(const std::string&)
+  // set(const String&)
+  template <typename T>
+  FORCE_INLINE bool set(
+      const T &value,
+      typename enable_if<IsString<T>::value>::type * = 0) const {
+    return variantSetString(_data, makeString(value), _memoryPool);
+  }
+
+  // set(char*)
+  template <typename T>
+  FORCE_INLINE bool set(
+      T *value, typename enable_if<IsString<T *>::value>::type * = 0) const {
+    return variantSetString(_data, makeString(value), _memoryPool);
+  }
+
+  // set(const char*);
+  FORCE_INLINE bool set(const char *value) const {
+    return variantSetString(_data, value);
+  }
+
+  // set(const char*);
+  FORCE_INLINE bool set(StringInMemoryPool value) const {
+    return variantSetString(_data, value, _memoryPool);
+  }
+
+  bool set(const JsonVariant &value) const;
+
+  FORCE_INLINE bool set(JsonArray array) const;
+  FORCE_INLINE bool set(const JsonArraySubscript &) const;
+  FORCE_INLINE bool set(JsonObject object) const;
+  template <typename TString>
+  FORCE_INLINE bool set(const JsonObjectSubscript<TString> &) const;
+
+  // Get the variant as the specified type.
+  //
+  // std::string as<std::string>() const;
+  // String as<String>() const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<!is_same<T, JsonArray>::value &&
+                                      !is_same<T, JsonObject>::value &&
+                                      !is_same<T, JsonVariant>::value,
+                                  typename JsonVariantAs<T>::type>::type
+  as() const {
+    return variantAs<T>(_data);
+  }
+  //
+  // JsonArray as<JsonArray>() const;
+  // const JsonArray as<const JsonArray>() const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, JsonArray>::value, T>::type as()
+      const;
+  //
+  // JsonObject as<JsonObject>() const;
+  // const JsonObject as<const JsonObject>() const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, JsonObject>::value, T>::type as()
+      const;
+  //
+  // JsonVariant as<JsonVariant> const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, JsonVariant>::value, T>::type as()
+      const {
+    return *this;
+  }
+
   template <typename Visitor>
   void accept(Visitor &visitor) const;
+
+  FORCE_INLINE bool operator==(JsonVariant lhs) const {
+    return variantEquals(_data, lhs._data);
+  }
+
+  FORCE_INLINE bool operator!=(JsonVariant lhs) const {
+    return !variantEquals(_data, lhs._data);
+  }
 
   // Change the type of the variant
   //
   // JsonArray to<JsonArray>()
   template <typename T>
-  typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type to();
+  typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type to() const;
   //
   // JsonObject to<JsonObject>()
   template <typename T>
-  typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type to();
+  typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type to()
+      const;
   //
   // JsonObject to<JsonVariant>()
   template <typename T>
-  typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type to();
+  typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type to()
+      const;
 
  private:
-  template <typename TStringRef>
-  bool setString(TStringRef value) {
-    if (!_data) return false;
-    const char *dup = value.save(_memoryPool);
-    if (dup) {
-      _data->type = JSON_OWNED_STRING;
-      _data->content.asString = dup;
-      return true;
-    } else {
-      _data->type = JSON_NULL;
-      return false;
-    }
+  MemoryPool *_memoryPool;
+};
+
+class JsonVariantConst : public JsonVariantProxy<const JsonVariantData>,
+                         public JsonVariantBase<JsonVariantConst> {
+  typedef JsonVariantProxy<const JsonVariantData> proxy_type;
+
+ public:
+  JsonVariantConst() : proxy_type(0) {}
+  JsonVariantConst(const JsonVariantData *data) : proxy_type(data) {}
+  JsonVariantConst(JsonVariant var) : proxy_type(var._data) {}
+
+  template <typename Visitor>
+  void accept(Visitor &visitor) const;
+
+  // Get the variant as the specified type.
+  //
+  template <typename T>
+  FORCE_INLINE typename JsonVariantConstAs<T>::type as() const {
+    return variantAs<typename JsonVariantConstAs<T>::type>(_data);
   }
 
-  MemoryPool *_memoryPool;
-  JsonVariantData *_data;
+  FORCE_INLINE JsonVariantConst operator[](size_t index) const;
+
+  //
+  // const JsonVariantConst operator[](TKey) const;
+  // TKey = const std::string&, const String&
+  template <typename TString>
+  FORCE_INLINE
+      typename enable_if<IsString<TString>::value, JsonVariantConst>::type
+      operator[](const TString &key) const {
+    return JsonVariantConst(objectGet(variantAsObject(_data), makeString(key)));
+  }
+  //
+  // JsonVariantConst operator[](TKey);
+  // TKey = const char*, const char[N], const FlashStringHelper*
+  template <typename TString>
+  FORCE_INLINE
+      typename enable_if<IsString<TString *>::value, JsonVariantConst>::type
+      operator[](TString *key) const {
+    return JsonVariantConst(objectGet(variantAsObject(_data), makeString(key)));
+  }
 };
 
 class JsonVariantLocal : public JsonVariant {

@@ -9,11 +9,11 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline JsonArray JsonArray::createNestedArray() {
+inline JsonArray JsonArray::createNestedArray() const {
   return add().to<JsonArray>();
 }
 
-inline JsonObject JsonArray::createNestedObject() {
+inline JsonObject JsonArray::createNestedObject() const {
   return add().to<JsonObject>();
 }
 }  // namespace ARDUINOJSON_NAMESPACE

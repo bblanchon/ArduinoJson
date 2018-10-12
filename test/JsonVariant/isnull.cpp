@@ -44,4 +44,12 @@ TEST_CASE("JsonVariant::isNull()") {
       variant.set(JsonObject());
       REQUIRE(variant.isNull() == true);
     }*/
+
+  SECTION("works with JsonVariantConst") {
+    variant.set(42);
+
+    JsonVariantConst cvar = variant;
+
+    REQUIRE(cvar.isNull() == false);
+  }
 }

@@ -32,15 +32,7 @@ TEST_CASE("JsonVariant undefined") {
     REQUIRE(variant.as<JsonArray>().isNull());
   }
 
-  SECTION("as<const JsonArray>()") {
-    REQUIRE(variant.as<const JsonArray>().isNull());
-  }
-
   SECTION("as<JsonObject>()") {
     REQUIRE(variant.as<JsonObject>().isNull());
-  }
-
-  SECTION("as<const JsonObject>()") {
-    REQUIRE(variant.as<const JsonObject>().isNull());
   }
 }

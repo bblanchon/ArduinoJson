@@ -10,12 +10,15 @@ TEST_CASE("JsonObject::containsKey()") {
   JsonObject obj = doc.to<JsonObject>();
   obj.set("hello", 42);
 
-  SECTION("returns false if key not present") {
+  SECTION("returns true only if key is present") {
     REQUIRE(false == obj.containsKey("world"));
+    REQUIRE(true == obj.containsKey("hello"));
   }
 
-  SECTION("returns true if key present") {
-    REQUIRE(true == obj.containsKey("hello"));
+  SECTION("works with JsonObjectConst") {
+    JsonObjectConst cobj = obj;
+    REQUIRE(false == cobj.containsKey("world"));
+    REQUIRE(true == cobj.containsKey("hello"));
   }
 
   SECTION("returns false after remove()") {

@@ -58,13 +58,7 @@ TEST_CASE("JsonObject::operator[]") {
     obj["hello"] = arr;
 
     REQUIRE(arr == obj["hello"].as<JsonArray>());
-    REQUIRE(arr == obj["hello"].as<JsonArray>());  // <- short hand
-    // REQUIRE(arr == obj["hello"].as<const JsonArray>());
-    // REQUIRE(arr == obj["hello"].as<const JsonArray>());  // <- short hand
     REQUIRE(true == obj["hello"].is<JsonArray>());
-    REQUIRE(true == obj["hello"].is<JsonArray>());
-    REQUIRE(true == obj["hello"].is<const JsonArray>());
-    REQUIRE(true == obj["hello"].is<const JsonArray>());
     REQUIRE(false == obj["hello"].is<JsonObject>());
   }
 
@@ -75,9 +69,7 @@ TEST_CASE("JsonObject::operator[]") {
     obj["hello"] = obj2;
 
     REQUIRE(obj2 == obj["hello"].as<JsonObject>());
-    REQUIRE(obj2 == obj["hello"].as<const JsonObject>());
     REQUIRE(true == obj["hello"].is<JsonObject>());
-    REQUIRE(true == obj["hello"].is<const JsonObject>());
     REQUIRE(false == obj["hello"].is<JsonArray>());
   }
 
@@ -219,4 +211,12 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(std::string("world") == obj[vla]);
   }
 #endif
+
+  SECTION("chain") {
+    obj.createNestedObject("hello")["world"] = 123;
+
+    REQUIRE(123 == obj["hello"]["world"].as<int>());
+    REQUIRE(true == obj["hello"]["world"].is<int>());
+    REQUIRE(false == obj["hello"]["world"].is<bool>());
+  }
 }

@@ -19,10 +19,10 @@ class JsonSerializer {
     _writer.writeFloat(value);
   }
 
-  void visitArray(JsonArray array) {
+  void visitArray(JsonArrayConst array) {
     _writer.beginArray();
 
-    JsonArray::iterator it = array.begin();
+    JsonArrayConst::iterator it = array.begin();
     while (it != array.end()) {
       it->accept(*this);
 
@@ -35,10 +35,10 @@ class JsonSerializer {
     _writer.endArray();
   }
 
-  void visitObject(JsonObject object) {
+  void visitObject(JsonObjectConst object) {
     _writer.beginObject();
 
-    JsonObject::iterator it = object.begin();
+    JsonObjectConst::iterator it = object.begin();
     while (it != object.end()) {
       _writer.writeString(it->key());
       _writer.writeColon();
@@ -113,6 +113,10 @@ inline std::ostream &operator<<(std::ostream &os, const JsonObject &source) {
 }
 inline std::ostream &operator<<(std::ostream &os, const JsonVariant &source) {
   serializeJson(source, os);
+  return os;
+}
+inline std::ostream &operator<<(std::ostream &os, JsonVariantConst source) {
+  os << serializeJson(source, os);
   return os;
 }
 

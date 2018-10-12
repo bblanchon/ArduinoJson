@@ -24,7 +24,12 @@ class JsonDocument {
   }
 
   template <typename T>
-  typename JsonVariantAs<T>::type as() const {
+  typename JsonVariantAs<T>::type as() {
+    return getVariant().template as<T>();
+  }
+
+  template <typename T>
+  typename JsonVariantConstAs<T>::type as() const {
     return getVariant().template as<T>();
   }
 
@@ -53,12 +58,16 @@ class JsonDocument {
   }
 
  private:
-  JsonVariant getVariant() const {
+  JsonVariant getVariant() {
     return JsonVariant(&_memoryPool, &_rootData);
   }
 
-  mutable TMemoryPool _memoryPool;
-  mutable JsonVariantData _rootData;
+  JsonVariantConst getVariant() const {
+    return JsonVariantConst(&_rootData);
+  }
+
+  TMemoryPool _memoryPool;
+  JsonVariantData _rootData;
 };
 
 class DynamicJsonDocument : public JsonDocument<DynamicMemoryPool> {

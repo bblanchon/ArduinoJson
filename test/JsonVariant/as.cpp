@@ -158,4 +158,16 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<long long>() == 9223372036854775807);
   }
 #endif
+
+  SECTION("should work on JsonVariantConst") {
+    variant.set("hello");
+
+    JsonVariantConst cvar = variant;
+
+    REQUIRE(cvar.as<bool>() == false);
+    REQUIRE(cvar.as<long>() == 0L);
+    REQUIRE(cvar.as<const char*>() == std::string("hello"));
+    REQUIRE(cvar.as<char*>() == std::string("hello"));
+    // REQUIRE(cvar.as<std::string>() == std::string("hello"));
+  }
 }

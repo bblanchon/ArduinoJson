@@ -38,4 +38,9 @@ struct IsString<TChar*> {
   static const bool value = sizeof(TChar) == 1;
 };
 
+template <>
+struct IsString<void*> {
+  static const bool value = false;
+};
+
 }  // namespace ARDUINOJSON_NAMESPACE

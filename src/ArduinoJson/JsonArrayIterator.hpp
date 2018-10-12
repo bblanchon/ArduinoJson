@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Data/Slot.hpp"
+#include "Data/SlotFunctions.hpp"
 #include "JsonVariant.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -29,8 +30,8 @@ class JsonVariantPtr {
 class JsonArrayIterator {
  public:
   JsonArrayIterator() : _slot(0) {}
-  explicit JsonArrayIterator(MemoryPool *memoryPool, Slot *iterator)
-      : _memoryPool(memoryPool), _slot(iterator) {}
+  explicit JsonArrayIterator(MemoryPool *memoryPool, Slot *slot)
+      : _memoryPool(memoryPool), _slot(slot) {}
 
   JsonVariant operator*() const {
     return JsonVariant(_memoryPool, &_slot->value);
@@ -53,10 +54,7 @@ class JsonArrayIterator {
   }
 
   JsonArrayIterator &operator+=(size_t distance) {
-    while (distance && _slot) {
-      _slot = _slot->next;
-      distance--;
-    }
+    _slot = slotAdvance(_slot, distance);
     return *this;
   }
 
@@ -67,5 +65,59 @@ class JsonArrayIterator {
  private:
   MemoryPool *_memoryPool;
   Slot *_slot;
+};
+
+class JsonVariantConstPtr {
+ public:
+  JsonVariantConstPtr(const JsonVariantData *data) : _variant(data) {}
+
+  JsonVariantConst *operator->() {
+    return &_variant;
+  }
+
+  JsonVariantConst &operator*() {
+    return _variant;
+  }
+
+ private:
+  JsonVariantConst _variant;
+};
+
+class JsonArrayConstIterator {
+ public:
+  JsonArrayConstIterator() : _slot(0) {}
+  explicit JsonArrayConstIterator(const Slot *slot) : _slot(slot) {}
+
+  JsonVariantConst operator*() const {
+    return JsonVariantConst(&_slot->value);
+  }
+  JsonVariantConstPtr operator->() {
+    return JsonVariantConstPtr(&_slot->value);
+  }
+
+  bool operator==(const JsonArrayConstIterator &other) const {
+    return _slot == other._slot;
+  }
+
+  bool operator!=(const JsonArrayConstIterator &other) const {
+    return _slot != other._slot;
+  }
+
+  JsonArrayConstIterator &operator++() {
+    _slot = _slot->next;
+    return *this;
+  }
+
+  JsonArrayConstIterator &operator+=(size_t distance) {
+    _slot = slotAdvance(_slot, distance);
+    return *this;
+  }
+
+  const Slot *internal() {
+    return _slot;
+  }
+
+ private:
+  const Slot *_slot;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

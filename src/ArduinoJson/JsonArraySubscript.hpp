@@ -19,7 +19,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
       : _array(array), _index(index) {}
 
   FORCE_INLINE JsonArraySubscript& operator=(const JsonArraySubscript& src) {
-    _array.set(_index, src.as<JsonVariant>());
+    get_impl().set(src.as<JsonVariant>());
     return *this;
   }
 
@@ -30,7 +30,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   //          std::string, String, JsonArray, JsonObject
   template <typename T>
   FORCE_INLINE JsonArraySubscript& operator=(const T& src) {
-    _array.set(_index, src);
+    get_impl().set(src);
     return *this;
   }
   //
@@ -38,7 +38,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename T>
   FORCE_INLINE JsonArraySubscript& operator=(T* src) {
-    _array.set(_index, src);
+    get_impl().set(src);
     return *this;
   }
 
@@ -57,7 +57,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   }
 
   template <typename T>
-  FORCE_INLINE typename JsonVariantTo<T>::type to() {
+  FORCE_INLINE typename JsonVariantTo<T>::type to() const {
     return _array.get<JsonVariant>(_index).to<T>();
   }
 
@@ -67,44 +67,42 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
   // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
   //          std::string, String, JsonArray, JsonObject
   template <typename TValue>
-  FORCE_INLINE bool set(const TValue& value) {
-    return _array.set(_index, value);
+  FORCE_INLINE bool set(const TValue& value) const {
+    return get_impl().set(value);
   }
   //
   // bool set(TValue)
   // TValue = char*, const char*, const FlashStringHelper*
   template <typename TValue>
-  FORCE_INLINE bool set(TValue* value) {
-    return _array.set(_index, value);
+  FORCE_INLINE bool set(TValue* value) const {
+    return get_impl().set(value);
   }
 
   template <typename Visitor>
   void accept(Visitor& visitor) const {
-    return _array.get<JsonVariant>(_index).accept(visitor);
+    return get_impl().accept(visitor);
+  }
+
+  FORCE_INLINE size_t size() const {
+    return get_impl().size();
   }
 
  private:
+  JsonVariant get_impl() const {
+    return _array.get<JsonVariant>(_index);
+  }
+
   JsonArray _array;
   const size_t _index;
 };
 
 template <typename TImpl>
 inline JsonArraySubscript JsonVariantSubscripts<TImpl>::operator[](
-    size_t index) {
-  return impl()->template as<JsonArray>()[index];
-}
-
-template <typename TImpl>
-inline const JsonArraySubscript JsonVariantSubscripts<TImpl>::operator[](
     size_t index) const {
   return impl()->template as<JsonArray>()[index];
 }
 
-inline JsonArraySubscript JsonArray::operator[](size_t index) {
-  return JsonArraySubscript(*this, index);
-}
-
-inline const JsonArraySubscript JsonArray::operator[](size_t index) const {
+inline JsonArraySubscript JsonArray::operator[](size_t index) const {
   return JsonArraySubscript(*this, index);
 }
 }  // namespace ARDUINOJSON_NAMESPACE
