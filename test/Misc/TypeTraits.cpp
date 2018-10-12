@@ -50,4 +50,19 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK(is_unsigned<float>::value == false);
     CHECK(is_unsigned<double>::value == false);
   }
+
+  SECTION("IsVisitable") {
+    CHECK(IsVisitable<DeserializationError>::value == false);
+    CHECK(IsVisitable<JsonPair>::value == false);
+    CHECK(IsVisitable<JsonVariant>::value == true);
+    CHECK(IsVisitable<JsonVariantConst>::value == true);
+    CHECK(IsVisitable<JsonArray>::value == true);
+    CHECK(IsVisitable<JsonArraySubscript>::value == true);
+    CHECK(IsVisitable<JsonArrayConst>::value == true);
+    CHECK(IsVisitable<JsonObject>::value == true);
+    CHECK(IsVisitable<JsonObjectSubscript<const char*> >::value == true);
+    CHECK(IsVisitable<JsonObjectConst>::value == true);
+    CHECK(IsVisitable<DynamicJsonDocument>::value == true);
+    CHECK(IsVisitable<StaticJsonDocument<10> >::value == true);
+  }
 }

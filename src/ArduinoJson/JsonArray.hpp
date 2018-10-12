@@ -38,12 +38,21 @@ class JsonArrayProxy {
   TData* _data;
 };
 
-class JsonArrayConst : public JsonArrayProxy<const JsonArrayData> {
+class JsonArrayConst : public JsonArrayProxy<const JsonArrayData>,
+                       public Visitable {
   friend class JsonArray;
   typedef JsonArrayProxy<const JsonArrayData> proxy_type;
 
  public:
   typedef JsonArrayConstIterator iterator;
+
+  template <typename Visitor>
+  FORCE_INLINE void accept(Visitor& visitor) const {
+    if (_data)
+      visitor.visitArray(*this);
+    else
+      visitor.visitNull();
+  }
 
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
@@ -62,7 +71,7 @@ class JsonArrayConst : public JsonArrayProxy<const JsonArrayData> {
   }
 };
 
-class JsonArray : public JsonArrayProxy<JsonArrayData> {
+class JsonArray : public JsonArrayProxy<JsonArrayData>, public Visitable {
   typedef JsonArrayProxy<JsonArrayData> proxy_type;
 
  public:
@@ -224,10 +233,7 @@ class JsonArray : public JsonArrayProxy<JsonArrayData> {
 
   template <typename Visitor>
   FORCE_INLINE void accept(Visitor& visitor) const {
-    if (_data)
-      visitor.visitArray(*this);
-    else
-      visitor.visitNull();
+    JsonArrayConst(_data).accept(visitor);
   }
 
  private:

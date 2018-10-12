@@ -6,39 +6,29 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::isNull()") {
-  SECTION("returns true for undefined JsonArray") {
-    JsonArray array;
-    REQUIRE(array.isNull() == true);
+  DynamicJsonDocument doc;
+
+  SECTION("returns true") {
+    JsonArray arr;
+    REQUIRE(arr.isNull() == true);
   }
 
-  SECTION("returns false when allocation succeeds") {
-    StaticJsonDocument<JSON_ARRAY_SIZE(0)> doc;
-    JsonArray array = doc.to<JsonArray>();
-    REQUIRE(array.isNull() == false);
+  SECTION("returns false") {
+    JsonArray arr = doc.to<JsonArray>();
+    REQUIRE(arr.isNull() == false);
   }
-
-  /*  SECTION("returns true when allocation fails") {
-      StaticJsonDocument<1> doc;
-      JsonArray array = doc.to<JsonArray>();
-      REQUIRE(array.isNull() == true);
-    }*/
 }
 
 TEST_CASE("JsonArrayConst::isNull()") {
-  SECTION("returns true for undefined JsonArray") {
-    JsonArrayConst array;
-    REQUIRE(array.isNull() == true);
+  DynamicJsonDocument doc;
+
+  SECTION("returns true") {
+    JsonArrayConst arr;
+    REQUIRE(arr.isNull() == true);
   }
 
-  SECTION("returns false when allocation succeeds") {
-    StaticJsonDocument<JSON_ARRAY_SIZE(0)> doc;
-    JsonArrayConst array = doc.to<JsonArray>();
-    REQUIRE(array.isNull() == false);
+  SECTION("returns false") {
+    JsonArrayConst arr = doc.to<JsonArray>();
+    REQUIRE(arr.isNull() == false);
   }
-
-  /*  SECTION("returns true when allocation fails") {
-      StaticJsonDocument<1> doc;
-      JsonArray array = doc.to<JsonArray>();
-      REQUIRE(array.isNull() == true);
-    }*/
 }

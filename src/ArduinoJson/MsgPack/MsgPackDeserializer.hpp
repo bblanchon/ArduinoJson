@@ -278,7 +278,8 @@ class MsgPackDeserializer {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
     --_nestingLimit;
     for (; n; --n) {
-      JsonVariantLocal key(_memoryPool);
+      JsonVariantData keyData;
+      JsonVariant key(_memoryPool, &keyData);
       DeserializationError err = parse(key);
       if (err) return err;
       if (!key.is<char *>()) return DeserializationError::NotSupported;

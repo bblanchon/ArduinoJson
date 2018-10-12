@@ -33,6 +33,10 @@ class JsonObjectProxy {
     return objectContainsKey(_data, makeString(key));
   }
 
+  FORCE_INLINE bool isNull() const {
+    return _data == 0;
+  }
+
   FORCE_INLINE size_t size() const {
     return objectSize(_data);
   }
@@ -42,7 +46,8 @@ class JsonObjectProxy {
   TData* _data;
 };
 
-class JsonObjectConst : public JsonObjectProxy<const JsonObjectData> {
+class JsonObjectConst : public JsonObjectProxy<const JsonObjectData>,
+                        public Visitable {
   friend class JsonObject;
   typedef JsonObjectProxy<const JsonObjectData> proxy_type;
 
@@ -51,6 +56,14 @@ class JsonObjectConst : public JsonObjectProxy<const JsonObjectData> {
 
   JsonObjectConst() : proxy_type(0) {}
   JsonObjectConst(const JsonObjectData* data) : proxy_type(data) {}
+
+  template <typename Visitor>
+  FORCE_INLINE void accept(Visitor& visitor) const {
+    if (_data)
+      visitor.visitObject(*this);
+    else
+      visitor.visitNull();
+  }
 
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
@@ -110,7 +123,7 @@ class JsonObjectConst : public JsonObjectProxy<const JsonObjectData> {
   }
 };
 
-class JsonObject : public JsonObjectProxy<JsonObjectData> {
+class JsonObject : public JsonObjectProxy<JsonObjectData>, public Visitable {
   typedef JsonObjectProxy<JsonObjectData> proxy_type;
 
  public:
@@ -304,16 +317,9 @@ class JsonObject : public JsonObjectProxy<JsonObjectData> {
     return set_impl(key);
   }
 
-  FORCE_INLINE bool isNull() const {
-    return _data == 0;
-  }
-
   template <typename Visitor>
   FORCE_INLINE void accept(Visitor& visitor) const {
-    if (_data)
-      visitor.visitObject(JsonObjectConst(_data));
-    else
-      visitor.visitNull();
+    JsonObjectConst(_data).accept(visitor);
   }
 
  private:

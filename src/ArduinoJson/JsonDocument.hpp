@@ -12,7 +12,7 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TMemoryPool>
-class JsonDocument {
+class JsonDocument : public Visitable {
  public:
   uint8_t nestingLimit;
 

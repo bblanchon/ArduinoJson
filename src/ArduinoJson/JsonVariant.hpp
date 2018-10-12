@@ -16,6 +16,7 @@
 #include "Numbers/parseFloat.hpp"
 #include "Numbers/parseInteger.hpp"
 #include "Polyfills/type_traits.hpp"
+#include "Visitable.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -117,7 +118,8 @@ class JsonVariantProxy {
 // - a string (const char*)
 // - a reference to a JsonArray or JsonObject
 class JsonVariant : public JsonVariantProxy<JsonVariantData>,
-                    public JsonVariantBase<JsonVariant> {
+                    public JsonVariantBase<JsonVariant>,
+                    public Visitable {
   typedef JsonVariantProxy<JsonVariantData> proxy_type;
   friend class JsonVariantConst;
 
@@ -279,7 +281,8 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
 };
 
 class JsonVariantConst : public JsonVariantProxy<const JsonVariantData>,
-                         public JsonVariantBase<JsonVariantConst> {
+                         public JsonVariantBase<JsonVariantConst>,
+                         public Visitable {
   typedef JsonVariantProxy<const JsonVariantData> proxy_type;
 
  public:
@@ -317,16 +320,5 @@ class JsonVariantConst : public JsonVariantProxy<const JsonVariantData>,
       operator[](TString *key) const {
     return JsonVariantConst(objectGet(variantAsObject(_data), makeString(key)));
   }
-};
-
-class JsonVariantLocal : public JsonVariant {
- public:
-  explicit JsonVariantLocal(MemoryPool *memoryPool)
-      : JsonVariant(memoryPool, &_localData) {
-    _localData.type = JSON_NULL;
-  }
-
- private:
-  JsonVariantData _localData;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

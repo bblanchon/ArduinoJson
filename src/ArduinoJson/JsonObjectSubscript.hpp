@@ -17,7 +17,8 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TStringRef>
 class JsonObjectSubscript
-    : public JsonVariantBase<JsonObjectSubscript<TStringRef> > {
+    : public JsonVariantBase<JsonObjectSubscript<TStringRef> >,
+      public Visitable {
   typedef JsonObjectSubscript<TStringRef> this_type;
 
  public:

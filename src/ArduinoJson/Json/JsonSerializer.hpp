@@ -6,7 +6,8 @@
 
 #include "../Serialization/measure.hpp"
 #include "../Serialization/serialize.hpp"
-#include "./JsonWriter.hpp"
+#include "../Visitable.hpp"
+#include "JsonWriter.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -103,32 +104,9 @@ size_t measureJson(const TSource &source) {
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-inline std::ostream &operator<<(std::ostream &os, const JsonArray &source) {
-  serializeJson(source, os);
-  return os;
-}
-inline std::ostream &operator<<(std::ostream &os, const JsonObject &source) {
-  serializeJson(source, os);
-  return os;
-}
-inline std::ostream &operator<<(std::ostream &os, const JsonVariant &source) {
-  serializeJson(source, os);
-  return os;
-}
-inline std::ostream &operator<<(std::ostream &os, JsonVariantConst source) {
-  os << serializeJson(source, os);
-  return os;
-}
-
-inline std::ostream &operator<<(std::ostream &os,
-                                const JsonArraySubscript &source) {
-  serializeJson(source, os);
-  return os;
-}
-
-template <typename TKey>
-inline std::ostream &operator<<(std::ostream &os,
-                                const JsonObjectSubscript<TKey> &source) {
+template <typename T>
+inline typename enable_if<IsVisitable<T>::value, std::ostream &>::type
+operator<<(std::ostream &os, const T &source) {
   serializeJson(source, os);
   return os;
 }

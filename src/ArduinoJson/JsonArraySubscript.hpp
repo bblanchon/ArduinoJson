@@ -13,7 +13,8 @@
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {
-class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript> {
+class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript>,
+                           public Visitable {
  public:
   FORCE_INLINE JsonArraySubscript(JsonArray array, size_t index)
       : _array(array), _index(index) {}

@@ -6,20 +6,29 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::isNull()") {
-  SECTION("returns true for undefined JsonObject") {
-    JsonObject array;
-    REQUIRE(array.isNull() == true);
+  DynamicJsonDocument doc;
+
+  SECTION("returns true") {
+    JsonObject obj;
+    REQUIRE(obj.isNull() == true);
   }
 
-  SECTION("returns false when allocation succeeds") {
-    StaticJsonDocument<JSON_OBJECT_SIZE(0)> doc;
-    JsonObject array = doc.to<JsonObject>();
-    REQUIRE(array.isNull() == false);
+  SECTION("returns false") {
+    JsonObject obj = doc.to<JsonObject>();
+    REQUIRE(obj.isNull() == false);
+  }
+}
+
+TEST_CASE("JsonObjectConst::isNull()") {
+  DynamicJsonDocument doc;
+
+  SECTION("returns true") {
+    JsonObjectConst obj;
+    REQUIRE(obj.isNull() == true);
   }
 
-  /*  SECTION("returns true when allocation fails") {
-      StaticJsonDocument<1> doc;
-      JsonObject array = doc.to<JsonObject>();
-      REQUIRE(array.isNull() == true);
-    }*/
+  SECTION("returns false") {
+    JsonObjectConst obj = doc.to<JsonObject>();
+    REQUIRE(obj.isNull() == false);
+  }
 }

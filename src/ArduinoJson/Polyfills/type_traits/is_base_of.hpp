@@ -18,8 +18,7 @@ class is_base_of {
   static No &probe(...);
 
  public:
-  enum {
-    value = sizeof(probe(reinterpret_cast<TDerived *>(0))) == sizeof(Yes)
-  };
+  static const bool value =
+      sizeof(probe(reinterpret_cast<TDerived *>(0))) == sizeof(Yes);
 };
 }  // namespace ARDUINOJSON_NAMESPACE
