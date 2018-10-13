@@ -19,5 +19,8 @@
     "third-party"
   ],
   "frameworks": "arduino",
-  "platforms": "*"
+  "platforms": [ "espressif8266", "espressif32" ],
+  "dependencies": {
+    "ArduinoJson": "~5.13.3"
+  }
 }
