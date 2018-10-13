@@ -11,6 +11,7 @@ HEAD
 * Increased the default capacity of `DynamicJsonDocument`
 * Fixed `JsonVariant::is<String>()` (closes #763)
 * Added `JsonArrayConst`, `JsonObjectConst`, and `JsonVariantConst`
+* Added copy-constructor and copy-assignment-operator for `JsonDocument` (issue #827)
 
 v6.4.0-beta (2018-09-11)
 -----------

@@ -20,7 +20,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript>,
       : _array(array), _index(index) {}
 
   FORCE_INLINE JsonArraySubscript& operator=(const JsonArraySubscript& src) {
-    get_impl().set(src.as<JsonVariant>());
+    get_impl().set(src.as<JsonVariantConst>());
     return *this;
   }
 

@@ -30,7 +30,11 @@ inline bool JsonVariant::set(const JsonObjectSubscript<TString>& value) const {
   return set(value.template as<JsonVariant>());
 }
 
-inline bool JsonVariant::set(const JsonVariant& value) const {
+inline bool JsonVariant::set(JsonVariantConst value) const {
+  return variantCopy(_data, value._data, _memoryPool);
+}
+
+inline bool JsonVariant::set(JsonVariant value) const {
   return variantCopy(_data, value._data, _memoryPool);
 }
 

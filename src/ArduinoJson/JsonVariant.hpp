@@ -209,7 +209,8 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
     return variantSetString(_data, value, _memoryPool);
   }
 
-  bool set(const JsonVariant &value) const;
+  bool set(JsonVariantConst value) const;
+  bool set(JsonVariant value) const;
 
   FORCE_INLINE bool set(JsonArray array) const;
   FORCE_INLINE bool set(const JsonArraySubscript &) const;
@@ -284,6 +285,7 @@ class JsonVariantConst : public JsonVariantProxy<const JsonVariantData>,
                          public JsonVariantBase<JsonVariantConst>,
                          public Visitable {
   typedef JsonVariantProxy<const JsonVariantData> proxy_type;
+  friend class JsonVariant;
 
  public:
   JsonVariantConst() : proxy_type(0) {}

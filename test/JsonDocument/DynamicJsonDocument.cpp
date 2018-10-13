@@ -38,4 +38,58 @@ TEST_CASE("DynamicJsonDocument") {
       REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(0));
     }
   }
+
+  SECTION("Copy constructor") {
+    deserializeJson(doc, "{\"hello\":\"world\"}");
+    doc.nestingLimit = 42;
+
+    DynamicJsonDocument doc2 = doc;
+
+    std::string json;
+    serializeJson(doc2, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc2.nestingLimit == 42);
+  }
+
+  SECTION("Copy assignment") {
+    DynamicJsonDocument doc2;
+    deserializeJson(doc2, "{\"hello\":\"world\"}");
+    doc2.nestingLimit = 42;
+
+    doc = doc2;
+
+    std::string json;
+    serializeJson(doc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc.nestingLimit == 42);
+  }
+
+  SECTION("Construct from StaticJsonDocument") {
+    StaticJsonDocument<200> sdoc;
+    deserializeJson(sdoc, "{\"hello\":\"world\"}");
+    sdoc.nestingLimit = 42;
+
+    DynamicJsonDocument ddoc = sdoc;
+
+    std::string json;
+    serializeJson(ddoc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(ddoc.nestingLimit == 42);
+  }
+
+  SECTION("Assign from StaticJsonDocument") {
+    DynamicJsonDocument ddoc;
+    ddoc.to<JsonVariant>().set(666);
+
+    StaticJsonDocument<200> sdoc;
+    deserializeJson(sdoc, "{\"hello\":\"world\"}");
+    sdoc.nestingLimit = 42;
+
+    ddoc = sdoc;
+
+    std::string json;
+    serializeJson(ddoc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(ddoc.nestingLimit == 42);
+  }
 }
