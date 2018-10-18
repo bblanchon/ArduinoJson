@@ -44,22 +44,22 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript>,
   }
 
   FORCE_INLINE bool isNull() const {
-    return _index >= _array.size();
+    return get_impl().isNull();
   }
 
   template <typename T>
   FORCE_INLINE typename JsonVariantAs<T>::type as() const {
-    return _array.get<T>(_index);
+    return get_impl().as<T>();
   }
 
   template <typename T>
   FORCE_INLINE bool is() const {
-    return _array.is<T>(_index);
+    return get_impl().is<T>();
   }
 
   template <typename T>
   FORCE_INLINE typename JsonVariantTo<T>::type to() const {
-    return _array.get<JsonVariant>(_index).to<T>();
+    return get_impl().to<T>();
   }
 
   // Replaces the value
@@ -89,7 +89,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript>,
   }
 
  private:
-  JsonVariant get_impl() const {
+  FORCE_INLINE JsonVariant get_impl() const {
     return _array.get<JsonVariant>(_index);
   }
 
