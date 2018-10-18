@@ -7,39 +7,12 @@
 #include "../Polyfills/mpl/max.hpp"
 #include "../Strings/StringInMemoryPool.hpp"
 #include "MemoryPool.hpp"
+#include "StringBuilder.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
 class StaticMemoryPoolBase : public MemoryPool {
  public:
-  class StringBuilder {
-   public:
-    explicit StringBuilder(StaticMemoryPoolBase* parent) : _parent(parent) {
-      _start = parent->_buffer + parent->_size;
-    }
-
-    void append(char c) {
-      if (_parent->canAlloc(1)) {
-        char* last = static_cast<char*>(_parent->doAlloc(1));
-        *last = c;
-      }
-    }
-
-    StringInMemoryPool complete() const {
-      if (_parent->canAlloc(1)) {
-        char* last = static_cast<char*>(_parent->doAlloc(1));
-        *last = '\0';
-        return _start;
-      } else {
-        return NULL;
-      }
-    }
-
-   private:
-    StaticMemoryPoolBase* _parent;
-    char* _start;
-  };
-
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
     return _capacity;
@@ -51,10 +24,17 @@ class StaticMemoryPoolBase : public MemoryPool {
   }
 
   // Allocates the specified amount of bytes in the memoryPool
-  virtual void* alloc(size_t bytes) {
+  virtual char* alloc(size_t bytes) {
     alignNextAlloc();
     if (!canAlloc(bytes)) return NULL;
     return doAlloc(bytes);
+  }
+
+  virtual char* realloc(char* oldPtr, size_t oldSize, size_t newSize) {
+    size_t n = newSize - oldSize;
+    if (!canAlloc(n)) return NULL;
+    doAlloc(n);
+    return oldPtr;
   }
 
   // Resets the memoryPool.
@@ -82,8 +62,8 @@ class StaticMemoryPoolBase : public MemoryPool {
     return _size + bytes <= _capacity;
   }
 
-  void* doAlloc(size_t bytes) {
-    void* p = &_buffer[_size];
+  char* doAlloc(size_t bytes) {
+    char* p = &_buffer[_size];
     _size += bytes;
     return p;
   }

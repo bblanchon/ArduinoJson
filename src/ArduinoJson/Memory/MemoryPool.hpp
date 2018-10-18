@@ -19,7 +19,9 @@ class MemoryPool {
  public:
   // Allocates n bytes in the MemoryPool.
   // Return a pointer to the allocated memory or NULL if allocation fails.
-  virtual void *alloc(size_t size) = 0;
+  virtual char *alloc(size_t size) = 0;
+
+  virtual char *realloc(char *oldPtr, size_t oldSize, size_t newSize) = 0;
 
  protected:
   // CAUTION: NO VIRTUAL DESTRUCTOR!

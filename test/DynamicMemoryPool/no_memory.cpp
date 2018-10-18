@@ -17,8 +17,6 @@ struct NoMemoryAllocator {
 TEST_CASE("DynamicMemoryPool no memory") {
   DynamicMemoryPoolBase<NoMemoryAllocator> _memoryPool;
 
-  typedef DynamicMemoryPoolBase<NoMemoryAllocator>::StringBuilder StringBuilder;
-
   SECTION("FixCodeCoverage") {
     // call this function to fix code coverage
     NoMemoryAllocator().deallocate(NULL);

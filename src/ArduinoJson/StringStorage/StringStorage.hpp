@@ -9,34 +9,34 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TMemoryPool, typename TInput, typename Enable = void>
+template <typename TInput, typename Enable = void>
 struct StringStorage {
-  typedef StringCopier<TMemoryPool> type;
+  typedef StringCopier type;
 
-  static type create(TMemoryPool& jb, TInput&) {
-    return type(jb);
+  static type create(MemoryPool& pool, TInput&) {
+    return type(&pool);
   }
 };
 
-template <typename TMemoryPool, typename TChar>
-struct StringStorage<TMemoryPool, TChar*,
+template <typename TChar>
+struct StringStorage<TChar*,
                      typename enable_if<!is_const<TChar>::value>::type> {
   typedef StringMover<TChar> type;
 
-  static type create(TMemoryPool&, TChar* input) {
+  static type create(MemoryPool&, TChar* input) {
     return type(input);
   }
 };
 
-template <typename TMemoryPool, typename TInput>
-typename StringStorage<TMemoryPool, TInput>::type makeStringStorage(
-    TMemoryPool& jb, TInput& input) {
-  return StringStorage<TMemoryPool, TInput>::create(jb, input);
+template <typename TInput>
+typename StringStorage<TInput>::type makeStringStorage(MemoryPool& pool,
+                                                       TInput& input) {
+  return StringStorage<TInput>::create(pool, input);
 }
 
-template <typename TMemoryPool, typename TChar>
-typename StringStorage<TMemoryPool, TChar*>::type makeStringStorage(
-    TMemoryPool& jb, TChar* input) {
-  return StringStorage<TMemoryPool, TChar*>::create(jb, input);
+template <typename TChar>
+typename StringStorage<TChar*>::type makeStringStorage(MemoryPool& pool,
+                                                       TChar* input) {
+  return StringStorage<TChar*>::create(pool, input);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

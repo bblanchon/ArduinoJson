@@ -6,6 +6,7 @@
 
 #include "../Strings/StringInMemoryPool.hpp"
 #include "MemoryPool.hpp"
+#include "StringBuilder.hpp"
 
 #include <stdlib.h>  // malloc, free
 
@@ -39,7 +40,7 @@ class DynamicMemoryPoolBase : public MemoryPool {
     size_t size;
   };
   struct Block : EmptyBlock {
-    uint8_t data[1];
+    char data[1];
   };
 
  public:
@@ -64,9 +65,21 @@ class DynamicMemoryPoolBase : public MemoryPool {
   }
 
   // Allocates the specified amount of bytes in the memoryPool
-  virtual void* alloc(size_t bytes) {
+  virtual char* alloc(size_t bytes) {
     alignNextAlloc();
     return canAllocInHead(bytes) ? allocInHead(bytes) : allocInNewBlock(bytes);
+  }
+
+  virtual char* realloc(char* oldPtr, size_t oldSize, size_t newSize) {
+    size_t n = newSize - oldSize;
+    if (canAllocInHead(n)) {
+      allocInHead(n);
+      return oldPtr;
+    } else {
+      char* newPtr = allocInNewBlock(newSize);
+      if (oldPtr && newPtr) memcpy(newPtr, oldPtr, oldSize);
+      return newPtr;
+    }
   }
 
   // Resets the memoryPool.
@@ -82,37 +95,6 @@ class DynamicMemoryPoolBase : public MemoryPool {
     _head = 0;
   }
 
-  class StringBuilder {
-   public:
-    explicit StringBuilder(DynamicMemoryPoolBase* parent)
-        : _parent(parent), _start(NULL), _length(0) {}
-
-    void append(char c) {
-      if (_parent->canAllocInHead(1)) {
-        char* end = static_cast<char*>(_parent->allocInHead(1));
-        *end = c;
-        if (_length == 0) _start = end;
-      } else {
-        char* newStart =
-            static_cast<char*>(_parent->allocInNewBlock(_length + 1));
-        if (_start && newStart) memcpy(newStart, _start, _length);
-        if (newStart) newStart[_length] = c;
-        _start = newStart;
-      }
-      _length++;
-    }
-
-    StringInMemoryPool complete() {
-      append(0);
-      return _start;
-    }
-
-   private:
-    DynamicMemoryPoolBase* _parent;
-    char* _start;
-    size_t _length;
-  };
-
   StringBuilder startString() {
     return StringBuilder(this);
   }
@@ -126,13 +108,13 @@ class DynamicMemoryPoolBase : public MemoryPool {
     return _head != NULL && _head->size + bytes <= _head->capacity;
   }
 
-  void* allocInHead(size_t bytes) {
-    void* p = _head->data + _head->size;
+  char* allocInHead(size_t bytes) {
+    char* p = _head->data + _head->size;
     _head->size += bytes;
     return p;
   }
 
-  void* allocInNewBlock(size_t bytes) {
+  char* allocInNewBlock(size_t bytes) {
     size_t capacity = _nextBlockCapacity;
     if (bytes > capacity) capacity = bytes;
     if (!addNewBlock(capacity)) return NULL;
