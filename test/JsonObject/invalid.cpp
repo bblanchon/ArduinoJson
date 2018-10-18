@@ -15,7 +15,7 @@ TEST_CASE("JsonObject::invalid()") {
   }
 
   SECTION("AddFails") {
-    obj.set("hello", "world");
+    obj["hello"] = "world";
     REQUIRE(0 == obj.size());
   }
 

@@ -1,6 +1,14 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Removed `JsonArray::is<T>(i)` and `JsonArray::set(i,v)`
+* Removed `JsonObject::is<T>(k)` and `JsonObject::set(k,v)`
+* Replaced `T JsonArray::get<T>(i)` with `JsonVariant JsonArray::get(i)`
+* Replaced `T JsonObject::get<T>(k)` with `JsonVariant JsonObject::get(k)`
+
 v6.5.0-beta (2018-10-13)
 -----------
 

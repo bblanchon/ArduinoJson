@@ -86,7 +86,7 @@ TEST_CASE("JsonObject::operator[]") {
   SECTION("object subscript") {
     DynamicJsonDocument doc2;
     JsonObject obj2 = doc2.to<JsonObject>();
-    obj2.set("x", 42);
+    obj2["x"] = 42;
 
     obj["a"] = obj2["x"];
 

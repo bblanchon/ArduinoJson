@@ -80,18 +80,18 @@ class JsonObjectConst : public JsonObjectProxy<const JsonObjectData>,
   // TKey = const std::string&, const String&
   // TValue = bool, char, long, int, short, float, double,
   //          std::string, String, JsonArrayConst, JsonObjectConst
-  template <typename TValue, typename TKey>
-  FORCE_INLINE typename JsonVariantAs<TValue>::type get(const TKey& key) const {
-    return get_impl(makeString(key)).template as<TValue>();
+  template <typename TKey>
+  FORCE_INLINE JsonVariantConst get(const TKey& key) const {
+    return get_impl(makeString(key));
   }
   //
   // TValue get<TValue>(TKey) const;
   // TKey = char*, const char*, const FlashStringHelper*
   // TValue = bool, char, long, int, short, float, double,
   //          std::string, String, JsonArrayConst, JsonObjectConst
-  template <typename TValue, typename TKey>
-  FORCE_INLINE typename JsonVariantAs<TValue>::type get(TKey* key) const {
-    return get_impl(makeString(key)).template as<TValue>();
+  template <typename TKey>
+  FORCE_INLINE JsonVariantConst get(TKey* key) const {
+    return get_impl(makeString(key));
   }
 
   //
@@ -191,39 +191,18 @@ class JsonObject : public JsonObjectProxy<JsonObjectData>, public Visitable {
   // TKey = const std::string&, const String&
   // TValue = bool, char, long, int, short, float, double,
   //          std::string, String, JsonArray, JsonObject
-  template <typename TValue, typename TKey>
-  FORCE_INLINE typename JsonVariantAs<TValue>::type get(const TKey& key) const {
-    return get_impl(makeString(key)).template as<TValue>();
+  template <typename TKey>
+  FORCE_INLINE JsonVariant get(const TKey& key) const {
+    return get_impl(makeString(key));
   }
   //
   // TValue get<TValue>(TKey) const;
   // TKey = char*, const char*, const FlashStringHelper*
   // TValue = bool, char, long, int, short, float, double,
   //          std::string, String, JsonArray, JsonObject
-  template <typename TValue, typename TKey>
-  FORCE_INLINE typename JsonVariantAs<TValue>::type get(TKey* key) const {
-    return get_impl(makeString(key)).template as<TValue>();
-  }
-
-  // Checks the type of the value associated with the specified key.
-  //
-  //
-  // bool is<TValue>(TKey) const;
-  // TKey = const std::string&, const String&
-  // TValue = bool, char, long, int, short, float, double,
-  //          std::string, String, JsonArray, JsonObject
-  template <typename TValue, typename TKey>
-  FORCE_INLINE bool is(const TKey& key) const {
-    return get_impl(makeString(key)).template is<TValue>();
-  }
-  //
-  // bool is<TValue>(TKey) const;
-  // TKey = char*, const char*, const FlashStringHelper*
-  // TValue = bool, char, long, int, short, float, double,
-  //          std::string, String, JsonArray, JsonObject
-  template <typename TValue, typename TKey>
-  FORCE_INLINE bool is(TKey* key) const {
-    return get_impl(makeString(key)).template is<TValue>();
+  template <typename TKey>
+  FORCE_INLINE JsonVariant get(TKey* key) const {
+    return get_impl(makeString(key));
   }
 
   // Gets or sets the value associated with the specified key.
@@ -265,42 +244,6 @@ class JsonObject : public JsonObjectProxy<JsonObjectData>, public Visitable {
   template <typename TKey>
   FORCE_INLINE void remove(TKey* key) const {
     remove_impl(makeString(key));
-  }
-
-  // Sets the specified key with the specified value.
-  //
-  // bool set(TKey, TValue);
-  // TKey = const std::string&, const String&
-  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
-  //          std::string, String, JsonArray, JsonObject
-  template <typename TValue, typename TKey>
-  FORCE_INLINE bool set(const TKey& key, const TValue& value) const {
-    return set(key).set(value);
-  }
-  //
-  // bool set(TKey, TValue);
-  // TKey = const std::string&, const String&
-  // TValue = char*, const char*, const FlashStringHelper*
-  template <typename TValue, typename TKey>
-  FORCE_INLINE bool set(const TKey& key, TValue* value) const {
-    return set(key).set(value);
-  }
-  //
-  // bool set(TKey, const TValue&);
-  // TKey = char*, const char*, const FlashStringHelper*
-  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
-  //          std::string, String, JsonArray, JsonObject
-  template <typename TValue, typename TKey>
-  FORCE_INLINE bool set(TKey* key, const TValue& value) const {
-    return set(key).set(value);
-  }
-  //
-  // bool set(TKey, TValue);
-  // TKey = char*, const char*, const FlashStringHelper*
-  // TValue = char*, const char*, const FlashStringHelper*
-  template <typename TValue, typename TKey>
-  FORCE_INLINE bool set(TKey* key, TValue* value) const {
-    return set(key).set(value);
   }
 
   template <typename TKey>

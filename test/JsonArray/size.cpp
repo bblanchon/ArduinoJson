@@ -21,15 +21,7 @@ TEST_CASE("JsonArray::size()") {
     REQUIRE(2U == array.size());
   }
 
-  SECTION("remains the same after set()") {
-    array.add("hello");
-    REQUIRE(1U == array.size());
-
-    array.set(0, "hello");
-    REQUIRE(1U == array.size());
-  }
-
-  SECTION("remains the same after assigment") {
+  SECTION("remains the same after replacing an element") {
     array.add("hello");
     REQUIRE(1U == array.size());
 

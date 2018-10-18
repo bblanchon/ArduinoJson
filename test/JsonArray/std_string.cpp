@@ -21,14 +21,6 @@ TEST_CASE("std::string") {
     REQUIRE(std::string("hello") == array[0]);
   }
 
-  SECTION("set()") {
-    std::string value("world");
-    array.add("hello");
-    array.set(0, value);
-    eraseString(value);
-    REQUIRE(std::string("world") == array[0]);
-  }
-
   SECTION("operator[]") {
     std::string value("world");
     array.add("hello");

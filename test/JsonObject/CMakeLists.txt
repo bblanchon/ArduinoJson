@@ -8,13 +8,10 @@ add_executable(JsonObjectTests
 	createNestedArray.cpp
 	createNestedObject.cpp
 	equals.cpp
-	get.cpp
 	invalid.cpp
-	is.cpp
 	isNull.cpp
 	iterator.cpp
 	remove.cpp
-	set.cpp
 	size.cpp
 	std_string.cpp
 	subscript.cpp

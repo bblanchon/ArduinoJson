@@ -15,12 +15,12 @@ TEST_CASE("JsonObject::size()") {
   }
 
   SECTION("increases when values are added") {
-    obj.set("hello", 42);
+    obj["hello"] = 42;
     REQUIRE(1 == obj.size());
   }
 
   SECTION("decreases when values are removed") {
-    obj.set("hello", 42);
+    obj["hello"] = 42;
     obj.remove("hello");
     REQUIRE(0 == obj.size());
   }

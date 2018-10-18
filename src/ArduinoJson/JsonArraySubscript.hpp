@@ -90,7 +90,7 @@ class JsonArraySubscript : public JsonVariantBase<JsonArraySubscript>,
 
  private:
   FORCE_INLINE JsonVariant get_impl() const {
-    return _array.get<JsonVariant>(_index);
+    return _array.get(_index);
   }
 
   JsonArray _array;

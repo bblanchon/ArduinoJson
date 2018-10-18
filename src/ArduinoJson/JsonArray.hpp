@@ -191,15 +191,8 @@ class JsonArray : public JsonArrayProxy<JsonArrayData>, public Visitable {
   }
 
   // Gets the value at the specified index.
-  template <typename T>
-  FORCE_INLINE typename JsonVariantAs<T>::type get(size_t index) const {
-    return get_impl(index).as<T>();
-  }
-
-  // Check the type of the value at specified index.
-  template <typename T>
-  FORCE_INLINE bool is(size_t index) const {
-    return get_impl(index).is<T>();
+  FORCE_INLINE JsonVariant get(size_t index) const {
+    return JsonVariant(_memoryPool, arrayGet(_data, index));
   }
 
   // Removes element at specified position.
@@ -212,25 +205,6 @@ class JsonArray : public JsonArrayProxy<JsonArrayData>, public Visitable {
     arrayRemove(_data, index);
   }
 
-  // Sets the value at specified index.
-  //
-  // bool add(size_t index, const TValue&);
-  // TValue = bool, long, int, short, float, double, serialized, JsonVariant,
-  //          std::string, String, JsonArray, JsonObject
-  template <typename T>
-  FORCE_INLINE bool set(size_t index, const T& value) const {
-    if (!_data) return false;
-    return get_impl(index).set(value);
-  }
-  //
-  // bool add(size_t index, TValue);
-  // TValue = char*, const char*, const FlashStringHelper*
-  template <typename T>
-  FORCE_INLINE bool set(size_t index, T* value) const {
-    if (!_data) return false;
-    return get_impl(index).set(value);
-  }
-
   template <typename Visitor>
   FORCE_INLINE void accept(Visitor& visitor) const {
     JsonArrayConst(_data).accept(visitor);
@@ -240,10 +214,6 @@ class JsonArray : public JsonArrayProxy<JsonArrayData>, public Visitable {
   template <typename TValueRef>
   FORCE_INLINE bool add_impl(TValueRef value) const {
     return add().set(value);
-  }
-
-  FORCE_INLINE JsonVariant get_impl(size_t index) const {
-    return JsonVariant(_memoryPool, arrayGet(_data, index));
   }
 
   MemoryPool* _memoryPool;

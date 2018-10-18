@@ -11,7 +11,6 @@ add_executable(JsonArrayTests
 	isNull.cpp
 	iterator.cpp
 	remove.cpp
-	set.cpp
 	size.cpp
 	std_string.cpp
 	subscript.cpp

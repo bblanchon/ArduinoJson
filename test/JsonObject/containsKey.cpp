@@ -8,7 +8,7 @@
 TEST_CASE("JsonObject::containsKey()") {
   DynamicJsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
-  obj.set("hello", 42);
+  obj["hello"] = 42;
 
   SECTION("returns true only if key is present") {
     REQUIRE(false == obj.containsKey("world"));

@@ -99,7 +99,7 @@ class JsonObjectSubscript
 
  private:
   FORCE_INLINE JsonVariant get_impl() const {
-    return _object.get<JsonVariant>(_key);
+    return _object.get(_key);
   }
 
   FORCE_INLINE JsonVariant set_impl() const {
