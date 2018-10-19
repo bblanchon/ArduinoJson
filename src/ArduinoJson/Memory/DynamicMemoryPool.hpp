@@ -58,7 +58,7 @@ class DynamicMemoryPoolBase : public MemoryPool {
   }
 
   // Gets the number of bytes occupied in the memoryPool
-  size_t size() const {
+  virtual size_t allocated_bytes() const {
     size_t total = 0;
     for (const Block* b = _head; b; b = b->next) total += b->size;
     return total;

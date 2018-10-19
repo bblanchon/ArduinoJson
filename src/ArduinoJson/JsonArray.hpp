@@ -197,12 +197,12 @@ class JsonArray : public JsonArrayProxy<JsonArrayData>, public Visitable {
 
   // Removes element at specified position.
   FORCE_INLINE void remove(iterator it) const {
-    arrayRemove(_data, it.internal());
+    arrayRemove(_data, it.internal(), _memoryPool);
   }
 
   // Removes element at specified index.
   FORCE_INLINE void remove(size_t index) const {
-    arrayRemove(_data, index);
+    arrayRemove(_data, index, _memoryPool);
   }
 
   template <typename Visitor>

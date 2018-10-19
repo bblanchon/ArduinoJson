@@ -18,11 +18,6 @@ class StaticMemoryPoolBase : public MemoryPool {
     return _capacity;
   }
 
-  // Gets the current usage of the memoryPool in bytes
-  size_t size() const {
-    return _size;
-  }
-
   // Allocates the specified amount of bytes in the memoryPool
   virtual char* alloc(size_t bytes) {
     alignNextAlloc();
@@ -52,6 +47,11 @@ class StaticMemoryPoolBase : public MemoryPool {
       : _buffer(memoryPool), _capacity(capa), _size(0) {}
 
   ~StaticMemoryPoolBase() {}
+
+  // Gets the current usage of the memoryPool in bytes
+  virtual size_t allocated_bytes() const {
+    return _size;
+  }
 
  private:
   void alignNextAlloc() {

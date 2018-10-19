@@ -4,12 +4,11 @@
 
 #pragma once
 
-#include "../Memory/AllocableInMemoryPool.hpp"
 #include "JsonVariantData.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-struct Slot : AllocableInMemoryPool {
+struct Slot {
   JsonVariantData value;
   struct Slot* next;
   struct Slot* prev;

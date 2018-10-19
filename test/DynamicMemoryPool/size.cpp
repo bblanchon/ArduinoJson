@@ -26,4 +26,23 @@ TEST_CASE("DynamicMemoryPool::size()") {
     memoryPool.clear();
     REQUIRE(0 == memoryPool.size());
   }
+
+  SECTION("Increases after allocSlot()") {
+    memoryPool.allocSlot();
+    REQUIRE(sizeof(Slot) == memoryPool.size());
+
+    memoryPool.allocSlot();
+    REQUIRE(2 * sizeof(Slot) == memoryPool.size());
+  }
+
+  SECTION("Decreases after freeSlot()") {
+    Slot* s1 = memoryPool.allocSlot();
+    Slot* s2 = memoryPool.allocSlot();
+
+    memoryPool.freeSlot(s1);
+    REQUIRE(sizeof(Slot) == memoryPool.size());
+
+    memoryPool.freeSlot(s2);
+    REQUIRE(0 == memoryPool.size());
+  }
 }

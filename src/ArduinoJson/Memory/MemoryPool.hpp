@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "../Configuration.hpp"
+#include "../Data/Slot.hpp"
 #include "../Polyfills/attributes.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -23,11 +24,35 @@ class MemoryPool {
 
   virtual char *realloc(char *oldPtr, size_t oldSize, size_t newSize) = 0;
 
+  Slot *allocSlot() {
+    if (_freeSlots) {
+      Slot *s = _freeSlots;
+      _freeSlots = s->next;
+      return s;
+    }
+    return reinterpret_cast<Slot *>(alloc(sizeof(Slot)));
+  }
+
+  void freeSlot(Slot *slot) {
+    slot->next = _freeSlots;
+    _freeSlots = slot;
+  }
+
+  size_t size() const {
+    size_t result = allocated_bytes();
+    for (Slot *s = _freeSlots; s; s = s->next) result -= sizeof(Slot);
+    return result;
+  }
+
  protected:
+  MemoryPool() : _freeSlots(0) {}
+
   // CAUTION: NO VIRTUAL DESTRUCTOR!
   // If we add a virtual constructor the Arduino compiler will add malloc()
   // and free() to the binary, adding 706 useless bytes.
   ~MemoryPool() {}
+
+  virtual size_t allocated_bytes() const = 0;
 
   // Preserve aligment if necessary
   static FORCE_INLINE size_t round_size_up(size_t bytes) {
@@ -38,5 +63,8 @@ class MemoryPool {
     return bytes;
 #endif
   }
+
+ private:
+  Slot *_freeSlots;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

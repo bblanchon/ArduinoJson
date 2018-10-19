@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "../Memory/MemoryPool.hpp"
 #include "../Strings/StringTypes.hpp"
 #include "JsonVariantData.hpp"
 #include "Slot.hpp"
@@ -55,5 +56,16 @@ inline size_t slotSize(const Slot* slot) {
     slot = slot->next;
   }
   return n;
+}
+
+inline void slotFree(Slot* slot, MemoryPool* pool) {
+  const JsonVariantData& v = slot->value;
+  if (v.type == JSON_ARRAY || v.type == JSON_OBJECT) {
+    for (Slot* s = v.content.asObject.head; s; s = s->next) {
+      slotFree(s, pool);
+    }
+  }
+
+  pool->freeSlot(slot);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

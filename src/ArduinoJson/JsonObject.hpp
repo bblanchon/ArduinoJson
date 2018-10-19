@@ -227,7 +227,7 @@ class JsonObject : public JsonObjectProxy<JsonObjectData>, public Visitable {
   }
 
   FORCE_INLINE void remove(iterator it) const {
-    objectRemove(_data, it.internal());
+    objectRemove(_data, it.internal(), _memoryPool);
   }
 
   // Removes the specified key and the associated value.
@@ -278,7 +278,7 @@ class JsonObject : public JsonObjectProxy<JsonObjectData>, public Visitable {
 
   template <typename TStringRef>
   FORCE_INLINE void remove_impl(TStringRef key) const {
-    objectRemove(_data, objectFindSlot(_data, key));
+    objectRemove(_data, objectFindSlot(_data, key), _memoryPool);
   }
 
   MemoryPool* _memoryPool;

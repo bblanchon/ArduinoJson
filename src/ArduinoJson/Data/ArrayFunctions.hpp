@@ -13,10 +13,11 @@ namespace ARDUINOJSON_NAMESPACE {
 inline JsonVariantData* arrayAdd(JsonArrayData* arr, MemoryPool* pool) {
   if (!arr) return 0;
 
-  Slot* slot = new (pool) Slot();
+  Slot* slot = pool->allocSlot();
   if (!slot) return 0;
 
   slot->next = 0;
+  slot->value.type = JSON_NULL;
 
   if (arr->tail) {
     slot->prev = arr->tail;
@@ -41,7 +42,7 @@ inline JsonVariantData* arrayGet(const JsonArrayData* arr, size_t index) {
   return slot ? &slot->value : 0;
 }
 
-inline void arrayRemove(JsonArrayData* arr, Slot* slot) {
+inline void arrayRemove(JsonArrayData* arr, Slot* slot, MemoryPool* pool) {
   if (!arr || !slot) return;
 
   if (slot->prev)
@@ -52,10 +53,12 @@ inline void arrayRemove(JsonArrayData* arr, Slot* slot) {
     slot->next->prev = slot->prev;
   else
     arr->tail = slot->prev;
+
+  slotFree(slot, pool);
 }
 
-inline void arrayRemove(JsonArrayData* arr, size_t index) {
-  arrayRemove(arr, arrayGetSlot(arr, index));
+inline void arrayRemove(JsonArrayData* arr, size_t index, MemoryPool* pool) {
+  arrayRemove(arr, arrayGetSlot(arr, index), pool);
 }
 
 inline void arrayClear(JsonArrayData* arr) {
