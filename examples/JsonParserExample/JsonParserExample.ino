@@ -19,9 +19,9 @@ void setup() {
   StaticJsonDocument<200> doc;
 
   // StaticJsonDocument<N> allocates memory on the stack, it can be
-  // replaced by DynamicJsonObject which allocates in the heap.
+  // replaced by DynamicJsonDocument which allocates in the heap.
   //
-  // DynamicJsonObject doc(200);
+  // DynamicJsonDocument doc(200);
 
   // JSON input string.
   //
