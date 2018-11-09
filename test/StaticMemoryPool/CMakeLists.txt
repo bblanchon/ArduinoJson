@@ -3,9 +3,11 @@
 # MIT License
 
 add_executable(StaticMemoryPoolTests 
-	alloc.cpp
+	allocVariant.cpp
+	allocString.cpp
+	clear.cpp
 	size.cpp
-	startString.cpp
+	StringBuilder.cpp
 )
 
 target_link_libraries(StaticMemoryPoolTests catch)

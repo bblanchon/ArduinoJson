@@ -13,11 +13,11 @@ class StlString {
   StlString(const std::string& str) : _str(&str) {}
 
   template <typename TMemoryPool>
-  const char* save(TMemoryPool* memoryPool) const {
+  StringSlot* save(TMemoryPool* memoryPool) const {
     size_t n = _str->length() + 1;
-    void* dup = memoryPool->alloc(n);
-    if (dup != NULL) memcpy(dup, _str->c_str(), n);
-    return static_cast<const char*>(dup);
+    StringSlot* slot = memoryPool->allocFrozenString(n);
+    if (slot) memcpy(slot->value, _str->c_str(), n);
+    return slot;
   }
 
   bool isNull() const {

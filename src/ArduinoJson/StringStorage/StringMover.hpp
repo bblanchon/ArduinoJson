@@ -11,13 +11,15 @@ class StringMover {
  public:
   class StringBuilder {
    public:
+    typedef ZeroTerminatedRamStringConst StringType;
+
     StringBuilder(TChar** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
 
     void append(char c) {
       *(*_writePtr)++ = TChar(c);
     }
 
-    StringInMemoryPool complete() const {
+    StringType complete() const {
       *(*_writePtr)++ = 0;
       return reinterpret_cast<const char*>(_startPtr);
     }

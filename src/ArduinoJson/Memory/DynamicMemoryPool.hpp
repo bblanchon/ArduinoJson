@@ -5,8 +5,9 @@
 #pragma once
 
 #include "../Strings/StringInMemoryPool.hpp"
+#include "Alignment.hpp"
 #include "MemoryPool.hpp"
-#include "StringBuilder.hpp"
+#include "StaticMemoryPool.hpp"
 
 #include <stdlib.h>  // malloc, free
 
@@ -33,18 +34,15 @@ class DefaultAllocator {
 
 template <typename TAllocator>
 class DynamicMemoryPoolBase : public MemoryPool {
-  struct Block;
-  struct EmptyBlock {
+  class Block : public StaticMemoryPoolBase {
+   public:
+    Block(char* buf, size_t sz, Block* nxt)
+        : StaticMemoryPoolBase(buf, sz), next(nxt) {}
     Block* next;
-    size_t capacity;
-    size_t size;
-  };
-  struct Block : EmptyBlock {
-    char data[1];
   };
 
  public:
-  enum { EmptyBlockSize = sizeof(EmptyBlock) };
+  enum { EmptyBlockSize = sizeof(Block) };
 
   DynamicMemoryPoolBase(size_t initialSize = ARDUINOJSON_DEFAULT_POOL_SIZE)
       : _head(NULL), _nextBlockCapacity(initialSize) {}
@@ -57,28 +55,82 @@ class DynamicMemoryPoolBase : public MemoryPool {
     _nextBlockCapacity = capacity;
   }
 
-  // Gets the number of bytes occupied in the memoryPool
-  virtual size_t allocated_bytes() const {
-    size_t total = 0;
-    for (const Block* b = _head; b; b = b->next) total += b->size;
-    return total;
+  virtual size_t size() const {
+    size_t sum = 0;
+    for (Block* b = _head; b; b = b->next) {
+      sum += b->size();
+    }
+    return sum;
   }
 
-  // Allocates the specified amount of bytes in the memoryPool
-  virtual char* alloc(size_t bytes) {
-    alignNextAlloc();
-    return canAllocInHead(bytes) ? allocInHead(bytes) : allocInNewBlock(bytes);
+  virtual VariantSlot* allocVariant() {
+    for (Block* b = _head; b; b = b->next) {
+      VariantSlot* s = b->allocVariant();
+      if (s) return s;
+    }
+
+    if (!addNewBlock(sizeof(VariantSlot))) return 0;
+
+    return _head->allocVariant();
   }
 
-  virtual char* realloc(char* oldPtr, size_t oldSize, size_t newSize) {
-    size_t n = newSize - oldSize;
-    if (canAllocInHead(n)) {
-      allocInHead(n);
-      return oldPtr;
-    } else {
-      char* newPtr = allocInNewBlock(newSize);
-      if (oldPtr && newPtr) memcpy(newPtr, oldPtr, oldSize);
-      return newPtr;
+  virtual void freeVariant(VariantSlot* slot) {
+    for (Block* b = _head; b; b = b->next) {
+      if (b->owns(slot)) {
+        b->freeVariant(slot);
+        break;
+      }
+    }
+  }
+
+  virtual void freeString(StringSlot* slot) {
+    for (Block* b = _head; b; b = b->next) {
+      if (b->owns(slot)) {
+        b->freeString(slot);
+        break;
+      }
+    }
+  }
+
+  virtual StringSlot* allocFrozenString(size_t n) {
+    for (Block* b = _head; b; b = b->next) {
+      StringSlot* s = b->allocFrozenString(n);
+      if (s) return s;
+    }
+
+    if (!addNewBlock(sizeof(StringSlot) + n)) return 0;
+
+    return _head->allocFrozenString(n);
+  }
+
+  virtual StringSlot* allocExpandableString() {
+    for (Block* b = _head; b; b = b->next) {
+      StringSlot* s = b->allocExpandableString();
+      if (s) return s;
+    }
+
+    if (!addNewBlock(sizeof(StringSlot))) return 0;
+
+    return _head->allocExpandableString();
+  }
+
+  virtual StringSlot* expandString(StringSlot* oldSlot) {
+    if (!addNewBlock(sizeof(StringSlot) + oldSlot->size)) return 0;
+
+    StringSlot* newSlot = _head->allocExpandableString();
+
+    ARDUINOJSON_ASSERT(newSlot->size > oldSlot->size);
+    memcpy(newSlot->value, oldSlot->value, oldSlot->size);
+    freeString(oldSlot);
+
+    return newSlot;
+  }
+
+  virtual void freezeString(StringSlot* slot, size_t newSize) {
+    for (Block* b = _head; b; b = b->next) {
+      if (b->owns(slot)) {
+        b->freezeString(slot, newSize);
+      }
     }
   }
 
@@ -87,7 +139,7 @@ class DynamicMemoryPoolBase : public MemoryPool {
   void clear() {
     Block* currentBlock = _head;
     while (currentBlock != NULL) {
-      _nextBlockCapacity = currentBlock->capacity;
+      _nextBlockCapacity = currentBlock->capacity();
       Block* nextBlock = currentBlock->next;
       _allocator.deallocate(currentBlock);
       currentBlock = nextBlock;
@@ -95,40 +147,22 @@ class DynamicMemoryPoolBase : public MemoryPool {
     _head = 0;
   }
 
-  StringBuilder startString() {
-    return StringBuilder(this);
+  size_t blockCount() const {
+    size_t sum = 0;
+    for (Block* b = _head; b; b = b->next) sum++;
+    return sum;
   }
 
  private:
-  void alignNextAlloc() {
-    if (_head) _head->size = this->round_size_up(_head->size);
-  }
-
-  bool canAllocInHead(size_t bytes) const {
-    return _head != NULL && _head->size + bytes <= _head->capacity;
-  }
-
-  char* allocInHead(size_t bytes) {
-    char* p = _head->data + _head->size;
-    _head->size += bytes;
-    return p;
-  }
-
-  char* allocInNewBlock(size_t bytes) {
+  bool addNewBlock(size_t minCapacity) {
     size_t capacity = _nextBlockCapacity;
-    if (bytes > capacity) capacity = bytes;
-    if (!addNewBlock(capacity)) return NULL;
-    _nextBlockCapacity *= 2;
-    return allocInHead(bytes);
-  }
-
-  bool addNewBlock(size_t capacity) {
-    size_t bytes = EmptyBlockSize + capacity;
-    Block* block = static_cast<Block*>(_allocator.allocate(bytes));
-    if (block == NULL) return false;
-    block->capacity = capacity;
-    block->size = 0;
-    block->next = _head;
+    if (minCapacity > capacity) capacity = minCapacity;
+    capacity = addPadding(capacity);
+    size_t bytes = sizeof(Block) + capacity;
+    char* p = reinterpret_cast<char*>(_allocator.allocate(bytes));
+    if (!p) return false;
+    Block* block = new (p) Block(p + sizeof(Block), capacity, _head);
+    _nextBlockCapacity = capacity * 2;
     _head = block;
     return true;
   }

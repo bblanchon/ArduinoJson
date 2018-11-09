@@ -4,15 +4,18 @@
 
 #pragma once
 
-#include "JsonVariantData.hpp"
+#include "../Data/JsonVariantData.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-struct Slot {
+struct VariantSlot {
   JsonVariantData value;
-  struct Slot* next;
-  struct Slot* prev;
-  const char* key;
+  struct VariantSlot* next;
+  struct VariantSlot* prev;
+  union {
+    const char* linkedKey;
+    StringSlot* ownedKey;
+  };
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

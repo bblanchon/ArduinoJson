@@ -13,22 +13,24 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
   SECTION("stores JsonArray by copy") {
     JsonArray arr = doc2.to<JsonArray>();
-    arr.add(42);
+    JsonObject obj = arr.createNestedObject();
+    obj["hello"] = "world";
 
     var1.set(arr);
 
     arr[0] = 666;
-    REQUIRE(var1.as<std::string>() == "[42]");
+    REQUIRE(var1.as<std::string>() == "[{\"hello\":\"world\"}]");
   }
 
   SECTION("stores JsonObject by copy") {
     JsonObject obj = doc2.to<JsonObject>();
-    obj["value"] = 42;
+    JsonArray arr = obj.createNestedArray("value");
+    arr.add(42);
 
     var1.set(obj);
 
     obj["value"] = 666;
-    REQUIRE(var1.as<std::string>() == "{\"value\":42}");
+    REQUIRE(var1.as<std::string>() == "{\"value\":[42]}");
   }
 
   SECTION("stores const char* by reference") {
@@ -45,20 +47,20 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     var1.set(str);
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == 8);
-    REQUIRE(doc2.memoryUsage() == 8);
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
   }
 
   SECTION("stores std::string by copy") {
     var1.set(std::string("hello!!"));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == 8);
-    REQUIRE(doc2.memoryUsage() == 8);
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
   }
 
   SECTION("stores Serialized<const char*> by reference") {
-    var1.set(serialized("hello!!", 8));
+    var1.set(serialized("hello!!", JSON_STRING_SIZE(8)));
     var2.set(var1);
 
     REQUIRE(doc1.memoryUsage() == 0);
@@ -70,15 +72,15 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     var1.set(serialized(str, 8));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == 8);
-    REQUIRE(doc2.memoryUsage() == 8);
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
   }
 
   SECTION("stores Serialized<std::string> by copy") {
     var1.set(serialized(std::string("hello!!!")));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == 8);
-    REQUIRE(doc2.memoryUsage() == 8);
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
   }
 }

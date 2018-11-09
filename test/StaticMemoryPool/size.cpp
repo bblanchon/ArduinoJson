@@ -8,37 +8,72 @@
 using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("StaticMemoryPool::size()") {
-  StaticMemoryPool<64> memoryPool;
-
   SECTION("Capacity equals template parameter") {
-    REQUIRE(64 == memoryPool.capacity());
+    const size_t capacity = 64;
+    StaticMemoryPool<capacity> memoryPool;
+    REQUIRE(capacity == memoryPool.capacity());
   }
 
   SECTION("Initial size is 0") {
+    StaticMemoryPool<32> memoryPool;
     REQUIRE(0 == memoryPool.size());
   }
 
-  SECTION("Increases after alloc()") {
-    memoryPool.alloc(1);
-    REQUIRE(1U <= memoryPool.size());
-    memoryPool.alloc(1);
-    REQUIRE(2U <= memoryPool.size());
+  SECTION("Increases after allocFrozenString()") {
+    StaticMemoryPool<128> memoryPool;
+    memoryPool.allocFrozenString(0);
+    REQUIRE(memoryPool.size() == JSON_STRING_SIZE(0));
+    memoryPool.allocFrozenString(0);
+    REQUIRE(memoryPool.size() == 2 * JSON_STRING_SIZE(0));
   }
 
-  SECTION("Doesn't grow when memoryPool is full") {
-    memoryPool.alloc(64);
-    memoryPool.alloc(1);
-    REQUIRE(64 == memoryPool.size());
+  SECTION("Decreases after freeVariant()") {
+    StaticMemoryPool<128> memoryPool;
+    VariantSlot* a = memoryPool.allocVariant();
+    VariantSlot* b = memoryPool.allocVariant();
+
+    memoryPool.freeVariant(b);
+    REQUIRE(memoryPool.size() == sizeof(VariantSlot));
+    memoryPool.freeVariant(a);
+    REQUIRE(memoryPool.size() == 0);
   }
 
-  SECTION("Does't grow when memoryPool is too small for alloc") {
-    memoryPool.alloc(65);
-    REQUIRE(0 == memoryPool.size());
+  SECTION("Decreases after calling freeString() in order") {
+    StaticMemoryPool<128> memoryPool;
+    StringSlot* a = memoryPool.allocFrozenString(5);
+    REQUIRE(a != 0);
+    StringSlot* b = memoryPool.allocFrozenString(6);
+    REQUIRE(b != 0);
+
+    memoryPool.freeString(b);
+    REQUIRE(memoryPool.size() == JSON_STRING_SIZE(5));
+    memoryPool.freeString(a);
+    REQUIRE(memoryPool.size() == 0);
   }
 
-  SECTION("Goes back to zero after clear()") {
-    memoryPool.alloc(1);
-    memoryPool.clear();
-    REQUIRE(0 == memoryPool.size());
+  SECTION("Decreases after calling freeString() in reverse order") {
+    StaticMemoryPool<128> memoryPool;
+    StringSlot* a = memoryPool.allocFrozenString(5);
+    REQUIRE(a != 0);
+    StringSlot* b = memoryPool.allocFrozenString(6);
+    REQUIRE(b != 0);
+
+    memoryPool.freeString(a);
+    REQUIRE(memoryPool.size() == JSON_STRING_SIZE(6));
+    memoryPool.freeString(b);
+    REQUIRE(memoryPool.size() == 0);
+  }
+
+  SECTION("Doesn't grow when memory pool is full") {
+    const size_t variantCount = 4;
+    const size_t capacity = variantCount * sizeof(VariantSlot);
+    StaticMemoryPool<capacity> memoryPool;
+
+    for (size_t i = 0; i < variantCount; i++) memoryPool.allocVariant();
+    REQUIRE(capacity == memoryPool.size());
+
+    memoryPool.allocVariant();
+
+    REQUIRE(capacity == memoryPool.size());
   }
 }

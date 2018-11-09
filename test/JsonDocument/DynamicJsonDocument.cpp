@@ -94,35 +94,36 @@ TEST_CASE("DynamicJsonDocument") {
   }
 
   SECTION("memoryUsage()") {
-    typedef ARDUINOJSON_NAMESPACE::Slot Slot;
-
     SECTION("Increases after adding value to array") {
       JsonArray arr = doc.to<JsonArray>();
 
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
       arr.add(42);
-      REQUIRE(sizeof(Slot) == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1));
       arr.add(43);
-      REQUIRE(2 * sizeof(Slot) == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(2));
     }
 
-    SECTION("Decreases after remove value from array") {
+    SECTION("Decreases after removing value from array") {
       JsonArray arr = doc.to<JsonArray>();
       arr.add(42);
       arr.add(43);
 
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(2));
       arr.remove(1);
-      REQUIRE(sizeof(Slot) == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1));
       arr.remove(0);
-      REQUIRE(0 == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
     }
 
     SECTION("Increases after adding value to object") {
       JsonObject obj = doc.to<JsonObject>();
 
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
       obj["a"] = 1;
-      REQUIRE(sizeof(Slot) == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1));
       obj["b"] = 2;
-      REQUIRE(2 * sizeof(Slot) == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
     }
 
     SECTION("Decreases after removing value from object") {
@@ -130,10 +131,11 @@ TEST_CASE("DynamicJsonDocument") {
       obj["a"] = 1;
       obj["b"] = 2;
 
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
       obj.remove("a");
-      REQUIRE(sizeof(Slot) == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1));
       obj.remove("b");
-      REQUIRE(0 == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
     }
 
     SECTION("Decreases after removing nested object from array") {
@@ -141,8 +143,9 @@ TEST_CASE("DynamicJsonDocument") {
       JsonObject obj = arr.createNestedObject();
       obj["hello"] = "world";
 
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1));
       arr.remove(0);
-      REQUIRE(0 == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
     }
 
     SECTION("Decreases after removing nested array from object") {
@@ -150,8 +153,9 @@ TEST_CASE("DynamicJsonDocument") {
       JsonArray arr = obj.createNestedArray("hello");
       arr.add("world");
 
+      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1));
       obj.remove("hello");
-      REQUIRE(0 == doc.memoryUsage());
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
     }
   }
 }

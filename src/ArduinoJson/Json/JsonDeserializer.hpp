@@ -18,6 +18,7 @@ template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
   typedef typename remove_reference<TStringStorage>::type::StringBuilder
       StringBuilder;
+  typedef typename StringBuilder::StringType StringType;
 
  public:
   JsonDeserializer(MemoryPool &memoryPool, TReader reader,
@@ -124,7 +125,7 @@ class JsonDeserializer {
     // Read each key value pair
     for (;;) {
       // Parse key
-      StringInMemoryPool key;
+      StringType key;
       err = parseKey(key);
       if (err) return err;
 
@@ -165,7 +166,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseKey(StringInMemoryPool &key) {
+  DeserializationError parseKey(StringType &key) {
     if (isQuote(current())) {
       return parseQuotedString(key);
     } else {
@@ -174,15 +175,15 @@ class JsonDeserializer {
   }
 
   DeserializationError parseStringValue(JsonVariant variant) {
-    StringInMemoryPool value;
+    StringType value;
     DeserializationError err = parseQuotedString(value);
     if (err) return err;
     variant.set(value);
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseQuotedString(StringInMemoryPool &result) {
-    StringBuilder str = _stringStorage.startString();
+  DeserializationError parseQuotedString(StringType &result) {
+    StringBuilder builder = _stringStorage.startString();
     const char stopChar = current();
 
     move();
@@ -203,16 +204,16 @@ class JsonDeserializer {
         move();
       }
 
-      str.append(c);
+      builder.append(c);
     }
 
-    result = str.complete();
+    result = builder.complete();
     if (result.isNull()) return DeserializationError::NoMemory;
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseNonQuotedString(StringInMemoryPool &result) {
-    StringBuilder str = _stringStorage.startString();
+  DeserializationError parseNonQuotedString(StringType &result) {
+    StringBuilder builder = _stringStorage.startString();
 
     char c = current();
     if (c == '\0') return DeserializationError::IncompleteInput;
@@ -220,14 +221,14 @@ class JsonDeserializer {
     if (canBeInNonQuotedString(c)) {  // no quotes
       do {
         move();
-        str.append(c);
+        builder.append(c);
         c = current();
       } while (canBeInNonQuotedString(c));
     } else {
       return DeserializationError::InvalidInput;
     }
 
-    result = str.complete();
+    result = builder.complete();
     if (result.isNull()) return DeserializationError::NoMemory;
     return DeserializationError::Ok;
   }

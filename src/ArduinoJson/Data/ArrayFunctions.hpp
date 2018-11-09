@@ -5,7 +5,6 @@
 #pragma once
 
 #include "JsonVariantData.hpp"
-#include "Slot.hpp"
 #include "SlotFunctions.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -13,7 +12,7 @@ namespace ARDUINOJSON_NAMESPACE {
 inline JsonVariantData* arrayAdd(JsonArrayData* arr, MemoryPool* pool) {
   if (!arr) return 0;
 
-  Slot* slot = pool->allocSlot();
+  VariantSlot* slot = pool->allocVariant();
   if (!slot) return 0;
 
   slot->next = 0;
@@ -29,20 +28,22 @@ inline JsonVariantData* arrayAdd(JsonArrayData* arr, MemoryPool* pool) {
     arr->tail = slot;
   }
 
+  slot->value.keyIsOwned = false;
   return &slot->value;
 }
 
-inline Slot* arrayGetSlot(const JsonArrayData* arr, size_t index) {
+inline VariantSlot* arrayGetSlot(const JsonArrayData* arr, size_t index) {
   if (!arr) return 0;
   return slotAdvance(arr->head, index);
 }
 
 inline JsonVariantData* arrayGet(const JsonArrayData* arr, size_t index) {
-  Slot* slot = arrayGetSlot(arr, index);
+  VariantSlot* slot = arrayGetSlot(arr, index);
   return slot ? &slot->value : 0;
 }
 
-inline void arrayRemove(JsonArrayData* arr, Slot* slot, MemoryPool* pool) {
+inline void arrayRemove(JsonArrayData* arr, VariantSlot* slot,
+                        MemoryPool* pool) {
   if (!arr || !slot) return;
 
   if (slot->prev)
@@ -73,7 +74,7 @@ inline bool arrayCopy(JsonArrayData* dst, const JsonArrayData* src,
                       MemoryPool* pool) {
   if (!dst || !src) return false;
   arrayClear(dst);
-  for (Slot* s = src->head; s; s = s->next) {
+  for (VariantSlot* s = src->head; s; s = s->next) {
     if (!variantCopy(arrayAdd(dst, pool), &s->value, pool)) return false;
   }
   return true;
@@ -84,8 +85,8 @@ bool variantEquals(const JsonVariantData*, const JsonVariantData*);
 inline bool arrayEquals(const JsonArrayData* a1, const JsonArrayData* a2) {
   if (a1 == a2) return true;
   if (!a1 || !a2) return false;
-  Slot* s1 = a1->head;
-  Slot* s2 = a2->head;
+  VariantSlot* s1 = a1->head;
+  VariantSlot* s2 = a2->head;
   for (;;) {
     if (s1 == s2) return true;
     if (!s1 || !s2) return false;

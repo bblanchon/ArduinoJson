@@ -11,7 +11,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class ZeroTerminatedRamStringConst {
  public:
-  ZeroTerminatedRamStringConst(const char* str) : _str(str) {}
+  ZeroTerminatedRamStringConst(const char* str = 0) : _str(str) {}
 
   bool equals(const char* expected) const {
     const char* actual = _str;
@@ -23,13 +23,17 @@ class ZeroTerminatedRamStringConst {
     return !_str;
   }
 
-  template <typename TMemoryPool>
-  const char* save(TMemoryPool*) const {
-    return _str;
-  }
+  // template <typename TMemoryPool>
+  // const char* save(TMemoryPool*) const {
+  //   return _str;
+  // }
 
   size_t size() const {
     return strlen(_str);
+  }
+
+  const char* c_str() const {
+    return _str;
   }
 
  protected:

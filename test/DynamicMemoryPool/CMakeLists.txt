@@ -2,12 +2,14 @@
 # Copyright Benoit Blanchon 2014-2018
 # MIT License
 
-add_executable(DynamicMemoryPoolTests 
-	alloc.cpp
-	allocSlot.cpp
+add_executable(DynamicMemoryPoolTests
+	allocString.cpp
+	allocVariant.cpp
+	blocks.cpp
+	clear.cpp
 	no_memory.cpp
 	size.cpp
-	startString.cpp
+	StringBuilder.cpp
 )
 
 target_link_libraries(DynamicMemoryPoolTests catch)

@@ -5,15 +5,19 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-static const size_t epsilon = sizeof(void*);
-
 template <size_t Capacity>
 static void check(const char* input, DeserializationError expected) {
   StaticJsonDocument<Capacity> variant;
 
   DeserializationError error = deserializeMsgPack(variant, input);
 
+  CAPTURE(input);
   REQUIRE(error == expected);
+}
+
+template <size_t Size>
+static void checkString(const char* input, DeserializationError expected) {
+  check<JSON_STRING_SIZE(Size)>(input, expected);
 }
 
 TEST_CASE("deserializeMsgPack(StaticJsonDocument&)") {
@@ -27,31 +31,39 @@ TEST_CASE("deserializeMsgPack(StaticJsonDocument&)") {
   }
 
   SECTION("fixstr") {
-    check<0>("\xA0", DeserializationError::Ok);
-    check<0>("\xA1H", DeserializationError::NoMemory);
-    check<4>("\xA1H", DeserializationError::Ok);
-    check<4>("\xA5Hello", DeserializationError::NoMemory);
+    checkString<8>("\xA0", DeserializationError::Ok);
+    checkString<8>("\xA7ZZZZZZZ", DeserializationError::Ok);
+    checkString<8>("\xA8ZZZZZZZZ", DeserializationError::NoMemory);
+    checkString<16>("\xAFZZZZZZZZZZZZZZZ", DeserializationError::Ok);
+    checkString<16>("\xB0ZZZZZZZZZZZZZZZZ", DeserializationError::NoMemory);
   }
 
   SECTION("str 8") {
-    check<0>("\xD9\x00", DeserializationError::Ok);
-    check<0>("\xD9\x01H", DeserializationError::NoMemory);
-    check<4>("\xD9\x01H", DeserializationError::Ok);
-    check<4>("\xD9\x05Hello", DeserializationError::NoMemory);
+    checkString<8>("\xD9\x00", DeserializationError::Ok);
+    checkString<8>("\xD9\x07ZZZZZZZ", DeserializationError::Ok);
+    checkString<8>("\xD9\x08ZZZZZZZZ", DeserializationError::NoMemory);
+    checkString<16>("\xD9\x0FZZZZZZZZZZZZZZZ", DeserializationError::Ok);
+    checkString<16>("\xD9\x10ZZZZZZZZZZZZZZZZ", DeserializationError::NoMemory);
   }
 
   SECTION("str 16") {
-    check<0>("\xDA\x00\x00", DeserializationError::Ok);
-    check<0>("\xDA\x00\x01H", DeserializationError::NoMemory);
-    check<4>("\xDA\x00\x01H", DeserializationError::Ok);
-    check<4>("\xDA\x00\x05Hello", DeserializationError::NoMemory);
+    checkString<8>("\xDA\x00\x00", DeserializationError::Ok);
+    checkString<8>("\xDA\x00\x07ZZZZZZZ", DeserializationError::Ok);
+    checkString<8>("\xDA\x00\x08ZZZZZZZZ", DeserializationError::NoMemory);
+    checkString<16>("\xDA\x00\x0FZZZZZZZZZZZZZZZ", DeserializationError::Ok);
+    checkString<16>("\xDA\x00\x10ZZZZZZZZZZZZZZZZ",
+                    DeserializationError::NoMemory);
   }
 
   SECTION("str 32") {
-    check<0>("\xDB\x00\x00\x00\x00", DeserializationError::Ok);
-    check<0>("\xDB\x00\x00\x00\x01H", DeserializationError::NoMemory);
-    check<4>("\xDB\x00\x00\x00\x01H", DeserializationError::Ok);
-    check<4>("\xDB\x00\x00\x00\x05Hello", DeserializationError::NoMemory);
+    checkString<8>("\xDB\x00\x00\x00\x00", DeserializationError::Ok);
+    checkString<8>("\xDB\x00\x00\x00\x07ZZZZZZZ", DeserializationError::Ok);
+    checkString<8>("\xDB\x00\x00\x00\x08ZZZZZZZZ",
+                   DeserializationError::NoMemory);
+    checkString<16>("\xDB\x00\x00\x00\x0FZZZZZZZZZZZZZZZ",
+                    DeserializationError::Ok);
+    checkString<16>("\xDB\x00\x00\x00\x10ZZZZZZZZZZZZZZZZ",
+                    DeserializationError::NoMemory);
   }
 
   SECTION("fixarray") {
@@ -89,14 +101,14 @@ TEST_CASE("deserializeMsgPack(StaticJsonDocument&)") {
     SECTION("{H:1}") {
       check<JSON_OBJECT_SIZE(0)>("\x81\xA1H\x01",
                                  DeserializationError::NoMemory);
-      check<JSON_OBJECT_SIZE(1) + epsilon>("\x81\xA1H\x01",
-                                           DeserializationError::Ok);
+      check<JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2)>(
+          "\x81\xA1H\x01", DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      check<JSON_OBJECT_SIZE(1) + epsilon>("\x82\xA1H\x01\xA1W\x02",
-                                           DeserializationError::NoMemory);
-      check<JSON_OBJECT_SIZE(2) + 2 * epsilon>("\x82\xA1H\x01\xA1W\x02",
-                                               DeserializationError::Ok);
+      check<JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2)>(
+          "\x82\xA1H\x01\xA1W\x02", DeserializationError::NoMemory);
+      check<JSON_OBJECT_SIZE(2) + 2 * JSON_STRING_SIZE(2)>(
+          "\x82\xA1H\x01\xA1W\x02", DeserializationError::Ok);
     }
   }
 
@@ -107,14 +119,14 @@ TEST_CASE("deserializeMsgPack(StaticJsonDocument&)") {
     SECTION("{H:1}") {
       check<JSON_OBJECT_SIZE(0)>("\xDE\x00\x01\xA1H\x01",
                                  DeserializationError::NoMemory);
-      check<JSON_OBJECT_SIZE(1) + epsilon>("\xDE\x00\x01\xA1H\x01",
-                                           DeserializationError::Ok);
+      check<JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2)>(
+          "\xDE\x00\x01\xA1H\x01", DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      check<JSON_OBJECT_SIZE(1) + epsilon>("\xDE\x00\x02\xA1H\x01\xA1W\x02",
-                                           DeserializationError::NoMemory);
-      check<JSON_OBJECT_SIZE(2) + 2 * epsilon>("\xDE\x00\x02\xA1H\x01\xA1W\x02",
-                                               DeserializationError::Ok);
+      check<JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2)>(
+          "\xDE\x00\x02\xA1H\x01\xA1W\x02", DeserializationError::NoMemory);
+      check<JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(1)>(
+          "\xDE\x00\x02\xA1H\x01\xA1W\x02", DeserializationError::Ok);
     }
   }
 
@@ -126,14 +138,14 @@ TEST_CASE("deserializeMsgPack(StaticJsonDocument&)") {
     SECTION("{H:1}") {
       check<JSON_OBJECT_SIZE(0)>("\xDF\x00\x00\x00\x01\xA1H\x01",
                                  DeserializationError::NoMemory);
-      check<JSON_OBJECT_SIZE(1) + epsilon>("\xDF\x00\x00\x00\x01\xA1H\x01",
-                                           DeserializationError::Ok);
+      check<JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2)>(
+          "\xDF\x00\x00\x00\x01\xA1H\x01", DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      check<JSON_OBJECT_SIZE(1) + epsilon>(
+      check<JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2)>(
           "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
           DeserializationError::NoMemory);
-      check<JSON_OBJECT_SIZE(2) + 2 * epsilon>(
+      check<JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(1)>(
           "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02", DeserializationError::Ok);
     }
   }

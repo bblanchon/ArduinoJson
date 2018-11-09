@@ -10,7 +10,7 @@
 // Returns the size (in bytes) of an object with n elements.
 // Can be very handy to determine the size of a StaticMemoryPool.
 #define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
-  ((NUMBER_OF_ELEMENTS) * sizeof(ARDUINOJSON_NAMESPACE::Slot))
+  ((NUMBER_OF_ELEMENTS) * sizeof(ARDUINOJSON_NAMESPACE::VariantSlot))
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -256,7 +256,11 @@ class JsonObject : public JsonObjectProxy<JsonObjectData>, public Visitable {
     return set_impl(makeString(key));
   }
 
-  FORCE_INLINE JsonVariant set(const StringInMemoryPool& key) const {
+  FORCE_INLINE JsonVariant set(StringInMemoryPool key) const {
+    return set_impl(key);
+  }
+
+  FORCE_INLINE JsonVariant set(ZeroTerminatedRamStringConst key) const {
     return set_impl(key);
   }
 

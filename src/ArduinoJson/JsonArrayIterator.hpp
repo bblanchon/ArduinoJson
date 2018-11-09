@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "Data/Slot.hpp"
 #include "Data/SlotFunctions.hpp"
 #include "JsonVariant.hpp"
 
@@ -30,7 +29,7 @@ class JsonVariantPtr {
 class JsonArrayIterator {
  public:
   JsonArrayIterator() : _slot(0) {}
-  explicit JsonArrayIterator(MemoryPool *memoryPool, Slot *slot)
+  explicit JsonArrayIterator(MemoryPool *memoryPool, VariantSlot *slot)
       : _memoryPool(memoryPool), _slot(slot) {}
 
   JsonVariant operator*() const {
@@ -58,13 +57,13 @@ class JsonArrayIterator {
     return *this;
   }
 
-  Slot *internal() {
+  VariantSlot *internal() {
     return _slot;
   }
 
  private:
   MemoryPool *_memoryPool;
-  Slot *_slot;
+  VariantSlot *_slot;
 };
 
 class JsonVariantConstPtr {
@@ -86,7 +85,7 @@ class JsonVariantConstPtr {
 class JsonArrayConstIterator {
  public:
   JsonArrayConstIterator() : _slot(0) {}
-  explicit JsonArrayConstIterator(const Slot *slot) : _slot(slot) {}
+  explicit JsonArrayConstIterator(const VariantSlot *slot) : _slot(slot) {}
 
   JsonVariantConst operator*() const {
     return JsonVariantConst(&_slot->value);
@@ -113,11 +112,11 @@ class JsonArrayConstIterator {
     return *this;
   }
 
-  const Slot *internal() {
+  const VariantSlot *internal() {
     return _slot;
   }
 
  private:
-  const Slot *_slot;
+  const VariantSlot *_slot;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

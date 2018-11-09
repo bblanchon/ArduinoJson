@@ -204,9 +204,12 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
     return variantSetString(_data, value);
   }
 
-  // set(const char*);
+  // for internal use only
   FORCE_INLINE bool set(StringInMemoryPool value) const {
-    return variantSetString(_data, value, _memoryPool);
+    return variantSetOwnedString(_data, value.slot());
+  }
+  FORCE_INLINE bool set(ZeroTerminatedRamStringConst value) const {
+    return variantSetString(_data, value.c_str());
   }
 
   bool set(JsonVariantConst value) const;
@@ -322,16 +325,5 @@ class JsonVariantConst : public JsonVariantProxy<const JsonVariantData>,
       operator[](TString *key) const {
     return JsonVariantConst(objectGet(variantAsObject(_data), makeString(key)));
   }
-};
-
-class JsonVariantLocal : public JsonVariant {
- public:
-  explicit JsonVariantLocal(MemoryPool *memoryPool)
-      : JsonVariant(memoryPool, &_localData) {
-    _localData.type = JSON_NULL;
-  }
-
- private:
-  JsonVariantData _localData;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

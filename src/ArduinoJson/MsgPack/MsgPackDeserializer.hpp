@@ -17,6 +17,7 @@ template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
   typedef typename remove_reference<TStringStorage>::type::StringBuilder
       StringBuilder;
+  typedef typename StringBuilder::StringType StringType;
 
  public:
   MsgPackDeserializer(MemoryPool &memoryPool, TReader reader,
@@ -220,16 +221,29 @@ class MsgPackDeserializer {
     return readString(variant, size);
   }
 
+  template <typename T>
+  DeserializationError readString(StringType &str) {
+    T size;
+    if (!readInteger(size)) return DeserializationError::IncompleteInput;
+    return readString(str, size);
+  }
+
   DeserializationError readString(JsonVariant variant, size_t n) {
-    StringBuilder str = _stringStorage.startString();
+    StringType s;
+    DeserializationError err = readString(s, n);
+    if (!err) variant.set(s);
+    return err;
+  }
+
+  DeserializationError readString(StringType &s, size_t n) {
+    StringBuilder builder = _stringStorage.startString();
     for (; n; --n) {
       uint8_t c;
       if (!readBytes(c)) return DeserializationError::IncompleteInput;
-      str.append(static_cast<char>(c));
+      builder.append(static_cast<char>(c));
     }
-    StringInMemoryPool s = str.complete();
+    s = builder.complete();
     if (s.isNull()) return DeserializationError::NoMemory;
-    variant.set(s);
     return DeserializationError::Ok;
   }
 
@@ -278,12 +292,11 @@ class MsgPackDeserializer {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
     --_nestingLimit;
     for (; n; --n) {
-      JsonVariantLocal key(_memoryPool);
-      DeserializationError err = parse(key);
+      StringType key;
+      DeserializationError err = parseKey(key);
       if (err) return err;
-      if (!key.is<char *>()) return DeserializationError::NotSupported;
 
-      JsonVariant value = object.set(StringInMemoryPool(key.as<char *>()));
+      JsonVariant value = object.set(key);
       if (value.isInvalid()) return DeserializationError::NoMemory;
 
       err = parse(value);
@@ -291,6 +304,27 @@ class MsgPackDeserializer {
     }
     ++_nestingLimit;
     return DeserializationError::Ok;
+  }
+
+  DeserializationError parseKey(StringType &key) {
+    uint8_t code;
+    if (!readByte(code)) return DeserializationError::IncompleteInput;
+
+    if ((code & 0xe0) == 0xa0) return readString(key, code & 0x1f);
+
+    switch (code) {
+      case 0xd9:
+        return readString<uint8_t>(key);
+
+      case 0xda:
+        return readString<uint16_t>(key);
+
+      case 0xdb:
+        return readString<uint32_t>(key);
+
+      default:
+        return DeserializationError::NotSupported;
+    }
   }
 
   MemoryPool *_memoryPool;

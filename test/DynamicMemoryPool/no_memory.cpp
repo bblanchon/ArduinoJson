@@ -2,7 +2,8 @@
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
 
-#include <ArduinoJson.h>
+#include <ArduinoJson/Memory/DynamicMemoryPool.hpp>
+#include <ArduinoJson/Memory/StringBuilder.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
@@ -32,8 +33,8 @@ TEST_CASE("DynamicMemoryPool no memory") {
   //   REQUIRE(err != DeserializationError::Ok);
   // }
 
-  SECTION("startString()") {
-    StringBuilder str = _memoryPool.startString();
+  SECTION("StringBuilder returns null") {
+    StringBuilder str(&_memoryPool);
     str.append('!');
     REQUIRE(str.complete().isNull());
   }

@@ -8,7 +8,8 @@ HEAD
 * Removed `JsonObject::is<T>(k)` and `JsonObject::set(k,v)`
 * Replaced `T JsonArray::get<T>(i)` with `JsonVariant JsonArray::get(i)`
 * Replaced `T JsonObject::get<T>(k)` with `JsonVariant JsonObject::get(k)`
-* `JsonArray::remove()` and `JsonObject::remove()` now release the memory of the variant
+* `JsonArray::remove()` and `JsonObject::remove()` now release the memory
+* Added `JSON_STRING_SIZE()`
 
 v6.5.0-beta (2018-10-13)
 -----------

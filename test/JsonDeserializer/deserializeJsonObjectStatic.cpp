@@ -16,7 +16,7 @@ TEST_CASE("deserialize JSON object with StaticJsonDocument") {
   }
 
   SECTION("TooSmallBufferForObjectWithOneValue") {
-    StaticJsonDocument<JSON_OBJECT_SIZE(1) - 1> doc;
+    StaticJsonDocument<JSON_OBJECT_SIZE(0)> doc;
     char input[] = "{\"a\":1}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -34,7 +34,7 @@ TEST_CASE("deserialize JSON object with StaticJsonDocument") {
   }
 
   SECTION("TooSmallBufferForObjectWithNestedObject") {
-    StaticJsonDocument<JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0) - 1> doc;
+    StaticJsonDocument<JSON_OBJECT_SIZE(0) + JSON_ARRAY_SIZE(0)> doc;
     char input[] = "{\"a\":[]}";
 
     DeserializationError err = deserializeJson(doc, input);

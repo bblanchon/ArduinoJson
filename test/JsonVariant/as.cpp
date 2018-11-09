@@ -108,6 +108,16 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<std::string>() == std::string("hello"));
   }
 
+  SECTION("set(std::string(\"4.2\"))") {
+    variant.set(std::string("4.2"));
+
+    REQUIRE(variant.as<bool>() == true);
+    REQUIRE(variant.as<long>() == 4L);
+    REQUIRE(variant.as<double>() == 4.2);
+    REQUIRE(variant.as<char*>() == std::string("4.2"));
+    REQUIRE(variant.as<std::string>() == std::string("4.2"));
+  }
+
   SECTION("set(\"true\")") {
     variant.set("true");
 

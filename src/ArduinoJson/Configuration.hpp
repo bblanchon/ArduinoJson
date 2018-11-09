@@ -130,16 +130,6 @@
 #endif
 #endif
 
-#ifndef ARDUINOJSON_ENABLE_ALIGNMENT
-#ifdef ARDUINO_ARCH_AVR
-// alignment isn't needed for 8-bit AVR
-#define ARDUINOJSON_ENABLE_ALIGNMENT 0
-#else
-// but most processors need pointers to be align on word size
-#define ARDUINOJSON_ENABLE_ALIGNMENT 1
-#endif
-#endif
-
 // Control the exponentiation threshold for big numbers
 // CAUTION: cannot be more that 1e9 !!!!
 #ifndef ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD

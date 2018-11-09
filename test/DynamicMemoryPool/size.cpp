@@ -14,35 +14,43 @@ TEST_CASE("DynamicMemoryPool::size()") {
     REQUIRE(0 == memoryPool.size());
   }
 
-  SECTION("Increases after alloc()") {
-    memoryPool.alloc(1);
-    REQUIRE(1U <= memoryPool.size());
-    memoryPool.alloc(1);
-    REQUIRE(2U <= memoryPool.size());
+  SECTION("Increases after allocExpandableString()") {
+    StringSlot* a = memoryPool.allocExpandableString();
+    memoryPool.freezeString(a, 1);
+    REQUIRE(memoryPool.size() == JSON_STRING_SIZE(1));
+
+    StringSlot* b = memoryPool.allocExpandableString();
+    memoryPool.freezeString(b, 1);
+    REQUIRE(memoryPool.size() == 2 * JSON_STRING_SIZE(1));
   }
 
-  SECTION("Goes back to 0 after clear()") {
-    memoryPool.alloc(1);
-    memoryPool.clear();
+  SECTION("Increases after allocVariant()") {
+    memoryPool.allocVariant();
+    REQUIRE(sizeof(VariantSlot) == memoryPool.size());
+
+    memoryPool.allocVariant();
+    REQUIRE(2 * sizeof(VariantSlot) == memoryPool.size());
+  }
+
+  SECTION("Decreases after freeVariant()") {
+    VariantSlot* a = memoryPool.allocVariant();
+    VariantSlot* b = memoryPool.allocVariant();
+
+    memoryPool.freeVariant(b);
+    REQUIRE(sizeof(VariantSlot) == memoryPool.size());
+
+    memoryPool.freeVariant(a);
     REQUIRE(0 == memoryPool.size());
   }
 
-  SECTION("Increases after allocSlot()") {
-    memoryPool.allocSlot();
-    REQUIRE(sizeof(Slot) == memoryPool.size());
+  SECTION("Decreases after freeString()") {
+    StringSlot* a = memoryPool.allocFrozenString(5);
+    StringSlot* b = memoryPool.allocFrozenString(6);
 
-    memoryPool.allocSlot();
-    REQUIRE(2 * sizeof(Slot) == memoryPool.size());
-  }
+    memoryPool.freeString(b);
+    REQUIRE(memoryPool.size() == JSON_STRING_SIZE(5));
 
-  SECTION("Decreases after freeSlot()") {
-    Slot* s1 = memoryPool.allocSlot();
-    Slot* s2 = memoryPool.allocSlot();
-
-    memoryPool.freeSlot(s1);
-    REQUIRE(sizeof(Slot) == memoryPool.size());
-
-    memoryPool.freeSlot(s2);
-    REQUIRE(0 == memoryPool.size());
+    memoryPool.freeString(a);
+    REQUIRE(memoryPool.size() == 0);
   }
 }

@@ -216,7 +216,7 @@ TEST_CASE("JsonVariant comparisons") {
   JsonVariant variant2 = doc2.to<JsonVariant>();
   JsonVariant variant3 = doc3.to<JsonVariant>();
 
-  SECTION("IntegerInVariant") {
+  SECTION("Variants containing integers") {
     variant1.set(42);
     variant2.set(42);
     variant3.set(666);
@@ -228,7 +228,7 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE_FALSE(variant1 == variant3);
   }
 
-  SECTION("StringInVariant") {
+  SECTION("Variants containing linked strings") {
     variant1.set("0hello" + 1);  // make sure they have
     variant2.set("1hello" + 1);  // different addresses
     variant3.set("world");
@@ -240,7 +240,19 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE_FALSE(variant1 == variant3);
   }
 
-  SECTION("DoubleInVariant") {
+  SECTION("Variants containing owned strings") {
+    variant1.set(std::string("hello"));
+    variant2.set(std::string("hello"));
+    variant3.set(std::string("world"));
+
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
+
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
+
+  SECTION("Variants containing double") {
     variant1.set(42.0);
     variant2.set(42.0);
     variant3.set(666.0);

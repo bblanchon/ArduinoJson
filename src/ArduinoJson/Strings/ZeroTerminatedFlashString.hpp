@@ -21,12 +21,12 @@ class ZeroTerminatedFlashString {
   }
 
   template <typename TMemoryPool>
-  const char* save(TMemoryPool* memoryPool) const {
+  StringSlot* save(TMemoryPool* memoryPool) const {
     if (!_str) return NULL;
     size_t n = size() + 1;  // copy the terminator
-    void* dup = memoryPool->alloc(n);
-    if (dup != NULL) memcpy_P(dup, (const char*)_str, n);
-    return static_cast<const char*>(dup);
+    StringSlot* slot = memoryPool->allocFrozenString(n);
+    if (slot) memcpy_P(slot->value, reinterpret_cast<const char*>(_str), n);
+    return slot;
   }
 
   size_t size() const {

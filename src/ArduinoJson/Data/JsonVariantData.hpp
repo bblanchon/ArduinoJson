@@ -26,13 +26,13 @@ enum JsonVariantType {
 };
 
 struct JsonObjectData {
-  struct Slot *head;
-  struct Slot *tail;
+  struct VariantSlot *head;
+  struct VariantSlot *tail;
 };
 
 struct JsonArrayData {
-  struct Slot *head;
-  struct Slot *tail;
+  struct VariantSlot *head;
+  struct VariantSlot *tail;
 };
 
 struct RawData {
@@ -48,6 +48,8 @@ union JsonVariantContent {
   JsonArrayData asArray;
   JsonObjectData asObject;
   const char *asString;
+  struct StringSlot *asOwnedString;
+  struct StringSlot *asOwnedRaw;
   struct {
     const char *data;
     size_t size;
@@ -56,7 +58,7 @@ union JsonVariantContent {
 
 // this struct must be a POD type to prevent error calling offsetof on clang
 struct JsonVariantData {
-  bool keyIsStatic : 1;
+  bool keyIsOwned : 1;
   JsonVariantType type : 7;
   JsonVariantContent content;
 };

@@ -11,7 +11,8 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class JsonPairPtr {
  public:
-  JsonPairPtr(MemoryPool *memoryPool, Slot *slot) : _pair(memoryPool, slot) {}
+  JsonPairPtr(MemoryPool *memoryPool, VariantSlot *slot)
+      : _pair(memoryPool, slot) {}
 
   const JsonPair *operator->() const {
     return &_pair;
@@ -29,7 +30,7 @@ class JsonObjectIterator {
  public:
   JsonObjectIterator() : _slot(0) {}
 
-  explicit JsonObjectIterator(MemoryPool *memoryPool, Slot *slot)
+  explicit JsonObjectIterator(MemoryPool *memoryPool, VariantSlot *slot)
       : _memoryPool(memoryPool), _slot(slot) {}
 
   JsonPair operator*() const {
@@ -57,18 +58,18 @@ class JsonObjectIterator {
     return *this;
   }
 
-  Slot *internal() {
+  VariantSlot *internal() {
     return _slot;
   }
 
  private:
   MemoryPool *_memoryPool;
-  Slot *_slot;
+  VariantSlot *_slot;
 };
 
 class JsonPairConstPtr {
  public:
-  JsonPairConstPtr(const Slot *slot) : _pair(slot) {}
+  JsonPairConstPtr(const VariantSlot *slot) : _pair(slot) {}
 
   const JsonPairConst *operator->() const {
     return &_pair;
@@ -86,7 +87,7 @@ class JsonObjectConstIterator {
  public:
   JsonObjectConstIterator() : _slot(0) {}
 
-  explicit JsonObjectConstIterator(const Slot *slot) : _slot(slot) {}
+  explicit JsonObjectConstIterator(const VariantSlot *slot) : _slot(slot) {}
 
   JsonPairConst operator*() const {
     return JsonPairConst(_slot);
@@ -113,11 +114,11 @@ class JsonObjectConstIterator {
     return *this;
   }
 
-  const Slot *internal() {
+  const VariantSlot *internal() {
     return _slot;
   }
 
  private:
-  const Slot *_slot;
+  const VariantSlot *_slot;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

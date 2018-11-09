@@ -11,11 +11,11 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TKey>
-inline Slot* objectFindSlot(const JsonObjectData* obj, TKey key) {
+inline VariantSlot* objectFindSlot(const JsonObjectData* obj, TKey key) {
   if (!obj) return 0;
-  Slot* slot = obj->head;
+  VariantSlot* slot = obj->head;
   while (slot) {
-    if (key.equals(slot->key)) break;
+    if (key.equals(slotGetKey(slot))) break;
     slot = slot->next;
   }
   return slot;
@@ -29,7 +29,7 @@ inline bool objectContainsKey(const JsonObjectData* obj, const TKey& key) {
 template <typename TKey>
 inline JsonVariantData* objectAdd(JsonObjectData* obj, TKey key,
                                   MemoryPool* pool) {
-  Slot* slot = pool->allocSlot();
+  VariantSlot* slot = pool->allocVariant();
   if (!slot) return 0;
 
   slot->next = 0;
@@ -58,7 +58,7 @@ inline JsonVariantData* objectSet(JsonObjectData* obj, TKey key,
   if (key.isNull()) return 0;
 
   // search a matching key
-  Slot* slot = objectFindSlot(obj, key);
+  VariantSlot* slot = objectFindSlot(obj, key);
   if (slot) return &slot->value;
 
   return objectAdd(obj, key, pool);
@@ -66,7 +66,7 @@ inline JsonVariantData* objectSet(JsonObjectData* obj, TKey key,
 
 template <typename TKey>
 inline JsonVariantData* objectGet(const JsonObjectData* obj, TKey key) {
-  Slot* slot = objectFindSlot(obj, key);
+  VariantSlot* slot = objectFindSlot(obj, key);
   return slot ? &slot->value : 0;
 }
 
@@ -76,7 +76,8 @@ inline void objectClear(JsonObjectData* obj) {
   obj->tail = 0;
 }
 
-inline void objectRemove(JsonObjectData* obj, Slot* slot, MemoryPool* pool) {
+inline void objectRemove(JsonObjectData* obj, VariantSlot* slot,
+                         MemoryPool* pool) {
   if (!obj) return;
   if (!slot) return;
   if (slot->prev)
@@ -102,12 +103,12 @@ inline bool objectCopy(JsonObjectData* dst, const JsonObjectData* src,
                        MemoryPool* pool) {
   if (!dst || !src) return false;
   objectClear(dst);
-  for (Slot* s = src->head; s; s = s->next) {
+  for (VariantSlot* s = src->head; s; s = s->next) {
     JsonVariantData* var;
-    if (s->value.keyIsStatic)
-      var = objectAdd(dst, ZeroTerminatedRamStringConst(s->key), pool);
+    if (s->value.keyIsOwned)
+      var = objectAdd(dst, ZeroTerminatedRamString(s->ownedKey->value), pool);
     else
-      var = objectAdd(dst, ZeroTerminatedRamString(s->key), pool);
+      var = objectAdd(dst, ZeroTerminatedRamStringConst(s->linkedKey), pool);
     if (!variantCopy(var, &s->value, pool)) return false;
   }
   return true;
@@ -117,9 +118,9 @@ inline bool objectEquals(const JsonObjectData* o1, const JsonObjectData* o2) {
   if (o1 == o2) return true;
   if (!o1 || !o2) return false;
 
-  for (Slot* s = o1->head; s; s = s->next) {
+  for (VariantSlot* s = o1->head; s; s = s->next) {
     JsonVariantData* v1 = &s->value;
-    JsonVariantData* v2 = objectGet(o2, makeString(s->key));
+    JsonVariantData* v2 = objectGet(o2, makeString(slotGetKey(s)));
     if (!variantEquals(v1, v2)) return false;
   }
   return true;
