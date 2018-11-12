@@ -10,7 +10,7 @@ using namespace Catch::Matchers;
 namespace my {
 using ARDUINOJSON_NAMESPACE::isinf;
 using ARDUINOJSON_NAMESPACE::isnan;
-}
+}  // namespace my
 
 TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
   DynamicJsonDocument doc;
@@ -222,5 +222,11 @@ TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
+  }
+
+  SECTION("Repeated object key") {
+    DeserializationError err = deserializeJson(doc, "{a:{b:{c:1}},a:2}");
+
+    REQUIRE(err == DeserializationError::Ok);
   }
 }

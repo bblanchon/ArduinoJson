@@ -13,6 +13,24 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+inline void variantFree(JsonVariantData* var, MemoryPool* pool) {
+  ARDUINOJSON_ASSERT(var != 0);
+  ARDUINOJSON_ASSERT(pool != 0);
+
+  switch (var->type) {
+    case JSON_ARRAY:
+    case JSON_OBJECT:
+      arrayFree(&var->content.asArray, pool);
+      break;
+    case JSON_OWNED_STRING:
+    case JSON_OWNED_RAW:
+      pool->freeString(var->content.asOwnedString);
+      break;
+    default:
+      break;
+  }
+}
+
 template <typename T>
 inline T variantAsIntegral(const JsonVariantData* var) {
   if (!var) return 0;
@@ -98,23 +116,30 @@ inline const JsonObjectData* variantAsObject(const JsonVariantData* var) {
     return 0;
 }
 
-inline bool variantSetBoolean(JsonVariantData* var, bool value) {
+inline bool variantSetBoolean(JsonVariantData* var, bool value,
+                              MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   var->type = JSON_BOOLEAN;
   var->content.asInteger = static_cast<JsonUInt>(value);
   return true;
 }
 
-inline bool variantSetFloat(JsonVariantData* var, JsonFloat value) {
+inline bool variantSetFloat(JsonVariantData* var, JsonFloat value,
+                            MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   var->type = JSON_FLOAT;
   var->content.asFloat = value;
   return true;
 }
 
 template <typename T>
-inline bool variantSetSignedInteger(JsonVariantData* var, T value) {
+inline bool variantSetSignedInteger(JsonVariantData* var, T value,
+                                    MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
+
   if (value >= 0) {
     var->type = JSON_POSITIVE_INTEGER;
     var->content.asInteger = static_cast<JsonUInt>(value);
@@ -125,16 +150,20 @@ inline bool variantSetSignedInteger(JsonVariantData* var, T value) {
   return true;
 }
 
-inline bool variantSetSignedInteger(JsonVariantData* var, JsonUInt value) {
+inline bool variantSetUnsignedInteger(JsonVariantData* var, JsonUInt value,
+                                      MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   var->type = JSON_POSITIVE_INTEGER;
   var->content.asInteger = static_cast<JsonUInt>(value);
   return true;
 }
 
 inline bool variantSetLinkedRaw(JsonVariantData* var,
-                                SerializedValue<const char*> value) {
+                                SerializedValue<const char*> value,
+                                MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   var->type = JSON_LINKED_RAW;
   var->content.asRaw.data = value.data();
   var->content.asRaw.size = value.size();
@@ -145,6 +174,7 @@ template <typename T>
 inline bool variantSetOwnedRaw(JsonVariantData* var, SerializedValue<T> value,
                                MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   StringSlot* slot = makeString(value.data(), value.size()).save(pool);
   if (slot) {
     var->type = JSON_OWNED_RAW;
@@ -159,6 +189,7 @@ inline bool variantSetOwnedRaw(JsonVariantData* var, SerializedValue<T> value,
 template <typename T>
 inline bool variantSetString(JsonVariantData* var, T value, MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   StringSlot* slot = value.save(pool);
   if (slot) {
     var->type = JSON_OWNED_STRING;
@@ -170,34 +201,42 @@ inline bool variantSetString(JsonVariantData* var, T value, MemoryPool* pool) {
   }
 }
 
-inline bool variantSetOwnedString(JsonVariantData* var, StringSlot* slot) {
+inline bool variantSetOwnedString(JsonVariantData* var, StringSlot* slot,
+                                  MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   var->type = JSON_OWNED_STRING;
   var->content.asOwnedString = slot;
   return true;
 }
 
-inline bool variantSetString(JsonVariantData* var, const char* value) {
+inline bool variantSetString(JsonVariantData* var, const char* value,
+                             MemoryPool* pool) {
   if (!var) return false;
+  variantFree(var, pool);
   var->type = JSON_LINKED_STRING;
   var->content.asString = value;
   return true;
 }
 
-inline void variantSetNull(JsonVariantData* var) {
-  if (var) var->type = JSON_NULL;
+inline void variantSetNull(JsonVariantData* var, MemoryPool* pool) {
+  if (!var) return;
+  variantFree(var, pool);
+  var->type = JSON_NULL;
 }
 
-inline JsonArrayData* variantToArray(JsonVariantData* var) {
+inline JsonArrayData* variantToArray(JsonVariantData* var, MemoryPool* pool) {
   if (!var) return 0;
+  variantFree(var, pool);
   var->type = JSON_ARRAY;
   var->content.asArray.head = 0;
   var->content.asArray.tail = 0;
   return &var->content.asArray;
 }
 
-inline JsonObjectData* variantToObject(JsonVariantData* var) {
+inline JsonObjectData* variantToObject(JsonVariantData* var, MemoryPool* pool) {
   if (!var) return 0;
+  variantFree(var, pool);
   var->type = JSON_OBJECT;
   var->content.asObject.head = 0;
   var->content.asObject.tail = 0;
@@ -208,14 +247,16 @@ inline bool variantCopy(JsonVariantData* dst, const JsonVariantData* src,
                         MemoryPool* pool) {
   if (!dst) return false;
   if (!src) {
+    variantFree(dst, pool);
     dst->type = JSON_NULL;
     return true;
   }
   switch (src->type) {
     case JSON_ARRAY:
-      return arrayCopy(variantToArray(dst), &src->content.asArray, pool);
+      return arrayCopy(variantToArray(dst, pool), &src->content.asArray, pool);
     case JSON_OBJECT:
-      return objectCopy(variantToObject(dst), &src->content.asObject, pool);
+      return objectCopy(variantToObject(dst, pool), &src->content.asObject,
+                        pool);
     case JSON_OWNED_STRING:
       return variantSetString(
           dst, makeString(src->content.asOwnedString->value), pool);
@@ -225,6 +266,7 @@ inline bool variantCopy(JsonVariantData* dst, const JsonVariantData* src,
                                            src->content.asOwnedRaw->size),
                                 pool);
     default:
+      variantFree(dst, pool);
       // caution: don't override keyIsOwned
       dst->type = src->type;
       dst->content = src->content;

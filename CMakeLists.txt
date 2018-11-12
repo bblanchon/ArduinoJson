@@ -7,11 +7,14 @@ project(ArduinoJson)
 
 enable_testing()
 
-if(${COVERAGE})
-	set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
+	add_definitions(-DARDUINOJSON_DEBUG)
+	add_compile_options(-g -O0)
 endif()
 
-add_definitions(-DARDUINOJSON_DEBUG)
+if(${COVERAGE})
+	set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
+endif()
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/src)
 add_subdirectory(third-party/catch)

@@ -133,7 +133,7 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
 
   // set(bool value)
   FORCE_INLINE bool set(bool value) const {
-    return variantSetBoolean(_data, value);
+    return variantSetBoolean(_data, value, _memoryPool);
   }
 
   // set(double value);
@@ -142,7 +142,7 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
   FORCE_INLINE bool set(
       T value,
       typename enable_if<is_floating_point<T>::value>::type * = 0) const {
-    return variantSetFloat(_data, static_cast<JsonFloat>(value));
+    return variantSetFloat(_data, static_cast<JsonFloat>(value), _memoryPool);
   }
 
   // set(char)
@@ -155,7 +155,7 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
       T value,
       typename enable_if<is_integral<T>::value && is_signed<T>::value>::type * =
           0) const {
-    return variantSetSignedInteger(_data, value);
+    return variantSetSignedInteger(_data, value, _memoryPool);
   }
 
   // set(unsigned short)
@@ -165,12 +165,13 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
   FORCE_INLINE bool set(
       T value, typename enable_if<is_integral<T>::value &&
                                   is_unsigned<T>::value>::type * = 0) const {
-    return variantSetSignedInteger(_data, static_cast<JsonUInt>(value));
+    return variantSetUnsignedInteger(_data, static_cast<JsonUInt>(value),
+                                     _memoryPool);
   }
 
   // set(SerializedValue<const char *>)
   FORCE_INLINE bool set(SerializedValue<const char *> value) const {
-    return variantSetLinkedRaw(_data, value);
+    return variantSetLinkedRaw(_data, value, _memoryPool);
   }
 
   // set(SerializedValue<std::string>)
@@ -201,15 +202,15 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
 
   // set(const char*);
   FORCE_INLINE bool set(const char *value) const {
-    return variantSetString(_data, value);
+    return variantSetString(_data, value, _memoryPool);
   }
 
   // for internal use only
   FORCE_INLINE bool set(StringInMemoryPool value) const {
-    return variantSetOwnedString(_data, value.slot());
+    return variantSetOwnedString(_data, value.slot(), _memoryPool);
   }
   FORCE_INLINE bool set(ZeroTerminatedRamStringConst value) const {
-    return variantSetString(_data, value.c_str());
+    return variantSetString(_data, value.c_str(), _memoryPool);
   }
 
   bool set(JsonVariantConst value) const;

@@ -100,4 +100,15 @@ inline size_t arraySize(const JsonArrayData* arr) {
   if (!arr) return 0;
   return slotSize(arr->head);
 }
+
+inline void arrayFree(JsonArrayData* arr, MemoryPool* pool) {
+  ARDUINOJSON_ASSERT(arr);
+
+  VariantSlot* cur = arr->head;
+  while (cur) {
+    VariantSlot* next = cur->next;
+    slotFree(cur, pool);
+    cur = next;
+  }
+}
 }  // namespace ARDUINOJSON_NAMESPACE

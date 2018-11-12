@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../Memory/MemoryPool.hpp"
+#include "../Polyfills/assert.hpp"
 #include "../Strings/StringTypes.hpp"
 #include "JsonVariantData.hpp"
 
@@ -61,25 +62,15 @@ inline size_t slotSize(const VariantSlot* var) {
   return n;
 }
 
+void variantFree(JsonVariantData* var, MemoryPool* pool);
+
 inline void slotFree(VariantSlot* var, MemoryPool* pool) {
-  const JsonVariantData& v = var->value;
+  ARDUINOJSON_ASSERT(var != 0);
+  ARDUINOJSON_ASSERT(pool != 0);
 
-  switch (v.type) {
-    case JSON_ARRAY:
-    case JSON_OBJECT:
-      for (VariantSlot* s = v.content.asObject.head; s; s = s->next) {
-        slotFree(s, pool);
-      }
-      break;
-    case JSON_OWNED_STRING:
-    case JSON_OWNED_RAW:
-      pool->freeString(v.content.asOwnedString);
-      break;
-    default:
-      break;
-  }
+  variantFree(&var->value, pool);
 
-  if (v.keyIsOwned) pool->freeString(var->ownedKey);
+  if (var->value.keyIsOwned) pool->freeString(var->ownedKey);
 
   pool->freeVariant(var);
 }

@@ -53,7 +53,7 @@ class JsonDocument : public Visitable {
 
   template <typename T>
   typename JsonVariantTo<T>::type to() {
-    _memoryPool.clear();
+    clear();
     return getVariant().template to<T>();
   }
 
