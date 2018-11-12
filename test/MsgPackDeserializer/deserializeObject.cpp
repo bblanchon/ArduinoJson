@@ -32,6 +32,47 @@ TEST_CASE("deserialize MsgPack object") {
       REQUIRE(obj["one"] == 1);
       REQUIRE(obj["two"] == 2);
     }
+
+    SECTION("key is str 8") {
+      const char* input = "\x82\xd9\x03one\x01\xd9\x03two\x02";
+
+      DeserializationError error = deserializeMsgPack(doc, input);
+      JsonObject obj = doc.as<JsonObject>();
+
+      REQUIRE(error == DeserializationError::Ok);
+      REQUIRE(doc.is<JsonObject>());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["one"] == 1);
+      REQUIRE(obj["two"] == 2);
+    }
+
+    SECTION("key is str 16") {
+      const char* input =
+          "\x82\xdb\x00\x00\x00\x03one\x01\xdb\x00\x00\x00\x03two\x02";
+
+      DeserializationError error = deserializeMsgPack(doc, input);
+      JsonObject obj = doc.as<JsonObject>();
+
+      REQUIRE(error == DeserializationError::Ok);
+      REQUIRE(doc.is<JsonObject>());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["one"] == 1);
+      REQUIRE(obj["two"] == 2);
+    }
+
+    SECTION("key is str 32") {
+      const char* input =
+          "\x82\xdb\x00\x00\x00\x03one\x01\xdb\x00\x00\x00\x03two\x02";
+
+      DeserializationError error = deserializeMsgPack(doc, input);
+      JsonObject obj = doc.as<JsonObject>();
+
+      REQUIRE(error == DeserializationError::Ok);
+      REQUIRE(doc.is<JsonObject>());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["one"] == 1);
+      REQUIRE(obj["two"] == 2);
+    }
   }
 
   SECTION("map 16") {
