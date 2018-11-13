@@ -10,7 +10,15 @@ void testStringification(DeserializationError error, std::string expected) {
 }
 
 void testBoolification(DeserializationError error, bool expected) {
+  // DeserializationError on left-hand side
   CHECK(error == expected);
+  CHECK(error != !expected);
+  CHECK(!error == !expected);
+
+  // DeserializationError on right-hand side
+  CHECK(expected == error);
+  CHECK(!expected != error);
+  CHECK(!expected == !error);
 }
 
 #define TEST_STRINGIFICATION(symbol) \
@@ -38,15 +46,92 @@ TEST_CASE("DeserializationError") {
     TEST_BOOLIFICATION(NotSupported, true);
   }
 
-  SECTION("ostream code") {
+  SECTION("ostream DeserializationError") {
     std::stringstream s;
     s << DeserializationError(DeserializationError::InvalidInput);
     REQUIRE(s.str() == "InvalidInput");
   }
 
-  SECTION("ostream code") {
+  SECTION("ostream DeserializationError::Code") {
     std::stringstream s;
     s << DeserializationError::InvalidInput;
     REQUIRE(s.str() == "InvalidInput");
+  }
+
+  SECTION("out of range") {
+    int code = 666;
+    DeserializationError err(
+        *reinterpret_cast<DeserializationError::Code*>(&code));
+    REQUIRE(err.c_str() == std::string("???"));
+  }
+
+  SECTION("switch") {
+    DeserializationError err = DeserializationError::InvalidInput;
+    switch (err.code()) {
+      case DeserializationError::InvalidInput:
+        SUCCEED();
+        break;
+      default:
+        FAIL();
+        break;
+    }
+  }
+
+  SECTION("Comparisons") {
+    DeserializationError invalidInput(DeserializationError::InvalidInput);
+    DeserializationError ok(DeserializationError::Ok);
+
+    SECTION("DeserializationError == bool") {
+      REQUIRE(invalidInput == true);
+      REQUIRE(ok == false);
+    }
+
+    SECTION("bool == DeserializationError") {
+      REQUIRE(true == invalidInput);
+      REQUIRE(false == ok);
+    }
+
+    SECTION("DeserializationError != bool") {
+      REQUIRE(invalidInput != false);
+      REQUIRE(ok != true);
+    }
+
+    SECTION("bool != DeserializationError") {
+      REQUIRE(false != invalidInput);
+      REQUIRE(true != ok);
+    }
+
+    SECTION("Negations") {
+      REQUIRE(!invalidInput == false);
+      REQUIRE(!ok == true);
+    }
+
+    SECTION("DeserializationError == Code") {
+      REQUIRE(invalidInput == DeserializationError::InvalidInput);
+      REQUIRE(ok == DeserializationError::Ok);
+    }
+
+    SECTION("Code == DeserializationError") {
+      REQUIRE(DeserializationError::InvalidInput == invalidInput);
+      REQUIRE(DeserializationError::Ok == ok);
+    }
+
+    SECTION("DeserializationError != Code") {
+      REQUIRE(invalidInput != DeserializationError::Ok);
+      REQUIRE(ok != DeserializationError::InvalidInput);
+    }
+
+    SECTION("Code != DeserializationError") {
+      REQUIRE(DeserializationError::Ok != invalidInput);
+      REQUIRE(DeserializationError::InvalidInput != ok);
+    }
+
+    SECTION("DeserializationError == DeserializationError") {
+      REQUIRE_FALSE(invalidInput == ok);
+    }
+
+    SECTION("DeserializationError != DeserializationError") {
+      REQUIRE(invalidInput != ok);
+    }
   }
 }

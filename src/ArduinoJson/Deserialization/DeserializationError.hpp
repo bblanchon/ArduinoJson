@@ -11,6 +11,10 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 class DeserializationError {
+  // safe bool idiom
+  typedef void (DeserializationError::*bool_type)() const;
+  void safeBoolHelper() const {}
+
  public:
   enum Code {
     Ok,
@@ -22,26 +26,52 @@ class DeserializationError {
   };
 
   DeserializationError() {}
-  DeserializationError(Code code) : _code(code) {}
+  DeserializationError(Code c) : _code(c) {}
 
-  friend bool operator==(const DeserializationError& err, Code code) {
-    return err._code == code;
+  // Compare with DeserializationError
+  friend bool operator==(const DeserializationError& lhs,
+                         const DeserializationError& rhs) {
+    return lhs._code == rhs._code;
+  }
+  friend bool operator!=(const DeserializationError& lhs,
+                         const DeserializationError& rhs) {
+    return lhs._code != rhs._code;
   }
 
-  friend bool operator==(Code code, const DeserializationError& err) {
-    return err._code == code;
+  // Compare with Code
+  friend bool operator==(const DeserializationError& lhs, Code rhs) {
+    return lhs._code == rhs;
+  }
+  friend bool operator==(Code lhs, const DeserializationError& rhs) {
+    return lhs == rhs._code;
+  }
+  friend bool operator!=(const DeserializationError& lhs, Code rhs) {
+    return lhs._code != rhs;
+  }
+  friend bool operator!=(Code lhs, const DeserializationError& rhs) {
+    return lhs != rhs._code;
   }
 
-  friend bool operator!=(const DeserializationError& err, Code code) {
-    return err._code != code;
+  // Behaves like a bool
+  operator bool_type() const {
+    return _code != Ok ? &DeserializationError::safeBoolHelper : 0;
+  }
+  friend bool operator==(bool value, const DeserializationError& err) {
+    return static_cast<bool>(err) == value;
+  }
+  friend bool operator==(const DeserializationError& err, bool value) {
+    return static_cast<bool>(err) == value;
+  }
+  friend bool operator!=(bool value, const DeserializationError& err) {
+    return static_cast<bool>(err) != value;
+  }
+  friend bool operator!=(const DeserializationError& err, bool value) {
+    return static_cast<bool>(err) != value;
   }
 
-  friend bool operator!=(Code code, const DeserializationError& err) {
-    return err._code != code;
-  }
-
-  operator bool() const {
-    return _code != Ok;
+  // Returns internal enum, useful for switch statement
+  Code code() const {
+    return _code;
   }
 
   const char* c_str() const {

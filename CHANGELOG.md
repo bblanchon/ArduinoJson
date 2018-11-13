@@ -9,7 +9,8 @@ HEAD
 * Replaced `T JsonArray::get<T>(i)` with `JsonVariant JsonArray::get(i)`
 * Replaced `T JsonObject::get<T>(k)` with `JsonVariant JsonObject::get(k)`
 * Added `JSON_STRING_SIZE()`
-* Replacing or removing a value now releases the memory.
+* Replacing or removing a value now releases the memory
+* Added `DeserializationError::code()` to be used in switch statements (issue #846)
 
 v6.5.0-beta (2018-10-13)
 -----------
