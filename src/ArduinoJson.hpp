@@ -7,9 +7,11 @@
 #include "ArduinoJson/Namespace.hpp"
 
 #include "ArduinoJson/JsonArray.hpp"
-#include "ArduinoJson/JsonDocument.hpp"
 #include "ArduinoJson/JsonObject.hpp"
 #include "ArduinoJson/JsonVariant.hpp"
+
+#include "ArduinoJson/DynamicJsonDocument.hpp"
+#include "ArduinoJson/StaticJsonDocument.hpp"
 
 #include "ArduinoJson/Data/VariantAsImpl.hpp"
 #include "ArduinoJson/JsonArrayImpl.hpp"

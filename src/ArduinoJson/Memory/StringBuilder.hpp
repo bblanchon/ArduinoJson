@@ -29,8 +29,8 @@ class StringBuilder {
     if (!_slot) return;
 
     if (_size >= _slot->size) {
-      _slot = _parent->expandString(_slot);
-      if (!_slot) return;
+      _slot = 0;
+      return;
     }
 
     _slot->value[_size++] = c;

@@ -2,15 +2,16 @@
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
 
-#include <ArduinoJson/Memory/StaticMemoryPool.hpp>
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-TEST_CASE("StaticMemoryPool::allocFrozenString()") {
+TEST_CASE("MemoryPool::allocFrozenString()") {
   const size_t poolCapacity = 64;
   const size_t longestString = poolCapacity - sizeof(StringSlot);
-  StaticMemoryPool<poolCapacity> pool;
+  char buffer[poolCapacity];
+  MemoryPool pool(buffer, poolCapacity);
 
   SECTION("Returns different addresses") {
     StringSlot *a = pool.allocFrozenString(1);
@@ -33,6 +34,16 @@ TEST_CASE("StaticMemoryPool::allocFrozenString()") {
   SECTION("Returns NULL when pool is too small") {
     void *p = pool.allocFrozenString(longestString + 1);
     REQUIRE(0 == p);
+  }
+
+  SECTION("Returns NULL when buffer is NULL") {
+    MemoryPool pool2(0, poolCapacity);
+    REQUIRE(0 == pool2.allocFrozenString(2));
+  }
+
+  SECTION("Returns NULL when capacity is 0") {
+    MemoryPool pool2(buffer, 0);
+    REQUIRE(0 == pool2.allocFrozenString(2));
   }
 
   SECTION("Returns aligned pointers") {
@@ -74,10 +85,11 @@ TEST_CASE("StaticMemoryPool::allocFrozenString()") {
   }
 }
 
-TEST_CASE("StaticMemoryPool::freeString()") {
+TEST_CASE("MemoryPool::freeString()") {
   const size_t poolCapacity = 512;
   const size_t longestString = poolCapacity - sizeof(StringSlot);
-  StaticMemoryPool<poolCapacity> pool;
+  char buffer[poolCapacity];
+  MemoryPool pool(buffer, poolCapacity);
 
   static const size_t testStringSize =
       (poolCapacity - sizeof(StringSlot) * 4 - sizeof(VariantSlot) * 4) / 4;

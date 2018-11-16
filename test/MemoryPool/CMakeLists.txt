@@ -2,7 +2,7 @@
 # Copyright Benoit Blanchon 2014-2018
 # MIT License
 
-add_executable(StaticMemoryPoolTests 
+add_executable(MemoryPoolTests 
 	allocVariant.cpp
 	allocString.cpp
 	clear.cpp
@@ -10,5 +10,5 @@ add_executable(StaticMemoryPoolTests
 	StringBuilder.cpp
 )
 
-target_link_libraries(StaticMemoryPoolTests catch)
-add_test(StaticMemoryPool StaticMemoryPoolTests)
+target_link_libraries(MemoryPoolTests catch)
+add_test(MemoryPool MemoryPoolTests)

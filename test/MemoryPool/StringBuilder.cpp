@@ -2,15 +2,17 @@
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
 
-#include <ArduinoJson/Memory/StaticMemoryPool.hpp>
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Memory/StringBuilder.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 
+static char buffer[4096];
+
 TEST_CASE("StringBuilder") {
-  SECTION("WorksWhenBufferIsBigEnough") {
-    StaticMemoryPool<JSON_STRING_SIZE(6)> memoryPool;
+  SECTION("Works when buffer is big enough") {
+    MemoryPool memoryPool(buffer, addPadding(JSON_STRING_SIZE(6)));
 
     StringBuilder str(&memoryPool);
     str.append("hello");
@@ -18,17 +20,17 @@ TEST_CASE("StringBuilder") {
     REQUIRE(str.complete().equals("hello"));
   }
 
-  SECTION("ReturnsNullWhenTooSmall") {
-    StaticMemoryPool<1> memoryPool;
+  SECTION("Returns null when too small") {
+    MemoryPool memoryPool(buffer, sizeof(void*));
 
     StringBuilder str(&memoryPool);
-    str.append("hello!!!");
+    str.append("hello world!");
 
     REQUIRE(str.complete().isNull());
   }
 
   SECTION("Increases size of memory pool") {
-    StaticMemoryPool<JSON_STRING_SIZE(6)> memoryPool;
+    MemoryPool memoryPool(buffer, addPadding(JSON_STRING_SIZE(6)));
 
     StringBuilder str(&memoryPool);
     str.append('h');

@@ -6,6 +6,18 @@
 #include <catch.hpp>
 
 TEST_CASE("StaticJsonDocument") {
+  SECTION("capacity()") {
+    SECTION("matches template argument") {
+      StaticJsonDocument<256> doc;
+      REQUIRE(doc.capacity() == 256);
+    }
+
+    SECTION("rounds up template argument") {
+      StaticJsonDocument<253> doc;
+      REQUIRE(doc.capacity() == 256);
+    }
+  }
+
   SECTION("serializeJson()") {
     StaticJsonDocument<200> doc;
     JsonObject obj = doc.to<JsonObject>();

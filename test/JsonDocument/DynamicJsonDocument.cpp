@@ -39,6 +39,18 @@ TEST_CASE("DynamicJsonDocument") {
     }
   }
 
+  SECTION("capacity()") {
+    SECTION("matches constructor argument") {
+      DynamicJsonDocument doc2(256);
+      REQUIRE(doc2.capacity() == 256);
+    }
+
+    SECTION("rounds up constructor argument") {
+      DynamicJsonDocument doc2(253);
+      REQUIRE(doc2.capacity() == 256);
+    }
+  }
+
   SECTION("Copy constructor") {
     deserializeJson(doc, "{\"hello\":\"world\"}");
     doc.nestingLimit = 42;

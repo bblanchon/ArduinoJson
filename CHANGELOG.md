@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Removed the automatic expansion of `DynamicJsonDocument`, it now has a fixed capacity.
+
 v6.6.0-beta (2018-11-13)
 -----------
 

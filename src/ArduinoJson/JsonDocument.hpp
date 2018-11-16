@@ -6,17 +6,13 @@
 
 #include "Data/JsonVariantTo.hpp"
 #include "JsonVariant.hpp"
-#include "Memory/DynamicMemoryPool.hpp"
-#include "Memory/StaticMemoryPool.hpp"
+#include "Memory/MemoryPool.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TMemoryPool>
 class JsonDocument : public Visitable {
  public:
   uint8_t nestingLimit;
-
-  JsonDocument() : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
 
   template <typename Visitor>
   void accept(Visitor& visitor) const {
@@ -47,7 +43,12 @@ class JsonDocument : public Visitable {
     return _memoryPool.size();
   }
 
-  TMemoryPool& memoryPool() {
+  size_t capacity() const {
+    return _memoryPool.capacity();
+  }
+
+  // for internal use only
+  MemoryPool& memoryPool() {
     return _memoryPool;
   }
 
@@ -58,10 +59,13 @@ class JsonDocument : public Visitable {
   }
 
  protected:
-  template <typename T>
-  void copy(const JsonDocument<T>& src) {
+  JsonDocument(char* buf, size_t capa)
+      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT),
+        _memoryPool(buf, capa) {}
+
+  void copy(const JsonDocument& src) {
     nestingLimit = src.nestingLimit;
-    to<JsonVariant>().set(src.template as<JsonVariant>());
+    to<JsonVariant>().set(src.as<JsonVariant>());
   }
 
  private:
@@ -73,59 +77,8 @@ class JsonDocument : public Visitable {
     return JsonVariantConst(&_rootData);
   }
 
-  TMemoryPool _memoryPool;
+  MemoryPool _memoryPool;
   JsonVariantData _rootData;
-};
-
-class DynamicJsonDocument : public JsonDocument<DynamicMemoryPool> {
- public:
-  DynamicJsonDocument() {}
-  DynamicJsonDocument(size_t capacity) {
-    memoryPool().reserve(capacity);
-  }
-
-  DynamicJsonDocument(const DynamicJsonDocument& src) {
-    memoryPool().reserve(src.memoryUsage());
-    copy(src);
-  }
-
-  template <typename T>
-  DynamicJsonDocument(const JsonDocument<T>& src) {
-    memoryPool().reserve(src.memoryUsage());
-    copy(src);
-  }
-
-  DynamicJsonDocument& operator=(const DynamicJsonDocument& src) {
-    copy(src);
-    return *this;
-  }
-
-  template <typename T>
-  DynamicJsonDocument& operator=(const JsonDocument<T>& src) {
-    copy(src);
-    return *this;
-  }
-};
-
-template <size_t CAPACITY>
-class StaticJsonDocument : public JsonDocument<StaticMemoryPool<CAPACITY> > {
- public:
-  StaticJsonDocument() {}
-
-  template <typename T>
-  StaticJsonDocument(const JsonDocument<T>& src) {
-    this->copy(src);
-  }
-
-  StaticMemoryPoolBase& memoryPool() {
-    return JsonDocument<StaticMemoryPool<CAPACITY> >::memoryPool();
-  }
-
-  template <typename T>
-  StaticJsonDocument operator=(const JsonDocument<T>& src) {
-    this->copy(src);
-    return *this;
-  }
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE
