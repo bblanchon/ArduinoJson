@@ -6,33 +6,30 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TChar>
 class UnsafeCharPointerReader {
-  const TChar* _ptr;
+  const char* _ptr;
 
  public:
-  explicit UnsafeCharPointerReader(const TChar* ptr)
-      : _ptr(ptr ? ptr : reinterpret_cast<const TChar*>("")) {}
+  explicit UnsafeCharPointerReader(const char* ptr)
+      : _ptr(ptr ? ptr : reinterpret_cast<const char*>("")) {}
 
   char read() {
     return static_cast<char>(*_ptr++);
   }
 
   bool ended() const {
-    // we cannot know
+    // we cannot know, that's why it's unsafe
     return false;
   }
 };
 
-template <typename TChar>
 class SafeCharPointerReader {
-  const TChar* _ptr;
-  const TChar* _end;
+  const char* _ptr;
+  const char* _end;
 
  public:
-  explicit SafeCharPointerReader(const TChar* ptr, size_t len)
-      : _ptr(ptr ? ptr : reinterpret_cast<const TChar*>("")),
-        _end(_ptr + len) {}
+  explicit SafeCharPointerReader(const char* ptr, size_t len)
+      : _ptr(ptr ? ptr : reinterpret_cast<const char*>("")), _end(_ptr + len) {}
 
   char read() {
     return static_cast<char>(*_ptr++);
@@ -44,18 +41,18 @@ class SafeCharPointerReader {
 };
 
 template <typename TChar>
-inline UnsafeCharPointerReader<TChar> makeReader(TChar* input) {
-  return UnsafeCharPointerReader<TChar>(input);
+inline UnsafeCharPointerReader makeReader(TChar* input) {
+  return UnsafeCharPointerReader(reinterpret_cast<const char*>(input));
 }
 
 template <typename TChar>
-inline SafeCharPointerReader<TChar> makeReader(TChar* input, size_t n) {
-  return SafeCharPointerReader<TChar>(input, n);
+inline SafeCharPointerReader makeReader(TChar* input, size_t n) {
+  return SafeCharPointerReader(reinterpret_cast<const char*>(input), n);
 }
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-inline SafeCharPointerReader<char> makeReader(const String& input) {
-  return SafeCharPointerReader<char>(input.c_str(), input.length());
+inline SafeCharPointerReader makeReader(const String& input) {
+  return SafeCharPointerReader(input.c_str(), input.length());
 }
 #endif
 

@@ -6,17 +6,16 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TChar>
 class StringMover {
  public:
   class StringBuilder {
    public:
     typedef ZeroTerminatedRamStringConst StringType;
 
-    StringBuilder(TChar** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
+    StringBuilder(char** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
 
     void append(char c) {
-      *(*_writePtr)++ = TChar(c);
+      *(*_writePtr)++ = char(c);
     }
 
     StringType complete() const {
@@ -25,17 +24,17 @@ class StringMover {
     }
 
    private:
-    TChar** _writePtr;
-    TChar* _startPtr;
+    char** _writePtr;
+    char* _startPtr;
   };
 
-  StringMover(TChar* ptr) : _ptr(ptr) {}
+  StringMover(char* ptr) : _ptr(ptr) {}
 
   StringBuilder startString() {
     return StringBuilder(&_ptr);
   }
 
  private:
-  TChar* _ptr;
+  char* _ptr;
 };
 }  // namespace ARDUINOJSON_NAMESPACE
