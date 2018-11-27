@@ -23,11 +23,11 @@ class FixedSizeRamString {
   }
 
   template <typename TMemoryPool>
-  StringSlot* save(TMemoryPool* memoryPool) const {
+  char* save(TMemoryPool* memoryPool) const {
     if (!_str) return NULL;
-    StringSlot* slot = memoryPool->allocFrozenString(_size);
-    if (slot) memcpy(slot->value, _str, _size);
-    return slot;
+    char* dup = memoryPool->allocFrozenString(_size);
+    if (dup) memcpy(dup, _str, _size);
+    return dup;
   }
 
   size_t size() const {

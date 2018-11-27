@@ -79,12 +79,12 @@ TEST_CASE("JsonVariant with not enough memory") {
   JsonVariant v = doc.to<JsonVariant>();
 
   SECTION("std::string") {
-    v.set(std::string("hello"));
+    v.set(std::string("hello world!!"));
     REQUIRE(v.isNull());
   }
 
   SECTION("Serialized<std::string>") {
-    v.set(serialized(std::string("hello")));
+    v.set(serialized(std::string("hello world!!")));
     REQUIRE(v.isNull());
   }
 }

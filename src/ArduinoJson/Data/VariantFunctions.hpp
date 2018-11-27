@@ -22,9 +22,8 @@ inline T variantAsIntegral(const JsonVariantData* var) {
     case JSON_NEGATIVE_INTEGER:
       return T(~var->content.asInteger + 1);
     case JSON_LINKED_STRING:
-      return parseInteger<T>(var->content.asString);
     case JSON_OWNED_STRING:
-      return parseInteger<T>(var->content.asOwnedString->value);
+      return parseInteger<T>(var->content.asString);
     case JSON_FLOAT:
       return T(var->content.asFloat);
     default:
@@ -47,9 +46,8 @@ inline T variantAsFloat(const JsonVariantData* var) {
     case JSON_NEGATIVE_INTEGER:
       return -static_cast<T>(var->content.asInteger);
     case JSON_LINKED_STRING:
-      return parseFloat<T>(var->content.asString);
     case JSON_OWNED_STRING:
-      return parseFloat<T>(var->content.asOwnedString->value);
+      return parseFloat<T>(var->content.asString);
     case JSON_FLOAT:
       return static_cast<T>(var->content.asFloat);
     default:
@@ -61,9 +59,8 @@ inline const char* variantAsString(const JsonVariantData* var) {
   if (!var) return 0;
   switch (var->type) {
     case JSON_LINKED_STRING:
-      return var->content.asString;
     case JSON_OWNED_STRING:
-      return var->content.asOwnedString->value;
+      return var->content.asString;
     default:
       return 0;
   }
@@ -144,10 +141,11 @@ template <typename T>
 inline bool variantSetOwnedRaw(JsonVariantData* var, SerializedValue<T> value,
                                MemoryPool* pool) {
   if (!var) return false;
-  StringSlot* slot = makeString(value.data(), value.size()).save(pool);
-  if (slot) {
+  char* dup = makeString(value.data(), value.size()).save(pool);
+  if (dup) {
     var->type = JSON_OWNED_RAW;
-    var->content.asOwnedRaw = slot;
+    var->content.asRaw.data = dup;
+    var->content.asRaw.size = value.size();
     return true;
   } else {
     var->type = JSON_NULL;
@@ -158,10 +156,10 @@ inline bool variantSetOwnedRaw(JsonVariantData* var, SerializedValue<T> value,
 template <typename T>
 inline bool variantSetString(JsonVariantData* var, T value, MemoryPool* pool) {
   if (!var) return false;
-  StringSlot* slot = value.save(pool);
-  if (slot) {
+  char* dup = value.save(pool);
+  if (dup) {
     var->type = JSON_OWNED_STRING;
-    var->content.asOwnedString = slot;
+    var->content.asString = dup;
     return true;
   } else {
     var->type = JSON_NULL;
@@ -169,10 +167,10 @@ inline bool variantSetString(JsonVariantData* var, T value, MemoryPool* pool) {
   }
 }
 
-inline bool variantSetOwnedString(JsonVariantData* var, StringSlot* slot) {
+inline bool variantSetOwnedString(JsonVariantData* var, char* s) {
   if (!var) return false;
   var->type = JSON_OWNED_STRING;
-  var->content.asOwnedString = slot;
+  var->content.asString = s;
   return true;
 }
 
@@ -218,12 +216,11 @@ inline bool variantCopy(JsonVariantData* dst, const JsonVariantData* src,
       return objectCopy(variantToObject(dst), &src->content.asObject, pool);
     case JSON_OWNED_STRING:
       return variantSetString(
-          dst, makeString(src->content.asOwnedString->value), pool);
+          dst, ZeroTerminatedRamString(src->content.asString), pool);
     case JSON_OWNED_RAW:
-      return variantSetOwnedRaw(dst,
-                                serialized(src->content.asOwnedRaw->value,
-                                           src->content.asOwnedRaw->size),
-                                pool);
+      return variantSetOwnedRaw(
+          dst, serialized(src->content.asRaw.data, src->content.asRaw.size),
+          pool);
     default:
       // caution: don't override keyIsOwned
       dst->type = src->type;
@@ -266,16 +263,15 @@ inline bool variantEquals(const JsonVariantData* a, const JsonVariantData* b) {
   if (a->type != b->type) return false;
 
   switch (a->type) {
-    case JSON_LINKED_RAW:
     case JSON_LINKED_STRING:
+    case JSON_OWNED_STRING:
       return !strcmp(a->content.asString, b->content.asString);
 
+    case JSON_LINKED_RAW:
     case JSON_OWNED_RAW:
-    case JSON_OWNED_STRING:
-      return a->content.asOwnedString->size == b->content.asOwnedString->size &&
-             !memcmp(a->content.asOwnedString->value,
-                     b->content.asOwnedString->value,
-                     a->content.asOwnedString->size);
+      return a->content.asRaw.size == b->content.asRaw.size &&
+             !memcmp(a->content.asRaw.data, b->content.asRaw.data,
+                     a->content.asRaw.size);
 
     case JSON_BOOLEAN:
     case JSON_POSITIVE_INTEGER:

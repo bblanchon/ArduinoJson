@@ -13,28 +13,28 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TKey>
 inline bool slotSetKey(VariantSlot* var, TKey key, MemoryPool* pool) {
-  StringSlot* slot = key.save(pool);
-  if (!slot) return false;
-  var->ownedKey = slot;
+  char* dup = key.save(pool);
+  if (!dup) return false;
+  var->key = dup;
   var->value.keyIsOwned = true;
   return true;
 }
 
 inline bool slotSetKey(VariantSlot* var, ZeroTerminatedRamStringConst key,
                        MemoryPool*) {
-  var->linkedKey = key.c_str();
+  var->key = key.c_str();
   var->value.keyIsOwned = false;
   return true;
 }
 
 inline bool slotSetKey(VariantSlot* var, StringInMemoryPool key, MemoryPool*) {
-  var->ownedKey = key.slot();
+  var->key = key.c_str();
   var->value.keyIsOwned = true;
   return true;
 }
 
 inline const char* slotGetKey(const VariantSlot* var) {
-  return var->value.keyIsOwned ? var->ownedKey->value : var->linkedKey;
+  return var->key;
 }
 
 inline const VariantSlot* slotAdvance(const VariantSlot* var, size_t distance) {

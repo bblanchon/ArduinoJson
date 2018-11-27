@@ -5,44 +5,35 @@
 #pragma once
 
 #include <string.h>
-#include "../Memory/StringSlot.hpp"
+#include "../Memory/MemoryPool.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
 class StringInMemoryPool {
  public:
-  StringInMemoryPool(StringSlot* s = 0) : _slot(s) {}
+  StringInMemoryPool(char* s = 0) : _value(s) {}
 
   bool equals(const char* expected) const {
-    if (!_slot) return expected == 0;
-    const char* actual = _slot->value;
+    if (!_value) return expected == 0;
+    const char* actual = _value;
     if (actual == expected) return true;
     return strcmp(actual, expected) == 0;
   }
 
+  char* save(void*) {
+    return _value;
+  }
+
   bool isNull() const {
-    return !_slot;
-  }
-
-  template <typename TMemoryPool>
-  StringSlot* save(TMemoryPool*) const {
-    return _slot;
-  }
-
-  size_t size() const {
-    return _slot->size;
-  }
-
-  StringSlot* slot() const {
-    return _slot;
+    return !_value;
   }
 
   const char* c_str() const {
-    return _slot->value;
+    return _value;
   }
 
  protected:
-  StringSlot* _slot;
+  char* _value;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

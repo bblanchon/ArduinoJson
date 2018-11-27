@@ -206,7 +206,8 @@ class JsonVariant : public JsonVariantProxy<JsonVariantData>,
 
   // for internal use only
   FORCE_INLINE bool set(StringInMemoryPool value) const {
-    return variantSetOwnedString(_data, value.slot());
+    return variantSetOwnedString(_data,
+                                 value.save(_memoryPool));  // TODO: remove?
   }
   FORCE_INLINE bool set(ZeroTerminatedRamStringConst value) const {
     return variantSetString(_data, value.c_str());

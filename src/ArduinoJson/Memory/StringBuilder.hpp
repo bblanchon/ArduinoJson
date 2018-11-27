@@ -26,28 +26,28 @@ class StringBuilder {
   }
 
   void append(char c) {
-    if (!_slot) return;
+    if (!_slot.value) return;
 
-    if (_size >= _slot->size) {
-      _slot = 0;
+    if (_size >= _slot.size) {
+      _slot.value = 0;
       return;
     }
 
-    _slot->value[_size++] = c;
+    _slot.value[_size++] = c;
   }
 
   StringType complete() {
     append('\0');
-    if (_slot) {
+    if (_slot.value) {
       _parent->freezeString(_slot, _size);
     }
-    return _slot;
+    return _slot.value;
   }
 
  private:
   MemoryPool* _parent;
   size_t _size;
-  StringSlot* _slot;
+  StringSlot _slot;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

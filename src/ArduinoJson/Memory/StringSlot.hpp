@@ -7,14 +7,12 @@
 #include <stddef.h>  // for size_t
 #include "../Configuration.hpp"
 
-#define JSON_STRING_SIZE(SIZE) \
-  (sizeof(ARDUINOJSON_NAMESPACE::StringSlot) + (SIZE))
+#define JSON_STRING_SIZE(SIZE) (SIZE)
 
 namespace ARDUINOJSON_NAMESPACE {
 
 struct StringSlot {
   char *value;
   size_t size;
-  struct StringSlot *next;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

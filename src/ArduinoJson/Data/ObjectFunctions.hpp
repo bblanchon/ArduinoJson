@@ -103,9 +103,9 @@ inline bool objectCopy(JsonObjectData* dst, const JsonObjectData* src,
   for (VariantSlot* s = src->head; s; s = s->next) {
     JsonVariantData* var;
     if (s->value.keyIsOwned)
-      var = objectAdd(dst, ZeroTerminatedRamString(s->ownedKey->value), pool);
+      var = objectAdd(dst, ZeroTerminatedRamString(s->key), pool);
     else
-      var = objectAdd(dst, ZeroTerminatedRamStringConst(s->linkedKey), pool);
+      var = objectAdd(dst, ZeroTerminatedRamStringConst(s->key), pool);
     if (!variantCopy(var, &s->value, pool)) return false;
   }
   return true;

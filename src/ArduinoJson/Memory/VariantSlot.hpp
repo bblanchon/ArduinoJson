@@ -12,10 +12,7 @@ struct VariantSlot {
   JsonVariantData value;
   struct VariantSlot* next;
   struct VariantSlot* prev;
-  union {
-    const char* linkedKey;
-    StringSlot* ownedKey;
-  };
+  const char* key;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

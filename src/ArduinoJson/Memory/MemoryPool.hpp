@@ -23,21 +23,6 @@ namespace ARDUINOJSON_NAMESPACE {
 //             _left          _right
 
 class MemoryPool {
-  class UpdateStringSlotAddress {
-   public:
-    UpdateStringSlotAddress(const char* address, size_t offset)
-        : _address(address), _offset(offset) {}
-
-    void operator()(StringSlot* slot) const {
-      ARDUINOJSON_ASSERT(slot != NULL);
-      if (slot->value > _address) slot->value -= _offset;
-    }
-
-   private:
-    const char* _address;
-    size_t _offset;
-  };
-
  public:
   MemoryPool(char* buf, size_t capa)
       : _begin(buf),
@@ -66,34 +51,26 @@ class MemoryPool {
     return allocRight<VariantSlot>();
   }
 
-  StringSlot* allocFrozenString(size_t n) {
-    StringSlot* s = allocStringSlot();
-    if (!s) return 0;
+  char* allocFrozenString(size_t n) {
     if (!canAlloc(n)) return 0;
-
-    s->value = _left;
-    s->size = n;
+    char* s = _left;
     _left += n;
     checkInvariants();
-
     return s;
   }
 
-  StringSlot* allocExpandableString() {
-    StringSlot* s = allocStringSlot();
-    if (!s) return 0;
-
-    s->value = _left;
-    s->size = size_t(_right - _left);
+  StringSlot allocExpandableString() {
+    StringSlot s;
+    s.value = _left;
+    s.size = size_t(_right - _left);
     _left = _right;
-
     checkInvariants();
     return s;
   }
 
-  void freezeString(StringSlot* slot, size_t newSize) {
-    _left -= (slot->size - newSize);
-    slot->size = newSize;
+  void freezeString(StringSlot& s, size_t newSize) {
+    _left -= (s.size - newSize);
+    s.size = newSize;
     checkInvariants();
   }
 

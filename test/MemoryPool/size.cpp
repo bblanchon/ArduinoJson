@@ -28,11 +28,11 @@ TEST_CASE("MemoryPool::size()") {
   }
 
   SECTION("Decreases after freezeString()") {
-    StringSlot* a = memoryPool.allocExpandableString();
+    StringSlot a = memoryPool.allocExpandableString();
     memoryPool.freezeString(a, 1);
     REQUIRE(memoryPool.size() == JSON_STRING_SIZE(1));
 
-    StringSlot* b = memoryPool.allocExpandableString();
+    StringSlot b = memoryPool.allocExpandableString();
     memoryPool.freezeString(b, 1);
     REQUIRE(memoryPool.size() == 2 * JSON_STRING_SIZE(1));
   }

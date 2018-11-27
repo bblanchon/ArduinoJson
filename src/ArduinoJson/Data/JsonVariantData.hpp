@@ -48,8 +48,6 @@ union JsonVariantContent {
   JsonArrayData asArray;
   JsonObjectData asObject;
   const char *asString;
-  struct StringSlot *asOwnedString;
-  struct StringSlot *asOwnedRaw;
   struct {
     const char *data;
     size_t size;

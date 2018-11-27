@@ -19,7 +19,7 @@ class JsonKey {
   }
 
   bool isNull() const {
-    return _slot == 0 || _slot->linkedKey == 0;
+    return _slot == 0 || _slot->key == 0;
   }
 
   friend bool operator==(JsonKey lhs, const char* rhs) {
