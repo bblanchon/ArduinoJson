@@ -47,8 +47,7 @@ TEST_CASE("deserialize MsgPack object") {
     }
 
     SECTION("key is str 16") {
-      const char* input =
-          "\x82\xdb\x00\x00\x00\x03one\x01\xdb\x00\x00\x00\x03two\x02";
+      const char* input = "\x82\xda\x00\x03one\x01\xda\x00\x03two\x02";
 
       DeserializationError error = deserializeMsgPack(doc, input);
       JsonObject obj = doc.as<JsonObject>();

@@ -252,6 +252,30 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE_FALSE(variant1 == variant3);
   }
 
+  SECTION("Variants containing linked raws") {
+    variant1.set(serialized("0hello" + 1));  // make sure they have
+    variant2.set(serialized("1hello" + 1));  // different addresses
+    variant3.set(serialized("world"));
+
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
+
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
+
+  SECTION("Variants containing owned raws") {
+    variant1.set(serialized(std::string("hello")));
+    variant2.set(serialized(std::string("hello")));
+    variant3.set(serialized(std::string("world")));
+
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
+
+    REQUIRE(variant1 != variant3);
+    REQUIRE_FALSE(variant1 == variant3);
+  }
+
   SECTION("Variants containing double") {
     variant1.set(42.0);
     variant2.set(42.0);
