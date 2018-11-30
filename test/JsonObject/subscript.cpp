@@ -141,22 +141,6 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(expectedSize <= doc.memoryUsage());
   }
 
-  SECTION("should release string memory when overiding value") {
-    obj["hello"] = std::string("world");
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(6));
-
-    obj["hello"] = 42;
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1));
-  }
-
-  SECTION("should release nested array memory when overiding value") {
-    obj.createNestedArray("hello").add("world");
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(1));
-
-    obj["hello"] = 42;
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1));
-  }
-
   SECTION("should ignore null key") {
     // object must have a value to make a call to strcmp()
     obj["dummy"] = 42;

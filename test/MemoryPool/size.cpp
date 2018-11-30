@@ -45,41 +45,6 @@ TEST_CASE("MemoryPool::size()") {
     REQUIRE(memoryPool.size() == 2 * JSON_STRING_SIZE(0));
   }
 
-  SECTION("Decreases after freeVariant()") {
-    VariantSlot* a = memoryPool.allocVariant();
-    VariantSlot* b = memoryPool.allocVariant();
-
-    memoryPool.freeVariant(b);
-    REQUIRE(memoryPool.size() == sizeof(VariantSlot));
-
-    memoryPool.freeVariant(a);
-    REQUIRE(memoryPool.size() == 0);
-  }
-
-  SECTION("Decreases after calling freeString() in order") {
-    StringSlot* a = memoryPool.allocFrozenString(5);
-    REQUIRE(a != 0);
-    StringSlot* b = memoryPool.allocFrozenString(6);
-    REQUIRE(b != 0);
-
-    memoryPool.freeString(b);
-    REQUIRE(memoryPool.size() == JSON_STRING_SIZE(5));
-    memoryPool.freeString(a);
-    REQUIRE(memoryPool.size() == 0);
-  }
-
-  SECTION("Decreases after calling freeString() in reverse order") {
-    StringSlot* a = memoryPool.allocFrozenString(5);
-    REQUIRE(a != 0);
-    StringSlot* b = memoryPool.allocFrozenString(6);
-    REQUIRE(b != 0);
-
-    memoryPool.freeString(a);
-    REQUIRE(memoryPool.size() == JSON_STRING_SIZE(6));
-    memoryPool.freeString(b);
-    REQUIRE(memoryPool.size() == 0);
-  }
-
   SECTION("Doesn't grow when memory pool is full") {
     const size_t variantCount = sizeof(buffer) / sizeof(VariantSlot);
 

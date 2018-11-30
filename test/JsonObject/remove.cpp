@@ -19,47 +19,18 @@ TEST_CASE("JsonObject::remove()") {
       obj.remove("a");
       serializeJson(obj, result);
       REQUIRE("{\"b\":1,\"c\":2}" == result);
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
     }
 
     SECTION("Remove middle") {
       obj.remove("b");
       serializeJson(obj, result);
       REQUIRE("{\"a\":0,\"c\":2}" == result);
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
     }
 
     SECTION("Remove last") {
       obj.remove("c");
       serializeJson(obj, result);
       REQUIRE("{\"a\":0,\"b\":1}" == result);
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
-    }
-
-    SECTION("Release value string memory") {
-      obj["c"] = std::string("Copy me!");
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(3) + JSON_STRING_SIZE(9));
-
-      obj.remove("c");
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
-    }
-
-    SECTION("Release key string memory") {
-      obj[std::string("Copy me!")] = 42;
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(4) + JSON_STRING_SIZE(9));
-
-      obj.remove("Copy me!");
-
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(3));
-    }
-
-    SECTION("Release raw string memory") {
-      obj["c"] = serialized(std::string("Copy me!"));
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(3) + JSON_STRING_SIZE(8));
-
-      obj.remove("c");
-
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
     }
   }
 

@@ -61,17 +61,4 @@ inline size_t slotSize(const VariantSlot* var) {
   }
   return n;
 }
-
-void variantFree(JsonVariantData* var, MemoryPool* pool);
-
-inline void slotFree(VariantSlot* var, MemoryPool* pool) {
-  ARDUINOJSON_ASSERT(var != 0);
-  ARDUINOJSON_ASSERT(pool != 0);
-
-  variantFree(&var->value, pool);
-
-  if (var->value.keyIsOwned) pool->freeString(var->ownedKey);
-
-  pool->freeVariant(var);
-}
 }  // namespace ARDUINOJSON_NAMESPACE

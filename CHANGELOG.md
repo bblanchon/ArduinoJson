@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Removed the automatic expansion of `DynamicJsonDocument`, it now has a fixed capacity.
+* Restored the monotonic allocator because the code was getting too big
 
 v6.6.0-beta (2018-11-13)
 -----------
@@ -14,7 +15,7 @@ v6.6.0-beta (2018-11-13)
 * Replaced `T JsonArray::get<T>(i)` with `JsonVariant JsonArray::get(i)`
 * Replaced `T JsonObject::get<T>(k)` with `JsonVariant JsonObject::get(k)`
 * Added `JSON_STRING_SIZE()`
-* Replacing or removing a value now releases the memory
+* ~~Replacing or removing a value now releases the memory~~
 * Added `DeserializationError::code()` to be used in switch statements (issue #846)
 
 v6.5.0-beta (2018-10-13)

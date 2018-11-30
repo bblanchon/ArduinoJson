@@ -83,23 +83,4 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
     REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
   }
-
-  SECTION("releases string memory when replacing with null") {
-    var1.set(std::string("hello"));
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(6));
-
-    var1.set(JsonVariant());
-
-    REQUIRE(doc1.memoryUsage() == 0);
-  }
-
-  SECTION("releases string memory when replacing with iteger") {
-    var1.set(std::string("hello"));
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(6));
-
-    var2.set(42);
-    var1.set(var2);
-
-    REQUIRE(doc1.memoryUsage() == 0);
-  }
 }

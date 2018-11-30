@@ -73,62 +73,6 @@ TEST_CASE("JsonVariant and strings") {
   }
 }
 
-TEST_CASE("JsonVariant::set() should release string memory") {
-  DynamicJsonDocument doc;
-  JsonVariant variant = doc.to<JsonVariant>();
-
-  variant.set(std::string("hello"));
-  REQUIRE(doc.memoryUsage() == JSON_STRING_SIZE(6));
-
-  SECTION("int") {
-    variant.set(-42);
-    REQUIRE(doc.memoryUsage() == 0);
-  }
-
-  SECTION("unsigned int") {
-    variant.set(42U);
-    REQUIRE(doc.memoryUsage() == 0);
-  }
-
-  SECTION("bool") {
-    variant.set(true);
-    REQUIRE(doc.memoryUsage() == 0);
-  }
-
-  SECTION("float") {
-    variant.set(3.14);
-    REQUIRE(doc.memoryUsage() == 0);
-  }
-
-  SECTION("const char*") {
-    variant.set("hello");
-    REQUIRE(doc.memoryUsage() == 0);
-  }
-
-  SECTION("std::string") {
-    variant.set(std::string("X"));
-    REQUIRE(doc.memoryUsage() == JSON_STRING_SIZE(2));
-  }
-
-  SECTION("SerializedValue<const char*>") {
-    variant.set(serialized("[42]"));
-    REQUIRE(doc.memoryUsage() == 0);
-  }
-
-  SECTION("SerializedValue<std::string>") {
-    variant.set(serialized(std::string("42")));
-    REQUIRE(doc.memoryUsage() == JSON_STRING_SIZE(2));
-  }
-
-  SECTION("StringInMemoryPool") {
-    DeserializationError err =
-        deserializeJson(doc, std::string("{\"A\":\"hello\",\"A\":\"B\"}"));
-    REQUIRE(err == DeserializationError::Ok);
-    // it stores the key twice, but should release "hello"
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + 3 * JSON_STRING_SIZE(2));
-  }
-}
-
 TEST_CASE("JsonVariant with not enough memory") {
   StaticJsonDocument<1> doc;
 

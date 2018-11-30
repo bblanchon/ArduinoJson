@@ -53,19 +53,19 @@ JsonVariant::as() const {
 template <typename T>
 inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
 JsonVariant::to() const {
-  return JsonArray(_memoryPool, variantToArray(_data, _memoryPool));
+  return JsonArray(_memoryPool, variantToArray(_data));
 }
 
 template <typename T>
 typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
 JsonVariant::to() const {
-  return JsonObject(_memoryPool, variantToObject(_data, _memoryPool));
+  return JsonObject(_memoryPool, variantToObject(_data));
 }
 
 template <typename T>
 typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
 JsonVariant::to() const {
-  variantSetNull(_data, _memoryPool);
+  variantSetNull(_data);
   return *this;
 }
 

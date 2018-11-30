@@ -21,16 +21,6 @@ TEST_CASE("MemoryPool::allocVariant()") {
     REQUIRE(s1 != s2);
   }
 
-  SECTION("Returns same pointer after freeSlot()") {
-    MemoryPool pool(buffer, sizeof(buffer));
-
-    VariantSlot* s1 = pool.allocVariant();
-    pool.freeVariant(s1);
-    VariantSlot* s2 = pool.allocVariant();
-
-    REQUIRE(s1 == s2);
-  }
-
   SECTION("Returns aligned pointers") {
     MemoryPool pool(buffer, sizeof(buffer));
 

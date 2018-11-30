@@ -22,17 +22,4 @@ TEST_CASE("JsonObject::createNestedObject()") {
     obj.createNestedObject(vla);
   }
 #endif
-
-  SECTION("releases memory from nested object") {
-    obj.createNestedObject(std::string("a"))
-        .createNestedObject(std::string("b"))
-        .set(std::string("c"))
-        .set(1);
-    // {"a":{"b":{"c":1}}}
-    REQUIRE(doc.memoryUsage() ==
-            3 * JSON_OBJECT_SIZE(1) + 3 * JSON_STRING_SIZE(2));
-
-    obj.createNestedObject(std::string("a"));
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2));
-  }
 }
