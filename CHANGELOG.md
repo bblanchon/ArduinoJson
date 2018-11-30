@@ -6,6 +6,7 @@ HEAD
 
 * Removed the automatic expansion of `DynamicJsonDocument`, it now has a fixed capacity.
 * Restored the monotonic allocator because the code was getting too big
+* Reduced the memory usage
 
 v6.6.0-beta (2018-11-13)
 -----------

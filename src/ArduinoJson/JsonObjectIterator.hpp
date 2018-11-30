@@ -49,12 +49,12 @@ class JsonObjectIterator {
   }
 
   JsonObjectIterator &operator++() {
-    if (_slot) _slot = _slot->next;
+    _slot = _slot->getNext();
     return *this;
   }
 
   JsonObjectIterator &operator+=(size_t distance) {
-    _slot = slotAdvance(_slot, distance);
+    _slot = _slot->getNext(distance);
     return *this;
   }
 
@@ -105,12 +105,12 @@ class JsonObjectConstIterator {
   }
 
   JsonObjectConstIterator &operator++() {
-    if (_slot) _slot = _slot->next;
+    _slot = _slot->getNext();
     return *this;
   }
 
   JsonObjectConstIterator &operator+=(size_t distance) {
-    _slot = slotAdvance(_slot, distance);
+    _slot = _slot->getNext(distance);
     return *this;
   }
 

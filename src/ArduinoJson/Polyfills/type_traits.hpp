@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "type_traits/conditional.hpp"
 #include "type_traits/enable_if.hpp"
 #include "type_traits/integral_constant.hpp"
 #include "type_traits/is_array.hpp"

@@ -16,7 +16,7 @@ inline VariantSlot* objectFindSlot(const JsonObjectData* obj, TKey key) {
   VariantSlot* slot = obj->head;
   while (slot) {
     if (key.equals(slotGetKey(slot))) break;
-    slot = slot->next;
+    slot = slot->getNext();
   }
   return slot;
 }
@@ -36,8 +36,7 @@ inline JsonVariantData* objectAdd(JsonObjectData* obj, TKey key,
   slot->value.type = JSON_NULL;
 
   if (obj->tail) {
-    slot->prev = obj->tail;
-    obj->tail->next = slot;
+    slot->attachTo(obj->tail);
     obj->tail = slot;
   } else {
     slot->prev = 0;
@@ -79,14 +78,16 @@ inline void objectClear(JsonObjectData* obj) {
 inline void objectRemove(JsonObjectData* obj, VariantSlot* slot) {
   if (!obj) return;
   if (!slot) return;
-  if (slot->prev)
-    slot->prev->next = slot->next;
+  VariantSlot* prev = slot->getPrev();
+  VariantSlot* next = slot->getNext();
+  if (prev)
+    prev->setNext(next);
   else
-    obj->head = slot->next;
-  if (slot->next)
-    slot->next->prev = slot->prev;
+    obj->head = next;
+  if (next)
+    next->setPrev(prev);
   else
-    obj->tail = slot->prev;
+    obj->tail = prev;
 }
 
 inline size_t objectSize(const JsonObjectData* obj) {
@@ -100,7 +101,7 @@ inline bool objectCopy(JsonObjectData* dst, const JsonObjectData* src,
                        MemoryPool* pool) {
   if (!dst || !src) return false;
   objectClear(dst);
-  for (VariantSlot* s = src->head; s; s = s->next) {
+  for (VariantSlot* s = src->head; s; s = s->getNext()) {
     JsonVariantData* var;
     if (s->value.keyIsOwned)
       var = objectAdd(dst, ZeroTerminatedRamString(s->key), pool);
@@ -115,7 +116,7 @@ inline bool objectEquals(const JsonObjectData* o1, const JsonObjectData* o2) {
   if (o1 == o2) return true;
   if (!o1 || !o2) return false;
 
-  for (VariantSlot* s = o1->head; s; s = s->next) {
+  for (VariantSlot* s = o1->head; s; s = s->getNext()) {
     JsonVariantData* v1 = &s->value;
     JsonVariantData* v2 = objectGet(o2, makeString(slotGetKey(s)));
     if (!variantEquals(v1, v2)) return false;
