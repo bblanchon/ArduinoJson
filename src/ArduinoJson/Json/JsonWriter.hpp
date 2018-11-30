@@ -6,10 +6,10 @@
 
 #include <stdint.h>
 #include <string.h>  // for strlen
-#include "../Data/JsonInteger.hpp"
 #include "../Numbers/FloatParts.hpp"
+#include "../Numbers/Integer.hpp"
 #include "../Polyfills/attributes.hpp"
-#include "./EscapeSequence.hpp"
+#include "EscapeSequence.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -71,8 +71,8 @@ class JsonWriter {
     }
   }
 
-  template <typename TFloat>
-  void writeFloat(TFloat value) {
+  template <typename T>
+  void writeFloat(T value) {
     if (isnan(value)) return writeRaw("NaN");
 
     if (value < 0.0) {
@@ -82,7 +82,7 @@ class JsonWriter {
 
     if (isinf(value)) return writeRaw("Infinity");
 
-    FloatParts<TFloat> parts(value);
+    FloatParts<T> parts(value);
 
     writeInteger(parts.integral);
     if (parts.decimalPlaces) writeDecimals(parts.decimal, parts.decimalPlaces);
@@ -98,8 +98,8 @@ class JsonWriter {
     }
   }
 
-  template <typename UInt>
-  void writeInteger(UInt value) {
+  template <typename T>
+  void writeInteger(T value) {
     char buffer[22];
     char *end = buffer + sizeof(buffer);
     char *begin = end;
@@ -107,7 +107,7 @@ class JsonWriter {
     // write the string in reverse order
     do {
       *--begin = char(value % 10 + '0');
-      value = UInt(value / 10);
+      value = T(value / 10);
     } while (value);
 
     // and dump it in the right order

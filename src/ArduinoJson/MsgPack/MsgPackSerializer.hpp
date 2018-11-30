@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "../JsonVariant.hpp"
 #include "../Polyfills/type_traits.hpp"
 #include "../Serialization/measure.hpp"
 #include "../Serialization/serialize.hpp"
-#include "./endianess.hpp"
+#include "../Variant/VariantRef.hpp"
+#include "endianess.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -35,7 +35,7 @@ class MsgPackSerializer {
     }
   }
 
-  void visitArray(JsonArrayConst array) {
+  void visitArray(ArrayConstRef array) {
     size_t n = array.size();
     if (n < 0x10) {
       writeByte(uint8_t(0x90 + array.size()));
@@ -46,12 +46,12 @@ class MsgPackSerializer {
       writeByte(0xDD);
       writeInteger(uint32_t(n));
     }
-    for (JsonArrayConst::iterator it = array.begin(); it != array.end(); ++it) {
+    for (ArrayConstRef::iterator it = array.begin(); it != array.end(); ++it) {
       it->accept(*this);
     }
   }
 
-  void visitObject(JsonObjectConst object) {
+  void visitObject(ObjectConstRef object) {
     size_t n = object.size();
     if (n < 0x10) {
       writeByte(uint8_t(0x80 + n));
@@ -62,7 +62,7 @@ class MsgPackSerializer {
       writeByte(0xDF);
       writeInteger(uint32_t(n));
     }
-    for (JsonObjectConst::iterator it = object.begin(); it != object.end();
+    for (ObjectConstRef::iterator it = object.begin(); it != object.end();
          ++it) {
       visitString(it->key());
       it->value().accept(*this);
@@ -93,8 +93,8 @@ class MsgPackSerializer {
     writeBytes(reinterpret_cast<const uint8_t*>(data), size);
   }
 
-  void visitNegativeInteger(JsonUInt value) {
-    JsonUInt negated = JsonUInt(~value + 1);
+  void visitNegativeInteger(UInt value) {
+    UInt negated = UInt(~value + 1);
     if (value <= 0x20) {
       writeInteger(int8_t(negated));
     } else if (value <= 0x80) {
@@ -115,7 +115,7 @@ class MsgPackSerializer {
 #endif
   }
 
-  void visitPositiveInteger(JsonUInt value) {
+  void visitPositiveInteger(UInt value) {
     if (value <= 0x7F) {
       writeInteger(uint8_t(value));
     } else if (value <= 0xFF) {

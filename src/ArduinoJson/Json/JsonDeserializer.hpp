@@ -5,12 +5,12 @@
 #pragma once
 
 #include "../Deserialization/deserialize.hpp"
-#include "../JsonVariant.hpp"
 #include "../Memory/MemoryPool.hpp"
 #include "../Numbers/isFloat.hpp"
 #include "../Numbers/isInteger.hpp"
 #include "../Polyfills/type_traits.hpp"
-#include "./EscapeSequence.hpp"
+#include "../Variant/VariantRef.hpp"
+#include "EscapeSequence.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -28,7 +28,7 @@ class JsonDeserializer {
         _stringStorage(stringStorage),
         _nestingLimit(nestingLimit),
         _loaded(false) {}
-  DeserializationError parse(JsonVariant variant) {
+  DeserializationError parse(VariantRef variant) {
     DeserializationError err = skipSpacesAndComments();
     if (err) return err;
 
@@ -68,10 +68,10 @@ class JsonDeserializer {
     return true;
   }
 
-  DeserializationError parseArray(JsonVariant variant) {
+  DeserializationError parseArray(VariantRef variant) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
 
-    JsonArray array = variant.to<JsonArray>();
+    ArrayRef array = variant.to<ArrayRef>();
     if (array.isNull()) return DeserializationError::NoMemory;
 
     // Check opening braket
@@ -87,7 +87,7 @@ class JsonDeserializer {
     // Read each value
     for (;;) {
       // Allocate slot in array
-      JsonVariant value = array.add();
+      VariantRef value = array.add();
       if (value.isInvalid()) return DeserializationError::NoMemory;
 
       // 1 - Parse value
@@ -106,10 +106,10 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseObject(JsonVariant variant) {
+  DeserializationError parseObject(VariantRef variant) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
 
-    JsonObject object = variant.to<JsonObject>();
+    ObjectRef object = variant.to<ObjectRef>();
     if (object.isNull()) return DeserializationError::NoMemory;
 
     // Check opening brace
@@ -135,7 +135,7 @@ class JsonDeserializer {
       if (!eat(':')) return DeserializationError::InvalidInput;
 
       // Allocate slot in object
-      JsonVariant value = object.set(key);
+      VariantRef value = object.set(key);
       if (value.isInvalid()) return DeserializationError::NoMemory;
 
       // Parse value
@@ -158,7 +158,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseValue(JsonVariant variant) {
+  DeserializationError parseValue(VariantRef variant) {
     if (isQuote(current())) {
       return parseStringValue(variant);
     } else {
@@ -174,7 +174,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseStringValue(JsonVariant variant) {
+  DeserializationError parseStringValue(VariantRef variant) {
     StringType value;
     DeserializationError err = parseQuotedString(value);
     if (err) return err;
@@ -233,7 +233,7 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseNumericValue(JsonVariant result) {
+  DeserializationError parseNumericValue(VariantRef result) {
     char buffer[64];
     uint8_t n = 0;
 
@@ -246,9 +246,9 @@ class JsonDeserializer {
     buffer[n] = 0;
 
     if (isInteger(buffer)) {
-      result.set(parseInteger<JsonInteger>(buffer));
+      result.set(parseInteger<Integer>(buffer));
     } else if (isFloat(buffer)) {
-      result.set(parseFloat<JsonFloat>(buffer));
+      result.set(parseFloat<Float>(buffer));
     } else if (!strcmp(buffer, "true")) {
       result.set(true);
     } else if (!strcmp(buffer, "false")) {

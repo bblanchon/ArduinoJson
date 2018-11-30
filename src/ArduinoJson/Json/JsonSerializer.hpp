@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "../Misc/Visitable.hpp"
 #include "../Serialization/measure.hpp"
 #include "../Serialization/serialize.hpp"
-#include "../Visitable.hpp"
 #include "JsonWriter.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -16,14 +16,14 @@ class JsonSerializer {
  public:
   JsonSerializer(TWriter &writer) : _writer(writer) {}
 
-  void visitFloat(JsonFloat value) {
+  void visitFloat(Float value) {
     _writer.writeFloat(value);
   }
 
-  void visitArray(JsonArrayConst array) {
+  void visitArray(ArrayConstRef array) {
     _writer.beginArray();
 
-    JsonArrayConst::iterator it = array.begin();
+    ArrayConstRef::iterator it = array.begin();
     while (it != array.end()) {
       it->accept(*this);
 
@@ -36,10 +36,10 @@ class JsonSerializer {
     _writer.endArray();
   }
 
-  void visitObject(JsonObjectConst object) {
+  void visitObject(ObjectConstRef object) {
     _writer.beginObject();
 
-    JsonObjectConst::iterator it = object.begin();
+    ObjectConstRef::iterator it = object.begin();
     while (it != object.end()) {
       _writer.writeString(it->key());
       _writer.writeColon();
@@ -63,12 +63,12 @@ class JsonSerializer {
     for (size_t i = 0; i < n; i++) _writer.writeRaw(data[i]);
   }
 
-  void visitNegativeInteger(JsonUInt value) {
+  void visitNegativeInteger(UInt value) {
     _writer.writeRaw('-');
     _writer.writeInteger(value);
   }
 
-  void visitPositiveInteger(JsonUInt value) {
+  void visitPositiveInteger(UInt value) {
     _writer.writeInteger(value);
   }
 

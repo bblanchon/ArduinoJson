@@ -13,9 +13,6 @@ TEST_CASE("Polyfills/type_traits") {
         static_cast<bool>(is_base_of<std::istream, std::ostringstream>::value));
     REQUIRE(
         static_cast<bool>(is_base_of<std::istream, std::istringstream>::value));
-    REQUIRE(static_cast<bool>(
-        is_base_of<JsonVariantBase<JsonObjectSubscript<const char*> >,
-                   JsonObjectSubscript<const char*> >::value));
   }
 
   SECTION("is_array") {
@@ -54,14 +51,14 @@ TEST_CASE("Polyfills/type_traits") {
   SECTION("IsVisitable") {
     CHECK(IsVisitable<DeserializationError>::value == false);
     CHECK(IsVisitable<JsonPair>::value == false);
-    CHECK(IsVisitable<JsonVariant>::value == true);
-    CHECK(IsVisitable<JsonVariantConst>::value == true);
-    CHECK(IsVisitable<JsonArray>::value == true);
-    CHECK(IsVisitable<JsonArraySubscript>::value == true);
-    CHECK(IsVisitable<JsonArrayConst>::value == true);
-    CHECK(IsVisitable<JsonObject>::value == true);
-    CHECK(IsVisitable<JsonObjectSubscript<const char*> >::value == true);
-    CHECK(IsVisitable<JsonObjectConst>::value == true);
+    CHECK(IsVisitable<VariantRef>::value == true);
+    CHECK(IsVisitable<VariantConstRef>::value == true);
+    CHECK(IsVisitable<ArrayRef>::value == true);
+    CHECK(IsVisitable<ArraySubscript>::value == true);
+    CHECK(IsVisitable<ArrayConstRef>::value == true);
+    CHECK(IsVisitable<ObjectRef>::value == true);
+    CHECK(IsVisitable<ObjectSubscript<const char*> >::value == true);
+    CHECK(IsVisitable<ObjectConstRef>::value == true);
     CHECK(IsVisitable<DynamicJsonDocument>::value == true);
     CHECK(IsVisitable<StaticJsonDocument<10> >::value == true);
   }
