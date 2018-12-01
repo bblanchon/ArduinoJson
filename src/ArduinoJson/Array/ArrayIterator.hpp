@@ -33,10 +33,10 @@ class ArrayIterator {
       : _memoryPool(memoryPool), _slot(slot) {}
 
   VariantRef operator*() const {
-    return VariantRef(_memoryPool, &_slot->value);
+    return VariantRef(_memoryPool, _slot->getData());
   }
   VariantPtr operator->() {
-    return VariantPtr(_memoryPool, &_slot->value);
+    return VariantPtr(_memoryPool, _slot->getData());
   }
 
   bool operator==(const ArrayIterator &other) const {
@@ -88,10 +88,10 @@ class ArrayConstRefIterator {
   explicit ArrayConstRefIterator(const VariantSlot *slot) : _slot(slot) {}
 
   VariantConstRef operator*() const {
-    return VariantConstRef(&_slot->value);
+    return VariantConstRef(_slot->getData());
   }
   VariantConstPtr operator->() {
-    return VariantConstPtr(&_slot->value);
+    return VariantConstPtr(_slot->getData());
   }
 
   bool operator==(const ArrayConstRefIterator &other) const {

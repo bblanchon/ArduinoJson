@@ -19,7 +19,7 @@ class Key {
   }
 
   bool isNull() const {
-    return _slot == 0 || _slot->key == 0;
+    return _slot == 0 || _slot->key() == 0;
   }
 
   friend bool operator==(Key lhs, const char* rhs) {

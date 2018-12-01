@@ -13,7 +13,7 @@ class Pair {
  public:
   Pair(MemoryPool* memoryPool, VariantSlot* slot) : _key(slot) {
     if (slot) {
-      _value = VariantRef(memoryPool, &slot->value);
+      _value = VariantRef(memoryPool, slot->getData());
     }
   }
 
@@ -34,7 +34,7 @@ class PairConst {
  public:
   PairConst(const VariantSlot* slot) : _key(slot) {
     if (slot) {
-      _value = VariantConstRef(&slot->value);
+      _value = VariantConstRef(slot->getData());
     }
   }
 

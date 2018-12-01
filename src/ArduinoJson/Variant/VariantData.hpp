@@ -11,6 +11,8 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+class VariantSlot;
+
 enum VariantType {
   JSON_NULL,
   JSON_LINKED_RAW,
@@ -26,13 +28,13 @@ enum VariantType {
 };
 
 struct ObjectData {
-  struct VariantSlot *head;
-  struct VariantSlot *tail;
+  VariantSlot *head;
+  VariantSlot *tail;
 };
 
 struct ArrayData {
-  struct VariantSlot *head;
-  struct VariantSlot *tail;
+  VariantSlot *head;
+  VariantSlot *tail;
 };
 
 struct RawData {
@@ -56,9 +58,9 @@ union VariantContent {
 
 // this struct must be a POD type to prevent error calling offsetof on clang
 struct VariantData {
+  VariantContent content;
   bool keyIsOwned : 1;
   VariantType type : 7;
-  VariantContent content;
 };
 
 inline VariantData *getVariantData(ArrayData *arr) {

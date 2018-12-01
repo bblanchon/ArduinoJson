@@ -11,16 +11,33 @@ namespace ARDUINOJSON_NAMESPACE {
 
 typedef conditional<sizeof(void*) <= 2, int8_t, int16_t>::type VariantSlotDiff;
 
-struct VariantSlot {
-  VariantData value;
-  VariantSlotDiff next;
-  VariantSlotDiff prev;
-  const char* key;
+class VariantSlot {
+  // CAUTION: same layout as VariantData
+  // we cannot use composition because it adds padding
+  // (+20% on ESP8266 for example)
+  VariantContent _content;
+  bool _keyIsOwned : 1;
+  VariantType _type : 7;
+  VariantSlotDiff _next;
+  const char* _key;
 
-  // Must be a POD! so no constructor, nor destructor, nor virtual
+ public:
+  // Must be a POD!
+  // - no constructor
+  // - no destructor
+  // - no virtual
+  // - no inheritance
+
+  VariantData* getData() {
+    return reinterpret_cast<VariantData*>(&_content);
+  }
+
+  const VariantData* getData() const {
+    return reinterpret_cast<const VariantData*>(&_content);
+  }
 
   VariantSlot* getNext() {
-    return next ? this + next : 0;
+    return _next ? this + _next : 0;
   }
 
   const VariantSlot* getNext() const {
@@ -30,32 +47,50 @@ struct VariantSlot {
   VariantSlot* getNext(size_t distance) {
     VariantSlot* slot = this;
     while (distance--) {
-      if (!slot->next) return 0;
-      slot += slot->next;
+      if (!slot->_next) return 0;
+      slot += slot->_next;
     }
     return slot;
+  }
+
+  VariantSlot* getPrev(VariantSlot* head) {
+    while (head) {
+      VariantSlot* nxt = head->getNext();
+      if (nxt == this) return head;
+      head = nxt;
+    }
+    return head;
   }
 
   const VariantSlot* getNext(size_t distance) const {
     return const_cast<VariantSlot*>(this)->getNext(distance);
   }
 
-  VariantSlot* getPrev() {
-    return prev ? this + prev : 0;
-  }
-
   void setNext(VariantSlot* slot) {
-    this->next = VariantSlotDiff(slot ? slot - this : 0);
-  }
-
-  void setPrev(VariantSlot* slot) {
-    this->prev = VariantSlotDiff(slot ? slot - this : 0);
+    _next = VariantSlotDiff(slot ? slot - this : 0);
   }
 
   void attachTo(VariantSlot* tail) {
-    VariantSlotDiff offset = VariantSlotDiff(tail - this);
-    this->prev = offset;
-    tail->next = VariantSlotDiff(-offset);
+    tail->_next = VariantSlotDiff(this - tail);
+  }
+
+  void setKey(const char* k, bool owned) {
+    _keyIsOwned = owned;
+    _key = k;
+  }
+
+  const char* key() const {
+    return _key;
+  }
+
+  bool ownsKey() const {
+    return _keyIsOwned;
+  }
+
+  void init() {
+    _next = 0;
+    _type = JSON_NULL;
+    _keyIsOwned = false;
   }
 };
 

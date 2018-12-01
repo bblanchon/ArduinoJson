@@ -15,26 +15,23 @@ template <typename TKey>
 inline bool slotSetKey(VariantSlot* var, TKey key, MemoryPool* pool) {
   char* dup = key.save(pool);
   if (!dup) return false;
-  var->key = dup;
-  var->value.keyIsOwned = true;
+  var->setKey(dup, true);
   return true;
 }
 
 inline bool slotSetKey(VariantSlot* var, ZeroTerminatedRamStringConst key,
                        MemoryPool*) {
-  var->key = key.c_str();
-  var->value.keyIsOwned = false;
+  var->setKey(key.c_str(), false);
   return true;
 }
 
 inline bool slotSetKey(VariantSlot* var, StringInMemoryPool key, MemoryPool*) {
-  var->key = key.c_str();
-  var->value.keyIsOwned = true;
+  var->setKey(key.c_str(), true);
   return true;
 }
 
 inline const char* slotGetKey(const VariantSlot* var) {
-  return var->key;
+  return var->key();
 }
 
 inline size_t slotSize(const VariantSlot* var) {
