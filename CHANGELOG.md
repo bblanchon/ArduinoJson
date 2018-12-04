@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v5.13.4
+-------
 
 * Removed spurious files in the Particle library
 
