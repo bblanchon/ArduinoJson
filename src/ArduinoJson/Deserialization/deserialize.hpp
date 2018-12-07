@@ -35,7 +35,7 @@ deserialize(JsonDocument &doc, const TString &input) {
 }
 //
 // DeserializationError deserialize(JsonDocument& doc, TChar* input);
-// TChar* = char*, const char*, const FlashStringHelper*
+// TChar* = char*, const char*, const __FlashStringHelper*
 template <template <typename, typename> class TDeserializer, typename TChar>
 DeserializationError deserialize(JsonDocument &doc, TChar *input) {
   doc.clear();
@@ -47,7 +47,7 @@ DeserializationError deserialize(JsonDocument &doc, TChar *input) {
 //
 // DeserializationError deserialize(JsonDocument& doc, TChar* input, size_t
 // inputSize);
-// TChar* = char*, const char*, const FlashStringHelper*
+// TChar* = char*, const char*, const __FlashStringHelper*
 template <template <typename, typename> class TDeserializer, typename TChar>
 DeserializationError deserialize(JsonDocument &doc, TChar *input,
                                  size_t inputSize) {

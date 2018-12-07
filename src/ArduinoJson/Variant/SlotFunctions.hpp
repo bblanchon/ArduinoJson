@@ -6,7 +6,7 @@
 
 #include "../Memory/MemoryPool.hpp"
 #include "../Polyfills/assert.hpp"
-#include "../Strings/StringTypes.hpp"
+#include "../Strings/StringWrappers.hpp"
 #include "VariantData.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -20,7 +20,7 @@ inline bool slotSetKey(VariantSlot* var, TKey key, MemoryPool* pool) {
   return true;
 }
 
-inline bool slotSetKey(VariantSlot* var, ZeroTerminatedRamStringConst key,
+inline bool slotSetKey(VariantSlot* var, ConstRamStringWrapper key,
                        MemoryPool*) {
   if (!var) return false;
   var->setLinkedKey(key.c_str());

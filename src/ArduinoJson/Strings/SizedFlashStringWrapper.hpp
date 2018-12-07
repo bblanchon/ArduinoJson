@@ -4,18 +4,17 @@
 
 #pragma once
 
-#include <string.h>  // strcmp
-
 namespace ARDUINOJSON_NAMESPACE {
 
-class FixedSizeRamString {
+class SizedFlashStringWrapper {
  public:
-  FixedSizeRamString(const char* str, size_t n) : _str(str), _size(n) {}
+  SizedFlashStringWrapper(const __FlashStringHelper* str, size_t sz)
+      : _str(str), _size(sz) {}
 
   bool equals(const char* expected) const {
     const char* actual = reinterpret_cast<const char*>(_str);
     if (!actual || !expected) return actual == expected;
-    return strcmp(actual, expected) == 0;
+    return strncmp_P(expected, actual, _size) == 0;
   }
 
   bool isNull() const {
@@ -25,22 +24,21 @@ class FixedSizeRamString {
   char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
     char* dup = pool->allocFrozenString(_size);
-    if (dup) memcpy(dup, _str, _size);
+    if (!dup) memcpy_P(dup, (const char*)_str, _size);
     return dup;
   }
 
   size_t size() const {
-    return strlen(reinterpret_cast<const char*>(_str));
+    return strlen_P(reinterpret_cast<const char*>(_str));
   }
 
  private:
-  const char* _str;
+  const __FlashStringHelper* _str;
   size_t _size;
 };
 
-template <typename TChar>
-inline FixedSizeRamString makeString(const TChar* str, size_t size) {
-  return FixedSizeRamString(reinterpret_cast<const char*>(str), size);
+inline SizedFlashStringWrapper wrapString(const __FlashStringHelper* str,
+                                          size_t sz) {
+  return SizedFlashStringWrapper(str, sz);
 }
-
 }  // namespace ARDUINOJSON_NAMESPACE

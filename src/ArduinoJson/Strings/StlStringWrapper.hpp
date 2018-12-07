@@ -8,9 +8,9 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class StlString {
+class StlStringWrapper {
  public:
-  StlString(const std::string& str) : _str(&str) {}
+  StlStringWrapper(const std::string& str) : _str(&str) {}
 
   char* save(MemoryPool* pool) const {
     size_t n = _str->length() + 1;
@@ -43,8 +43,8 @@ class StlString {
 template <>
 struct IsString<std::string> : true_type {};
 
-inline StlString makeString(const std::string& str) {
-  return StlString(str);
+inline StlStringWrapper wrapString(const std::string& str) {
+  return StlStringWrapper(str);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -9,9 +9,9 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ZeroTerminatedRamStringConst {
+class ConstRamStringWrapper {
  public:
-  ZeroTerminatedRamStringConst(const char* str = 0) : _str(str) {}
+  ConstRamStringWrapper(const char* str = 0) : _str(str) {}
 
   bool equals(const char* expected) const {
     const char* actual = _str;
@@ -40,8 +40,8 @@ class ZeroTerminatedRamStringConst {
   const char* _str;
 };
 
-inline ZeroTerminatedRamStringConst makeString(const char* str) {
-  return ZeroTerminatedRamStringConst(str);
+inline ConstRamStringWrapper wrapString(const char* str) {
+  return ConstRamStringWrapper(str);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

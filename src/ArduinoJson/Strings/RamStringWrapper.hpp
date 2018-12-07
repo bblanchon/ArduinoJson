@@ -4,14 +4,13 @@
 
 #pragma once
 
-#include "ZeroTerminatedRamStringConst.hpp"
+#include "ConstRamStringWrapper.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ZeroTerminatedRamString : public ZeroTerminatedRamStringConst {
+class RamStringWrapper : public ConstRamStringWrapper {
  public:
-  ZeroTerminatedRamString(const char* str)
-      : ZeroTerminatedRamStringConst(str) {}
+  RamStringWrapper(const char* str) : ConstRamStringWrapper(str) {}
 
   char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
@@ -23,12 +22,12 @@ class ZeroTerminatedRamString : public ZeroTerminatedRamStringConst {
 };
 
 template <typename TChar>
-inline ZeroTerminatedRamString makeString(const TChar* str) {
-  return ZeroTerminatedRamString(reinterpret_cast<const char*>(str));
+inline RamStringWrapper wrapString(const TChar* str) {
+  return RamStringWrapper(reinterpret_cast<const char*>(str));
 }
 
-inline ZeroTerminatedRamString makeString(char* str) {
-  return ZeroTerminatedRamString(str);
+inline RamStringWrapper wrapString(char* str) {
+  return RamStringWrapper(str);
 }
 
 template <typename TChar>

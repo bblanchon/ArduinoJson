@@ -183,7 +183,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE bool set(
       const T &value,
       typename enable_if<IsString<T>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, makeString(value), _pool);
+    return variantSetOwnedString(_data, wrapString(value), _pool);
   }
 
   // set(char*)
@@ -191,7 +191,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename T>
   FORCE_INLINE bool set(
       T *value, typename enable_if<IsString<T *>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, makeString(value), _pool);
+    return variantSetOwnedString(_data, wrapString(value), _pool);
   }
 
   // set(const char*);
@@ -304,17 +304,17 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString &key) const {
-    return VariantConstRef(objectGet(variantAsObject(_data), makeString(key)));
+    return VariantConstRef(objectGet(variantAsObject(_data), wrapString(key)));
   }
   //
   // VariantConstRef operator[](TKey);
-  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TKey = const char*, const char[N], const __FlashStringHelper*
   template <typename TString>
   FORCE_INLINE
       typename enable_if<IsString<TString *>::value, VariantConstRef>::type
       operator[](TString *key) const {
     const CollectionData *obj = variantAsObject(_data);
-    return VariantConstRef(obj ? obj->get(makeString(key)) : 0);
+    return VariantConstRef(obj ? obj->get(wrapString(key)) : 0);
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

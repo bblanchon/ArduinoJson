@@ -36,7 +36,7 @@ class ArraySubscript : public VariantOperators<ArraySubscript>,
   }
   //
   // operator=(TValue)
-  // TValue = char*, const char*, const FlashStringHelper*
+  // TValue = char*, const char*, const __FlashStringHelper*
   template <typename T>
   FORCE_INLINE ArraySubscript& operator=(T* src) {
     get_impl().set(src);
@@ -73,7 +73,7 @@ class ArraySubscript : public VariantOperators<ArraySubscript>,
   }
   //
   // bool set(TValue)
-  // TValue = char*, const char*, const FlashStringHelper*
+  // TValue = char*, const char*, const __FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE bool set(TValue* value) const {
     return get_impl().set(value);

@@ -46,7 +46,7 @@ class ObjectSubscript : public VariantOperators<ObjectSubscript<TStringRef> >,
   }
   //
   // operator=(TValue);
-  // TValue = char*, const char*, const FlashStringHelper*
+  // TValue = char*, const char*, const __FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE this_type &operator=(TValue *src) {
     set_impl().set(src);
@@ -85,7 +85,7 @@ class ObjectSubscript : public VariantOperators<ObjectSubscript<TStringRef> >,
   }
   //
   // bool set(TValue);
-  // TValue = char*, const char, const FlashStringHelper*
+  // TValue = char*, const char, const __FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE bool set(const TValue *value) {
     return set_impl().set(value);

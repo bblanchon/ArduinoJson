@@ -21,28 +21,28 @@ class VariantComparisons {
   template <typename T>
   friend typename enable_if<IsString<T *>::value, bool>::type operator==(
       T *lhs, TVariant rhs) {
-    return makeString(lhs).equals(rhs.template as<const char *>());
+    return wrapString(lhs).equals(rhs.template as<const char *>());
   }
 
   // std::string == TVariant
   template <typename T>
   friend typename enable_if<IsString<T>::value, bool>::type operator==(
       const T &lhs, TVariant rhs) {
-    return makeString(lhs).equals(rhs.template as<const char *>());
+    return wrapString(lhs).equals(rhs.template as<const char *>());
   }
 
   // TVariant == const char*
   template <typename T>
   friend typename enable_if<IsString<T *>::value, bool>::type operator==(
       TVariant lhs, T *rhs) {
-    return makeString(rhs).equals(lhs.template as<const char *>());
+    return wrapString(rhs).equals(lhs.template as<const char *>());
   }
 
   // TVariant == std::string
   template <typename T>
   friend typename enable_if<IsString<T>::value, bool>::type operator==(
       TVariant lhs, const T &rhs) {
-    return makeString(rhs).equals(lhs.template as<const char *>());
+    return wrapString(rhs).equals(lhs.template as<const char *>());
   }
 
   // bool/int/float == TVariant
@@ -63,28 +63,28 @@ class VariantComparisons {
   template <typename T>
   friend typename enable_if<IsString<T *>::value, bool>::type operator!=(
       T *lhs, TVariant rhs) {
-    return !makeString(lhs).equals(rhs.template as<const char *>());
+    return !wrapString(lhs).equals(rhs.template as<const char *>());
   }
 
   // std::string != TVariant
   template <typename T>
   friend typename enable_if<IsString<T>::value, bool>::type operator!=(
       const T &lhs, TVariant rhs) {
-    return !makeString(lhs).equals(rhs.template as<const char *>());
+    return !wrapString(lhs).equals(rhs.template as<const char *>());
   }
 
   // TVariant != const char*
   template <typename T>
   friend typename enable_if<IsString<T *>::value, bool>::type operator!=(
       TVariant lhs, T *rhs) {
-    return !makeString(rhs).equals(lhs.template as<const char *>());
+    return !wrapString(rhs).equals(lhs.template as<const char *>());
   }
 
   // TVariant != std::string
   template <typename T>
   friend typename enable_if<IsString<T>::value, bool>::type operator!=(
       TVariant lhs, const T &rhs) {
-    return !makeString(rhs).equals(lhs.template as<const char *>());
+    return !wrapString(rhs).equals(lhs.template as<const char *>());
   }
 
   // bool/int/float != TVariant

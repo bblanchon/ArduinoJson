@@ -95,8 +95,7 @@ class VariantData {
       case VALUE_IS_OBJECT:
         return toObject().copyFrom(src._content.asCollection, pool);
       case VALUE_IS_OWNED_STRING:
-        return setOwnedString(ZeroTerminatedRamString(src._content.asString),
-                              pool);
+        return setOwnedString(RamStringWrapper(src._content.asString), pool);
       case VALUE_IS_OWNED_RAW:
         return setOwnedRaw(
             serialized(src._content.asRaw.data, src._content.asRaw.size), pool);
@@ -190,7 +189,7 @@ class VariantData {
 
   template <typename T>
   bool setOwnedRaw(SerializedValue<T> value, MemoryPool *pool) {
-    char *dup = makeString(value.data(), value.size()).save(pool);
+    char *dup = wrapString(value.data(), value.size()).save(pool);
     if (dup) {
       setType(VALUE_IS_OWNED_RAW);
       _content.asRaw.data = dup;

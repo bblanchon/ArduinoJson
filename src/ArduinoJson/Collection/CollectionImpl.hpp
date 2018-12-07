@@ -53,9 +53,9 @@ inline bool CollectionData::copyFrom(const CollectionData& src,
     VariantData* var;
     if (s->key() != 0) {
       if (s->ownsKey())
-        var = add(ZeroTerminatedRamString(s->key()), pool);
+        var = add(RamStringWrapper(s->key()), pool);
       else
-        var = add(ZeroTerminatedRamStringConst(s->key()), pool);
+        var = add(ConstRamStringWrapper(s->key()), pool);
     } else {
       var = add(pool);
     }
@@ -69,7 +69,7 @@ inline bool CollectionData::equalsObject(const CollectionData& other) const {
   size_t count = 0;
   for (VariantSlot* slot = _head; slot; slot = slot->next()) {
     VariantData* v1 = slot->data();
-    VariantData* v2 = other.get(makeString(slot->key()));
+    VariantData* v2 = other.get(wrapString(slot->key()));
     if (!variantEquals(v1, v2)) return false;
     count++;
   }

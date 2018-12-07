@@ -101,7 +101,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>, public Visitable {
   }
   //
   // bool add(TValue);
-  // TValue = char*, const char*, const FlashStringHelper*
+  // TValue = char*, const char*, const __FlashStringHelper*
   template <typename T>
   FORCE_INLINE bool add(T* value) const {
     return add().set(value);

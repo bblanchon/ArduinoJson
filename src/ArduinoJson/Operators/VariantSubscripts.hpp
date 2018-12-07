@@ -6,7 +6,7 @@
 
 #include "../Polyfills/attributes.hpp"
 #include "../Polyfills/type_traits.hpp"
-#include "../Strings/StringTypes.hpp"
+#include "../Strings/StringWrappers.hpp"
 #include "../Variant/VariantAs.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -37,7 +37,7 @@ class VariantSubscripts {
   operator[](const TString &key) const;
   //
   // ObjectSubscript operator[](TKey) const;
-  // TKey = const char*, const char[N], const FlashStringHelper*
+  // TKey = const char*, const char[N], const __FlashStringHelper*
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString *>::value,
                                   ObjectSubscript<TString *> >::type

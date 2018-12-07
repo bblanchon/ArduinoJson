@@ -18,19 +18,19 @@ template <typename T>
 struct IsString<T&> : IsString<T> {};
 }  // namespace ARDUINOJSON_NAMESPACE
 
-#include "FixedSizeRamString.hpp"
-#include "ZeroTerminatedRamString.hpp"
-#include "ZeroTerminatedRamStringConst.hpp"
+#include "ConstRamStringWrapper.hpp"
+#include "RamStringWrapper.hpp"
+#include "SizedRamStringWrapper.hpp"
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-#include "StlString.hpp"
+#include "StlStringWrapper.hpp"
 #endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#include "ArduinoString.hpp"
+#include "ArduinoStringWrapper.hpp"
 #endif
 
 #if ARDUINOJSON_ENABLE_PROGMEM
-#include "FixedSizeFlashString.hpp"
-#include "ZeroTerminatedFlashString.hpp"
+#include "FlashStringWrapper.hpp"
+#include "SizedFlashStringWrapper.hpp"
 #endif

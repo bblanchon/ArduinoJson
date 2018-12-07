@@ -8,6 +8,7 @@ HEAD
 * Restored the monotonic allocator because the code was getting too big
 * Reduced the memory usage
 * Reduced the code size
+* Renamed `JsonKey` to `JsonString`
 * Removed spurious files in the Particle library
 
 v6.6.0-beta (2018-11-13)

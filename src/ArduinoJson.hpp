@@ -38,9 +38,9 @@ typedef ARDUINOJSON_NAMESPACE::Pair JsonPair;
 typedef ARDUINOJSON_NAMESPACE::UInt JsonUInt;
 typedef ARDUINOJSON_NAMESPACE::VariantRef JsonVariant;
 typedef ARDUINOJSON_NAMESPACE::VariantConstRef JsonVariantConst;
+typedef ARDUINOJSON_NAMESPACE::String JsonString;
 using ARDUINOJSON_NAMESPACE::DeserializationError;
 using ARDUINOJSON_NAMESPACE::DynamicJsonDocument;
-using ARDUINOJSON_NAMESPACE::Key;
 using ARDUINOJSON_NAMESPACE::serialized;
 using ARDUINOJSON_NAMESPACE::StaticJsonDocument;
 }  // namespace ArduinoJson
