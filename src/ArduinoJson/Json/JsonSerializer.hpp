@@ -20,15 +20,16 @@ class JsonSerializer {
     _writer.writeFloat(value);
   }
 
-  void visitArray(ArrayConstRef array) {
+  void visitArray(const CollectionData &array) {
     _writer.beginArray();
 
-    ArrayConstRef::iterator it = array.begin();
-    while (it != array.end()) {
-      it->accept(*this);
+    VariantSlot *slot = array.head();
 
-      ++it;
-      if (it == array.end()) break;
+    while (slot != 0) {
+      slot->data()->accept(*this);
+
+      slot = slot->next();
+      if (slot == 0) break;
 
       _writer.writeComma();
     }
@@ -36,17 +37,18 @@ class JsonSerializer {
     _writer.endArray();
   }
 
-  void visitObject(ObjectConstRef object) {
+  void visitObject(const CollectionData &object) {
     _writer.beginObject();
 
-    ObjectConstRef::iterator it = object.begin();
-    while (it != object.end()) {
-      _writer.writeString(it->key());
-      _writer.writeColon();
-      it->value().accept(*this);
+    VariantSlot *slot = object.head();
 
-      ++it;
-      if (it == object.end()) break;
+    while (slot != 0) {
+      _writer.writeString(slot->key());
+      _writer.writeColon();
+      slot->data()->accept(*this);
+
+      slot = slot->next();
+      if (slot == 0) break;
 
       _writer.writeComma();
     }

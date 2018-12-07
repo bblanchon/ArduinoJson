@@ -14,7 +14,6 @@
 #include "../Operators/VariantOperators.hpp"
 #include "../Polyfills/type_traits.hpp"
 #include "VariantAs.hpp"
-#include "VariantData.hpp"
 #include "VariantFunctions.hpp"
 #include "VariantRef.hpp"
 
@@ -58,7 +57,7 @@ class VariantRefBase {
   template <typename T>
   FORCE_INLINE typename enable_if<is_same<T, bool>::value, bool>::type is()
       const {
-    return _data && _data->type == JSON_BOOLEAN;
+    return variantIsBoolean(_data);
   }
   //
   // bool is<const char*>() const;
@@ -96,13 +95,8 @@ class VariantRefBase {
     return variantIsNull(_data);
   }
 
-  FORCE_INLINE bool isInvalid() const {
-    return _data == 0;
-  }
-
   size_t size() const {
-    return objectSize(variantAsObject(_data)) +
-           arraySize(variantAsArray(_data));
+    return variantSize(_data);
   }
 
  protected:
@@ -125,11 +119,11 @@ class VariantRef : public VariantRefBase<VariantData>,
 
  public:
   // Intenal use only
-  FORCE_INLINE VariantRef(MemoryPool *memoryPool, VariantData *data)
-      : base_type(data), _memoryPool(memoryPool) {}
+  FORCE_INLINE VariantRef(MemoryPool *pool, VariantData *data)
+      : base_type(data), _pool(pool) {}
 
   // Creates an uninitialized VariantRef
-  FORCE_INLINE VariantRef() : base_type(0), _memoryPool(0) {}
+  FORCE_INLINE VariantRef() : base_type(0), _pool(0) {}
 
   // set(bool value)
   FORCE_INLINE bool set(bool value) const {
@@ -180,7 +174,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE bool set(
       SerializedValue<T> value,
       typename enable_if<!is_same<const char *, T>::value>::type * = 0) const {
-    return variantSetOwnedRaw(_data, value, _memoryPool);
+    return variantSetOwnedRaw(_data, value, _pool);
   }
 
   // set(const std::string&)
@@ -189,28 +183,20 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE bool set(
       const T &value,
       typename enable_if<IsString<T>::value>::type * = 0) const {
-    return variantSetString(_data, makeString(value), _memoryPool);
+    return variantSetOwnedString(_data, makeString(value), _pool);
   }
 
   // set(char*)
+  // set(const __FlashStringHelper*)
   template <typename T>
   FORCE_INLINE bool set(
       T *value, typename enable_if<IsString<T *>::value>::type * = 0) const {
-    return variantSetString(_data, makeString(value), _memoryPool);
+    return variantSetOwnedString(_data, makeString(value), _pool);
   }
 
   // set(const char*);
   FORCE_INLINE bool set(const char *value) const {
-    return variantSetString(_data, value);
-  }
-
-  // for internal use only
-  FORCE_INLINE bool set(StringInMemoryPool value) const {
-    return variantSetOwnedString(_data,
-                                 value.save(_memoryPool));  // TODO: remove?
-  }
-  FORCE_INLINE bool set(ZeroTerminatedRamStringConst value) const {
-    return variantSetString(_data, value.c_str());
+    return variantSetLinkedString(_data, value);
   }
 
   bool set(VariantConstRef value) const;
@@ -255,7 +241,9 @@ class VariantRef : public VariantRefBase<VariantData>,
   }
 
   template <typename Visitor>
-  void accept(Visitor &visitor) const;
+  void accept(Visitor &visitor) const {
+    variantAccept(_data, visitor);
+  }
 
   FORCE_INLINE bool operator==(VariantRef lhs) const {
     return variantEquals(_data, lhs._data);
@@ -281,7 +269,7 @@ class VariantRef : public VariantRefBase<VariantData>,
       const;
 
  private:
-  MemoryPool *_memoryPool;
+  MemoryPool *_pool;
 };
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
@@ -296,7 +284,9 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   VariantConstRef(VariantRef var) : base_type(var._data) {}
 
   template <typename Visitor>
-  void accept(Visitor &visitor) const;
+  void accept(Visitor &visitor) const {
+    variantAccept(_data, visitor);
+  }
 
   // Get the variant as the specified type.
   //
@@ -323,7 +313,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TString *>::value, VariantConstRef>::type
       operator[](TString *key) const {
-    return VariantConstRef(objectGet(variantAsObject(_data), makeString(key)));
+    const CollectionData *obj = variantAsObject(_data);
+    return VariantConstRef(obj ? obj->get(makeString(key)) : 0);
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

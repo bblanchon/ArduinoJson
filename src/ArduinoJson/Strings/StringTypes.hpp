@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "../Memory/MemoryPool.hpp"
 #include "../Polyfills/type_traits.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -18,7 +19,6 @@ struct IsString<T&> : IsString<T> {};
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #include "FixedSizeRamString.hpp"
-#include "StringInMemoryPool.hpp"
 #include "ZeroTerminatedRamString.hpp"
 #include "ZeroTerminatedRamStringConst.hpp"
 

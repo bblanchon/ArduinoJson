@@ -22,7 +22,25 @@ TEST_CASE("JsonArray::operator==()") {
     REQUIRE_FALSE(array1c == array2c);
   }
 
-  SECTION("should return false when arrays differ") {
+  SECTION("should return false when LHS has more elements") {
+    array1.add(1);
+    array1.add(2);
+    array2.add(1);
+
+    REQUIRE_FALSE(array1 == array2);
+    REQUIRE_FALSE(array1c == array2c);
+  }
+
+  SECTION("should return false when RKS has more elements") {
+    array1.add(1);
+    array2.add(1);
+    array2.add(2);
+
+    REQUIRE_FALSE(array1 == array2);
+    REQUIRE_FALSE(array1c == array2c);
+  }
+
+  SECTION("should return true when arrays equal") {
     array1.add("coucou");
     array2.add("coucou");
 

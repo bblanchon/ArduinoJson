@@ -30,8 +30,8 @@ class JsonDocument : public Visitable {
   }
 
   void clear() {
-    _memoryPool.clear();
-    _rootData.type = JSON_NULL;
+    _pool.clear();
+    _data.setNull();
   }
 
   template <typename T>
@@ -40,16 +40,11 @@ class JsonDocument : public Visitable {
   }
 
   size_t memoryUsage() const {
-    return _memoryPool.size();
+    return _pool.size();
   }
 
   size_t capacity() const {
-    return _memoryPool.capacity();
-  }
-
-  // for internal use only
-  MemoryPool& memoryPool() {
-    return _memoryPool;
+    return _pool.capacity();
   }
 
   template <typename T>
@@ -58,10 +53,18 @@ class JsonDocument : public Visitable {
     return getVariant().template to<T>();
   }
 
+  // for internal use only
+  MemoryPool& memoryPool() {
+    return _pool;
+  }
+
+  VariantData& data() {
+    return _data;
+  }
+
  protected:
   JsonDocument(char* buf, size_t capa)
-      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT),
-        _memoryPool(buf, capa) {}
+      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT), _pool(buf, capa) {}
 
   void copy(const JsonDocument& src) {
     nestingLimit = src.nestingLimit;
@@ -70,15 +73,15 @@ class JsonDocument : public Visitable {
 
  private:
   VariantRef getVariant() {
-    return VariantRef(&_memoryPool, &_rootData);
+    return VariantRef(&_pool, &_data);
   }
 
   VariantConstRef getVariant() const {
-    return VariantConstRef(&_rootData);
+    return VariantConstRef(&_data);
   }
 
-  MemoryPool _memoryPool;
-  VariantData _rootData;
+  MemoryPool _pool;
+  VariantData _data;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

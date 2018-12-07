@@ -13,6 +13,53 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+template <typename T>
+inline T VariantData::asIntegral() const {
+  switch (type()) {
+    case VALUE_IS_POSITIVE_INTEGER:
+    case VALUE_IS_BOOLEAN:
+      return T(_content.asInteger);
+    case VALUE_IS_NEGATIVE_INTEGER:
+      return T(~_content.asInteger + 1);
+    case VALUE_IS_LINKED_STRING:
+    case VALUE_IS_OWNED_STRING:
+      return parseInteger<T>(_content.asString);
+    case VALUE_IS_FLOAT:
+      return T(_content.asFloat);
+    default:
+      return 0;
+  }
+}
+
+// T = float/double
+template <typename T>
+inline T VariantData::asFloat() const {
+  switch (type()) {
+    case VALUE_IS_POSITIVE_INTEGER:
+    case VALUE_IS_BOOLEAN:
+      return static_cast<T>(_content.asInteger);
+    case VALUE_IS_NEGATIVE_INTEGER:
+      return -static_cast<T>(_content.asInteger);
+    case VALUE_IS_LINKED_STRING:
+    case VALUE_IS_OWNED_STRING:
+      return parseFloat<T>(_content.asString);
+    case VALUE_IS_FLOAT:
+      return static_cast<T>(_content.asFloat);
+    default:
+      return 0;
+  }
+}
+
+inline const char* VariantData::asString() const {
+  switch (type()) {
+    case VALUE_IS_LINKED_STRING:
+    case VALUE_IS_OWNED_STRING:
+      return _content.asString;
+    default:
+      return 0;
+  }
+}
+
 inline bool VariantRef::set(ArrayRef array) const {
   return to<ArrayRef>().copyFrom(array);
 }
@@ -31,35 +78,35 @@ inline bool VariantRef::set(const ObjectSubscript<TString>& value) const {
 }
 
 inline bool VariantRef::set(VariantConstRef value) const {
-  return variantCopy(_data, value._data, _memoryPool);
+  return variantCopyFrom(_data, value._data, _pool);
 }
 
 inline bool VariantRef::set(VariantRef value) const {
-  return variantCopy(_data, value._data, _memoryPool);
+  return variantCopyFrom(_data, value._data, _pool);
 }
 
 template <typename T>
 inline typename enable_if<is_same<T, ArrayRef>::value, T>::type VariantRef::as()
     const {
-  return ArrayRef(_memoryPool, variantAsArray(_data));
+  return ArrayRef(_pool, _data != 0 ? _data->asArray() : 0);
 }
 
 template <typename T>
 inline typename enable_if<is_same<T, ObjectRef>::value, T>::type
 VariantRef::as() const {
-  return ObjectRef(_memoryPool, variantAsObject(_data));
+  return ObjectRef(_pool, variantAsObject(_data));
 }
 
 template <typename T>
 inline typename enable_if<is_same<T, ArrayRef>::value, ArrayRef>::type
 VariantRef::to() const {
-  return ArrayRef(_memoryPool, variantToArray(_data));
+  return ArrayRef(_pool, variantToArray(_data));
 }
 
 template <typename T>
 typename enable_if<is_same<T, ObjectRef>::value, ObjectRef>::type
 VariantRef::to() const {
-  return ObjectRef(_memoryPool, variantToObject(_data));
+  return ObjectRef(_pool, variantToObject(_data));
 }
 
 template <typename T>
@@ -69,50 +116,8 @@ VariantRef::to() const {
   return *this;
 }
 
-template <typename Visitor>
-inline void VariantRef::accept(Visitor& visitor) const {
-  return VariantConstRef(_data).accept(visitor);
-}
-
-template <typename Visitor>
-inline void VariantConstRef::accept(Visitor& visitor) const {
-  if (!_data) return visitor.visitNull();
-
-  switch (_data->type) {
-    case JSON_FLOAT:
-      return visitor.visitFloat(_data->content.asFloat);
-
-    case JSON_ARRAY:
-      return visitor.visitArray(ArrayConstRef(&_data->content.asArray));
-
-    case JSON_OBJECT:
-      return visitor.visitObject(ObjectConstRef(&_data->content.asObject));
-
-    case JSON_LINKED_STRING:
-    case JSON_OWNED_STRING:
-      return visitor.visitString(_data->content.asString);
-
-    case JSON_OWNED_RAW:
-    case JSON_LINKED_RAW:
-      return visitor.visitRawJson(_data->content.asRaw.data,
-                                  _data->content.asRaw.size);
-
-    case JSON_NEGATIVE_INTEGER:
-      return visitor.visitNegativeInteger(_data->content.asInteger);
-
-    case JSON_POSITIVE_INTEGER:
-      return visitor.visitPositiveInteger(_data->content.asInteger);
-
-    case JSON_BOOLEAN:
-      return visitor.visitBoolean(_data->content.asInteger != 0);
-
-    default:
-      return visitor.visitNull();
-  }
-}
-
 inline VariantConstRef VariantConstRef::operator[](size_t index) const {
-  return ArrayConstRef(variantAsArray(_data))[index];
+  return ArrayConstRef(_data != 0 ? _data->asArray() : 0)[index];
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

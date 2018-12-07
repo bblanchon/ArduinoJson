@@ -5,7 +5,6 @@
 #pragma once
 
 #include "../Serialization/DynamicStringWriter.hpp"
-#include "VariantFunctions.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -55,19 +54,19 @@ struct VariantConstAs<ArrayRef> {
 template <typename T>
 inline typename enable_if<is_integral<T>::value, T>::type variantAs(
     const VariantData* _data) {
-  return variantAsIntegral<T>(_data);
+  return _data != 0 ? _data->asIntegral<T>() : T(0);
 }
 
 template <typename T>
 inline typename enable_if<is_same<T, bool>::value, T>::type variantAs(
     const VariantData* _data) {
-  return variantAsBoolean(_data);
+  return _data != 0 ? _data->asBoolean() : false;
 }
 
 template <typename T>
 inline typename enable_if<is_floating_point<T>::value, T>::type variantAs(
     const VariantData* _data) {
-  return variantAsFloat<T>(_data);
+  return _data != 0 ? _data->asFloat<T>() : T(0);
 }
 
 template <typename T>
@@ -75,7 +74,7 @@ inline typename enable_if<is_same<T, const char*>::value ||
                               is_same<T, char*>::value,
                           const char*>::type
 variantAs(const VariantData* _data) {
-  return variantAsString(_data);
+  return _data != 0 ? _data->asString() : 0;
 }
 
 template <typename T>

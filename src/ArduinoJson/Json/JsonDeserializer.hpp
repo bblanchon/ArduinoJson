@@ -9,7 +9,7 @@
 #include "../Numbers/isFloat.hpp"
 #include "../Numbers/isInteger.hpp"
 #include "../Polyfills/type_traits.hpp"
-#include "../Variant/VariantRef.hpp"
+#include "../Variant/VariantData.hpp"
 #include "EscapeSequence.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -18,26 +18,26 @@ template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
   typedef typename remove_reference<TStringStorage>::type::StringBuilder
       StringBuilder;
-  typedef typename StringBuilder::StringType StringType;
+  typedef const char *StringType;
 
  public:
-  JsonDeserializer(MemoryPool &memoryPool, TReader reader,
+  JsonDeserializer(MemoryPool &pool, TReader reader,
                    TStringStorage stringStorage, uint8_t nestingLimit)
-      : _memoryPool(&memoryPool),
+      : _pool(&pool),
         _reader(reader),
         _stringStorage(stringStorage),
         _nestingLimit(nestingLimit),
         _loaded(false) {}
-  DeserializationError parse(VariantRef variant) {
+  DeserializationError parse(VariantData &variant) {
     DeserializationError err = skipSpacesAndComments();
     if (err) return err;
 
     switch (current()) {
       case '[':
-        return parseArray(variant);
+        return parseArray(variant.toArray());
 
       case '{':
-        return parseObject(variant);
+        return parseObject(variant.toObject());
 
       default:
         return parseValue(variant);
@@ -68,11 +68,8 @@ class JsonDeserializer {
     return true;
   }
 
-  DeserializationError parseArray(VariantRef variant) {
+  DeserializationError parseArray(CollectionData &array) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
-
-    ArrayRef array = variant.to<ArrayRef>();
-    if (array.isNull()) return DeserializationError::NoMemory;
 
     // Check opening braket
     if (!eat('[')) return DeserializationError::InvalidInput;
@@ -87,12 +84,12 @@ class JsonDeserializer {
     // Read each value
     for (;;) {
       // Allocate slot in array
-      VariantRef value = array.add();
-      if (value.isInvalid()) return DeserializationError::NoMemory;
+      VariantData *value = array.add(_pool);
+      if (!value) return DeserializationError::NoMemory;
 
       // 1 - Parse value
       _nestingLimit--;
-      err = parse(value);
+      err = parse(*value);
       _nestingLimit++;
       if (err) return err;
 
@@ -106,11 +103,8 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseObject(VariantRef variant) {
+  DeserializationError parseObject(CollectionData &object) {
     if (_nestingLimit == 0) return DeserializationError::TooDeep;
-
-    ObjectRef object = variant.to<ObjectRef>();
-    if (object.isNull()) return DeserializationError::NoMemory;
 
     // Check opening brace
     if (!eat('{')) return DeserializationError::InvalidInput;
@@ -124,23 +118,24 @@ class JsonDeserializer {
 
     // Read each key value pair
     for (;;) {
+      // Allocate slot in object
+      VariantSlot *slot = object.addSlot(_pool);
+      if (!slot) return DeserializationError::NoMemory;
+
       // Parse key
       StringType key;
       err = parseKey(key);
       if (err) return err;
+      slot->setOwnedKey(key);
 
       // Skip spaces
       err = skipSpacesAndComments();
       if (err) return err;  // Colon
       if (!eat(':')) return DeserializationError::InvalidInput;
 
-      // Allocate slot in object
-      VariantRef value = object.set(key);
-      if (value.isInvalid()) return DeserializationError::NoMemory;
-
       // Parse value
       _nestingLimit--;
-      err = parse(value);
+      err = parse(*slot->data());
       _nestingLimit++;
       if (err) return err;
 
@@ -158,7 +153,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseValue(VariantRef variant) {
+  DeserializationError parseValue(VariantData &variant) {
     if (isQuote(current())) {
       return parseStringValue(variant);
     } else {
@@ -174,11 +169,11 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseStringValue(VariantRef variant) {
+  DeserializationError parseStringValue(VariantData &variant) {
     StringType value;
     DeserializationError err = parseQuotedString(value);
     if (err) return err;
-    variant.set(value);
+    variant.setOwnedString(value);
     return DeserializationError::Ok;
   }
 
@@ -208,7 +203,7 @@ class JsonDeserializer {
     }
 
     result = builder.complete();
-    if (result.isNull()) return DeserializationError::NoMemory;
+    if (!result) return DeserializationError::NoMemory;
     return DeserializationError::Ok;
   }
 
@@ -229,11 +224,11 @@ class JsonDeserializer {
     }
 
     result = builder.complete();
-    if (result.isNull()) return DeserializationError::NoMemory;
+    if (!result) return DeserializationError::NoMemory;
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseNumericValue(VariantRef result) {
+  DeserializationError parseNumericValue(VariantData &result) {
     char buffer[64];
     uint8_t n = 0;
 
@@ -246,13 +241,13 @@ class JsonDeserializer {
     buffer[n] = 0;
 
     if (isInteger(buffer)) {
-      result.set(parseInteger<Integer>(buffer));
+      result.setInteger(parseInteger<Integer>(buffer));
     } else if (isFloat(buffer)) {
-      result.set(parseFloat<Float>(buffer));
+      result.setFloat(parseFloat<Float>(buffer));
     } else if (!strcmp(buffer, "true")) {
-      result.set(true);
+      result.setBoolean(true);
     } else if (!strcmp(buffer, "false")) {
-      result.set(false);
+      result.setBoolean(false);
     } else if (!strcmp(buffer, "null")) {
       // already null
     } else {
@@ -333,7 +328,7 @@ class JsonDeserializer {
     }
   }
 
-  MemoryPool *_memoryPool;
+  MemoryPool *_pool;
   TReader _reader;
   TStringStorage _stringStorage;
   uint8_t _nestingLimit;

@@ -21,16 +21,21 @@ class ArraySubscript;
 template <typename TData>
 class ArrayRefBase {
  public:
+  template <typename Visitor>
+  FORCE_INLINE void accept(Visitor& visitor) const {
+    arrayAccept(_data, visitor);
+  }
+
   FORCE_INLINE bool isNull() const {
     return _data == 0;
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return VariantConstRef(arrayGet(_data, index));
+    return VariantConstRef(_data ? _data->get(index) : 0);
   }
 
   FORCE_INLINE size_t size() const {
-    return arraySize(_data);
+    return _data ? _data->size() : 0;
   }
 
  protected:
@@ -38,24 +43,17 @@ class ArrayRefBase {
   TData* _data;
 };
 
-class ArrayConstRef : public ArrayRefBase<const ArrayData>, public Visitable {
+class ArrayConstRef : public ArrayRefBase<const CollectionData>,
+                      public Visitable {
   friend class ArrayRef;
-  typedef ArrayRefBase<const ArrayData> base_type;
+  typedef ArrayRefBase<const CollectionData> base_type;
 
  public:
   typedef ArrayConstRefIterator iterator;
 
-  template <typename Visitor>
-  FORCE_INLINE void accept(Visitor& visitor) const {
-    if (_data)
-      visitor.visitArray(*this);
-    else
-      visitor.visitNull();
-  }
-
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
-    return iterator(_data->head);
+    return iterator(_data->head());
   }
 
   FORCE_INLINE iterator end() const {
@@ -63,25 +61,25 @@ class ArrayConstRef : public ArrayRefBase<const ArrayData>, public Visitable {
   }
 
   FORCE_INLINE ArrayConstRef() : base_type(0) {}
-  FORCE_INLINE ArrayConstRef(const ArrayData* data) : base_type(data) {}
+  FORCE_INLINE ArrayConstRef(const CollectionData* data) : base_type(data) {}
 
   FORCE_INLINE bool operator==(ArrayConstRef rhs) const {
     return arrayEquals(_data, rhs._data);
   }
 };
 
-class ArrayRef : public ArrayRefBase<ArrayData>, public Visitable {
-  typedef ArrayRefBase<ArrayData> base_type;
+class ArrayRef : public ArrayRefBase<CollectionData>, public Visitable {
+  typedef ArrayRefBase<CollectionData> base_type;
 
  public:
   typedef ArrayIterator iterator;
 
-  FORCE_INLINE ArrayRef() : base_type(0), _memoryPool(0) {}
-  FORCE_INLINE ArrayRef(MemoryPool* pool, ArrayData* data)
-      : base_type(data), _memoryPool(pool) {}
+  FORCE_INLINE ArrayRef() : base_type(0), _pool(0) {}
+  FORCE_INLINE ArrayRef(MemoryPool* pool, CollectionData* data)
+      : base_type(data), _pool(pool) {}
 
   operator VariantRef() {
-    return VariantRef(_memoryPool, getVariantData(_data));
+    return VariantRef(_pool, reinterpret_cast<VariantData*>(_data));
   }
 
   operator ArrayConstRef() const {
@@ -110,12 +108,12 @@ class ArrayRef : public ArrayRefBase<ArrayData>, public Visitable {
   }
 
   VariantRef add() const {
-    return VariantRef(_memoryPool, arrayAdd(_data, _memoryPool));
+    return VariantRef(_pool, arrayAdd(_data, _pool));
   }
 
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
-    return iterator(_memoryPool, _data->head);
+    return iterator(_pool, _data->head());
   }
 
   FORCE_INLINE iterator end() const {
@@ -153,7 +151,8 @@ class ArrayRef : public ArrayRefBase<ArrayData>, public Visitable {
 
   // Copy a ArrayRef
   FORCE_INLINE bool copyFrom(ArrayRef src) const {
-    return arrayCopy(_data, src._data, _memoryPool);
+    if (!_data || !src._data) return false;
+    return _data->copyFrom(*src._data, _pool);
   }
 
   // Exports a 1D array
@@ -191,30 +190,22 @@ class ArrayRef : public ArrayRefBase<ArrayData>, public Visitable {
 
   // Gets the value at the specified index.
   FORCE_INLINE VariantRef get(size_t index) const {
-    return VariantRef(_memoryPool, arrayGet(_data, index));
+    return VariantRef(_pool, _data ? _data->get(index) : 0);
   }
 
   // Removes element at specified position.
   FORCE_INLINE void remove(iterator it) const {
-    arrayRemove(_data, it.internal());
+    if (!_data) return;
+    _data->remove(it.internal());
   }
 
   // Removes element at specified index.
   FORCE_INLINE void remove(size_t index) const {
-    arrayRemove(_data, index);
-  }
-
-  template <typename Visitor>
-  FORCE_INLINE void accept(Visitor& visitor) const {
-    ArrayConstRef(_data).accept(visitor);
+    if (!_data) return;
+    _data->remove(index);
   }
 
  private:
-  template <typename TValueRef>
-  FORCE_INLINE bool add_impl(TValueRef value) const {
-    return add().set(value);
-  }
-
-  MemoryPool* _memoryPool;
+  MemoryPool* _pool;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

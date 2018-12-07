@@ -8,12 +8,12 @@
 #include "Key.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
-// A key value pair for ObjectData.
+// A key value pair for CollectionData.
 class Pair {
  public:
-  Pair(MemoryPool* memoryPool, VariantSlot* slot) : _key(slot) {
+  Pair(MemoryPool* pool, VariantSlot* slot) : _key(slot) {
     if (slot) {
-      _value = VariantRef(memoryPool, slot->getData());
+      _value = VariantRef(pool, slot->data());
     }
   }
 
@@ -34,7 +34,7 @@ class PairConst {
  public:
   PairConst(const VariantSlot* slot) : _key(slot) {
     if (slot) {
-      _value = VariantConstRef(slot->getData());
+      _value = VariantConstRef(slot->data());
     }
   }
 

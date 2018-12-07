@@ -12,9 +12,9 @@ class StlString {
  public:
   StlString(const std::string& str) : _str(&str) {}
 
-  char* save(MemoryPool* memoryPool) const {
+  char* save(MemoryPool* pool) const {
     size_t n = _str->length() + 1;
-    char* dup = memoryPool->allocFrozenString(n);
+    char* dup = pool->allocFrozenString(n);
     if (dup) memcpy(dup, _str->c_str(), n);
     return dup;
   }

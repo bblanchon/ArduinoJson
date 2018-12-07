@@ -13,11 +13,10 @@ class ZeroTerminatedRamString : public ZeroTerminatedRamStringConst {
   ZeroTerminatedRamString(const char* str)
       : ZeroTerminatedRamStringConst(str) {}
 
-  template <typename TMemoryPool>
-  char* save(TMemoryPool* memoryPool) const {
+  char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
     size_t n = size() + 1;
-    char* dup = memoryPool->allocFrozenString(n);
+    char* dup = pool->allocFrozenString(n);
     if (dup) memcpy(dup, _str, n);
     return dup;
   }

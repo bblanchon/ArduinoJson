@@ -22,7 +22,25 @@ TEST_CASE("JsonObject::operator==()") {
     REQUIRE_FALSE(obj1c == obj2c);
   }
 
-  SECTION("should return false when objs differ") {
+  SECTION("should return false when LHS has more elements") {
+    obj1["hello"] = "coucou";
+    obj1["world"] = 666;
+    obj2["hello"] = "coucou";
+
+    REQUIRE_FALSE(obj1 == obj2);
+    REQUIRE_FALSE(obj1c == obj2c);
+  }
+
+  SECTION("should return false when RKS has more elements") {
+    obj1["hello"] = "coucou";
+    obj2["hello"] = "coucou";
+    obj2["world"] = 666;
+
+    REQUIRE_FALSE(obj1 == obj2);
+    REQUIRE_FALSE(obj1c == obj2c);
+  }
+
+  SECTION("should return true when objs equal") {
     obj1["hello"] = "world";
     obj1["anwser"] = 42;
     // insert in different order

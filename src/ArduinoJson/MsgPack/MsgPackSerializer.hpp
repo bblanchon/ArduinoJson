@@ -7,7 +7,7 @@
 #include "../Polyfills/type_traits.hpp"
 #include "../Serialization/measure.hpp"
 #include "../Serialization/serialize.hpp"
-#include "../Variant/VariantRef.hpp"
+#include "../Variant/VariantData.hpp"
 #include "endianess.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -35,7 +35,7 @@ class MsgPackSerializer {
     }
   }
 
-  void visitArray(ArrayConstRef array) {
+  void visitArray(const CollectionData& array) {
     size_t n = array.size();
     if (n < 0x10) {
       writeByte(uint8_t(0x90 + array.size()));
@@ -46,12 +46,12 @@ class MsgPackSerializer {
       writeByte(0xDD);
       writeInteger(uint32_t(n));
     }
-    for (ArrayConstRef::iterator it = array.begin(); it != array.end(); ++it) {
-      it->accept(*this);
+    for (VariantSlot* slot = array.head(); slot; slot = slot->next()) {
+      slot->data()->accept(*this);
     }
   }
 
-  void visitObject(ObjectConstRef object) {
+  void visitObject(const CollectionData& object) {
     size_t n = object.size();
     if (n < 0x10) {
       writeByte(uint8_t(0x80 + n));
@@ -62,10 +62,9 @@ class MsgPackSerializer {
       writeByte(0xDF);
       writeInteger(uint32_t(n));
     }
-    for (ObjectConstRef::iterator it = object.begin(); it != object.end();
-         ++it) {
-      visitString(it->key());
-      it->value().accept(*this);
+    for (VariantSlot* slot = object.head(); slot; slot = slot->next()) {
+      visitString(slot->key());
+      slot->data()->accept(*this);
     }
   }
 

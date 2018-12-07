@@ -17,6 +17,11 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TData>
 class ObjectRefBase {
  public:
+  template <typename Visitor>
+  FORCE_INLINE void accept(Visitor& visitor) const {
+    objectAccept(_data, visitor);
+  }
+
   // Tells weither the specified key is present and associated with a value.
   //
   // bool containsKey(TKey);
@@ -38,7 +43,7 @@ class ObjectRefBase {
   }
 
   FORCE_INLINE size_t size() const {
-    return objectSize(_data);
+    return _data ? _data->size() : 0;
   }
 
  protected:
@@ -46,28 +51,20 @@ class ObjectRefBase {
   TData* _data;
 };
 
-class ObjectConstRef : public ObjectRefBase<const ObjectData>,
+class ObjectConstRef : public ObjectRefBase<const CollectionData>,
                        public Visitable {
   friend class ObjectRef;
-  typedef ObjectRefBase<const ObjectData> base_type;
+  typedef ObjectRefBase<const CollectionData> base_type;
 
  public:
   typedef ObjectConstIterator iterator;
 
   ObjectConstRef() : base_type(0) {}
-  ObjectConstRef(const ObjectData* data) : base_type(data) {}
-
-  template <typename Visitor>
-  FORCE_INLINE void accept(Visitor& visitor) const {
-    if (_data)
-      visitor.visitObject(*this);
-    else
-      visitor.visitNull();
-  }
+  ObjectConstRef(const CollectionData* data) : base_type(data) {}
 
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
-    return iterator(_data->head);
+    return iterator(_data->head());
   }
 
   FORCE_INLINE iterator end() const {
@@ -122,18 +119,18 @@ class ObjectConstRef : public ObjectRefBase<const ObjectData>,
   }
 };
 
-class ObjectRef : public ObjectRefBase<ObjectData>, public Visitable {
-  typedef ObjectRefBase<ObjectData> base_type;
+class ObjectRef : public ObjectRefBase<CollectionData>, public Visitable {
+  typedef ObjectRefBase<CollectionData> base_type;
 
  public:
   typedef ObjectIterator iterator;
 
-  FORCE_INLINE ObjectRef() : base_type(0), _memoryPool(0) {}
-  FORCE_INLINE ObjectRef(MemoryPool* buf, ObjectData* data)
-      : base_type(data), _memoryPool(buf) {}
+  FORCE_INLINE ObjectRef() : base_type(0), _pool(0) {}
+  FORCE_INLINE ObjectRef(MemoryPool* buf, CollectionData* data)
+      : base_type(data), _pool(buf) {}
 
   operator VariantRef() const {
-    return VariantRef(_memoryPool, getVariantData(_data));
+    return VariantRef(_pool, reinterpret_cast<VariantData*>(_data));
   }
 
   operator ObjectConstRef() const {
@@ -142,7 +139,7 @@ class ObjectRef : public ObjectRefBase<ObjectData>, public Visitable {
 
   FORCE_INLINE iterator begin() const {
     if (!_data) return iterator();
-    return iterator(_memoryPool, _data->head);
+    return iterator(_pool, _data->head());
   }
 
   FORCE_INLINE iterator end() const {
@@ -150,11 +147,13 @@ class ObjectRef : public ObjectRefBase<ObjectData>, public Visitable {
   }
 
   void clear() const {
-    objectClear(_data);
+    if (!_data) return;
+    _data->clear();
   }
 
   FORCE_INLINE bool copyFrom(ObjectConstRef src) {
-    return objectCopy(_data, src._data, _memoryPool);
+    if (!_data || !src._data) return false;
+    return _data->copyFrom(*src._data, _pool);
   }
 
   // Creates and adds a ArrayRef.
@@ -225,7 +224,8 @@ class ObjectRef : public ObjectRefBase<ObjectData>, public Visitable {
   }
 
   FORCE_INLINE void remove(iterator it) const {
-    objectRemove(_data, it.internal());
+    if (!_data) return;
+    _data->remove(it.internal());
   }
 
   // Removes the specified key and the associated value.
@@ -234,14 +234,14 @@ class ObjectRef : public ObjectRefBase<ObjectData>, public Visitable {
   // TKey = const std::string&, const String&
   template <typename TKey>
   FORCE_INLINE void remove(const TKey& key) const {
-    remove_impl(makeString(key));
+    objectRemove(_data, makeString(key));
   }
   //
   // void remove(TKey);
   // TKey = char*, const char*, char[], const char[], const FlashStringHelper*
   template <typename TKey>
   FORCE_INLINE void remove(TKey* key) const {
-    remove_impl(makeString(key));
+    objectRemove(_data, makeString(key));
   }
 
   template <typename TKey>
@@ -254,35 +254,17 @@ class ObjectRef : public ObjectRefBase<ObjectData>, public Visitable {
     return set_impl(makeString(key));
   }
 
-  FORCE_INLINE VariantRef set(StringInMemoryPool key) const {
-    return set_impl(key);
-  }
-
-  FORCE_INLINE VariantRef set(ZeroTerminatedRamStringConst key) const {
-    return set_impl(key);
-  }
-
-  template <typename Visitor>
-  FORCE_INLINE void accept(Visitor& visitor) const {
-    ObjectConstRef(_data).accept(visitor);
-  }
-
  private:
-  template <typename TStringRef>
-  FORCE_INLINE VariantRef get_impl(TStringRef key) const {
-    return VariantRef(_memoryPool, objectGet(_data, key));
+  template <typename TKey>
+  FORCE_INLINE VariantRef get_impl(TKey key) const {
+    return VariantRef(_pool, objectGet(_data, key));
   }
 
   template <typename TKey>
   FORCE_INLINE VariantRef set_impl(TKey key) const {
-    return VariantRef(_memoryPool, objectSet(_data, key, _memoryPool));
+    return VariantRef(_pool, objectSet(_data, key, _pool));
   }
 
-  template <typename TStringRef>
-  FORCE_INLINE void remove_impl(TStringRef key) const {
-    objectRemove(_data, objectFindSlot(_data, key));
-  }
-
-  MemoryPool* _memoryPool;
+  MemoryPool* _pool;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

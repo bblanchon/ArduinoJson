@@ -21,9 +21,9 @@ class FixedSizeFlashString {
     return !_str;
   }
 
-  char* save(MemoryPool* memoryPool) const {
+  char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
-    char* dup = memoryPool->allocFrozenString(_size);
+    char* dup = pool->allocFrozenString(_size);
     if (!dup) memcpy_P(dup, (const char*)_str, _size);
     return dup;
   }

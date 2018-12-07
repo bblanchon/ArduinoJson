@@ -12,30 +12,30 @@ static char buffer[4096];
 
 TEST_CASE("StringBuilder") {
   SECTION("Works when buffer is big enough") {
-    MemoryPool memoryPool(buffer, addPadding(JSON_STRING_SIZE(6)));
+    MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
 
-    StringBuilder str(&memoryPool);
+    StringBuilder str(&pool);
     str.append("hello");
 
-    REQUIRE(str.complete().equals("hello"));
+    REQUIRE(str.complete() == std::string("hello"));
   }
 
   SECTION("Returns null when too small") {
-    MemoryPool memoryPool(buffer, sizeof(void*));
+    MemoryPool pool(buffer, sizeof(void*));
 
-    StringBuilder str(&memoryPool);
+    StringBuilder str(&pool);
     str.append("hello world!");
 
-    REQUIRE(str.complete().isNull());
+    REQUIRE(str.complete() == 0);
   }
 
   SECTION("Increases size of memory pool") {
-    MemoryPool memoryPool(buffer, addPadding(JSON_STRING_SIZE(6)));
+    MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
 
-    StringBuilder str(&memoryPool);
+    StringBuilder str(&pool);
     str.append('h');
     str.complete();
 
-    REQUIRE(JSON_STRING_SIZE(2) == memoryPool.size());
+    REQUIRE(JSON_STRING_SIZE(2) == pool.size());
   }
 }

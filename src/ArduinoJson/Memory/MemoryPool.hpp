@@ -6,7 +6,6 @@
 
 #include "../Polyfills/assert.hpp"
 #include "../Polyfills/mpl/max.hpp"
-#include "../Strings/StringInMemoryPool.hpp"
 #include "../Variant/VariantSlot.hpp"
 #include "Alignment.hpp"
 #include "MemoryPool.hpp"

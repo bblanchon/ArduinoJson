@@ -13,13 +13,13 @@ class StringCopier {
  public:
   typedef ARDUINOJSON_NAMESPACE::StringBuilder StringBuilder;
 
-  StringCopier(MemoryPool* memoryPool) : _memoryPool(memoryPool) {}
+  StringCopier(MemoryPool* pool) : _pool(pool) {}
 
   StringBuilder startString() {
-    return StringBuilder(_memoryPool);
+    return StringBuilder(_pool);
   }
 
  private:
-  MemoryPool* _memoryPool;
+  MemoryPool* _pool;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

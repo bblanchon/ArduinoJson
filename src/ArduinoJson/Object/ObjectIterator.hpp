@@ -11,8 +11,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class PairPtr {
  public:
-  PairPtr(MemoryPool *memoryPool, VariantSlot *slot)
-      : _pair(memoryPool, slot) {}
+  PairPtr(MemoryPool *pool, VariantSlot *slot) : _pair(pool, slot) {}
 
   const Pair *operator->() const {
     return &_pair;
@@ -30,14 +29,14 @@ class ObjectIterator {
  public:
   ObjectIterator() : _slot(0) {}
 
-  explicit ObjectIterator(MemoryPool *memoryPool, VariantSlot *slot)
-      : _memoryPool(memoryPool), _slot(slot) {}
+  explicit ObjectIterator(MemoryPool *pool, VariantSlot *slot)
+      : _pool(pool), _slot(slot) {}
 
   Pair operator*() const {
-    return Pair(_memoryPool, _slot);
+    return Pair(_pool, _slot);
   }
   PairPtr operator->() {
-    return PairPtr(_memoryPool, _slot);
+    return PairPtr(_pool, _slot);
   }
 
   bool operator==(const ObjectIterator &other) const {
@@ -49,12 +48,12 @@ class ObjectIterator {
   }
 
   ObjectIterator &operator++() {
-    _slot = _slot->getNext();
+    _slot = _slot->next();
     return *this;
   }
 
   ObjectIterator &operator+=(size_t distance) {
-    _slot = _slot->getNext(distance);
+    _slot = _slot->next(distance);
     return *this;
   }
 
@@ -63,7 +62,7 @@ class ObjectIterator {
   }
 
  private:
-  MemoryPool *_memoryPool;
+  MemoryPool *_pool;
   VariantSlot *_slot;
 };
 
@@ -105,12 +104,12 @@ class ObjectConstIterator {
   }
 
   ObjectConstIterator &operator++() {
-    _slot = _slot->getNext();
+    _slot = _slot->next();
     return *this;
   }
 
   ObjectConstIterator &operator+=(size_t distance) {
-    _slot = _slot->getNext(distance);
+    _slot = _slot->next(distance);
     return *this;
   }
 

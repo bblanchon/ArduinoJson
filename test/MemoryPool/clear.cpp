@@ -11,21 +11,21 @@ static const size_t poolCapacity = 512;
 
 TEST_CASE("MemoryPool::clear()") {
   char buffer[poolCapacity];
-  MemoryPool memoryPool(buffer, sizeof(buffer));
+  MemoryPool pool(buffer, sizeof(buffer));
 
   SECTION("Discards allocated variants") {
-    memoryPool.allocVariant();
+    pool.allocVariant();
 
-    memoryPool.clear();
-    REQUIRE(memoryPool.size() == 0);
+    pool.clear();
+    REQUIRE(pool.size() == 0);
   }
 
   SECTION("Discards allocated strings") {
-    memoryPool.allocFrozenString(10);
-    REQUIRE(memoryPool.size() > 0);
+    pool.allocFrozenString(10);
+    REQUIRE(pool.size() > 0);
 
-    memoryPool.clear();
+    pool.clear();
 
-    REQUIRE(memoryPool.size() == 0);
+    REQUIRE(pool.size() == 0);
   }
 }

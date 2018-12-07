@@ -14,63 +14,58 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <template <typename, typename> class TDeserializer,
-          typename TMemoryPool, typename TReader, typename TWriter>
-TDeserializer<TReader, TWriter> makeDeserializer(TMemoryPool &memoryPool,
+template <template <typename, typename> class TDeserializer, typename TReader,
+          typename TWriter>
+TDeserializer<TReader, TWriter> makeDeserializer(MemoryPool &pool,
                                                  TReader reader, TWriter writer,
                                                  uint8_t nestingLimit) {
-  return TDeserializer<TReader, TWriter>(memoryPool, reader, writer,
-                                         nestingLimit);
+  return TDeserializer<TReader, TWriter>(pool, reader, writer, nestingLimit);
 }
 
-// DeserializationError deserialize(TDocument& doc, TString input);
-// TDocument = DynamicJsonDocument, StaticJsonDocument
+// DeserializationError deserialize(JsonDocument& doc, TString input);
 // TString = const std::string&, const String&
-template <template <typename, typename> class TDeserializer, typename TDocument,
-          typename TString>
+template <template <typename, typename> class TDeserializer, typename TString>
 typename enable_if<!is_array<TString>::value, DeserializationError>::type
-deserialize(TDocument &doc, const TString &input) {
+deserialize(JsonDocument &doc, const TString &input) {
+  doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<VariantRef>());
+      .parse(doc.data());
 }
 //
-// DeserializationError deserialize(TDocument& doc, TChar* input);
-// TDocument = DynamicJsonDocument, StaticJsonDocument
+// DeserializationError deserialize(JsonDocument& doc, TChar* input);
 // TChar* = char*, const char*, const FlashStringHelper*
-template <template <typename, typename> class TDeserializer, typename TDocument,
-          typename TChar>
-DeserializationError deserialize(TDocument &doc, TChar *input) {
+template <template <typename, typename> class TDeserializer, typename TChar>
+DeserializationError deserialize(JsonDocument &doc, TChar *input) {
+  doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<VariantRef>());
+      .parse(doc.data());
 }
 //
-// DeserializationError deserialize(TDocument& doc, TChar* input, size_t
+// DeserializationError deserialize(JsonDocument& doc, TChar* input, size_t
 // inputSize);
-// TDocument = DynamicJsonDocument, StaticJsonDocument
 // TChar* = char*, const char*, const FlashStringHelper*
-template <template <typename, typename> class TDeserializer, typename TDocument,
-          typename TChar>
-DeserializationError deserialize(TDocument &doc, TChar *input,
+template <template <typename, typename> class TDeserializer, typename TChar>
+DeserializationError deserialize(JsonDocument &doc, TChar *input,
                                  size_t inputSize) {
+  doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input, inputSize),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<VariantRef>());
+      .parse(doc.data());
 }
 //
-// DeserializationError deserialize(TDocument& doc, TStream input);
-// TDocument = DynamicJsonDocument, StaticJsonDocument
+// DeserializationError deserialize(JsonDocument& doc, TStream input);
 // TStream = std::istream&, Stream&
-template <template <typename, typename> class TDeserializer, typename TDocument,
-          typename TStream>
-DeserializationError deserialize(TDocument &doc, TStream &input) {
+template <template <typename, typename> class TDeserializer, typename TStream>
+DeserializationError deserialize(JsonDocument &doc, TStream &input) {
+  doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
              makeStringStorage(doc.memoryPool(), input), doc.nestingLimit)
-      .parse(doc.template to<VariantRef>());
+      .parse(doc.data());
 }
 }  // namespace ARDUINOJSON_NAMESPACE

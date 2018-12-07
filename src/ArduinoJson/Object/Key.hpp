@@ -15,7 +15,7 @@ class Key {
   }
 
   const char* c_str() const {
-    return _slot ? slotGetKey(_slot) : 0;
+    return _slot ? _slot->key() : 0;
   }
 
   bool isNull() const {

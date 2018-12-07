@@ -15,6 +15,7 @@
 
 #include "ArduinoJson/Array/ArrayImpl.hpp"
 #include "ArduinoJson/Array/ArraySubscript.hpp"
+#include "ArduinoJson/Collection/CollectionImpl.hpp"
 #include "ArduinoJson/Object/ObjectImpl.hpp"
 #include "ArduinoJson/Object/ObjectSubscript.hpp"
 #include "ArduinoJson/Variant/VariantAsImpl.hpp"

@@ -11,8 +11,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class VariantPtr {
  public:
-  VariantPtr(MemoryPool *memoryPool, VariantData *data)
-      : _variant(memoryPool, data) {}
+  VariantPtr(MemoryPool *pool, VariantData *data) : _variant(pool, data) {}
 
   VariantRef *operator->() {
     return &_variant;
@@ -29,14 +28,14 @@ class VariantPtr {
 class ArrayIterator {
  public:
   ArrayIterator() : _slot(0) {}
-  explicit ArrayIterator(MemoryPool *memoryPool, VariantSlot *slot)
-      : _memoryPool(memoryPool), _slot(slot) {}
+  explicit ArrayIterator(MemoryPool *pool, VariantSlot *slot)
+      : _pool(pool), _slot(slot) {}
 
   VariantRef operator*() const {
-    return VariantRef(_memoryPool, _slot->getData());
+    return VariantRef(_pool, _slot->data());
   }
   VariantPtr operator->() {
-    return VariantPtr(_memoryPool, _slot->getData());
+    return VariantPtr(_pool, _slot->data());
   }
 
   bool operator==(const ArrayIterator &other) const {
@@ -48,12 +47,12 @@ class ArrayIterator {
   }
 
   ArrayIterator &operator++() {
-    _slot = _slot->getNext();
+    _slot = _slot->next();
     return *this;
   }
 
   ArrayIterator &operator+=(size_t distance) {
-    _slot = _slot->getNext(distance);
+    _slot = _slot->next(distance);
     return *this;
   }
 
@@ -62,7 +61,7 @@ class ArrayIterator {
   }
 
  private:
-  MemoryPool *_memoryPool;
+  MemoryPool *_pool;
   VariantSlot *_slot;
 };
 
@@ -88,10 +87,10 @@ class ArrayConstRefIterator {
   explicit ArrayConstRefIterator(const VariantSlot *slot) : _slot(slot) {}
 
   VariantConstRef operator*() const {
-    return VariantConstRef(_slot->getData());
+    return VariantConstRef(_slot->data());
   }
   VariantConstPtr operator->() {
-    return VariantConstPtr(_slot->getData());
+    return VariantConstPtr(_slot->data());
   }
 
   bool operator==(const ArrayConstRefIterator &other) const {
@@ -103,12 +102,12 @@ class ArrayConstRefIterator {
   }
 
   ArrayConstRefIterator &operator++() {
-    _slot = _slot->getNext();
+    _slot = _slot->next();
     return *this;
   }
 
   ArrayConstRefIterator &operator+=(size_t distance) {
-    _slot = _slot->getNext(distance);
+    _slot = _slot->next(distance);
     return *this;
   }
 

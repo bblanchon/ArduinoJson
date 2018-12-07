@@ -4,78 +4,285 @@
 
 #pragma once
 
-#include <stddef.h>  // ptrdiff_t, size_t
-
-#include "../Numbers/Float.hpp"
-#include "../Numbers/Integer.hpp"
+#include "../Misc/SerializedValue.hpp"
+#include "VariantContent.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class VariantSlot;
+class VariantData {
+  VariantContent _content;  // must be first to allow cast from array to variant
+  uint8_t _flags;
 
-enum VariantType {
-  JSON_NULL,
-  JSON_LINKED_RAW,
-  JSON_OWNED_RAW,
-  JSON_LINKED_STRING,
-  JSON_OWNED_STRING,
-  JSON_BOOLEAN,
-  JSON_POSITIVE_INTEGER,
-  JSON_NEGATIVE_INTEGER,
-  JSON_ARRAY,
-  JSON_OBJECT,
-  JSON_FLOAT
+ public:
+  // Must be a POD!
+  // - no constructor
+  // - no destructor
+  // - no virtual
+  // - no inheritance
+
+  template <typename Visitor>
+  void accept(Visitor &visitor) const {
+    switch (type()) {
+      case VALUE_IS_FLOAT:
+        return visitor.visitFloat(_content.asFloat);
+
+      case VALUE_IS_ARRAY:
+        return visitor.visitArray(_content.asCollection);
+
+      case VALUE_IS_OBJECT:
+        return visitor.visitObject(_content.asCollection);
+
+      case VALUE_IS_LINKED_STRING:
+      case VALUE_IS_OWNED_STRING:
+        return visitor.visitString(_content.asString);
+
+      case VALUE_IS_OWNED_RAW:
+      case VALUE_IS_LINKED_RAW:
+        return visitor.visitRawJson(_content.asRaw.data, _content.asRaw.size);
+
+      case VALUE_IS_NEGATIVE_INTEGER:
+        return visitor.visitNegativeInteger(_content.asInteger);
+
+      case VALUE_IS_POSITIVE_INTEGER:
+        return visitor.visitPositiveInteger(_content.asInteger);
+
+      case VALUE_IS_BOOLEAN:
+        return visitor.visitBoolean(_content.asInteger != 0);
+
+      default:
+        return visitor.visitNull();
+    }
+  }
+
+  template <typename T>
+  T asIntegral() const;
+
+  template <typename T>
+  T asFloat() const;
+
+  const char *asString() const;
+
+  bool asBoolean() const {
+    return asIntegral<int>() != 0;
+  }
+
+  CollectionData *asArray() {
+    if (type() == VALUE_IS_ARRAY)
+      return &_content.asCollection;
+    else
+      return 0;
+  }
+
+  const CollectionData *asArray() const {
+    return const_cast<VariantData *>(this)->asArray();
+  }
+
+  CollectionData *asObject() {
+    if (type() == VALUE_IS_OBJECT)
+      return &_content.asCollection;
+    else
+      return 0;
+  }
+
+  const CollectionData *asObject() const {
+    return const_cast<VariantData *>(this)->asObject();
+  }
+
+  bool copyFrom(const VariantData &src, MemoryPool *pool) {
+    switch (src.type()) {
+      case VALUE_IS_ARRAY:
+        return toArray().copyFrom(src._content.asCollection, pool);
+      case VALUE_IS_OBJECT:
+        return toObject().copyFrom(src._content.asCollection, pool);
+      case VALUE_IS_OWNED_STRING:
+        return setOwnedString(ZeroTerminatedRamString(src._content.asString),
+                              pool);
+      case VALUE_IS_OWNED_RAW:
+        return setOwnedRaw(
+            serialized(src._content.asRaw.data, src._content.asRaw.size), pool);
+      default:
+        setType(src.type());
+        _content = src._content;
+        return true;
+    }
+  }
+
+  bool equals(const VariantData &other) const {
+    if (type() != other.type()) return false;
+
+    switch (type()) {
+      case VALUE_IS_LINKED_STRING:
+      case VALUE_IS_OWNED_STRING:
+        return !strcmp(_content.asString, other._content.asString);
+
+      case VALUE_IS_LINKED_RAW:
+      case VALUE_IS_OWNED_RAW:
+        return _content.asRaw.size == other._content.asRaw.size &&
+               !memcmp(_content.asRaw.data, other._content.asRaw.data,
+                       _content.asRaw.size);
+
+      case VALUE_IS_BOOLEAN:
+      case VALUE_IS_POSITIVE_INTEGER:
+      case VALUE_IS_NEGATIVE_INTEGER:
+        return _content.asInteger == other._content.asInteger;
+
+      case VALUE_IS_ARRAY:
+        return _content.asCollection.equalsArray(other._content.asCollection);
+
+      case VALUE_IS_OBJECT:
+        return _content.asCollection.equalsObject(other._content.asCollection);
+
+      case VALUE_IS_FLOAT:
+        return _content.asFloat == other._content.asFloat;
+
+      case VALUE_IS_NULL:
+      default:
+        return true;
+    }
+  }
+
+  bool isArray() const {
+    return type() == VALUE_IS_ARRAY;
+  }
+
+  bool isBoolean() const {
+    return type() == VALUE_IS_BOOLEAN;
+  }
+
+  bool isInteger() const {
+    return type() == VALUE_IS_POSITIVE_INTEGER ||
+           type() == VALUE_IS_NEGATIVE_INTEGER;
+  }
+
+  bool isFloat() const {
+    return type() == VALUE_IS_FLOAT || type() == VALUE_IS_POSITIVE_INTEGER ||
+           type() == VALUE_IS_NEGATIVE_INTEGER;
+  }
+
+  bool isString() const {
+    return (type() == VALUE_IS_LINKED_STRING ||
+            type() == VALUE_IS_OWNED_STRING);
+  }
+
+  bool isObject() const {
+    return type() == VALUE_IS_OBJECT;
+  }
+
+  bool isNull() const {
+    return type() == VALUE_IS_NULL;
+  }
+
+  void setBoolean(bool value) {
+    setType(VALUE_IS_BOOLEAN);
+    _content.asInteger = static_cast<UInt>(value);
+  }
+
+  void setFloat(Float value) {
+    setType(VALUE_IS_FLOAT);
+    _content.asFloat = value;
+  }
+
+  void setLinkedRaw(SerializedValue<const char *> value) {
+    setType(VALUE_IS_LINKED_RAW);
+    _content.asRaw.data = value.data();
+    _content.asRaw.size = value.size();
+  }
+
+  template <typename T>
+  bool setOwnedRaw(SerializedValue<T> value, MemoryPool *pool) {
+    char *dup = makeString(value.data(), value.size()).save(pool);
+    if (dup) {
+      setType(VALUE_IS_OWNED_RAW);
+      _content.asRaw.data = dup;
+      _content.asRaw.size = value.size();
+      return true;
+    } else {
+      setType(VALUE_IS_NULL);
+      return false;
+    }
+  }
+
+  template <typename T>
+  typename enable_if<is_unsigned<T>::value>::type setInteger(T value) {
+    setUnsignedInteger(value);
+  }
+
+  template <typename T>
+  typename enable_if<is_signed<T>::value>::type setInteger(T value) {
+    setSignedInteger(value);
+  }
+
+  template <typename T>
+  void setSignedInteger(T value) {
+    if (value >= 0) {
+      setType(VALUE_IS_POSITIVE_INTEGER);
+      _content.asInteger = static_cast<UInt>(value);
+    } else {
+      setType(VALUE_IS_NEGATIVE_INTEGER);
+      _content.asInteger = ~static_cast<UInt>(value) + 1;
+    }
+  }
+
+  void setLinkedString(const char *value) {
+    setType(VALUE_IS_LINKED_STRING);
+    _content.asString = value;
+  }
+
+  void setNull() {
+    setType(VALUE_IS_NULL);
+  }
+
+  void setOwnedString(const char *s) {
+    setType(VALUE_IS_OWNED_STRING);
+    _content.asString = s;
+  }
+
+  template <typename T>
+  bool setOwnedString(T value, MemoryPool *pool) {
+    char *dup = value.save(pool);
+    if (dup) {
+      setType(VALUE_IS_OWNED_STRING);
+      _content.asString = dup;
+      return true;
+    } else {
+      setType(VALUE_IS_NULL);
+      return false;
+    }
+  }
+
+  void setUnsignedInteger(UInt value) {
+    setType(VALUE_IS_POSITIVE_INTEGER);
+    _content.asInteger = static_cast<UInt>(value);
+  }
+
+  CollectionData &toArray() {
+    setType(VALUE_IS_ARRAY);
+    _content.asCollection.clear();
+    return _content.asCollection;
+  }
+
+  CollectionData &toObject() {
+    setType(VALUE_IS_OBJECT);
+    _content.asCollection.clear();
+    return _content.asCollection;
+  }
+
+  size_t size() const {
+    if (type() == VALUE_IS_OBJECT || type() == VALUE_IS_ARRAY)
+      return _content.asCollection.size();
+    else
+      return 0;
+  }
+
+ private:
+  uint8_t type() const {
+    return _flags & VALUE_MASK;
+  }
+
+  void setType(uint8_t t) {
+    _flags &= KEY_IS_OWNED;
+    _flags |= t;
+  }
 };
 
-struct ObjectData {
-  VariantSlot *head;
-  VariantSlot *tail;
-};
-
-struct ArrayData {
-  VariantSlot *head;
-  VariantSlot *tail;
-};
-
-struct RawData {
-  const char *data;
-  size_t size;
-};
-
-// A union that defines the actual content of a VariantData.
-// The enum VariantType determines which member is in use.
-union VariantContent {
-  Float asFloat;
-  UInt asInteger;
-  ArrayData asArray;
-  ObjectData asObject;
-  const char *asString;
-  struct {
-    const char *data;
-    size_t size;
-  } asRaw;
-};
-
-// this struct must be a POD type to prevent error calling offsetof on clang
-struct VariantData {
-  VariantContent content;
-  bool keyIsOwned : 1;
-  VariantType type : 7;
-};
-
-inline VariantData *getVariantData(ArrayData *arr) {
-  const ptrdiff_t offset =
-      offsetof(VariantData, content) - offsetof(VariantContent, asArray);
-  if (!arr) return 0;
-  return reinterpret_cast<VariantData *>(reinterpret_cast<char *>(arr) -
-                                         offset);
-}
-
-inline VariantData *getVariantData(ObjectData *obj) {
-  const ptrdiff_t offset =
-      offsetof(VariantData, content) - offsetof(VariantContent, asObject);
-  if (!obj) return 0;
-  return reinterpret_cast<VariantData *>(reinterpret_cast<char *>(obj) -
-                                         offset);
-}
 }  // namespace ARDUINOJSON_NAMESPACE

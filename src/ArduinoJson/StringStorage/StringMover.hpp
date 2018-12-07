@@ -10,17 +10,15 @@ class StringMover {
  public:
   class StringBuilder {
    public:
-    typedef ZeroTerminatedRamStringConst StringType;
-
     StringBuilder(char** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
 
     void append(char c) {
       *(*_writePtr)++ = char(c);
     }
 
-    StringType complete() const {
+    char* complete() const {
       *(*_writePtr)++ = 0;
-      return reinterpret_cast<const char*>(_startPtr);
+      return _startPtr;
     }
 
    private:

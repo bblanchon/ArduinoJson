@@ -4,15 +4,12 @@
 
 #pragma once
 
-#include "../Strings/StringInMemoryPool.hpp"
 #include "MemoryPool.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
 class StringBuilder {
  public:
-  typedef StringInMemoryPool StringType;
-
   explicit StringBuilder(MemoryPool* parent) : _parent(parent), _size(0) {
     _slot = _parent->allocExpandableString();
   }
@@ -36,7 +33,7 @@ class StringBuilder {
     _slot.value[_size++] = c;
   }
 
-  StringType complete() {
+  char* complete() {
     append('\0');
     if (_slot.value) {
       _parent->freezeString(_slot, _size);

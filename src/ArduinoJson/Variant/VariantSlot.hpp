@@ -5,7 +5,9 @@
 #pragma once
 
 #include "../Polyfills/type_traits.hpp"
-#include "../Variant/VariantData.hpp"
+#include "../Variant/VariantContent.hpp"
+
+#include <stdint.h>  // int8_t, int16_t
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -16,8 +18,7 @@ class VariantSlot {
   // we cannot use composition because it adds padding
   // (+20% on ESP8266 for example)
   VariantContent _content;
-  bool _keyIsOwned : 1;
-  VariantType _type : 7;
+  uint8_t _flags;
   VariantSlotDiff _next;
   const char* _key;
 
@@ -28,23 +29,23 @@ class VariantSlot {
   // - no virtual
   // - no inheritance
 
-  VariantData* getData() {
+  VariantData* data() {
     return reinterpret_cast<VariantData*>(&_content);
   }
 
-  const VariantData* getData() const {
+  const VariantData* data() const {
     return reinterpret_cast<const VariantData*>(&_content);
   }
 
-  VariantSlot* getNext() {
+  VariantSlot* next() {
     return _next ? this + _next : 0;
   }
 
-  const VariantSlot* getNext() const {
-    return const_cast<VariantSlot*>(this)->getNext();
+  const VariantSlot* next() const {
+    return const_cast<VariantSlot*>(this)->next();
   }
 
-  VariantSlot* getNext(size_t distance) {
+  VariantSlot* next(size_t distance) {
     VariantSlot* slot = this;
     while (distance--) {
       if (!slot->_next) return 0;
@@ -53,29 +54,26 @@ class VariantSlot {
     return slot;
   }
 
-  VariantSlot* getPrev(VariantSlot* head) {
-    while (head) {
-      VariantSlot* nxt = head->getNext();
-      if (nxt == this) return head;
-      head = nxt;
-    }
-    return head;
-  }
-
-  const VariantSlot* getNext(size_t distance) const {
-    return const_cast<VariantSlot*>(this)->getNext(distance);
+  const VariantSlot* next(size_t distance) const {
+    return const_cast<VariantSlot*>(this)->next(distance);
   }
 
   void setNext(VariantSlot* slot) {
     _next = VariantSlotDiff(slot ? slot - this : 0);
   }
 
-  void attachTo(VariantSlot* tail) {
-    tail->_next = VariantSlotDiff(this - tail);
+  void setNextNotNull(VariantSlot* slot) {
+    ARDUINOJSON_ASSERT(slot != 0);
+    _next = VariantSlotDiff(slot - this);
   }
 
-  void setKey(const char* k, bool owned) {
-    _keyIsOwned = owned;
+  void setOwnedKey(const char* k) {
+    _flags |= KEY_IS_OWNED;
+    _key = k;
+  }
+
+  void setLinkedKey(const char* k) {
+    _flags &= VALUE_MASK;
     _key = k;
   }
 
@@ -84,13 +82,13 @@ class VariantSlot {
   }
 
   bool ownsKey() const {
-    return _keyIsOwned;
+    return (_flags & KEY_IS_OWNED) != 0;
   }
 
-  void init() {
+  void clear() {
     _next = 0;
-    _type = JSON_NULL;
-    _keyIsOwned = false;
+    _flags = 0;
+    _key = 0;
   }
 };
 

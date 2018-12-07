@@ -20,10 +20,10 @@ class ZeroTerminatedFlashString {
     return !_str;
   }
 
-  char* save(MemoryPool* memoryPool) const {
+  char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
     size_t n = size() + 1;  // copy the terminator
-    char* dup = memoryPool->allocFrozenString(n);
+    char* dup = pool->allocFrozenString(n);
     if (dup) memcpy_P(dup, reinterpret_cast<const char*>(_str), n);
     return dup;
   }
