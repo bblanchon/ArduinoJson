@@ -63,12 +63,19 @@ class JsonDocument : public Visitable {
   }
 
  protected:
+  JsonDocument(MemoryPool pool)
+      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT), _pool(pool) {}
+
   JsonDocument(char* buf, size_t capa)
       : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT), _pool(buf, capa) {}
 
   void copy(const JsonDocument& src) {
     nestingLimit = src.nestingLimit;
     to<VariantRef>().set(src.as<VariantRef>());
+  }
+
+  void replacePool(MemoryPool pool) {
+    _pool = pool;
   }
 
  private:

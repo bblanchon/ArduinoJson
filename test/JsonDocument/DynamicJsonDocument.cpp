@@ -51,60 +51,6 @@ TEST_CASE("DynamicJsonDocument") {
     }
   }
 
-  SECTION("Copy constructor") {
-    deserializeJson(doc, "{\"hello\":\"world\"}");
-    doc.nestingLimit = 42;
-
-    DynamicJsonDocument doc2 = doc;
-
-    std::string json;
-    serializeJson(doc2, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.nestingLimit == 42);
-  }
-
-  SECTION("Copy assignment") {
-    DynamicJsonDocument doc2;
-    deserializeJson(doc2, "{\"hello\":\"world\"}");
-    doc2.nestingLimit = 42;
-
-    doc = doc2;
-
-    std::string json;
-    serializeJson(doc, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(doc.nestingLimit == 42);
-  }
-
-  SECTION("Construct from StaticJsonDocument") {
-    StaticJsonDocument<200> sdoc;
-    deserializeJson(sdoc, "{\"hello\":\"world\"}");
-    sdoc.nestingLimit = 42;
-
-    DynamicJsonDocument ddoc = sdoc;
-
-    std::string json;
-    serializeJson(ddoc, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(ddoc.nestingLimit == 42);
-  }
-
-  SECTION("Assign from StaticJsonDocument") {
-    DynamicJsonDocument ddoc;
-    ddoc.to<JsonVariant>().set(666);
-
-    StaticJsonDocument<200> sdoc;
-    deserializeJson(sdoc, "{\"hello\":\"world\"}");
-    sdoc.nestingLimit = 42;
-
-    ddoc = sdoc;
-
-    std::string json;
-    serializeJson(ddoc, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(ddoc.nestingLimit == 42);
-  }
-
   SECTION("memoryUsage()") {
     SECTION("Increases after adding value to array") {
       JsonArray arr = doc.to<JsonArray>();
@@ -125,5 +71,83 @@ TEST_CASE("DynamicJsonDocument") {
       obj["b"] = 2;
       REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
     }
+  }
+}
+
+TEST_CASE("DynamicJsonDocument copies") {
+  SECTION("Copy constructor") {
+    DynamicJsonDocument doc1(1234);
+    deserializeJson(doc1, "{\"hello\":\"world\"}");
+    doc1.nestingLimit = 42;
+
+    DynamicJsonDocument doc2 = doc1;
+
+    std::string json;
+    serializeJson(doc2, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+
+    REQUIRE(doc2.nestingLimit == 42);
+    REQUIRE(doc2.capacity() == doc1.capacity());
+  }
+
+  SECTION("Copy assignment preserves the buffer when capacity is sufficient") {
+    DynamicJsonDocument doc1(1234);
+    deserializeJson(doc1, "{\"hello\":\"world\"}");
+    doc1.nestingLimit = 42;
+
+    DynamicJsonDocument doc2(doc1.capacity());
+    doc2 = doc1;
+
+    std::string json;
+    serializeJson(doc2, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc2.nestingLimit == 42);
+    REQUIRE(doc2.capacity() == doc1.capacity());
+  }
+
+  SECTION("Copy assignment realloc the buffer when capacity is insufficient") {
+    DynamicJsonDocument doc1(1234);
+    deserializeJson(doc1, "{\"hello\":\"world\"}");
+    doc1.nestingLimit = 42;
+    DynamicJsonDocument doc2(8);
+
+    REQUIRE(doc2.capacity() < doc1.memoryUsage());
+    doc2 = doc1;
+    REQUIRE(doc2.capacity() >= doc1.memoryUsage());
+
+    std::string json;
+    serializeJson(doc2, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc2.nestingLimit == 42);
+  }
+
+  SECTION("Construct from StaticJsonDocument") {
+    StaticJsonDocument<200> sdoc;
+    deserializeJson(sdoc, "{\"hello\":\"world\"}");
+    sdoc.nestingLimit = 42;
+
+    DynamicJsonDocument ddoc = sdoc;
+
+    std::string json;
+    serializeJson(ddoc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(ddoc.nestingLimit == 42);
+    REQUIRE(ddoc.capacity() == sdoc.capacity());
+  }
+
+  SECTION("Assign from StaticJsonDocument") {
+    DynamicJsonDocument ddoc;
+    ddoc.to<JsonVariant>().set(666);
+
+    StaticJsonDocument<200> sdoc;
+    deserializeJson(sdoc, "{\"hello\":\"world\"}");
+    sdoc.nestingLimit = 42;
+
+    ddoc = sdoc;
+
+    std::string json;
+    serializeJson(ddoc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(ddoc.nestingLimit == 42);
   }
 }
