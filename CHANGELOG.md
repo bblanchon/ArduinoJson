@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Import functions in the ArduinoJson namespace to get clearer errors
+* Improved syntax highlighting in Arduino IDE
 
 v6.7.0-beta (2018-12-07)
 -----------
