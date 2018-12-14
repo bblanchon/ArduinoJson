@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Import functions in the ArduinoJson namespace to get clearer errors
+
 v6.7.0-beta (2018-12-07)
 -----------
 
