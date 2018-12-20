@@ -53,7 +53,7 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
   }
 
   // Allocates the specified amount of bytes in the buffer
-  virtual void* alloc(size_t bytes) {
+  virtual void* alloc(size_t bytes) override {
     alignNextAlloc();
     if (!canAlloc(bytes)) return NULL;
     return doAlloc(bytes);
