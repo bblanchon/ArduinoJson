@@ -326,24 +326,25 @@ class MsgPackDeserializer {
   uint8_t _nestingLimit;
 };
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeMsgPack(TDocument &doc, const TInput &input) {
+template <typename TInput>
+DeserializationError deserializeMsgPack(JsonDocument &doc,
+                                        const TInput &input) {
   return deserialize<MsgPackDeserializer>(doc, input);
 }
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeMsgPack(TDocument &doc, TInput *input) {
+template <typename TInput>
+DeserializationError deserializeMsgPack(JsonDocument &doc, TInput *input) {
   return deserialize<MsgPackDeserializer>(doc, input);
 }
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeMsgPack(TDocument &doc, TInput *input,
+template <typename TInput>
+DeserializationError deserializeMsgPack(JsonDocument &doc, TInput *input,
                                         size_t inputSize) {
   return deserialize<MsgPackDeserializer>(doc, input, inputSize);
 }
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeMsgPack(TDocument &doc, TInput &input) {
+template <typename TInput>
+DeserializationError deserializeMsgPack(JsonDocument &doc, TInput &input) {
   return deserialize<MsgPackDeserializer>(doc, input);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

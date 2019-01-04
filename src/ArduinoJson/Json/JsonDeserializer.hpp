@@ -336,24 +336,24 @@ class JsonDeserializer {
   bool _loaded;
 };
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeJson(TDocument &doc, const TInput &input) {
+template <typename TInput>
+DeserializationError deserializeJson(JsonDocument &doc, const TInput &input) {
   return deserialize<JsonDeserializer>(doc, input);
 }
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeJson(TDocument &doc, TInput *input) {
+template <typename TInput>
+DeserializationError deserializeJson(JsonDocument &doc, TInput *input) {
   return deserialize<JsonDeserializer>(doc, input);
 }
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeJson(TDocument &doc, TInput *input,
+template <typename TInput>
+DeserializationError deserializeJson(JsonDocument &doc, TInput *input,
                                      size_t inputSize) {
   return deserialize<JsonDeserializer>(doc, input, inputSize);
 }
 
-template <typename TDocument, typename TInput>
-DeserializationError deserializeJson(TDocument &doc, TInput &input) {
+template <typename TInput>
+DeserializationError deserializeJson(JsonDocument &doc, TInput &input) {
   return deserialize<JsonDeserializer>(doc, input);
 }
 }  // namespace ARDUINOJSON_NAMESPACE
