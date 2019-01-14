@@ -7,7 +7,7 @@
 
 TEST_CASE("JsonArray::copyFrom()") {
   SECTION("OneDimension") {
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonArray array = doc.to<JsonArray>();
     char json[32];
     int source[] = {1, 2, 3};
@@ -34,7 +34,7 @@ TEST_CASE("JsonArray::copyFrom()") {
   }
 
   SECTION("TwoDimensions") {
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonArray array = doc.to<JsonArray>();
     char json[32];
     int source[][3] = {{1, 2, 3}, {4, 5, 6}};

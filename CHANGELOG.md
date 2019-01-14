@@ -6,6 +6,23 @@ HEAD
 
 * Import functions in the ArduinoJson namespace to get clearer errors
 * Improved syntax highlighting in Arduino IDE
+* Removed default capacity of `DynamicJsonDocument`
+
+> ### BREAKING CHANGES
+> 
+> The parameter to the constructor of `DynamicJsonDocument` is now mandatory
+>
+> Old code:
+>
+> ```c++
+> DynamicJsonDocument doc;
+> ```
+>
+> New code:
+>
+> ```c++
+> DynamicJsonDocument doc(1024);
+> ```
 
 v6.7.0-beta (2018-12-07)
 -----------

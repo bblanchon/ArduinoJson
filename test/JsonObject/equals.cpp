@@ -6,11 +6,11 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::operator==()") {
-  DynamicJsonDocument doc1;
+  DynamicJsonDocument doc1(4096);
   JsonObject obj1 = doc1.to<JsonObject>();
   JsonObjectConst obj1c = obj1;
 
-  DynamicJsonDocument doc2;
+  DynamicJsonDocument doc2(4096);
   JsonObject obj2 = doc2.to<JsonObject>();
   JsonObjectConst obj2c = obj2;
 

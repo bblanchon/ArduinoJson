@@ -7,7 +7,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::operator[]") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
   array.add(0);
 
@@ -52,7 +52,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
   SECTION("nested array") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonArray arr2 = doc2.to<JsonArray>();
 
     array[0] = arr2;
@@ -63,7 +63,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
   SECTION("nested object") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonObject obj = doc2.to<JsonObject>();
 
     array[0] = obj;
@@ -74,7 +74,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
   SECTION("array subscript") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonArray arr2 = doc2.to<JsonArray>();
     const char* str = "hello";
 
@@ -87,7 +87,7 @@ TEST_CASE("JsonArray::operator[]") {
 
   SECTION("object subscript") {
     const char* str = "hello";
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonObject obj = doc2.to<JsonObject>();
 
     obj["x"] = str;
@@ -146,7 +146,7 @@ TEST_CASE("JsonArray::operator[]") {
 }
 
 TEST_CASE("JsonArrayConst::operator[]") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
   array.add(0);
 

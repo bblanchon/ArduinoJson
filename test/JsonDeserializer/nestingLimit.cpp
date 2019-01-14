@@ -10,7 +10,7 @@
   REQUIRE(DeserializationError::TooDeep == expression);
 
 TEST_CASE("JsonDeserializer nestingLimit") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("limit = 0") {
     doc.nestingLimit = 0;

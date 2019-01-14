@@ -13,7 +13,7 @@ using ARDUINOJSON_NAMESPACE::isnan;
 }  // namespace my
 
 TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("null char*") {
     DeserializationError err = deserializeJson(doc, static_cast<char*>(0));

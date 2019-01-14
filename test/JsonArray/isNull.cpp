@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::isNull()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("returns true") {
     JsonArray arr;
@@ -20,7 +20,7 @@ TEST_CASE("JsonArray::isNull()") {
 }
 
 TEST_CASE("JsonArrayConst::isNull()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("returns true") {
     JsonArrayConst arr;

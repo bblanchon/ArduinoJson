@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::copyTo()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("BiggerOneDimensionIntegerArray") {
     char json[] = "[1,2,3]";

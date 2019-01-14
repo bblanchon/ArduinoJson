@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::isNull()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("return true when Undefined") {
@@ -20,7 +20,7 @@ TEST_CASE("JsonVariant::isNull()") {
   }
 
   SECTION("return false when EmptyArray") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonArray array = doc2.to<JsonArray>();
 
     variant.set(array);
@@ -28,7 +28,7 @@ TEST_CASE("JsonVariant::isNull()") {
   }
 
   SECTION("return false when EmptyObject") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonObject obj = doc2.to<JsonObject>();
 
     variant.set(obj);

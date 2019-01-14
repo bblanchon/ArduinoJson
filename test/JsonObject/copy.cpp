@@ -6,8 +6,8 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::copyFrom()") {
-  DynamicJsonDocument doc1;
-  DynamicJsonDocument doc2;
+  DynamicJsonDocument doc1(4096);
+  DynamicJsonDocument doc2(4096);
 
   JsonObject obj1 = doc1.to<JsonObject>();
   JsonObject obj2 = doc2.to<JsonObject>();

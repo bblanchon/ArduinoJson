@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Gbathree") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   DeserializationError error = deserializeJson(
       doc,

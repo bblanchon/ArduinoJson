@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::operator[]") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("The JsonVariant is undefined") {
@@ -122,7 +122,7 @@ TEST_CASE("JsonVariant::operator[]") {
 }
 
 TEST_CASE("JsonVariantConst::operator[]") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
   JsonVariantConst cvar = var;
 

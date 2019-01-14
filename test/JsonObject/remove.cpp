@@ -7,7 +7,7 @@
 #include <string>
 
 TEST_CASE("JsonObject::remove()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
   obj["a"] = 0;
   obj["b"] = 1;

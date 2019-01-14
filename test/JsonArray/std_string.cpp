@@ -11,7 +11,7 @@ static void eraseString(std::string &str) {
 }
 
 TEST_CASE("std::string") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("add()") {

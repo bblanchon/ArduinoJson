@@ -7,7 +7,7 @@
 
 static void check(const char* input, DeserializationError expected,
                   uint8_t limit) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   doc.nestingLimit = limit;
 
   DeserializationError error = deserializeMsgPack(doc, input);

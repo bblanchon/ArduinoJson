@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 static void checkNotSupported(const char* input) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   DeserializationError error = deserializeMsgPack(doc, input);
 

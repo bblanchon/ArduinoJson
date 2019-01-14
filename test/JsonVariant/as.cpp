@@ -9,7 +9,7 @@
 static const char* null = 0;
 
 TEST_CASE("JsonVariant::as()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("not set") {

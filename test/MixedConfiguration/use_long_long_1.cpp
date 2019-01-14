@@ -4,7 +4,7 @@
 #include <catch.hpp>
 
 TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 1") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonObject root = doc.to<JsonObject>();
 
   root["A"] = 123456789123456789;

@@ -9,7 +9,7 @@ static const char* null = 0;
 
 template <typename T>
 void checkEquals(T a, T b) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
   variant.set(a);
 
@@ -30,7 +30,7 @@ void checkEquals(T a, T b) {
 
 template <typename T>
 void checkGreater(T a, T b) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
   variant.set(a);
 
@@ -47,7 +47,7 @@ void checkGreater(T a, T b) {
 
 template <typename T>
 void checkLower(T a, T b) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
   variant.set(a);
 
@@ -111,7 +111,7 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("null") {
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonVariant variant = doc.to<JsonVariant>();
     variant.set(null);
 
@@ -126,7 +126,7 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("StringLiteral") {
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     deserializeJson(doc, "\"hello\"");
     JsonVariant variant = doc.as<JsonVariant>();
 
@@ -153,7 +153,7 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("String") {
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonVariant variant = doc.to<JsonVariant>();
     variant.set("hello");
 
@@ -185,7 +185,7 @@ TEST_CASE("JsonVariant comparisons") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonVariant variant = doc.to<JsonVariant>();
     variant.set("hello");
 
@@ -200,7 +200,7 @@ TEST_CASE("JsonVariant comparisons") {
     char vla[i];
     strcpy(vla, "hello");
 
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonVariant variant = doc.to<JsonVariant>();
     variant.set("world");
 
@@ -211,7 +211,7 @@ TEST_CASE("JsonVariant comparisons") {
   }
 #endif
 
-  DynamicJsonDocument doc1, doc2, doc3;
+  DynamicJsonDocument doc1(4096), doc2(4096), doc3(4096);
   JsonVariant variant1 = doc1.to<JsonVariant>();
   JsonVariant variant2 = doc2.to<JsonVariant>();
   JsonVariant variant3 = doc3.to<JsonVariant>();
@@ -329,10 +329,10 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   // SECTION("VariantsOfDifferentTypes") {
-  //   DynamicJsonDocument doc1;
+  //   DynamicJsonDocument doc1(4096);
   //   JsonObject obj = doc1.to<JsonObject>();
 
-  //   DynamicJsonDocument doc2;
+  //   DynamicJsonDocument doc2(4096);
   //   JsonArray arr = doc2.to<JsonArray>();
   //   JsonVariant variants[] = {
   //       true, 42, 666.667, "hello", arr, obj,

@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::createNestedObject()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("key is a const char*") {

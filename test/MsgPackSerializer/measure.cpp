@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("measureMsgPack()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonObject object = doc.to<JsonObject>();
   object["hello"] = "world";
 

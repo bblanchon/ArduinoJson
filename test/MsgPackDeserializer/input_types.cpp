@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("deserializeMsgPack(const std::string&)") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("should accept const string") {
     const std::string input("\x92\x01\x02");
@@ -46,7 +46,7 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
 }
 
 TEST_CASE("deserializeMsgPack(std::istream&)") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("should accept a zero in input") {
     std::istringstream input(std::string("\x92\x00\x02", 3));

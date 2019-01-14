@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 DeserializationError deserialize(const char* input, size_t len) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   return deserializeMsgPack(doc, input, len);
 }

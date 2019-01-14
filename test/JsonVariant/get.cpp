@@ -9,7 +9,7 @@
 
 template <typename T>
 void checkValue(T expected) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
   variant.set(expected);
@@ -24,7 +24,7 @@ void checkReference(T &expected) {
 
 template <typename T>
 void checkNumericType() {
-  DynamicJsonDocument docMin, docMax;
+  DynamicJsonDocument docMin(4096), docMax(4096);
   JsonVariant variantMin = docMin.to<JsonVariant>();
   JsonVariant variantMax = docMax.to<JsonVariant>();
 
@@ -132,7 +132,7 @@ TEST_CASE("JsonVariant set()/get()") {
 #endif
 
   SECTION("CanStoreObject") {
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonObject object = doc.to<JsonObject>();
 
     checkValue<JsonObject>(object);

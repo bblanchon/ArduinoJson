@@ -73,7 +73,7 @@ TEST_CASE("StaticJsonDocument") {
 
   SECTION("Assign from DynamicJsonDocument") {
     StaticJsonDocument<200> doc1;
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     doc1.to<JsonVariant>().set(666);
     deserializeJson(doc2, "{\"hello\":\"world\"}");
     doc2.nestingLimit = 42;
@@ -100,7 +100,7 @@ TEST_CASE("StaticJsonDocument") {
   }
 
   SECTION("Construct from DynamicJsonDocument") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     deserializeJson(doc2, "{\"hello\":\"world\"}");
     doc2.nestingLimit = 42;
 

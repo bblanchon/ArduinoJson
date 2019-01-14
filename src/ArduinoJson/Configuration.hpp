@@ -53,11 +53,6 @@
 #define ARDUINOJSON_DEFAULT_NESTING_LIMIT 10
 #endif
 
-// Default capacity for DynamicJsonDocument
-#ifndef ARDUINOJSON_DEFAULT_POOL_SIZE
-#define ARDUINOJSON_DEFAULT_POOL_SIZE 1024
-#endif
-
 #else  // ARDUINOJSON_EMBEDDED_MODE
 
 // On a computer we have plenty of memory so we can use doubles
@@ -87,11 +82,6 @@
 // On a computer, the stack is large so we can increase nesting limit
 #ifndef ARDUINOJSON_DEFAULT_NESTING_LIMIT
 #define ARDUINOJSON_DEFAULT_NESTING_LIMIT 50
-#endif
-
-// Default capacity for DynamicJsonDocument
-#ifndef ARDUINOJSON_DEFAULT_POOL_SIZE
-#define ARDUINOJSON_DEFAULT_POOL_SIZE 16384
 #endif
 
 #endif  // ARDUINOJSON_EMBEDDED_MODE

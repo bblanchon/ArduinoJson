@@ -14,7 +14,7 @@
 void setup() {
 #ifdef PROGMEM  // <- check that Flash strings are supported
 
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(1024);
 
   // You can use a Flash String as your JSON input.
   // WARNING: the content of the Flash String will be duplicated in the

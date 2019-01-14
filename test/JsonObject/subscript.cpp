@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::operator[]") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("int") {
@@ -52,7 +52,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("array") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonArray arr = doc2.to<JsonArray>();
 
     obj["hello"] = arr;
@@ -63,7 +63,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("object") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonObject obj2 = doc2.to<JsonObject>();
 
     obj["hello"] = obj2;
@@ -74,7 +74,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("array subscript") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonArray arr = doc2.to<JsonArray>();
     arr.add(42);
 
@@ -84,7 +84,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("object subscript") {
-    DynamicJsonDocument doc2;
+    DynamicJsonDocument doc2(4096);
     JsonObject obj2 = doc2.to<JsonObject>();
     obj2["x"] = 42;
 

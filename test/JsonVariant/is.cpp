@@ -19,7 +19,7 @@ void checkIsArray(TVariant var) {
 }
 
 void testArray(JsonArray value) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   JsonVariant var = doc.to<JsonVariant>();
   var.set(value);
@@ -44,7 +44,7 @@ void checkIsBool(TVariant var) {
 }
 
 void testBool(bool value) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
   var.set(value);
 
@@ -66,7 +66,7 @@ void checkIsFloat(TVariant var) {
 }
 
 void testFloat(double value) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
   var.set(value);
 
@@ -89,7 +89,7 @@ void checkIsInteger(TVariant var) {
 
 template <typename T>
 void testInteger(T value) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
   var.set(value);
 
@@ -112,7 +112,7 @@ void checkIsString(TVariant var) {
 }
 
 void testString(const char *value) {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
   var.set(value);
 
@@ -122,7 +122,7 @@ void testString(const char *value) {
 
 TEST_CASE("JsonVariant::is()") {
   SECTION("JsonArray") {
-    DynamicJsonDocument doc;
+    DynamicJsonDocument doc(4096);
     JsonArray array = doc.to<JsonArray>();
     testArray(array);
   }

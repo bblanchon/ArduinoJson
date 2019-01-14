@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("deserialize JSON array") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("An empty array") {
     DeserializationError err = deserializeJson(doc, "[]");

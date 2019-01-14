@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::get()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   deserializeJson(doc, "[1,2,3]");
   JsonArray array = doc.as<JsonArray>();
 

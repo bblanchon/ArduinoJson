@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::isNull()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("returns true") {
     JsonObject obj;
@@ -20,7 +20,7 @@ TEST_CASE("JsonObject::isNull()") {
 }
 
 TEST_CASE("JsonObjectConst::isNull()") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
 
   SECTION("returns true") {
     JsonObjectConst obj;

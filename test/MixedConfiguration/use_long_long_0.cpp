@@ -17,7 +17,7 @@ std::string get_expected_json<8>() {
 }
 
 TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 0") {
-  DynamicJsonDocument doc;
+  DynamicJsonDocument doc(4096);
   JsonObject root = doc.to<JsonObject>();
 
   root["A"] = 123456789123456789;

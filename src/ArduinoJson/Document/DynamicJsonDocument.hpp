@@ -12,7 +12,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class DynamicJsonDocument : public JsonDocument {
  public:
-  DynamicJsonDocument(size_t capa = ARDUINOJSON_DEFAULT_POOL_SIZE)
+  explicit DynamicJsonDocument(size_t capa)
       : JsonDocument(allocPool(addPadding(capa))) {}
 
   DynamicJsonDocument(const DynamicJsonDocument& src)
