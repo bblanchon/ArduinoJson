@@ -7,6 +7,8 @@ HEAD
 * Import functions in the ArduinoJson namespace to get clearer errors
 * Improved syntax highlighting in Arduino IDE
 * Removed default capacity of `DynamicJsonDocument`
+* `JsonArray::copyFrom()` accepts `JsonArrayConst`
+* `JsonVariant::set()` accepts `JsonArrayConst` and `JsonObjectConst`
 
 > ### BREAKING CHANGES
 > 

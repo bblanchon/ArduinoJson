@@ -96,7 +96,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>, public Visitable {
     return add().set(value);
   }
   // Adds the specified value at the end of the array.
-  FORCE_INLINE bool add(ArrayRef value) const {
+  FORCE_INLINE bool add(ArrayConstRef value) const {
     return add().set(value);
   }
   //
@@ -150,7 +150,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>, public Visitable {
   }
 
   // Copy a ArrayRef
-  FORCE_INLINE bool copyFrom(ArrayRef src) const {
+  FORCE_INLINE bool copyFrom(ArrayConstRef src) const {
     if (!_data || !src._data) return false;
     return _data->copyFrom(*src._data, _pool);
   }

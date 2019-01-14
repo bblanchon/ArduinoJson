@@ -64,11 +64,19 @@ inline bool VariantRef::set(ArrayRef array) const {
   return to<ArrayRef>().copyFrom(array);
 }
 
+inline bool VariantRef::set(ArrayConstRef array) const {
+  return to<ArrayRef>().copyFrom(array);
+}
+
 inline bool VariantRef::set(const ArraySubscript& value) const {
   return set(value.as<VariantRef>());
 }
 
 inline bool VariantRef::set(ObjectRef object) const {
+  return to<ObjectRef>().copyFrom(object);
+}
+
+inline bool VariantRef::set(ObjectConstRef object) const {
   return to<ObjectRef>().copyFrom(object);
 }
 
