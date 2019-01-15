@@ -9,6 +9,7 @@ HEAD
 * Removed default capacity of `DynamicJsonDocument`
 * `JsonArray::copyFrom()` accepts `JsonArrayConst`
 * `JsonVariant::set()` accepts `JsonArrayConst` and `JsonObjectConst`
+* `JsonDocument` was missing in the ArduinoJson namespace
 
 > ### BREAKING CHANGES
 > 

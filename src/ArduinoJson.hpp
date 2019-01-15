@@ -43,6 +43,7 @@ using ARDUINOJSON_NAMESPACE::DeserializationError;
 using ARDUINOJSON_NAMESPACE::deserializeJson;
 using ARDUINOJSON_NAMESPACE::deserializeMsgPack;
 using ARDUINOJSON_NAMESPACE::DynamicJsonDocument;
+using ARDUINOJSON_NAMESPACE::JsonDocument;
 using ARDUINOJSON_NAMESPACE::serialized;
 using ARDUINOJSON_NAMESPACE::serializeJson;
 using ARDUINOJSON_NAMESPACE::serializeJsonPretty;
