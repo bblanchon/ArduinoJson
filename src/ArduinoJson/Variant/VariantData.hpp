@@ -266,6 +266,20 @@ class VariantData {
     return _content.asCollection;
   }
 
+  size_t memoryUsage() const {
+    switch (type()) {
+      case VALUE_IS_OWNED_STRING:
+        return strlen(_content.asString) + 1;
+      case VALUE_IS_OWNED_RAW:
+        return _content.asRaw.size;
+      case VALUE_IS_OBJECT:
+      case VALUE_IS_ARRAY:
+        return _content.asCollection.memoryUsage();
+      default:
+        return 0;
+    }
+  }
+
   size_t size() const {
     if (type() == VALUE_IS_OBJECT || type() == VALUE_IS_ARRAY)
       return _content.asCollection.size();

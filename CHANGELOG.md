@@ -10,6 +10,7 @@ HEAD
 * `JsonArray::copyFrom()` accepts `JsonArrayConst`
 * `JsonVariant::set()` accepts `JsonArrayConst` and `JsonObjectConst`
 * `JsonDocument` was missing in the ArduinoJson namespace
+* Added `memoryUsage()` to `JsonArray`, `JsonObject`, and `JsonVariant`
 
 > ### BREAKING CHANGES
 > 

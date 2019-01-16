@@ -9,6 +9,7 @@ add_executable(JsonVariantTests
 	get.cpp
 	is.cpp
 	isnull.cpp
+	memoryUsage.cpp
 	misc.cpp
 	or.cpp
 	set.cpp

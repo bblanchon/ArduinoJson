@@ -95,6 +95,10 @@ class VariantRefBase {
     return variantIsNull(_data);
   }
 
+  FORCE_INLINE size_t memoryUsage() const {
+    return _data ? _data->memoryUsage() : 0;
+  }
+
   size_t size() const {
     return variantSize(_data);
   }

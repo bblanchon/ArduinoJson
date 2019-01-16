@@ -9,7 +9,7 @@ TEST_CASE("JsonArray::size()") {
   DynamicJsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
 
-  SECTION("InitialSizeIsZero") {
+  SECTION("returns 0 is empty") {
     REQUIRE(0U == array.size());
   }
 

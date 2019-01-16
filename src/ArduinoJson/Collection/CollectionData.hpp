@@ -55,6 +55,7 @@ class CollectionData {
 
   void remove(VariantSlot *slot);
 
+  size_t memoryUsage() const;
   size_t size() const;
 
  private:

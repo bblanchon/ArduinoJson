@@ -138,6 +138,15 @@ inline void CollectionData::remove(size_t index) {
   remove(getSlot(index));
 }
 
+inline size_t CollectionData::memoryUsage() const {
+  size_t total = 0;
+  for (VariantSlot* s = _head; s; s = s->next()) {
+    total += sizeof(VariantSlot) + s->data()->memoryUsage();
+    if (s->ownsKey()) total += strlen(s->key()) + 1;
+  }
+  return total;
+}
+
 inline size_t CollectionData::size() const {
   return slotSize(_head);
 }
