@@ -43,6 +43,10 @@ class JsonDocument : public Visitable {
     return _pool.size();
   }
 
+  size_t nesting() const {
+    return _data.nesting();
+  }
+
   size_t capacity() const {
     return _pool.capacity();
   }

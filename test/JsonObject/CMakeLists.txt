@@ -12,6 +12,7 @@ add_executable(JsonObjectTests
 	isNull.cpp
 	iterator.cpp
 	memoryUsage.cpp
+	nesting.cpp
 	remove.cpp
 	size.cpp
 	std_string.cpp

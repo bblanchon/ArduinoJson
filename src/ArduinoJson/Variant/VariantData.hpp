@@ -280,6 +280,16 @@ class VariantData {
     }
   }
 
+  size_t nesting() const {
+    switch (type()) {
+      case VALUE_IS_OBJECT:
+      case VALUE_IS_ARRAY:
+        return _content.asCollection.nesting();
+      default:
+        return 0;
+    }
+  }
+
   size_t size() const {
     if (type() == VALUE_IS_OBJECT || type() == VALUE_IS_ARRAY)
       return _content.asCollection.size();

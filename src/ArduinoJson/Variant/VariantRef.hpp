@@ -99,6 +99,10 @@ class VariantRefBase {
     return _data ? _data->memoryUsage() : 0;
   }
 
+  FORCE_INLINE size_t nesting() const {
+    return _data ? _data->nesting() : 0;
+  }
+
   size_t size() const {
     return variantSize(_data);
   }

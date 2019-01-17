@@ -11,6 +11,7 @@ HEAD
 * `JsonVariant::set()` accepts `JsonArrayConst` and `JsonObjectConst`
 * `JsonDocument` was missing in the ArduinoJson namespace
 * Added `memoryUsage()` to `JsonArray`, `JsonObject`, and `JsonVariant`
+* Added `nesting()` to `JsonArray`, `JsonDocument`, `JsonObject`, and `JsonVariant`
 
 > ### BREAKING CHANGES
 > 
