@@ -12,8 +12,6 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class JsonDocument : public Visitable {
  public:
-  uint8_t nestingLimit;
-
   template <typename Visitor>
   void accept(Visitor& visitor) const {
     return getVariant().accept(visitor);
@@ -67,14 +65,11 @@ class JsonDocument : public Visitable {
   }
 
  protected:
-  JsonDocument(MemoryPool pool)
-      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT), _pool(pool) {}
+  JsonDocument(MemoryPool pool) : _pool(pool) {}
 
-  JsonDocument(char* buf, size_t capa)
-      : nestingLimit(ARDUINOJSON_DEFAULT_NESTING_LIMIT), _pool(buf, capa) {}
+  JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {}
 
   void copy(const JsonDocument& src) {
-    nestingLimit = src.nestingLimit;
     to<VariantRef>().set(src.as<VariantRef>());
   }
 

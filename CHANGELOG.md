@@ -12,8 +12,12 @@ HEAD
 * `JsonDocument` was missing in the ArduinoJson namespace
 * Added `memoryUsage()` to `JsonArray`, `JsonObject`, and `JsonVariant`
 * Added `nesting()` to `JsonArray`, `JsonDocument`, `JsonObject`, and `JsonVariant`
+* Replaced `JsonDocument::nestingLimit` with an additional parameter
+  to `deserializeJson()` and `deserializeMsgPack()`
 
 > ### BREAKING CHANGES
+> 
+> #### `DynamicJsonDocument`'s constructor
 > 
 > The parameter to the constructor of `DynamicJsonDocument` is now mandatory
 >
@@ -27,6 +31,23 @@ HEAD
 >
 > ```c++
 > DynamicJsonDocument doc(1024);
+> ```
+> 
+> #### Nesting limit
+> 
+> `JsonDocument::nestingLimit` was replaced with a new parameter to `deserializeJson()` and `deserializeMsgPack()`.
+> 
+> Old code:
+> 
+> ```c++
+> doc.nestingLimit = 15;
+> deserializeJson(doc, input);
+> ```
+> 
+> New code: 
+> 
+> ```c++
+> deserializeJson(doc, input, DeserializationOption::NestingLimit(15));
 > ```
 
 v6.7.0-beta (2018-12-07)

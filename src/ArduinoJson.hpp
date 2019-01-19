@@ -49,4 +49,8 @@ using ARDUINOJSON_NAMESPACE::serializeJson;
 using ARDUINOJSON_NAMESPACE::serializeJsonPretty;
 using ARDUINOJSON_NAMESPACE::serializeMsgPack;
 using ARDUINOJSON_NAMESPACE::StaticJsonDocument;
+
+namespace DeserializationOption {
+using ARDUINOJSON_NAMESPACE::NestingLimit;
+}
 }  // namespace ArduinoJson

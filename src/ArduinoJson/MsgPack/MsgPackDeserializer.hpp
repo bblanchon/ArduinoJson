@@ -327,24 +327,30 @@ class MsgPackDeserializer {
 };
 
 template <typename TInput>
-DeserializationError deserializeMsgPack(JsonDocument &doc,
-                                        const TInput &input) {
-  return deserialize<MsgPackDeserializer>(doc, input);
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, const TInput &input,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit);
 }
 
 template <typename TInput>
-DeserializationError deserializeMsgPack(JsonDocument &doc, TInput *input) {
-  return deserialize<MsgPackDeserializer>(doc, input);
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TInput *input,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit);
 }
 
 template <typename TInput>
-DeserializationError deserializeMsgPack(JsonDocument &doc, TInput *input,
-                                        size_t inputSize) {
-  return deserialize<MsgPackDeserializer>(doc, input, inputSize);
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TInput *input, size_t inputSize,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit);
 }
 
 template <typename TInput>
-DeserializationError deserializeMsgPack(JsonDocument &doc, TInput &input) {
-  return deserialize<MsgPackDeserializer>(doc, input);
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TInput &input,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

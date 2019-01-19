@@ -78,7 +78,6 @@ TEST_CASE("DynamicJsonDocument copies") {
   SECTION("Copy constructor") {
     DynamicJsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
-    doc1.nestingLimit = 42;
 
     DynamicJsonDocument doc2 = doc1;
 
@@ -86,14 +85,12 @@ TEST_CASE("DynamicJsonDocument copies") {
     serializeJson(doc2, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
 
-    REQUIRE(doc2.nestingLimit == 42);
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
   SECTION("Copy assignment preserves the buffer when capacity is sufficient") {
     DynamicJsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
-    doc1.nestingLimit = 42;
 
     DynamicJsonDocument doc2(doc1.capacity());
     doc2 = doc1;
@@ -101,14 +98,12 @@ TEST_CASE("DynamicJsonDocument copies") {
     std::string json;
     serializeJson(doc2, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.nestingLimit == 42);
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
   SECTION("Copy assignment realloc the buffer when capacity is insufficient") {
     DynamicJsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
-    doc1.nestingLimit = 42;
     DynamicJsonDocument doc2(8);
 
     REQUIRE(doc2.capacity() < doc1.memoryUsage());
@@ -118,20 +113,17 @@ TEST_CASE("DynamicJsonDocument copies") {
     std::string json;
     serializeJson(doc2, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.nestingLimit == 42);
   }
 
   SECTION("Construct from StaticJsonDocument") {
     StaticJsonDocument<200> sdoc;
     deserializeJson(sdoc, "{\"hello\":\"world\"}");
-    sdoc.nestingLimit = 42;
 
     DynamicJsonDocument ddoc = sdoc;
 
     std::string json;
     serializeJson(ddoc, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(ddoc.nestingLimit == 42);
     REQUIRE(ddoc.capacity() == sdoc.capacity());
   }
 
@@ -141,13 +133,11 @@ TEST_CASE("DynamicJsonDocument copies") {
 
     StaticJsonDocument<200> sdoc;
     deserializeJson(sdoc, "{\"hello\":\"world\"}");
-    sdoc.nestingLimit = 42;
 
     ddoc = sdoc;
 
     std::string json;
     serializeJson(ddoc, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(ddoc.nestingLimit == 42);
   }
 }
