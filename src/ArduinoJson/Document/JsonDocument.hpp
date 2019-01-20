@@ -37,6 +37,10 @@ class JsonDocument : public Visitable {
     return getVariant().template is<T>();
   }
 
+  bool isNull() const {
+    return getVariant().isNull();
+  }
+
   size_t memoryUsage() const {
     return _pool.size();
   }
@@ -65,9 +69,13 @@ class JsonDocument : public Visitable {
   }
 
  protected:
-  JsonDocument(MemoryPool pool) : _pool(pool) {}
+  JsonDocument(MemoryPool pool) : _pool(pool) {
+    _data.setNull();
+  }
 
-  JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {}
+  JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {
+    _data.setNull();
+  }
 
   void copy(const JsonDocument& src) {
     to<VariantRef>().set(src.as<VariantRef>());

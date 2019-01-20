@@ -14,6 +14,8 @@ HEAD
 * Added `nesting()` to `JsonArray`, `JsonDocument`, `JsonObject`, and `JsonVariant`
 * Replaced `JsonDocument::nestingLimit` with an additional parameter
   to `deserializeJson()` and `deserializeMsgPack()`
+* Fixed uninitialized variant in `JsonDocument`
+* Added `JsonDocument::isNull()`
 
 > ### BREAKING CHANGES
 > 

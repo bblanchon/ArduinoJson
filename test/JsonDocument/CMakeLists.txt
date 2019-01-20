@@ -5,6 +5,7 @@
 add_executable(JsonDocumentTests
 	DynamicJsonDocument.cpp
 	nesting.cpp
+	isNull.cpp
 	StaticJsonDocument.cpp
 )
 
