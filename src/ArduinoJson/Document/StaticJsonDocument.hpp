@@ -16,13 +16,31 @@ class StaticJsonDocument : public JsonDocument {
  public:
   StaticJsonDocument() : JsonDocument(_buffer, ACTUAL_CAPACITY) {}
 
-  StaticJsonDocument(const JsonDocument& src)
+  StaticJsonDocument(const StaticJsonDocument& src)
       : JsonDocument(_buffer, ACTUAL_CAPACITY) {
-    copy(src);
+    set(src);
   }
 
-  StaticJsonDocument operator=(const JsonDocument& src) {
-    copy(src);
+  template <typename T>
+  StaticJsonDocument(const T& src,
+                     typename enable_if<IsVisitable<T>::value>::type* = 0)
+      : JsonDocument(_buffer, ACTUAL_CAPACITY) {
+    set(src);
+  }
+
+  // disambiguate
+  StaticJsonDocument(VariantRef src) : JsonDocument(_buffer, ACTUAL_CAPACITY) {
+    set(src);
+  }
+
+  StaticJsonDocument operator=(const StaticJsonDocument& src) {
+    set(src);
+    return *this;
+  }
+
+  template <typename T>
+  StaticJsonDocument operator=(const T& src) {
+    set(src);
     return *this;
   }
 

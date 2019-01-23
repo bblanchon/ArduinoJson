@@ -78,6 +78,14 @@ variantAs(const VariantData* _data) {
 }
 
 template <typename T>
+inline typename enable_if<is_same<ArrayConstRef, T>::value, T>::type variantAs(
+    const VariantData* _data);
+
+template <typename T>
+inline typename enable_if<is_same<ObjectConstRef, T>::value, T>::type variantAs(
+    const VariantData* _data);
+
+template <typename T>
 inline typename enable_if<is_same<VariantConstRef, T>::value, T>::type
 variantAs(const VariantData* _data);
 

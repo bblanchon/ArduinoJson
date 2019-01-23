@@ -67,10 +67,7 @@ class VariantData {
   }
 
   CollectionData *asArray() {
-    if (type() == VALUE_IS_ARRAY)
-      return &_content.asCollection;
-    else
-      return 0;
+    return type() == VALUE_IS_ARRAY ? &_content.asCollection : 0;
   }
 
   const CollectionData *asArray() const {
@@ -78,10 +75,7 @@ class VariantData {
   }
 
   CollectionData *asObject() {
-    if (type() == VALUE_IS_OBJECT)
-      return &_content.asCollection;
-    else
-      return 0;
+    return type() == VALUE_IS_OBJECT ? &_content.asCollection : 0;
   }
 
   const CollectionData *asObject() const {

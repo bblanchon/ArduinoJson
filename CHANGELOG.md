@@ -15,6 +15,9 @@ HEAD
 * Replaced `JsonDocument::nestingLimit` with an additional parameter
   to `deserializeJson()` and `deserializeMsgPack()`
 * Fixed uninitialized variant in `JsonDocument`
+* Fixed `StaticJsonDocument` copy constructor and copy assignment
+* The copy constructor of `DynamicJsonDocument` chooses the capacity according to the memory usage of the source, not from the capacity of the source.
+* Added the ability to create/assign a `StaticJsonDocument`/`DynamicJsonDocument` from a `JsonArray`/`JsonObject`/`JsonVariant`
 * Added `JsonDocument::isNull()`
 
 > ### BREAKING CHANGES

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../Memory/MemoryPool.hpp"
+#include "../Object/ObjectRef.hpp"
 #include "../Variant/VariantRef.hpp"
 #include "../Variant/VariantTo.hpp"
 
@@ -51,6 +52,16 @@ class JsonDocument : public Visitable {
 
   size_t capacity() const {
     return _pool.capacity();
+  }
+
+  bool set(const JsonDocument& src) {
+    return to<VariantRef>().set(src.as<VariantRef>());
+  }
+
+  template <typename T>
+  typename enable_if<!is_base_of<JsonDocument, T>::value, bool>::type set(
+      const T& src) {
+    return to<VariantRef>().set(src);
   }
 
   template <typename T>

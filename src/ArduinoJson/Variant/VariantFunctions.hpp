@@ -16,6 +16,10 @@ inline void variantAccept(const VariantData *var, Visitor &visitor) {
     visitor.visitNull();
 }
 
+inline const CollectionData *variantAsArray(const VariantData *var) {
+  return var != 0 ? var->asArray() : 0;
+}
+
 inline const CollectionData *variantAsObject(const VariantData *var) {
   return var != 0 ? var->asObject() : 0;
 }

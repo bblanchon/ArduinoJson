@@ -5,9 +5,22 @@
 #pragma once
 
 #include "../Serialization/DynamicStringWriter.hpp"
+#include "VariantFunctions.hpp"
 #include "VariantRef.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
+
+template <typename T>
+inline typename enable_if<is_same<ArrayConstRef, T>::value, T>::type variantAs(
+    const VariantData* _data) {
+  return ArrayConstRef(variantAsArray(_data));
+}
+
+template <typename T>
+inline typename enable_if<is_same<ObjectConstRef, T>::value, T>::type variantAs(
+    const VariantData* _data) {
+  return ObjectConstRef(variantAsObject(_data));
+}
 
 template <typename T>
 inline typename enable_if<is_same<VariantConstRef, T>::value, T>::type

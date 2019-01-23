@@ -5,6 +5,14 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ARDUINOJSON_NAMESPACE::addPadding;
+
+static void REQUIRE_JSON(JsonDocument& doc, const std::string& expected) {
+  std::string json;
+  serializeJson(doc, json);
+  REQUIRE(json == expected);
+}
+
 TEST_CASE("DynamicJsonDocument") {
   DynamicJsonDocument doc(4096);
 
@@ -74,20 +82,62 @@ TEST_CASE("DynamicJsonDocument") {
   }
 }
 
-TEST_CASE("DynamicJsonDocument copies") {
+TEST_CASE("DynamicJsonDocument constructor") {
   SECTION("Copy constructor") {
     DynamicJsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
 
     DynamicJsonDocument doc2 = doc1;
 
-    std::string json;
-    serializeJson(doc2, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
 
-    REQUIRE(doc2.capacity() == doc1.capacity());
+    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
   }
 
+  SECTION("Construct from StaticJsonDocument") {
+    StaticJsonDocument<200> doc1;
+    deserializeJson(doc1, "{\"hello\":\"world\"}");
+
+    DynamicJsonDocument doc2 = doc1;
+
+    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
+  }
+
+  SECTION("Construct from JsonObject") {
+    StaticJsonDocument<200> doc1;
+    JsonObject obj = doc1.to<JsonObject>();
+    obj["hello"] = "world";
+
+    DynamicJsonDocument doc2 = obj;
+
+    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
+  }
+
+  SECTION("Construct from JsonArray") {
+    StaticJsonDocument<200> doc1;
+    JsonArray arr = doc1.to<JsonArray>();
+    arr.add("hello");
+
+    DynamicJsonDocument doc2 = arr;
+
+    REQUIRE_JSON(doc2, "[\"hello\"]");
+    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
+  }
+
+  SECTION("Construct from JsonVariant") {
+    StaticJsonDocument<200> doc1;
+    deserializeJson(doc1, "42");
+
+    DynamicJsonDocument doc2 = doc1.as<JsonVariant>();
+
+    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
+  }
+}
+
+TEST_CASE("DynamicJsonDocument assignment") {
   SECTION("Copy assignment preserves the buffer when capacity is sufficient") {
     DynamicJsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
@@ -95,9 +145,7 @@ TEST_CASE("DynamicJsonDocument copies") {
     DynamicJsonDocument doc2(doc1.capacity());
     doc2 = doc1;
 
-    std::string json;
-    serializeJson(doc2, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
@@ -110,34 +158,52 @@ TEST_CASE("DynamicJsonDocument copies") {
     doc2 = doc1;
     REQUIRE(doc2.capacity() >= doc1.memoryUsage());
 
-    std::string json;
-    serializeJson(doc2, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
-  }
-
-  SECTION("Construct from StaticJsonDocument") {
-    StaticJsonDocument<200> sdoc;
-    deserializeJson(sdoc, "{\"hello\":\"world\"}");
-
-    DynamicJsonDocument ddoc = sdoc;
-
-    std::string json;
-    serializeJson(ddoc, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(ddoc.capacity() == sdoc.capacity());
+    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
   }
 
   SECTION("Assign from StaticJsonDocument") {
-    DynamicJsonDocument ddoc(4096);
-    ddoc.to<JsonVariant>().set(666);
+    StaticJsonDocument<200> doc1;
+    deserializeJson(doc1, "{\"hello\":\"world\"}");
+    DynamicJsonDocument doc2(4096);
+    doc2.to<JsonVariant>().set(666);
 
-    StaticJsonDocument<200> sdoc;
-    deserializeJson(sdoc, "{\"hello\":\"world\"}");
+    doc2 = doc1;
 
-    ddoc = sdoc;
+    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+  }
 
-    std::string json;
-    serializeJson(ddoc, json);
-    REQUIRE(json == "{\"hello\":\"world\"}");
+  SECTION("Assign from JsonObject") {
+    StaticJsonDocument<200> doc1;
+    JsonObject obj = doc1.to<JsonObject>();
+    obj["hello"] = "world";
+
+    DynamicJsonDocument doc2(4096);
+    doc2 = obj;
+
+    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.capacity() == 4096);
+  }
+
+  SECTION("Assign from JsonArray") {
+    StaticJsonDocument<200> doc1;
+    JsonArray arr = doc1.to<JsonArray>();
+    arr.add("hello");
+
+    DynamicJsonDocument doc2(4096);
+    doc2 = arr;
+
+    REQUIRE_JSON(doc2, "[\"hello\"]");
+    REQUIRE(doc2.capacity() == 4096);
+  }
+
+  SECTION("Assign from JsonVariant") {
+    StaticJsonDocument<200> doc1;
+    deserializeJson(doc1, "42");
+
+    DynamicJsonDocument doc2(4096);
+    doc2 = doc1.as<JsonVariant>();
+
+    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.capacity() == 4096);
   }
 }
