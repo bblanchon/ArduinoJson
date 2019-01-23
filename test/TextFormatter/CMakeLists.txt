@@ -8,4 +8,4 @@ add_executable(JsonWriterTests
 )
 
 target_link_libraries(JsonWriterTests catch)
-add_test(JsonWriter JsonWriterTests)
+add_test(TextFormatter JsonWriterTests)

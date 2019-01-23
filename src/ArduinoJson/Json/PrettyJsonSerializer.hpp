@@ -4,37 +4,68 @@
 
 #pragma once
 
+#include "../Configuration.hpp"
 #include "../Serialization/measure.hpp"
 #include "../Serialization/serialize.hpp"
-#include "./IndentedPrint.hpp"
-#include "./JsonSerializer.hpp"
-#include "./Prettyfier.hpp"
+#include "JsonSerializer.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TPrint>
-class PrettyJsonSerializer_Base {
- public:
-  PrettyJsonSerializer_Base(TPrint &output)
-      : _indentedPrint(output), _prettyfier(_indentedPrint) {}
+template <typename TWriter>
+class PrettyJsonSerializer : public JsonSerializer<TWriter> {
+  typedef JsonSerializer<TWriter> base;
 
- protected:
-  IndentedPrint<TPrint> _indentedPrint;
-  Prettyfier<TPrint> _prettyfier;
-};
-
-template <typename TPrint>
-class PrettyJsonSerializer : PrettyJsonSerializer_Base<TPrint>,
-                             public JsonSerializer<Prettyfier<TPrint> > {
  public:
-  PrettyJsonSerializer(TPrint &output)
-      : PrettyJsonSerializer_Base<TPrint>(output),
-        JsonSerializer<Prettyfier<TPrint> >(
-            PrettyJsonSerializer_Base<TPrint>::_prettyfier) {}
+  PrettyJsonSerializer(TWriter &writer) : base(writer), _nesting(0) {}
+
+  void visitArray(const CollectionData &array) {
+    VariantSlot *slot = array.head();
+    if (!slot) return base::write("[]");
+
+    base::write("[\r\n");
+    _nesting++;
+    while (slot != 0) {
+      indent();
+      slot->data()->accept(*this);
+
+      slot = slot->next();
+      base::write(slot ? ",\r\n" : "\r\n");
+    }
+    _nesting--;
+    indent();
+    base::write("]");
+  }
+
+  void visitObject(const CollectionData &object) {
+    VariantSlot *slot = object.head();
+    if (!slot) return base::write("{}");
+
+    base::write("{\r\n");
+    _nesting++;
+    while (slot != 0) {
+      indent();
+      base::visitString(slot->key());
+      base::write(": ");
+      slot->data()->accept(*this);
+
+      slot = slot->next();
+      base::write(slot ? ",\r\n" : "\r\n");
+    }
+    _nesting--;
+    indent();
+    base::write("}");
+  }
+
+ private:
+  void indent() {
+    for (uint8_t i = 0; i < _nesting; i++) base::write(ARDUINOJSON_TAB);
+  }
+
+  uint8_t _nesting;
 };
 
 template <typename TSource, typename TDestination>
-size_t serializeJsonPretty(TSource &source, TDestination &destination) {
+size_t serializeJsonPretty(const TSource &source, TDestination &destination) {
   return serialize<PrettyJsonSerializer>(source, destination);
 }
 

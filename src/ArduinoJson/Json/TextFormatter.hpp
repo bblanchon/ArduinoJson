@@ -14,34 +14,13 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TWriter>
-class JsonWriter {
+class TextFormatter {
  public:
-  explicit JsonWriter(TWriter &writer) : _writer(writer), _length(0) {}
+  explicit TextFormatter(TWriter &writer) : _writer(writer), _length(0) {}
 
   // Returns the number of bytes sent to the TWriter implementation.
   size_t bytesWritten() const {
     return _length;
-  }
-
-  void beginArray() {
-    writeRaw('[');
-  }
-  void endArray() {
-    writeRaw(']');
-  }
-
-  void beginObject() {
-    writeRaw('{');
-  }
-  void endObject() {
-    writeRaw('}');
-  }
-
-  void writeColon() {
-    writeRaw(':');
-  }
-  void writeComma() {
-    writeRaw(',');
   }
 
   void writeBoolean(bool value) {
@@ -84,22 +63,27 @@ class JsonWriter {
 
     FloatParts<T> parts(value);
 
-    writeInteger(parts.integral);
+    writePositiveInteger(parts.integral);
     if (parts.decimalPlaces) writeDecimals(parts.decimal, parts.decimalPlaces);
 
     if (parts.exponent < 0) {
       writeRaw("e-");
-      writeInteger(-parts.exponent);
+      writePositiveInteger(-parts.exponent);
     }
 
     if (parts.exponent > 0) {
       writeRaw('e');
-      writeInteger(parts.exponent);
+      writePositiveInteger(parts.exponent);
     }
   }
 
+  void writeNegativeInteger(UInt value) {
+    writeRaw('-');
+    writePositiveInteger(value);
+  }
+
   template <typename T>
-  void writeInteger(T value) {
+  void writePositiveInteger(T value) {
     char buffer[22];
     char *end = buffer + sizeof(buffer);
     char *begin = end;
@@ -134,10 +118,16 @@ class JsonWriter {
   void writeRaw(const char *s) {
     _length += _writer.write(reinterpret_cast<const uint8_t *>(s), strlen(s));
   }
+
+  void writeRaw(const char *s, size_t n) {
+    _length += _writer.write(reinterpret_cast<const uint8_t *>(s), n);
+  }
+
   void writeRaw(const char *begin, const char *end) {
     _length += _writer.write(reinterpret_cast<const uint8_t *>(begin),
                              static_cast<size_t>(end - begin));
   }
+
   template <size_t N>
   void writeRaw(const char (&s)[N]) {
     _length += _writer.write(reinterpret_cast<const uint8_t *>(s), N - 1);
@@ -151,6 +141,6 @@ class JsonWriter {
   size_t _length;
 
  private:
-  JsonWriter &operator=(const JsonWriter &);  // cannot be assigned
+  TextFormatter &operator=(const TextFormatter &);  // cannot be assigned
 };
 }  // namespace ARDUINOJSON_NAMESPACE

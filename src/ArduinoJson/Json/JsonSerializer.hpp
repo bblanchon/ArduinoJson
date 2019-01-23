@@ -7,21 +7,17 @@
 #include "../Misc/Visitable.hpp"
 #include "../Serialization/measure.hpp"
 #include "../Serialization/serialize.hpp"
-#include "JsonWriter.hpp"
+#include "TextFormatter.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TWriter>
 class JsonSerializer {
  public:
-  JsonSerializer(TWriter &writer) : _writer(writer) {}
+  JsonSerializer(TWriter &writer) : _formatter(writer) {}
 
-  void visitFloat(Float value) {
-    _writer.writeFloat(value);
-  }
-
-  void visitArray(const CollectionData &array) {
-    _writer.beginArray();
+  FORCE_INLINE void visitArray(const CollectionData &array) {
+    write('[');
 
     VariantSlot *slot = array.head();
 
@@ -31,63 +27,74 @@ class JsonSerializer {
       slot = slot->next();
       if (slot == 0) break;
 
-      _writer.writeComma();
+      write(',');
     }
 
-    _writer.endArray();
+    write(']');
   }
 
   void visitObject(const CollectionData &object) {
-    _writer.beginObject();
+    write('{');
 
     VariantSlot *slot = object.head();
 
     while (slot != 0) {
-      _writer.writeString(slot->key());
-      _writer.writeColon();
+      _formatter.writeString(slot->key());
+      write(':');
       slot->data()->accept(*this);
 
       slot = slot->next();
       if (slot == 0) break;
 
-      _writer.writeComma();
+      write(',');
     }
 
-    _writer.endObject();
+    write('}');
+  }
+
+  void visitFloat(Float value) {
+    _formatter.writeFloat(value);
   }
 
   void visitString(const char *value) {
-    _writer.writeString(value);
+    _formatter.writeString(value);
   }
 
   void visitRawJson(const char *data, size_t n) {
-    // TODO
-    for (size_t i = 0; i < n; i++) _writer.writeRaw(data[i]);
+    _formatter.writeRaw(data, n);
   }
 
   void visitNegativeInteger(UInt value) {
-    _writer.writeRaw('-');
-    _writer.writeInteger(value);
+    _formatter.writeNegativeInteger(value);
   }
 
   void visitPositiveInteger(UInt value) {
-    _writer.writeInteger(value);
+    _formatter.writePositiveInteger(value);
   }
 
   void visitBoolean(bool value) {
-    _writer.writeBoolean(value);
+    _formatter.writeBoolean(value);
   }
 
   void visitNull() {
-    _writer.writeRaw("null");
+    _formatter.writeRaw("null");
   }
 
   size_t bytesWritten() const {
-    return _writer.bytesWritten();
+    return _formatter.bytesWritten();
+  }
+
+ protected:
+  void write(char c) {
+    _formatter.writeRaw(c);
+  }
+
+  void write(const char *s) {
+    _formatter.writeRaw(s);
   }
 
  private:
-  JsonWriter<TWriter> _writer;
+  TextFormatter<TWriter> _formatter;
 };
 
 template <typename TSource, typename TDestination>

@@ -4,7 +4,7 @@
 
 #include <catch.hpp>
 
-#include <ArduinoJson/Json/JsonWriter.hpp>
+#include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/StaticStringWriter.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
@@ -12,13 +12,13 @@ using namespace ARDUINOJSON_NAMESPACE;
 void check(const char* input, std::string expected) {
   char output[1024];
   StaticStringWriter sb(output, sizeof(output));
-  JsonWriter<StaticStringWriter> writer(sb);
+  TextFormatter<StaticStringWriter> writer(sb);
   writer.writeString(input);
   REQUIRE(expected == output);
   REQUIRE(writer.bytesWritten() == expected.size());
 }
 
-TEST_CASE("JsonWriter::writeString()") {
+TEST_CASE("TextFormatter::writeString()") {
   SECTION("Null") {
     check(0, "null");
   }

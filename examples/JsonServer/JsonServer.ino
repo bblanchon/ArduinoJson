@@ -79,7 +79,7 @@ void loop() {
   }
 
   Serial.print(F("Sending: "));
-  serializeJson(root, Serial);
+  serializeJson(doc, Serial);
   Serial.println();
 
   // Write response headers
@@ -89,7 +89,7 @@ void loop() {
   client.println();
 
   // Write JSON document
-  serializeJsonPretty(root, client);
+  serializeJsonPretty(doc, client);
 
   // Disconnect
   client.stop();

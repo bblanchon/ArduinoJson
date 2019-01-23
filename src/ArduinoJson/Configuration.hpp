@@ -140,3 +140,7 @@
 #define ARDUINOJSON_LITTLE_ENDIAN 0
 #endif
 #endif
+
+#ifndef ARDUINOJSON_TAB
+#define ARDUINOJSON_TAB "  "
+#endif

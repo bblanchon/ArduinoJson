@@ -6,7 +6,7 @@
 #include <limits>
 #include <string>
 
-#include <ArduinoJson/Json/JsonWriter.hpp>
+#include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
@@ -15,13 +15,13 @@ template <typename TFloat>
 void check(TFloat input, const std::string& expected) {
   std::string output;
   DynamicStringWriter<std::string> sb(output);
-  JsonWriter<DynamicStringWriter<std::string> > writer(sb);
+  TextFormatter<DynamicStringWriter<std::string> > writer(sb);
   writer.writeFloat(input);
   REQUIRE(writer.bytesWritten() == output.size());
   CHECK(expected == output);
 }
 
-TEST_CASE("JsonWriter::writeFloat(double)") {
+TEST_CASE("TextFormatter::writeFloat(double)") {
   SECTION("Pi") {
     check<double>(3.14159265359, "3.141592654");
   }
@@ -102,7 +102,7 @@ TEST_CASE("JsonWriter::writeFloat(double)") {
   }
 }
 
-TEST_CASE("JsonWriter::writeFloat(float)") {
+TEST_CASE("TextFormatter::writeFloat(float)") {
   SECTION("Pi") {
     check<float>(3.14159265359f, "3.141593");
   }
