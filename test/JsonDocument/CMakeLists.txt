@@ -7,6 +7,7 @@ add_executable(JsonDocumentTests
 	nesting.cpp
 	isNull.cpp
 	StaticJsonDocument.cpp
+	subscript.cpp
 )
 
 target_link_libraries(JsonDocumentTests catch)

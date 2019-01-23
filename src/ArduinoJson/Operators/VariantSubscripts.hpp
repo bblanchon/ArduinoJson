@@ -31,17 +31,17 @@ class VariantSubscripts {
   //
   // ObjectSubscript operator[](TKey) const;
   // TKey = const std::string&, const String&
-  template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value,
-                                  ObjectSubscript<const TString &> >::type
-  operator[](const TString &key) const;
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey>::value,
+                                  ObjectSubscript<const TKey &> >::type
+  operator[](const TKey &key) const;
   //
   // ObjectSubscript operator[](TKey) const;
   // TKey = const char*, const char[N], const __FlashStringHelper*
-  template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString *>::value,
-                                  ObjectSubscript<TString *> >::type
-  operator[](TString *key) const;
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey *>::value,
+                                  ObjectSubscript<TKey *> >::type
+  operator[](TKey *key) const;
 
  private:
   const TImpl *impl() const {

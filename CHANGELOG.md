@@ -19,6 +19,7 @@ HEAD
 * The copy constructor of `DynamicJsonDocument` chooses the capacity according to the memory usage of the source, not from the capacity of the source.
 * Added the ability to create/assign a `StaticJsonDocument`/`DynamicJsonDocument` from a `JsonArray`/`JsonObject`/`JsonVariant`
 * Added `JsonDocument::isNull()`
+* Added `JsonDocument::operator[]`
 
 > ### BREAKING CHANGES
 > 

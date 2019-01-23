@@ -9,6 +9,8 @@
 #include "../Variant/VariantRef.hpp"
 #include "../Variant/VariantTo.hpp"
 
+#include "../Array/ArraySubscript.hpp"
+
 namespace ARDUINOJSON_NAMESPACE {
 
 class JsonDocument : public Visitable {
@@ -79,6 +81,48 @@ class JsonDocument : public Visitable {
     return _data;
   }
 
+  // ObjectSubscript operator[](TKey)
+  // TKey = const std::string&, const String&
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey>::value,
+                                  ObjectSubscript<const TKey&> >::type
+  operator[](const TKey& key) {
+    return getVariant()[key];
+  }
+
+  // ObjectSubscript operator[](TKey);
+  // TKey = const char*, const char[N], const __FlashStringHelper*
+  template <typename TKey>
+  FORCE_INLINE
+      typename enable_if<IsString<TKey*>::value, ObjectSubscript<TKey*> >::type
+      operator[](TKey* key) {
+    return getVariant()[key];
+  }
+
+  // VariantConstRef operator[](TKey) const
+  // TKey = const std::string&, const String&
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey>::value, VariantConstRef>::type
+  operator[](const TKey& key) const {
+    return getVariant()[key];
+  }
+
+  // VariantConstRef operator[](TKey) const;
+  // TKey = const char*, const char[N], const __FlashStringHelper*
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey*>::value, VariantConstRef>::type
+  operator[](TKey* key) const {
+    return getVariant()[key];
+  }
+
+  FORCE_INLINE ArraySubscript operator[](size_t index) {
+    return getVariant()[index];
+  }
+
+  FORCE_INLINE VariantConstRef operator[](size_t index) const {
+    return getVariant()[index];
+  }
+
  protected:
   JsonDocument(MemoryPool pool) : _pool(pool) {
     _data.setNull();
@@ -86,10 +130,6 @@ class JsonDocument : public Visitable {
 
   JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {
     _data.setNull();
-  }
-
-  void copy(const JsonDocument& src) {
-    to<VariantRef>().set(src.as<VariantRef>());
   }
 
   void replacePool(MemoryPool pool) {
