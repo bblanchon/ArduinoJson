@@ -7,7 +7,7 @@
 #include "VariantCasts.hpp"
 #include "VariantComparisons.hpp"
 #include "VariantOr.hpp"
-#include "VariantSubscripts.hpp"
+#include "VariantShortcuts.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -15,5 +15,5 @@ template <typename TImpl>
 class VariantOperators : public VariantCasts<TImpl>,
                          public VariantComparisons<TImpl>,
                          public VariantOr<TImpl>,
-                         public VariantSubscripts<TImpl> {};
+                         public VariantShortcuts<TImpl> {};
 }  // namespace ARDUINOJSON_NAMESPACE

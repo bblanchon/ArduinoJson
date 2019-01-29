@@ -50,7 +50,7 @@ inline T VariantData::asFloat() const {
   }
 }
 
-inline const char* VariantData::asString() const {
+inline const char *VariantData::asString() const {
   switch (type()) {
     case VALUE_IS_LINKED_STRING:
     case VALUE_IS_OWNED_STRING:
@@ -60,37 +60,11 @@ inline const char* VariantData::asString() const {
   }
 }
 
-inline bool VariantRef::set(ArrayRef array) const {
-  return to<ArrayRef>().copyFrom(array);
-}
-
-inline bool VariantRef::set(ArrayConstRef array) const {
-  return to<ArrayRef>().copyFrom(array);
-}
-
-inline bool VariantRef::set(const ArraySubscript& value) const {
-  return set(value.as<VariantRef>());
-}
-
-inline bool VariantRef::set(ObjectRef object) const {
-  return to<ObjectRef>().copyFrom(object);
-}
-
-inline bool VariantRef::set(ObjectConstRef object) const {
-  return to<ObjectRef>().copyFrom(object);
-}
-
-template <typename TString>
-inline bool VariantRef::set(const ObjectSubscript<TString>& value) const {
-  return set(value.template as<VariantRef>());
-}
-
-inline bool VariantRef::set(VariantConstRef value) const {
-  return variantCopyFrom(_data, value._data, _pool);
-}
-
-inline bool VariantRef::set(VariantRef value) const {
-  return variantCopyFrom(_data, value._data, _pool);
+template <typename TVariant>
+typename enable_if<IsVisitable<TVariant>::value, bool>::type VariantRef::set(
+    const TVariant &value) const {
+  VariantConstRef v = value;
+  return variantCopyFrom(_data, v._data, _pool);
 }
 
 template <typename T>
@@ -128,4 +102,32 @@ inline VariantConstRef VariantConstRef::operator[](size_t index) const {
   return ArrayConstRef(_data != 0 ? _data->asArray() : 0)[index];
 }
 
+inline VariantRef VariantRef::add() const {
+  return VariantRef(_pool, variantAdd(_data, _pool));
+}
+
+inline VariantRef VariantRef::get(size_t index) const {
+  return VariantRef(_pool, _data != 0 ? _data->get(index) : 0);
+}
+
+template <typename TKey>
+inline VariantRef VariantRef::get(TKey *key) const {
+  return VariantRef(_pool, _data != 0 ? _data->get(wrapString(key)) : 0);
+}
+
+template <typename TKey>
+inline typename enable_if<IsString<TKey>::value, VariantRef>::type
+VariantRef::get(const TKey &key) const {
+  return VariantRef(_pool, _data != 0 ? _data->get(wrapString(key)) : 0);
+}
+
+template <typename TKey>
+inline VariantRef VariantRef::getOrCreate(TKey *key) const {
+  return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
+}
+
+template <typename TKey>
+inline VariantRef VariantRef::getOrCreate(const TKey &key) const {
+  return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
+}
 }  // namespace ARDUINOJSON_NAMESPACE

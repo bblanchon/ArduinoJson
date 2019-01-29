@@ -23,6 +23,9 @@ namespace ARDUINOJSON_NAMESPACE {
 class ArrayRef;
 class ObjectRef;
 
+template <typename, typename>
+class MemberProxy;
+
 // Contains the methods shared by VariantRef and VariantConstRef
 template <typename TData>
 class VariantRefBase {
@@ -207,16 +210,15 @@ class VariantRef : public VariantRefBase<VariantData>,
     return variantSetLinkedString(_data, value);
   }
 
-  bool set(VariantConstRef value) const;
-  bool set(VariantRef value) const;
-
-  FORCE_INLINE bool set(ArrayRef array) const;
-  FORCE_INLINE bool set(ArrayConstRef array) const;
-  FORCE_INLINE bool set(const ArraySubscript &) const;
-  FORCE_INLINE bool set(ObjectRef object) const;
-  FORCE_INLINE bool set(ObjectConstRef object) const;
-  template <typename TString>
-  FORCE_INLINE bool set(const ObjectSubscript<TString> &) const;
+  // set(VariantRef)
+  // set(VariantConstRef)
+  // set(ArrayRef)
+  // set(ArrayConstRef)
+  // set(ObjectRef)
+  // set(ObjecConstRef)
+  template <typename TVariant>
+  typename enable_if<IsVisitable<TVariant>::value, bool>::type set(
+      const TVariant &value) const;
 
   // Get the variant as the specified type.
   //
@@ -277,6 +279,26 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename T>
   typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type to()
       const;
+
+  VariantRef add() const;
+  using ArrayShortcuts::add;
+
+  FORCE_INLINE VariantRef get(size_t) const;
+
+  template <typename TKey>
+  FORCE_INLINE VariantRef get(TKey *) const;
+
+  // get(const char*)
+  // get(const __FlashStringHelper*)
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey>::value, VariantRef>::type get(
+      const TKey &) const;
+
+  template <typename TKey>
+  FORCE_INLINE VariantRef getOrCreate(TKey *) const;
+
+  template <typename TKey>
+  FORCE_INLINE VariantRef getOrCreate(const TKey &) const;
 
  private:
   MemoryPool *_pool;

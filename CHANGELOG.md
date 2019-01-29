@@ -22,6 +22,12 @@ HEAD
 * Added `JsonDocument::operator[]`
 * Added `ARDUINOJSON_TAB` to configure the indentation character
 * Reduced the size of the pretty JSON serializer
+* Added `add()`, `createNestedArray()` and `createNestedObject()` to `JsonVariant`
+* `JsonVariant` automatically promotes to `JsonObject` or `JsonArray` on write.
+  Calling `JsonVariant::to<T>()` is not required anymore.
+* `JsonDocument` now support the same operations as `JsonVariant`.
+  Calling `JsonDocument::as<T>()` is not required anymore.
+* Fixed example `JsonHttpClient.ino`
 
 > ### BREAKING CHANGES
 > 

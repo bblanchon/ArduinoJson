@@ -37,7 +37,7 @@ TEST_CASE("operator<<(std::ostream)") {
     REQUIRE("{\"key\":\"value\"}" == os.str());
   }
 
-  SECTION("JsonObjectSubscript") {
+  SECTION("MemberProxy") {
     JsonObject object = doc.to<JsonObject>();
     object["key"] = "value";
 
@@ -55,7 +55,7 @@ TEST_CASE("operator<<(std::ostream)") {
     REQUIRE("[\"value\"]" == os.str());
   }
 
-  SECTION("JsonArraySubscript") {
+  SECTION("ElementProxy") {
     JsonArray array = doc.to<JsonArray>();
     array.add("value");
 

@@ -67,7 +67,7 @@ class VariantData {
   }
 
   CollectionData *asArray() {
-    return type() == VALUE_IS_ARRAY ? &_content.asCollection : 0;
+    return isArray() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asArray() const {
@@ -75,7 +75,7 @@ class VariantData {
   }
 
   CollectionData *asObject() {
-    return type() == VALUE_IS_OBJECT ? &_content.asCollection : 0;
+    return isObject() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asObject() const {
@@ -135,11 +135,15 @@ class VariantData {
   }
 
   bool isArray() const {
-    return type() == VALUE_IS_ARRAY;
+    return (_flags & VALUE_IS_ARRAY) != 0;
   }
 
   bool isBoolean() const {
     return type() == VALUE_IS_BOOLEAN;
+  }
+
+  bool isCollection() const {
+    return (_flags & COLLECTION_MASK) != 0;
   }
 
   bool isInteger() const {
@@ -153,12 +157,11 @@ class VariantData {
   }
 
   bool isString() const {
-    return (type() == VALUE_IS_LINKED_STRING ||
-            type() == VALUE_IS_OWNED_STRING);
+    return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
   }
 
   bool isObject() const {
-    return type() == VALUE_IS_OBJECT;
+    return (_flags & VALUE_IS_OBJECT) != 0;
   }
 
   bool isNull() const {
@@ -275,20 +278,35 @@ class VariantData {
   }
 
   size_t nesting() const {
-    switch (type()) {
-      case VALUE_IS_OBJECT:
-      case VALUE_IS_ARRAY:
-        return _content.asCollection.nesting();
-      default:
-        return 0;
-    }
+    return isCollection() ? _content.asCollection.nesting() : 0;
   }
 
   size_t size() const {
-    if (type() == VALUE_IS_OBJECT || type() == VALUE_IS_ARRAY)
-      return _content.asCollection.size();
-    else
-      return 0;
+    return isCollection() ? _content.asCollection.size() : 0;
+  }
+
+  VariantData *get(size_t index) const {
+    return isArray() ? _content.asCollection.get(index) : 0;
+  }
+
+  template <typename TKey>
+  VariantData *get(TKey key) const {
+    return isObject() ? _content.asCollection.get(key) : 0;
+  }
+
+  template <typename TKey>
+  VariantData *getOrCreate(TKey key, MemoryPool *pool) {
+    if (isNull()) toObject();
+    if (!isObject()) return 0;
+    VariantData *var = _content.asCollection.get(key);
+    if (var) return var;
+    return _content.asCollection.add(key, pool);
+  }
+
+  VariantData *add(MemoryPool *pool) {
+    if (isNull()) toArray();
+    if (!isArray()) return 0;
+    return _content.asCollection.add(pool);
   }
 
  private:

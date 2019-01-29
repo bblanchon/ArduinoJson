@@ -14,9 +14,9 @@ void setup() {
 
   // Allocate the JSON document
   //
-  // Inside the brackets, 200 is the size of the memory pool in bytes.
+  // Inside the brackets, 200 is the capacity of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
-  // Use arduinojson.org/assistant to compute the capacity.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<200> doc;
 
   // StaticJsonObject allocates memory on the stack, it can be
@@ -26,9 +26,12 @@ void setup() {
 
   // MessagePack input string.
   //
-  // It's better to use a char[] as shown here.
-  // If you use a const char* or a String, ArduinoJson will
-  // have to make a copy of the input in the JsonBuffer.
+  // Using a char[], as shown here, enables the "zero-copy" mode. This mode uses
+  // the minimal amount of memory because the JsonDocument stores pointers to
+  // the input buffer.
+  // If you use another type of input, ArduinoJson must copy the strings from
+  // the input to the JsonDocument, so you need to increase the capacity of the
+  // JsonDocument.
   uint8_t input[] = {131, 166, 115, 101, 110, 115, 111, 114, 163, 103, 112, 115,
                      164, 116, 105, 109, 101, 206, 80,  147, 50,  248, 164, 100,
                      97,  116, 97,  146, 203, 64,  72,  96,  199, 58,  188, 148,
@@ -40,31 +43,23 @@ void setup() {
   //   "data": [48.75608, 2.302038]
   // }
 
-  // doc of the object tree.
-  //
-  // It's a reference to the JsonObject, the actual bytes are inside the
-  // JsonBuffer with all the other nodes of the object tree.
-  // Memory is freed when jsonBuffer goes out of scope.
   DeserializationError error = deserializeMsgPack(doc, input);
 
-  // Test if parsing succeeds.
+  // Test if parsing succeeded.
   if (error) {
     Serial.print("deserializeMsgPack() failed: ");
     Serial.println(error.c_str());
     return;
   }
 
-  // Get the root object in the document
-  JsonObject root = doc.as<JsonObject>();
-
   // Fetch values.
   //
   // Most of the time, you can rely on the implicit casts.
-  // In other case, you can do root["time"].as<long>();
-  const char* sensor = root["sensor"];
-  long time = root["time"];
-  double latitude = root["data"][0];
-  double longitude = root["data"][1];
+  // In other case, you can do doc["time"].as<long>();
+  const char* sensor = doc["sensor"];
+  long time = doc["time"];
+  double latitude = doc["data"][0];
+  double longitude = doc["data"][1];
 
   // Print values.
   Serial.println(sensor);

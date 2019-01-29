@@ -9,11 +9,14 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline ArrayRef ArrayRef::createNestedArray() const {
-  return add().to<ArrayRef>();
+template <typename TArray>
+inline ArrayRef ArrayShortcuts<TArray>::createNestedArray() const {
+  return impl()->add().template to<ArrayRef>();
 }
 
-inline ObjectRef ArrayRef::createNestedObject() const {
-  return add().to<ObjectRef>();
+template <typename TArray>
+inline ObjectRef ArrayShortcuts<TArray>::createNestedObject() const {
+  return impl()->add().template to<ObjectRef>();
 }
+
 }  // namespace ARDUINOJSON_NAMESPACE

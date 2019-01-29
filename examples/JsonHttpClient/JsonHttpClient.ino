@@ -71,7 +71,7 @@ void setup() {
   }
 
   // Allocate the JSON document
-  // Use arduinojson.org/assistant to compute the capacity.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
   const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
   DynamicJsonDocument doc(capacity);
 
@@ -84,12 +84,11 @@ void setup() {
   }
 
   // Extract values
-  JsonObject root = doc.as<JsonObject>();
   Serial.println(F("Response:"));
-  Serial.println(root["sensor"].as<char*>());
-  Serial.println(root["time"].as<char*>());
-  Serial.println(root["data"][0].as<char*>());
-  Serial.println(root["data"][1].as<char*>());
+  Serial.println(doc["sensor"].as<char*>());
+  Serial.println(doc["time"].as<long>());
+  Serial.println(doc["data"][0].as<float>(), 6);
+  Serial.println(doc["data"][1].as<float>(), 6);
 
   // Disconnect
   client.stop();

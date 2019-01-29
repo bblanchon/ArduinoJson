@@ -9,7 +9,8 @@
 #include "../Variant/VariantRef.hpp"
 #include "../Variant/VariantTo.hpp"
 
-#include "../Array/ArraySubscript.hpp"
+#include "../Array/ElementProxy.hpp"
+#include "../Object/MemberProxy.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -81,22 +82,51 @@ class JsonDocument : public Visitable {
     return _data;
   }
 
-  // ObjectSubscript operator[](TKey)
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey>::value,
-                                  ObjectSubscript<const TKey&> >::type
-  operator[](const TKey& key) {
-    return getVariant()[key];
+  ArrayRef createNestedArray() {
+    return add().to<ArrayRef>();
   }
 
-  // ObjectSubscript operator[](TKey);
-  // TKey = const char*, const char[N], const __FlashStringHelper*
+  template <typename TKey>
+  ArrayRef createNestedArray(TKey* key) {
+    return getOrCreate(key).template to<ArrayRef>();
+  }
+
+  template <typename TKey>
+  ArrayRef createNestedArray(const TKey& key) {
+    return getOrCreate(key).template to<ArrayRef>();
+  }
+
+  ObjectRef createNestedObject() {
+    return add().to<ObjectRef>();
+  }
+
+  template <typename TKey>
+  ObjectRef createNestedObject(TKey* key) {
+    return getOrCreate(key).template to<ObjectRef>();
+  }
+
+  template <typename TKey>
+  ObjectRef createNestedObject(const TKey& key) {
+    return getOrCreate(key).template to<ObjectRef>();
+  }
+
+  // MemberProxy operator[](TKey)
+  // TKey = const std::string&, const String&
   template <typename TKey>
   FORCE_INLINE
-      typename enable_if<IsString<TKey*>::value, ObjectSubscript<TKey*> >::type
-      operator[](TKey* key) {
-    return getVariant()[key];
+      typename enable_if<IsString<TKey>::value,
+                         MemberProxy<JsonDocument&, const TKey&> >::type
+      operator[](const TKey& key) {
+    return MemberProxy<JsonDocument&, const TKey&>(*this, key);
+  }
+
+  // MemberProxy operator[](TKey);
+  // TKey = const char*, const char[N], const __FlashStringHelper*
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey*>::value,
+                                  MemberProxy<JsonDocument&, TKey*> >::type
+  operator[](TKey* key) {
+    return MemberProxy<JsonDocument&, TKey*>(*this, key);
   }
 
   // VariantConstRef operator[](TKey) const
@@ -115,12 +145,56 @@ class JsonDocument : public Visitable {
     return getVariant()[key];
   }
 
-  FORCE_INLINE ArraySubscript operator[](size_t index) {
-    return getVariant()[index];
+  FORCE_INLINE ElementProxy<JsonDocument&> operator[](size_t index) {
+    return ElementProxy<JsonDocument&>(*this, index);
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return getVariant()[index];
+    return VariantConstRef(_data.get(index));
+  }
+
+  FORCE_INLINE VariantRef get(size_t index) {
+    return VariantRef(&_pool, _data.get(index));
+  }
+
+  template <typename TKey>
+  FORCE_INLINE VariantRef get(TKey* key) {
+    return VariantRef(&_pool, _data.get(wrapString(key)));
+  }
+
+  template <typename TKey>
+  FORCE_INLINE typename enable_if<IsString<TKey>::value, VariantRef>::type get(
+      const TKey& key) {
+    return VariantRef(&_pool, _data.get(wrapString(key)));
+  }
+
+  template <typename TKey>
+  FORCE_INLINE VariantRef getOrCreate(TKey* key) {
+    return VariantRef(&_pool, _data.getOrCreate(wrapString(key), &_pool));
+  }
+
+  template <typename TKey>
+  FORCE_INLINE VariantRef getOrCreate(const TKey& key) {
+    return VariantRef(&_pool, _data.getOrCreate(wrapString(key), &_pool));
+  }
+
+  FORCE_INLINE VariantRef add() {
+    return VariantRef(&_pool, _data.add(&_pool));
+  }
+  //
+  // bool add(TValue);
+  // TValue = bool, long, int, short, float, double, serialized, VariantRef,
+  //          std::string, String, ObjectRef
+  template <typename T>
+  FORCE_INLINE bool add(const T& value) {
+    return add().set(value);
+  }
+  //
+  // bool add(TValue);
+  // TValue = char*, const char*, const __FlashStringHelper*
+  template <typename T>
+  FORCE_INLINE bool add(T* value) {
+    return add().set(value);
   }
 
  protected:

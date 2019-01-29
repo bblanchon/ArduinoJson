@@ -17,6 +17,10 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TData>
 class ObjectRefBase {
  public:
+  operator VariantConstRef() const {
+    return VariantConstRef(reinterpret_cast<const VariantData*>(_data));
+  }
+
   template <typename Visitor>
   FORCE_INLINE void accept(Visitor& visitor) const {
     objectAccept(_data, visitor);
@@ -127,7 +131,9 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   }
 };
 
-class ObjectRef : public ObjectRefBase<CollectionData>, public Visitable {
+class ObjectRef : public ObjectRefBase<CollectionData>,
+                  public ObjectShortcuts<ObjectRef>,
+                  public Visitable {
   typedef ObjectRefBase<CollectionData> base_type;
 
  public:
@@ -164,68 +170,30 @@ class ObjectRef : public ObjectRefBase<CollectionData>, public Visitable {
     return _data->copyFrom(*src._data, _pool);
   }
 
-  // Creates and adds a ArrayRef.
-  //
-  // ArrayRef createNestedArray(TKey);
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE ArrayRef createNestedArray(const TKey& key) const;
-  // ArrayRef createNestedArray(TKey);
-  // TKey = char*, const char*, char[], const char[], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE ArrayRef createNestedArray(TKey* key) const;
-
-  // Creates and adds a ObjectRef.
-  //
-  // ObjectRef createNestedObject(TKey);
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE ObjectRef createNestedObject(const TKey& key) const {
-    return set(key).template to<ObjectRef>();
-  }
-  //
-  // ObjectRef createNestedObject(TKey);
-  // TKey = char*, const char*, char[], const char[], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE ObjectRef createNestedObject(TKey* key) const {
-    return set(key).template to<ObjectRef>();
-  }
-
   // Gets the value associated with the specified key.
   //
-  // TValue get<TValue>(TKey) const;
+  // VariantRef get<TValue>(TKey) const;
   // TKey = const std::string&, const String&
-  // TValue = bool, char, long, int, short, float, double,
-  //          std::string, String, ArrayRef, ObjectRef
   template <typename TKey>
   FORCE_INLINE VariantRef get(const TKey& key) const {
     return get_impl(wrapString(key));
   }
   //
-  // TValue get<TValue>(TKey) const;
+  // VariantRef get<TValue>(TKey) const;
   // TKey = char*, const char*, const __FlashStringHelper*
-  // TValue = bool, char, long, int, short, float, double,
-  //          std::string, String, ArrayRef, ObjectRef
   template <typename TKey>
   FORCE_INLINE VariantRef get(TKey* key) const {
     return get_impl(wrapString(key));
   }
 
-  // Gets or sets the value associated with the specified key.
-  //
-  // ObjectSubscript operator[](TKey)
-  // TKey = const std::string&, const String&
   template <typename TKey>
-  FORCE_INLINE ObjectSubscript<const TKey&> operator[](const TKey& key) const {
-    return ObjectSubscript<const TKey&>(*this, key);
+  FORCE_INLINE VariantRef getOrCreate(TKey* key) const {
+    return getOrCreate_impl(wrapString(key));
   }
-  //
-  // ObjectSubscript operator[](TKey)
-  // TKey = char*, const char*, char[], const char[N], const
-  // __FlashStringHelper*
+
   template <typename TKey>
-  FORCE_INLINE ObjectSubscript<TKey*> operator[](TKey* key) const {
-    return ObjectSubscript<TKey*>(*this, key);
+  FORCE_INLINE VariantRef getOrCreate(const TKey& key) const {
+    return getOrCreate_impl(wrapString(key));
   }
 
   FORCE_INLINE bool operator==(ObjectRef rhs) const {
@@ -253,16 +221,6 @@ class ObjectRef : public ObjectRefBase<CollectionData>, public Visitable {
     objectRemove(_data, wrapString(key));
   }
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef set(TKey* key) const {
-    return set_impl(wrapString(key));
-  }
-
-  template <typename TKey>
-  FORCE_INLINE VariantRef set(const TKey& key) const {
-    return set_impl(wrapString(key));
-  }
-
  private:
   template <typename TKey>
   FORCE_INLINE VariantRef get_impl(TKey key) const {
@@ -270,8 +228,8 @@ class ObjectRef : public ObjectRefBase<CollectionData>, public Visitable {
   }
 
   template <typename TKey>
-  FORCE_INLINE VariantRef set_impl(TKey key) const {
-    return VariantRef(_pool, objectSet(_data, key, _pool));
+  FORCE_INLINE VariantRef getOrCreate_impl(TKey key) const {
+    return VariantRef(_pool, objectGetOrCreate(_data, key, _pool));
   }
 
   MemoryPool* _pool;

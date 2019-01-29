@@ -15,21 +15,21 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TStringRef>
-class ObjectSubscript : public VariantOperators<ObjectSubscript<TStringRef> >,
-                        public Visitable {
-  typedef ObjectSubscript<TStringRef> this_type;
+template <typename TObject, typename TString>
+class MemberProxy : public VariantOperators<MemberProxy<TObject, TString> >,
+                    public Visitable {
+  typedef MemberProxy<TObject, TString> this_type;
 
  public:
-  FORCE_INLINE ObjectSubscript(ObjectRef object, TStringRef key)
-      : _object(object), _key(key) {}
+  FORCE_INLINE MemberProxy(TObject variant, TString key)
+      : _object(variant), _key(key) {}
 
-  operator VariantConstRef() const {
-    return get_impl();
+  FORCE_INLINE operator VariantConstRef() const {
+    return getMember();
   }
 
   FORCE_INLINE this_type &operator=(const this_type &src) {
-    set_impl().set(src);
+    getOrCreateMember().set(src);
     return *this;
   }
 
@@ -41,7 +41,7 @@ class ObjectSubscript : public VariantOperators<ObjectSubscript<TStringRef> >,
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, this_type &>::type
   operator=(const TValue &src) {
-    set_impl().set(src);
+    getOrCreateMember().set(src);
     return *this;
   }
   //
@@ -49,27 +49,27 @@ class ObjectSubscript : public VariantOperators<ObjectSubscript<TStringRef> >,
   // TValue = char*, const char*, const __FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE this_type &operator=(TValue *src) {
-    set_impl().set(src);
+    getOrCreateMember().set(src);
     return *this;
   }
 
   FORCE_INLINE bool isNull() const {
-    return get_impl().isNull();
+    return getMember().isNull();
   }
 
   template <typename TValue>
   FORCE_INLINE typename VariantAs<TValue>::type as() const {
-    return get_impl().template as<TValue>();
+    return getMember().template as<TValue>();
   }
 
   template <typename TValue>
   FORCE_INLINE bool is() const {
-    return get_impl().template is<TValue>();
+    return getMember().template is<TValue>();
   }
 
   template <typename TValue>
   FORCE_INLINE typename VariantTo<TValue>::type to() {
-    return set_impl().template to<TValue>();
+    return getOrCreateMember().template to<TValue>();
   }
 
   // Sets the specified value.
@@ -81,48 +81,73 @@ class ObjectSubscript : public VariantOperators<ObjectSubscript<TStringRef> >,
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, bool>::type set(
       const TValue &value) {
-    return set_impl().set(value);
+    return getOrCreateMember().set(value);
   }
   //
   // bool set(TValue);
   // TValue = char*, const char, const __FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE bool set(const TValue *value) {
-    return set_impl().set(value);
+    return getOrCreateMember().set(value);
   }
 
   template <typename Visitor>
   void accept(Visitor &visitor) const {
-    return get_impl().accept(visitor);
+    return getMember().accept(visitor);
+  }
+
+  using ArrayShortcuts<MemberProxy>::add;
+  FORCE_INLINE VariantRef add() const {
+    return getOrCreateMember().add();
+  }
+
+  template <typename TNestedKey>
+  FORCE_INLINE VariantRef get(TNestedKey *key) const {
+    return getMember().get(key);
+  }
+
+  template <typename TNestedKey>
+  FORCE_INLINE VariantRef get(const TNestedKey &key) const {
+    return getMember().get(key);
+  }
+
+  template <typename TNestedKey>
+  FORCE_INLINE VariantRef getOrCreate(TNestedKey *key) const {
+    return getOrCreateMember().getOrCreate(key);
+  }
+
+  template <typename TNestedKey>
+  FORCE_INLINE VariantRef getOrCreate(const TNestedKey &key) const {
+    return getOrCreateMember().getOrCreate(key);
   }
 
  private:
-  FORCE_INLINE VariantRef get_impl() const {
+  FORCE_INLINE VariantRef getMember() const {
     return _object.get(_key);
   }
 
-  FORCE_INLINE VariantRef set_impl() const {
-    return _object.set(_key);
+  FORCE_INLINE VariantRef getOrCreateMember() const {
+    return _object.getOrCreate(_key);
   }
 
-  ObjectRef _object;
-  TStringRef _key;
+  TObject _object;
+  TString _key;
 };
 
-template <typename TImpl>
+template <typename TObject>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value,
-                          ObjectSubscript<const TString &> >::type
-    VariantSubscripts<TImpl>::operator[](const TString &key) const {
-  return impl()->template as<ObjectRef>()[key];
+                          MemberProxy<const TObject &, const TString &> >::type
+    ObjectShortcuts<TObject>::operator[](const TString &key) const {
+  return MemberProxy<const TObject &, const TString &>(*impl(), key);
 }
 
-template <typename TImpl>
+template <typename TObject>
 template <typename TString>
 inline typename enable_if<IsString<TString *>::value,
-                          ObjectSubscript<TString *> >::type
-    VariantSubscripts<TImpl>::operator[](TString *key) const {
-  return impl()->template as<ObjectRef>()[key];
+                          MemberProxy<const TObject &, TString *> >::type
+    ObjectShortcuts<TObject>::operator[](TString *key) const {
+  return MemberProxy<const TObject &, TString *>(*impl(), key);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

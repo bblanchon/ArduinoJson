@@ -21,6 +21,11 @@ TEST_CASE("JsonDocument::operator[]") {
       REQUIRE(doc[std::string("hello")] == "world");
       REQUIRE(cdoc[std::string("hello")] == "world");
     }
+
+    SECTION("supports operator|") {
+      REQUIRE((doc["hello"] | "nope") == std::string("world"));
+      REQUIRE((doc["world"] | "nope") == std::string("nope"));
+    }
   }
 
   SECTION("array") {
@@ -29,4 +34,12 @@ TEST_CASE("JsonDocument::operator[]") {
     REQUIRE(doc[1] == "world");
     REQUIRE(cdoc[1] == "world");
   }
+}
+
+TEST_CASE("JsonDocument automatically promotes to object") {
+  DynamicJsonDocument doc(4096);
+
+  doc["one"]["two"]["three"] = 4;
+
+  REQUIRE(doc["one"]["two"]["three"] == 4);
 }

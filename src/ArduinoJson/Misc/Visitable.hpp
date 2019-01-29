@@ -15,4 +15,7 @@ struct Visitable {
 
 template <typename T>
 struct IsVisitable : is_base_of<Visitable, T> {};
+
+template <typename T>
+struct IsVisitable<T&> : IsVisitable<T> {};
 }  // namespace ARDUINOJSON_NAMESPACE

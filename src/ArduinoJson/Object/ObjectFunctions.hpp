@@ -40,7 +40,8 @@ void objectRemove(CollectionData *obj, TKey key) {
 }
 
 template <typename TKey>
-inline VariantData *objectSet(CollectionData *obj, TKey key, MemoryPool *pool) {
+inline VariantData *objectGetOrCreate(CollectionData *obj, TKey key,
+                                      MemoryPool *pool) {
   if (!obj) return 0;
 
   // ignore null key

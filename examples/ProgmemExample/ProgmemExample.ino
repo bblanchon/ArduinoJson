@@ -6,7 +6,7 @@
 // ArduinoJson.
 //
 // Use Flash strings sparingly, because ArduinoJson duplicates them in the
-// JsonBuffer. Prefer plain old char*, as they are more efficient in term of
+// JsonDocument. Prefer plain old char*, as they are more efficient in term of
 // code size, speed, and memory usage.
 
 #include <ArduinoJson.h>
@@ -17,8 +17,7 @@ void setup() {
   DynamicJsonDocument doc(1024);
 
   // You can use a Flash String as your JSON input.
-  // WARNING: the content of the Flash String will be duplicated in the
-  // JsonBuffer.
+  // WARNING: the string in the input  will be duplicated in the JsonDocument.
   deserializeJson(doc, F("{\"sensor\":\"gps\",\"time\":1351824120,"
                          "\"data\":[48.756080,2.302038]}"));
   JsonObject obj = doc.as<JsonObject>();
@@ -29,12 +28,12 @@ void setup() {
 
   // You can use a Flash String to set an element of a JsonObject
   // WARNING: the content of the Flash String will be duplicated in the
-  // JsonBuffer.
+  // JsonDocument.
   obj[F("time")] = time;
 
   // You can set a Flash String to a JsonObject or JsonArray:
   // WARNING: the content of the Flash String will be duplicated in the
-  // JsonBuffer.
+  // JsonDocument.
   obj["sensor"] = F("gps");
 
   // It works with serialized() too:

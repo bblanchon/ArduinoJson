@@ -16,11 +16,16 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 class ObjectRef;
-class ArraySubscript;
+template <typename>
+class ElementProxy;
 
 template <typename TData>
 class ArrayRefBase {
  public:
+  operator VariantConstRef() const {
+    return VariantConstRef(reinterpret_cast<const VariantData*>(_data));
+  }
+
   template <typename Visitor>
   FORCE_INLINE void accept(Visitor& visitor) const {
     arrayAccept(_data, visitor);
@@ -28,10 +33,6 @@ class ArrayRefBase {
 
   FORCE_INLINE bool isNull() const {
     return _data == 0;
-  }
-
-  FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return VariantConstRef(_data ? _data->get(index) : 0);
   }
 
   FORCE_INLINE size_t memoryUsage() const {
@@ -74,9 +75,15 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
   FORCE_INLINE bool operator==(ArrayConstRef rhs) const {
     return arrayEquals(_data, rhs._data);
   }
+
+  FORCE_INLINE VariantConstRef operator[](size_t index) const {
+    return VariantConstRef(_data ? _data->get(index) : 0);
+  }
 };
 
-class ArrayRef : public ArrayRefBase<CollectionData>, public Visitable {
+class ArrayRef : public ArrayRefBase<CollectionData>,
+                 public ArrayShortcuts<ArrayRef>,
+                 public Visitable {
   typedef ArrayRefBase<CollectionData> base_type;
 
  public:
@@ -94,27 +101,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>, public Visitable {
     return ArrayConstRef(_data);
   }
 
-  // Adds the specified value at the end of the array.
-  //
-  // bool add(TValue);
-  // TValue = bool, long, int, short, float, double, serialized, VariantRef,
-  //          std::string, String, ObjectRef
-  template <typename T>
-  FORCE_INLINE bool add(const T& value) const {
-    return add().set(value);
-  }
-  // Adds the specified value at the end of the array.
-  FORCE_INLINE bool add(ArrayConstRef value) const {
-    return add().set(value);
-  }
-  //
-  // bool add(TValue);
-  // TValue = char*, const char*, const __FlashStringHelper*
-  template <typename T>
-  FORCE_INLINE bool add(T* value) const {
-    return add().set(value);
-  }
-
+  using ArrayShortcuts::add;
   VariantRef add() const {
     return VariantRef(_pool, arrayAdd(_data, _pool));
   }
@@ -186,11 +173,6 @@ class ArrayRef : public ArrayRefBase<CollectionData>, public Visitable {
       it->as<ArrayRef>().copyTo(array[i++]);
     }
   }
-
-  FORCE_INLINE ArrayRef createNestedArray() const;
-  FORCE_INLINE ObjectRef createNestedObject() const;
-
-  FORCE_INLINE ArraySubscript operator[](size_t index) const;
 
   FORCE_INLINE bool operator==(ArrayRef rhs) const {
     return arrayEquals(_data, rhs._data);

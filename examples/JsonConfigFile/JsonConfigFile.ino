@@ -15,7 +15,11 @@
 #include <SD.h>
 #include <SPI.h>
 
-// Configuration that we'll store on disk
+// Our configuration structure.
+//
+// Never use a JsonDocument to store the configuration!
+// A JsonDocument is *not* a permanent storage; it's only a temporary storage
+// used during the serialization phase.
 struct Config {
   char hostname[64];
   int port;
@@ -29,9 +33,9 @@ void loadConfiguration(const char *filename, Config &config) {
   // Open file for reading
   File file = SD.open(filename);
 
-  // Allocate the document on the stack.
+  // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/assistant to compute the capacity.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<512> doc;
 
   // Deserialize the JSON document
@@ -39,16 +43,13 @@ void loadConfiguration(const char *filename, Config &config) {
   if (error)
     Serial.println(F("Failed to read file, using default configuration"));
 
-  // Get the root object in the document
-  JsonObject root = doc.as<JsonObject>();
+  // Copy values from the JsonDocument to the Config
+  config.port = doc["port"] | 2731;
+  strlcpy(config.hostname,                  // <- destination
+          doc["hostname"] | "example.com",  // <- source
+          sizeof(config.hostname));         // <- destination's capacity
 
-  // Copy values from the JsonObject to the Config
-  config.port = root["port"] | 2731;
-  strlcpy(config.hostname,                   // <- destination
-          root["hostname"] | "example.com",  // <- source
-          sizeof(config.hostname));          // <- destination's capacity
-
-  // Close the file (File's destructor doesn't close the file)
+  // Close the file (Curiously, File's destructor doesn't close the file)
   file.close();
 }
 
@@ -64,24 +65,21 @@ void saveConfiguration(const char *filename, const Config &config) {
     return;
   }
 
-  // Allocate the document on the stack.
+  // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
   StaticJsonDocument<256> doc;
 
-  // Make our document contain an object
-  JsonObject root = doc.to<JsonObject>();
-
-  // Set the values in the object
-  root["hostname"] = config.hostname;
-  root["port"] = config.port;
+  // Set the values in the document
+  doc["hostname"] = config.hostname;
+  doc["port"] = config.port;
 
   // Serialize JSON to file
   if (serializeJson(doc, file) == 0) {
     Serial.println(F("Failed to write to file"));
   }
 
-  // Close the file (File's destructor doesn't close the file)
+  // Close the file
   file.close();
 }
 
@@ -100,7 +98,7 @@ void printFile(const char *filename) {
   }
   Serial.println();
 
-  // Close the file (File's destructor doesn't close the file)
+  // Close the file
   file.close();
 }
 

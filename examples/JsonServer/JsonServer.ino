@@ -2,15 +2,15 @@
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
 //
-// This example shows how to implement an HTTP server that sends JSON document
-// in the responses.
+// This example shows how to implement an HTTP server that sends a JSON document
+// in the response.
 // It uses the Ethernet library but can be easily adapted for Wifi.
 //
-// It sends the value of the analog and digital pins.
-// The JSON document looks like the following:
+// The JSON document contains the values of the analog and digital pins.
+// It looks like that:
 // {
-//   "analog": [ 0, 1, 2, 3, 4, 5 ],
-//   "digital": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+//   "analog": [0, 76, 123, 158, 192, 205],
+//   "digital": [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]
 // }
 
 #include <ArduinoJson.h>
@@ -51,15 +51,12 @@ void loop() {
   // Read the request (we ignore the content in this example)
   while (client.available()) client.read();
 
-  // Allocate the JSON document
-  // Use arduinojson.org/assistant to compute the capacity.
+  // Allocate a temporary JsonDocument
+  // Use arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<500> doc;
 
-  // Make our document represent an object
-  JsonObject root = doc.to<JsonObject>();
-
   // Create the "analog" array
-  JsonArray analogValues = root.createNestedArray("analog");
+  JsonArray analogValues = doc.createNestedArray("analog");
   for (int pin = 0; pin < 6; pin++) {
     // Read the analog input
     int value = analogRead(pin);
@@ -69,7 +66,7 @@ void loop() {
   }
 
   // Create the "digital" array
-  JsonArray digitalValues = root.createNestedArray("digital");
+  JsonArray digitalValues = doc.createNestedArray("digital");
   for (int pin = 0; pin < 14; pin++) {
     // Read the digital input
     int value = digitalRead(pin);
@@ -83,9 +80,11 @@ void loop() {
   Serial.println();
 
   // Write response headers
-  client.println("HTTP/1.0 200 OK");
-  client.println("Content-Type: application/json");
-  client.println("Connection: close");
+  client.println(F("HTTP/1.0 200 OK"));
+  client.println(F("Content-Type: application/json"));
+  client.println(F("Connection: close"));
+  client.print(F("Content-Length: "));
+  client.println(measureJsonPretty(doc));
   client.println();
 
   // Write JSON document

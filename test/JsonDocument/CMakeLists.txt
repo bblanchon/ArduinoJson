@@ -3,9 +3,11 @@
 # MIT License
 
 add_executable(JsonDocumentTests
+	add.cpp
+	createNested.cpp
 	DynamicJsonDocument.cpp
-	nesting.cpp
 	isNull.cpp
+	nesting.cpp
 	StaticJsonDocument.cpp
 	subscript.cpp
 )

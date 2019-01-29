@@ -12,7 +12,7 @@ void check(T value, const std::string &expected) {
   REQUIRE(expected.size() == returnValue);
 }
 
-TEST_CASE("serializeMsgPack(JsonObjectSubscript)") {
+TEST_CASE("serializeMsgPack(MemberProxy)") {
   DynamicJsonDocument doc(4096);
   deserializeJson(doc, "{\"hello\":42}");
   JsonObject obj = doc.as<JsonObject>();
@@ -23,7 +23,7 @@ TEST_CASE("serializeMsgPack(JsonObjectSubscript)") {
   REQUIRE(result == "*");
 }
 
-TEST_CASE("serializeMsgPack(JsonArraySubscript)") {
+TEST_CASE("serializeMsgPack(ElementProxy)") {
   DynamicJsonDocument doc(4096);
   deserializeJson(doc, "[42]");
   JsonArray arr = doc.as<JsonArray>();

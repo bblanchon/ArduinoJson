@@ -146,4 +146,20 @@ inline CollectionData *variantToObject(VariantData *var) {
   return &var->toObject();
 }
 
+inline NO_INLINE VariantData *variantAdd(VariantData *var, MemoryPool *pool) {
+  return var != 0 ? var->add(pool) : 0;
+}
+
+template <typename TKey>
+NO_INLINE VariantData *variantGetOrCreate(VariantData *var, TKey *key,
+                                          MemoryPool *pool) {
+  return var != 0 ? var->getOrCreate(wrapString(key), pool) : 0;
+}
+
+template <typename TKey>
+NO_INLINE VariantData *variantGetOrCreate(VariantData *var, const TKey &key,
+                                          MemoryPool *pool) {
+  return var != 0 ? var->getOrCreate(wrapString(key), pool) : 0;
+}
+
 }  // namespace ARDUINOJSON_NAMESPACE

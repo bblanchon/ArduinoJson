@@ -147,7 +147,7 @@ TEST_CASE("unsigned char[]") {
     }
   }
 
-  SECTION("JsonObjectSubscript") {
+  SECTION("MemberProxy") {
     SECTION("operator=") {  // issue #416
       unsigned char value[] = "world";
 
@@ -181,7 +181,7 @@ TEST_CASE("unsigned char[]") {
     }
   }
 
-  SECTION("JsonArraySubscript") {
+  SECTION("ElementProxy") {
     SECTION("set()") {
       unsigned char value[] = "world";
 

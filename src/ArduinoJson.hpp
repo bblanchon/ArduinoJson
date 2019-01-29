@@ -14,10 +14,10 @@
 #include "ArduinoJson/Document/StaticJsonDocument.hpp"
 
 #include "ArduinoJson/Array/ArrayImpl.hpp"
-#include "ArduinoJson/Array/ArraySubscript.hpp"
+#include "ArduinoJson/Array/ElementProxy.hpp"
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
+#include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Object/ObjectImpl.hpp"
-#include "ArduinoJson/Object/ObjectSubscript.hpp"
 #include "ArduinoJson/Variant/VariantAsImpl.hpp"
 #include "ArduinoJson/Variant/VariantImpl.hpp"
 
