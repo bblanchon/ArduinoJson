@@ -4,12 +4,15 @@
 
 #pragma once
 
+#include "ConstRamStringAdapter.hpp"
+
 namespace ARDUINOJSON_NAMESPACE {
 
 class String {
  public:
-  String() : _data(0) {}
-  String(const char* slot) : _data(slot) {}
+  String() : _data(0), _isStatic(true) {}
+  String(const char* data, bool isStaticData = true)
+      : _data(data), _isStatic(isStaticData) {}
 
   const char* c_str() const {
     return _data;
@@ -17,6 +20,10 @@ class String {
 
   bool isNull() const {
     return !_data;
+  }
+
+  bool isStatic() const {
+    return _isStatic;
   }
 
   friend bool operator==(String lhs, String rhs) {
@@ -28,5 +35,31 @@ class String {
 
  private:
   const char* _data;
+  bool _isStatic;
 };
+
+class StringAdapter : public RamStringAdapter {
+ public:
+  StringAdapter(const String& str)
+      : RamStringAdapter(str.c_str()), _isStatic(str.isStatic()) {}
+
+  bool isStatic() const {
+    return _isStatic;
+  }
+
+  /*  const char* save(MemoryPool* pool) const {
+      if (_isStatic) return c_str();
+      return RamStringAdapter::save(pool);
+    }*/
+
+ private:
+  bool _isStatic;
+};
+
+template <>
+struct IsString<String> : true_type {};
+
+inline StringAdapter adaptString(const String& str) {
+  return StringAdapter(str);
+}
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -8,9 +8,9 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class StlStringWrapper {
+class StlStringAdapter {
  public:
-  StlStringWrapper(const std::string& str) : _str(&str) {}
+  StlStringAdapter(const std::string& str) : _str(&str) {}
 
   char* save(MemoryPool* pool) const {
     size_t n = _str->length() + 1;
@@ -36,6 +36,10 @@ class StlStringWrapper {
     return _str->size();
   }
 
+  bool isStatic() const {
+    return false;
+  }
+
  private:
   const std::string* _str;
 };
@@ -43,8 +47,8 @@ class StlStringWrapper {
 template <>
 struct IsString<std::string> : true_type {};
 
-inline StlStringWrapper wrapString(const std::string& str) {
-  return StlStringWrapper(str);
+inline StlStringAdapter adaptString(const std::string& str) {
+  return StlStringAdapter(str);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

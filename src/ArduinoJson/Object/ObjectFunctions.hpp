@@ -16,8 +16,8 @@ void objectAccept(const CollectionData *obj, Visitor &visitor) {
     visitor.visitNull();
 }
 
-template <typename TKey>
-inline bool objectContainsKey(const CollectionData *obj, TKey key) {
+template <typename TAdaptedString>
+inline bool objectContainsKey(const CollectionData *obj, TAdaptedString key) {
   return obj && obj->containsKey(key);
 }
 
@@ -27,20 +27,20 @@ inline bool objectEquals(const CollectionData *lhs, const CollectionData *rhs) {
   return lhs->equalsObject(*rhs);
 }
 
-template <typename TKey>
-inline VariantData *objectGet(const CollectionData *obj, TKey key) {
+template <typename TAdaptedString>
+inline VariantData *objectGet(const CollectionData *obj, TAdaptedString key) {
   if (!obj) return 0;
   return obj->get(key);
 }
 
-template <typename TKey>
-void objectRemove(CollectionData *obj, TKey key) {
+template <typename TAdaptedString>
+void objectRemove(CollectionData *obj, TAdaptedString key) {
   if (!obj) return;
   obj->remove(key);
 }
 
-template <typename TKey>
-inline VariantData *objectGetOrCreate(CollectionData *obj, TKey key,
+template <typename TAdaptedString>
+inline VariantData *objectGetOrCreate(CollectionData *obj, TAdaptedString key,
                                       MemoryPool *pool) {
   if (!obj) return 0;
 

@@ -8,9 +8,9 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ArduinoStringWrapper {
+class ArduinoStringAdapter {
  public:
-  ArduinoStringWrapper(const ::String& str) : _str(&str) {}
+  ArduinoStringAdapter(const ::String& str) : _str(&str) {}
 
   char* save(MemoryPool* pool) const {
     if (isNull()) return NULL;
@@ -40,6 +40,10 @@ class ArduinoStringWrapper {
     return _str->length();
   }
 
+  bool isStatic() const {
+    return false;
+  }
+
  private:
   const ::String* _str;
 };
@@ -50,8 +54,8 @@ struct IsString< ::String> : true_type {};
 template <>
 struct IsString< ::StringSumHelper> : true_type {};
 
-inline ArduinoStringWrapper wrapString(const ::String& str) {
-  return ArduinoStringWrapper(str);
+inline ArduinoStringAdapter adaptString(const ::String& str) {
+  return ArduinoStringAdapter(str);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

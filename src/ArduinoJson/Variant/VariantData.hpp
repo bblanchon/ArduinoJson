@@ -89,7 +89,7 @@ class VariantData {
       case VALUE_IS_OBJECT:
         return toObject().copyFrom(src._content.asCollection, pool);
       case VALUE_IS_OWNED_STRING:
-        return setOwnedString(RamStringWrapper(src._content.asString), pool);
+        return setOwnedString(RamStringAdapter(src._content.asString), pool);
       case VALUE_IS_OWNED_RAW:
         return setOwnedRaw(
             serialized(src._content.asRaw.data, src._content.asRaw.size), pool);
@@ -186,7 +186,7 @@ class VariantData {
 
   template <typename T>
   bool setOwnedRaw(SerializedValue<T> value, MemoryPool *pool) {
-    char *dup = wrapString(value.data(), value.size()).save(pool);
+    char *dup = adaptString(value.data(), value.size()).save(pool);
     if (dup) {
       setType(VALUE_IS_OWNED_RAW);
       _content.asRaw.data = dup;
@@ -289,13 +289,13 @@ class VariantData {
     return isArray() ? _content.asCollection.get(index) : 0;
   }
 
-  template <typename TKey>
-  VariantData *get(TKey key) const {
+  template <typename TAdaptedString>
+  VariantData *get(TAdaptedString key) const {
     return isObject() ? _content.asCollection.get(key) : 0;
   }
 
-  template <typename TKey>
-  VariantData *getOrCreate(TKey key, MemoryPool *pool) {
+  template <typename TAdaptedString>
+  VariantData *getOrCreate(TAdaptedString key, MemoryPool *pool) {
     if (isNull()) toObject();
     if (!isObject()) return 0;
     VariantData *var = _content.asCollection.get(key);

@@ -86,13 +86,18 @@ class JsonDocument : public Visitable {
     return add().to<ArrayRef>();
   }
 
-  template <typename TKey>
-  ArrayRef createNestedArray(TKey* key) {
+  // createNestedArray(char*)
+  // createNestedArray(const char*)
+  // createNestedArray(const __FlashStringHelper*)
+  template <typename TChar>
+  ArrayRef createNestedArray(TChar* key) {
     return getOrCreate(key).template to<ArrayRef>();
   }
 
-  template <typename TKey>
-  ArrayRef createNestedArray(const TKey& key) {
+  // createNestedArray(const std::string&)
+  // createNestedArray(const String&)
+  template <typename TString>
+  ArrayRef createNestedArray(const TString& key) {
     return getOrCreate(key).template to<ArrayRef>();
   }
 
@@ -100,48 +105,57 @@ class JsonDocument : public Visitable {
     return add().to<ObjectRef>();
   }
 
-  template <typename TKey>
-  ObjectRef createNestedObject(TKey* key) {
+  // createNestedObject(char*)
+  // createNestedObject(const char*)
+  // createNestedObject(const __FlashStringHelper*)
+  template <typename TChar>
+  ObjectRef createNestedObject(TChar* key) {
     return getOrCreate(key).template to<ObjectRef>();
   }
 
-  template <typename TKey>
-  ObjectRef createNestedObject(const TKey& key) {
+  // createNestedObject(const std::string&)
+  // createNestedObject(const String&)
+  template <typename TString>
+  ObjectRef createNestedObject(const TString& key) {
     return getOrCreate(key).template to<ObjectRef>();
   }
 
-  // MemberProxy operator[](TKey)
-  // TKey = const std::string&, const String&
-  template <typename TKey>
+  // operator[](const std::string&)
+  // operator[](const String&)
+  template <typename TString>
   FORCE_INLINE
-      typename enable_if<IsString<TKey>::value,
-                         MemberProxy<JsonDocument&, const TKey&> >::type
-      operator[](const TKey& key) {
-    return MemberProxy<JsonDocument&, const TKey&>(*this, key);
+      typename enable_if<IsString<TString>::value,
+                         MemberProxy<JsonDocument&, const TString&> >::type
+      operator[](const TString& key) {
+    return MemberProxy<JsonDocument&, const TString&>(*this, key);
   }
 
-  // MemberProxy operator[](TKey);
-  // TKey = const char*, const char[N], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey*>::value,
-                                  MemberProxy<JsonDocument&, TKey*> >::type
-  operator[](TKey* key) {
-    return MemberProxy<JsonDocument&, TKey*>(*this, key);
+  // operator[](char*)
+  // operator[](const char*)
+  // operator[](const __FlashStringHelper*)
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value,
+                                  MemberProxy<JsonDocument&, TChar*> >::type
+  operator[](TChar* key) {
+    return MemberProxy<JsonDocument&, TChar*>(*this, key);
   }
 
-  // VariantConstRef operator[](TKey) const
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey>::value, VariantConstRef>::type
-  operator[](const TKey& key) const {
+  // operator[](const std::string&) const
+  // operator[](const String&) const
+  template <typename TString>
+  FORCE_INLINE
+      typename enable_if<IsString<TString>::value, VariantConstRef>::type
+      operator[](const TString& key) const {
     return getVariant()[key];
   }
 
-  // VariantConstRef operator[](TKey) const;
-  // TKey = const char*, const char[N], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey*>::value, VariantConstRef>::type
-  operator[](TKey* key) const {
+  // operator[](char*) const
+  // operator[](const char*) const
+  // operator[](const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE
+      typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
+      operator[](TChar* key) const {
     return getVariant()[key];
   }
 
@@ -157,43 +171,51 @@ class JsonDocument : public Visitable {
     return VariantRef(&_pool, _data.get(index));
   }
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef get(TKey* key) {
-    return VariantRef(&_pool, _data.get(wrapString(key)));
+  // get(char*) const
+  // get(const char*) const
+  // get(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantRef get(TChar* key) {
+    return VariantRef(&_pool, _data.get(adaptString(key)));
   }
 
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey>::value, VariantRef>::type get(
-      const TKey& key) {
-    return VariantRef(&_pool, _data.get(wrapString(key)));
+  // get(const std::string&) const
+  // get(const String&) const
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
+  get(const TString& key) {
+    return VariantRef(&_pool, _data.get(adaptString(key)));
   }
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef getOrCreate(TKey* key) {
-    return VariantRef(&_pool, _data.getOrCreate(wrapString(key), &_pool));
+  // getOrCreate(char*)
+  // getOrCreate(const char*)
+  // getOrCreate(const __FlashStringHelper*)
+  template <typename TChar>
+  FORCE_INLINE VariantRef getOrCreate(TChar* key) {
+    return VariantRef(&_pool, _data.getOrCreate(adaptString(key), &_pool));
   }
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef getOrCreate(const TKey& key) {
-    return VariantRef(&_pool, _data.getOrCreate(wrapString(key), &_pool));
+  // getOrCreate(const std::string&)
+  // getOrCreate(const String&)
+  template <typename TString>
+  FORCE_INLINE VariantRef getOrCreate(const TString& key) {
+    return VariantRef(&_pool, _data.getOrCreate(adaptString(key), &_pool));
   }
 
   FORCE_INLINE VariantRef add() {
     return VariantRef(&_pool, _data.add(&_pool));
   }
-  //
-  // bool add(TValue);
-  // TValue = bool, long, int, short, float, double, serialized, VariantRef,
-  //          std::string, String, ObjectRef
-  template <typename T>
-  FORCE_INLINE bool add(const T& value) {
+
+  template <typename TValue>
+  FORCE_INLINE bool add(const TValue& value) {
     return add().set(value);
   }
-  //
-  // bool add(TValue);
-  // TValue = char*, const char*, const __FlashStringHelper*
-  template <typename T>
-  FORCE_INLINE bool add(T* value) {
+
+  // add(char*) const
+  // add(const char*) const
+  // add(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE bool add(TChar* value) {
     return add().set(value);
   }
 

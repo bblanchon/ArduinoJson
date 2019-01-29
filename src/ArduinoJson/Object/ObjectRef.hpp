@@ -26,20 +26,19 @@ class ObjectRefBase {
     objectAccept(_data, visitor);
   }
 
-  // Tells weither the specified key is present and associated with a value.
-  //
-  // bool containsKey(TKey);
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE bool containsKey(const TKey& key) const {
-    return objectContainsKey(_data, wrapString(key));
+  // containsKey(const std::string&) const
+  // containsKey(const String&) const
+  template <typename TString>
+  FORCE_INLINE bool containsKey(const TString& key) const {
+    return objectContainsKey(_data, adaptString(key));
   }
-  //
-  // bool containsKey(TKey);
-  // TKey = char*, const char*, char[], const char[], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE bool containsKey(TKey* key) const {
-    return objectContainsKey(_data, wrapString(key));
+
+  // containsKey(char*) const
+  // containsKey(const char*) const
+  // containsKey(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE bool containsKey(TChar* key) const {
+    return objectContainsKey(_data, adaptString(key));
   }
 
   FORCE_INLINE bool isNull() const {
@@ -83,41 +82,38 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
     return iterator();
   }
 
-  // Gets the value associated with the specified key.
-  //
-  // TValue get<TValue>(TKey) const;
-  // TKey = const std::string&, const String&
-  // TValue = bool, char, long, int, short, float, double,
-  //          std::string, String, ArrayConstRef, ObjectConstRef
-  template <typename TKey>
-  FORCE_INLINE VariantConstRef get(const TKey& key) const {
-    return get_impl(wrapString(key));
-  }
-  //
-  // TValue get<TValue>(TKey) const;
-  // TKey = char*, const char*, const __FlashStringHelper*
-  // TValue = bool, char, long, int, short, float, double,
-  //          std::string, String, ArrayConstRef, ObjectConstRef
-  template <typename TKey>
-  FORCE_INLINE VariantConstRef get(TKey* key) const {
-    return get_impl(wrapString(key));
+  // get(const std::string&) const
+  // get(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantConstRef get(const TString& key) const {
+    return get_impl(adaptString(key));
   }
 
-  //
-  // VariantConstRef operator[](TKey) const;
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey>::value, VariantConstRef>::type
-  operator[](const TKey& key) const {
-    return get_impl(wrapString(key));
+  // get(char*) const
+  // get(const char*) const
+  // get(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantConstRef get(TChar* key) const {
+    return get_impl(adaptString(key));
   }
-  //
-  // VariantConstRef operator[](TKey) const;
-  // TKey = const char*, const char[N], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey*>::value, VariantConstRef>::type
-  operator[](TKey* key) const {
-    return get_impl(wrapString(key));
+
+  // operator[](const std::string&) const
+  // operator[](const String&) const
+  template <typename TString>
+  FORCE_INLINE
+      typename enable_if<IsString<TString>::value, VariantConstRef>::type
+      operator[](const TString& key) const {
+    return get_impl(adaptString(key));
+  }
+
+  // operator[](char*) const
+  // operator[](const char*) const
+  // operator[](const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE
+      typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
+      operator[](TChar* key) const {
+    return get_impl(adaptString(key));
   }
 
   FORCE_INLINE bool operator==(ObjectConstRef rhs) const {
@@ -125,8 +121,8 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   }
 
  private:
-  template <typename TKey>
-  FORCE_INLINE VariantConstRef get_impl(TKey key) const {
+  template <typename TAdaptedString>
+  FORCE_INLINE VariantConstRef get_impl(TAdaptedString key) const {
     return VariantConstRef(objectGet(_data, key));
   }
 };
@@ -170,30 +166,34 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
     return _data->copyFrom(*src._data, _pool);
   }
 
-  // Gets the value associated with the specified key.
-  //
-  // VariantRef get<TValue>(TKey) const;
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE VariantRef get(const TKey& key) const {
-    return get_impl(wrapString(key));
-  }
-  //
-  // VariantRef get<TValue>(TKey) const;
-  // TKey = char*, const char*, const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE VariantRef get(TKey* key) const {
-    return get_impl(wrapString(key));
+  // get(const std::string&) const
+  // get(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantRef get(const TString& key) const {
+    return get_impl(adaptString(key));
   }
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef getOrCreate(TKey* key) const {
-    return getOrCreate_impl(wrapString(key));
+  // get(char*) const
+  // get(const char*) const
+  // get(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantRef get(TChar* key) const {
+    return get_impl(adaptString(key));
   }
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef getOrCreate(const TKey& key) const {
-    return getOrCreate_impl(wrapString(key));
+  // getOrCreate(const std::string&) const
+  // getOrCreate(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantRef getOrCreate(const TString& key) const {
+    return getOrCreate_impl(adaptString(key));
+  }
+
+  // getOrCreate(char*) const
+  // getOrCreate(const char*) const
+  // getOrCreate(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantRef getOrCreate(TChar* key) const {
+    return getOrCreate_impl(adaptString(key));
   }
 
   FORCE_INLINE bool operator==(ObjectRef rhs) const {
@@ -205,30 +205,29 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
     _data->remove(it.internal());
   }
 
-  // Removes the specified key and the associated value.
-  //
-  // void remove(TKey);
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE void remove(const TKey& key) const {
-    objectRemove(_data, wrapString(key));
+  // remove(const std::string&) const
+  // remove(const String&) const
+  template <typename TString>
+  FORCE_INLINE void remove(const TString& key) const {
+    objectRemove(_data, adaptString(key));
   }
-  //
-  // void remove(TKey);
-  // TKey = char*, const char*, char[], const char[], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE void remove(TKey* key) const {
-    objectRemove(_data, wrapString(key));
+
+  // remove(char*) const
+  // remove(const char*) const
+  // remove(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE void remove(TChar* key) const {
+    objectRemove(_data, adaptString(key));
   }
 
  private:
-  template <typename TKey>
-  FORCE_INLINE VariantRef get_impl(TKey key) const {
+  template <typename TAdaptedString>
+  FORCE_INLINE VariantRef get_impl(TAdaptedString key) const {
     return VariantRef(_pool, objectGet(_data, key));
   }
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef getOrCreate_impl(TKey key) const {
+  template <typename TAdaptedString>
+  FORCE_INLINE VariantRef getOrCreate_impl(TAdaptedString key) const {
     return VariantRef(_pool, objectGetOrCreate(_data, key, _pool));
   }
 

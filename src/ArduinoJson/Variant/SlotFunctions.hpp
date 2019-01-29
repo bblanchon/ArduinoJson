@@ -6,24 +6,21 @@
 
 #include "../Memory/MemoryPool.hpp"
 #include "../Polyfills/assert.hpp"
-#include "../Strings/StringWrappers.hpp"
+#include "../Strings/StringAdapters.hpp"
 #include "VariantData.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TKey>
-inline bool slotSetKey(VariantSlot* var, TKey key, MemoryPool* pool) {
+template <typename TAdaptedString>
+inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool) {
   if (!var) return false;
-  char* dup = key.save(pool);
-  if (!dup) return false;
-  var->setOwnedKey(dup);
-  return true;
-}
-
-inline bool slotSetKey(VariantSlot* var, ConstRamStringWrapper key,
-                       MemoryPool*) {
-  if (!var) return false;
-  var->setLinkedKey(key.c_str());
+  if (key.isStatic()) {
+    var->setLinkedKey(key.data());
+  } else {
+    char* dup = key.save(pool);
+    if (!dup) return false;
+    var->setOwnedKey(dup);
+  }
   return true;
 }
 

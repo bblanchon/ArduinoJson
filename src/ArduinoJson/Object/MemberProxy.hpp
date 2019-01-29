@@ -15,13 +15,13 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TObject, typename TString>
-class MemberProxy : public VariantOperators<MemberProxy<TObject, TString> >,
+template <typename TObject, typename TStringRef>
+class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
                     public Visitable {
-  typedef MemberProxy<TObject, TString> this_type;
+  typedef MemberProxy<TObject, TStringRef> this_type;
 
  public:
-  FORCE_INLINE MemberProxy(TObject variant, TString key)
+  FORCE_INLINE MemberProxy(TObject variant, TStringRef key)
       : _object(variant), _key(key) {}
 
   FORCE_INLINE operator VariantConstRef() const {
@@ -33,22 +33,18 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TString> >,
     return *this;
   }
 
-  // Set the specified value
-  //
-  // operator=(const TValue&);
-  // TValue = bool, char, long, int, short, float, double,
-  //          std::string, String, ArrayRef, ObjectRef
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, this_type &>::type
   operator=(const TValue &src) {
     getOrCreateMember().set(src);
     return *this;
   }
-  //
-  // operator=(TValue);
-  // TValue = char*, const char*, const __FlashStringHelper*
-  template <typename TValue>
-  FORCE_INLINE this_type &operator=(TValue *src) {
+
+  // operator=(char*) const
+  // operator=(const char*) const
+  // operator=(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE this_type &operator=(TChar *src) {
     getOrCreateMember().set(src);
     return *this;
   }
@@ -72,22 +68,17 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TString> >,
     return getOrCreateMember().template to<TValue>();
   }
 
-  // Sets the specified value.
-  //
-  // bool set(const TValue&);
-  // TValue = bool, char, long, int, short, float, double, serialized,
-  // VariantRef,
-  //          std::string, String, ArrayRef, ObjectRef
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, bool>::type set(
       const TValue &value) {
     return getOrCreateMember().set(value);
   }
-  //
-  // bool set(TValue);
-  // TValue = char*, const char, const __FlashStringHelper*
-  template <typename TValue>
-  FORCE_INLINE bool set(const TValue *value) {
+
+  // set(char*) const
+  // set(const char*) const
+  // set(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE bool set(const TChar *value) {
     return getOrCreateMember().set(value);
   }
 
@@ -101,23 +92,33 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TString> >,
     return getOrCreateMember().add();
   }
 
-  template <typename TNestedKey>
-  FORCE_INLINE VariantRef get(TNestedKey *key) const {
+  // get(char*) const
+  // get(const char*) const
+  // get(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantRef get(TChar *key) const {
     return getMember().get(key);
   }
 
-  template <typename TNestedKey>
-  FORCE_INLINE VariantRef get(const TNestedKey &key) const {
+  // get(const std::string&) const
+  // get(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantRef get(const TString &key) const {
     return getMember().get(key);
   }
 
-  template <typename TNestedKey>
-  FORCE_INLINE VariantRef getOrCreate(TNestedKey *key) const {
+  // getOrCreate(char*) const
+  // getOrCreate(const char*) const
+  // getOrCreate(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantRef getOrCreate(TChar *key) const {
     return getOrCreateMember().getOrCreate(key);
   }
 
-  template <typename TNestedKey>
-  FORCE_INLINE VariantRef getOrCreate(const TNestedKey &key) const {
+  // getOrCreate(const std::string&) const
+  // getOrCreate(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantRef getOrCreate(const TString &key) const {
     return getOrCreateMember().getOrCreate(key);
   }
 
@@ -131,7 +132,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TString> >,
   }
 
   TObject _object;
-  TString _key;
+  TStringRef _key;
 };
 
 template <typename TObject>

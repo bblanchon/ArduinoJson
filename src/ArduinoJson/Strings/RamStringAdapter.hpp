@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include "ConstRamStringWrapper.hpp"
+#include "ConstRamStringAdapter.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class RamStringWrapper : public ConstRamStringWrapper {
+class RamStringAdapter : public ConstRamStringAdapter {
  public:
-  RamStringWrapper(const char* str) : ConstRamStringWrapper(str) {}
+  RamStringAdapter(const char* str) : ConstRamStringAdapter(str) {}
 
   char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
@@ -19,15 +19,19 @@ class RamStringWrapper : public ConstRamStringWrapper {
     if (dup) memcpy(dup, _str, n);
     return dup;
   }
+
+  bool isStatic() const {
+    return false;
+  }
 };
 
 template <typename TChar>
-inline RamStringWrapper wrapString(const TChar* str) {
-  return RamStringWrapper(reinterpret_cast<const char*>(str));
+inline RamStringAdapter adaptString(const TChar* str) {
+  return RamStringAdapter(reinterpret_cast<const char*>(str));
 }
 
-inline RamStringWrapper wrapString(char* str) {
-  return RamStringWrapper(str);
+inline RamStringAdapter adaptString(char* str) {
+  return RamStringAdapter(str);
 }
 
 template <typename TChar>

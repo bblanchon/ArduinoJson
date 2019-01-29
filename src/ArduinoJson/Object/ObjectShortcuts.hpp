@@ -6,52 +6,52 @@
 
 #include "../Polyfills/attributes.hpp"
 #include "../Polyfills/type_traits.hpp"
-#include "../Strings/StringWrappers.hpp"
+#include "../Strings/StringAdapters.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
-template <typename TParent, typename TKey>
+template <typename TParent, typename TStringRef>
 class MemberProxy;
 
 template <typename TObject>
 class ObjectShortcuts {
  public:
-  // MemberProxy operator[](TKey) const;
-  // TKey = const std::string&, const String&
-  template <typename TKey>
+  // operator[](const std::string&) const
+  // operator[](const String&) const
+  template <typename TString>
   FORCE_INLINE
-      typename enable_if<IsString<TKey>::value,
-                         MemberProxy<const TObject &, const TKey &> >::type
-      operator[](const TKey &key) const;
-  //
-  // MemberProxy operator[](TKey) const;
-  // TKey = const char*, const char[N], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey *>::value,
-                                  MemberProxy<const TObject &, TKey *> >::type
-  operator[](TKey *key) const;
+      typename enable_if<IsString<TString>::value,
+                         MemberProxy<const TObject &, const TString &> >::type
+      operator[](const TString &key) const;
 
-  // Creates and adds a ArrayRef.
-  //
-  // ArrayRef createNestedArray(TKey);
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  FORCE_INLINE ArrayRef createNestedArray(const TKey &key) const;
-  // ArrayRef createNestedArray(TKey);
-  // TKey = char*, const char*, char[], const char[], const __FlashStringHelper*
-  template <typename TKey>
-  FORCE_INLINE ArrayRef createNestedArray(TKey *key) const;
+  // operator[](char*) const
+  // operator[](const char*) const
+  // operator[](const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar *>::value,
+                                  MemberProxy<const TObject &, TChar *> >::type
+  operator[](TChar *key) const;
 
-  // Creates and adds a ObjectRef.
-  //
-  // ObjectRef createNestedObject(TKey);
-  // TKey = const std::string&, const String&
-  template <typename TKey>
-  ObjectRef createNestedObject(const TKey &key) const;
-  //
-  // ObjectRef createNestedObject(TKey);
-  // TKey = char*, const char*, char[], const char[], const __FlashStringHelper*
-  template <typename TKey>
-  ObjectRef createNestedObject(TKey *key) const;
+  // createNestedArray(const std::string&) const
+  // createNestedArray(const String&) const
+  template <typename TString>
+  FORCE_INLINE ArrayRef createNestedArray(const TString &key) const;
+
+  // createNestedArray(char*) const
+  // createNestedArray(const char*) const
+  // createNestedArray(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE ArrayRef createNestedArray(TChar *key) const;
+
+  // createNestedObject(const std::string&) const
+  // createNestedObject(const String&) const
+  template <typename TString>
+  ObjectRef createNestedObject(const TString &key) const;
+
+  // createNestedObject(char*) const
+  // createNestedObject(const char*) const
+  // createNestedObject(const __FlashStringHelper*) const
+  template <typename TChar>
+  ObjectRef createNestedObject(TChar *key) const;
 
  private:
   const TObject *impl() const {

@@ -9,9 +9,9 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ConstRamStringWrapper {
+class ConstRamStringAdapter {
  public:
-  ConstRamStringWrapper(const char* str = 0) : _str(str) {}
+  ConstRamStringAdapter(const char* str = 0) : _str(str) {}
 
   bool equals(const char* expected) const {
     const char* actual = _str;
@@ -23,25 +23,29 @@ class ConstRamStringWrapper {
     return !_str;
   }
 
-  // template <typename TMemoryPool>
-  // const char* save(TMemoryPool*) const {
-  //   return _str;
-  // }
+  template <typename TMemoryPool>
+  char* save(TMemoryPool*) const {
+    return 0;
+  }
 
   size_t size() const {
     return strlen(_str);
   }
 
-  const char* c_str() const {
+  const char* data() const {
     return _str;
+  }
+
+  bool isStatic() const {
+    return true;
   }
 
  protected:
   const char* _str;
 };
 
-inline ConstRamStringWrapper wrapString(const char* str) {
-  return ConstRamStringWrapper(str);
+inline ConstRamStringAdapter adaptString(const char* str) {
+  return ConstRamStringAdapter(str);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

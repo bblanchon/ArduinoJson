@@ -194,7 +194,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE bool set(
       const T &value,
       typename enable_if<IsString<T>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, wrapString(value), _pool);
+    return variantSetOwnedString(_data, adaptString(value), _pool);
   }
 
   // set(char*)
@@ -202,7 +202,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename T>
   FORCE_INLINE bool set(
       T *value, typename enable_if<IsString<T *>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, wrapString(value), _pool);
+    return variantSetOwnedString(_data, adaptString(value), _pool);
   }
 
   // set(const char*);
@@ -285,20 +285,27 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   FORCE_INLINE VariantRef get(size_t) const;
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef get(TKey *) const;
+  // get(const char*) const
+  // get(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantRef get(TChar *) const;
 
-  // get(const char*)
-  // get(const __FlashStringHelper*)
-  template <typename TKey>
-  FORCE_INLINE typename enable_if<IsString<TKey>::value, VariantRef>::type get(
-      const TKey &) const;
+  // get(const std::string&) const
+  // get(const String&) const
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
+  get(const TString &) const;
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef getOrCreate(TKey *) const;
+  // getOrCreate(char*) const
+  // getOrCreate(const char*) const
+  // getOrCreate(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantRef getOrCreate(TChar *) const;
 
-  template <typename TKey>
-  FORCE_INLINE VariantRef getOrCreate(const TKey &) const;
+  // getOrCreate(const std::string&) const
+  // getOrCreate(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantRef getOrCreate(const TString &) const;
 
  private:
   MemoryPool *_pool;
@@ -329,24 +336,24 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const;
 
-  //
-  // const VariantConstRef operator[](TKey) const;
-  // TKey = const std::string&, const String&
+  // operator[](const std::string&) const
+  // operator[](const String&) const
   template <typename TString>
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString &key) const {
-    return VariantConstRef(objectGet(variantAsObject(_data), wrapString(key)));
+    return VariantConstRef(objectGet(variantAsObject(_data), adaptString(key)));
   }
-  //
-  // VariantConstRef operator[](TKey);
-  // TKey = const char*, const char[N], const __FlashStringHelper*
-  template <typename TString>
+
+  // operator[](char*) const
+  // operator[](const char*) const
+  // operator[](const __FlashStringHelper*) const
+  template <typename TChar>
   FORCE_INLINE
-      typename enable_if<IsString<TString *>::value, VariantConstRef>::type
-      operator[](TString *key) const {
+      typename enable_if<IsString<TChar *>::value, VariantConstRef>::type
+      operator[](TChar *key) const {
     const CollectionData *obj = variantAsObject(_data);
-    return VariantConstRef(obj ? obj->get(wrapString(key)) : 0);
+    return VariantConstRef(obj ? obj->get(adaptString(key)) : 0);
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

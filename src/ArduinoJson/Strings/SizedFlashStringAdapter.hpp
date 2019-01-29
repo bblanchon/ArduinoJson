@@ -6,14 +6,15 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class FlashStringWrapper {
+class SizedFlashStringAdapter {
  public:
-  FlashStringWrapper(const __FlashStringHelper* str) : _str(str) {}
+  SizedFlashStringAdapter(const __FlashStringHelper* str, size_t sz)
+      : _str(str), _size(sz) {}
 
   bool equals(const char* expected) const {
     const char* actual = reinterpret_cast<const char*>(_str);
     if (!actual || !expected) return actual == expected;
-    return strcmp_P(expected, actual) == 0;
+    return strncmp_P(expected, actual, _size) == 0;
   }
 
   bool isNull() const {
@@ -22,9 +23,8 @@ class FlashStringWrapper {
 
   char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
-    size_t n = size() + 1;  // copy the terminator
-    char* dup = pool->allocFrozenString(n);
-    if (dup) memcpy_P(dup, reinterpret_cast<const char*>(_str), n);
+    char* dup = pool->allocFrozenString(_size);
+    if (!dup) memcpy_P(dup, (const char*)_str, _size);
     return dup;
   }
 
@@ -32,14 +32,17 @@ class FlashStringWrapper {
     return strlen_P(reinterpret_cast<const char*>(_str));
   }
 
+  bool isStatic() const {
+    return false;
+  }
+
  private:
   const __FlashStringHelper* _str;
+  size_t _size;
 };
 
-inline FlashStringWrapper wrapString(const __FlashStringHelper* str) {
-  return FlashStringWrapper(str);
+inline SizedFlashStringAdapter adaptString(const __FlashStringHelper* str,
+                                           size_t sz) {
+  return SizedFlashStringAdapter(str, sz);
 }
-
-template <>
-struct IsString<const __FlashStringHelper*> : true_type {};
 }  // namespace ARDUINOJSON_NAMESPACE

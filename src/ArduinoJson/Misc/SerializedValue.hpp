@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Strings/StringWrappers.hpp"
+#include "../Strings/StringAdapters.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -58,7 +58,7 @@ inline SerializedValue<T> serialized(T str) {
 
 template <typename TChar>
 inline SerializedValue<TChar*> serialized(TChar* p) {
-  return SerializedValue<TChar*>(p, wrapString(p).size());
+  return SerializedValue<TChar*>(p, adaptString(p).size());
 }
 
 template <typename TChar>

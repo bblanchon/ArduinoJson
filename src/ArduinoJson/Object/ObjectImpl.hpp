@@ -17,23 +17,22 @@ inline ArrayRef ObjectShortcuts<TObject>::createNestedArray(
 }
 
 template <typename TObject>
-template <typename TString>
-inline ArrayRef ObjectShortcuts<TObject>::createNestedArray(
-    TString* key) const {
+template <typename TChar>
+inline ArrayRef ObjectShortcuts<TObject>::createNestedArray(TChar* key) const {
   return impl()->getOrCreate(key).template to<ArrayRef>();
 }
 
 template <typename TObject>
-template <typename TKey>
-ObjectRef ObjectShortcuts<TObject>::createNestedObject(const TKey& key) const {
+template <typename TString>
+inline ObjectRef ObjectShortcuts<TObject>::createNestedObject(
+    const TString& key) const {
   return impl()->getOrCreate(key).template to<ObjectRef>();
 }
-//
-// ObjectRef createNestedObject(TKey);
-// TKey = char*, const char*, char[], const char[], const __FlashStringHelper*
+
 template <typename TObject>
-template <typename TKey>
-ObjectRef ObjectShortcuts<TObject>::createNestedObject(TKey* key) const {
+template <typename TChar>
+inline ObjectRef ObjectShortcuts<TObject>::createNestedObject(
+    TChar* key) const {
   return impl()->getOrCreate(key).template to<ObjectRef>();
 }
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -4,17 +4,18 @@
 
 #pragma once
 
+#include <string.h>  // strcmp
+
 namespace ARDUINOJSON_NAMESPACE {
 
-class SizedFlashStringWrapper {
+class SizedRamStringAdapter {
  public:
-  SizedFlashStringWrapper(const __FlashStringHelper* str, size_t sz)
-      : _str(str), _size(sz) {}
+  SizedRamStringAdapter(const char* str, size_t n) : _str(str), _size(n) {}
 
   bool equals(const char* expected) const {
     const char* actual = reinterpret_cast<const char*>(_str);
     if (!actual || !expected) return actual == expected;
-    return strncmp_P(expected, actual, _size) == 0;
+    return strcmp(actual, expected) == 0;
   }
 
   bool isNull() const {
@@ -24,21 +25,26 @@ class SizedFlashStringWrapper {
   char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
     char* dup = pool->allocFrozenString(_size);
-    if (!dup) memcpy_P(dup, (const char*)_str, _size);
+    if (dup) memcpy(dup, _str, _size);
     return dup;
   }
 
   size_t size() const {
-    return strlen_P(reinterpret_cast<const char*>(_str));
+    return strlen(reinterpret_cast<const char*>(_str));
+  }
+
+  bool isStatic() const {
+    return false;
   }
 
  private:
-  const __FlashStringHelper* _str;
+  const char* _str;
   size_t _size;
 };
 
-inline SizedFlashStringWrapper wrapString(const __FlashStringHelper* str,
-                                          size_t sz) {
-  return SizedFlashStringWrapper(str, sz);
+template <typename TChar>
+inline SizedRamStringAdapter adaptString(const TChar* str, size_t size) {
+  return SizedRamStringAdapter(reinterpret_cast<const char*>(str), size);
 }
+
 }  // namespace ARDUINOJSON_NAMESPACE

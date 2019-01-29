@@ -141,6 +141,18 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(expectedSize <= doc.memoryUsage());
   }
 
+  SECTION("should duplicate a non-static JsonString key") {
+    obj[JsonString("hello", false)] = "world";
+    const size_t expectedSize = JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(6);
+    REQUIRE(expectedSize == doc.memoryUsage());
+  }
+
+  SECTION("should not duplicate a static JsonString key") {
+    obj[JsonString("hello", true)] = "world";
+    const size_t expectedSize = JSON_OBJECT_SIZE(1);
+    REQUIRE(expectedSize == doc.memoryUsage());
+  }
+
   SECTION("should ignore null key") {
     // object must have a value to make a call to strcmp()
     obj["dummy"] = 42;

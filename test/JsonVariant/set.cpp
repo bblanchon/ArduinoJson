@@ -71,6 +71,26 @@ TEST_CASE("JsonVariant and strings") {
 
     REQUIRE(variant == "hello");
   }
+
+  SECTION("stores static JsonString by reference") {
+    char str[16];
+
+    strcpy(str, "hello");
+    variant.set(JsonString(str, true));
+    strcpy(str, "world");
+
+    REQUIRE(variant == "hello");
+  }
+
+  SECTION("stores non-static JsonString by copy") {
+    char str[16];
+
+    strcpy(str, "hello");
+    variant.set(JsonString(str, false));
+    strcpy(str, "world");
+
+    REQUIRE(variant == "hello");
+  }
 }
 
 TEST_CASE("JsonVariant with not enough memory") {

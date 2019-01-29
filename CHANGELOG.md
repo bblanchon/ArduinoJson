@@ -28,6 +28,7 @@ HEAD
 * `JsonDocument` now support the same operations as `JsonVariant`.
   Calling `JsonDocument::as<T>()` is not required anymore.
 * Fixed example `JsonHttpClient.ino`
+* User can now use a `JsonString` as a key or a value
 
 > ### BREAKING CHANGES
 > 

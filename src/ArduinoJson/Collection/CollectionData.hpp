@@ -24,13 +24,13 @@ class CollectionData {
 
   VariantData *add(MemoryPool *pool);
 
-  template <typename TKey>
-  VariantData *add(TKey key, MemoryPool *pool);
+  template <typename TAdaptedString>
+  VariantData *add(TAdaptedString key, MemoryPool *pool);
 
   void clear();
 
-  template <typename TKey>
-  bool containsKey(const TKey &key) const;
+  template <typename TAdaptedString>
+  bool containsKey(const TAdaptedString &key) const;
 
   bool copyFrom(const CollectionData &src, MemoryPool *pool);
 
@@ -39,8 +39,8 @@ class CollectionData {
 
   VariantData *get(size_t index) const;
 
-  template <typename TKey>
-  VariantData *get(TKey key) const;
+  template <typename TAdaptedString>
+  VariantData *get(TAdaptedString key) const;
 
   VariantSlot *head() const {
     return _head;
@@ -48,8 +48,8 @@ class CollectionData {
 
   void remove(size_t index);
 
-  template <typename TKey>
-  void remove(TKey key) {
+  template <typename TAdaptedString>
+  void remove(TAdaptedString key) {
     remove(getSlot(key));
   }
 
@@ -62,8 +62,8 @@ class CollectionData {
  private:
   VariantSlot *getSlot(size_t index) const;
 
-  template <typename TKey>
-  VariantSlot *getSlot(TKey key) const;
+  template <typename TAdaptedString>
+  VariantSlot *getSlot(TAdaptedString key) const;
 
   VariantSlot *getPreviousSlot(VariantSlot *) const;
 };

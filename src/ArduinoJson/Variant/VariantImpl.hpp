@@ -110,24 +110,24 @@ inline VariantRef VariantRef::get(size_t index) const {
   return VariantRef(_pool, _data != 0 ? _data->get(index) : 0);
 }
 
-template <typename TKey>
-inline VariantRef VariantRef::get(TKey *key) const {
-  return VariantRef(_pool, _data != 0 ? _data->get(wrapString(key)) : 0);
+template <typename TChar>
+inline VariantRef VariantRef::get(TChar *key) const {
+  return VariantRef(_pool, _data != 0 ? _data->get(adaptString(key)) : 0);
 }
 
-template <typename TKey>
-inline typename enable_if<IsString<TKey>::value, VariantRef>::type
-VariantRef::get(const TKey &key) const {
-  return VariantRef(_pool, _data != 0 ? _data->get(wrapString(key)) : 0);
+template <typename TString>
+inline typename enable_if<IsString<TString>::value, VariantRef>::type
+VariantRef::get(const TString &key) const {
+  return VariantRef(_pool, _data != 0 ? _data->get(adaptString(key)) : 0);
 }
 
-template <typename TKey>
-inline VariantRef VariantRef::getOrCreate(TKey *key) const {
+template <typename TChar>
+inline VariantRef VariantRef::getOrCreate(TChar *key) const {
   return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
 }
 
-template <typename TKey>
-inline VariantRef VariantRef::getOrCreate(const TKey &key) const {
+template <typename TString>
+inline VariantRef VariantRef::getOrCreate(const TString &key) const {
   return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
 }
 }  // namespace ARDUINOJSON_NAMESPACE
