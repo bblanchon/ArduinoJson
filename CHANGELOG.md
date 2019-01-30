@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.8.0-beta (2019-01-30)
+-----------
 
 * Import functions in the ArduinoJson namespace to get clearer errors
 * Improved syntax highlighting in Arduino IDE
