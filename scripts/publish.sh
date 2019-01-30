@@ -34,7 +34,7 @@ update_version_in_source () {
 }
 
 commit_new_version () {
-	git add src/ArduinoJson/version.hpp CHANGELOG.md library.json library.properties
+	git add src/ArduinoJson/version.hpp README.md CHANGELOG.md library.json library.properties
 	git commit -m "Set version to $VERSION"
 }
 
