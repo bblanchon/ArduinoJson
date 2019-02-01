@@ -17,7 +17,7 @@ void setup() {
   DynamicJsonDocument doc(1024);
 
   // You can use a Flash String as your JSON input.
-  // WARNING: the string in the input  will be duplicated in the JsonDocument.
+  // WARNING: the strings in the input will be duplicated in the JsonDocument.
   deserializeJson(doc, F("{\"sensor\":\"gps\",\"time\":1351824120,"
                          "\"data\":[48.756080,2.302038]}"));
   JsonObject obj = doc.as<JsonObject>();
