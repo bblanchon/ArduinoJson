@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -12,8 +12,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class DynamicJsonDocument : public JsonDocument {
  public:
-  explicit DynamicJsonDocument(size_t capa)
-      : JsonDocument(allocPool(capa)) {}
+  explicit DynamicJsonDocument(size_t capa) : JsonDocument(allocPool(capa)) {}
 
   DynamicJsonDocument(const DynamicJsonDocument& src)
       : JsonDocument(allocPool(src.memoryUsage())) {
