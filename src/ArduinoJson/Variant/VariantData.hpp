@@ -285,28 +285,28 @@ class VariantData {
     return isCollection() ? _content.asCollection.size() : 0;
   }
 
-  VariantData *get(size_t index) const {
+  VariantData *addElement(MemoryPool *pool) {
+    if (isNull()) toArray();
+    if (!isArray()) return 0;
+    return _content.asCollection.add(pool);
+  }
+
+  VariantData *getElement(size_t index) const {
     return isArray() ? _content.asCollection.get(index) : 0;
   }
 
   template <typename TAdaptedString>
-  VariantData *get(TAdaptedString key) const {
+  VariantData *getMember(TAdaptedString key) const {
     return isObject() ? _content.asCollection.get(key) : 0;
   }
 
   template <typename TAdaptedString>
-  VariantData *getOrCreate(TAdaptedString key, MemoryPool *pool) {
+  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool) {
     if (isNull()) toObject();
     if (!isObject()) return 0;
     VariantData *var = _content.asCollection.get(key);
     if (var) return var;
     return _content.asCollection.add(key, pool);
-  }
-
-  VariantData *add(MemoryPool *pool) {
-    if (isNull()) toArray();
-    if (!isArray()) return 0;
-    return _content.asCollection.add(pool);
   }
 
  private:

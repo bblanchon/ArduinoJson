@@ -102,32 +102,32 @@ inline VariantConstRef VariantConstRef::operator[](size_t index) const {
   return ArrayConstRef(_data != 0 ? _data->asArray() : 0)[index];
 }
 
-inline VariantRef VariantRef::add() const {
+inline VariantRef VariantRef::addElement() const {
   return VariantRef(_pool, variantAdd(_data, _pool));
 }
 
-inline VariantRef VariantRef::get(size_t index) const {
-  return VariantRef(_pool, _data != 0 ? _data->get(index) : 0);
+inline VariantRef VariantRef::getElement(size_t index) const {
+  return VariantRef(_pool, _data != 0 ? _data->getElement(index) : 0);
 }
 
 template <typename TChar>
-inline VariantRef VariantRef::get(TChar *key) const {
-  return VariantRef(_pool, _data != 0 ? _data->get(adaptString(key)) : 0);
+inline VariantRef VariantRef::getMember(TChar *key) const {
+  return VariantRef(_pool, _data != 0 ? _data->getMember(adaptString(key)) : 0);
 }
 
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, VariantRef>::type
-VariantRef::get(const TString &key) const {
-  return VariantRef(_pool, _data != 0 ? _data->get(adaptString(key)) : 0);
+VariantRef::getMember(const TString &key) const {
+  return VariantRef(_pool, _data != 0 ? _data->getMember(adaptString(key)) : 0);
 }
 
 template <typename TChar>
-inline VariantRef VariantRef::getOrCreate(TChar *key) const {
+inline VariantRef VariantRef::getOrAddMember(TChar *key) const {
   return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
 }
 
 template <typename TString>
-inline VariantRef VariantRef::getOrCreate(const TString &key) const {
+inline VariantRef VariantRef::getOrAddMember(const TString &key) const {
   return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
 }
 }  // namespace ARDUINOJSON_NAMESPACE

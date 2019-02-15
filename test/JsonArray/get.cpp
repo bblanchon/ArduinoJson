@@ -11,6 +11,6 @@ TEST_CASE("JsonArray::get()") {
   JsonArray array = doc.as<JsonArray>();
 
   SECTION("Overflow") {
-    REQUIRE(array.get(3).isNull());
+    REQUIRE(array.getElement(3).isNull());
   }
 }

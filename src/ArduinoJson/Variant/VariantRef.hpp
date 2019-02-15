@@ -280,32 +280,31 @@ class VariantRef : public VariantRefBase<VariantData>,
   typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type to()
       const;
 
-  VariantRef add() const;
-  using ArrayShortcuts::add;
+  VariantRef addElement() const;
 
-  FORCE_INLINE VariantRef get(size_t) const;
+  FORCE_INLINE VariantRef getElement(size_t) const;
 
-  // get(const char*) const
-  // get(const __FlashStringHelper*) const
+  // getMember(const char*) const
+  // getMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef get(TChar *) const;
+  FORCE_INLINE VariantRef getMember(TChar *) const;
 
-  // get(const std::string&) const
-  // get(const String&) const
+  // getMember(const std::string&) const
+  // getMember(const String&) const
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
-  get(const TString &) const;
+  getMember(const TString &) const;
 
-  // getOrCreate(char*) const
-  // getOrCreate(const char*) const
-  // getOrCreate(const __FlashStringHelper*) const
+  // getOrAddMember(char*) const
+  // getOrAddMember(const char*) const
+  // getOrAddMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef getOrCreate(TChar *) const;
+  FORCE_INLINE VariantRef getOrAddMember(TChar *) const;
 
-  // getOrCreate(const std::string&) const
-  // getOrCreate(const String&) const
+  // getOrAddMember(const std::string&) const
+  // getOrAddMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantRef getOrCreate(const TString &) const;
+  FORCE_INLINE VariantRef getOrAddMember(const TString &) const;
 
  private:
   MemoryPool *_pool;

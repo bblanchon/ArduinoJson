@@ -25,18 +25,18 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
       : _object(variant), _key(key) {}
 
   FORCE_INLINE operator VariantConstRef() const {
-    return getMember();
+    return getUpstreamMember();
   }
 
   FORCE_INLINE this_type &operator=(const this_type &src) {
-    getOrCreateMember().set(src);
+    getOrAddUpstreamMember().set(src);
     return *this;
   }
 
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, this_type &>::type
   operator=(const TValue &src) {
-    getOrCreateMember().set(src);
+    getOrAddUpstreamMember().set(src);
     return *this;
   }
 
@@ -45,33 +45,33 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   // operator=(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE this_type &operator=(TChar *src) {
-    getOrCreateMember().set(src);
+    getOrAddUpstreamMember().set(src);
     return *this;
   }
 
   FORCE_INLINE bool isNull() const {
-    return getMember().isNull();
+    return getUpstreamMember().isNull();
   }
 
   template <typename TValue>
   FORCE_INLINE typename VariantAs<TValue>::type as() const {
-    return getMember().template as<TValue>();
+    return getUpstreamMember().template as<TValue>();
   }
 
   template <typename TValue>
   FORCE_INLINE bool is() const {
-    return getMember().template is<TValue>();
+    return getUpstreamMember().template is<TValue>();
   }
 
   template <typename TValue>
   FORCE_INLINE typename VariantTo<TValue>::type to() {
-    return getOrCreateMember().template to<TValue>();
+    return getOrAddUpstreamMember().template to<TValue>();
   }
 
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, bool>::type set(
       const TValue &value) {
-    return getOrCreateMember().set(value);
+    return getOrAddUpstreamMember().set(value);
   }
 
   // set(char*) const
@@ -79,56 +79,60 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   // set(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE bool set(const TChar *value) {
-    return getOrCreateMember().set(value);
+    return getOrAddUpstreamMember().set(value);
   }
 
   template <typename Visitor>
   void accept(Visitor &visitor) const {
-    return getMember().accept(visitor);
+    return getUpstreamMember().accept(visitor);
   }
 
-  using ArrayShortcuts<MemberProxy>::add;
-  FORCE_INLINE VariantRef add() const {
-    return getOrCreateMember().add();
+  FORCE_INLINE VariantRef addElement() const {
+    return getOrAddUpstreamMember().addElement();
   }
 
-  // get(char*) const
-  // get(const char*) const
-  // get(const __FlashStringHelper*) const
+  // getElement(size_t) const
+  FORCE_INLINE VariantRef getElement(size_t index) const {
+    return getUpstreamMember().getElement(index);
+  }
+
+  // getMember(char*) const
+  // getMember(const char*) const
+  // getMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef get(TChar *key) const {
-    return getMember().get(key);
+  FORCE_INLINE VariantRef getMember(TChar *key) const {
+    return getUpstreamMember().getMember(key);
   }
 
-  // get(const std::string&) const
-  // get(const String&) const
+  // getMember(const std::string&) const
+  // getMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantRef get(const TString &key) const {
-    return getMember().get(key);
+  FORCE_INLINE VariantRef getMember(const TString &key) const {
+    return getUpstreamMember().getMember(key);
   }
 
-  // getOrCreate(char*) const
-  // getOrCreate(const char*) const
-  // getOrCreate(const __FlashStringHelper*) const
+  // getOrAddMember(char*) const
+  // getOrAddMember(const char*) const
+  // getOrAddMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef getOrCreate(TChar *key) const {
-    return getOrCreateMember().getOrCreate(key);
+  FORCE_INLINE VariantRef getOrAddMember(TChar *key) const {
+    return getOrAddUpstreamMember().getOrAddMember(key);
   }
 
-  // getOrCreate(const std::string&) const
-  // getOrCreate(const String&) const
+  // getOrAddMember(const std::string&) const
+  // getOrAddMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantRef getOrCreate(const TString &key) const {
-    return getOrCreateMember().getOrCreate(key);
+  FORCE_INLINE VariantRef getOrAddMember(const TString &key) const {
+    return getOrAddUpstreamMember().getOrAddMember(key);
   }
 
  private:
-  FORCE_INLINE VariantRef getMember() const {
-    return _object.get(_key);
+  FORCE_INLINE VariantRef getUpstreamMember() const {
+    return _object.getMember(_key);
   }
 
-  FORCE_INLINE VariantRef getOrCreateMember() const {
-    return _object.getOrCreate(_key);
+  FORCE_INLINE VariantRef getOrAddUpstreamMember() const {
+    return _object.getOrAddMember(_key);
   }
 
   TObject _object;

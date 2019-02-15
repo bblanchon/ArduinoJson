@@ -9,6 +9,10 @@ HEAD
 * Add option ARDUINOJSON_DECODE_UNICODE to enable it
 * Converted `JsonArray::copyFrom()/copyTo()` to free functions `copyArray()`
 * Renamed `JsonArray::copyFrom()` and `JsonObject::copyFrom()` to `set()`
+* Renamed `JsonArray::get()` to `getElement()`
+* Renamed `JsonArray::add()` (without arg) to `addElement()`
+* Renamed `JsonObject::get()` to `getMember()`
+* Renamed `JsonObject::getOrCreate()` to `getOrAddMember()`
 
 v6.8.0-beta (2019-01-30)
 -----------

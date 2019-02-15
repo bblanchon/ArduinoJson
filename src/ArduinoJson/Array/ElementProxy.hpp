@@ -24,7 +24,7 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
       : _array(array), _index(index) {}
 
   FORCE_INLINE this_type& operator=(const this_type& src) {
-    getElement().set(src.as<VariantConstRef>());
+    getUpstreamElement().set(src.as<VariantConstRef>());
     return *this;
   }
 
@@ -35,7 +35,7 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   //          std::string, String, ArrayRef, ObjectRef
   template <typename T>
   FORCE_INLINE this_type& operator=(const T& src) {
-    getElement().set(src);
+    getUpstreamElement().set(src);
     return *this;
   }
   //
@@ -43,27 +43,27 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   // TValue = char*, const char*, const __FlashStringHelper*
   template <typename T>
   FORCE_INLINE this_type& operator=(T* src) {
-    getElement().set(src);
+    getUpstreamElement().set(src);
     return *this;
   }
 
   FORCE_INLINE bool isNull() const {
-    return getElement().isNull();
+    return getUpstreamElement().isNull();
   }
 
   template <typename T>
   FORCE_INLINE typename VariantAs<T>::type as() const {
-    return getElement().template as<T>();
+    return getUpstreamElement().template as<T>();
   }
 
   template <typename T>
   FORCE_INLINE bool is() const {
-    return getElement().template is<T>();
+    return getUpstreamElement().template is<T>();
   }
 
   template <typename T>
   FORCE_INLINE typename VariantTo<T>::type to() const {
-    return getElement().template to<T>();
+    return getUpstreamElement().template to<T>();
   }
 
   // Replaces the value
@@ -73,53 +73,56 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   //          std::string, String, ArrayRef, ObjectRef
   template <typename TValue>
   FORCE_INLINE bool set(const TValue& value) const {
-    return getElement().set(value);
+    return getUpstreamElement().set(value);
   }
   //
   // bool set(TValue)
   // TValue = char*, const char*, const __FlashStringHelper*
   template <typename TValue>
   FORCE_INLINE bool set(TValue* value) const {
-    return getElement().set(value);
+    return getUpstreamElement().set(value);
   }
 
   template <typename Visitor>
   void accept(Visitor& visitor) const {
-    return getElement().accept(visitor);
+    return getUpstreamElement().accept(visitor);
   }
 
   FORCE_INLINE size_t size() const {
-    return getElement().size();
+    return getUpstreamElement().size();
   }
 
   template <typename TNestedKey>
-  VariantRef get(TNestedKey* key) const {
-    return getElement().get(key);
+  VariantRef getMember(TNestedKey* key) const {
+    return getUpstreamElement().getMember(key);
   }
 
   template <typename TNestedKey>
-  VariantRef get(const TNestedKey& key) const {
-    return getElement().get(key);
+  VariantRef getMember(const TNestedKey& key) const {
+    return getUpstreamElement().getMember(key);
   }
 
   template <typename TNestedKey>
-  VariantRef getOrCreate(TNestedKey* key) const {
-    return getElement().getOrCreate(key);
+  VariantRef getOrAddMember(TNestedKey* key) const {
+    return getUpstreamElement().getOrAddMember(key);
   }
 
   template <typename TNestedKey>
-  VariantRef getOrCreate(const TNestedKey& key) const {
-    return getElement().getOrCreate(key);
+  VariantRef getOrAddMember(const TNestedKey& key) const {
+    return getUpstreamElement().getOrAddMember(key);
   }
 
-  using ArrayShortcuts<ElementProxy>::add;
-  VariantRef add() const {
-    return getElement().add();
+  VariantRef addElement() const {
+    return getUpstreamElement().addElement();
+  }
+
+  VariantRef getElement(size_t index) const {
+    return getUpstreamElement().getElement(index);
   }
 
  private:
-  FORCE_INLINE VariantRef getElement() const {
-    return _array.get(_index);
+  FORCE_INLINE VariantRef getUpstreamElement() const {
+    return _array.getElement(_index);
   }
 
   TArray _array;

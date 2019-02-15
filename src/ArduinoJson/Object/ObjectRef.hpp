@@ -82,18 +82,18 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
     return iterator();
   }
 
-  // get(const std::string&) const
-  // get(const String&) const
+  // getMember(const std::string&) const
+  // getMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantConstRef get(const TString& key) const {
+  FORCE_INLINE VariantConstRef getMember(const TString& key) const {
     return get_impl(adaptString(key));
   }
 
-  // get(char*) const
-  // get(const char*) const
-  // get(const __FlashStringHelper*) const
+  // getMember(char*) const
+  // getMember(const char*) const
+  // getMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantConstRef get(TChar* key) const {
+  FORCE_INLINE VariantConstRef getMember(TChar* key) const {
     return get_impl(adaptString(key));
   }
 
@@ -166,33 +166,33 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
     return _data->copyFrom(*src._data, _pool);
   }
 
-  // get(const std::string&) const
-  // get(const String&) const
+  // getMember(const std::string&) const
+  // getMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantRef get(const TString& key) const {
+  FORCE_INLINE VariantRef getMember(const TString& key) const {
     return get_impl(adaptString(key));
   }
 
-  // get(char*) const
-  // get(const char*) const
-  // get(const __FlashStringHelper*) const
+  // getMember(char*) const
+  // getMember(const char*) const
+  // getMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef get(TChar* key) const {
+  FORCE_INLINE VariantRef getMember(TChar* key) const {
     return get_impl(adaptString(key));
   }
 
-  // getOrCreate(const std::string&) const
-  // getOrCreate(const String&) const
+  // getOrAddMember(const std::string&) const
+  // getOrAddMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantRef getOrCreate(const TString& key) const {
+  FORCE_INLINE VariantRef getOrAddMember(const TString& key) const {
     return getOrCreate_impl(adaptString(key));
   }
 
-  // getOrCreate(char*) const
-  // getOrCreate(const char*) const
-  // getOrCreate(const __FlashStringHelper*) const
+  // getOrAddMember(char*) const
+  // getOrAddMember(const char*) const
+  // getOrAddMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef getOrCreate(TChar* key) const {
+  FORCE_INLINE VariantRef getOrAddMember(TChar* key) const {
     return getOrCreate_impl(adaptString(key));
   }
 

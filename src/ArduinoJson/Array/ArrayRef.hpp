@@ -101,8 +101,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     return ArrayConstRef(_data);
   }
 
-  using ArrayShortcuts::add;
-  VariantRef add() const {
+  VariantRef addElement() const {
     return VariantRef(_pool, arrayAdd(_data, _pool));
   }
 
@@ -126,7 +125,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
   }
 
   // Gets the value at the specified index.
-  FORCE_INLINE VariantRef get(size_t index) const {
+  FORCE_INLINE VariantRef getElement(size_t index) const {
     return VariantRef(_pool, _data ? _data->get(index) : 0);
   }
 

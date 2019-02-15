@@ -9,7 +9,7 @@ using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("ElementProxy::add()") {
   DynamicJsonDocument doc(4096);
-  doc.add();
+  doc.addElement();
   ElementProxy<JsonDocument&> ep = doc[0];
 
   SECTION("add(int)") {
