@@ -4,8 +4,7 @@
 
 add_executable(JsonArrayTests 
 	add.cpp
-	copyFrom.cpp
-	copyTo.cpp
+	copyArray.cpp
 	createNested.cpp
 	equals.cpp
 	get.cpp

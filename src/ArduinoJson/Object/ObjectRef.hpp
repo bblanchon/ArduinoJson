@@ -161,7 +161,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
     _data->clear();
   }
 
-  FORCE_INLINE bool copyFrom(ObjectConstRef src) {
+  FORCE_INLINE bool set(ObjectConstRef src) {
     if (!_data || !src._data) return false;
     return _data->copyFrom(*src._data, _pool);
   }

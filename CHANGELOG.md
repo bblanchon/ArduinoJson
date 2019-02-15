@@ -7,6 +7,8 @@ HEAD
 * Decode escaped Unicode characters like \u00DE (issue #304, PR #791)
   Many thanks to Daniel Schulte (aka @trilader) who implemented this feature.
 * Add option ARDUINOJSON_DECODE_UNICODE to enable it
+* Converted `JsonArray::copyFrom()/copyTo()` to free functions `copyArray()`
+* Renamed `JsonArray::copyFrom()` and `JsonObject::copyFrom()` to `set()`
 
 v6.8.0-beta (2019-01-30)
 -----------
