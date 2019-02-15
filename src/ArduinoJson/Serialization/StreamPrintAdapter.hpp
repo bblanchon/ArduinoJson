@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -33,7 +33,7 @@ class StreamPrintAdapter {
 
   std::ostream& _os;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
 
 #endif  // ARDUINOJSON_ENABLE_STD_STREAM

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -37,10 +37,10 @@ struct StringTraits<RawJsonString<String>, void> {
   static const bool has_equals = false;
   static const bool should_duplicate = StringTraits<String>::should_duplicate;
 };
-}
+}  // namespace Internals
 
 template <typename T>
 inline Internals::RawJsonString<T> RawJson(T str) {
   return Internals::RawJsonString<T>(str);
 }
-}
+}  // namespace ArduinoJson

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -25,4 +25,4 @@ inline JsonObject &JsonObject::createNestedObject_impl(TStringRef key) {
   set(key, object);
   return object;
 }
-}
+}  // namespace ArduinoJson

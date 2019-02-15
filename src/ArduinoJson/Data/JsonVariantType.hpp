@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -23,5 +23,5 @@ enum JsonVariantType {
   JSON_OBJECT,            // JsonVariant stores a pointer to a JsonObject
   JSON_FLOAT              // JsonVariant stores a JsonFloat
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

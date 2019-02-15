@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -113,5 +113,5 @@ inline std::ostream &operator<<(std::ostream &os, const JsonPrintable<T> &v) {
   return v.printTo(os);
 }
 #endif
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

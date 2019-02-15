@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -54,7 +54,7 @@ struct StringTraits<
     typename EnableIf<IsBaseOf<
         std::istream, typename RemoveReference<TStream>::type>::value>::type>
     : StdStreamTraits {};
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
 
 #endif

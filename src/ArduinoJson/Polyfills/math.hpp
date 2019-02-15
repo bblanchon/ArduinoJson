@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -15,5 +15,5 @@ template <typename T>
 bool isInfinity(T x) {
   return x != 0.0 && x * 2 == x;
 }
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

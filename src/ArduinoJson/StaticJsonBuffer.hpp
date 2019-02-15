@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -91,7 +91,7 @@ class StaticJsonBufferBase : public JsonBufferBase<StaticJsonBufferBase> {
   size_t _capacity;
   size_t _size;
 };
-}
+}  // namespace Internals
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -115,7 +115,7 @@ class StaticJsonBuffer : public Internals::StaticJsonBufferBase {
  private:
   char _buffer[CAPACITY];
 };
-}
+}  // namespace ArduinoJson
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

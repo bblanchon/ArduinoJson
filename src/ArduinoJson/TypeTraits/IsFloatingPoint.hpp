@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -14,5 +14,5 @@ template <typename T>
 struct IsFloatingPoint {
   static const bool value = IsSame<T, float>::value || IsSame<T, double>::value;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -17,5 +17,5 @@ template <typename T>
 struct IsConst<const T> {
   static const bool value = true;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

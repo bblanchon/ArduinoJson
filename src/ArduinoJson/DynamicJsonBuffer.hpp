@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -152,7 +152,7 @@ class DynamicJsonBufferBase
   Block* _head;
   size_t _nextBlockCapacity;
 };
-}
+}  // namespace Internals
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -167,4 +167,4 @@ class DynamicJsonBufferBase
 // more suitable for embedded systems.
 typedef Internals::DynamicJsonBufferBase<Internals::DefaultAllocator>
     DynamicJsonBuffer;
-}
+}  // namespace ArduinoJson

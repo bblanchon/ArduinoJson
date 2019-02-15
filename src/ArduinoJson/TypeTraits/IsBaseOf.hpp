@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -23,5 +23,5 @@ class IsBaseOf {
     value = sizeof(probe(reinterpret_cast<TDerived *>(0))) == sizeof(Yes)
   };
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

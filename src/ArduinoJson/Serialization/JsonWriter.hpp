@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -151,5 +151,5 @@ class JsonWriter {
  private:
   JsonWriter &operator=(const JsonWriter &);  // cannot be assigned
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

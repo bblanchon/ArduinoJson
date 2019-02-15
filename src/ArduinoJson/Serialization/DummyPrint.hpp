@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -18,5 +18,5 @@ class DummyPrint {
     return strlen(s);
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

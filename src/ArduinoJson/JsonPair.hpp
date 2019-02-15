@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -13,4 +13,4 @@ struct JsonPair {
   const char* key;
   JsonVariant value;
 };
-}
+}  // namespace ArduinoJson

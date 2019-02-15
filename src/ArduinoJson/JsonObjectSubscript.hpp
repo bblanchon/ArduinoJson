@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -102,8 +102,8 @@ inline std::ostream& operator<<(std::ostream& os,
   return source.printTo(os);
 }
 #endif
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
 
 #ifdef _MSC_VER
 #pragma warning(pop)

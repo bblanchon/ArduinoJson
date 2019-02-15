@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -167,5 +167,5 @@ struct FloatTraits<T, 4 /*32bits*/> {
     return forge(0x7f800000);
   }
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

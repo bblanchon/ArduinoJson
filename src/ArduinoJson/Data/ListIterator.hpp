@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -56,5 +56,5 @@ class ListIterator {
  private:
   ListNode<T> *_node;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

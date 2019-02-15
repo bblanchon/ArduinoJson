@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -19,5 +19,5 @@ typedef unsigned _int64 JsonUInt;
 typedef long JsonInteger;
 typedef unsigned long JsonUInt;
 #endif
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

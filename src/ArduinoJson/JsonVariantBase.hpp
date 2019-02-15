@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -20,5 +20,5 @@ class JsonVariantBase : public JsonPrintable<TImpl>,
                         public JsonVariantOr<TImpl>,
                         public JsonVariantSubscripts<TImpl>,
                         public JsonVariantTag {};
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

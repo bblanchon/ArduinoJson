@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -105,7 +105,7 @@ inline std::ostream& operator<<(std::ostream& os,
   return source.printTo(os);
 }
 #endif
-}
+}  // namespace Internals
 
 inline Internals::JsonArraySubscript JsonArray::operator[](size_t index) {
   return Internals::JsonArraySubscript(*this, index);
@@ -115,7 +115,7 @@ inline const Internals::JsonArraySubscript JsonArray::operator[](
     size_t index) const {
   return Internals::JsonArraySubscript(*const_cast<JsonArray*>(this), index);
 }
-}
+}  // namespace ArduinoJson
 
 #ifdef _MSC_VER
 #pragma warning(pop)

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -32,5 +32,5 @@ class StaticStringBuilder {
   char *end;
   char *p;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

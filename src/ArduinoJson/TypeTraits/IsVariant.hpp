@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -13,5 +13,5 @@ class JsonVariantTag {};
 
 template <typename T>
 struct IsVariant : IsBaseOf<JsonVariantTag, T> {};
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

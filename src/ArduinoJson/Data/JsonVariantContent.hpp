@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -23,5 +23,5 @@ union JsonVariantContent {
   JsonArray* asArray;    // asArray cannot be null
   JsonObject* asObject;  // asObject cannot be null
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

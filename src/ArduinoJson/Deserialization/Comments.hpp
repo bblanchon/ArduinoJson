@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -57,5 +57,5 @@ void skipSpacesAndComments(TInput& input) {
     }
   }
 }
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

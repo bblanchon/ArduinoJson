@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -20,5 +20,5 @@ struct ListNode : public Internals::JsonBufferAllocated {
   ListNode<T> *next;
   T content;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

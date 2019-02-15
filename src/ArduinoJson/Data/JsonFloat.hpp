@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -14,5 +14,5 @@ typedef double JsonFloat;
 #else
 typedef float JsonFloat;
 #endif
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -28,5 +28,5 @@ class JsonSerializer {
   static void serialize(const JsonObjectSubscript<TKey> &, Writer &);
   static void serialize(const JsonVariant &, Writer &);
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

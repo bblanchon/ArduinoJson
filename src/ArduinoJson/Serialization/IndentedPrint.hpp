@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -64,5 +64,5 @@ class IndentedPrint {
   static const int MAX_LEVEL = 15;    // because it's only 4 bits
   static const int MAX_TAB_SIZE = 7;  // because it's only 3 bits
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
