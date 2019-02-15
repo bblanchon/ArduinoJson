@@ -272,6 +272,12 @@ TEST_CASE("deserialize JSON object") {
 
       REQUIRE(err == DeserializationError::Ok);
     }
+
+    SECTION("Repeated key") {
+      DeserializationError err = deserializeJson(doc, "{a:{b:{c:1}},a:2}");
+
+      REQUIRE(err == DeserializationError::Ok);
+    }
   }
 
   SECTION("Block comments") {

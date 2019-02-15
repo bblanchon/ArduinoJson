@@ -19,4 +19,5 @@
 #define ARDUINOJSON_NAMESPACE                                                  \
   ARDUINOJSON_CONCAT8(ArduinoJson, ARDUINOJSON_VERSION_MAJOR,                  \
                       ARDUINOJSON_VERSION_MINOR, ARDUINOJSON_VERSION_REVISION, \
-                      _, ARDUINOJSON_USE_LONG_LONG, _, ARDUINOJSON_USE_DOUBLE)
+                      _, ARDUINOJSON_USE_LONG_LONG, ARDUINOJSON_USE_DOUBLE,    \
+                      ARDUINOJSON_DECODE_UNICODE)

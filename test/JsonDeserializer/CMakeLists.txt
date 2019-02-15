@@ -9,6 +9,7 @@ add_executable(JsonDeserializerTests
 	deserializeJsonObject.cpp
 	deserializeJsonObjectStatic.cpp
 	deserializeJsonValue.cpp
+	deserializeJsonString.cpp
 	input_types.cpp
 	nestingLimit.cpp
 )

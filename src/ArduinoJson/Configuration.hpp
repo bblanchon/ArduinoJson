@@ -120,6 +120,11 @@
 #endif
 #endif
 
+// Convert unicode escape sequence (\u0123) to UTF-8
+#ifndef ARDUINOJSON_DECODE_UNICODE
+#define ARDUINOJSON_DECODE_UNICODE 0
+#endif
+
 // Control the exponentiation threshold for big numbers
 // CAUTION: cannot be more that 1e9 !!!!
 #ifndef ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD

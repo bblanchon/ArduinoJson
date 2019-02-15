@@ -11,6 +11,7 @@
 #include "../Polyfills/type_traits.hpp"
 #include "../Variant/VariantData.hpp"
 #include "EscapeSequence.hpp"
+#include "Utf8.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -192,7 +193,18 @@ class JsonDeserializer {
       if (c == '\\') {
         c = current();
         if (c == '\0') return DeserializationError::IncompleteInput;
-        if (c == 'u') return DeserializationError::NotSupported;
+        if (c == 'u') {
+#if ARDUINOJSON_DECODE_UNICODE
+          uint16_t codepoint;
+          move();
+          DeserializationError err = parseCodepoint(codepoint);
+          if (err) return err;
+          Utf8::encodeCodepoint(codepoint, builder);
+          continue;
+#else
+          return DeserializationError::NotSupported;
+#endif
+        }
         // replace char
         c = EscapeSequence::unescapeChar(c);
         if (c == '\0') return DeserializationError::InvalidInput;
@@ -256,6 +268,19 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
+  DeserializationError parseCodepoint(uint16_t &codepoint) {
+    codepoint = 0;
+    for (uint8_t i = 0; i < 4; ++i) {
+      char digit = current();
+      if (!digit) return DeserializationError::IncompleteInput;
+      uint8_t value = decodeHex(digit);
+      if (value > 0x0F) return DeserializationError::InvalidInput;
+      codepoint = uint16_t((codepoint << 4) | value);
+      move();
+    }
+    return DeserializationError::Ok;
+  }
+
   static inline bool isBetween(char c, char min, char max) {
     return min <= c && c <= max;
   }
@@ -267,6 +292,12 @@ class JsonDeserializer {
 
   static inline bool isQuote(char c) {
     return c == '\'' || c == '\"';
+  }
+
+  static inline uint8_t decodeHex(char c) {
+    if (c < 'A') return uint8_t(c - '0');
+    c &= ~0x20;  // uppercase
+    return uint8_t(c - 'A' + 10);
   }
 
   DeserializationError skipSpacesAndComments() {
