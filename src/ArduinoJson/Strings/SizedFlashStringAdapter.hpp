@@ -29,7 +29,7 @@ class SizedFlashStringAdapter {
   }
 
   size_t size() const {
-    return strlen_P(reinterpret_cast<const char*>(_str));
+    return _size;
   }
 
   bool isStatic() const {

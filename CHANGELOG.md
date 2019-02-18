@@ -13,6 +13,8 @@ HEAD
 * Renamed `JsonArray::add()` (without arg) to `addElement()`
 * Renamed `JsonObject::get()` to `getMember()`
 * Renamed `JsonObject::getOrCreate()` to `getOrAddMember()`
+* Fixed `JsonVariant::isNull()` not returning `true` after `set((char*)0)`
+* Fixed segfault after `variant.set(serialized((char*)0))`
 
 v6.8.0-beta (2019-01-30)
 -----------

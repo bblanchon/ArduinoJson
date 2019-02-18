@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../Misc/SerializedValue.hpp"
+#include "../Polyfills/gsl/not_null.hpp"
 #include "VariantContent.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -179,9 +180,13 @@ class VariantData {
   }
 
   void setLinkedRaw(SerializedValue<const char *> value) {
-    setType(VALUE_IS_LINKED_RAW);
-    _content.asRaw.data = value.data();
-    _content.asRaw.size = value.size();
+    if (value.data()) {
+      setType(VALUE_IS_LINKED_RAW);
+      _content.asRaw.data = value.data();
+      _content.asRaw.size = value.size();
+    } else {
+      setType(VALUE_IS_NULL);
+    }
   }
 
   template <typename T>
@@ -220,30 +225,36 @@ class VariantData {
   }
 
   void setLinkedString(const char *value) {
-    setType(VALUE_IS_LINKED_STRING);
-    _content.asString = value;
+    if (value) {
+      setType(VALUE_IS_LINKED_STRING);
+      _content.asString = value;
+    } else {
+      setType(VALUE_IS_NULL);
+    }
   }
 
   void setNull() {
     setType(VALUE_IS_NULL);
   }
 
-  void setOwnedString(const char *s) {
+  void setOwnedString(not_null<const char *> s) {
     setType(VALUE_IS_OWNED_STRING);
-    _content.asString = s;
+    _content.asString = s.get();
   }
 
-  template <typename T>
-  bool setOwnedString(T value, MemoryPool *pool) {
-    char *dup = value.save(pool);
-    if (dup) {
-      setType(VALUE_IS_OWNED_STRING);
-      _content.asString = dup;
+  bool setOwnedString(const char *s) {
+    if (s) {
+      setOwnedString(make_not_null(s));
       return true;
     } else {
       setType(VALUE_IS_NULL);
       return false;
     }
+  }
+
+  template <typename T>
+  bool setOwnedString(T value, MemoryPool *pool) {
+    return setOwnedString(value.save(pool));
   }
 
   void setUnsignedInteger(UInt value) {

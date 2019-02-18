@@ -29,6 +29,7 @@ class ConstRamStringAdapter {
   }
 
   size_t size() const {
+    if (!_str) return 0;
     return strlen(_str);
   }
 

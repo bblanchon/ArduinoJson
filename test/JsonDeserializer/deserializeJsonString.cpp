@@ -64,3 +64,11 @@ TEST_CASE("Invalid JSON string") {
     REQUIRE(deserializeJson(doc, input) == DeserializationError::InvalidInput);
   }
 }
+
+TEST_CASE("Not enough room to duplicate the string") {
+  DynamicJsonDocument doc(4);
+
+  REQUIRE(deserializeJson(doc, "\"hello world!\"") ==
+          DeserializationError::NoMemory);
+  REQUIRE(doc.isNull() == true);
+}

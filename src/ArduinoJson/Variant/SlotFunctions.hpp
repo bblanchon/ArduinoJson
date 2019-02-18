@@ -15,11 +15,11 @@ template <typename TAdaptedString>
 inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool) {
   if (!var) return false;
   if (key.isStatic()) {
-    var->setLinkedKey(key.data());
+    var->setLinkedKey(make_not_null(key.data()));
   } else {
-    char* dup = key.save(pool);
+    const char* dup = key.save(pool);
     if (!dup) return false;
-    var->setOwnedKey(dup);
+    var->setOwnedKey(make_not_null(dup));
   }
   return true;
 }

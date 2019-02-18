@@ -35,15 +35,40 @@ TEST_CASE("JsonVariant::isNull()") {
     REQUIRE(variant.isNull() == false);
   }
 
-  /*  SECTION("return true when InvalidArray") {
-      variant.set(JsonArray());
-      REQUIRE(variant.isNull() == true);
-    }
-  */
-  /*  SECTION("return true when InvalidObject") {
-      variant.set(JsonObject());
-      REQUIRE(variant.isNull() == true);
-    }*/
+  SECTION("return true after set(JsonArray())") {
+    variant.set(JsonArray());
+    REQUIRE(variant.isNull() == true);
+  }
+
+  SECTION("return true after set(JsonObject())") {
+    variant.set(JsonObject());
+    REQUIRE(variant.isNull() == true);
+  }
+
+  SECTION("return false after set('hello')") {
+    variant.set("hello");
+    REQUIRE(variant.isNull() == false);
+  }
+
+  SECTION("return true after set((char*)0)") {
+    variant.set(static_cast<char*>(0));
+    REQUIRE(variant.isNull() == true);
+  }
+
+  SECTION("return true after set((const char*)0)") {
+    variant.set(static_cast<const char*>(0));
+    REQUIRE(variant.isNull() == true);
+  }
+
+  SECTION("return true after set(serialized((char*)0))") {
+    variant.set(serialized(static_cast<char*>(0)));
+    REQUIRE(variant.isNull() == true);
+  }
+
+  SECTION("return true after set(serialized((const char*)0))") {
+    variant.set(serialized(static_cast<const char*>(0)));
+    REQUIRE(variant.isNull() == true);
+  }
 
   SECTION("works with JsonVariantConst") {
     variant.set(42);

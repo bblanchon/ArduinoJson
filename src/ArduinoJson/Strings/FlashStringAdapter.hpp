@@ -33,6 +33,7 @@ class FlashStringAdapter {
   }
 
   size_t size() const {
+    if (!_str) return 0;
     return strlen_P(reinterpret_cast<const char*>(_str));
   }
 

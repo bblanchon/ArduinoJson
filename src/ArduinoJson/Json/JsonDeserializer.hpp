@@ -19,7 +19,6 @@ template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
   typedef typename remove_reference<TStringStorage>::type::StringBuilder
       StringBuilder;
-  typedef const char *StringType;
 
  public:
   JsonDeserializer(MemoryPool &pool, TReader reader,
@@ -124,10 +123,10 @@ class JsonDeserializer {
       if (!slot) return DeserializationError::NoMemory;
 
       // Parse key
-      StringType key;
+      const char *key;
       err = parseKey(key);
       if (err) return err;
-      slot->setOwnedKey(key);
+      slot->setOwnedKey(make_not_null(key));
 
       // Skip spaces
       err = skipSpacesAndComments();
@@ -162,7 +161,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseKey(StringType &key) {
+  DeserializationError parseKey(const char *&key) {
     if (isQuote(current())) {
       return parseQuotedString(key);
     } else {
@@ -171,14 +170,14 @@ class JsonDeserializer {
   }
 
   DeserializationError parseStringValue(VariantData &variant) {
-    StringType value;
+    const char *value;
     DeserializationError err = parseQuotedString(value);
     if (err) return err;
-    variant.setOwnedString(value);
+    variant.setOwnedString(make_not_null(value));
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseQuotedString(StringType &result) {
+  DeserializationError parseQuotedString(const char *&result) {
     StringBuilder builder = _stringStorage.startString();
     const char stopChar = current();
 
@@ -219,7 +218,7 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseNonQuotedString(StringType &result) {
+  DeserializationError parseNonQuotedString(const char *&result) {
     StringBuilder builder = _stringStorage.startString();
 
     char c = current();

@@ -17,7 +17,6 @@ template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
   typedef typename remove_reference<TStringStorage>::type::StringBuilder
       StringBuilder;
-  typedef const char *StringType;
 
  public:
   MsgPackDeserializer(MemoryPool &pool, TReader reader,
@@ -227,20 +226,20 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  DeserializationError readString(StringType &str) {
+  DeserializationError readString(const char *&str) {
     T size;
     if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readString(str, size);
   }
 
   DeserializationError readString(VariantData &variant, size_t n) {
-    StringType s;
+    const char *s;
     DeserializationError err = readString(s, n);
-    if (!err) variant.setOwnedString(s);
+    if (!err) variant.setOwnedString(make_not_null(s));
     return err;
   }
 
-  DeserializationError readString(StringType &result, size_t n) {
+  DeserializationError readString(const char *&result, size_t n) {
     StringBuilder builder = _stringStorage.startString();
     for (; n; --n) {
       uint8_t c;
@@ -287,10 +286,10 @@ class MsgPackDeserializer {
       VariantSlot *slot = object.addSlot(_pool);
       if (!slot) return DeserializationError::NoMemory;
 
-      StringType key;
+      const char *key;
       DeserializationError err = parseKey(key);
       if (err) return err;
-      slot->setOwnedKey(key);
+      slot->setOwnedKey(make_not_null(key));
 
       err = parse(*slot->data());
       if (err) return err;
@@ -299,7 +298,7 @@ class MsgPackDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseKey(StringType &key) {
+  DeserializationError parseKey(const char *&key) {
     uint8_t code;
     if (!readByte(code)) return DeserializationError::IncompleteInput;
 

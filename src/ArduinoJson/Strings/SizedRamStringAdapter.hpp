@@ -30,7 +30,7 @@ class SizedRamStringAdapter {
   }
 
   size_t size() const {
-    return strlen(reinterpret_cast<const char*>(_str));
+    return _size;
   }
 
   bool isStatic() const {
