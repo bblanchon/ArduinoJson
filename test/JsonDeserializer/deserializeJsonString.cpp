@@ -6,8 +6,6 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using namespace Catch::Matchers;
-
 TEST_CASE("Valid JSON strings value") {
   struct TestCase {
     const char* input;

@@ -253,18 +253,29 @@ class JsonDeserializer {
 
     if (isInteger(buffer)) {
       result.setInteger(parseInteger<Integer>(buffer));
-    } else if (isFloat(buffer)) {
-      result.setFloat(parseFloat<Float>(buffer));
-    } else if (!strcmp(buffer, "true")) {
-      result.setBoolean(true);
-    } else if (!strcmp(buffer, "false")) {
-      result.setBoolean(false);
-    } else if (!strcmp(buffer, "null")) {
-      // already null
-    } else {
-      return DeserializationError::InvalidInput;
+      return DeserializationError::Ok;
     }
-    return DeserializationError::Ok;
+    if (isFloat(buffer)) {
+      result.setFloat(parseFloat<Float>(buffer));
+      return DeserializationError::Ok;
+    }
+    c = buffer[0];
+    if (c == 't') {  // true
+      result.setBoolean(true);
+      return n == 4 ? DeserializationError::Ok
+                    : DeserializationError::IncompleteInput;
+    }
+    if (c == 'f') {  // false
+      result.setBoolean(false);
+      return n == 5 ? DeserializationError::Ok
+                    : DeserializationError::IncompleteInput;
+    }
+    if (c == 'n') {  // null
+      // the variant is already null
+      return n == 4 ? DeserializationError::Ok
+                    : DeserializationError::IncompleteInput;
+    }
+    return DeserializationError::InvalidInput;
   }
 
   DeserializationError parseCodepoint(uint16_t &codepoint) {
