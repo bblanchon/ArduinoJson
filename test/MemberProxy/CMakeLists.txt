@@ -4,6 +4,7 @@
 
 add_executable(MemberProxyTests
 	add.cpp
+	clear.cpp
 	subscript.cpp
 	set.cpp
 	size.cpp

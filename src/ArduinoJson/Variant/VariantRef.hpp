@@ -136,6 +136,10 @@ class VariantRef : public VariantRefBase<VariantData>,
   // Creates an uninitialized VariantRef
   FORCE_INLINE VariantRef() : base_type(0), _pool(0) {}
 
+  FORCE_INLINE void clear() const {
+    return variantSetNull(_data);
+  }
+
   // set(bool value)
   FORCE_INLINE bool set(bool value) const {
     return variantSetBoolean(_data, value);

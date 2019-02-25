@@ -17,6 +17,7 @@ HEAD
 * Fixed segfault after `variant.set(serialized((char*)0))`
 * Detect `IncompleteInput` in `false`, `true`, and `null`
 * Added `JsonDocument::size()`
+* Added `JsonVariant::clear()`
 
 v6.8.0-beta (2019-01-30)
 -----------

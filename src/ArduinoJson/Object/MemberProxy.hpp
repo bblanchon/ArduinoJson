@@ -49,6 +49,10 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return *this;
   }
 
+  FORCE_INLINE void clear() const {
+    getUpstreamMember().clear();
+  }
+
   FORCE_INLINE bool isNull() const {
     return getUpstreamMember().isNull();
   }

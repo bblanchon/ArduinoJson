@@ -47,6 +47,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return *this;
   }
 
+  FORCE_INLINE void clear() const {
+    getUpstreamElement().clear();
+  }
+
   FORCE_INLINE bool isNull() const {
     return getUpstreamElement().isNull();
   }
