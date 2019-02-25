@@ -63,6 +63,10 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getUpstreamMember().template is<TValue>();
   }
 
+  FORCE_INLINE size_t size() const {
+    return getUpstreamMember().size();
+  }
+
   template <typename TValue>
   FORCE_INLINE typename VariantTo<TValue>::type to() {
     return getOrAddUpstreamMember().template to<TValue>();

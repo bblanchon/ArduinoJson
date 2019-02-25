@@ -57,6 +57,10 @@ class JsonDocument : public Visitable {
     return _pool.capacity();
   }
 
+  size_t size() const {
+    return _data.size();
+  }
+
   bool set(const JsonDocument& src) {
     return to<VariantRef>().set(src.as<VariantRef>());
   }
