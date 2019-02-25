@@ -169,6 +169,15 @@ class VariantData {
     return type() == VALUE_IS_NULL;
   }
 
+  void remove(size_t index) {
+    if (isArray()) _content.asCollection.remove(index);
+  }
+
+  template <typename TAdaptedString>
+  void remove(TAdaptedString key) {
+    if (isObject()) _content.asCollection.remove(key);
+  }
+
   void setBoolean(bool value) {
     setType(VALUE_IS_BOOLEAN);
     _content.asInteger = static_cast<UInt>(value);

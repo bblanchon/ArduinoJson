@@ -71,6 +71,25 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getUpstreamMember().size();
   }
 
+  FORCE_INLINE void remove(size_t index) const {
+    getUpstreamMember().remove(index);
+  }
+  // remove(char*) const
+  // remove(const char*) const
+  // remove(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar *>::value>::type remove(
+      TChar *key) const {
+    getUpstreamMember().remove(key);
+  }
+  // remove(const std::string&) const
+  // remove(const String&) const
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
+      const TString &key) const {
+    getUpstreamMember().remove(key);
+  }
+
   template <typename TValue>
   FORCE_INLINE typename VariantTo<TValue>::type to() {
     return getOrAddUpstreamMember().template to<TValue>();

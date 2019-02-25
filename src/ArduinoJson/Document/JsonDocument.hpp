@@ -223,6 +223,25 @@ class JsonDocument : public Visitable {
     return addElement().set(value);
   }
 
+  FORCE_INLINE void remove(size_t index) {
+    _data.remove(index);
+  }
+  // remove(char*)
+  // remove(const char*)
+  // remove(const __FlashStringHelper*)
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value>::type remove(
+      TChar* key) {
+    _data.remove(adaptString(key));
+  }
+  // remove(const std::string&)
+  // remove(const String&)
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
+      const TString& key) {
+    _data.remove(adaptString(key));
+  }
+
  protected:
   JsonDocument(MemoryPool pool) : _pool(pool) {
     _data.setNull();
