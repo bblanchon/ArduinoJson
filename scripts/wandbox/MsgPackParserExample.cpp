@@ -49,17 +49,14 @@ int main() {
     return 1;
   }
 
-  // Get the root object in the document
-  JsonObject root = doc.as<JsonObject>();
-
   // Fetch values.
   //
   // Most of the time, you can rely on the implicit casts.
   // In other case, you can do doc["time"].as<long>();
-  const char* sensor = root["sensor"];
-  long time = root["time"];
-  double latitude = root["data"][0];
-  double longitude = root["data"][1];
+  const char* sensor = doc["sensor"];
+  long time = doc["time"];
+  double latitude = doc["data"][0];
+  double longitude = doc["data"][1];
 
   // Print values.
   std::cout << sensor << std::endl;
