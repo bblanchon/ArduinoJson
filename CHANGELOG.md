@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.9.0 (2019-02-26)
+------
 
 * Decode escaped Unicode characters like \u00DE (issue #304, PR #791)
   Many thanks to Daniel Schulte (aka @trilader) who implemented this feature.
