@@ -24,7 +24,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wshadow
 		-Wsign-promo
 		-Wstrict-aliasing
-		-Wstrict-overflow=5
 		-Wundef
 	)
 
