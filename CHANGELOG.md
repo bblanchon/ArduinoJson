@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added a clear error message for `StaticJsonBuffer` and `DynamicJsonBuffer`
+
 v6.9.0 (2019-02-26)
 ------
 

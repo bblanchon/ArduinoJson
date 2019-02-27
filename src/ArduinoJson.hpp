@@ -28,6 +28,8 @@
 #include "ArduinoJson/MsgPack/MsgPackDeserializer.hpp"
 #include "ArduinoJson/MsgPack/MsgPackSerializer.hpp"
 
+#include "ArduinoJson/compatibility.hpp"
+
 namespace ArduinoJson {
 typedef ARDUINOJSON_NAMESPACE::ArrayConstRef JsonArrayConst;
 typedef ARDUINOJSON_NAMESPACE::ArrayRef JsonArray;
