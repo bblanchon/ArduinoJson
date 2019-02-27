@@ -1,6 +1,6 @@
 #!/bin/sh -ex
 
-if [ $(uname) = 'Darwin' ]; then
+if [ "$(uname)" = 'Darwin' ]; then
 	URL=https://cmake.org/files/v3.4/cmake-3.4.3-Darwin-x86_64.tar.gz
 	CMAKE=/tmp/CMake.app/Contents/bin/cmake
 	CTEST=/tmp/CMake.app/Contents/bin/ctest
@@ -23,8 +23,11 @@ fi
 
 if [ -n "$SANITIZE" ]; then
 	export CXXFLAGS="-fsanitize=$SANITIZE"
+	BUILD_TYPE="Debug"
+else
+	BUILD_TYPE="Release"
 fi
 
-$CMAKE .
+$CMAKE -DCMAKE_BUILD_TYPE=$BUILD_TYPE .
 $CMAKE --build .
 $CTEST --output-on-failure .
