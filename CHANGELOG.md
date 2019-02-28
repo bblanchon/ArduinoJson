@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed warning "unused variable" with GCC 4.4 (issue #912)
+
 v5.13.4
 -------
 
