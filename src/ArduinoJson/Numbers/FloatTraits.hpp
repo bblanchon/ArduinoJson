@@ -98,12 +98,8 @@ struct FloatTraits<T, 8 /*64bits*/> {
   // we use this function to workaround platforms with single precision literals
   // (for example, when -fsingle-precision-constant is passed to GCC)
   static T forge(uint32_t msb, uint32_t lsb) {
-    union {
-      uint64_t integerBits;
-      T floatBits;
-    };
-    integerBits = (uint64_t(msb) << 32) | lsb;
-    return floatBits;
+    uint64_t bits = (uint64_t(msb) << 32) | lsb;
+    return *reinterpret_cast<T*>(&bits);
   }
 };
 
@@ -150,12 +146,7 @@ struct FloatTraits<T, 4 /*32bits*/> {
   }
 
   static T forge(uint32_t bits) {
-    union {
-      uint32_t integerBits;
-      T floatBits;
-    };
-    integerBits = bits;
-    return floatBits;
+    return *reinterpret_cast<T*>(&bits);
   }
 
   static T nan() {
