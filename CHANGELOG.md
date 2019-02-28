@@ -6,6 +6,7 @@ HEAD
 
 * Fixed warning "unused variable" with GCC 4.4 (issue #912)
 * Fixed warning "cast  increases required alignment" (issue #914)
+* Fixed warning "conversion may alter value" (issue #914)
 * Added a clear error message for `StaticJsonBuffer` and `DynamicJsonBuffer`
 
 v6.9.0 (2019-02-26)

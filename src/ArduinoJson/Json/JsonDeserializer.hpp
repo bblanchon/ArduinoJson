@@ -306,7 +306,7 @@ class JsonDeserializer {
 
   static inline uint8_t decodeHex(char c) {
     if (c < 'A') return uint8_t(c - '0');
-    c &= ~0x20;  // uppercase
+    c = char(c & ~0x20);  // uppercase
     return uint8_t(c - 'A' + 10);
   }
 
