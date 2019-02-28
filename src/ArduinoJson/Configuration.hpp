@@ -139,7 +139,7 @@
 #ifndef ARDUINOJSON_LITTLE_ENDIAN
 #if defined(_MSC_VER) ||                                                      \
     (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) || \
-    (defined(__LITTLE_ENDIAN__))
+    defined(__LITTLE_ENDIAN__) || defined(__i386) || defined(__x86_64)
 #define ARDUINOJSON_LITTLE_ENDIAN 1
 #else
 #define ARDUINOJSON_LITTLE_ENDIAN 0
