@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stdlib.h>  // for size_t
 #include "../Configuration.hpp"
+#include "../Polyfills/alias_cast.hpp"
 #include "../Polyfills/math.hpp"
 
 namespace ArduinoJson {
@@ -99,8 +100,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
   // we use this function to workaround platforms with single precision literals
   // (for example, when -fsingle-precision-constant is passed to GCC)
   static T forge(uint32_t msb, uint32_t lsb) {
-    uint64_t bits = (uint64_t(msb) << 32) | lsb;
-    return *reinterpret_cast<T*>(&bits);
+    return alias_cast<T>((uint64_t(msb) << 32) | lsb);
   }
 };
 
@@ -147,7 +147,7 @@ struct FloatTraits<T, 4 /*32bits*/> {
   }
 
   static T forge(uint32_t bits) {
-    return *reinterpret_cast<T*>(&bits);
+    return alias_cast<T>(bits);
   }
 
   static T nan() {
