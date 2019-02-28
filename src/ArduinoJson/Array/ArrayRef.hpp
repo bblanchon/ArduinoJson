@@ -23,7 +23,8 @@ template <typename TData>
 class ArrayRefBase {
  public:
   operator VariantConstRef() const {
-    return VariantConstRef(reinterpret_cast<const VariantData*>(_data));
+    const void* data = _data;  // prevent warning cast-align
+    return VariantConstRef(reinterpret_cast<const VariantData*>(data));
   }
 
   template <typename Visitor>
@@ -94,7 +95,8 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
       : base_type(data), _pool(pool) {}
 
   operator VariantRef() {
-    return VariantRef(_pool, reinterpret_cast<VariantData*>(_data));
+    void* data = _data;  // prevent warning cast-align
+    return VariantRef(_pool, reinterpret_cast<VariantData*>(data));
   }
 
   operator ArrayConstRef() const {
