@@ -17,3 +17,5 @@
 #include "ArduinoJson/JsonObjectImpl.hpp"
 #include "ArduinoJson/JsonVariantImpl.hpp"
 #include "ArduinoJson/Serialization/JsonSerializerImpl.hpp"
+
+#include "ArduinoJson/compatibility.hpp"

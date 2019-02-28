@@ -6,6 +6,7 @@ HEAD
 
 * Fixed warning "unused variable" with GCC 4.4 (issue #912)
 * Fixed warning "maybe uninitialized" (issue #909)
+* Added an clear message for `StaticJsonDocument`, `DynamicJsonDocument`...
 
 v5.13.4
 -------
