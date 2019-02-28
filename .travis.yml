@@ -42,6 +42,10 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
       env: SCRIPT=test _CC=gcc-7 _CXX=g++-7
+    - addons:
+        apt:
+          packages: ['g++-arm-linux-gnueabihf']
+      env: SCRIPT=build _CC=arm-linux-gnueabihf-gcc _CXX=arm-linux-gnueabihf-g++
     - env: SCRIPT=test _CC=clang _CXX=clang++
     - addons:
         apt:
