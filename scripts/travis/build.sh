@@ -12,4 +12,3 @@ fi
 
 cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE .
 cmake --build .
-ctest --output-on-failure .
