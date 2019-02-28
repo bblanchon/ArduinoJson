@@ -3,6 +3,7 @@
 # MIT License
 
 add_executable(MiscTests 
+	empty.cpp
 	deprecated.cpp
 	FloatParts.cpp
 	std_stream.cpp
