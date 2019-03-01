@@ -1,14 +1,7 @@
 #!/bin/sh -ex
 
-if [ -n "$GCC" ]; then
-	export CC="gcc-$GCC"
-	export CXX="g++-$GCC"
-fi
-
-if [ -n "$CLANG" ]; then
-	export CC="clang-$CLANG"
-	export CXX="clang++-$CLANG"
-fi
+export CC="$_CC"
+export CXX="$_CXX"
 
 if [ -n "$SANITIZE" ]; then
 	export CXXFLAGS="-fsanitize=$SANITIZE"
