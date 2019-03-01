@@ -7,6 +7,7 @@ HEAD
 * Fixed warning "unused variable" with GCC 4.4 (issue #912)
 * Fixed warning "cast  increases required alignment" (issue #914)
 * Fixed warning "conversion may alter value" (issue #914)
+* Fixed naming conflict with "CAPACITY" (issue #839)
 * Muted warning "will change in GCC 7.1" (issue #914)
 * Added a clear error message for `StaticJsonBuffer` and `DynamicJsonBuffer`
 * Marked ArduinoJson.h  as a "system header"
