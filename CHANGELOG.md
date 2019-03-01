@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.9.1 (2019-03-01)
+------
 
 * Fixed warning "unused variable" with GCC 4.4 (issue #912)
 * Fixed warning "cast  increases required alignment" (issue #914)
