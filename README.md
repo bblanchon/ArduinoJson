@@ -2,7 +2,7 @@
 
 ---
 
-[![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=5.13.4)](https://www.ardu-badge.com/ArduinoJson/5.13.4)
+[![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=5.13.5)](https://www.ardu-badge.com/ArduinoJson/5.13.5)
 [![Build Status](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/master?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/master)
 [![Build Status](https://travis-ci.org/bblanchon/ArduinoJson.svg?branch=master)](https://travis-ci.org/bblanchon/ArduinoJson)
 [![Coverage Status](https://img.shields.io/coveralls/bblanchon/ArduinoJson.svg)](https://coveralls.io/r/bblanchon/ArduinoJson?branch=master)
