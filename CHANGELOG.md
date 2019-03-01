@@ -9,6 +9,7 @@ HEAD
 * Fixed warning "conversion may alter value" (issue #914)
 * Muted warning "will change in GCC 7.1" (issue #914)
 * Added a clear error message for `StaticJsonBuffer` and `DynamicJsonBuffer`
+* Marked ArduinoJson.h  as a "system header"
 
 v6.9.0 (2019-02-26)
 ------
