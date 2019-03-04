@@ -2,6 +2,11 @@
 // Copyright Benoit Blanchon 2014-2019
 // MIT License
 
+// Include any header that might use the conflicting macros
+#include <cmath>
+#include <string>
+#include <iostream>
+
 // All cores
 #define bit()
 #define constrain()
