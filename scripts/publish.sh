@@ -18,11 +18,15 @@ update_version_in_source () {
 
 	sed -i~ -bE "4s/HEAD/$TAG ($DATE)/; 5s/-+/$UNDERLINE/" CHANGELOG.md
 	rm CHANGELOG.md*~
+
 	sed -i~ -bE "s/\"version\":.*$/\"version\": \"$VERSION\",/" library.json
 	rm library.json*~
 
 	sed -i~ -bE "s/version=.*$/version=$VERSION/" library.properties
 	rm library.properties*~
+
+	sed -i~ -bE "s/version: .*$/version: $VERSION.{build}/" appveyor.yml
+	rm appveyor.yml*~
 
 	sed -i~ -bE \
 		-e "s/ARDUINOJSON_VERSION .*$/ARDUINOJSON_VERSION \"$VERSION\"/" \
