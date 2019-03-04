@@ -15,6 +15,8 @@
 //     2.302038
 //   ]
 // }
+//
+// https://arduinojson.org/v6/example/http-client/
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
@@ -98,4 +100,16 @@ void loop() {
   // not used in this example
 }
 
-// Visit https://arduinojson.org/v6/example/http-client/ for more.
+// See also
+// --------
+//
+// https://arduinojson.org/ contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any
+// serialization  problem.
+//
+// The book "Mastering ArduinoJson" contains a tutorial on deserialization
+// showing how to parse the response from GitHub's API. In the last chapter,
+// it shows how to parse the huge documents from OpenWeatherMap
+// and Reddit.
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤

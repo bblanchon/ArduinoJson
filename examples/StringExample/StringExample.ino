@@ -7,6 +7,8 @@
 // Use String objects sparingly, because ArduinoJson duplicates them in the
 // JsonDocument. Prefer plain old char[], as they are more efficient in term of
 // code size, speed, and memory usage.
+//
+// https://arduinojson.org/v6/example/string/
 
 #include <ArduinoJson.h>
 
@@ -62,4 +64,14 @@ void loop() {
   // not used in this example
 }
 
-// Visit https://arduinojson.org/v6/example/string/ for more.
+// See also
+// --------
+//
+// https://arduinojson.org/ contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any problem.
+//
+// The book "Mastering ArduinoJson" contains a quick C++ course that explains
+// how your microcontroller stores strings in memory. On several occasions, it
+// shows how you can avoid String in your program.
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤

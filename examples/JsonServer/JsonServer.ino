@@ -12,6 +12,8 @@
 //   "analog": [0, 76, 123, 158, 192, 205],
 //   "digital": [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]
 // }
+//
+// https://arduinojson.org/v6/example/http-server/
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
@@ -94,4 +96,15 @@ void loop() {
   client.stop();
 }
 
-// Visit https://arduinojson.org/v6/example/http-server/ for more.
+// See also
+// --------
+//
+// https://arduinojson.org/ contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any
+// serialization problem.
+//
+// The book "Mastering ArduinoJson" contains a tutorial on serialization.
+// It begins with a simple example, then adds more features like serializing
+// directly to a file or an HTTP client.
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤

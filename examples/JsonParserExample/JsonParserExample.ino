@@ -3,6 +3,8 @@
 // MIT License
 //
 // This example shows how to deserialize a JSON document with ArduinoJson.
+//
+// https://arduinojson.org/v6/example/parser/
 
 #include <ArduinoJson.h>
 
@@ -64,4 +66,15 @@ void loop() {
   // not used in this example
 }
 
-// Visit https://arduinojson.org/v6/example/parser/ for more.
+// See also
+// --------
+//
+// https://arduinojson.org/ contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any
+// deserialization problem.
+//
+// The book "Mastering ArduinoJson" contains a tutorial on deserialization.
+// It begins with a simple example, like the one above, and then adds more
+// features like deserializing directly from a file or an HTTP request.
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤

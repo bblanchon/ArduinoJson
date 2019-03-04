@@ -16,6 +16,8 @@
 // For example, you can run netcat on your computer
 // $ ncat -ulp 8888
 // See https://nmap.org/ncat/
+//
+// https://arduinojson.org/v6/example/udp-beacon/
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
@@ -84,4 +86,15 @@ void loop() {
   delay(10000);
 }
 
-// Visit https://arduinojson.org/v6/example/udp-beacon/ for more.
+// See also
+// --------
+//
+// https://arduinojson.org/ contains the documentation for all the functions
+// used above. It also includes an FAQ that will help you solve any
+// serialization problem.
+//
+// The book "Mastering ArduinoJson" contains a tutorial on serialization.
+// It begins with a simple example, then adds more features like serializing
+// directly to a file or any stream.
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤
