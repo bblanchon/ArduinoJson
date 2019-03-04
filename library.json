@@ -5,7 +5,8 @@
   "homepage": "https://arduinojson.org/?utm_source=meta&utm_medium=library.json",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bblanchon/ArduinoJson.git"
+    "url": "https://github.com/bblanchon/ArduinoJson.git",
+    "branch": "5.x"
   },
   "version": "5.13.5",
   "authors": {
