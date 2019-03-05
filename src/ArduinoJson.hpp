@@ -4,10 +4,12 @@
 
 #pragma once
 
+#ifndef ARDUINOJSON_DEBUG
 #ifdef __clang__
 #pragma clang system_header
 #elif defined __GNUC__
 #pragma GCC system_header
+#endif
 #endif
 
 #include "ArduinoJson/Namespace.hpp"
