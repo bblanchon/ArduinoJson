@@ -32,4 +32,8 @@ inline size_t slotSize(const VariantSlot* var) {
   }
   return n;
 }
+
+inline VariantData* slotData(VariantSlot* slot) {
+  return reinterpret_cast<VariantData*>(slot);
+}
 }  // namespace ARDUINOJSON_NAMESPACE

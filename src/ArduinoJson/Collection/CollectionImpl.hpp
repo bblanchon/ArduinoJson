@@ -26,7 +26,7 @@ inline VariantSlot* CollectionData::addSlot(MemoryPool* pool) {
 }
 
 inline VariantData* CollectionData::add(MemoryPool* pool) {
-  return addSlot(pool)->data();
+  return slotData(addSlot(pool));
 }
 
 template <typename TAdaptedString>
