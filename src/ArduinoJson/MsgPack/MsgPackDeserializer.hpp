@@ -79,8 +79,7 @@ class MsgPackDeserializer {
 #if ARDUINOJSON_USE_LONG_LONG
         return readInteger<uint64_t>(variant);
 #else
-        readInteger<uint32_t>();
-        return readInteger<uint32_t>(variant);
+        return DeserializationError::NotSupported;
 #endif
 
       case 0xd0:
@@ -96,8 +95,7 @@ class MsgPackDeserializer {
 #if ARDUINOJSON_USE_LONG_LONG
         return readInteger<int64_t>(variant);
 #else
-        if (!skip(4)) return DeserializationError::IncompleteInput;
-        return readInteger<int32_t>(variant);
+        return DeserializationError::NotSupported;
 #endif
 
       case 0xca:

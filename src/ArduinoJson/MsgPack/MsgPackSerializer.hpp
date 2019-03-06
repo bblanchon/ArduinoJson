@@ -24,7 +24,8 @@ class MsgPackSerializer {
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 8>::type visitFloat(T value64) {
+  typename enable_if<sizeof(T) == 8>::type visitFloat(T value64)
+      ARDUINOJSON_NO_SANITIZE("float-cast-overflow") {
     float value32 = float(value64);
     if (value32 == value64) {
       writeByte(0xCA);

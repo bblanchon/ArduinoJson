@@ -4,85 +4,15 @@
 
 #pragma once
 
-#include "../Numbers/FloatTraits.hpp"
-#include "../Polyfills/ctype.hpp"
-#include "../Polyfills/math.hpp"
+#include "convertNumber.hpp"
+#include "parseNumber.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename T>
 inline T parseFloat(const char* s) {
-  typedef FloatTraits<T> traits;
-  typedef typename traits::mantissa_type mantissa_t;
-  typedef typename traits::exponent_type exponent_t;
-
-  if (!s) return 0;  // NULL
-
-  bool negative_result = false;
-  switch (*s) {
-    case '-':
-      negative_result = true;
-      s++;
-      break;
-    case '+':
-      s++;
-      break;
-  }
-
-  if (*s == 't') return 1;  // true
-  if (*s == 'n' || *s == 'N') return traits::nan();
-  if (*s == 'i' || *s == 'I')
-    return negative_result ? -traits::inf() : traits::inf();
-
-  mantissa_t mantissa = 0;
-  exponent_t exponent_offset = 0;
-
-  while (isdigit(*s)) {
-    if (mantissa < traits::mantissa_max / 10)
-      mantissa = mantissa * 10 + (*s - '0');
-    else
-      exponent_offset++;
-    s++;
-  }
-
-  if (*s == '.') {
-    s++;
-    while (isdigit(*s)) {
-      if (mantissa < traits::mantissa_max / 10) {
-        mantissa = mantissa * 10 + (*s - '0');
-        exponent_offset--;
-      }
-      s++;
-    }
-  }
-
-  int exponent = 0;
-  if (*s == 'e' || *s == 'E') {
-    s++;
-    bool negative_exponent = false;
-    if (*s == '-') {
-      negative_exponent = true;
-      s++;
-    } else if (*s == '+') {
-      s++;
-    }
-
-    while (isdigit(*s)) {
-      exponent = exponent * 10 + (*s - '0');
-      if (exponent + exponent_offset > traits::exponent_max) {
-        if (negative_exponent)
-          return negative_result ? -0.0f : 0.0f;
-        else
-          return negative_result ? -traits::inf() : traits::inf();
-      }
-      s++;
-    }
-    if (negative_exponent) exponent = -exponent;
-  }
-  exponent += exponent_offset;
-
-  T result = traits::make_float(static_cast<T>(mantissa), exponent);
-
-  return negative_result ? -result : result;
+  // try to reuse the same parameters as JsonDeserializer
+  typedef typename choose_largest<Float, T>::type TFloat;
+  return parseNumber<TFloat, UInt>(s).template as<T>();
 }
 }  // namespace ARDUINOJSON_NAMESPACE

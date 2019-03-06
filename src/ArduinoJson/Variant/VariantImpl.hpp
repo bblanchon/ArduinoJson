@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../Configuration.hpp"
+#include "../Numbers/convertNumber.hpp"
 #include "../Numbers/parseFloat.hpp"
 #include "../Numbers/parseInteger.hpp"
 #include "VariantRef.hpp"
@@ -18,16 +19,32 @@ inline T VariantData::asIntegral() const {
   switch (type()) {
     case VALUE_IS_POSITIVE_INTEGER:
     case VALUE_IS_BOOLEAN:
-      return T(_content.asInteger);
+      return convertPositiveInteger<T>(_content.asInteger);
     case VALUE_IS_NEGATIVE_INTEGER:
-      return T(~_content.asInteger + 1);
+      return convertNegativeInteger<T>(_content.asInteger);
     case VALUE_IS_LINKED_STRING:
     case VALUE_IS_OWNED_STRING:
       return parseInteger<T>(_content.asString);
     case VALUE_IS_FLOAT:
-      return T(_content.asFloat);
+      return convertFloat<T>(_content.asFloat);
     default:
       return 0;
+  }
+}
+
+inline bool VariantData::asBoolean() const {
+  switch (type()) {
+    case VALUE_IS_POSITIVE_INTEGER:
+    case VALUE_IS_BOOLEAN:
+    case VALUE_IS_NEGATIVE_INTEGER:
+      return _content.asInteger != 0;
+    case VALUE_IS_FLOAT:
+      return _content.asFloat != 0;
+    case VALUE_IS_LINKED_STRING:
+    case VALUE_IS_OWNED_STRING:
+      return strcmp("true", _content.asString) == 0;
+    default:
+      return false;
   }
 }
 

@@ -6,8 +6,7 @@
 
 #include "../Deserialization/deserialize.hpp"
 #include "../Memory/MemoryPool.hpp"
-#include "../Numbers/isFloat.hpp"
-#include "../Numbers/isInteger.hpp"
+#include "../Numbers/parseNumber.hpp"
 #include "../Polyfills/type_traits.hpp"
 #include "../Variant/VariantData.hpp"
 #include "EscapeSequence.hpp"
@@ -251,14 +250,6 @@ class JsonDeserializer {
     }
     buffer[n] = 0;
 
-    if (isInteger(buffer)) {
-      result.setInteger(parseInteger<Integer>(buffer));
-      return DeserializationError::Ok;
-    }
-    if (isFloat(buffer)) {
-      result.setFloat(parseFloat<Float>(buffer));
-      return DeserializationError::Ok;
-    }
     c = buffer[0];
     if (c == 't') {  // true
       result.setBoolean(true);
@@ -275,6 +266,23 @@ class JsonDeserializer {
       return n == 4 ? DeserializationError::Ok
                     : DeserializationError::IncompleteInput;
     }
+
+    ParsedNumber<Float, UInt> num = parseNumber<Float, UInt>(buffer);
+
+    switch (num.type()) {
+      case VALUE_IS_NEGATIVE_INTEGER:
+        result.setNegativeInteger(num.uintValue);
+        return DeserializationError::Ok;
+
+      case VALUE_IS_POSITIVE_INTEGER:
+        result.setPositiveInteger(num.uintValue);
+        return DeserializationError::Ok;
+
+      case VALUE_IS_FLOAT:
+        result.setFloat(num.floatValue);
+        return DeserializationError::Ok;
+    }
+
     return DeserializationError::InvalidInput;
   }
 

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../Misc/SerializedValue.hpp"
+#include "../Numbers/convertNumber.hpp"
 #include "../Polyfills/gsl/not_null.hpp"
 #include "VariantContent.hpp"
 
@@ -63,9 +64,7 @@ class VariantData {
 
   const char *asString() const;
 
-  bool asBoolean() const {
-    return asIntegral<int>() != 0;
-  }
+  bool asBoolean() const;
 
   CollectionData *asArray() {
     return isArray() ? &_content.asCollection : 0;
@@ -147,9 +146,18 @@ class VariantData {
     return (_flags & COLLECTION_MASK) != 0;
   }
 
+  template <typename T>
   bool isInteger() const {
-    return type() == VALUE_IS_POSITIVE_INTEGER ||
-           type() == VALUE_IS_NEGATIVE_INTEGER;
+    switch (type()) {
+      case VALUE_IS_POSITIVE_INTEGER:
+        return canStorePositiveInteger<T>(_content.asInteger);
+
+      case VALUE_IS_NEGATIVE_INTEGER:
+        return canStoreNegativeInteger<T>(_content.asInteger);
+
+      default:
+        return false;
+    }
   }
 
   bool isFloat() const {
@@ -225,12 +233,20 @@ class VariantData {
   template <typename T>
   void setSignedInteger(T value) {
     if (value >= 0) {
-      setType(VALUE_IS_POSITIVE_INTEGER);
-      _content.asInteger = static_cast<UInt>(value);
+      setPositiveInteger(static_cast<UInt>(value));
     } else {
-      setType(VALUE_IS_NEGATIVE_INTEGER);
-      _content.asInteger = ~static_cast<UInt>(value) + 1;
+      setNegativeInteger(~static_cast<UInt>(value) + 1);
     }
+  }
+
+  void setPositiveInteger(UInt value) {
+    setType(VALUE_IS_POSITIVE_INTEGER);
+    _content.asInteger = value;
+  }
+
+  void setNegativeInteger(UInt value) {
+    setType(VALUE_IS_NEGATIVE_INTEGER);
+    _content.asInteger = value;
   }
 
   void setLinkedString(const char *value) {
