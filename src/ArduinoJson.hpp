@@ -50,6 +50,7 @@ typedef ARDUINOJSON_NAMESPACE::String JsonString;
 typedef ARDUINOJSON_NAMESPACE::UInt JsonUInt;
 typedef ARDUINOJSON_NAMESPACE::VariantConstRef JsonVariantConst;
 typedef ARDUINOJSON_NAMESPACE::VariantRef JsonVariant;
+using ARDUINOJSON_NAMESPACE::BasicJsonDocument;
 using ARDUINOJSON_NAMESPACE::copyArray;
 using ARDUINOJSON_NAMESPACE::DeserializationError;
 using ARDUINOJSON_NAMESPACE::deserializeJson;

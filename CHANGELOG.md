@@ -8,6 +8,7 @@ HEAD
 * Added overflow handling in `JsonVariant::as<T>()` and `JsonVariant::is<T>()`.
    - `as<T>()` returns `0` if the integer `T` overflows
    - `is<T>()` returns `false` if the integer `T` overflows
+* Added `BasicJsonDocument` to support custom allocator (issue #876)
 
 v6.9.1 (2019-03-01)
 ------
