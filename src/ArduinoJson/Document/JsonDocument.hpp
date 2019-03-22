@@ -124,6 +124,21 @@ class JsonDocument : public Visitable {
     return getOrAddMember(key).template to<ObjectRef>();
   }
 
+  // containsKey(char*) const
+  // containsKey(const char*) const
+  // containsKey(const __FlashStringHelper*) const
+  template <typename TChar>
+  bool containsKey(TChar* key) const {
+    return as<ObjectRef>().containsKey(key);
+  }
+
+  // containsKey(const std::string&) const
+  // containsKey(const String&) const
+  template <typename TString>
+  bool containsKey(const TString& key) const {
+    return as<ObjectRef>().containsKey(key);
+  }
+
   // operator[](const std::string&)
   // operator[](const String&)
   template <typename TString>
