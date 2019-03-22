@@ -78,6 +78,10 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
+    return getElement(index);
+  }
+
+  FORCE_INLINE VariantConstRef getElement(size_t index) const {
     return VariantConstRef(_data ? _data->get(index) : 0);
   }
 };

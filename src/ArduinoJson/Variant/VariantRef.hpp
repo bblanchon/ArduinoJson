@@ -96,6 +96,10 @@ class VariantRefBase {
     return variantIsNull(_data);
   }
 
+  FORCE_INLINE bool isUndefined() const {
+    return !_data;
+  }
+
   FORCE_INLINE size_t memoryUsage() const {
     return _data ? _data->memoryUsage() : 0;
   }

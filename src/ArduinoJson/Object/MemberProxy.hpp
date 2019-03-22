@@ -40,9 +40,9 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return *this;
   }
 
-  // operator=(char*) const
-  // operator=(const char*) const
-  // operator=(const __FlashStringHelper*) const
+  // operator=(char*)
+  // operator=(const char*)
+  // operator=(const __FlashStringHelper*)
   template <typename TChar>
   FORCE_INLINE this_type &operator=(TChar *src) {
     getOrAddUpstreamMember().set(src);

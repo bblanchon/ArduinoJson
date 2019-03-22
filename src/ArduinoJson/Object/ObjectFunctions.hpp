@@ -16,11 +16,6 @@ void objectAccept(const CollectionData *obj, Visitor &visitor) {
     visitor.visitNull();
 }
 
-template <typename TAdaptedString>
-inline bool objectContainsKey(const CollectionData *obj, TAdaptedString key) {
-  return obj && obj->containsKey(key);
-}
-
 inline bool objectEquals(const CollectionData *lhs, const CollectionData *rhs) {
   if (lhs == rhs) return true;
   if (!lhs || !rhs) return false;

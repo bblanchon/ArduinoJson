@@ -27,21 +27,6 @@ class ObjectRefBase {
     objectAccept(_data, visitor);
   }
 
-  // containsKey(const std::string&) const
-  // containsKey(const String&) const
-  template <typename TString>
-  FORCE_INLINE bool containsKey(const TString& key) const {
-    return objectContainsKey(_data, adaptString(key));
-  }
-
-  // containsKey(char*) const
-  // containsKey(const char*) const
-  // containsKey(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE bool containsKey(TChar* key) const {
-    return objectContainsKey(_data, adaptString(key));
-  }
-
   FORCE_INLINE bool isNull() const {
     return _data == 0;
   }
@@ -81,6 +66,21 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
 
   FORCE_INLINE iterator end() const {
     return iterator();
+  }
+
+  // containsKey(const std::string&) const
+  // containsKey(const String&) const
+  template <typename TString>
+  FORCE_INLINE bool containsKey(const TString& key) const {
+    return !getMember(key).isUndefined();
+  }
+
+  // containsKey(char*) const
+  // containsKey(const char*) const
+  // containsKey(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE bool containsKey(TChar* key) const {
+    return !getMember(key).isUndefined();
   }
 
   // getMember(const std::string&) const

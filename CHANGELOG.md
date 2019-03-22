@@ -10,6 +10,7 @@ HEAD
    - `is<T>()` returns `false` if the integer `T` overflows
 * Added `BasicJsonDocument` to support custom allocator (issue #876)
 * Added `JsonDocument::containsKey()` (issue #938)
+* Added `JsonVariant::containsKey()`
 
 v6.9.1 (2019-03-01)
 ------

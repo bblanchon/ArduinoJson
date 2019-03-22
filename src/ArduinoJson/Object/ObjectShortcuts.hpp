@@ -15,6 +15,19 @@ class MemberProxy;
 template <typename TObject>
 class ObjectShortcuts {
  public:
+  // containsKey(const std::string&) const
+  // containsKey(const String&) const
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
+  containsKey(const TString &key) const;
+
+  // containsKey(char*) const
+  // containsKey(const char*) const
+  // containsKey(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar *>::value, bool>::type
+  containsKey(TChar *key) const;
+
   // operator[](const std::string&) const
   // operator[](const String&) const
   template <typename TString>
