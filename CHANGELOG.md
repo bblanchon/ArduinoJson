@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.10.0 (2019-03-22)
+-------
 
 * Fixed an integer overflow in the JSON deserializer
 * Added overflow handling in `JsonVariant::as<T>()` and `JsonVariant::is<T>()`.
