@@ -229,8 +229,13 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("Variants containing linked strings") {
-    variant1.set("0hello" + 1);  // make sure they have
-    variant2.set("1hello" + 1);  // different addresses
+    // create two identical strings at different addresses
+    char hello1[] = "hello";
+    char hello2[] = "hello";
+    REQUIRE(hello1 != hello2);
+
+    variant1.set(hello1);
+    variant2.set(hello2);
     variant3.set("world");
 
     REQUIRE(variant1 == variant2);
@@ -253,8 +258,13 @@ TEST_CASE("JsonVariant comparisons") {
   }
 
   SECTION("Variants containing linked raws") {
-    variant1.set(serialized("0hello" + 1));  // make sure they have
-    variant2.set(serialized("1hello" + 1));  // different addresses
+    // create two identical strings at different addresses
+    char hello1[] = "hello";
+    char hello2[] = "hello";
+    REQUIRE(hello1 != hello2);
+
+    variant1.set(serialized(hello1));
+    variant2.set(serialized(hello2));
     variant3.set(serialized("world"));
 
     REQUIRE(variant1 == variant2);
