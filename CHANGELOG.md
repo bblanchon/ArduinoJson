@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed error "attributes are not allowed on a function-definition"
+
 v6.10.0 (2019-03-22)
 -------
 
