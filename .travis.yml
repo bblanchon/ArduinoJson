@@ -31,7 +31,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
-      env: SCRIPT=test _CC=gcc-5 _CXX=g++-5 # SANITIZE=undefined 
+      env: SCRIPT=test _CC=gcc-5 _CXX=g++-5 # SANITIZE=undefined
     - addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
@@ -96,7 +96,12 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-7']
           packages: ['clang-7']
-      env: SCRIPT=test _CC=clang-7 _CXX=clang++-7      
+      env: SCRIPT=test _CC=clang-7 _CXX=clang++-7
+    - addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-8']
+          packages: ['clang-8']
+      env: SCRIPT=test _CC=clang-8 _CXX=clang++-8
     - env: SCRIPT=coverage
     - os: osx
       osx_image: xcode7.3
