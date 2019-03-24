@@ -92,6 +92,11 @@ matrix:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-6.0']
           packages: ['clang-6.0']
       env: SCRIPT=test _CC=clang-6.0 _CXX=clang++-6.0
+    - addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-7']
+          packages: ['clang-7']
+      env: SCRIPT=test _CC=clang-7 _CXX=clang++-7      
     - env: SCRIPT=coverage
     - os: osx
       osx_image: xcode7.3
