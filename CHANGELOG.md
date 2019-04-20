@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed error "attributes are not allowed on a function-definition"
+* Fixed `deserializeJson()` not being picky enough (issue #969)
 
 v6.10.0 (2019-03-22)
 -------

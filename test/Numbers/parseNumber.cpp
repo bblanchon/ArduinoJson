@@ -16,3 +16,9 @@ TEST_CASE("Test uint32_t overflow") {
   REQUIRE(first.type() == uint8_t(VALUE_IS_POSITIVE_INTEGER));
   REQUIRE(second.type() == uint8_t(VALUE_IS_FLOAT));
 }
+
+TEST_CASE("Invalid value") {
+  ParsedNumber<float, uint32_t> result = parseNumber<float, uint32_t>("6a3");
+
+  REQUIRE(result.type() == uint8_t(VALUE_IS_NULL));
+}

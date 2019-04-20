@@ -140,6 +140,9 @@ inline ParsedNumber<TFloat, TUInt> parseNumber(const char *s) {
   }
   exponent += exponent_offset;
 
+  // we should be at the end of the string, otherwise it's an error
+  if (*s != '\0') return return_type();
+
   TFloat result = traits::make_float(static_cast<TFloat>(mantissa), exponent);
 
   return is_negative ? -result : result;
