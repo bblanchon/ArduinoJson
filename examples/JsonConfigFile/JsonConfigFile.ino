@@ -21,7 +21,8 @@
 //
 // Never use a JsonDocument to store the configuration!
 // A JsonDocument is *not* a permanent storage; it's only a temporary storage
-// used during the serialization phase.
+// used during the serialization phase. See:
+// https://arduinojson.org/v6/faq/why-must-i-create-a-separate-config-object/
 struct Config {
   char hostname[64];
   int port;
