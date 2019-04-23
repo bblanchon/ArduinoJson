@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.10.1 (2019-04-23)
+-------
 
 * Fixed error "attributes are not allowed on a function-definition"
 * Fixed `deserializeJson()` not being picky enough (issue #969)
