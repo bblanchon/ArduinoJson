@@ -88,26 +88,36 @@
 
 #ifdef ARDUINO
 
-// Enable support for Arduino String
+// Enable support for Arduino's String class
 #ifndef ARDUINOJSON_ENABLE_ARDUINO_STRING
 #define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
 #endif
 
-// Enable support for Arduino Stream
+// Enable support for Arduino's Stream class
 #ifndef ARDUINOJSON_ENABLE_ARDUINO_STREAM
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
 #endif
 
+// Enable support for Arduino's Print class
+#ifndef ARDUINOJSON_ENABLE_ARDUINO_PRINT
+#define ARDUINOJSON_ENABLE_ARDUINO_PRINT 1
+#endif
+
 #else  // ARDUINO
 
-// Disable support for Arduino String
+// Enable support for Arduino's String class
 #ifndef ARDUINOJSON_ENABLE_ARDUINO_STRING
 #define ARDUINOJSON_ENABLE_ARDUINO_STRING 0
 #endif
 
-// Disable support for Arduino Stream
+// Enable support for Arduino's Stream class
 #ifndef ARDUINOJSON_ENABLE_ARDUINO_STREAM
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 0
+#endif
+
+// Enable support for Arduino's Print class
+#ifndef ARDUINOJSON_ENABLE_ARDUINO_PRINT
+#define ARDUINOJSON_ENABLE_ARDUINO_PRINT 0
 #endif
 
 #endif  // ARDUINO
