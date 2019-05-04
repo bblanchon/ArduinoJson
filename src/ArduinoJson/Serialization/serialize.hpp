@@ -34,6 +34,11 @@ template <template <typename> class TSerializer, typename TSource>
 size_t serialize(const TSource &source, Print &destination) {
   return doSerialize<TSerializer>(source, destination);
 }
+
+template <template <typename> class TSerializer, typename TSource>
+size_t serialize(const TSource &source, Print *destination) {
+  return destination ? doSerialize<TSerializer>(source, *destination) : 0;
+}
 #endif
 
 template <template <typename> class TSerializer, typename TSource>

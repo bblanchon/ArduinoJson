@@ -40,8 +40,13 @@ deserialize(JsonDocument &doc, const TString &input,
 // deserialize(JsonDocument&, const char*);
 // deserialize(JsonDocument&, const __FlashStringHelper*);
 template <template <typename, typename> class TDeserializer, typename TChar>
-DeserializationError deserialize(JsonDocument &doc, TChar *input,
-                                 NestingLimit nestingLimit) {
+#if ARDUINOJSON_ENABLE_ARDUINO_STREAM
+typename enable_if<!is_base_of<Stream, TChar>::value,
+                   DeserializationError>::type
+#else
+DeserializationError
+#endif
+deserialize(JsonDocument &doc, TChar *input, NestingLimit nestingLimit) {
   doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), makeReader(input),
@@ -73,4 +78,19 @@ DeserializationError deserialize(JsonDocument &doc, TStream &input,
              makeStringStorage(doc.memoryPool(), input), nestingLimit.value)
       .parse(doc.data());
 }
+#if ARDUINOJSON_ENABLE_ARDUINO_STREAM
+//
+// deserialize(JsonDocument&, Stream*);
+template <template <typename, typename> class TDeserializer, typename TStream>
+typename enable_if<is_base_of<Stream, TStream>::value,
+                   DeserializationError>::type
+deserialize(JsonDocument &doc, TStream *input, NestingLimit nestingLimit) {
+  doc.clear();
+  if (!input) return DeserializationError::NoMemory;
+  return makeDeserializer<TDeserializer>(
+             doc.memoryPool(), makeReader(*input),
+             makeStringStorage(doc.memoryPool(), *input), nestingLimit.value)
+      .parse(doc.data());
+}
+#endif
 }  // namespace ARDUINOJSON_NAMESPACE
