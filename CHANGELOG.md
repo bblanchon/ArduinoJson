@@ -1,6 +1,32 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed invalid result from `operator|` (issue #981)
+
+> ### BREAKING CHANGE
+> 
+> This version slightly changes the behavior of the | operator when the 
+> variant contains a float and the user requests an integer.
+>
+> Older versions returned the floating point value truncated.
+> Now, it returns the default value.
+> 
+> ```c++
+> // suppose variant contains 1.2
+> int value = variant | 3;
+> 
+> // old behavior:
+> value == 1
+> 
+> // new behavior
+> value == 3
+> ```
+> 
+> If you need the old behavior, you must add `if (variant.is<float>())`.
+
 v6.10.1 (2019-04-23)
 -------
 
