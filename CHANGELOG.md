@@ -4,6 +4,7 @@ ArduinoJson: change log
 HEAD
 ----
 
+* Fixed `deserializeJson()` silently accepting a `Stream*` (issue #978)
 * Fixed invalid result from `operator|` (issue #981)
 
 > ### BREAKING CHANGE
