@@ -28,19 +28,14 @@ class JsonDeserializer {
         _nestingLimit(nestingLimit),
         _loaded(false) {}
   DeserializationError parse(VariantData &variant) {
-    DeserializationError err = skipSpacesAndComments();
-    if (err) return err;
+    DeserializationError err = parseVariant(variant);
 
-    switch (current()) {
-      case '[':
-        return parseArray(variant.toArray());
-
-      case '{':
-        return parseObject(variant.toObject());
-
-      default:
-        return parseValue(variant);
+    if (!err && _current != 0 && !variant.isEnclosed()) {
+      // We don't detect trailing characters earlier, so we need to check now
+      err = DeserializationError::InvalidInput;
     }
+
+    return err;
   }
 
  private:
@@ -48,10 +43,8 @@ class JsonDeserializer {
 
   char current() {
     if (!_loaded) {
-      if (_reader.ended())
-        _current = 0;
-      else
-        _current = _reader.read();
+      int c = _reader.read();
+      _current = static_cast<char>(c > 0 ? c : 0);
       _loaded = true;
     }
     return _current;
@@ -65,6 +58,26 @@ class JsonDeserializer {
     if (current() != charToSkip) return false;
     move();
     return true;
+  }
+
+  DeserializationError parseVariant(VariantData &variant) {
+    DeserializationError err = skipSpacesAndComments();
+    if (err) return err;
+
+    switch (current()) {
+      case '[':
+        return parseArray(variant.toArray());
+
+      case '{':
+        return parseObject(variant.toObject());
+
+      case '\"':
+      case '\'':
+        return parseStringValue(variant);
+
+      default:
+        return parseNumericValue(variant);
+    }
   }
 
   DeserializationError parseArray(CollectionData &array) {
@@ -88,7 +101,7 @@ class JsonDeserializer {
 
       // 1 - Parse value
       _nestingLimit--;
-      err = parse(*value);
+      err = parseVariant(*value);
       _nestingLimit++;
       if (err) return err;
 
@@ -134,7 +147,7 @@ class JsonDeserializer {
 
       // Parse value
       _nestingLimit--;
-      err = parse(*slot->data());
+      err = parseVariant(*slot->data());
       _nestingLimit++;
       if (err) return err;
 
@@ -149,14 +162,6 @@ class JsonDeserializer {
       // Skip spaces
       err = skipSpacesAndComments();
       if (err) return err;
-    }
-  }
-
-  DeserializationError parseValue(VariantData &variant) {
-    if (isQuote(current())) {
-      return parseStringValue(variant);
-    } else {
-      return parseNumericValue(variant);
     }
   }
 

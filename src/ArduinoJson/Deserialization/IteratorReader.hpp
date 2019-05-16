@@ -14,12 +14,11 @@ class IteratorReader {
   explicit IteratorReader(TIterator begin, TIterator end)
       : _ptr(begin), _end(end) {}
 
-  bool ended() const {
-    return _ptr == _end;
-  }
-
-  char read() {
-    return char(*_ptr++);
+  int read() {
+    if (_ptr < _end)
+      return static_cast<unsigned char>(*_ptr++);
+    else
+      return -1;
   }
 };
 

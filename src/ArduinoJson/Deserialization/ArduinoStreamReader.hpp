@@ -12,22 +12,14 @@ namespace ARDUINOJSON_NAMESPACE {
 
 struct ArduinoStreamReader {
   Stream& _stream;
-  char _current;
-  bool _ended;
 
  public:
-  explicit ArduinoStreamReader(Stream& stream)
-      : _stream(stream), _current(0), _ended(false) {}
+  explicit ArduinoStreamReader(Stream& stream) : _stream(stream) {}
 
-  char read() {
+  int read() {
     // don't use _stream.read() as it ignores the timeout
-    char c = 0;
-    _ended = _stream.readBytes(&c, 1) == 0;
-    return c;
-  }
-
-  bool ended() const {
-    return _ended;
+    uint8_t c;
+    return _stream.readBytes(&c, 1) ? c : -1;
   }
 };
 

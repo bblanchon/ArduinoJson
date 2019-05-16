@@ -23,13 +23,8 @@ class UnsafeCharPointerReader {
   explicit UnsafeCharPointerReader(const char* ptr)
       : _ptr(ptr ? ptr : reinterpret_cast<const char*>("")) {}
 
-  char read() {
-    return static_cast<char>(*_ptr++);
-  }
-
-  bool ended() const {
-    // we cannot know, that's why it's unsafe
-    return false;
+  int read() {
+    return static_cast<unsigned char>(*_ptr++);
   }
 };
 
@@ -41,12 +36,11 @@ class SafeCharPointerReader {
   explicit SafeCharPointerReader(const char* ptr, size_t len)
       : _ptr(ptr ? ptr : reinterpret_cast<const char*>("")), _end(_ptr + len) {}
 
-  char read() {
-    return static_cast<char>(*_ptr++);
-  }
-
-  bool ended() const {
-    return _ptr == _end;
+  int read() {
+    if (_ptr < _end)
+      return static_cast<unsigned char>(*_ptr++);
+    else
+      return -1;
   }
 };
 

@@ -6,6 +6,7 @@ HEAD
 
 * Fixed `deserializeJson()` silently accepting a `Stream*` (issue #978)
 * Fixed invalid result from `operator|` (issue #981)
+* Made `deserializeJson()` more picky about trailing characters (issue #980)
 
 > ### BREAKING CHANGE
 > 

@@ -177,6 +177,10 @@ class VariantData {
     return type() == VALUE_IS_NULL;
   }
 
+  bool isEnclosed() const {
+    return isCollection() || isString();
+  }
+
   void remove(size_t index) {
     if (isArray()) _content.asCollection.remove(index);
   }
