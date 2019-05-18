@@ -135,6 +135,11 @@
 #define ARDUINOJSON_DECODE_UNICODE 0
 #endif
 
+// Support NaN in JSON
+#ifndef ARDUINOJSON_ENABLE_NAN
+#define ARDUINOJSON_ENABLE_NAN 1
+#endif
+
 // Control the exponentiation threshold for big numbers
 // CAUTION: cannot be more that 1e9 !!!!
 #ifndef ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD

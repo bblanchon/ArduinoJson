@@ -7,6 +7,7 @@ HEAD
 * Fixed `deserializeJson()` silently accepting a `Stream*` (issue #978)
 * Fixed invalid result from `operator|` (issue #981)
 * Made `deserializeJson()` more picky about trailing characters (issue #980)
+* Added `ARDUINOJSON_ENABLE_NAN` to enable NaN in JSON (issue #973)
 
 > ### BREAKING CHANGE
 > 

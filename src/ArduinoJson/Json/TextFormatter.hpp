@@ -52,7 +52,7 @@ class TextFormatter {
 
   template <typename T>
   void writeFloat(T value) {
-    if (isnan(value)) return writeRaw("NaN");
+    if (isnan(value)) return writeRaw(ARDUINOJSON_ENABLE_NAN ? "NaN" : "null");
 
     if (value < 0.0) {
       writeRaw('-');
