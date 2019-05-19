@@ -137,12 +137,12 @@
 
 // Support NaN in JSON
 #ifndef ARDUINOJSON_ENABLE_NAN
-#define ARDUINOJSON_ENABLE_NAN 1
+#define ARDUINOJSON_ENABLE_NAN 0
 #endif
 
 // Support Infinity in JSON
 #ifndef ARDUINOJSON_ENABLE_INFINITY
-#define ARDUINOJSON_ENABLE_INFINITY 1
+#define ARDUINOJSON_ENABLE_INFINITY 0
 #endif
 
 // Control the exponentiation threshold for big numbers

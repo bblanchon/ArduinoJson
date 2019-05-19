@@ -3,6 +3,8 @@
 // MIT License
 
 #define ARDUINOJSON_USE_DOUBLE 0
+#define ARDUINOJSON_ENABLE_NAN 1
+#define ARDUINOJSON_ENABLE_INFINITY 1
 
 #include <ArduinoJson/Numbers/parseFloat.hpp>
 #include <catch.hpp>

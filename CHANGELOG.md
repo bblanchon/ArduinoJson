@@ -7,10 +7,31 @@ HEAD
 * Fixed `deserializeJson()` silently accepting a `Stream*` (issue #978)
 * Fixed invalid result from `operator|` (issue #981)
 * Made `deserializeJson()` more picky about trailing characters (issue #980)
-* Added `ARDUINOJSON_ENABLE_NAN` to enable NaN in JSON (issue #973)
-* Added `ARDUINOJSON_ENABLE_INFINITY` to enable Infinity in JSON
+* Added `ARDUINOJSON_ENABLE_NAN` (default=0) to enable NaN in JSON (issue #973)
+* Added `ARDUINOJSON_ENABLE_INFINITY` (default=0) to enable Infinity in JSON
 
-> ### BREAKING CHANGE
+> ### BREAKING CHANGES
+> 
+> #### NaN and Infinity
+> 
+> The JSON specification allows neither NaN not Infinity, but previous
+> versions of ArduinoJson supported it. Now, ArduinoJson behaves like most
+> other libraries: a NaN or and Infinity in the `JsonDocument`, becomes
+> a `null` in the output JSON. Also, `deserializeJson()` returns
+> `InvalidInput` if the JSON document contains NaN or Infinity.
+> 
+> This version still supports NaN and Infinity in JSON documents, but
+> it's disabled by default to be compatible with other JSON parsers.
+> If you need the old behavior back, define `ARDUINOJSON_ENABLE_NAN` and
+> `ARDUINOJSON_ENABLE_INFINITY` to `1`;:
+> 
+> ```c++
+> #define ARDUINOJSON_ENABLE_NAN 1
+> #define ARDUINOJSON_ENABLE_INFINITY 1
+> #include <ArduinoJson.h>
+> ```
+> 
+> #### The "or" operator
 > 
 > This version slightly changes the behavior of the | operator when the 
 > variant contains a float and the user requests an integer.

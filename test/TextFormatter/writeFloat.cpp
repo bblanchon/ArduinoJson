@@ -6,6 +6,8 @@
 #include <limits>
 #include <string>
 
+#define ARDUINOJSON_ENABLE_NAN 1
+#define ARDUINOJSON_ENABLE_INFINITY 1
 #include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
 
