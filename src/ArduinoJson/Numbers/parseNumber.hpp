@@ -71,11 +71,16 @@ inline ParsedNumber<TFloat, TUInt> parseNumber(const char *s) {
       s++;
       break;
   }
+
 #if ARDUINOJSON_ENABLE_NAN
   if (*s == 'n' || *s == 'N') return traits::nan();
 #endif
+
+#if ARDUINOJSON_ENABLE_INFINITY
   if (*s == 'i' || *s == 'I')
     return is_negative ? -traits::inf() : traits::inf();
+#endif
+
   if (!isdigit(*s) && *s != '.') return return_type();
 
   mantissa_t mantissa = 0;

@@ -8,6 +8,7 @@ HEAD
 * Fixed invalid result from `operator|` (issue #981)
 * Made `deserializeJson()` more picky about trailing characters (issue #980)
 * Added `ARDUINOJSON_ENABLE_NAN` to enable NaN in JSON (issue #973)
+* Added `ARDUINOJSON_ENABLE_INFINITY` to enable Infinity in JSON
 
 > ### BREAKING CHANGE
 > 
