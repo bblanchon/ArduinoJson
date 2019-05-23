@@ -5,6 +5,7 @@
 #pragma once
 
 #include <WString.h>
+#include "../Polyfills/safe_strcmp.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -25,11 +26,14 @@ class ArduinoStringAdapter {
     return !_str->c_str();
   }
 
-  bool equals(const char* expected) const {
+  int8_t compare(const char* other) const {
     // Arduino's String::c_str() can return NULL
-    const char* actual = _str->c_str();
-    if (!actual || !expected) return actual == expected;
-    return 0 == strcmp(actual, expected);
+    const char* me = _str->c_str();
+    return safe_strcmp(me, other);
+  }
+
+  bool equals(const char* expected) const {
+    return compare(expected) == 0;
   }
 
   const char* data() const {

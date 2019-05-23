@@ -9,6 +9,8 @@ HEAD
 * Made `deserializeJson()` more picky about trailing characters (issue #980)
 * Added `ARDUINOJSON_ENABLE_NAN` (default=0) to enable NaN in JSON (issue #973)
 * Added `ARDUINOJSON_ENABLE_INFINITY` (default=0) to enable Infinity in JSON
+* Removed implicit conversion in comparison operators (issue #998)
+* Added lexicographical comparison for `JsonVariant`
 
 > ### BREAKING CHANGES
 > 

@@ -14,7 +14,7 @@ TEST_CASE("JsonVariant::createNestedObject()") {
 
   SECTION("promotes to array") {
     JsonObject obj = variant.createNestedObject();
-    obj["value"] = "42";
+    obj["value"] = 42;
 
     REQUIRE(variant.is<JsonArray>() == true);
     REQUIRE(variant[0]["value"] == 42);
@@ -23,7 +23,7 @@ TEST_CASE("JsonVariant::createNestedObject()") {
 
   SECTION("works on MemberProxy") {
     JsonObject obj = variant["items"].createNestedObject();
-    obj["value"] = "42";
+    obj["value"] = 42;
 
     REQUIRE(variant["items"][0]["value"] == 42);
   }
@@ -42,7 +42,7 @@ TEST_CASE("JsonVariant::createNestedArray()") {
 
   SECTION("works on MemberProxy") {
     JsonArray arr = variant["items"].createNestedArray();
-    arr.add("42");
+    arr.add(42);
 
     REQUIRE(variant["items"][0][0] == 42);
   }
@@ -54,7 +54,7 @@ TEST_CASE("JsonVariant::createNestedObject(key)") {
 
   SECTION("promotes to object") {
     JsonObject obj = variant.createNestedObject("weather");
-    obj["temp"] = "42";
+    obj["temp"] = 42;
 
     REQUIRE(variant.is<JsonObject>() == true);
     REQUIRE(variant["weather"]["temp"] == 42);
@@ -62,7 +62,7 @@ TEST_CASE("JsonVariant::createNestedObject(key)") {
 
   SECTION("works on MemberProxy") {
     JsonObject obj = variant["status"].createNestedObject("weather");
-    obj["temp"] = "42";
+    obj["temp"] = 42;
 
     REQUIRE(variant["status"]["weather"]["temp"] == 42);
   }
@@ -81,7 +81,7 @@ TEST_CASE("JsonVariant::createNestedArray(key)") {
 
   SECTION("works on MemberProxy") {
     JsonArray arr = variant["weather"].createNestedArray("temp");
-    arr.add("42");
+    arr.add(42);
 
     REQUIRE(variant["weather"]["temp"][0] == 42);
   }

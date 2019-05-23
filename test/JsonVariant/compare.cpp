@@ -337,23 +337,117 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE(variant1 != variant3);
     REQUIRE_FALSE(variant1 == variant3);
   }
+}
 
-  // SECTION("VariantsOfDifferentTypes") {
-  //   DynamicJsonDocument doc1(4096);
-  //   JsonObject obj = doc1.to<JsonObject>();
+class VariantComparisionFixture {
+ private:
+  StaticJsonDocument<256> doc;
+  JsonVariant variant;
 
-  //   DynamicJsonDocument doc2(4096);
-  //   JsonArray arr = doc2.to<JsonArray>();
-  //   JsonVariant variants[] = {
-  //       true, 42, 666.667, "hello", arr, obj,
-  //   };
-  //   size_t n = sizeof(variants) / sizeof(variants[0]);
+ public:
+  VariantComparisionFixture() : variant(doc.to<JsonVariant>()) {}
 
-  //   for (size_t i = 0; i < n; i++) {
-  //     for (size_t j = i + 1; j < n; j++) {
-  //       REQUIRE(variants[i] != variants[j]);
-  //       REQUIRE_FALSE(variants[i] == variants[j]);
-  //     }
-  //   }
-  // }
+ protected:
+  template <typename T>
+  void setValue(const T& value) {
+    variant.set(value);
+  }
+
+  template <typename T>
+  void assertEqualsTo(const T& value) {
+    REQUIRE(variant == value);
+    REQUIRE(value == variant);
+
+    REQUIRE_FALSE(variant != value);
+    REQUIRE_FALSE(value != variant);
+  }
+
+  template <typename T>
+  void assertDiffersFrom(const T& value) {
+    REQUIRE(variant != value);
+    REQUIRE(value != variant);
+
+    REQUIRE_FALSE(variant == value);
+    REQUIRE_FALSE(value == variant);
+  }
+
+  template <typename T>
+  void assertGreaterThan(const T& value) {
+    REQUIRE((variant > value));
+    REQUIRE((variant >= value));
+    REQUIRE(value < variant);
+    REQUIRE(value <= variant);
+
+    REQUIRE_FALSE((variant < value));
+    REQUIRE_FALSE((variant <= value));
+    REQUIRE_FALSE(value > variant);
+    REQUIRE_FALSE(value >= variant);
+  }
+
+  template <typename T>
+  void assertLowerThan(const T& value) {
+    REQUIRE(variant < value);
+    REQUIRE(variant <= value);
+    REQUIRE(value > variant);
+    REQUIRE(value >= variant);
+
+    REQUIRE_FALSE(variant > value);
+    REQUIRE_FALSE(variant >= value);
+    REQUIRE_FALSE(value < variant);
+    REQUIRE_FALSE(value <= variant);
+  }
+};
+
+TEST_CASE_METHOD(VariantComparisionFixture,
+                 "Compare variant with another type") {
+  SECTION("null") {
+    assertDiffersFrom(3);
+    assertDiffersFrom("world");
+  }
+
+  SECTION("string") {
+    setValue("hello");
+    assertEqualsTo("hello");
+    assertDiffersFrom(3);
+    assertDiffersFrom("world");
+    assertGreaterThan("helln");
+    assertLowerThan("hellp");
+  }
+
+  SECTION("positive integer") {
+    setValue(42);
+    assertEqualsTo(42);
+    assertDiffersFrom(43);
+    assertGreaterThan(41);
+    assertLowerThan(43);
+    assertDiffersFrom("world");
+  }
+
+  SECTION("negative integer") {
+    setValue(-42);
+    assertEqualsTo(-42);
+    assertDiffersFrom(42);
+    assertGreaterThan(-43);
+    assertLowerThan(-41);
+    assertDiffersFrom("world");
+  }
+
+  SECTION("double") {
+    setValue(42.0);
+    assertEqualsTo(42.0);
+    assertDiffersFrom(42.1);
+    assertGreaterThan(41.0);
+    assertLowerThan(43.0);
+    assertDiffersFrom("42.0");
+  }
+
+  SECTION("true") {
+    setValue(true);
+    assertEqualsTo(true);
+    assertDiffersFrom(false);
+    assertDiffersFrom(1);
+    assertDiffersFrom("true");
+    assertDiffersFrom(1.0);
+    assertGreaterThan(false);
+  }
 }
