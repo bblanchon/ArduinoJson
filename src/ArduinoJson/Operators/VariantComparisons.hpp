@@ -88,6 +88,27 @@ struct Comparer<bool, void> {
   void visitNull() {}
 };
 
+#if ARDUINOJSON_HAS_NULLPTR
+template <>
+struct Comparer<decltype(nullptr), void> {
+  int result;
+
+  explicit Comparer(decltype(nullptr)) : result(1) {}
+
+  void visitArray(const CollectionData &) {}
+  void visitObject(const CollectionData &) {}
+  void visitFloat(Float) {}
+  void visitString(const char *) {}
+  void visitRawJson(const char *, size_t) {}
+  void visitNegativeInteger(UInt) {}
+  void visitPositiveInteger(UInt) {}
+  void visitBoolean(bool) {}
+  void visitNull() {
+    result = 0;
+  }
+};
+#endif
+
 template <typename TVariant>
 class VariantComparisons {
  private:

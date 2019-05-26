@@ -12,8 +12,10 @@
 
 #if __cplusplus >= 201103L
 #define ARDUINOJSON_HAS_LONG_LONG 1
+#define ARDUINOJSON_HAS_NULLPTR 1
 #else
 #define ARDUINOJSON_HAS_LONG_LONG 0
+#define ARDUINOJSON_HAS_NULLPTR 0
 #endif
 
 // Small or big machine?

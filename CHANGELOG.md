@@ -11,6 +11,7 @@ HEAD
 * Added `ARDUINOJSON_ENABLE_INFINITY` (default=0) to enable Infinity in JSON
 * Removed implicit conversion in comparison operators (issue #998)
 * Added lexicographical comparison for `JsonVariant`
+* Added support for `nullptr` (issue #998)
 
 > ### BREAKING CHANGES
 > 
