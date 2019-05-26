@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.11.0 (2019-05-26)
+-------
 
 * Fixed `deserializeJson()` silently accepting a `Stream*` (issue #978)
 * Fixed invalid result from `operator|` (issue #981)
