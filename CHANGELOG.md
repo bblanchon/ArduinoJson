@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed `serialized()` not working with Flash strings (issue #1030)
+
 v6.11.0 (2019-05-26)
 -------
 

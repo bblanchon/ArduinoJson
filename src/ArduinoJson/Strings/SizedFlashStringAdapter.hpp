@@ -29,7 +29,7 @@ class SizedFlashStringAdapter {
   char* save(MemoryPool* pool) const {
     if (!_str) return NULL;
     char* dup = pool->allocFrozenString(_size);
-    if (!dup) memcpy_P(dup, (const char*)_str, _size);
+    if (dup) memcpy_P(dup, (const char*)_str, _size);
     return dup;
   }
 
