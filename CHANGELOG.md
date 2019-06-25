@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed assignment of `JsonDocument` to `JsonVariant` (issue #1023)
+
 v6.11.1 (2019-06-21)
 -------
 

@@ -108,3 +108,19 @@ TEST_CASE("JsonVariant with not enough memory") {
     REQUIRE(v.isNull());
   }
 }
+
+TEST_CASE("JsonVariant::set(DynamicJsonDocument)") {
+  DynamicJsonDocument doc1(1024);
+  doc1["hello"] = "world";
+
+  DynamicJsonDocument doc2(1024);
+  JsonVariant v = doc2.to<JsonVariant>();
+
+  // Should copy the doc
+  v.set(doc1);
+  doc1.clear();
+
+  std::string json;
+  serializeJson(doc2, json);
+  REQUIRE(json == "{\"hello\":\"world\"}");
+}

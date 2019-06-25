@@ -278,6 +278,10 @@ class JsonDocument : public Visitable {
     _data.remove(adaptString(key));
   }
 
+  FORCE_INLINE operator VariantConstRef() const {
+    return VariantConstRef(&_data);
+  }
+
  protected:
   JsonDocument(MemoryPool pool) : _pool(pool) {
     _data.setNull();

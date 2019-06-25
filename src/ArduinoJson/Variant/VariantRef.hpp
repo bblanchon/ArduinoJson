@@ -222,6 +222,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   // set(ArrayConstRef)
   // set(ObjectRef)
   // set(ObjecConstRef)
+  // set(const JsonDocument&)
   template <typename TVariant>
   typename enable_if<IsVisitable<TVariant>::value, bool>::type set(
       const TVariant &value) const;
