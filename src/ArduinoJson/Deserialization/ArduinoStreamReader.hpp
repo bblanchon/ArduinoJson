@@ -18,7 +18,7 @@ struct ArduinoStreamReader {
 
   int read() {
     // don't use _stream.read() as it ignores the timeout
-    uint8_t c;
+    char c;
     return _stream.readBytes(&c, 1) ? c : -1;
   }
 };

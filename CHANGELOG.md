@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed assignment of `JsonDocument` to `JsonVariant` (issue #1023)
+* Fix invalid conversion error on Particle Argon (issue #1035)
 
 v6.11.1 (2019-06-21)
 -------
