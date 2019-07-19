@@ -101,7 +101,9 @@ class VariantData {
   }
 
   bool equals(const VariantData &other) const {
-    if (type() != other.type()) return false;
+    // Check that variant have the same type, but ignore string ownership
+    if ((type() | OWNERSHIP_BIT) != (other.type() | OWNERSHIP_BIT))
+      return false;
 
     switch (type()) {
       case VALUE_IS_LINKED_STRING:

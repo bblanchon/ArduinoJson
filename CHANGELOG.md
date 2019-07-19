@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added operators `==` and `!=` for `JsonDocument`, `ElementProxy`, and `MemberProxy`
+* Fixed comparison of `JsonVariant` when one contains a linked string and the other contains an owned string (issue #1051)
 
 v6.11.2 (2019-07-08)
 -------

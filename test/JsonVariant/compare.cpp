@@ -286,6 +286,17 @@ TEST_CASE("JsonVariant comparisons") {
     REQUIRE_FALSE(variant1 == variant3);
   }
 
+  SECTION("Variants containing mixed strings (issue #1051)") {
+    variant1.set("hello");
+    variant2.set(std::string("hello"));
+
+    REQUIRE(variant1 == variant2);
+    REQUIRE_FALSE(variant1 != variant2);
+
+    REQUIRE(variant2 == variant1);
+    REQUIRE_FALSE(variant2 != variant1);
+  }
+
   SECTION("Variants containing double") {
     variant1.set(42.0);
     variant2.set(42.0);
