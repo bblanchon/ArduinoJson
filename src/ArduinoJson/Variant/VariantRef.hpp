@@ -380,5 +380,13 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     const CollectionData *obj = variantAsObject(_data);
     return VariantConstRef(obj ? obj->get(adaptString(key)) : 0);
   }
+
+  FORCE_INLINE bool operator==(VariantConstRef lhs) const {
+    return variantEquals(_data, lhs._data);
+  }
+
+  FORCE_INLINE bool operator!=(VariantConstRef lhs) const {
+    return !variantEquals(_data, lhs._data);
+  }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

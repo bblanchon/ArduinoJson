@@ -126,7 +126,8 @@ class VariantComparisons {
     return compare(rhs, lhs) == 0;
   }
   template <typename T>
-  friend bool operator==(const T &lhs, TVariant rhs) {
+  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator==(
+      const T &lhs, TVariant rhs) {
     return compare(rhs, lhs) == 0;
   }
 
@@ -136,7 +137,8 @@ class VariantComparisons {
     return compare(lhs, rhs) == 0;
   }
   template <typename T>
-  friend bool operator==(TVariant lhs, const T &rhs) {
+  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator==(
+      TVariant lhs, const T &rhs) {
     return compare(lhs, rhs) == 0;
   }
 
@@ -146,7 +148,8 @@ class VariantComparisons {
     return compare(rhs, lhs) != 0;
   }
   template <typename T>
-  friend bool operator!=(const T &lhs, TVariant rhs) {
+  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator!=(
+      const T &lhs, TVariant rhs) {
     return compare(rhs, lhs) != 0;
   }
 
@@ -156,7 +159,8 @@ class VariantComparisons {
     return compare(lhs, rhs) != 0;
   }
   template <typename T>
-  friend bool operator!=(TVariant lhs, const T &rhs) {
+  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator!=(
+      TVariant lhs, const T &rhs) {
     return compare(lhs, rhs) != 0;
   }
 

@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added operators `==` and `!=` for `JsonDocument`
+
 v6.11.2 (2019-07-08)
 -------
 

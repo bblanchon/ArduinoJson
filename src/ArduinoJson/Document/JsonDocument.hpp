@@ -282,6 +282,14 @@ class JsonDocument : public Visitable {
     return VariantConstRef(&_data);
   }
 
+  bool operator==(VariantConstRef rhs) const {
+    return getVariant() == rhs;
+  }
+
+  bool operator!=(VariantConstRef rhs) const {
+    return getVariant() != rhs;
+  }
+
  protected:
   JsonDocument(MemoryPool pool) : _pool(pool) {
     _data.setNull();
