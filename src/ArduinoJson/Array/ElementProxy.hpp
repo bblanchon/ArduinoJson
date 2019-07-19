@@ -47,6 +47,14 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return *this;
   }
 
+  FORCE_INLINE bool operator==(VariantConstRef rhs) const {
+    return static_cast<VariantConstRef>(getUpstreamElement()) == rhs;
+  }
+
+  FORCE_INLINE bool operator!=(VariantConstRef rhs) const {
+    return static_cast<VariantConstRef>(getUpstreamElement()) != rhs;
+  }
+
   FORCE_INLINE void clear() const {
     getUpstreamElement().clear();
   }

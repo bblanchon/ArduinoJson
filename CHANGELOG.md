@@ -4,7 +4,7 @@ ArduinoJson: change log
 HEAD
 ----
 
-* Added operators `==` and `!=` for `JsonDocument` and `MemberProxy`
+* Added operators `==` and `!=` for `JsonDocument`, `ElementProxy`, and `MemberProxy`
 
 v6.11.2 (2019-07-08)
 -------
