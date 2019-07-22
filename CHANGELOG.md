@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.11.3 (2019-07-22)
+-------
 
 * Added operators `==` and `!=` for `JsonDocument`, `ElementProxy`, and `MemberProxy`
 * Fixed comparison of `JsonVariant` when one contains a linked string and the other contains an owned string (issue #1051)
