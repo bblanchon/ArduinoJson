@@ -6,6 +6,7 @@ HEAD
 
 * Added `measureJson()` to the `ArduinoJson` namespace (PR #1069 by @nomis)
 * Fixed example `JsonConfigFile.ino` for ESP8266
+* Include `Arduino.h` if `ARDUINO` is defined (PR #1071 by @nomis)
 
 v6.11.3 (2019-07-22)
 -------
