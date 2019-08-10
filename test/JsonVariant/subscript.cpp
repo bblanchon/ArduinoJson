@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+class __FlashStringHelper;
+
 TEST_CASE("JsonVariant::operator[]") {
   DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
@@ -17,6 +19,14 @@ TEST_CASE("JsonVariant::operator[]") {
 
   SECTION("The JsonVariant is a string") {
     var.set("hello world");
+    REQUIRE(0 == var.size());
+    REQUIRE(var["0"].isNull());
+    REQUIRE(var[0].isNull());
+  }
+
+  SECTION("The JsonVariant is a const __FlashStringHelper*") {
+    const __FlashStringHelper *value = reinterpret_cast<const __FlashStringHelper *>("hello world");
+    var.set(value);
     REQUIRE(0 == var.size());
     REQUIRE(var["0"].isNull());
     REQUIRE(var[0].isNull());
@@ -40,10 +50,21 @@ TEST_CASE("JsonVariant::operator[]") {
       REQUIRE(var["0"].isNull());
     }
 
-    SECTION("set value") {
+    SECTION("set value as a string") {
       array.add("hello");
 
       var[0] = "world";
+
+      REQUIRE(1 == var.size());
+      REQUIRE(std::string("world") == var[0]);
+    }
+
+    SECTION("set value as a const __FlashStringHelper*") {
+      const __FlashStringHelper *value = reinterpret_cast<const __FlashStringHelper *>("world");
+
+      array.add("hello");
+
+      var[0] = value;
 
       REQUIRE(1 == var.size());
       REQUIRE(std::string("world") == var[0]);
@@ -88,6 +109,14 @@ TEST_CASE("JsonVariant::operator[]") {
 
       REQUIRE(1 == var.size());
       REQUIRE(std::string("world") == var["hello"]);
+    }
+
+    SECTION("set value, key is a const __FlashStringHelper*") {
+      const __FlashStringHelper *key = reinterpret_cast<const __FlashStringHelper *>("hello");
+      var[key] = "world";
+
+      REQUIRE(1 == var.size());
+      REQUIRE(std::string("world") == var[key]);
     }
 
     SECTION("var[key].to<JsonArray>()") {
