@@ -17,6 +17,7 @@ add_executable(MixedConfigurationTests
 	use_double_1.cpp
 	use_long_long_0.cpp
 	use_long_long_1.cpp
+	enable_progmem_1.cpp
 )
 
 target_link_libraries(MixedConfigurationTests catch)
