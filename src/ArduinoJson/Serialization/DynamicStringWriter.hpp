@@ -54,13 +54,16 @@ class DynamicStringWriter<String> {
 #endif
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-template <>
-struct IsWriteableString<std::string> : true_type {};
+template <typename TCharTraits, typename TAllocator>
+struct IsWriteableString<std::basic_string<char, TCharTraits, TAllocator> >
+    : true_type {};
 
-template <>
-class DynamicStringWriter<std::string> {
+template <typename TCharTraits, typename TAllocator>
+class DynamicStringWriter<std::basic_string<char, TCharTraits, TAllocator> > {
+  typedef std::basic_string<char, TCharTraits, TAllocator> string_type;
+
  public:
-  DynamicStringWriter(std::string &str) : _str(&str) {}
+  DynamicStringWriter(string_type &str) : _str(&str) {}
 
   size_t write(uint8_t c) {
     _str->operator+=(static_cast<char>(c));
@@ -73,7 +76,7 @@ class DynamicStringWriter<std::string> {
   }
 
  private:
-  std::string *_str;
+  string_type *_str;
 };
 #endif
 }  // namespace ARDUINOJSON_NAMESPACE

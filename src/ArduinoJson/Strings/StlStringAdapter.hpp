@@ -8,9 +8,10 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+template <typename TString>
 class StlStringAdapter {
  public:
-  StlStringAdapter(const std::string& str) : _str(&str) {}
+  StlStringAdapter(const TString& str) : _str(&str) {}
 
   char* save(MemoryPool* pool) const {
     size_t n = _str->length() + 1;
@@ -46,14 +47,18 @@ class StlStringAdapter {
   }
 
  private:
-  const std::string* _str;
+  const TString* _str;
 };
 
-template <>
-struct IsString<std::string> : true_type {};
+template <typename TCharTraits, typename TAllocator>
+struct IsString<std::basic_string<char, TCharTraits, TAllocator> > : true_type {
+};
 
-inline StlStringAdapter adaptString(const std::string& str) {
-  return StlStringAdapter(str);
+template <typename TCharTraits, typename TAllocator>
+inline StlStringAdapter<std::basic_string<char, TCharTraits, TAllocator> >
+adaptString(const std::basic_string<char, TCharTraits, TAllocator>& str) {
+  return StlStringAdapter<std::basic_string<char, TCharTraits, TAllocator> >(
+      str);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

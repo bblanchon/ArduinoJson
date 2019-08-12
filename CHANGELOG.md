@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added `measureJson()` to the `ArduinoJson` namespace (PR #1069 by @nomis)
+* Added support for `basic_string<char, traits, allocator>` (issue #1045)
 * Fixed example `JsonConfigFile.ino` for ESP8266
 * Include `Arduino.h` if `ARDUINO` is defined (PR #1071 by @nomis)
 

@@ -4,6 +4,7 @@
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
+#include "custom_string.hpp"
 
 using namespace ARDUINOJSON_NAMESPACE;
 
@@ -31,9 +32,9 @@ TEST_CASE("ConstRamStringAdapter") {
   }
 }
 
-TEST_CASE("StlString") {
+TEST_CASE("std::string") {
   std::string str("bravo");
-  StlStringAdapter adapter(str);
+  StlStringAdapter<std::string> adapter = adaptString(str);
 
   REQUIRE(adapter.compare(NULL) > 0);
   REQUIRE(adapter.compare("alpha") > 0);
@@ -42,4 +43,31 @@ TEST_CASE("StlString") {
 
   REQUIRE(adapter.equals("bravo"));
   REQUIRE_FALSE(adapter.equals("charlie"));
+}
+
+TEST_CASE("custom_string") {
+  custom_string str("bravo");
+  StlStringAdapter<custom_string> adapter = adaptString(str);
+
+  REQUIRE(adapter.compare(NULL) > 0);
+  REQUIRE(adapter.compare("alpha") > 0);
+  REQUIRE(adapter.compare("bravo") == 0);
+  REQUIRE(adapter.compare("charlie") < 0);
+
+  REQUIRE(adapter.equals("bravo"));
+  REQUIRE_FALSE(adapter.equals("charlie"));
+}
+
+TEST_CASE("IsString<T>") {
+  SECTION("std::string") {
+    REQUIRE(IsString<std::string>::value == true);
+  }
+
+  SECTION("basic_string<wchar_t>") {
+    REQUIRE(IsString<std::basic_string<wchar_t> >::value == false);
+  }
+
+  SECTION("custom_string") {
+    REQUIRE(IsString<custom_string>::value == true);
+  }
 }

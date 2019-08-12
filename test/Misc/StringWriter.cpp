@@ -4,6 +4,7 @@
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
+#include "custom_string.hpp"
 
 using namespace ARDUINOJSON_NAMESPACE;
 
@@ -48,8 +49,30 @@ TEST_CASE("StaticStringWriter") {
   }
 }
 
-TEST_CASE("DynamicStringWriter") {
+TEST_CASE("DynamicStringWriter<std::string>") {
   std::string output;
   DynamicStringWriter<std::string> sb(output);
   common_tests(sb, output);
+}
+
+TEST_CASE("DynamicStringWriter<custom_string>") {
+  custom_string output;
+  DynamicStringWriter<custom_string> sb(output);
+
+  REQUIRE(4 == print(sb, "ABCD"));
+  REQUIRE("ABCD" == output);
+}
+
+TEST_CASE("IsWriteableString") {
+  SECTION("std::string") {
+    REQUIRE(IsWriteableString<std::string>::value == true);
+  }
+
+  SECTION("custom_string") {
+    REQUIRE(IsWriteableString<custom_string>::value == true);
+  }
+
+  SECTION("basic_string<wchar_t>") {
+    REQUIRE(IsWriteableString<std::basic_string<wchar_t> >::value == false);
+  }
 }
