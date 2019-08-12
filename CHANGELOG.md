@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.11.4 (2019-08-12)
+-------
 
 * Added `measureJson()` to the `ArduinoJson` namespace (PR #1069 by @nomis)
 * Added support for `basic_string<char, traits, allocator>` (issue #1045)
