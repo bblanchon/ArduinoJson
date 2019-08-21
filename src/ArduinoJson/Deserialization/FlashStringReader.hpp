@@ -15,7 +15,7 @@ class UnsafeFlashStringReader {
       : _ptr(reinterpret_cast<const char*>(ptr)) {}
 
   int read() {
-    return pgm_read_byte_near(_ptr++);
+    return pgm_read_byte(_ptr++);
   }
 };
 
@@ -29,7 +29,7 @@ class SafeFlashStringReader {
 
   int read() {
     if (_ptr < _end)
-      return pgm_read_byte_near(_ptr++);
+      return pgm_read_byte(_ptr++);
     else
       return -1;
   }

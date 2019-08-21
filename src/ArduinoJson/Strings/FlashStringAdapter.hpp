@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "../Polyfills/pgmspace.hpp"
+
 namespace ARDUINOJSON_NAMESPACE {
 
 class FlashStringAdapter {
