@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include "../Polyfills/assert.hpp"
-#include "../Polyfills/ctype.hpp"
-#include "../Polyfills/math.hpp"
-#include "../Polyfills/type_traits.hpp"
-#include "../Variant/VariantContent.hpp"
-#include "FloatTraits.hpp"
-#include "convertNumber.hpp"
+#include <ArduinoJson/Numbers/FloatTraits.hpp>
+#include <ArduinoJson/Numbers/convertNumber.hpp>
+#include <ArduinoJson/Polyfills/assert.hpp>
+#include <ArduinoJson/Polyfills/ctype.hpp>
+#include <ArduinoJson/Polyfills/math.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Variant/VariantContent.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

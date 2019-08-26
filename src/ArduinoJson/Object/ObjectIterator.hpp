@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "../Variant/SlotFunctions.hpp"
-#include "Pair.hpp"
+#include <ArduinoJson/Object/Pair.hpp>
+#include <ArduinoJson/Variant/SlotFunctions.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

@@ -6,9 +6,9 @@
 
 #include <stddef.h>  // size_t
 
-#include "../Collection/CollectionData.hpp"
-#include "../Numbers/Float.hpp"
-#include "../Numbers/Integer.hpp"
+#include <ArduinoJson/Collection/CollectionData.hpp>
+#include <ArduinoJson/Numbers/Float.hpp>
+#include <ArduinoJson/Numbers/Integer.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

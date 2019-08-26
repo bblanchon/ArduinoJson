@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Use absolute instead of relative includes (issue #1072)
+
 v6.11.5 (2019-08-23)
 -------
 

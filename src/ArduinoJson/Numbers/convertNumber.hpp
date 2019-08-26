@@ -14,10 +14,10 @@
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
-#include "../Polyfills/limits.hpp"
-#include "Float.hpp"
-#include "FloatTraits.hpp"
-#include "Integer.hpp"
+#include <ArduinoJson/Numbers/Float.hpp>
+#include <ArduinoJson/Numbers/FloatTraits.hpp>
+#include <ArduinoJson/Numbers/Integer.hpp>
+#include <ArduinoJson/Polyfills/limits.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "./DynamicStringWriter.hpp"
-#include "./StaticStringWriter.hpp"
+#include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
+#include <ArduinoJson/Serialization/StaticStringWriter.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-#include "./StreamWriter.hpp"
+#include <ArduinoJson/Serialization/StreamWriter.hpp>
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {

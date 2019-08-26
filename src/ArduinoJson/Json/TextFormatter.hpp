@@ -6,10 +6,11 @@
 
 #include <stdint.h>
 #include <string.h>  // for strlen
-#include "../Numbers/FloatParts.hpp"
-#include "../Numbers/Integer.hpp"
-#include "../Polyfills/attributes.hpp"
-#include "EscapeSequence.hpp"
+
+#include <ArduinoJson/Json/EscapeSequence.hpp>
+#include <ArduinoJson/Numbers/FloatParts.hpp>
+#include <ArduinoJson/Numbers/Integer.hpp>
+#include <ArduinoJson/Polyfills/attributes.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

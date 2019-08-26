@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "../Configuration.hpp"
-#include "../Numbers/convertNumber.hpp"
-#include "../Numbers/parseFloat.hpp"
-#include "../Numbers/parseInteger.hpp"
-#include "VariantRef.hpp"
+#include <ArduinoJson/Configuration.hpp>
+#include <ArduinoJson/Numbers/convertNumber.hpp>
+#include <ArduinoJson/Numbers/parseFloat.hpp>
+#include <ArduinoJson/Numbers/parseInteger.hpp>
+#include <ArduinoJson/Variant/VariantRef.hpp>
 
 #include <string.h>  // for strcmp
 

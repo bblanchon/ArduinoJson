@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Polyfills/type_traits.hpp"
+#include "type_traits.hpp"
 
 #ifdef _MSC_VER
 #pragma warning(push)

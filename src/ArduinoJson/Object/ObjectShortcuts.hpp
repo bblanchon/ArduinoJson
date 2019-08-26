@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "../Polyfills/attributes.hpp"
-#include "../Polyfills/type_traits.hpp"
-#include "../Strings/StringAdapters.hpp"
+#include <ArduinoJson/Polyfills/attributes.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Strings/StringAdapters.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 template <typename TParent, typename TStringRef>

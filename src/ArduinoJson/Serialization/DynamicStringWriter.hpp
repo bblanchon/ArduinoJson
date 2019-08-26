@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Polyfills/type_traits.hpp"
+#include <ArduinoJson/Polyfills/type_traits.hpp>
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
 #include <WString.h>

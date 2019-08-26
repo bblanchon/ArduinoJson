@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "BasicJsonDocument.hpp"
+#include <ArduinoJson/Document/BasicJsonDocument.hpp>
 
 #include <stdlib.h>  // malloc, free
 

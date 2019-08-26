@@ -4,14 +4,14 @@
 
 #pragma once
 
-#include "../StringStorage/StringStorage.hpp"
-#include "ArduinoStreamReader.hpp"
-#include "CharPointerReader.hpp"
-#include "DeserializationError.hpp"
-#include "FlashStringReader.hpp"
-#include "IteratorReader.hpp"
-#include "NestingLimit.hpp"
-#include "StdStreamReader.hpp"
+#include <ArduinoJson/Deserialization/ArduinoStreamReader.hpp>
+#include <ArduinoJson/Deserialization/CharPointerReader.hpp>
+#include <ArduinoJson/Deserialization/DeserializationError.hpp>
+#include <ArduinoJson/Deserialization/FlashStringReader.hpp>
+#include <ArduinoJson/Deserialization/IteratorReader.hpp>
+#include <ArduinoJson/Deserialization/NestingLimit.hpp>
+#include <ArduinoJson/Deserialization/StdStreamReader.hpp>
+#include <ArduinoJson/StringStorage/StringStorage.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

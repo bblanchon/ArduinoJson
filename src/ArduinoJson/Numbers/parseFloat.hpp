@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "convertNumber.hpp"
-#include "parseNumber.hpp"
+#include <ArduinoJson/Numbers/convertNumber.hpp>
+#include <ArduinoJson/Numbers/parseNumber.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

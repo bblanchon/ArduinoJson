@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "../Polyfills/attributes.hpp"
-#include "../Polyfills/type_traits.hpp"
+#include <ArduinoJson/Polyfills/attributes.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 // Forward declarations.

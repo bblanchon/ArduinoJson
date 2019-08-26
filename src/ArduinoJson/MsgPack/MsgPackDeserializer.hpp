@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "../Deserialization/deserialize.hpp"
-#include "../Memory/MemoryPool.hpp"
-#include "../Polyfills/type_traits.hpp"
-#include "../Variant/VariantData.hpp"
-#include "endianess.hpp"
-#include "ieee754.hpp"
+#include <ArduinoJson/Deserialization/deserialize.hpp>
+#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/MsgPack/endianess.hpp>
+#include <ArduinoJson/MsgPack/ieee754.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Variant/VariantData.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

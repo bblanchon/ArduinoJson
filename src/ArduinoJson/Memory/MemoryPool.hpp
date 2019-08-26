@@ -4,12 +4,11 @@
 
 #pragma once
 
-#include "../Polyfills/assert.hpp"
-#include "../Polyfills/mpl/max.hpp"
-#include "../Variant/VariantSlot.hpp"
-#include "Alignment.hpp"
-#include "MemoryPool.hpp"
-#include "StringSlot.hpp"
+#include <ArduinoJson/Memory/Alignment.hpp>
+#include <ArduinoJson/Memory/StringSlot.hpp>
+#include <ArduinoJson/Polyfills/assert.hpp>
+#include <ArduinoJson/Polyfills/mpl/max.hpp>
+#include <ArduinoJson/Variant/VariantSlot.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

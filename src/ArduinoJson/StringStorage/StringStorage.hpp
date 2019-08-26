@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "./StringCopier.hpp"
-#include "./StringMover.hpp"
+#include <ArduinoJson/StringStorage/StringCopier.hpp>
+#include <ArduinoJson/StringStorage/StringMover.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

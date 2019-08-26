@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <stddef.h>  // size_t
+
 namespace ARDUINOJSON_NAMESPACE {
 
 class MemoryPool;

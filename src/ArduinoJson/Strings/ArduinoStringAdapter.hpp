@@ -5,7 +5,8 @@
 #pragma once
 
 #include <WString.h>
-#include "../Polyfills/safe_strcmp.hpp"
+
+#include <ArduinoJson/Polyfills/safe_strcmp.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

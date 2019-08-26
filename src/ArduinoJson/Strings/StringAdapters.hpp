@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "../Memory/MemoryPool.hpp"
-#include "../Polyfills/type_traits.hpp"
+#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 template <typename>
@@ -18,19 +18,19 @@ template <typename T>
 struct IsString<T&> : IsString<T> {};
 }  // namespace ARDUINOJSON_NAMESPACE
 
-#include "ConstRamStringAdapter.hpp"
-#include "RamStringAdapter.hpp"
-#include "SizedRamStringAdapter.hpp"
+#include <ArduinoJson/Strings/ConstRamStringAdapter.hpp>
+#include <ArduinoJson/Strings/RamStringAdapter.hpp>
+#include <ArduinoJson/Strings/SizedRamStringAdapter.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-#include "StlStringAdapter.hpp"
+#include <ArduinoJson/Strings/StlStringAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#include "ArduinoStringAdapter.hpp"
+#include <ArduinoJson/Strings/ArduinoStringAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_PROGMEM
-#include "FlashStringAdapter.hpp"
-#include "SizedFlashStringAdapter.hpp"
+#include <ArduinoJson/Strings/FlashStringAdapter.hpp>
+#include <ArduinoJson/Strings/SizedFlashStringAdapter.hpp>
 #endif

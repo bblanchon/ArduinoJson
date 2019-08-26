@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "../Polyfills/attributes.hpp"
-#include "../Polyfills/type_traits.hpp"
-#include "../Variant/VariantAs.hpp"
+#include <ArduinoJson/Polyfills/attributes.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Variant/VariantAs.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

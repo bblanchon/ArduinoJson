@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Configuration.hpp"
+#include <ArduinoJson/Configuration.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "../Strings/String.hpp"
-#include "../Variant/VariantRef.hpp"
+#include <ArduinoJson/Strings/String.hpp>
+#include <ArduinoJson/Variant/VariantRef.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 // A key value pair for CollectionData.

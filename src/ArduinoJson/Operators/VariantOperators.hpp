@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "VariantCasts.hpp"
-#include "VariantComparisons.hpp"
-#include "VariantOr.hpp"
-#include "VariantShortcuts.hpp"
+#include <ArduinoJson/Operators/VariantCasts.hpp>
+#include <ArduinoJson/Operators/VariantComparisons.hpp>
+#include <ArduinoJson/Operators/VariantOr.hpp>
+#include <ArduinoJson/Operators/VariantShortcuts.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

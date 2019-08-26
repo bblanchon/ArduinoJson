@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Serialization/DynamicStringWriter.hpp"
+#include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

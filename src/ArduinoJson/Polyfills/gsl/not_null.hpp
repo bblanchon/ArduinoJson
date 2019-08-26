@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../assert.hpp"
+#include <ArduinoJson/Polyfills/assert.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

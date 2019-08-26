@@ -6,8 +6,9 @@
 
 #include <stdint.h>
 #include <stdlib.h>  // for size_t
-#include "../Configuration.hpp"
-#include "../Polyfills/math.hpp"
+
+#include <ArduinoJson/Configuration.hpp>
+#include "math.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
