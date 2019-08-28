@@ -40,11 +40,10 @@ inline bool VariantData::asBoolean() const {
       return _content.asInteger != 0;
     case VALUE_IS_FLOAT:
       return _content.asFloat != 0;
-    case VALUE_IS_LINKED_STRING:
-    case VALUE_IS_OWNED_STRING:
-      return strcmp("true", _content.asString) == 0;
-    default:
+    case VALUE_IS_NULL:
       return false;
+    default:
+      return true;
   }
 }
 

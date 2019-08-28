@@ -77,13 +77,8 @@ TEST_CASE("JsonVariant::as()") {
   SECTION("set(0L)") {
     variant.set(0L);
 
-    SECTION("as<bool>()") {
-      REQUIRE(false == variant.as<bool>());
-    }
-
-    SECTION("as<double>()") {
-      REQUIRE(variant.as<double>() == 0.0);
-    }
+    REQUIRE(variant.as<bool>() == false);
+    REQUIRE(variant.as<double>() == 0.0);
   }
 
   SECTION("set(null)") {
@@ -104,7 +99,7 @@ TEST_CASE("JsonVariant::as()") {
   SECTION("set(\"hello\")") {
     variant.set("hello");
 
-    REQUIRE(variant.as<bool>() == false);
+    REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<long>() == 0L);
     REQUIRE(variant.as<const char*>() == std::string("hello"));
     REQUIRE(variant.as<char*>() == std::string("hello"));
@@ -114,6 +109,7 @@ TEST_CASE("JsonVariant::as()") {
   SECTION("set(std::string(\"4.2\"))") {
     variant.set(std::string("4.2"));
 
+    REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<long>() == 4L);
     REQUIRE(variant.as<double>() == 4.2);
     REQUIRE(variant.as<char*>() == std::string("4.2"));
@@ -130,6 +126,7 @@ TEST_CASE("JsonVariant::as()") {
   SECTION("set(-1e300)") {
     variant.set(-1e300);
 
+    REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<double>() == -1e300);
     REQUIRE(variant.as<float>() < 0);
     REQUIRE(my::isinf(variant.as<float>()));
@@ -138,14 +135,16 @@ TEST_CASE("JsonVariant::as()") {
   SECTION("set(1e300)") {
     variant.set(1e300);
 
+    REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<double>() == 1e300);
     REQUIRE(variant.as<float>() > 0);
     REQUIRE(my::isinf(variant.as<float>()));
   }
 
-  SECTION("set(1e300)") {
+  SECTION("set(1e-300)") {
     variant.set(1e-300);
 
+    REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<double>() == 1e-300);
     REQUIRE(variant.as<float>() == 0);
   }
@@ -153,6 +152,10 @@ TEST_CASE("JsonVariant::as()") {
   SECTION("to<JsonObject>()") {
     JsonObject obj = variant.to<JsonObject>();
     obj["key"] = "value";
+
+    SECTION("as<bool>()") {
+      REQUIRE(variant.as<bool>() == true);
+    }
 
     SECTION("as<std::string>()") {
       REQUIRE(variant.as<std::string>() == std::string("{\"key\":\"value\"}"));
@@ -169,6 +172,10 @@ TEST_CASE("JsonVariant::as()") {
     JsonArray arr = variant.to<JsonArray>();
     arr.add(4);
     arr.add(2);
+
+    SECTION("as<bool>()") {
+      REQUIRE(variant.as<bool>() == true);
+    }
 
     SECTION("as<std::string>()") {
       REQUIRE(variant.as<std::string>() == std::string("[4,2]"));
@@ -199,7 +206,7 @@ TEST_CASE("JsonVariant::as()") {
 
     JsonVariantConst cvar = variant;
 
-    REQUIRE(cvar.as<bool>() == false);
+    REQUIRE(cvar.as<bool>() == true);
     REQUIRE(cvar.as<long>() == 0L);
     REQUIRE(cvar.as<const char*>() == std::string("hello"));
     REQUIRE(cvar.as<char*>() == std::string("hello"));
