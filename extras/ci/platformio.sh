@@ -2,8 +2,6 @@
 
 pip install --user platformio
 
-rm -r test
-
 case $BOARD in
 uno)
   platformio lib install 868 # SD library

@@ -2,7 +2,7 @@
 
 set -eu
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 VERSION="$1"
 DATE=$(date +%F)

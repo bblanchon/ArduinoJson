@@ -17,6 +17,5 @@ if(${COVERAGE})
 endif()
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/src)
-add_subdirectory(third-party/catch)
-add_subdirectory(test)
-add_subdirectory(fuzzing)
+add_subdirectory(extras/tests)
+add_subdirectory(extras/fuzzing)

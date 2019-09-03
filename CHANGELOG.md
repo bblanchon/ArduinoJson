@@ -6,6 +6,7 @@ HEAD
 
 * Use absolute instead of relative includes (issue #1072)
 * Changed `JsonVariant::as<bool>()` to return `true` for any non-null value (issue #1005)
+* Moved ancillary files to `extras/` (issue #1011)
 
 v6.11.5 (2019-08-23)
 -------

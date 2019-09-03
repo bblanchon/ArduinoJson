@@ -2,6 +2,8 @@
 # Copyright Benoit Blanchon 2014-2019
 # MIT License
 
+add_subdirectory(catch)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_compile_options(
 		-pedantic

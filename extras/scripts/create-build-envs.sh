@@ -2,7 +2,7 @@
 
 export PATH="$PATH:/Applications/CMake.app/Contents/bin/"
 
-cd $(dirname $0)/..
+cd $(dirname $0)/../..
 ROOT=$(pwd)
 
 mkdir "build"

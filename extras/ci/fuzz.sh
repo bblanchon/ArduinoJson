@@ -2,7 +2,7 @@
 
 ROOT_DIR=$(dirname $0)/../../
 INCLUDE_DIR=${ROOT_DIR}/src/
-FUZZING_DIR=${ROOT_DIR}/fuzzing/
+FUZZING_DIR=${ROOT_DIR}/extras/fuzzing/
 CXXFLAGS="-g -fprofile-instr-generate -fcoverage-mapping -fsanitize=address,undefined,fuzzer -fno-sanitize-recover=all"
 
 fuzz() {

@@ -5,4 +5,5 @@ make
 make test
 
 pip install --user cpp-coveralls 'requests[security]'
-coveralls --exclude third-party --gcov-options '\-lp'; fi
+pwd
+coveralls --include 'src' --gcov-options '\-lp'

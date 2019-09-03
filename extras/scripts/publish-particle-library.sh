@@ -2,7 +2,7 @@
 
 set -eu
 
-SOURCE_DIR="$(dirname "$0")/.."
+SOURCE_DIR="$(dirname "$0")/../.."
 WORK_DIR=$(mktemp -d)
 trap 'rm -rf "$WORK_DIR"' EXIT
 

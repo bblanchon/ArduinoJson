@@ -127,6 +127,6 @@ matrix:
 cache:
   directories:
     - "~/.platformio"
-    - "fuzzing/json_corpus"
-    - "fuzzing/msgpack_corpus"
-script: scripts/travis/$SCRIPT.sh
+    - "extras/fuzzing/json_corpus"
+    - "extras/fuzzing/msgpack_corpus"
+script: extras/ci/$SCRIPT.sh

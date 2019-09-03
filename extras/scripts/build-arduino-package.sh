@@ -3,7 +3,7 @@
 TAG=$(git describe)
 OUTPUT="ArduinoJson-$TAG.zip"
 
-cd $(dirname $0)/../..
+cd $(dirname $0)/../../..
 
 # remove existing file
 rm -f $OUTPUT

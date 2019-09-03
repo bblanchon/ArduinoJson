@@ -6,7 +6,7 @@
 /sftp-config.json
 .tags
 .tags_sorted_by_file
-/fuzzing/*_fuzzer
-/fuzzing/*_fuzzer.options
-/fuzzing/*_fuzzer_seed_corpus.zip
+/extras/fuzzing/*_fuzzer
+/extras/fuzzing/*_fuzzer.options
+/extras/fuzzing/*_fuzzer_seed_corpus.zip
 .vs/
