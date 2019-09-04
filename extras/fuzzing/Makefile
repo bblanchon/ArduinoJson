@@ -1,6 +1,6 @@
 # CAUTION: this file is invoked by https://github.com/google/oss-fuzz
 
-CXXFLAGS += -I../src -DARDUINOJSON_DEBUG
+CXXFLAGS += -I../../src -DARDUINOJSON_DEBUG
 
 all: \
 	$(OUT)/json_fuzzer \
@@ -10,7 +10,7 @@ all: \
 	$(OUT)/msgpack_fuzzer_seed_corpus.zip \
 	$(OUT)/msgpack_fuzzer.options
 
-$(OUT)/%_fuzzer: %_fuzzer.cpp $(shell find ../src -type f)
+$(OUT)/%_fuzzer: %_fuzzer.cpp $(shell find ../../src -type f)
 	$(CXX) $(CXXFLAGS) $< -o$@ $(LIB_FUZZING_ENGINE)
 
 $(OUT)/%_fuzzer_seed_corpus.zip: %_seed_corpus/*
