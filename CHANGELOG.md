@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.12.0 (2019-09-05)
+-------
 
 * Use absolute instead of relative includes (issue #1072)
 * Changed `JsonVariant::as<bool>()` to return `true` for any non-null value (issue #1005)
