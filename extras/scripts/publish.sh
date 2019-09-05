@@ -56,6 +56,6 @@ commit_new_version
 add_tag
 push
 
-scripts/build-arduino-package.sh
-scripts/build-single-header.sh
-scripts/wandbox/publish.sh "../ArduinoJson-$TAG.h"
+extras/scripts/build-arduino-package.sh
+extras/scripts/build-single-header.sh
+extras/scripts/wandbox/publish.sh "../ArduinoJson-$TAG.h"
