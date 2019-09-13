@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ArduinoJson/Namespace.hpp>
+
 namespace ARDUINOJSON_NAMESPACE {
 
 class DummyWriter {

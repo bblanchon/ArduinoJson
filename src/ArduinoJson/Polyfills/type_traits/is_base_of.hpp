@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ArduinoJson/Namespace.hpp>
+
 namespace ARDUINOJSON_NAMESPACE {
 
 // A meta-function that returns true if Derived inherits from TBase is an
