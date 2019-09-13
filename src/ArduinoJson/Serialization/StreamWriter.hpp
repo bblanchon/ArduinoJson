@@ -5,8 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Configuration.hpp>
-
-#if ARDUINOJSON_ENABLE_STD_STREAM
+#include <ArduinoJson/Serialization/WriterSelector.hpp>
 
 #include <ostream>
 
@@ -33,6 +32,11 @@ class StreamWriter {
 
   std::ostream& _os;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
 
-#endif  // ARDUINOJSON_ENABLE_STD_STREAM
+template <typename TDestination>
+struct WriterSelector<
+    TDestination,
+    typename enable_if<is_base_of<std::ostream, TDestination>::value>::type> {
+  typedef StreamWriter writer_type;
+};
+}  // namespace ARDUINOJSON_NAMESPACE

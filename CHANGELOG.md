@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added support for custom writer classes (issue #1088)
+
 v6.12.0 (2019-09-05)
 -------
 

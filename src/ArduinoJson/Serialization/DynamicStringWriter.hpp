@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Serialization/WriterSelector.hpp>
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
 #include <WString.h>
@@ -79,4 +81,11 @@ class DynamicStringWriter<std::basic_string<char, TCharTraits, TAllocator> > {
   string_type *_str;
 };
 #endif
+
+template <typename TDestination>
+struct WriterSelector<
+    TDestination,
+    typename enable_if<IsWriteableString<TDestination>::value>::type> {
+  typedef DynamicStringWriter<TDestination> writer_type;
+};
 }  // namespace ARDUINOJSON_NAMESPACE

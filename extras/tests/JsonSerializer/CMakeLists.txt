@@ -3,6 +3,7 @@
 # MIT License
 
 add_executable(JsonSerializerTests
+	CustomWriter.cpp
 	JsonArray.cpp
 	JsonArrayPretty.cpp
 	JsonObject.cpp
