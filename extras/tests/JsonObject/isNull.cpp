@@ -6,29 +6,53 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::isNull()") {
-  DynamicJsonDocument doc(4096);
-
   SECTION("returns true") {
     JsonObject obj;
     REQUIRE(obj.isNull() == true);
   }
 
   SECTION("returns false") {
+    DynamicJsonDocument doc(4096);
     JsonObject obj = doc.to<JsonObject>();
     REQUIRE(obj.isNull() == false);
   }
 }
 
 TEST_CASE("JsonObjectConst::isNull()") {
-  DynamicJsonDocument doc(4096);
-
   SECTION("returns true") {
     JsonObjectConst obj;
     REQUIRE(obj.isNull() == true);
   }
 
   SECTION("returns false") {
+    DynamicJsonDocument doc(4096);
     JsonObjectConst obj = doc.to<JsonObject>();
     REQUIRE(obj.isNull() == false);
+  }
+}
+
+TEST_CASE("JsonObject::operator bool()") {
+  SECTION("returns false") {
+    JsonObject obj;
+    REQUIRE(static_cast<bool>(obj) == false);
+  }
+
+  SECTION("returns true") {
+    DynamicJsonDocument doc(4096);
+    JsonObject obj = doc.to<JsonObject>();
+    REQUIRE(static_cast<bool>(obj) == true);
+  }
+}
+
+TEST_CASE("JsonObjectConst::operator bool()") {
+  SECTION("returns false") {
+    JsonObjectConst obj;
+    REQUIRE(static_cast<bool>(obj) == false);
+  }
+
+  SECTION("returns true") {
+    DynamicJsonDocument doc(4096);
+    JsonObjectConst obj = doc.to<JsonObject>();
+    REQUIRE(static_cast<bool>(obj) == true);
   }
 }
