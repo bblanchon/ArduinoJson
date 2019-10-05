@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 //
 // This example shows how to store your project configuration in a file.
@@ -10,12 +10,25 @@
 //   "hostname": "examples.com",
 //   "port": 2731
 // }
+//
+// To run this program, you need an SD card connected to the SPI bus as follows:
+// * MOSI <-> pin 11
+// * MISO <-> pin 12
+// * CLK  <-> pin 13
+// * CS   <-> pin 4
+//
+// https://arduinojson.org/v6/example/config/
 
 #include <ArduinoJson.h>
 #include <SD.h>
 #include <SPI.h>
 
-// Configuration that we'll store on disk
+// Our configuration structure.
+//
+// Never use a JsonDocument to store the configuration!
+// A JsonDocument is *not* a permanent storage; it's only a temporary storage
+// used during the serialization phase. See:
+// https://arduinojson.org/v6/faq/why-must-i-create-a-separate-config-object/
 struct Config {
   char hostname[64];
   int port;
@@ -29,24 +42,23 @@ void loadConfiguration(const char *filename, Config &config) {
   // Open file for reading
   File file = SD.open(filename);
 
-  // Allocate the memory pool on the stack.
-  // Don't forget to change the capacity to match your JSON document.
-  // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonBuffer<512> jsonBuffer;
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
+  StaticJsonDocument<512> doc;
 
-  // Parse the root object
-  JsonObject &root = jsonBuffer.parseObject(file);
-
-  if (!root.success())
+  // Deserialize the JSON document
+  DeserializationError error = deserializeJson(doc, file);
+  if (error)
     Serial.println(F("Failed to read file, using default configuration"));
 
-  // Copy values from the JsonObject to the Config
-  config.port = root["port"] | 2731;
-  strlcpy(config.hostname,                   // <- destination
-          root["hostname"] | "example.com",  // <- source
-          sizeof(config.hostname));          // <- destination's capacity
+  // Copy values from the JsonDocument to the Config
+  config.port = doc["port"] | 2731;
+  strlcpy(config.hostname,                  // <- destination
+          doc["hostname"] | "example.com",  // <- source
+          sizeof(config.hostname));         // <- destination's capacity
 
-  // Close the file (File's destructor doesn't close the file)
+  // Close the file (Curiously, File's destructor doesn't close the file)
   file.close();
 }
 
@@ -62,24 +74,21 @@ void saveConfiguration(const char *filename, const Config &config) {
     return;
   }
 
-  // Allocate the memory pool on the stack
-  // Don't forget to change the capacity to match your JSON document.
-  // Use https://arduinojson.org/assistant/ to compute the capacity.
-  StaticJsonBuffer<256> jsonBuffer;
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/assistant to compute the capacity.
+  StaticJsonDocument<256> doc;
 
-  // Parse the root object
-  JsonObject &root = jsonBuffer.createObject();
-
-  // Set the values
-  root["hostname"] = config.hostname;
-  root["port"] = config.port;
+  // Set the values in the document
+  doc["hostname"] = config.hostname;
+  doc["port"] = config.port;
 
   // Serialize JSON to file
-  if (root.printTo(file) == 0) {
+  if (serializeJson(doc, file) == 0) {
     Serial.println(F("Failed to write to file"));
   }
 
-  // Close the file (File's destructor doesn't close the file)
+  // Close the file
   file.close();
 }
 
@@ -98,7 +107,7 @@ void printFile(const char *filename) {
   }
   Serial.println();
 
-  // Close the file (File's destructor doesn't close the file)
+  // Close the file
   file.close();
 }
 
@@ -108,7 +117,8 @@ void setup() {
   while (!Serial) continue;
 
   // Initialize SD library
-  while (!SD.begin()) {
+  const int chipSelect = 4;
+  while (!SD.begin(chipSelect)) {
     Serial.println(F("Failed to initialize SD library"));
     delay(1000);
   }
@@ -133,12 +143,12 @@ void loop() {
 // See also
 // --------
 //
-// The website arduinojson.org contains the documentation for all the functions
+// https://arduinojson.org/ contains the documentation for all the functions
 // used above. It also includes an FAQ that will help you solve any
 // serialization or deserialization problem.
-// Please check it out at: https://arduinojson.org/
 //
 // The book "Mastering ArduinoJson" contains a case study of a project that has
 // a complex configuration with nested members.
 // Contrary to this example, the project in the book uses the SPIFFS filesystem.
-// Please check it out at: https://arduinojson.org/book/
+// Learn more at https://arduinojson.org/book/
+// Use the coupon code TWENTY for a 20% discount ❤❤❤❤❤

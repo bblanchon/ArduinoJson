@@ -1,15 +1,36 @@
-JsonArray	KEYWORD1
-JsonObject	KEYWORD1
-JsonVariant	KEYWORD1
-StaticJsonBuffer	KEYWORD1
-DynamicJsonBuffer	KEYWORD1
+# Macros
+JSON_ARRAY_SIZE	KEYWORD2
+JSON_OBJECT_SIZE	KEYWORD2
+JSON_STRING_SIZE	KEYWORD2
+
+# Free functions
+deserializeJson	KEYWORD2
+deserializeMsgPack	KEYWORD2
+serialized	KEYWORD2
+serializeJson	KEYWORD2
+serializeJsonPretty	KEYWORD2
+serializeMsgPack	KEYWORD2
+
+# Methods
 add	KEYWORD2
-createArray	KEYWORD2
+as	KEYWORD2
 createNestedArray	KEYWORD2
 createNestedObject	KEYWORD2
-createObject	KEYWORD2
-parseArray	KEYWORD2
-parseObject	KEYWORD2
-prettyPrintTo	KEYWORD2
-printTo	KEYWORD2
-success	KEYWORD2
+get	KEYWORD2
+set	KEYWORD2
+to	KEYWORD2
+
+# Type names
+DeserializationError	KEYWORD1	DATA_TYPE
+DynamicJsonDocument	KEYWORD1	DATA_TYPE
+JsonArray	KEYWORD1	DATA_TYPE
+JsonArrayConst	KEYWORD1	DATA_TYPE
+JsonFloat	KEYWORD1	DATA_TYPE
+JsonInteger	KEYWORD1	DATA_TYPE
+JsonObject	KEYWORD1	DATA_TYPE
+JsonObjectConst	KEYWORD1	DATA_TYPE
+JsonString	KEYWORD1	DATA_TYPE
+JsonUInt	KEYWORD1	DATA_TYPE
+JsonVariant	KEYWORD1	DATA_TYPE
+JsonVariantConst	KEYWORD1	DATA_TYPE
+StaticJsonDocument	KEYWORD1	DATA_TYPE

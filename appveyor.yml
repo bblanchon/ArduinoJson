@@ -1,4 +1,4 @@
-version: 5.13.2.{build}
+version: 6.12.0.{build}
 environment:
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -17,4 +17,4 @@ before_build:
 build_script:
 - cmake --build . --config %CONFIGURATION%
 test_script:
-- ctest --output-on-failure .
+- ctest -C %CONFIGURATION% --output-on-failure .
