@@ -7,6 +7,7 @@ HEAD
 * Added support for custom writer classes (issue #1088)
 * Added conversion from `JsonArray` and `JsonObject` to `bool`, to be consistent with `JsonVariant`
 * Fixed `deserializeJson()` when input contains duplicate keys (issue #1095)
+* Improved `deserializeMsgPack()` speed by reading several bytes at once
 
 v6.12.0 (2019-09-05)
 -------

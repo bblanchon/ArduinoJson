@@ -24,6 +24,11 @@ class StdStreamReader {
     return _stream.get();
   }
 
+  size_t readBytes(char* buffer, size_t length) {
+    _stream.read(buffer, static_cast<std::streamsize>(length));
+    return static_cast<size_t>(_stream.gcount());
+  }
+
  private:
   StdStreamReader& operator=(const StdStreamReader&);  // Visual Studio C4512
 };

@@ -22,6 +22,12 @@ class IteratorReader {
     else
       return -1;
   }
+
+  size_t readBytes(char* buffer, size_t length) {
+    size_t i = 0;
+    while (i < length && _ptr < _end) buffer[i++] = *_ptr++;
+    return i;
+  }
 };
 
 template <typename TInput>

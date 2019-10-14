@@ -19,6 +19,12 @@ class UnsafeFlashStringReader {
   int read() {
     return pgm_read_byte(_ptr++);
   }
+
+  size_t readBytes(char* buffer, size_t length) {
+    memcpy_P(buffer, _ptr, length);
+    _ptr += length;
+    return length;
+  }
 };
 
 class SafeFlashStringReader {
@@ -34,6 +40,14 @@ class SafeFlashStringReader {
       return pgm_read_byte(_ptr++);
     else
       return -1;
+  }
+
+  size_t readBytes(char* buffer, size_t length) {
+    size_t available = static_cast<size_t>(_end - _ptr);
+    if (available < length) length = available;
+    memcpy_P(buffer, _ptr, length);
+    _ptr += length;
+    return length;
   }
 };
 

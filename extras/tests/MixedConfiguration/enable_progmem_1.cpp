@@ -85,3 +85,83 @@ TEST_CASE("memcpy_P") {
   CHECK(dst[2] == 'C');
   CHECK(dst[3] == 0);
 }
+
+TEST_CASE("SafeCharPointerReader") {
+  using ARDUINOJSON_NAMESPACE::SafeFlashStringReader;
+
+  SECTION("read") {
+    SafeFlashStringReader reader(F("\x01\xFF"), 2);
+    REQUIRE(reader.read() == 0x01);
+    REQUIRE(reader.read() == 0xFF);
+    REQUIRE(reader.read() == -1);
+    REQUIRE(reader.read() == -1);
+  }
+
+  SECTION("readBytes() all at once") {
+    SafeFlashStringReader reader(F("ABCD"), 3);
+
+    char buffer[8] = "abcd";
+    REQUIRE(reader.readBytes(buffer, 4) == 3);
+
+    REQUIRE(buffer[0] == 'A');
+    REQUIRE(buffer[1] == 'B');
+    REQUIRE(buffer[2] == 'C');
+    REQUIRE(buffer[3] == 'd');
+  }
+
+  SECTION("readBytes() in two parts") {
+    SafeFlashStringReader reader(F("ABCDEF"), 6);
+
+    char buffer[8] = "abcdefg";
+    REQUIRE(reader.readBytes(buffer, 4) == 4);
+    REQUIRE(reader.readBytes(buffer + 4, 4) == 2);
+
+    REQUIRE(buffer[0] == 'A');
+    REQUIRE(buffer[1] == 'B');
+    REQUIRE(buffer[2] == 'C');
+    REQUIRE(buffer[3] == 'D');
+    REQUIRE(buffer[4] == 'E');
+    REQUIRE(buffer[5] == 'F');
+    REQUIRE(buffer[6] == 'g');
+  }
+}
+
+TEST_CASE("UnsafeFlashStringReader") {
+  using ARDUINOJSON_NAMESPACE::UnsafeFlashStringReader;
+
+  SECTION("read()") {
+    UnsafeFlashStringReader reader(F("\x01\xFF\x00\x12"));
+    REQUIRE(reader.read() == 0x01);
+    REQUIRE(reader.read() == 0xFF);
+    REQUIRE(reader.read() == 0);
+    REQUIRE(reader.read() == 0x12);
+  }
+
+  SECTION("readBytes() all at once") {
+    UnsafeFlashStringReader reader(F("ABCD"));
+
+    char buffer[8] = "abcd";
+    REQUIRE(reader.readBytes(buffer, 3) == 3);
+
+    REQUIRE(buffer[0] == 'A');
+    REQUIRE(buffer[1] == 'B');
+    REQUIRE(buffer[2] == 'C');
+    REQUIRE(buffer[3] == 'd');
+  }
+
+  SECTION("readBytes() in two parts") {
+    UnsafeFlashStringReader reader(F("ABCDEF"));
+
+    char buffer[8] = "abcdefg";
+    REQUIRE(reader.readBytes(buffer, 4) == 4);
+    REQUIRE(reader.readBytes(buffer + 4, 2) == 2);
+
+    REQUIRE(buffer[0] == 'A');
+    REQUIRE(buffer[1] == 'B');
+    REQUIRE(buffer[2] == 'C');
+    REQUIRE(buffer[3] == 'D');
+    REQUIRE(buffer[4] == 'E');
+    REQUIRE(buffer[5] == 'F');
+    REQUIRE(buffer[6] == 'g');
+  }
+}

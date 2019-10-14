@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ArduinoJson/Deserialization/IteratorReader.hpp>
 #include <ArduinoJson/Namespace.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -28,22 +29,17 @@ class UnsafeCharPointerReader {
   int read() {
     return static_cast<unsigned char>(*_ptr++);
   }
+
+  size_t readBytes(char* buffer, size_t length) {
+    for (size_t i = 0; i < length; i++) buffer[i] = *_ptr++;
+    return length;
+  }
 };
 
-class SafeCharPointerReader {
-  const char* _ptr;
-  const char* _end;
-
+class SafeCharPointerReader : public IteratorReader<const char*> {
  public:
   explicit SafeCharPointerReader(const char* ptr, size_t len)
-      : _ptr(ptr ? ptr : reinterpret_cast<const char*>("")), _end(_ptr + len) {}
-
-  int read() {
-    if (_ptr < _end)
-      return static_cast<unsigned char>(*_ptr++);
-    else
-      return -1;
-  }
+      : IteratorReader<const char*>(ptr, ptr + len) {}
 };
 
 template <typename TChar>

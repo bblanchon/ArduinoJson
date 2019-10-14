@@ -23,6 +23,10 @@ struct ArduinoStreamReader {
     char c;
     return _stream.readBytes(&c, 1) ? c : -1;
   }
+
+  size_t readBytes(char* buffer, size_t length) {
+    return _stream.readBytes(buffer, length);
+  }
 };
 
 inline ArduinoStreamReader makeReader(Stream& input) {

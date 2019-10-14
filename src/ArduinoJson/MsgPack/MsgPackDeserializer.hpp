@@ -142,10 +142,7 @@ class MsgPackDeserializer {
   }
 
   bool readBytes(uint8_t *p, size_t n) {
-    for (size_t i = 0; i < n; i++) {
-      if (!readByte(p[i])) return false;
-    }
-    return true;
+    return _reader.readBytes(reinterpret_cast<char *>(p), n) == n;
   }
 
   template <typename T>
