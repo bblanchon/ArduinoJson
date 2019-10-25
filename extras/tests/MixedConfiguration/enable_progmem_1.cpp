@@ -86,11 +86,11 @@ TEST_CASE("memcpy_P") {
   CHECK(dst[3] == 0);
 }
 
-TEST_CASE("SafeCharPointerReader") {
-  using ARDUINOJSON_NAMESPACE::SafeFlashStringReader;
+TEST_CASE("BoundedReader<const __FlashStringHelper*>") {
+  using namespace ARDUINOJSON_NAMESPACE;
 
   SECTION("read") {
-    SafeFlashStringReader reader(F("\x01\xFF"), 2);
+    BoundedReader<const __FlashStringHelper*> reader(F("\x01\xFF"), 2);
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
     REQUIRE(reader.read() == -1);
@@ -98,7 +98,7 @@ TEST_CASE("SafeCharPointerReader") {
   }
 
   SECTION("readBytes() all at once") {
-    SafeFlashStringReader reader(F("ABCD"), 3);
+    BoundedReader<const __FlashStringHelper*> reader(F("ABCD"), 3);
 
     char buffer[8] = "abcd";
     REQUIRE(reader.readBytes(buffer, 4) == 3);
@@ -110,7 +110,7 @@ TEST_CASE("SafeCharPointerReader") {
   }
 
   SECTION("readBytes() in two parts") {
-    SafeFlashStringReader reader(F("ABCDEF"), 6);
+    BoundedReader<const __FlashStringHelper*> reader(F("ABCDEF"), 6);
 
     char buffer[8] = "abcdefg";
     REQUIRE(reader.readBytes(buffer, 4) == 4);
@@ -126,11 +126,11 @@ TEST_CASE("SafeCharPointerReader") {
   }
 }
 
-TEST_CASE("UnsafeFlashStringReader") {
-  using ARDUINOJSON_NAMESPACE::UnsafeFlashStringReader;
+TEST_CASE("Reader<const __FlashStringHelper*>") {
+  using namespace ARDUINOJSON_NAMESPACE;
 
   SECTION("read()") {
-    UnsafeFlashStringReader reader(F("\x01\xFF\x00\x12"));
+    Reader<const __FlashStringHelper*> reader(F("\x01\xFF\x00\x12"));
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
     REQUIRE(reader.read() == 0);
@@ -138,7 +138,7 @@ TEST_CASE("UnsafeFlashStringReader") {
   }
 
   SECTION("readBytes() all at once") {
-    UnsafeFlashStringReader reader(F("ABCD"));
+    Reader<const __FlashStringHelper*> reader(F("ABCD"));
 
     char buffer[8] = "abcd";
     REQUIRE(reader.readBytes(buffer, 3) == 3);
@@ -150,7 +150,7 @@ TEST_CASE("UnsafeFlashStringReader") {
   }
 
   SECTION("readBytes() in two parts") {
-    UnsafeFlashStringReader reader(F("ABCDEF"));
+    Reader<const __FlashStringHelper*> reader(F("ABCDEF"));
 
     char buffer[8] = "abcdefg";
     REQUIRE(reader.readBytes(buffer, 4) == 4);

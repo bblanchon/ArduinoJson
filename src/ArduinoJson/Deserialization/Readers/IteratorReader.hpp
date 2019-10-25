@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Namespace.hpp>
-
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TIterator>
@@ -30,10 +28,16 @@ class IteratorReader {
   }
 };
 
-template <typename TInput>
-inline IteratorReader<typename TInput::const_iterator> makeReader(
-    const TInput& input) {
-  return IteratorReader<typename TInput::const_iterator>(input.begin(),
-                                                         input.end());
-}
+template <typename T>
+struct void_ {
+  typedef void type;
+};
+
+template <typename TSource>
+struct Reader<TSource, typename void_<typename TSource::const_iterator>::type>
+    : IteratorReader<typename TSource::const_iterator> {
+  explicit Reader(const TSource& source)
+      : IteratorReader<typename TSource::const_iterator>(source.begin(),
+                                                         source.end()) {}
+};
 }  // namespace ARDUINOJSON_NAMESPACE

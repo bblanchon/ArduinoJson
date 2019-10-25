@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "CustomReader.hpp"
+
 TEST_CASE("deserializeMsgPack(const std::string&)") {
   DynamicJsonDocument doc(4096);
 
@@ -80,3 +82,14 @@ TEST_CASE("deserializeMsgPack(VLA)") {
   REQUIRE(err == DeserializationError::Ok);
 }
 #endif
+
+TEST_CASE("deserializeMsgPack(CustomReader)") {
+  DynamicJsonDocument doc(4096);
+  CustomReader reader("\x92\xA5Hello\xA5world");
+  DeserializationError err = deserializeMsgPack(doc, reader);
+
+  REQUIRE(err == DeserializationError::Ok);
+  REQUIRE(doc.size() == 2);
+  REQUIRE(doc[0] == "Hello");
+  REQUIRE(doc[1] == "world");
+}

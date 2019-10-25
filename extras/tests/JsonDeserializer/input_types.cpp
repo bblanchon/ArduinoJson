@@ -6,6 +6,8 @@
 #include <catch.hpp>
 #include <sstream>
 
+#include "CustomReader.hpp"
+
 TEST_CASE("deserializeJson(const std::string&)") {
   DynamicJsonDocument doc(4096);
 
@@ -113,3 +115,14 @@ TEST_CASE("deserializeJson(VLA)") {
   REQUIRE(err == DeserializationError::Ok);
 }
 #endif
+
+TEST_CASE("deserializeJson(CustomReader)") {
+  DynamicJsonDocument doc(4096);
+  CustomReader reader("[4,2]");
+  DeserializationError err = deserializeJson(doc, reader);
+
+  REQUIRE(err == DeserializationError::Ok);
+  REQUIRE(doc.size() == 2);
+  REQUIRE(doc[0] == 4);
+  REQUIRE(doc[1] == 2);
+}

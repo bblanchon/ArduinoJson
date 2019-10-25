@@ -4,19 +4,17 @@
 
 #pragma once
 
-#include <ArduinoJson/Namespace.hpp>
-
-#if ARDUINOJSON_ENABLE_ARDUINO_STREAM
-
 #include <Stream.h>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-struct ArduinoStreamReader {
+template <typename TSource>
+struct Reader<TSource,
+              typename enable_if<is_base_of<Stream, TSource>::value>::type> {
   Stream& _stream;
 
  public:
-  explicit ArduinoStreamReader(Stream& stream) : _stream(stream) {}
+  explicit Reader(Stream& stream) : _stream(stream) {}
 
   int read() {
     // don't use _stream.read() as it ignores the timeout
@@ -29,9 +27,4 @@ struct ArduinoStreamReader {
   }
 };
 
-inline ArduinoStreamReader makeReader(Stream& input) {
-  return ArduinoStreamReader(input);
-}
 }  // namespace ARDUINOJSON_NAMESPACE
-
-#endif

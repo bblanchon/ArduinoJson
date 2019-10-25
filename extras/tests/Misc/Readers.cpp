@@ -2,15 +2,15 @@
 // Copyright Benoit Blanchon 2014-2019
 // MIT License
 
-#include <ArduinoJson.h>
+#include <ArduinoJson/Deserialization/Reader.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-TEST_CASE("StdStreamReader") {
+TEST_CASE("Reader<std::istringstream>") {
   SECTION("read()") {
     std::istringstream src("\x01\xFF");
-    StdStreamReader reader(src);
+    Reader<std::istringstream> reader(src);
 
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
@@ -19,7 +19,7 @@ TEST_CASE("StdStreamReader") {
 
   SECTION("readBytes() all at once") {
     std::istringstream src("ABC");
-    StdStreamReader reader(src);
+    Reader<std::istringstream> reader(src);
 
     char buffer[8] = "abcd";
     REQUIRE(reader.readBytes(buffer, 4) == 3);
@@ -32,7 +32,7 @@ TEST_CASE("StdStreamReader") {
 
   SECTION("readBytes() in two parts") {
     std::istringstream src("ABCDEF");
-    StdStreamReader reader(src);
+    Reader<std::istringstream> reader(src);
 
     char buffer[12] = "abcdefg";
     REQUIRE(reader.readBytes(buffer, 4) == 4);
@@ -48,9 +48,9 @@ TEST_CASE("StdStreamReader") {
   }
 }
 
-TEST_CASE("SafeCharPointerReader") {
+TEST_CASE("BoundedReader<const char*>") {
   SECTION("read") {
-    SafeCharPointerReader reader("\x01\xFF", 2);
+    BoundedReader<const char*> reader("\x01\xFF", 2);
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
     REQUIRE(reader.read() == -1);
@@ -58,7 +58,7 @@ TEST_CASE("SafeCharPointerReader") {
   }
 
   SECTION("readBytes() all at once") {
-    SafeCharPointerReader reader("ABCD", 3);
+    BoundedReader<const char*> reader("ABCD", 3);
 
     char buffer[8] = "abcd";
     REQUIRE(reader.readBytes(buffer, 4) == 3);
@@ -70,7 +70,7 @@ TEST_CASE("SafeCharPointerReader") {
   }
 
   SECTION("readBytes() in two parts") {
-    SafeCharPointerReader reader("ABCDEF", 6);
+    BoundedReader<const char*> reader("ABCDEF", 6);
 
     char buffer[8] = "abcdefg";
     REQUIRE(reader.readBytes(buffer, 4) == 4);
@@ -86,9 +86,9 @@ TEST_CASE("SafeCharPointerReader") {
   }
 }
 
-TEST_CASE("UnsafeCharPointerReader") {
+TEST_CASE("Reader<const char*>") {
   SECTION("read()") {
-    UnsafeCharPointerReader reader("\x01\xFF\x00\x12");
+    Reader<const char*> reader("\x01\xFF\x00\x12");
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
     REQUIRE(reader.read() == 0);
@@ -96,7 +96,7 @@ TEST_CASE("UnsafeCharPointerReader") {
   }
 
   SECTION("readBytes() all at once") {
-    UnsafeCharPointerReader reader("ABCD");
+    Reader<const char*> reader("ABCD");
 
     char buffer[8] = "abcd";
     REQUIRE(reader.readBytes(buffer, 3) == 3);
@@ -108,7 +108,7 @@ TEST_CASE("UnsafeCharPointerReader") {
   }
 
   SECTION("readBytes() in two parts") {
-    UnsafeCharPointerReader reader("ABCDEF");
+    Reader<const char*> reader("ABCDEF");
 
     char buffer[8] = "abcdefg";
     REQUIRE(reader.readBytes(buffer, 4) == 4);

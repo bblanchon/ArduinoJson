@@ -72,6 +72,7 @@ if(MSVC)
 	)
 endif()
 
+include_directories(Helpers)
 add_subdirectory(ElementProxy)
 add_subdirectory(IntegrationTests)
 add_subdirectory(JsonArray)
