@@ -19,7 +19,7 @@ struct Reader<TSource,
   int read() {
     // don't use _stream.read() as it ignores the timeout
     char c;
-    return _stream.readBytes(&c, 1) ? c : -1;
+    return _stream.readBytes(&c, 1) ? static_cast<unsigned char>(c) : -1;
   }
 
   size_t readBytes(char* buffer, size_t length) {
