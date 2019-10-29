@@ -2,6 +2,7 @@
 // Copyright Benoit Blanchon 2014-2019
 // MIT License
 
+#define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
 #include <ArduinoJson/Deserialization/Reader.hpp>
 #include <catch.hpp>
 
@@ -150,6 +151,64 @@ TEST_CASE("IteratorReader") {
   SECTION("readBytes() in two parts") {
     std::string src("ABCDEF");
     IteratorReader<std::string::const_iterator> reader(src.begin(), src.end());
+
+    char buffer[12] = "abcdefg";
+    REQUIRE(reader.readBytes(buffer, 4) == 4);
+    REQUIRE(reader.readBytes(buffer + 4, 4) == 2);
+
+    REQUIRE(buffer[0] == 'A');
+    REQUIRE(buffer[1] == 'B');
+    REQUIRE(buffer[2] == 'C');
+    REQUIRE(buffer[3] == 'D');
+    REQUIRE(buffer[4] == 'E');
+    REQUIRE(buffer[5] == 'F');
+    REQUIRE(buffer[6] == 'g');
+  }
+}
+
+class StreamStub : public Stream {
+ public:
+  StreamStub(const char* s) : _stream(s) {}
+
+  int read() {
+    return _stream.get();
+  }
+
+  size_t readBytes(char* buffer, size_t length) {
+    _stream.read(buffer, static_cast<std::streamsize>(length));
+    return static_cast<size_t>(_stream.gcount());
+  }
+
+ private:
+  std::istringstream _stream;
+};
+
+TEST_CASE("Reader<Stream>") {
+  SECTION("read()") {
+    StreamStub src("\x01\xFF");
+    Reader<StreamStub> reader(src);
+
+    REQUIRE(reader.read() == 0x01);
+    REQUIRE(reader.read() == 0xFF);
+    REQUIRE(reader.read() == -1);
+  }
+
+  SECTION("readBytes() all at once") {
+    StreamStub src("ABC");
+    Reader<StreamStub> reader(src);
+
+    char buffer[8] = "abcd";
+    REQUIRE(reader.readBytes(buffer, 4) == 3);
+
+    REQUIRE(buffer[0] == 'A');
+    REQUIRE(buffer[1] == 'B');
+    REQUIRE(buffer[2] == 'C');
+    REQUIRE(buffer[3] == 'd');
+  }
+
+  SECTION("readBytes() in two parts") {
+    StreamStub src("ABCDEF");
+    Reader<StreamStub> reader(src);
 
     char buffer[12] = "abcdefg";
     REQUIRE(reader.readBytes(buffer, 4) == 4);

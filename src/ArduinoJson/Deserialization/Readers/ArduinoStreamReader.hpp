@@ -11,20 +11,21 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TSource>
 struct Reader<TSource,
               typename enable_if<is_base_of<Stream, TSource>::value>::type> {
-  Stream& _stream;
-
  public:
-  explicit Reader(Stream& stream) : _stream(stream) {}
+  explicit Reader(Stream& stream) : _stream(&stream) {}
 
   int read() {
     // don't use _stream.read() as it ignores the timeout
     char c;
-    return _stream.readBytes(&c, 1) ? c : -1;
+    return _stream->readBytes(&c, 1) ? static_cast<unsigned char>(c) : -1;
   }
 
   size_t readBytes(char* buffer, size_t length) {
-    return _stream.readBytes(buffer, length);
+    return _stream->readBytes(buffer, length);
   }
+
+ private:
+  Stream* _stream;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE
