@@ -141,11 +141,10 @@ class JsonDocument : public Visitable {
   // operator[](const std::string&)
   // operator[](const String&)
   template <typename TString>
-  FORCE_INLINE
-      typename enable_if<IsString<TString>::value,
-                         MemberProxy<JsonDocument&, const TString&> >::type
-      operator[](const TString& key) {
-    return MemberProxy<JsonDocument&, const TString&>(*this, key);
+  FORCE_INLINE typename enable_if<IsString<TString>::value,
+                                  MemberProxy<JsonDocument&, TString> >::type
+  operator[](const TString& key) {
+    return MemberProxy<JsonDocument&, TString>(*this, key);
   }
 
   // operator[](char*)

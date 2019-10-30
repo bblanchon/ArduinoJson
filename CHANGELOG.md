@@ -10,6 +10,7 @@ HEAD
 * Improved `deserializeMsgPack()` speed by reading several bytes at once
 * Added detection of Atmel AVR8/GNU C Compiler (issue #1112)
 * Fixed deserializer that stopped reading at the first `0xFF` (PR #1118 by @mikee47)
+* Fixed dangling reference in copies of `MemberProxy` and `ElementProxy` (issue #1120)
 
 v6.12.0 (2019-09-05)
 -------

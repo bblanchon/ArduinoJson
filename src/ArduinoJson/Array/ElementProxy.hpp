@@ -161,12 +161,6 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   const size_t _index;
 };
 
-template <typename TArray>
-inline ElementProxy<const TArray&> ArrayShortcuts<TArray>::operator[](
-    size_t index) const {
-  return ElementProxy<const TArray&>(*impl(), index);
-}
-
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #ifdef _MSC_VER

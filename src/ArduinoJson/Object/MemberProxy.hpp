@@ -174,22 +174,6 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   TStringRef _key;
 };
 
-template <typename TObject>
-template <typename TString>
-inline typename enable_if<IsString<TString>::value,
-                          MemberProxy<const TObject &, const TString &> >::type
-    ObjectShortcuts<TObject>::operator[](const TString &key) const {
-  return MemberProxy<const TObject &, const TString &>(*impl(), key);
-}
-
-template <typename TObject>
-template <typename TString>
-inline typename enable_if<IsString<TString *>::value,
-                          MemberProxy<const TObject &, TString *> >::type
-    ObjectShortcuts<TObject>::operator[](TString *key) const {
-  return MemberProxy<const TObject &, TString *>(*impl(), key);
-}
-
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #ifdef _MSC_VER

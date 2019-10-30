@@ -31,17 +31,16 @@ class ObjectShortcuts {
   // operator[](const std::string&) const
   // operator[](const String&) const
   template <typename TString>
-  FORCE_INLINE
-      typename enable_if<IsString<TString>::value,
-                         MemberProxy<const TObject &, const TString &> >::type
-      operator[](const TString &key) const;
+  FORCE_INLINE typename enable_if<IsString<TString>::value,
+                                  MemberProxy<TObject, TString> >::type
+  operator[](const TString &key) const;
 
   // operator[](char*) const
   // operator[](const char*) const
   // operator[](const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar *>::value,
-                                  MemberProxy<const TObject &, TChar *> >::type
+                                  MemberProxy<TObject, TChar *> >::type
   operator[](TChar *key) const;
 
   // createNestedArray(const std::string&) const
