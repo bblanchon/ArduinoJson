@@ -15,7 +15,7 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TWriter>
 class MsgPackSerializer {
  public:
-  MsgPackSerializer(TWriter& writer) : _writer(&writer), _bytesWritten(0) {}
+  MsgPackSerializer(TWriter writer) : _writer(writer), _bytesWritten(0) {}
 
   template <typename T>
   typename enable_if<sizeof(T) == 4>::type visitFloat(T value32) {
@@ -150,11 +150,11 @@ class MsgPackSerializer {
 
  private:
   void writeByte(uint8_t c) {
-    _bytesWritten += _writer->write(c);
+    _bytesWritten += _writer.write(c);
   }
 
   void writeBytes(const uint8_t* p, size_t n) {
-    _bytesWritten += _writer->write(p, n);
+    _bytesWritten += _writer.write(p, n);
   }
 
   template <typename T>
@@ -163,7 +163,7 @@ class MsgPackSerializer {
     writeBytes(reinterpret_cast<uint8_t*>(&value), sizeof(value));
   }
 
-  TWriter* _writer;
+  TWriter _writer;
   size_t _bytesWritten;
 };
 

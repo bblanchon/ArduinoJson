@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
+#include <ArduinoJson/Strings/IsWriteableString.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 

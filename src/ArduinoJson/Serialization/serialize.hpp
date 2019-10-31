@@ -4,23 +4,13 @@
 
 #pragma once
 
-#include <ArduinoJson/Configuration.hpp>
-#include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
-#include <ArduinoJson/Serialization/StaticStringWriter.hpp>
-
-#if ARDUINOJSON_ENABLE_STD_STREAM
-#include <ArduinoJson/Serialization/StreamWriter.hpp>
-#endif
-
-#if ARDUINOJSON_ENABLE_ARDUINO_PRINT
-#include <ArduinoJson/Serialization/PrintWriter.hpp>
-#endif
+#include <ArduinoJson/Serialization/Writer.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename> class TSerializer, typename TSource,
           typename TWriter>
-size_t doSerialize(const TSource &source, TWriter &writer) {
+size_t doSerialize(const TSource &source, TWriter writer) {
   TSerializer<TWriter> serializer(writer);
   source.accept(serializer);
   return serializer.bytesWritten();
@@ -29,7 +19,7 @@ size_t doSerialize(const TSource &source, TWriter &writer) {
 template <template <typename> class TSerializer, typename TSource,
           typename TDestination>
 size_t serialize(const TSource &source, TDestination &destination) {
-  typename WriterSelector<TDestination>::writer_type writer(destination);
+  Writer<TDestination> writer(destination);
   return doSerialize<TSerializer>(source, writer);
 }
 

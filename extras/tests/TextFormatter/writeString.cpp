@@ -5,7 +5,7 @@
 #include <catch.hpp>
 
 #include <ArduinoJson/Json/TextFormatter.hpp>
-#include <ArduinoJson/Serialization/StaticStringWriter.hpp>
+#include <ArduinoJson/Serialization/Writers/StaticStringWriter.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 

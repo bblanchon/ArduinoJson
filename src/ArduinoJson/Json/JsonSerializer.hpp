@@ -14,7 +14,7 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TWriter>
 class JsonSerializer {
  public:
-  JsonSerializer(TWriter &writer) : _formatter(writer) {}
+  JsonSerializer(TWriter writer) : _formatter(writer) {}
 
   FORCE_INLINE void visitArray(const CollectionData &array) {
     write('[');
