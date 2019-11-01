@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.13.0 (2019-11-01)
+-------
 
 * Added support for custom writer/reader classes (issue #1088)
 * Added conversion from `JsonArray` and `JsonObject` to `bool`, to be consistent with `JsonVariant`
