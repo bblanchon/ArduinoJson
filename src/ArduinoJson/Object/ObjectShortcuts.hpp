@@ -28,11 +28,19 @@ class ObjectShortcuts {
   FORCE_INLINE typename enable_if<IsString<TChar *>::value, bool>::type
   containsKey(TChar *key) const;
 
+  // operator[](std::string) const
+  // operator[](String) const
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsWriteableString<TString>::value,
+                                  MemberProxy<TObject, TString> >::type
+  operator[](const TString &key) const;
+
   // operator[](const std::string&) const
   // operator[](const String&) const
   template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value,
-                                  MemberProxy<TObject, TString> >::type
+  FORCE_INLINE typename enable_if<IsString<TString>::value &&
+                                      !IsWriteableString<TString>::value,
+                                  MemberProxy<TObject, const TString &> >::type
   operator[](const TString &key) const;
 
   // operator[](char*) const

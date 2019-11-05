@@ -138,13 +138,23 @@ class JsonDocument : public Visitable {
     return !getMember(key).isUndefined();
   }
 
-  // operator[](const std::string&)
-  // operator[](const String&)
+  // operator[](std::string)
+  // operator[](String)
   template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value,
+  FORCE_INLINE typename enable_if<IsWriteableString<TString>::value,
                                   MemberProxy<JsonDocument&, TString> >::type
   operator[](const TString& key) {
     return MemberProxy<JsonDocument&, TString>(*this, key);
+  }
+
+  // operator[](const std::string&)
+  // operator[](const String&)
+  template <typename TString>
+  FORCE_INLINE
+      typename enable_if<IsString<TString>::value && !IsWriteableString<TString>::value,
+                         MemberProxy<JsonDocument&, const TString&> >::type
+      operator[](const TString& key) {
+    return MemberProxy<JsonDocument&, const TString&>(*this, key);
   }
 
   // operator[](char*)
