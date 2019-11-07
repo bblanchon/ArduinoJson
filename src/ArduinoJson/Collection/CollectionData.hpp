@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Polyfills/assert.hpp>
 
 #include <stddef.h>  // size_t
 
@@ -62,6 +63,8 @@ class CollectionData {
   size_t memoryUsage() const;
   size_t nesting() const;
   size_t size() const;
+
+  void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance);
 
  private:
   VariantSlot *getSlot(size_t index) const;

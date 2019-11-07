@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added `BasicJsonDocument::shrinkToFit()`
+
 v6.13.0 (2019-11-01)
 -------
 

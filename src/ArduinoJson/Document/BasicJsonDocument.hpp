@@ -8,6 +8,8 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+// Helper to implement the "base-from-member" idiom
+// (we need to store the allocator before constructing JsonDocument)
 template <typename TAllocator>
 class AllocatorOwner {
  protected:
@@ -15,12 +17,16 @@ class AllocatorOwner {
   AllocatorOwner(const AllocatorOwner& src) : _allocator(src._allocator) {}
   AllocatorOwner(TAllocator allocator) : _allocator(allocator) {}
 
-  void* allocate(size_t n) {
-    return _allocator.allocate(n);
+  void* allocate(size_t size) {
+    return _allocator.allocate(size);
   }
 
-  void deallocate(void* p) {
-    _allocator.deallocate(p);
+  void deallocate(void* ptr) {
+    _allocator.deallocate(ptr);
+  }
+
+  void* reallocate(void* ptr, size_t new_size) {
+    return _allocator.reallocate(ptr, new_size);
   }
 
  private:
@@ -67,6 +73,20 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     reallocPoolIfTooSmall(src.memoryUsage());
     set(src);
     return *this;
+  }
+
+  void shrinkToFit() {
+    ptrdiff_t bytes_reclaimed = _pool.squash();
+    if (bytes_reclaimed == 0) return;
+
+    void* old_ptr = _pool.buffer();
+    void* new_ptr = this->reallocate(old_ptr, _pool.capacity());
+
+    ptrdiff_t ptr_offset =
+        static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
+
+    _pool.movePointers(ptr_offset);
+    _data.movePointers(ptr_offset, ptr_offset - bytes_reclaimed);
   }
 
  private:

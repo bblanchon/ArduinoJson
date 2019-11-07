@@ -12,6 +12,7 @@ add_executable(JsonDocumentTests
 	isNull.cpp
 	nesting.cpp
 	remove.cpp
+	shrinkToFit.cpp
 	size.cpp
 	StaticJsonDocument.cpp
 	subscript.cpp

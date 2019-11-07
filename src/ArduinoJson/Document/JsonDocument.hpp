@@ -301,7 +301,6 @@ class JsonDocument : public Visitable {
     _pool = pool;
   }
 
- private:
   VariantRef getVariant() {
     return VariantRef(&_pool, &_data);
   }

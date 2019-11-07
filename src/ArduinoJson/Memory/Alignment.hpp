@@ -21,6 +21,12 @@ inline size_t addPadding(size_t bytes) {
   return (bytes + mask) & ~mask;
 }
 
+template <typename T>
+inline T *addPadding(T *p) {
+  size_t address = addPadding(reinterpret_cast<size_t>(p));
+  return reinterpret_cast<T *>(address);
+}
+
 template <size_t bytes>
 struct AddPadding {
   static const size_t mask = sizeof(void *) - 1;

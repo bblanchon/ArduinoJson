@@ -10,13 +10,15 @@
 #include <ArduinoJson/Polyfills/mpl/max.hpp>
 #include <ArduinoJson/Variant/VariantSlot.hpp>
 
+#include <string.h>  // memmove
+
 namespace ARDUINOJSON_NAMESPACE {
 
-// _begin                                _end
-// v                                        v
-// +-------------+--------------+-----------+
-// | strings...  |   (free)     |  ...slots |
-// +-------------+--------------+-----------+
+// _begin                                   _end
+// v                                           v
+// +-------------+--------------+--------------+
+// | strings...  |   (free)     |  ...variants |
+// +-------------+--------------+--------------+
 //               ^              ^
 //             _left          _right
 
@@ -99,6 +101,39 @@ class MemoryPool {
   // Workaround for missing placement new
   void* operator new(size_t, void* p) {
     return p;
+  }
+
+  // Squash the free space between strings and variants
+  //
+  // _begin                    _end
+  // v                            v
+  // +-------------+--------------+
+  // | strings...  |  ...variants |
+  // +-------------+--------------+
+  //               ^
+  //          _left _right
+  //
+  // This funcion is called before a realloc.
+  ptrdiff_t squash() {
+    char* new_right = addPadding(_left);
+    if (new_right >= _right) return 0;
+
+    size_t right_size = static_cast<size_t>(_end - _right);
+    memmove(new_right, _right, right_size);
+
+    ptrdiff_t bytes_reclaimed = _right - new_right;
+    _right = new_right;
+    _end = new_right + right_size;
+    return bytes_reclaimed;
+  }
+
+  // Move all pointers together
+  // This funcion is called after a realloc.
+  void movePointers(ptrdiff_t offset) {
+    _begin += offset;
+    _left += offset;
+    _right += offset;
+    _end += offset;
   }
 
  private:

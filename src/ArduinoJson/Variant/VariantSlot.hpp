@@ -14,8 +14,6 @@ namespace ARDUINOJSON_NAMESPACE {
 
 typedef conditional<sizeof(void*) <= 2, int8_t, int16_t>::type VariantSlotDiff;
 
-class VairantData;
-
 class VariantSlot {
   // CAUTION: same layout as VariantData
   // we cannot use composition because it adds padding
@@ -92,6 +90,13 @@ class VariantSlot {
     _next = 0;
     _flags = 0;
     _key = 0;
+  }
+
+  void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
+    if (_flags & KEY_IS_OWNED) _key += stringDistance;
+    if (_flags & VALUE_IS_OWNED) _content.asString += stringDistance;
+    if (_flags & COLLECTION_MASK)
+      _content.asCollection.movePointers(stringDistance, variantDistance);
   }
 };
 
