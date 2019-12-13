@@ -172,8 +172,8 @@ inline size_t serializeMsgPack(const TSource& source, TDestination& output) {
   return serialize<MsgPackSerializer>(source, output);
 }
 
-template <typename TSource, typename TDestination>
-inline size_t serializeMsgPack(const TSource& source, TDestination* output,
+template <typename TSource>
+inline size_t serializeMsgPack(const TSource& source, void* output,
                                size_t size) {
   return serialize<MsgPackSerializer>(source, output, size);
 }

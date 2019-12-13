@@ -24,14 +24,20 @@ size_t serialize(const TSource &source, TDestination &destination) {
 }
 
 template <template <typename> class TSerializer, typename TSource>
-size_t serialize(const TSource &source, char *buffer, size_t bufferSize) {
-  StaticStringWriter writer(buffer, bufferSize);
+size_t serialize(const TSource &source, void *buffer, size_t bufferSize) {
+  StaticStringWriter writer(reinterpret_cast<char *>(buffer), bufferSize);
   return doSerialize<TSerializer>(source, writer);
 }
 
-template <template <typename> class TSerializer, typename TSource, size_t N>
-size_t serialize(const TSource &source, char (&buffer)[N]) {
-  StaticStringWriter writer(buffer, N);
+template <template <typename> class TSerializer, typename TSource,
+          typename TChar, size_t N>
+#if defined _MSC_VER && _MSC_VER < 1900
+typename enable_if<sizeof(remove_reference<TChar>::type) == 1, size_t>::type
+#else
+typename enable_if<sizeof(TChar) == 1, size_t>::type
+#endif
+serialize(const TSource &source, TChar (&buffer)[N]) {
+  StaticStringWriter writer(reinterpret_cast<char *>(buffer), N);
   return doSerialize<TSerializer>(source, writer);
 }
 

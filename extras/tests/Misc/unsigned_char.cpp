@@ -28,6 +28,70 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(err == DeserializationError::Ok);
   }
 
+  SECTION("serializeMsgPack(unsigned char[])") {
+    unsigned char buffer[32];
+    StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
+    doc["hello"] = "world";
+
+    size_t n = serializeMsgPack(doc, buffer);
+
+    REQUIRE(n == 13);
+    REQUIRE(memcmp(buffer, "\x81\xA5hello\xA5world", 13) == 0);
+  }
+
+  SECTION("serializeMsgPack(unsigned char*)") {
+    unsigned char buffer[32];
+    StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
+    doc["hello"] = "world";
+
+    size_t n = serializeMsgPack(doc, buffer, sizeof(buffer));
+
+    REQUIRE(n == 13);
+    REQUIRE(memcmp(buffer, "\x81\xA5hello\xA5world", 13) == 0);
+  }
+
+  SECTION("serializeJson(unsigned char[])") {
+    unsigned char buffer[32];
+    StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
+    doc["hello"] = "world";
+
+    size_t n = serializeJson(doc, buffer);
+
+    REQUIRE(n == 17);
+    REQUIRE(memcmp(buffer, "{\"hello\":\"world\"}", n) == 0);
+  }
+
+  SECTION("serializeJson(unsigned char*)") {
+    unsigned char buffer[32];
+    StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
+    doc["hello"] = "world";
+
+    size_t n = serializeJson(doc, buffer, sizeof(buffer));
+
+    REQUIRE(n == 17);
+    REQUIRE(memcmp(buffer, "{\"hello\":\"world\"}", n) == 0);
+  }
+
+  SECTION("serializeJsonPretty(unsigned char[])") {
+    unsigned char buffer[32];
+    StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
+    doc["hello"] = "world";
+
+    size_t n = serializeJsonPretty(doc, buffer);
+
+    REQUIRE(n == 24);
+  }
+
+  SECTION("serializeJsonPretty(unsigned char*)") {
+    unsigned char buffer[32];
+    StaticJsonDocument<JSON_OBJECT_SIZE(2)> doc;
+    doc["hello"] = "world";
+
+    size_t n = serializeJsonPretty(doc, buffer, sizeof(buffer));
+
+    REQUIRE(n == 24);
+  }
+
   SECTION("JsonVariant") {
     DynamicJsonDocument doc(4096);
 

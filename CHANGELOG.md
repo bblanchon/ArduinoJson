@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added `BasicJsonDocument::shrinkToFit()`
+* Added support of `uint8_t` for `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` (issue #1142)
 
 v6.13.0 (2019-11-01)
 -------
