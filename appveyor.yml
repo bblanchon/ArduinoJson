@@ -1,6 +1,8 @@
 version: 6.13.0.{build}
 environment:
   matrix:
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    CMAKE_GENERATOR: Visual Studio 16 2019
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     CMAKE_GENERATOR: Visual Studio 15 2017
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
