@@ -5,8 +5,6 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-static const char* null = 0;
-
 template <typename T>
 void checkEquals(T a, T b) {
   DynamicJsonDocument doc(4096);
@@ -70,6 +68,8 @@ void checkComparisons(T low, T mid, T high) {
 }
 
 TEST_CASE("JsonVariant comparisons") {
+  static const char* null = 0;
+
   SECTION("Double") {
     checkComparisons<double>(123.44, 123.45, 123.46);
   }

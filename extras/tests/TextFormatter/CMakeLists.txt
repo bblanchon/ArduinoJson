@@ -8,4 +8,6 @@ add_executable(TextFormatterTests
 )
 
 target_link_libraries(TextFormatterTests catch)
+set_target_properties(TextFormatterTests PROPERTIES UNITY_BUILD OFF)
+
 add_test(TextFormatter TextFormatterTests)

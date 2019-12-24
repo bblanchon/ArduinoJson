@@ -8,9 +8,9 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-static char buffer[4096];
-
 TEST_CASE("StringBuilder") {
+  char buffer[4096];
+
   SECTION("Works when buffer is big enough") {
     MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
 

@@ -21,4 +21,6 @@ add_executable(MixedConfigurationTests
 )
 
 target_link_libraries(MixedConfigurationTests catch)
+set_target_properties(MixedConfigurationTests PROPERTIES UNITY_BUILD OFF)
+
 add_test(MixedConfiguration MixedConfigurationTests)

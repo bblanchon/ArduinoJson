@@ -10,9 +10,9 @@ namespace my {
 using ARDUINOJSON_NAMESPACE::isinf;
 }  // namespace my
 
-static const char* null = 0;
-
 TEST_CASE("JsonVariant::as()") {
+  static const char* null = 0;
+
   DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 

@@ -7,15 +7,15 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-char buffer[4096];
-
 TEST_CASE("MemoryPool::capacity()") {
+  char buffer[4096];
   const size_t capacity = 64;
   MemoryPool pool(buffer, capacity);
   REQUIRE(capacity == pool.capacity());
 }
 
 TEST_CASE("MemoryPool::size()") {
+  char buffer[4096];
   MemoryPool pool(buffer, sizeof(buffer));
 
   SECTION("Initial size is 0") {

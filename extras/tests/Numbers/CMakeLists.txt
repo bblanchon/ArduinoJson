@@ -9,4 +9,5 @@ add_executable(NumbersTests
 )
 
 target_link_libraries(NumbersTests catch)
+
 add_test(Numbers NumbersTests)

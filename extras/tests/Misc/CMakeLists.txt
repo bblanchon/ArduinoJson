@@ -14,6 +14,8 @@ add_executable(MiscTests
 )
 
 target_link_libraries(MiscTests catch)
+set_target_properties(MiscTests PROPERTIES UNITY_BUILD OFF)
+
 add_test(Misc MiscTests)
 
 

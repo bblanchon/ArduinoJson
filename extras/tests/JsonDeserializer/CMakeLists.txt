@@ -18,4 +18,6 @@ add_executable(JsonDeserializerTests
 )
 
 target_link_libraries(JsonDeserializerTests catch)
+set_target_properties(JsonDeserializerTests PROPERTIES UNITY_BUILD OFF)
+
 add_test(JsonDeserializer JsonDeserializerTests)
