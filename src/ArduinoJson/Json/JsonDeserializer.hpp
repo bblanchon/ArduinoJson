@@ -189,6 +189,7 @@ class JsonDeserializer {
 
   DeserializationError parseQuotedString(const char *&result) {
     StringBuilder builder = _stringStorage.startString();
+    uint16_t surrogate1 = 0;
     const char stopChar = current();
 
     move();
@@ -208,7 +209,20 @@ class JsonDeserializer {
           move();
           DeserializationError err = parseCodepoint(codepoint);
           if (err) return err;
-          Utf8::encodeCodepoint(codepoint, builder);
+          if (codepoint >= 0xd800 && codepoint <= 0xdbff) {
+            if (surrogate1 > 0)
+              return DeserializationError::InvalidInput;
+            surrogate1 = codepoint;
+          } else if (codepoint >= 0xdc00 && codepoint <= 0xdfff) {
+            if (surrogate1 == 0)
+              return DeserializationError::InvalidInput;
+            uint32_t codepoint32 = 0x10000;
+            codepoint32 += static_cast<uint32_t>(surrogate1 - 0xd800) << 10;
+            codepoint32 += codepoint - 0xdc00;
+            Utf8::encodeCodepoint(codepoint32, builder);
+            surrogate1 = 0;
+          } else
+            Utf8::encodeCodepoint(codepoint, builder);
           continue;
 #else
           return DeserializationError::NotSupported;
@@ -219,6 +233,9 @@ class JsonDeserializer {
         if (c == '\0') return DeserializationError::InvalidInput;
         move();
       }
+
+      if (surrogate1 > 0)
+        return DeserializationError::InvalidInput;
 
       builder.append(c);
     }
