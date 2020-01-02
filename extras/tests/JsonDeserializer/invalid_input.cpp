@@ -7,9 +7,10 @@
 #include <catch.hpp>
 
 TEST_CASE("Invalid JSON input") {
-  const char* testCases[] = {"'\\u'",     "'\\u000g'", "'\\u000'", "'\\u000G'",
-                             "'\\u000/'", "\\x1234",   "6a9",      "1,",
-                             "2]",        "3}"};
+  const char* testCases[] = {
+      "'\\u'",     "'\\u000g'",  "'\\u000'",  "'\\u000G'", "'\\ud83d\\ud83d'",
+      "'\\udda4'", "'\\ud83d_'", "'\\u000/'", "\\x1234",   "6a9",
+      "1,",        "2]",         "3}"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
   DynamicJsonDocument doc(4096);

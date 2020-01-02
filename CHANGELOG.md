@@ -7,7 +7,10 @@ HEAD
 * Added `BasicJsonDocument::shrinkToFit()`
 * Added support of `uint8_t` for `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` (issue #1142)
 * Auto enable support for `std::string` and `std::stream` on modern compilers (issue #1156)
-  No need to define `ARDUINOJSON_ENABLE_STD_STRING` and `ARDUINOJSON_ENABLE_STD_STREAM`.
+  (No need to define `ARDUINOJSON_ENABLE_STD_STRING` and `ARDUINOJSON_ENABLE_STD_STREAM` anymore)
+* Improved decoding of UTF-16 surrogate pairs (PR #1157 by @kaysievers)
+  (ArduinoJson now produces standard UTF-8 instead of CESU-8)
+
 
 v6.13.0 (2019-11-01)
 -------

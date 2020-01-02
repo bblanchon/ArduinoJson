@@ -17,10 +17,10 @@ TEST_CASE("Valid JSON strings value") {
       {"\'hello world\'", "hello world"},
       {"\"1\\\"2\\\\3\\/4\\b5\\f6\\n7\\r8\\t9\"", "1\"2\\3/4\b5\f6\n7\r8\t9"},
       {"'\\u0041'", "A"},
-      {"'\\u00e4'", "\xc3\xa4"},      // ä
-      {"'\\u00E4'", "\xc3\xa4"},      // ä
-      {"'\\u3042'", "\xe3\x81\x82"},  // あ
-
+      {"'\\u00e4'", "\xc3\xa4"},                 // ä
+      {"'\\u00E4'", "\xc3\xa4"},                 // ä
+      {"'\\u3042'", "\xe3\x81\x82"},             // あ
+      {"'\\ud83d\\udda4'", "\xf0\x9f\x96\xa4"},  // 🖤
   };
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
