@@ -189,7 +189,9 @@ class JsonDeserializer {
 
   DeserializationError parseQuotedString(const char *&result) {
     StringBuilder builder = _stringStorage.startString();
+#if ARDUINOJSON_DECODE_UNICODE
     uint16_t surrogate1 = 0;
+#endif
     const char stopChar = current();
 
     move();
@@ -205,23 +207,21 @@ class JsonDeserializer {
         if (c == '\0') return DeserializationError::IncompleteInput;
         if (c == 'u') {
 #if ARDUINOJSON_DECODE_UNICODE
-          uint16_t codepoint;
           move();
-          DeserializationError err = parseCodepoint(codepoint);
+          uint32_t codepoint;
+          uint16_t codeunit;
+          DeserializationError err = parseHex4(codeunit);
           if (err) return err;
-          if (codepoint >= 0xd800 && codepoint <= 0xdbff) {
-            if (surrogate1 > 0) return DeserializationError::InvalidInput;
-            surrogate1 = codepoint;
-          } else if (codepoint >= 0xdc00 && codepoint <= 0xdfff) {
-            if (surrogate1 == 0) return DeserializationError::InvalidInput;
-            uint32_t codepoint32 = 0x10000;
-            codepoint32 += static_cast<uint32_t>(surrogate1 - 0xd800) << 10;
-            codepoint32 += codepoint - 0xdc00;
-            Utf8::encodeCodepoint(codepoint32, builder);
-            surrogate1 = 0;
+          if (codeunit >= 0xDC00) {
+            codepoint =
+                uint32_t(0x10000 | ((surrogate1 << 10) | (codeunit & 0x3FF)));
+          } else if (codeunit < 0xd800) {
+            codepoint = codeunit;
           } else {
-            Utf8::encodeCodepoint(codepoint, builder);
+            surrogate1 = codeunit & 0x3FF;
+            continue;
           }
+          Utf8::encodeCodepoint(codepoint, builder);
           continue;
 #else
           return DeserializationError::NotSupported;
@@ -232,8 +232,6 @@ class JsonDeserializer {
         if (c == '\0') return DeserializationError::InvalidInput;
         move();
       }
-
-      if (surrogate1 > 0) return DeserializationError::InvalidInput;
 
       builder.append(c);
     }
@@ -312,14 +310,14 @@ class JsonDeserializer {
     return DeserializationError::InvalidInput;
   }
 
-  DeserializationError parseCodepoint(uint16_t &codepoint) {
-    codepoint = 0;
+  DeserializationError parseHex4(uint16_t &result) {
+    result = 0;
     for (uint8_t i = 0; i < 4; ++i) {
       char digit = current();
       if (!digit) return DeserializationError::IncompleteInput;
       uint8_t value = decodeHex(digit);
       if (value > 0x0F) return DeserializationError::InvalidInput;
-      codepoint = uint16_t((codepoint << 4) | value);
+      result = uint16_t((result << 4) | value);
       move();
     }
     return DeserializationError::Ok;

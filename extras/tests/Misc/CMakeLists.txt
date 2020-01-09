@@ -10,6 +10,7 @@ add_executable(MiscTests
 	StringWriter.cpp
 	TypeTraits.cpp
 	unsigned_char.cpp
+	Utf8.cpp
 	version.cpp
 )
 
