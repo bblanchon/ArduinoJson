@@ -1,5 +1,5 @@
 # ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2019
+# Copyright Benoit Blanchon 2014-2020
 # MIT License
 
 # we need C++11 for 'long long'
