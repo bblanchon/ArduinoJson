@@ -13,6 +13,7 @@ HEAD
   (ArduinoJson now produces standard UTF-8 instead of CESU-8)
 * Added `measureJson`, `measureJsonPretty`, and `measureMsgPack` to `keywords.txt`
   (This file is used for syntax highlighting in the Arduino IDE) 
+* Fixed `variant.is<nullptr_t>()`
 
 > ### BREAKING CHANGES
 > 

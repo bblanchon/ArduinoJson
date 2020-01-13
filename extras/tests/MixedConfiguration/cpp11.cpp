@@ -26,6 +26,14 @@ TEST_CASE("nullptr") {
 
     REQUIRE(variant.isNull());
   }
+
+  SECTION("JsonVariant.is<nullptr_t>()") {
+    variant.set(42);
+    REQUIRE(variant.is<std::nullptr_t>() == false);
+
+    variant.clear();
+    REQUIRE(variant.is<std::nullptr_t>() == true);
+  }
 }
 
 TEST_CASE("Issue #1120") {
