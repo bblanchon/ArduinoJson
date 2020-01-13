@@ -41,7 +41,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
   DynamicJsonDocument doc(4096);
 
   SECTION("array") {
-    std::istringstream json(" [ 42 /* comment */ ] ");
+    std::istringstream json(" [ 42 ] ");
 
     DeserializationError err = deserializeJson(doc, json);
     JsonArray arr = doc.as<JsonArray>();
@@ -52,7 +52,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
   }
 
   SECTION("object") {
-    std::istringstream json(" { hello : 'world' // comment\n }");
+    std::istringstream json(" { hello : 'world' }");
 
     DeserializationError err = deserializeJson(doc, json);
     JsonObject obj = doc.as<JsonObject>();

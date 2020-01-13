@@ -18,6 +18,8 @@ add_executable(MixedConfigurationTests
 	use_long_long_0.cpp
 	use_long_long_1.cpp
 	enable_progmem_1.cpp
+	enable_comments_1.cpp
+	enable_comments_0.cpp
 )
 
 target_link_libraries(MixedConfigurationTests catch)

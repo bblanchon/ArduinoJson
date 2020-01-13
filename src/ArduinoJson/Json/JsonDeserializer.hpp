@@ -357,6 +357,7 @@ class JsonDeserializer {
           move();
           continue;
 
+#if ARDUINOJSON_ENABLE_COMMENTS
         // comments
         case '/':
           move();  // skip '/'
@@ -394,6 +395,7 @@ class JsonDeserializer {
               return DeserializationError::InvalidInput;
           }
           break;
+#endif
 
         default:
           return DeserializationError::Ok;

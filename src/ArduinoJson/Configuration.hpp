@@ -165,6 +165,11 @@
 #define ARDUINOJSON_DECODE_UNICODE 0
 #endif
 
+// Ignore comments in input
+#ifndef ARDUINOJSON_ENABLE_COMMENTS
+#define ARDUINOJSON_ENABLE_COMMENTS 0
+#endif
+
 // Support NaN in JSON
 #ifndef ARDUINOJSON_ENABLE_NAN
 #define ARDUINOJSON_ENABLE_NAN 0
