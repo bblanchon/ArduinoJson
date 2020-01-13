@@ -10,6 +10,9 @@ serialized	KEYWORD2
 serializeJson	KEYWORD2
 serializeJsonPretty	KEYWORD2
 serializeMsgPack	KEYWORD2
+measureJson	KEYWORD2
+measureJsonPretty	KEYWORD2
+measureMsgPack	KEYWORD2
 
 # Methods
 add	KEYWORD2

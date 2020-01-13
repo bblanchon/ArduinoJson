@@ -11,6 +11,8 @@ HEAD
   (No need to define `ARDUINOJSON_ENABLE_STD_STRING` and `ARDUINOJSON_ENABLE_STD_STREAM` anymore)
 * Improved decoding of UTF-16 surrogate pairs (PR #1157 by @kaysievers)
   (ArduinoJson now produces standard UTF-8 instead of CESU-8)
+* Added `measureJson`, `measureJsonPretty`, and `measureMsgPack` to `keywords.txt`
+  (This file is used for syntax highlighting in the Arduino IDE) 
 
 > ### BREAKING CHANGES
 > 
