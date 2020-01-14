@@ -15,6 +15,7 @@ HEAD
   (This file is used for syntax highlighting in the Arduino IDE) 
 * Fixed `variant.is<nullptr_t>()`
 * Fixed value returned by `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` when writing to a `String`
+* Improved speed of `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` when writing to a `String`
 
 > ### BREAKING CHANGES
 > 

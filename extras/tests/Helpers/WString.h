@@ -9,15 +9,9 @@
 // Reproduces Arduino's String class
 class String {
  public:
-  String& operator+=(char c) {
-    _str += c;
+  String& operator+=(const char* rhs) {
+    _str += rhs;
     return *this;
-  }
-  String& operator+=(int);  // no used, just to add ambiguity
-
-  unsigned char reserve(size_t capacity) {
-    _str.reserve(capacity);
-    return 1;
   }
 
   size_t length() const {
@@ -28,12 +22,21 @@ class String {
     return _str.c_str();
   }
 
+  bool operator==(const char* s) const {
+    return _str == s;
+  }
+
+  friend std::ostream& operator<<(std::ostream& lhs, const ::String& rhs) {
+    lhs << rhs._str;
+    return lhs;
+  }
+
  private:
   std::string _str;
 };
 
 class StringSumHelper;
 
-bool operator==(const std::string& lhs, const ::String& rhs) {
+inline bool operator==(const std::string& lhs, const ::String& rhs) {
   return lhs == rhs.c_str();
 }

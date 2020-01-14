@@ -10,26 +10,42 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <>
 class Writer< ::String, void> {
+  static const size_t bufferCapacity = ARDUINOJSON_STRING_BUFFER_SIZE;
+
  public:
-  explicit Writer(::String &str) : _str(&str) {}
+  explicit Writer(::String &str) : _destination(&str) {
+    _size = 0;
+  }
+
+  ~Writer() {
+    flush();
+  }
 
   size_t write(uint8_t c) {
-    _str->operator+=(static_cast<char>(c));
+    ARDUINOJSON_ASSERT(_size < bufferCapacity);
+    _buffer[_size++] = static_cast<char>(c);
+    if (_size + 1 >= bufferCapacity) flush();
     return 1;
   }
 
   size_t write(const uint8_t *s, size_t n) {
-    // CAUTION: Arduino String doesn't have append()
-    // and old version doesn't have size() either
-    _str->reserve(_str->length() + n);
     for (size_t i = 0; i < n; i++) {
-      _str->operator+=(static_cast<char>(*s++));
+      write(s[i]);
     }
     return n;
   }
 
  private:
-  ::String *_str;
+  void flush() {
+    ARDUINOJSON_ASSERT(_size < bufferCapacity);
+    _buffer[_size] = 0;
+    *_destination += _buffer;
+    _size = 0;
+  }
+
+  ::String *_destination;
+  char _buffer[bufferCapacity];
+  size_t _size;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE
