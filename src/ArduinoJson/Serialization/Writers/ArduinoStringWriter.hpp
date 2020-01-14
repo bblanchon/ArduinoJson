@@ -22,9 +22,8 @@ class Writer< ::String, void> {
     // CAUTION: Arduino String doesn't have append()
     // and old version doesn't have size() either
     _str->reserve(_str->length() + n);
-    while (n > 0) {
+    for (size_t i = 0; i < n; i++) {
       _str->operator+=(static_cast<char>(*s++));
-      n--;
     }
     return n;
   }

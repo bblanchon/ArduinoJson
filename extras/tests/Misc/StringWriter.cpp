@@ -2,6 +2,7 @@
 // Copyright Benoit Blanchon 2014-2020
 // MIT License
 
+#define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
 #include <ArduinoJson.h>
 #include <catch.hpp>
 #include "custom_string.hpp"
@@ -52,6 +53,12 @@ TEST_CASE("StaticStringWriter") {
 TEST_CASE("Writer<std::string>") {
   std::string output;
   Writer<std::string> sb(output);
+  common_tests(sb, output);
+}
+
+TEST_CASE("Writer<String>") {
+  ::String output;
+  Writer< ::String> sb(output);
   common_tests(sb, output);
 }
 
