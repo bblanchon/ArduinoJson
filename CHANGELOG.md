@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.14.0 (2020-01-16)
+-------
 
 * Added `BasicJsonDocument::shrinkToFit()`
 * Added support of `uint8_t` for `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` (issue #1142)
