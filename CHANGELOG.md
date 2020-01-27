@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.14.1 (2020-01-27)
+-------
 
 * Fixed regression in UTF16 decoding (issue #1173)
 * Fixed `containsKey()` on `JsonVariantConst`
