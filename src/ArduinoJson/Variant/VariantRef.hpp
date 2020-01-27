@@ -369,7 +369,27 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     return variantAs<typename VariantConstAs<T>::type>(_data);
   }
 
-  FORCE_INLINE VariantConstRef operator[](size_t index) const;
+  FORCE_INLINE VariantConstRef getElement(size_t) const;
+
+  FORCE_INLINE VariantConstRef operator[](size_t index) const {
+    return getElement(index);
+  }
+
+  // getMember(const std::string&) const
+  // getMember(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantConstRef getMember(const TString &key) const {
+    return VariantConstRef(objectGet(variantAsObject(_data), adaptString(key)));
+  }
+
+  // getMember(char*) const
+  // getMember(const char*) const
+  // getMember(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantConstRef getMember(TChar *key) const {
+    const CollectionData *obj = variantAsObject(_data);
+    return VariantConstRef(obj ? obj->get(adaptString(key)) : 0);
+  }
 
   // operator[](const std::string&) const
   // operator[](const String&) const
@@ -377,7 +397,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString &key) const {
-    return VariantConstRef(objectGet(variantAsObject(_data), adaptString(key)));
+    return getMember(key);
   }
 
   // operator[](char*) const
@@ -387,8 +407,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TChar *>::value, VariantConstRef>::type
       operator[](TChar *key) const {
-    const CollectionData *obj = variantAsObject(_data);
-    return VariantConstRef(obj ? obj->get(adaptString(key)) : 0);
+    return getMember(key);
   }
 
   FORCE_INLINE bool operator==(VariantConstRef lhs) const {
