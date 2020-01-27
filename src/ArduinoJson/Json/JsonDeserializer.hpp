@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Deserialization/deserialize.hpp>
 #include <ArduinoJson/Json/EscapeSequence.hpp>
+#include <ArduinoJson/Json/Utf16.hpp>
 #include <ArduinoJson/Json/Utf8.hpp>
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Numbers/parseNumber.hpp>
@@ -190,7 +191,7 @@ class JsonDeserializer {
   DeserializationError parseQuotedString(const char *&result) {
     StringBuilder builder = _stringStorage.startString();
 #if ARDUINOJSON_DECODE_UNICODE
-    uint16_t surrogate1 = 0;
+    Utf16::Codepoint codepoint;
 #endif
     const char stopChar = current();
 
@@ -208,20 +209,11 @@ class JsonDeserializer {
         if (c == 'u') {
 #if ARDUINOJSON_DECODE_UNICODE
           move();
-          uint32_t codepoint;
           uint16_t codeunit;
           DeserializationError err = parseHex4(codeunit);
           if (err) return err;
-          if (codeunit >= 0xDC00) {
-            codepoint =
-                uint32_t(0x10000 | ((surrogate1 << 10) | (codeunit & 0x3FF)));
-          } else if (codeunit < 0xd800) {
-            codepoint = codeunit;
-          } else {
-            surrogate1 = codeunit & 0x3FF;
-            continue;
-          }
-          Utf8::encodeCodepoint(codepoint, builder);
+          if (codepoint.append(codeunit))
+            Utf8::encodeCodepoint(codepoint.value(), builder);
           continue;
 #else
           return DeserializationError::NotSupported;

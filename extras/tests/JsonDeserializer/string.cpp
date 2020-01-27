@@ -21,6 +21,9 @@ TEST_CASE("Valid JSON strings value") {
       {"'\\u00E4'", "\xc3\xa4"},                 // ä
       {"'\\u3042'", "\xe3\x81\x82"},             // あ
       {"'\\ud83d\\udda4'", "\xf0\x9f\x96\xa4"},  // 🖤
+      {"'\\uF053'", "\xef\x81\x93"},             // issue #1173
+      {"'\\uF015'", "\xef\x80\x95"},             // issue #1173
+      {"'\\uF054'", "\xef\x81\x94"},             // issue #1173
   };
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 

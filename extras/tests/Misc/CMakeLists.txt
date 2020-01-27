@@ -11,6 +11,7 @@ add_executable(MiscTests
 	TypeTraits.cpp
 	unsigned_char.cpp
 	Utf8.cpp
+	Utf16.cpp
 	version.cpp
 )
 

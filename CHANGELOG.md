@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed regression in UTF16 decoding (issue #1173)
+
 v6.14.0 (2020-01-16)
 -------
 
