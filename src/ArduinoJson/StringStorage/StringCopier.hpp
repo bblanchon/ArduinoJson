@@ -19,6 +19,10 @@ class StringCopier {
     return StringBuilder(_pool);
   }
 
+  void reclaim(const char* s) {
+    _pool->reclaimLastString(s);
+  }
+
  private:
   MemoryPool* _pool;
 };

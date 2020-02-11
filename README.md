@@ -17,6 +17,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [Optionally decodes UTF-16 escape sequences to UTF-8](https://arduinojson.org/v6/api/config/decode_unicode/)
     * [Optionally stores links to the input buffer (zero-copy)](https://arduinojson.org/v6/api/json/deserializejson/)
     * [Optionally supports comments in the input](https://arduinojson.org/v6/api/config/enable_comments/)
+    * Optionally filters the input to keep only desired values
     * Supports single quotes as a string delimiter
     * Compatible with NDJSON and JSON Lines
 * [JSON serialization](https://arduinojson.org/v6/api/json/serializejson/)

@@ -6,6 +6,7 @@ add_executable(IntegrationTests
 	gbathree.cpp
 	issue772.cpp
 	round_trip.cpp
+	openweathermap.cpp
 )
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")

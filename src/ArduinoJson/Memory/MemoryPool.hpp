@@ -74,6 +74,10 @@ class MemoryPool {
     checkInvariants();
   }
 
+  void reclaimLastString(const char* s) {
+    _left = const_cast<char*>(s);
+  }
+
   void clear() {
     _left = _begin;
     _right = _end;

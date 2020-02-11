@@ -1,6 +1,12 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added `DeserializationOption::Filter` (issue #959)
+* Added example `JsonFilterExample.ino`
+
 v6.14.1 (2020-01-27)
 -------
 

@@ -181,7 +181,7 @@ class VariantData {
   }
 
   bool isEnclosed() const {
-    return isCollection() || isString();
+    return !isFloat();
   }
 
   void remove(size_t index) {

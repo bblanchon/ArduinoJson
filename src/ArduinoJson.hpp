@@ -65,6 +65,7 @@ using ARDUINOJSON_NAMESPACE::serializeMsgPack;
 using ARDUINOJSON_NAMESPACE::StaticJsonDocument;
 
 namespace DeserializationOption {
+using ARDUINOJSON_NAMESPACE::Filter;
 using ARDUINOJSON_NAMESPACE::NestingLimit;
-}
+}  // namespace DeserializationOption
 }  // namespace ArduinoJson

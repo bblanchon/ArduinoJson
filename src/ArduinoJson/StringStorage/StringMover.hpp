@@ -34,6 +34,11 @@ class StringMover {
     return StringBuilder(&_ptr);
   }
 
+  // recover memory from last string
+  void reclaim(const char* str) {
+    _ptr = const_cast<char*>(str);
+  }
+
  private:
   char* _ptr;
 };
