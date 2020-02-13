@@ -15,9 +15,9 @@ namespace ARDUINOJSON_NAMESPACE {
 template <template <typename, typename> class TDeserializer, typename TReader,
           typename TWriter>
 TDeserializer<TReader, TWriter> makeDeserializer(MemoryPool &pool,
-                                                 TReader reader, TWriter writer,
-                                                 uint8_t nestingLimit) {
-  return TDeserializer<TReader, TWriter>(pool, reader, writer, nestingLimit);
+                                                 TReader reader,
+                                                 TWriter writer) {
+  return TDeserializer<TReader, TWriter>(pool, reader, writer);
 }
 
 // deserialize(JsonDocument&, const std::string&, NestingLimit, Filter);
@@ -34,8 +34,8 @@ deserialize(JsonDocument &doc, const TString &input, NestingLimit nestingLimit,
   doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), reader,
-             makeStringStorage(doc.memoryPool(), input), nestingLimit.value)
-      .parse(doc.data(), filter);
+             makeStringStorage(doc.memoryPool(), input))
+      .parse(doc.data(), filter, nestingLimit);
 }
 //
 // deserialize(JsonDocument&, char*, size_t, NestingLimit, Filter);
@@ -50,8 +50,8 @@ DeserializationError deserialize(JsonDocument &doc, TChar *input,
   doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), reader,
-             makeStringStorage(doc.memoryPool(), input), nestingLimit.value)
-      .parse(doc.data(), filter);
+             makeStringStorage(doc.memoryPool(), input))
+      .parse(doc.data(), filter, nestingLimit);
 }
 //
 // deserialize(JsonDocument&, std::istream&, NestingLimit, Filter);
@@ -64,8 +64,8 @@ DeserializationError deserialize(JsonDocument &doc, TStream &input,
   doc.clear();
   return makeDeserializer<TDeserializer>(
              doc.memoryPool(), reader,
-             makeStringStorage(doc.memoryPool(), input), nestingLimit.value)
-      .parse(doc.data(), filter);
+             makeStringStorage(doc.memoryPool(), input))
+      .parse(doc.data(), filter, nestingLimit);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

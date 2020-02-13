@@ -23,15 +23,13 @@ class JsonDeserializer {
 
  public:
   JsonDeserializer(MemoryPool &pool, TReader reader,
-                   TStringStorage stringStorage, uint8_t nestingLimit)
-      : _pool(&pool),
-        _stringStorage(stringStorage),
-        _nestingLimit(nestingLimit),
-        _latch(reader) {}
+                   TStringStorage stringStorage)
+      : _pool(&pool), _stringStorage(stringStorage), _latch(reader) {}
 
   template <typename TFilter>
-  DeserializationError parse(VariantData &variant, TFilter filter) {
-    DeserializationError err = parseVariant(variant, filter);
+  DeserializationError parse(VariantData &variant, TFilter filter,
+                             NestingLimit nestingLimit) {
+    DeserializationError err = parseVariant(variant, filter, nestingLimit);
 
     if (!err && _latch.last() != 0 && !variant.isEnclosed()) {
       // We don't detect trailing characters earlier, so we need to check now
@@ -59,22 +57,23 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError parseVariant(VariantData &variant, TFilter filter) {
+  DeserializationError parseVariant(VariantData &variant, TFilter filter,
+                                    NestingLimit nestingLimit) {
     DeserializationError err = skipSpacesAndComments();
     if (err) return err;
 
     switch (current()) {
       case '[':
         if (filter.allowArray())
-          return parseArray(variant.toArray(), filter);
+          return parseArray(variant.toArray(), filter, nestingLimit);
         else
-          return skipArray();
+          return skipArray(nestingLimit);
 
       case '{':
         if (filter.allowObject())
-          return parseObject(variant.toObject(), filter);
+          return parseObject(variant.toObject(), filter, nestingLimit);
         else
-          return skipObject();
+          return skipObject(nestingLimit);
 
       case '\"':
       case '\'':
@@ -91,16 +90,16 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError skipVariant() {
+  DeserializationError skipVariant(NestingLimit nestingLimit) {
     DeserializationError err = skipSpacesAndComments();
     if (err) return err;
 
     switch (current()) {
       case '[':
-        return skipArray();
+        return skipArray(nestingLimit);
 
       case '{':
-        return skipObject();
+        return skipObject(nestingLimit);
 
       case '\"':
       case '\'':
@@ -112,8 +111,9 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError parseArray(CollectionData &array, TFilter filter) {
-    if (_nestingLimit == 0) return DeserializationError::TooDeep;
+  DeserializationError parseArray(CollectionData &array, TFilter filter,
+                                  NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
     // Check opening braket
     if (!eat('[')) return DeserializationError::InvalidInput;
@@ -135,14 +135,10 @@ class JsonDeserializer {
         if (!value) return DeserializationError::NoMemory;
 
         // 1 - Parse value
-        _nestingLimit--;
-        err = parseVariant(*value, memberFilter);
-        _nestingLimit++;
+        err = parseVariant(*value, memberFilter, nestingLimit.decrement());
         if (err) return err;
       } else {
-        _nestingLimit--;
-        err = skipVariant();
-        _nestingLimit++;
+        err = skipVariant(nestingLimit.decrement());
         if (err) return err;
       }
 
@@ -156,8 +152,8 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError skipArray() {
-    if (_nestingLimit == 0) return DeserializationError::TooDeep;
+  DeserializationError skipArray(NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
     // Check opening braket
     if (!eat('[')) return DeserializationError::InvalidInput;
@@ -165,9 +161,7 @@ class JsonDeserializer {
     // Read each value
     for (;;) {
       // 1 - Skip value
-      _nestingLimit--;
-      DeserializationError err = skipVariant();
-      _nestingLimit++;
+      DeserializationError err = skipVariant(nestingLimit.decrement());
       if (err) return err;
 
       // 2 - Skip spaces
@@ -181,8 +175,9 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError parseObject(CollectionData &object, TFilter filter) {
-    if (_nestingLimit == 0) return DeserializationError::TooDeep;
+  DeserializationError parseObject(CollectionData &object, TFilter filter,
+                                   NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
     // Check opening brace
     if (!eat('{')) return DeserializationError::InvalidInput;
@@ -221,15 +216,11 @@ class JsonDeserializer {
         }
 
         // Parse value
-        _nestingLimit--;
-        err = parseVariant(*variant, memberFilter);
-        _nestingLimit++;
+        err = parseVariant(*variant, memberFilter, nestingLimit.decrement());
         if (err) return err;
       } else {
         _stringStorage.reclaim(key);
-        _nestingLimit--;
-        err = skipVariant();
-        _nestingLimit++;
+        err = skipVariant(nestingLimit.decrement());
         if (err) return err;
       }
 
@@ -247,8 +238,8 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError skipObject() {
-    if (_nestingLimit == 0) return DeserializationError::TooDeep;
+  DeserializationError skipObject(NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
     // Check opening brace
     if (!eat('{')) return DeserializationError::InvalidInput;
@@ -263,7 +254,7 @@ class JsonDeserializer {
     // Read each key value pair
     for (;;) {
       // Skip key
-      err = skipVariant();
+      err = skipVariant(nestingLimit.decrement());
       if (err) return err;
 
       // Skip spaces
@@ -272,9 +263,7 @@ class JsonDeserializer {
       if (!eat(':')) return DeserializationError::InvalidInput;
 
       // Skip value
-      _nestingLimit--;
-      err = skipVariant();
-      _nestingLimit++;
+      err = skipVariant(nestingLimit.decrement());
       if (err) return err;
 
       // Skip spaces
@@ -538,7 +527,6 @@ class JsonDeserializer {
 
   MemoryPool *_pool;
   TStringStorage _stringStorage;
-  uint8_t _nestingLimit;
   Latch<TReader> _latch;
 };
 
