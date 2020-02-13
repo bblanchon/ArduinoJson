@@ -24,6 +24,9 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   FORCE_INLINE ElementProxy(TArray array, size_t index)
       : _array(array), _index(index) {}
 
+  FORCE_INLINE ElementProxy(const ElementProxy& src)
+      : _array(src._array), _index(src._index) {}
+
   FORCE_INLINE this_type& operator=(const this_type& src) {
     getUpstreamElement().set(src.as<VariantConstRef>());
     return *this;

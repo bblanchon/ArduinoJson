@@ -24,6 +24,9 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   FORCE_INLINE MemberProxy(TObject variant, TStringRef key)
       : _object(variant), _key(key) {}
 
+  FORCE_INLINE MemberProxy(const MemberProxy &src)
+      : _object(src._object), _key(src._key) {}
+
   FORCE_INLINE operator VariantConstRef() const {
     return getUpstreamMember();
   }
