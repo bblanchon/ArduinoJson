@@ -40,15 +40,18 @@ TEST_CASE("JsonObjectConst::begin()/end()") {
 
   JsonObjectConst cobj = obj;
 
-  SECTION("NonConstIterator") {
+  SECTION("Iteration") {
     JsonObjectConst::iterator it = cobj.begin();
     REQUIRE(cobj.end() != it);
     REQUIRE(it->key() == "ab");
     REQUIRE(12 == it->value());
+
     ++it;
     REQUIRE(cobj.end() != it);
-    REQUIRE(it->key() == "cd");
-    REQUIRE(34 == it->value());
+    JsonPairConst pair = *it;
+    REQUIRE(pair.key() == "cd");
+    REQUIRE(34 == pair.value());
+
     ++it;
     REQUIRE(cobj.end() == it);
   }
