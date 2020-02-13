@@ -11,6 +11,7 @@
 #include <ArduinoJson/Json/Utf8.hpp>
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Numbers/parseNumber.hpp>
+#include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
@@ -115,8 +116,9 @@ class JsonDeserializer {
                                   NestingLimit nestingLimit) {
     if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
-    // Check opening braket
-    if (!eat('[')) return DeserializationError::InvalidInput;
+    // Skip opening braket
+    ARDUINOJSON_ASSERT(current() == '[');
+    move();
 
     // Skip spaces
     DeserializationError err = skipSpacesAndComments();
@@ -155,8 +157,9 @@ class JsonDeserializer {
   DeserializationError skipArray(NestingLimit nestingLimit) {
     if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
-    // Check opening braket
-    if (!eat('[')) return DeserializationError::InvalidInput;
+    // Skip opening braket
+    ARDUINOJSON_ASSERT(current() == '[');
+    move();
 
     // Read each value
     for (;;) {
@@ -179,8 +182,9 @@ class JsonDeserializer {
                                    NestingLimit nestingLimit) {
     if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
-    // Check opening brace
-    if (!eat('{')) return DeserializationError::InvalidInput;
+    // Skip opening brace
+    ARDUINOJSON_ASSERT(current() == '{');
+    move();
 
     // Skip spaces
     DeserializationError err = skipSpacesAndComments();
@@ -241,8 +245,9 @@ class JsonDeserializer {
   DeserializationError skipObject(NestingLimit nestingLimit) {
     if (nestingLimit.reached()) return DeserializationError::TooDeep;
 
-    // Check opening brace
-    if (!eat('{')) return DeserializationError::InvalidInput;
+    // Skip opening brace
+    ARDUINOJSON_ASSERT(current() == '{');
+    move();
 
     // Skip spaces
     DeserializationError err = skipSpacesAndComments();
