@@ -445,6 +445,15 @@ TEST_CASE("Filtering") {
       "[]", 
       JSON_ARRAY_SIZE(0)
     },
+    {
+      // supports back-slash at the end of skipped string
+      "\"hell\\",
+      "false", 
+      1,
+      DeserializationError::IncompleteInput,
+      "null", 
+      0
+    },
   };  // clang-format on
 
   for (size_t i = 0; i < sizeof(testCases) / sizeof(testCases[0]); i++) {

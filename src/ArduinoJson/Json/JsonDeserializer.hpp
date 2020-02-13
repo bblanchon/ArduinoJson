@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Deserialization/deserialize.hpp>
 #include <ArduinoJson/Json/EscapeSequence.hpp>
+#include <ArduinoJson/Json/Latch.hpp>
 #include <ArduinoJson/Json/Utf16.hpp>
 #include <ArduinoJson/Json/Utf8.hpp>
 #include <ArduinoJson/Memory/MemoryPool.hpp>
@@ -24,20 +25,15 @@ class JsonDeserializer {
   JsonDeserializer(MemoryPool &pool, TReader reader,
                    TStringStorage stringStorage, uint8_t nestingLimit)
       : _pool(&pool),
-        _reader(reader),
         _stringStorage(stringStorage),
         _nestingLimit(nestingLimit),
-        _loaded(false) {
-#ifdef ARDUINOJSON_DEBUG
-    _ended = false;
-#endif
-  }
+        _latch(reader) {}
 
   template <typename TFilter>
   DeserializationError parse(VariantData &variant, TFilter filter) {
     DeserializationError err = parseVariant(variant, filter);
 
-    if (!err && _current != 0 && !variant.isEnclosed()) {
+    if (!err && _latch.last() != 0 && !variant.isEnclosed()) {
       // We don't detect trailing characters earlier, so we need to check now
       err = DeserializationError::InvalidInput;
     }
@@ -49,23 +45,14 @@ class JsonDeserializer {
   JsonDeserializer &operator=(const JsonDeserializer &);  // non-copiable
 
   char current() {
-    if (!_loaded) {
-      ARDUINOJSON_ASSERT(!_ended);
-      int c = _reader.read();
-#ifdef ARDUINOJSON_DEBUG
-      if (c <= 0) _ended = true;
-#endif
-      _current = static_cast<char>(c > 0 ? c : 0);
-      _loaded = true;
-    }
-    return _current;
+    return _latch.current();
   }
 
   void move() {
-    _loaded = false;
+    _latch.clear();
   }
 
-  FORCE_INLINE bool eat(char charToSkip) {
+  bool eat(char charToSkip) {
     if (current() != charToSkip) return false;
     move();
     return true;
@@ -391,7 +378,9 @@ class JsonDeserializer {
       move();
       if (c == stopChar) break;
       if (c == '\0') return DeserializationError::IncompleteInput;
-      if (c == '\\') _reader.read();
+      if (c == '\\') {
+        if (current() != '\0') move();
+      }
     }
 
     return DeserializationError::Ok;
@@ -548,14 +537,9 @@ class JsonDeserializer {
   }
 
   MemoryPool *_pool;
-  TReader _reader;
   TStringStorage _stringStorage;
   uint8_t _nestingLimit;
-  char _current;
-  bool _loaded;
-#ifdef ARDUINOJSON_DEBUG
-  bool _ended;
-#endif
+  Latch<TReader> _latch;
 };
 
 // deserializeJson(JsonDocument&, const std::string&, ...)
