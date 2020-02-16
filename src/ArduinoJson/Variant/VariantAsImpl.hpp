@@ -32,7 +32,8 @@ template <typename T>
 inline typename enable_if<IsWriteableString<T>::value, T>::type variantAs(
     const VariantData* _data) {
   const char* cstr = _data != 0 ? _data->asString() : 0;
-  if (cstr) return T(cstr);
+  if (cstr)
+    return T(cstr);
   T s;
   serializeJson(VariantConstRef(_data), s);
   return s;

@@ -73,7 +73,8 @@ inline ParsedNumber<TFloat, TUInt> parseNumber(const char *s) {
   }
 
 #if ARDUINOJSON_ENABLE_NAN
-  if (*s == 'n' || *s == 'N') return traits::nan();
+  if (*s == 'n' || *s == 'N')
+    return traits::nan();
 #endif
 
 #if ARDUINOJSON_ENABLE_INFINITY
@@ -81,7 +82,8 @@ inline ParsedNumber<TFloat, TUInt> parseNumber(const char *s) {
     return is_negative ? -traits::inf() : traits::inf();
 #endif
 
-  if (!isdigit(*s) && *s != '.') return return_type();
+  if (!isdigit(*s) && *s != '.')
+    return return_type();
 
   mantissa_t mantissa = 0;
   exponent_t exponent_offset = 0;
@@ -89,14 +91,17 @@ inline ParsedNumber<TFloat, TUInt> parseNumber(const char *s) {
 
   while (isdigit(*s)) {
     uint8_t digit = uint8_t(*s - '0');
-    if (mantissa > maxUint / 10) break;
+    if (mantissa > maxUint / 10)
+      break;
     mantissa *= 10;
-    if (mantissa > maxUint - digit) break;
+    if (mantissa > maxUint - digit)
+      break;
     mantissa += digit;
     s++;
   }
 
-  if (*s == '\0') return return_type(TUInt(mantissa), is_negative);
+  if (*s == '\0')
+    return return_type(TUInt(mantissa), is_negative);
 
   // avoid mantissa overflow
   while (mantissa > traits::mantissa_max) {
@@ -142,12 +147,14 @@ inline ParsedNumber<TFloat, TUInt> parseNumber(const char *s) {
       }
       s++;
     }
-    if (negative_exponent) exponent = -exponent;
+    if (negative_exponent)
+      exponent = -exponent;
   }
   exponent += exponent_offset;
 
   // we should be at the end of the string, otherwise it's an error
-  if (*s != '\0') return return_type();
+  if (*s != '\0')
+    return return_type();
 
   TFloat result = traits::make_float(static_cast<TFloat>(mantissa), exponent);
 

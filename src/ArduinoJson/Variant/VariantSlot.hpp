@@ -49,7 +49,8 @@ class VariantSlot {
   VariantSlot* next(size_t distance) {
     VariantSlot* slot = this;
     while (distance--) {
-      if (!slot->_next) return 0;
+      if (!slot->_next)
+        return 0;
       slot += slot->_next;
     }
     return slot;
@@ -93,8 +94,10 @@ class VariantSlot {
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
-    if (_flags & KEY_IS_OWNED) _key += stringDistance;
-    if (_flags & VALUE_IS_OWNED) _content.asString += stringDistance;
+    if (_flags & KEY_IS_OWNED)
+      _key += stringDistance;
+    if (_flags & VALUE_IS_OWNED)
+      _content.asString += stringDistance;
     if (_flags & COLLECTION_MASK)
       _content.asCollection.movePointers(stringDistance, variantDistance);
   }

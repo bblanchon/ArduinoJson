@@ -23,7 +23,8 @@ class StringBuilder {
   }
 
   void append(char c) {
-    if (!_slot.value) return;
+    if (!_slot.value)
+      return;
 
     if (_size >= _slot.size) {
       _slot.value = 0;

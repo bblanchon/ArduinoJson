@@ -15,10 +15,12 @@ class ArduinoStringAdapter {
   ArduinoStringAdapter(const ::String& str) : _str(&str) {}
 
   char* save(MemoryPool* pool) const {
-    if (isNull()) return NULL;
+    if (isNull())
+      return NULL;
     size_t n = _str->length() + 1;
     char* dup = pool->allocFrozenString(n);
-    if (dup) memcpy(dup, _str->c_str(), n);
+    if (dup)
+      memcpy(dup, _str->c_str(), n);
     return dup;
   }
 

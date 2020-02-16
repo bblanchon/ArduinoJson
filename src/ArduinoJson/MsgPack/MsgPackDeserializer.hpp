@@ -31,7 +31,8 @@ class MsgPackDeserializer {
 
   DeserializationError parse(VariantData &variant, NestingLimit nestingLimit) {
     uint8_t code;
-    if (!readByte(code)) return DeserializationError::IncompleteInput;
+    if (!readByte(code))
+      return DeserializationError::IncompleteInput;
 
     if ((code & 0x80) == 0) {
       variant.setUnsignedInteger(code);
@@ -139,7 +140,8 @@ class MsgPackDeserializer {
 
   bool readByte(uint8_t &value) {
     int c = _reader.read();
-    if (c < 0) return false;
+    if (c < 0)
+      return false;
     value = static_cast<uint8_t>(c);
     return true;
   }
@@ -163,7 +165,8 @@ class MsgPackDeserializer {
 
   template <typename T>
   bool readInteger(T &value) {
-    if (!readBytes(value)) return false;
+    if (!readBytes(value))
+      return false;
     fixEndianess(value);
     return true;
   }
@@ -171,7 +174,8 @@ class MsgPackDeserializer {
   template <typename T>
   DeserializationError readInteger(VariantData &variant) {
     T value;
-    if (!readInteger(value)) return DeserializationError::IncompleteInput;
+    if (!readInteger(value))
+      return DeserializationError::IncompleteInput;
     variant.setInteger(value);
     return DeserializationError::Ok;
   }
@@ -180,7 +184,8 @@ class MsgPackDeserializer {
   typename enable_if<sizeof(T) == 4, DeserializationError>::type readFloat(
       VariantData &variant) {
     T value;
-    if (!readBytes(value)) return DeserializationError::IncompleteInput;
+    if (!readBytes(value))
+      return DeserializationError::IncompleteInput;
     fixEndianess(value);
     variant.setFloat(value);
     return DeserializationError::Ok;
@@ -190,7 +195,8 @@ class MsgPackDeserializer {
   typename enable_if<sizeof(T) == 8, DeserializationError>::type readDouble(
       VariantData &variant) {
     T value;
-    if (!readBytes(value)) return DeserializationError::IncompleteInput;
+    if (!readBytes(value))
+      return DeserializationError::IncompleteInput;
     fixEndianess(value);
     variant.setFloat(value);
     return DeserializationError::Ok;
@@ -202,7 +208,8 @@ class MsgPackDeserializer {
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
     uint8_t *o = reinterpret_cast<uint8_t *>(&value);
-    if (!readBytes(i, 8)) return DeserializationError::IncompleteInput;
+    if (!readBytes(i, 8))
+      return DeserializationError::IncompleteInput;
     doubleToFloat(i, o);
     fixEndianess(value);
     variant.setFloat(value);
@@ -212,21 +219,24 @@ class MsgPackDeserializer {
   template <typename T>
   DeserializationError readString(VariantData &variant) {
     T size;
-    if (!readInteger(size)) return DeserializationError::IncompleteInput;
+    if (!readInteger(size))
+      return DeserializationError::IncompleteInput;
     return readString(variant, size);
   }
 
   template <typename T>
   DeserializationError readString(const char *&str) {
     T size;
-    if (!readInteger(size)) return DeserializationError::IncompleteInput;
+    if (!readInteger(size))
+      return DeserializationError::IncompleteInput;
     return readString(str, size);
   }
 
   DeserializationError readString(VariantData &variant, size_t n) {
     const char *s;
     DeserializationError err = readString(s, n);
-    if (!err) variant.setOwnedString(make_not_null(s));
+    if (!err)
+      variant.setOwnedString(make_not_null(s));
     return err;
   }
 
@@ -234,11 +244,13 @@ class MsgPackDeserializer {
     StringBuilder builder = _stringStorage.startString();
     for (; n; --n) {
       uint8_t c;
-      if (!readBytes(c)) return DeserializationError::IncompleteInput;
+      if (!readBytes(c))
+        return DeserializationError::IncompleteInput;
       builder.append(static_cast<char>(c));
     }
     result = builder.complete();
-    if (!result) return DeserializationError::NoMemory;
+    if (!result)
+      return DeserializationError::NoMemory;
     return DeserializationError::Ok;
   }
 
@@ -246,20 +258,24 @@ class MsgPackDeserializer {
   DeserializationError readArray(CollectionData &array,
                                  NestingLimit nestingLimit) {
     TSize size;
-    if (!readInteger(size)) return DeserializationError::IncompleteInput;
+    if (!readInteger(size))
+      return DeserializationError::IncompleteInput;
     return readArray(array, size, nestingLimit);
   }
 
   DeserializationError readArray(CollectionData &array, size_t n,
                                  NestingLimit nestingLimit) {
-    if (nestingLimit.reached()) return DeserializationError::TooDeep;
+    if (nestingLimit.reached())
+      return DeserializationError::TooDeep;
 
     for (; n; --n) {
       VariantData *value = array.add(_pool);
-      if (!value) return DeserializationError::NoMemory;
+      if (!value)
+        return DeserializationError::NoMemory;
 
       DeserializationError err = parse(*value, nestingLimit.decrement());
-      if (err) return err;
+      if (err)
+        return err;
     }
 
     return DeserializationError::Ok;
@@ -269,25 +285,30 @@ class MsgPackDeserializer {
   DeserializationError readObject(CollectionData &object,
                                   NestingLimit nestingLimit) {
     TSize size;
-    if (!readInteger(size)) return DeserializationError::IncompleteInput;
+    if (!readInteger(size))
+      return DeserializationError::IncompleteInput;
     return readObject(object, size, nestingLimit);
   }
 
   DeserializationError readObject(CollectionData &object, size_t n,
                                   NestingLimit nestingLimit) {
-    if (nestingLimit.reached()) return DeserializationError::TooDeep;
+    if (nestingLimit.reached())
+      return DeserializationError::TooDeep;
 
     for (; n; --n) {
       VariantSlot *slot = object.addSlot(_pool);
-      if (!slot) return DeserializationError::NoMemory;
+      if (!slot)
+        return DeserializationError::NoMemory;
 
       const char *key;
       DeserializationError err = parseKey(key);
-      if (err) return err;
+      if (err)
+        return err;
       slot->setOwnedKey(make_not_null(key));
 
       err = parse(*slot->data(), nestingLimit.decrement());
-      if (err) return err;
+      if (err)
+        return err;
     }
 
     return DeserializationError::Ok;
@@ -295,9 +316,11 @@ class MsgPackDeserializer {
 
   DeserializationError parseKey(const char *&key) {
     uint8_t code;
-    if (!readByte(code)) return DeserializationError::IncompleteInput;
+    if (!readByte(code))
+      return DeserializationError::IncompleteInput;
 
-    if ((code & 0xe0) == 0xa0) return readString(key, code & 0x1f);
+    if ((code & 0xe0) == 0xa0)
+      return readString(key, code & 0x1f);
 
     switch (code) {
       case 0xd9:

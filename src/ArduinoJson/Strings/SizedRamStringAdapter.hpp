@@ -27,9 +27,11 @@ class SizedRamStringAdapter {
   }
 
   char* save(MemoryPool* pool) const {
-    if (!_str) return NULL;
+    if (!_str)
+      return NULL;
     char* dup = pool->allocFrozenString(_size);
-    if (dup) memcpy(dup, _str, _size);
+    if (dup)
+      memcpy(dup, _str, _size);
     return dup;
   }
 

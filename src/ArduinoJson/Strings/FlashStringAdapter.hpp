@@ -13,9 +13,12 @@ class FlashStringAdapter {
   FlashStringAdapter(const __FlashStringHelper* str) : _str(str) {}
 
   int8_t compare(const char* other) const {
-    if (!other && !_str) return 0;
-    if (!_str) return -1;
-    if (!other) return 1;
+    if (!other && !_str)
+      return 0;
+    if (!_str)
+      return -1;
+    if (!other)
+      return 1;
     return int8_t(-strcmp_P(other, reinterpret_cast<const char*>(_str)));
   }
 
@@ -28,10 +31,12 @@ class FlashStringAdapter {
   }
 
   char* save(MemoryPool* pool) const {
-    if (!_str) return NULL;
+    if (!_str)
+      return NULL;
     size_t n = size() + 1;  // copy the terminator
     char* dup = pool->allocFrozenString(n);
-    if (dup) memcpy_P(dup, reinterpret_cast<const char*>(_str), n);
+    if (dup)
+      memcpy_P(dup, reinterpret_cast<const char*>(_str), n);
     return dup;
   }
 
@@ -40,7 +45,8 @@ class FlashStringAdapter {
   }
 
   size_t size() const {
-    if (!_str) return 0;
+    if (!_str)
+      return 0;
     return strlen_P(reinterpret_cast<const char*>(_str));
   }
 

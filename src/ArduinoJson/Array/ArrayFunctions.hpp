@@ -21,9 +21,10 @@ inline void arrayAccept(const CollectionData *arr, Visitor &visitor) {
 }
 
 inline bool arrayEquals(const CollectionData *lhs, const CollectionData *rhs) {
-  if (lhs == rhs) return true;
-  if (!lhs || !rhs) return false;
-
+  if (lhs == rhs)
+    return true;
+  if (!lhs || !rhs)
+    return false;
   return lhs->equalsArray(*rhs);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

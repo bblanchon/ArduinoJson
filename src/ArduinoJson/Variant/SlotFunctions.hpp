@@ -11,12 +11,14 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TAdaptedString>
 inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool) {
-  if (!var) return false;
+  if (!var)
+    return false;
   if (key.isStatic()) {
     var->setLinkedKey(make_not_null(key.data()));
   } else {
     const char* dup = key.save(pool);
-    if (!dup) return false;
+    if (!dup)
+      return false;
     var->setOwnedKey(make_not_null(dup));
   }
   return true;

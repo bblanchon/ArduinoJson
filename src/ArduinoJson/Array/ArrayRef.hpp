@@ -66,7 +66,8 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
   typedef ArrayConstRefIterator iterator;
 
   FORCE_INLINE iterator begin() const {
-    if (!_data) return iterator();
+    if (!_data)
+      return iterator();
     return iterator(_data->head());
   }
 
@@ -116,7 +117,8 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
   }
 
   FORCE_INLINE iterator begin() const {
-    if (!_data) return iterator();
+    if (!_data)
+      return iterator();
     return iterator(_pool, _data->head());
   }
 
@@ -126,7 +128,8 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
 
   // Copy a ArrayRef
   FORCE_INLINE bool set(ArrayConstRef src) const {
-    if (!_data || !src._data) return false;
+    if (!_data || !src._data)
+      return false;
     return _data->copyFrom(*src._data, _pool);
   }
 
@@ -141,13 +144,15 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
 
   // Removes element at specified position.
   FORCE_INLINE void remove(iterator it) const {
-    if (!_data) return;
+    if (!_data)
+      return;
     _data->remove(it.internal());
   }
 
   // Removes element at specified index.
   FORCE_INLINE void remove(size_t index) const {
-    if (!_data) return;
+    if (!_data)
+      return;
     _data->remove(index);
   }
 

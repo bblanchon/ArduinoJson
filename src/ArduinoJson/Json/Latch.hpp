@@ -37,7 +37,8 @@ class Latch {
     ARDUINOJSON_ASSERT(!_ended);
     int c = _reader.read();
 #ifdef ARDUINOJSON_DEBUG
-    if (c <= 0) _ended = true;
+    if (c <= 0)
+      _ended = true;
 #endif
     _current = static_cast<char>(c > 0 ? c : 0);
     _loaded = true;

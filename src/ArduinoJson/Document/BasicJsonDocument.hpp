@@ -77,7 +77,8 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   void shrinkToFit() {
     ptrdiff_t bytes_reclaimed = _pool.squash();
-    if (bytes_reclaimed == 0) return;
+    if (bytes_reclaimed == 0)
+      return;
 
     void* old_ptr = _pool.buffer();
     void* new_ptr = this->reallocate(old_ptr, _pool.capacity());
@@ -96,7 +97,8 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   }
 
   void reallocPoolIfTooSmall(size_t requiredSize) {
-    if (requiredSize <= capacity()) return;
+    if (requiredSize <= capacity())
+      return;
     freePool();
     replacePool(allocPool(addPadding(requiredSize)));
   }

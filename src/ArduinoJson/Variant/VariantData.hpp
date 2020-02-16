@@ -185,12 +185,14 @@ class VariantData {
   }
 
   void remove(size_t index) {
-    if (isArray()) _content.asCollection.remove(index);
+    if (isArray())
+      _content.asCollection.remove(index);
   }
 
   template <typename TAdaptedString>
   void remove(TAdaptedString key) {
-    if (isObject()) _content.asCollection.remove(key);
+    if (isObject())
+      _content.asCollection.remove(key);
   }
 
   void setBoolean(bool value) {
@@ -329,8 +331,10 @@ class VariantData {
   }
 
   VariantData *addElement(MemoryPool *pool) {
-    if (isNull()) toArray();
-    if (!isArray()) return 0;
+    if (isNull())
+      toArray();
+    if (!isArray())
+      return 0;
     return _content.asCollection.add(pool);
   }
 
@@ -345,15 +349,19 @@ class VariantData {
 
   template <typename TAdaptedString>
   VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool) {
-    if (isNull()) toObject();
-    if (!isObject()) return 0;
+    if (isNull())
+      toObject();
+    if (!isObject())
+      return 0;
     VariantData *var = _content.asCollection.get(key);
-    if (var) return var;
+    if (var)
+      return var;
     return _content.asCollection.add(key, pool);
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
-    if (_flags & VALUE_IS_OWNED) _content.asString += stringDistance;
+    if (_flags & VALUE_IS_OWNED)
+      _content.asString += stringDistance;
     if (_flags & COLLECTION_MASK)
       _content.asCollection.movePointers(stringDistance, variantDistance);
   }

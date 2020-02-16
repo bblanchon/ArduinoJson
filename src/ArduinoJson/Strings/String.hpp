@@ -27,9 +27,12 @@ class String {
   }
 
   friend bool operator==(String lhs, String rhs) {
-    if (lhs._data == rhs._data) return true;
-    if (!lhs._data) return false;
-    if (!rhs._data) return false;
+    if (lhs._data == rhs._data)
+      return true;
+    if (!lhs._data)
+      return false;
+    if (!rhs._data)
+      return false;
     return strcmp(lhs._data, rhs._data) == 0;
   }
 

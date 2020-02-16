@@ -25,7 +25,8 @@ class JsonSerializer {
       slot->data()->accept(*this);
 
       slot = slot->next();
-      if (slot == 0) break;
+      if (slot == 0)
+        break;
 
       write(',');
     }
@@ -44,7 +45,8 @@ class JsonSerializer {
       slot->data()->accept(*this);
 
       slot = slot->next();
-      if (slot == 0) break;
+      if (slot == 0)
+        break;
 
       write(',');
     }

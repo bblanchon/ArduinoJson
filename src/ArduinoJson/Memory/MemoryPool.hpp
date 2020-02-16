@@ -52,7 +52,8 @@ class MemoryPool {
   }
 
   char* allocFrozenString(size_t n) {
-    if (!canAlloc(n)) return 0;
+    if (!canAlloc(n))
+      return 0;
     char* s = _left;
     _left += n;
     checkInvariants();
@@ -97,7 +98,8 @@ class MemoryPool {
   }
 
   void* allocRight(size_t bytes) {
-    if (!canAlloc(bytes)) return 0;
+    if (!canAlloc(bytes))
+      return 0;
     _right -= bytes;
     return _right;
   }
@@ -120,7 +122,8 @@ class MemoryPool {
   // This funcion is called before a realloc.
   ptrdiff_t squash() {
     char* new_right = addPadding(_left);
-    if (new_right >= _right) return 0;
+    if (new_right >= _right)
+      return 0;
 
     size_t right_size = static_cast<size_t>(_end - _right);
     memmove(new_right, _right, right_size);

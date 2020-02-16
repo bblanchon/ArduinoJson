@@ -30,13 +30,15 @@ struct FloatTraits<T, 8 /*64bits*/> {
   static T make_float(T m, TExponent e) {
     if (e > 0) {
       for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1) m *= positiveBinaryPowerOfTen(index);
+        if (e & 1)
+          m *= positiveBinaryPowerOfTen(index);
         e >>= 1;
       }
     } else {
       e = TExponent(-e);
       for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1) m *= negativeBinaryPowerOfTen(index);
+        if (e & 1)
+          m *= negativeBinaryPowerOfTen(index);
         e >>= 1;
       }
     }
@@ -126,13 +128,15 @@ struct FloatTraits<T, 4 /*32bits*/> {
   static T make_float(T m, TExponent e) {
     if (e > 0) {
       for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1) m *= positiveBinaryPowerOfTen(index);
+        if (e & 1)
+          m *= positiveBinaryPowerOfTen(index);
         e >>= 1;
       }
     } else {
       e = -e;
       for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1) m *= negativeBinaryPowerOfTen(index);
+        if (e & 1)
+          m *= negativeBinaryPowerOfTen(index);
         e >>= 1;
       }
     }

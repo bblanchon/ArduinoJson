@@ -13,10 +13,12 @@ class RamStringAdapter : public ConstRamStringAdapter {
   RamStringAdapter(const char* str) : ConstRamStringAdapter(str) {}
 
   char* save(MemoryPool* pool) const {
-    if (!_str) return NULL;
+    if (!_str)
+      return NULL;
     size_t n = size() + 1;
     char* dup = pool->allocFrozenString(n);
-    if (dup) memcpy(dup, _str, n);
+    if (dup)
+      memcpy(dup, _str, n);
     return dup;
   }
 

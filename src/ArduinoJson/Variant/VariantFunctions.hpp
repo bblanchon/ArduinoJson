@@ -30,7 +30,8 @@ inline CollectionData *variantAsObject(VariantData *var) {
 
 inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
                             MemoryPool *pool) {
-  if (!dst) return false;
+  if (!dst)
+    return false;
   if (!src) {
     dst->setNull();
     return true;
@@ -39,8 +40,10 @@ inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
 }
 
 inline bool variantEquals(const VariantData *a, const VariantData *b) {
-  if (a == b) return true;
-  if (!a || !b) return false;
+  if (a == b)
+    return true;
+  if (!a || !b)
+    return false;
   return a->equals(*b);
 }
 
@@ -74,20 +77,23 @@ inline bool variantIsNull(const VariantData *var) {
 }
 
 inline bool variantSetBoolean(VariantData *var, bool value) {
-  if (!var) return false;
+  if (!var)
+    return false;
   var->setBoolean(value);
   return true;
 }
 
 inline bool variantSetFloat(VariantData *var, Float value) {
-  if (!var) return false;
+  if (!var)
+    return false;
   var->setFloat(value);
   return true;
 }
 
 inline bool variantSetLinkedRaw(VariantData *var,
                                 SerializedValue<const char *> value) {
-  if (!var) return false;
+  if (!var)
+    return false;
   var->setLinkedRaw(value);
   return true;
 }
@@ -100,24 +106,28 @@ inline bool variantSetOwnedRaw(VariantData *var, SerializedValue<T> value,
 
 template <typename T>
 inline bool variantSetSignedInteger(VariantData *var, T value) {
-  if (!var) return false;
+  if (!var)
+    return false;
   var->setSignedInteger(value);
   return true;
 }
 
 inline bool variantSetLinkedString(VariantData *var, const char *value) {
-  if (!var) return false;
+  if (!var)
+    return false;
   var->setLinkedString(value);
   return true;
 }
 
 inline void variantSetNull(VariantData *var) {
-  if (!var) return;
+  if (!var)
+    return;
   var->setNull();
 }
 
 inline bool variantSetOwnedString(VariantData *var, char *value) {
-  if (!var) return false;
+  if (!var)
+    return false;
   var->setOwnedString(value);
   return true;
 }
@@ -128,7 +138,8 @@ inline bool variantSetOwnedString(VariantData *var, T value, MemoryPool *pool) {
 }
 
 inline bool variantSetUnsignedInteger(VariantData *var, UInt value) {
-  if (!var) return false;
+  if (!var)
+    return false;
   var->setUnsignedInteger(value);
   return true;
 }
@@ -138,12 +149,14 @@ inline size_t variantSize(const VariantData *var) {
 }
 
 inline CollectionData *variantToArray(VariantData *var) {
-  if (!var) return 0;
+  if (!var)
+    return 0;
   return &var->toArray();
 }
 
 inline CollectionData *variantToObject(VariantData *var) {
-  if (!var) return 0;
+  if (!var)
+    return 0;
   return &var->toObject();
 }
 

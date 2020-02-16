@@ -70,7 +70,8 @@ class MsgPackSerializer {
   }
 
   void visitString(const char* value) {
-    if (!value) return writeByte(0xC0);  // nil
+    if (!value)
+      return writeByte(0xC0);  // nil
 
     size_t n = strlen(value);
 

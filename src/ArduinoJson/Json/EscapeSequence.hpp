@@ -23,8 +23,10 @@ class EscapeSequence {
   static char unescapeChar(char c) {
     const char *p = escapeTable(true);
     for (;;) {
-      if (p[0] == '\0') return c;
-      if (p[0] == c) return p[1];
+      if (p[0] == '\0')
+        return c;
+      if (p[0] == c)
+        return p[1];
       p += 2;
     }
   }

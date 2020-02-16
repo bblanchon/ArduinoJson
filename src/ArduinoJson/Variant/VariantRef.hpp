@@ -324,7 +324,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE VariantRef getOrAddMember(const TString &) const;
 
   FORCE_INLINE void remove(size_t index) const {
-    if (_data) _data->remove(index);
+    if (_data)
+      _data->remove(index);
   }
   // remove(char*) const
   // remove(const char*) const
@@ -332,14 +333,16 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar *>::value>::type remove(
       TChar *key) const {
-    if (_data) _data->remove(adaptString(key));
+    if (_data)
+      _data->remove(adaptString(key));
   }
   // remove(const std::string&) const
   // remove(const String&) const
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
       const TString &key) const {
-    if (_data) _data->remove(adaptString(key));
+    if (_data)
+      _data->remove(adaptString(key));
   }
 
  private:

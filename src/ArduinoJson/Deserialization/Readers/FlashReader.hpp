@@ -43,7 +43,8 @@ struct BoundedReader<const __FlashStringHelper*, void> {
 
   size_t readBytes(char* buffer, size_t length) {
     size_t available = static_cast<size_t>(_end - _ptr);
-    if (available < length) length = available;
+    if (available < length)
+      length = available;
     memcpy_P(buffer, _ptr, length);
     _ptr += length;
     return length;

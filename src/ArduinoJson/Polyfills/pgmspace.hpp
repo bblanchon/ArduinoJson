@@ -30,9 +30,12 @@ inline int strncmp_P(const char* a, ARDUINOJSON_NAMESPACE::pgm_p b, size_t n) {
   while (n-- > 0) {
     char c1 = *s1++;
     char c2 = static_cast<char>(pgm_read_byte(s2++));
-    if (c1 < c2) return -1;
-    if (c1 > c2) return 1;
-    if (c1 == 0 /* and c2 as well */) return 0;
+    if (c1 < c2)
+      return -1;
+    if (c1 > c2)
+      return 1;
+    if (c1 == 0 /* and c2 as well */)
+      return 0;
   }
   return 0;
 }
@@ -45,9 +48,12 @@ inline int strcmp_P(const char* a, ARDUINOJSON_NAMESPACE::pgm_p b) {
   for (;;) {
     char c1 = *s1++;
     char c2 = static_cast<char>(pgm_read_byte(s2++));
-    if (c1 < c2) return -1;
-    if (c1 > c2) return 1;
-    if (c1 == 0 /* and c2 as well */) return 0;
+    if (c1 < c2)
+      return -1;
+    if (c1 > c2)
+      return 1;
+    if (c1 == 0 /* and c2 as well */)
+      return 0;
   }
 }
 #endif

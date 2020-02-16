@@ -3,3 +3,6 @@
 BasedOnStyle: Google
 Standard: Cpp03
 AllowShortFunctionsOnASingleLine: Empty
+
+# Always break after if to get accurate coverage
+AllowShortIfStatementsOnASingleLine: false

@@ -18,7 +18,8 @@ class StlStringAdapter {
   char* save(MemoryPool* pool) const {
     size_t n = _str->length() + 1;
     char* dup = pool->allocFrozenString(n);
-    if (dup) memcpy(dup, _str->c_str(), n);
+    if (dup)
+      memcpy(dup, _str->c_str(), n);
     return dup;
   }
 
@@ -27,12 +28,14 @@ class StlStringAdapter {
   }
 
   int8_t compare(const char* other) const {
-    if (!other) return 1;
+    if (!other)
+      return 1;
     return static_cast<int8_t>(_str->compare(other));
   }
 
   bool equals(const char* expected) const {
-    if (!expected) return false;
+    if (!expected)
+      return false;
     return *_str == expected;
   }
 

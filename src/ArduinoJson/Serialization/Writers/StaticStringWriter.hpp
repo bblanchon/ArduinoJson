@@ -16,7 +16,8 @@ class StaticStringWriter {
   }
 
   size_t write(uint8_t c) {
-    if (p >= end) return 0;
+    if (p >= end)
+      return 0;
     *p++ = static_cast<char>(c);
     *p = '\0';
     return 1;

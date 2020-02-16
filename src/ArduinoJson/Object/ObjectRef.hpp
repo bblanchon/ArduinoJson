@@ -64,7 +64,8 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   ObjectConstRef(const CollectionData* data) : base_type(data) {}
 
   FORCE_INLINE iterator begin() const {
-    if (!_data) return iterator();
+    if (!_data)
+      return iterator();
     return iterator(_data->head());
   }
 
@@ -154,7 +155,8 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   }
 
   FORCE_INLINE iterator begin() const {
-    if (!_data) return iterator();
+    if (!_data)
+      return iterator();
     return iterator(_pool, _data->head());
   }
 
@@ -163,12 +165,14 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   }
 
   void clear() const {
-    if (!_data) return;
+    if (!_data)
+      return;
     _data->clear();
   }
 
   FORCE_INLINE bool set(ObjectConstRef src) {
-    if (!_data || !src._data) return false;
+    if (!_data || !src._data)
+      return false;
     return _data->copyFrom(*src._data, _pool);
   }
 
@@ -207,7 +211,8 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   }
 
   FORCE_INLINE void remove(iterator it) const {
-    if (!_data) return;
+    if (!_data)
+      return;
     _data->remove(it.internal());
   }
 
