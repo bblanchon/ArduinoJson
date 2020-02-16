@@ -79,7 +79,7 @@ TEST_CASE("JsonVariant and strings") {
     variant.set(JsonString(str, true));
     strcpy(str, "world");
 
-    REQUIRE(variant == "hello");
+    REQUIRE(variant == "world");
   }
 
   SECTION("stores non-static JsonString by copy") {

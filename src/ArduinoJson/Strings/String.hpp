@@ -53,10 +53,11 @@ class StringAdapter : public RamStringAdapter {
     return _isStatic;
   }
 
-  /*  const char* save(MemoryPool* pool) const {
-      if (_isStatic) return c_str();
-      return RamStringAdapter::save(pool);
-    }*/
+  const char* save(MemoryPool* pool) const {
+    if (_isStatic)
+      return data();
+    return RamStringAdapter::save(pool);
+  }
 
  private:
   bool _isStatic;
