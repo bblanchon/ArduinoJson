@@ -13,14 +13,36 @@ template <typename TAdaptedString>
 inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool) {
   if (!var)
     return false;
+  return slotSetKey(var, key, pool, typename TAdaptedString::storage_policy());
+}
+
+template <typename TAdaptedString>
+inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool,
+                       storage_policy::decide_at_runtime) {
   if (key.isStatic()) {
-    var->setLinkedKey(make_not_null(key.data()));
+    return slotSetKey(var, key, pool, storage_policy::store_by_address());
   } else {
-    const char* dup = key.save(pool);
-    if (!dup)
-      return false;
-    var->setOwnedKey(make_not_null(dup));
+    return slotSetKey(var, key, pool, storage_policy::store_by_copy());
   }
+  return true;
+}
+
+template <typename TAdaptedString>
+inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool*,
+                       storage_policy::store_by_address) {
+  ARDUINOJSON_ASSERT(var);
+  var->setLinkedKey(make_not_null(key.data()));
+  return true;
+}
+
+template <typename TAdaptedString>
+inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool,
+                       storage_policy::store_by_copy) {
+  const char* dup = key.save(pool);
+  if (!dup)
+    return false;
+  ARDUINOJSON_ASSERT(var);
+  var->setOwnedKey(make_not_null(dup));
   return true;
 }
 

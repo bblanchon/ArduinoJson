@@ -8,6 +8,7 @@
 #include <string.h>  // strcmp
 
 #include <ArduinoJson/Polyfills/safe_strcmp.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -27,11 +28,6 @@ class ConstRamStringAdapter {
     return !_str;
   }
 
-  template <typename TMemoryPool>
-  char* save(TMemoryPool*) const {
-    return 0;
-  }
-
   size_t size() const {
     if (!_str)
       return 0;
@@ -42,9 +38,7 @@ class ConstRamStringAdapter {
     return _str;
   }
 
-  bool isStatic() const {
-    return true;
-  }
+  typedef storage_policy::store_by_address storage_policy;
 
  protected:
   const char* _str;

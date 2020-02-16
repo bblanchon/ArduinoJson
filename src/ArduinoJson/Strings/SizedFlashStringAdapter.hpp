@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -45,9 +46,7 @@ class SizedFlashStringAdapter {
     return _size;
   }
 
-  bool isStatic() const {
-    return false;
-  }
+  typedef storage_policy::store_by_copy storage_policy;
 
  private:
   const __FlashStringHelper* _str;

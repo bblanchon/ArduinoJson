@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 #include <string.h>  // strcmp
 
@@ -39,9 +40,7 @@ class SizedRamStringAdapter {
     return _size;
   }
 
-  bool isStatic() const {
-    return false;
-  }
+  typedef storage_policy::store_by_copy storage_policy;
 
  private:
   const char* _str;

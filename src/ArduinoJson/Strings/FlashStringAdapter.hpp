@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Polyfills/pgmspace.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -40,19 +41,13 @@ class FlashStringAdapter {
     return dup;
   }
 
-  const char* data() const {
-    return 0;
-  }
-
   size_t size() const {
     if (!_str)
       return 0;
     return strlen_P(reinterpret_cast<const char*>(_str));
   }
 
-  bool isStatic() const {
-    return false;
-  }
+  typedef storage_policy::store_by_copy storage_policy;
 
  private:
   const __FlashStringHelper* _str;

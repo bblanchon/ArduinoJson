@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 #include <string>
 
@@ -39,17 +40,11 @@ class StlStringAdapter {
     return *_str == expected;
   }
 
-  const char* data() const {
-    return _str->data();
-  }
-
   size_t size() const {
     return _str->size();
   }
 
-  bool isStatic() const {
-    return false;
-  }
+  typedef storage_policy::store_by_copy storage_policy;
 
  private:
   const TString* _str;

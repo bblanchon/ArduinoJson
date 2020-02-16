@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Strings/ConstRamStringAdapter.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -35,6 +36,8 @@ class String {
       return false;
     return strcmp(lhs._data, rhs._data) == 0;
   }
+
+  typedef storage_policy::decide_at_runtime storage_policy;
 
  private:
   const char* _data;

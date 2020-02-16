@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Strings/ConstRamStringAdapter.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -22,9 +23,7 @@ class RamStringAdapter : public ConstRamStringAdapter {
     return dup;
   }
 
-  bool isStatic() const {
-    return false;
-  }
+  typedef ARDUINOJSON_NAMESPACE::storage_policy::store_by_copy storage_policy;
 };
 
 template <typename TChar>

@@ -7,6 +7,7 @@
 #include <WString.h>
 
 #include <ArduinoJson/Polyfills/safe_strcmp.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -39,17 +40,11 @@ class ArduinoStringAdapter {
     return compare(expected) == 0;
   }
 
-  const char* data() const {
-    return _str->c_str();
-  }
-
   size_t size() const {
     return _str->length();
   }
 
-  bool isStatic() const {
-    return false;
-  }
+  typedef storage_policy::store_by_copy storage_policy;
 
  private:
   const ::String* _str;
