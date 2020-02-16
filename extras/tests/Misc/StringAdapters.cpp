@@ -2,9 +2,14 @@
 // Copyright Benoit Blanchon 2014-2020
 // MIT License
 
-#include <ArduinoJson.h>
-#include <catch.hpp>
 #include "custom_string.hpp"
+#include "progmem_emulation.hpp"
+
+#include <ArduinoJson/Strings/ConstRamStringAdapter.hpp>
+#include <ArduinoJson/Strings/FlashStringAdapter.hpp>
+#include <ArduinoJson/Strings/StlStringAdapter.hpp>
+
+#include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 
@@ -17,6 +22,8 @@ TEST_CASE("ConstRamStringAdapter") {
 
     REQUIRE(adapter.equals(NULL));
     REQUIRE_FALSE(adapter.equals("charlie"));
+
+    REQUIRE(adapter.size() == 0);
   }
 
   SECTION("non-null") {
@@ -29,6 +36,36 @@ TEST_CASE("ConstRamStringAdapter") {
 
     REQUIRE(adapter.equals("bravo"));
     REQUIRE_FALSE(adapter.equals("charlie"));
+
+    REQUIRE(adapter.size() == 5);
+  }
+}
+
+TEST_CASE("FlashStringAdapter") {
+  SECTION("null") {
+    FlashStringAdapter adapter(NULL);
+
+    REQUIRE(adapter.compare("bravo") < 0);
+    REQUIRE(adapter.compare(NULL) == 0);
+
+    REQUIRE(adapter.equals(NULL));
+    REQUIRE_FALSE(adapter.equals("charlie"));
+
+    REQUIRE(adapter.size() == 0);
+  }
+
+  SECTION("non-null") {
+    FlashStringAdapter adapter = adaptString(F("bravo"));
+
+    REQUIRE(adapter.compare(NULL) > 0);
+    REQUIRE(adapter.compare("alpha") > 0);
+    REQUIRE(adapter.compare("bravo") == 0);
+    REQUIRE(adapter.compare("charlie") < 0);
+
+    REQUIRE(adapter.equals("bravo"));
+    REQUIRE_FALSE(adapter.equals("charlie"));
+
+    REQUIRE(adapter.size() == 5);
   }
 }
 
@@ -43,6 +80,8 @@ TEST_CASE("std::string") {
 
   REQUIRE(adapter.equals("bravo"));
   REQUIRE_FALSE(adapter.equals("charlie"));
+
+  REQUIRE(adapter.size() == 5);
 }
 
 TEST_CASE("custom_string") {
@@ -56,6 +95,8 @@ TEST_CASE("custom_string") {
 
   REQUIRE(adapter.equals("bravo"));
   REQUIRE_FALSE(adapter.equals("charlie"));
+
+  REQUIRE(adapter.size() == 5);
 }
 
 TEST_CASE("IsString<T>") {
@@ -69,5 +110,9 @@ TEST_CASE("IsString<T>") {
 
   SECTION("custom_string") {
     REQUIRE(IsString<custom_string>::value == true);
+  }
+
+  SECTION("const __FlashStringHelper*") {
+    REQUIRE(IsString<const __FlashStringHelper*>::value == true);
   }
 }

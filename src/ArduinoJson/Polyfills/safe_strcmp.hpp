@@ -6,6 +6,8 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
+#include <stdint.h>  // int8_t
+
 namespace ARDUINOJSON_NAMESPACE {
 
 inline int8_t safe_strcmp(const char* a, const char* b) {

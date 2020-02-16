@@ -7,6 +7,7 @@
 #include <WString.h>
 
 #include <ArduinoJson/Polyfills/safe_strcmp.hpp>
+#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {

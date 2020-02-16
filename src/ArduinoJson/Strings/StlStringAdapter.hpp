@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 #include <string>

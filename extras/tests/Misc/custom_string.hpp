@@ -6,8 +6,6 @@
 
 #include <string>
 
-using namespace ARDUINOJSON_NAMESPACE;
-
 struct custom_char_traits : std::char_traits<char> {};
 struct custom_allocator : std::allocator<char> {};
 typedef std::basic_string<char, custom_char_traits, custom_allocator>
