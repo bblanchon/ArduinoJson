@@ -12,7 +12,7 @@ class EscapeSequence {
  public:
   // Optimized for code size on a 8-bit AVR
   static char escapeChar(char c) {
-    const char *p = escapeTable(false);
+    const char *p = escapeTable(true);
     while (p[0] && p[1] != c) {
       p += 2;
     }
@@ -21,10 +21,10 @@ class EscapeSequence {
 
   // Optimized for code size on a 8-bit AVR
   static char unescapeChar(char c) {
-    const char *p = escapeTable(true);
+    const char *p = escapeTable(false);
     for (;;) {
       if (p[0] == '\0')
-        return c;
+        return 0;
       if (p[0] == c)
         return p[1];
       p += 2;
@@ -32,8 +32,8 @@ class EscapeSequence {
   }
 
  private:
-  static const char *escapeTable(bool excludeIdenticals) {
-    return &"\"\"\\\\b\bf\fn\nr\rt\t"[excludeIdenticals ? 4 : 0];
+  static const char *escapeTable(bool excludeSolidus) {
+    return &"//\"\"\\\\b\bf\fn\nr\rt\t"[excludeSolidus ? 2 : 0];
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

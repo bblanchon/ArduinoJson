@@ -299,7 +299,9 @@ class JsonDeserializer {
       // Skip spaces
       err = skipSpacesAndComments();
       if (err)
-        return err;  // Colon
+        return err;
+
+      // Colon
       if (!eat(':'))
         return DeserializationError::InvalidInput;
 
@@ -393,8 +395,7 @@ class JsonDeserializer {
     StringBuilder builder = _stringStorage.startString();
 
     char c = current();
-    if (c == '\0')
-      return DeserializationError::IncompleteInput;
+    ARDUINOJSON_ASSERT(c);
 
     if (canBeInNonQuotedString(c)) {  // no quotes
       do {
@@ -482,7 +483,7 @@ class JsonDeserializer {
 
   DeserializationError skipNumericValue() {
     char c = current();
-    while (c && c != '}' && c != ',' && c != ']' && c != ':') {
+    while (canBeInNonQuotedString(c)) {
       move();
       c = current();
     }

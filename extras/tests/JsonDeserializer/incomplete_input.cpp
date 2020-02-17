@@ -13,7 +13,9 @@ TEST_CASE("Truncated JSON input") {
                              // true
                              "t", "tr", "tru",
                              // null
-                             "n", "nu", "nul"};
+                             "n", "nu", "nul",
+                             // object
+                             "{", "{a", "{a:", "{a:1", "{a:1,", "{a:1,"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
   DynamicJsonDocument doc(4096);

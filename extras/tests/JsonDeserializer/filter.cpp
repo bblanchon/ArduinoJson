@@ -2,6 +2,7 @@
 // Copyright Benoit Blanchon 2014-2020
 // MIT License
 
+#define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
@@ -257,11 +258,11 @@ TEST_CASE("Filtering") {
       JSON_ARRAY_SIZE(0)
     },
     {
-      // ignore errors in skipped value
+      // detect errors in skipped value
       "[!,2,\\]",
       "[false]",
       10,
-      DeserializationError::Ok,
+      DeserializationError::InvalidInput,
       "[]",
       JSON_ARRAY_SIZE(0)
     },
@@ -374,11 +375,11 @@ TEST_CASE("Filtering") {
       0
     },
     {
-      // ignore invalid value in skipped object
+      // detect invalid value in skipped object
       "{'hello':!}",
       "false", 
       10,
-      DeserializationError::Ok,
+      DeserializationError::InvalidInput,
       "null",
       0
     },
@@ -387,7 +388,7 @@ TEST_CASE("Filtering") {
       "{'hello':\\}",
       "false", 
       10,
-      DeserializationError::Ok,
+      DeserializationError::InvalidInput,
       "null", 
       0
     },
@@ -450,6 +451,168 @@ TEST_CASE("Filtering") {
       "\"hell\\",
       "false", 
       1,
+      DeserializationError::IncompleteInput,
+      "null", 
+      0
+    },
+    {
+      // invalid comment at after an element in a skipped array
+      "[1/]",
+      "false", 
+      10,
+      DeserializationError::InvalidInput,
+      "null", 
+      0
+    },
+    {
+      // incomplete comment at after an element in a skipped array
+      "[1/*]",
+      "false", 
+      10,
+      DeserializationError::IncompleteInput,
+      "null", 
+      0
+    },
+    {
+      // missing comma in a skipped array
+      "[1 2]",
+      "false", 
+      10,
+      DeserializationError::InvalidInput,
+      "null", 
+      0
+    },
+    {
+      // invalid comment at the beginning of array
+      "[/1]",
+      "[false]", 
+      10,
+      DeserializationError::InvalidInput,
+      "[]", 
+      JSON_ARRAY_SIZE(0)
+    },
+    {
+      // incomplete comment at the begining of an array
+      "[/*]",
+      "[false]", 
+      10,
+      DeserializationError::IncompleteInput,
+      "[]", 
+      JSON_ARRAY_SIZE(0)
+    },
+    {
+      // invalid comment before key
+      "{/1:2}",
+      "{}", 
+      10,
+      DeserializationError::InvalidInput,
+      "{}", 
+      JSON_OBJECT_SIZE(0)
+    },
+    {
+      // incomplete comment before key
+      "{/*:2}",
+      "{}", 
+      10,
+      DeserializationError::IncompleteInput,
+      "{}", 
+      JSON_OBJECT_SIZE(0)
+    },
+    {
+      // invalid comment after key
+      "{\"example\"/1:2}",
+      "{}", 
+      10,
+      DeserializationError::InvalidInput,
+      "{}", 
+      JSON_OBJECT_SIZE(0) + 8
+    },
+    {
+      // incomplete comment after key
+      "{\"example\"/*:2}",
+      "{}", 
+      10,
+      DeserializationError::IncompleteInput,
+      "{}", 
+      JSON_OBJECT_SIZE(0) + 8
+    },
+    {
+      // invalid comment after colon
+      "{\"example\":/12}",
+      "{}", 
+      10,
+      DeserializationError::InvalidInput,
+      "{}", 
+      JSON_OBJECT_SIZE(0)
+    },
+    {
+      // incomplete comment after colon
+      "{\"example\":/*2}",
+      "{}", 
+      10,
+      DeserializationError::IncompleteInput,
+      "{}", 
+      JSON_OBJECT_SIZE(0)
+    },
+    {
+      // comment next to an integer
+      "{\"ignore\":1//,\"example\":2\n}",
+      "{\"example\":true}", 
+      10,
+      DeserializationError::Ok,
+      "{}", 
+      JSON_OBJECT_SIZE(0)
+    },
+    {
+      // invalid comment after opening brace of a skipped object
+      "{/1:2}",
+      "false", 
+      10,
+      DeserializationError::InvalidInput,
+      "null", 
+      0
+    },
+    {
+      // incomplete after opening brace of a skipped object
+      "{/*:2}",
+      "false", 
+      10,
+      DeserializationError::IncompleteInput,
+      "null", 
+      0
+    },
+    {
+      // invalid comment after key of a skipped object
+      "{\"example\"/:2}",
+      "false", 
+      10,
+      DeserializationError::InvalidInput,
+      "null", 
+      0
+    },
+    {
+      // incomplete after after key of a skipped object
+      "{\"example\"/*:2}",
+      "false", 
+      10,
+      DeserializationError::IncompleteInput,
+      "null", 
+      0
+    },
+    {
+      // invalid comment after value in a skipped object
+      "{\"example\":2/}",
+      "false", 
+      10,
+      DeserializationError::InvalidInput,
+      "null", 
+      0
+    },
+    {
+      // incomplete after after value of a skipped object
+      "{\"example\":2/*}",
+      "false", 
+      10,
       DeserializationError::IncompleteInput,
       "null", 
       0
