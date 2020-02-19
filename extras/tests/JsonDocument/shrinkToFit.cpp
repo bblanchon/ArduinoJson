@@ -48,14 +48,17 @@ typedef BasicJsonDocument<ArmoredAllocator> ShrinkToFitTestDocument;
 
 void testShrinkToFit(ShrinkToFitTestDocument& doc, std::string expected_json,
                      size_t expected_size) {
-  doc.shrinkToFit();
+  // test twice: shrinkToFit() should be idempotent
+  for (int i = 0; i < 2; i++) {
+    doc.shrinkToFit();
 
-  REQUIRE(doc.capacity() == expected_size);
-  REQUIRE(doc.memoryUsage() == expected_size);
+    REQUIRE(doc.capacity() == expected_size);
+    REQUIRE(doc.memoryUsage() == expected_size);
 
-  std::string json;
-  serializeJson(doc, json);
-  REQUIRE(json == expected_json);
+    std::string json;
+    serializeJson(doc, json);
+    REQUIRE(json == expected_json);
+  }
 }
 
 TEST_CASE("BasicJsonDocument::shrinkToFit()") {
