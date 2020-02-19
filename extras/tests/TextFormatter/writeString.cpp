@@ -19,10 +19,6 @@ void check(const char* input, std::string expected) {
 }
 
 TEST_CASE("TextFormatter::writeString()") {
-  SECTION("Null") {
-    check(0, "null");
-  }
-
   SECTION("EmptyString") {
     check("", "\"\"");
   }

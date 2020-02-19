@@ -10,6 +10,7 @@
 #include <ArduinoJson/Json/EscapeSequence.hpp>
 #include <ArduinoJson/Numbers/FloatParts.hpp>
 #include <ArduinoJson/Numbers/Integer.hpp>
+#include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -32,13 +33,10 @@ class TextFormatter {
   }
 
   void writeString(const char *value) {
-    if (!value) {
-      writeRaw("null");
-    } else {
-      writeRaw('\"');
-      while (*value) writeChar(*value++);
-      writeRaw('\"');
-    }
+    ARDUINOJSON_ASSERT(value != NULL);
+    writeRaw('\"');
+    while (*value) writeChar(*value++);
+    writeRaw('\"');
   }
 
   void writeChar(char c) {
