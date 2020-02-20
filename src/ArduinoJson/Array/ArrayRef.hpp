@@ -87,7 +87,7 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
   }
 
   FORCE_INLINE VariantConstRef getElement(size_t index) const {
-    return VariantConstRef(_data ? _data->get(index) : 0);
+    return VariantConstRef(_data ? _data->getElement(index) : 0);
   }
 };
 
@@ -137,23 +137,28 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     return arrayEquals(_data, rhs._data);
   }
 
+  // Internal use
+  FORCE_INLINE VariantRef getOrAddElement(size_t index) const {
+    return VariantRef(_pool, _data ? _data->getOrAddElement(index, _pool) : 0);
+  }
+
   // Gets the value at the specified index.
   FORCE_INLINE VariantRef getElement(size_t index) const {
-    return VariantRef(_pool, _data ? _data->get(index) : 0);
+    return VariantRef(_pool, _data ? _data->getElement(index) : 0);
   }
 
   // Removes element at specified position.
   FORCE_INLINE void remove(iterator it) const {
     if (!_data)
       return;
-    _data->remove(it.internal());
+    _data->removeSlot(it.internal());
   }
 
   // Removes element at specified index.
   FORCE_INLINE void remove(size_t index) const {
     if (!_data)
       return;
-    _data->remove(index);
+    _data->removeElement(index);
   }
 
  private:

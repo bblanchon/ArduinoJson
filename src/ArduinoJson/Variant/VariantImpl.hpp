@@ -119,11 +119,15 @@ inline VariantConstRef VariantConstRef::getElement(size_t index) const {
 }
 
 inline VariantRef VariantRef::addElement() const {
-  return VariantRef(_pool, variantAdd(_data, _pool));
+  return VariantRef(_pool, variantAddElement(_data, _pool));
 }
 
 inline VariantRef VariantRef::getElement(size_t index) const {
   return VariantRef(_pool, _data != 0 ? _data->getElement(index) : 0);
+}
+
+inline VariantRef VariantRef::getOrAddElement(size_t index) const {
+  return VariantRef(_pool, variantGetOrAddElement(_data, index, _pool));
 }
 
 template <typename TChar>
@@ -139,11 +143,11 @@ VariantRef::getMember(const TString &key) const {
 
 template <typename TChar>
 inline VariantRef VariantRef::getOrAddMember(TChar *key) const {
-  return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
+  return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
 }
 
 template <typename TString>
 inline VariantRef VariantRef::getOrAddMember(const TString &key) const {
-  return VariantRef(_pool, variantGetOrCreate(_data, key, _pool));
+  return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
 }
 }  // namespace ARDUINOJSON_NAMESPACE

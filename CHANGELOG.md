@@ -6,6 +6,7 @@ HEAD
 
 * Added `DeserializationOption::Filter` (issue #959)
 * Added example `JsonFilterExample.ino`
+* Changed the array subscript operator to automatically add missing elements
 * Fixed "deprecated-copy" warning on GCC 9 (fixes #1184)
 
 v6.14.1 (2020-01-27)

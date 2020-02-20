@@ -43,10 +43,10 @@ TEST_CASE("JsonVariant::operator[]") {
     SECTION("set value") {
       array.add("hello");
 
-      var[0] = "world";
+      var[1] = "world";
 
-      REQUIRE(1 == var.size());
-      REQUIRE(std::string("world") == var[0]);
+      REQUIRE(var.size() == 2);
+      REQUIRE(std::string("world") == var[1]);
     }
 
     SECTION("set value in a nested object") {

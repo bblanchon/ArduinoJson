@@ -9,7 +9,7 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 inline VariantData *arrayAdd(CollectionData *arr, MemoryPool *pool) {
-  return arr ? arr->add(pool) : 0;
+  return arr ? arr->addElement(pool) : 0;
 }
 
 template <typename Visitor>

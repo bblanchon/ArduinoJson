@@ -26,12 +26,13 @@ inline VariantSlot* CollectionData::addSlot(MemoryPool* pool) {
   return slot;
 }
 
-inline VariantData* CollectionData::add(MemoryPool* pool) {
+inline VariantData* CollectionData::addElement(MemoryPool* pool) {
   return slotData(addSlot(pool));
 }
 
 template <typename TAdaptedString>
-inline VariantData* CollectionData::add(TAdaptedString key, MemoryPool* pool) {
+inline VariantData* CollectionData::addMember(TAdaptedString key,
+                                              MemoryPool* pool) {
   VariantSlot* slot = addSlot(pool);
   if (!slotSetKey(slot, key, pool))
     return 0;
@@ -55,11 +56,11 @@ inline bool CollectionData::copyFrom(const CollectionData& src,
     VariantData* var;
     if (s->key() != 0) {
       if (s->ownsKey())
-        var = add(RamStringAdapter(s->key()), pool);
+        var = addMember(RamStringAdapter(s->key()), pool);
       else
-        var = add(ConstRamStringAdapter(s->key()), pool);
+        var = addMember(ConstRamStringAdapter(s->key()), pool);
     } else {
-      var = add(pool);
+      var = addElement(pool);
     }
     if (!var)
       return false;
@@ -73,7 +74,7 @@ inline bool CollectionData::equalsObject(const CollectionData& other) const {
   size_t count = 0;
   for (VariantSlot* slot = _head; slot; slot = slot->next()) {
     VariantData* v1 = slot->data();
-    VariantData* v2 = other.get(adaptString(slot->key()));
+    VariantData* v2 = other.getMember(adaptString(slot->key()));
     if (!variantEquals(v1, v2))
       return false;
     count++;
@@ -123,17 +124,40 @@ inline VariantSlot* CollectionData::getPreviousSlot(VariantSlot* target) const {
 }
 
 template <typename TAdaptedString>
-inline VariantData* CollectionData::get(TAdaptedString key) const {
+inline VariantData* CollectionData::getMember(TAdaptedString key) const {
   VariantSlot* slot = getSlot(key);
   return slot ? slot->data() : 0;
 }
 
-inline VariantData* CollectionData::get(size_t index) const {
+template <typename TAdaptedString>
+inline VariantData* CollectionData::getOrAddMember(TAdaptedString key,
+                                                   MemoryPool* pool) {
+  VariantSlot* slot = getSlot(key);
+  return slot ? slot->data() : addMember(key, pool);
+}
+
+inline VariantData* CollectionData::getElement(size_t index) const {
   VariantSlot* slot = getSlot(index);
   return slot ? slot->data() : 0;
 }
 
-inline void CollectionData::remove(VariantSlot* slot) {
+inline VariantData* CollectionData::getOrAddElement(size_t index,
+                                                    MemoryPool* pool) {
+  VariantSlot* slot = _head;
+  while (slot && index > 0) {
+    slot = slot->next();
+    index--;
+  }
+  if (!slot)
+    index++;
+  while (index > 0) {
+    slot = addSlot(pool);
+    index--;
+  }
+  return slotData(slot);
+}
+
+inline void CollectionData::removeSlot(VariantSlot* slot) {
   if (!slot)
     return;
   VariantSlot* prev = getPreviousSlot(slot);
@@ -146,8 +170,8 @@ inline void CollectionData::remove(VariantSlot* slot) {
     _tail = prev;
 }
 
-inline void CollectionData::remove(size_t index) {
-  remove(getSlot(index));
+inline void CollectionData::removeElement(size_t index) {
+  removeSlot(getSlot(index));
 }
 
 inline size_t CollectionData::memoryUsage() const {

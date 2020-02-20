@@ -269,7 +269,7 @@ class MsgPackDeserializer {
       return DeserializationError::TooDeep;
 
     for (; n; --n) {
-      VariantData *value = array.add(_pool);
+      VariantData *value = array.addElement(_pool);
       if (!value)
         return DeserializationError::NoMemory;
 

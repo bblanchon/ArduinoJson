@@ -9,17 +9,17 @@ using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("MemberProxy::operator[]") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  ElementProxy<JsonDocument&> ep = doc[1];
 
   SECTION("set member") {
-    mp["world"] = 42;
+    ep["world"] = 42;
 
-    REQUIRE(doc.as<std::string>() == "{\"hello\":{\"world\":42}}");
+    REQUIRE(doc.as<std::string>() == "[null,{\"world\":42}]");
   }
 
   SECTION("set element") {
-    mp[2] = 42;
+    ep[2] = 42;
 
-    REQUIRE(doc.as<std::string>() == "{\"hello\":[null,null,42]}");
+    REQUIRE(doc.as<std::string>() == "[null,[null,null,42]]");
   }
 }

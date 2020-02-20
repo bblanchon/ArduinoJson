@@ -186,13 +186,13 @@ class VariantData {
 
   void remove(size_t index) {
     if (isArray())
-      _content.asCollection.remove(index);
+      _content.asCollection.removeElement(index);
   }
 
   template <typename TAdaptedString>
   void remove(TAdaptedString key) {
     if (isObject())
-      _content.asCollection.remove(key);
+      _content.asCollection.removeMember(key);
   }
 
   void setBoolean(bool value) {
@@ -335,16 +335,24 @@ class VariantData {
       toArray();
     if (!isArray())
       return 0;
-    return _content.asCollection.add(pool);
+    return _content.asCollection.addElement(pool);
   }
 
   VariantData *getElement(size_t index) const {
-    return isArray() ? _content.asCollection.get(index) : 0;
+    return isArray() ? _content.asCollection.getElement(index) : 0;
+  }
+
+  VariantData *getOrAddElement(size_t index, MemoryPool *pool) {
+    if (isNull())
+      toArray();
+    if (!isArray())
+      return 0;
+    return _content.asCollection.getOrAddElement(index, pool);
   }
 
   template <typename TAdaptedString>
   VariantData *getMember(TAdaptedString key) const {
-    return isObject() ? _content.asCollection.get(key) : 0;
+    return isObject() ? _content.asCollection.getMember(key) : 0;
   }
 
   template <typename TAdaptedString>
@@ -353,10 +361,7 @@ class VariantData {
       toObject();
     if (!isObject())
       return 0;
-    VariantData *var = _content.asCollection.get(key);
-    if (var)
-      return var;
-    return _content.asCollection.add(key, pool);
+    return _content.asCollection.getOrAddMember(key, pool);
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {

@@ -129,9 +129,12 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getOrAddUpstreamMember().addElement();
   }
 
-  // getElement(size_t) const
   FORCE_INLINE VariantRef getElement(size_t index) const {
     return getUpstreamMember().getElement(index);
+  }
+
+  FORCE_INLINE VariantRef getOrAddElement(size_t index) const {
+    return getOrAddUpstreamMember().getOrAddElement(index);
   }
 
   // getMember(char*) const

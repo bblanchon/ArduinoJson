@@ -9,7 +9,20 @@
 TEST_CASE("JsonArray::operator[]") {
   DynamicJsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
-  array.add(0);
+
+  SECTION("Pad with null") {
+    array[2] = 2;
+    array[5] = 5;
+    REQUIRE(array.size() == 6);
+    REQUIRE(array[0].isNull() == true);
+    REQUIRE(array[1].isNull() == true);
+    REQUIRE(array[2].isNull() == false);
+    REQUIRE(array[3].isNull() == true);
+    REQUIRE(array[4].isNull() == true);
+    REQUIRE(array[5].isNull() == false);
+    REQUIRE(array[2] == 2);
+    REQUIRE(array[5] == 5);
+  }
 
   SECTION("int") {
     array[0] = 123;

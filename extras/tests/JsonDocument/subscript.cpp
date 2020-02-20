@@ -43,3 +43,11 @@ TEST_CASE("JsonDocument automatically promotes to object") {
 
   REQUIRE(doc["one"]["two"]["three"] == 4);
 }
+
+TEST_CASE("JsonDocument automatically promotes to array") {
+  DynamicJsonDocument doc(4096);
+
+  doc[2] = 2;
+
+  REQUIRE(doc.as<std::string>() == "[null,null,2]");
+}

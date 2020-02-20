@@ -25,44 +25,55 @@ class CollectionData {
   // - no destructor
   // - no virtual
   // - no inheritance
-  VariantSlot *addSlot(MemoryPool *);
 
-  VariantData *add(MemoryPool *pool);
+  // Array only
+
+  VariantData *addElement(MemoryPool *pool);
+
+  VariantData *getElement(size_t index) const;
+
+  VariantData *getOrAddElement(size_t index, MemoryPool *pool);
+
+  void removeElement(size_t index);
+
+  bool equalsArray(const CollectionData &other) const;
+
+  // Object only
 
   template <typename TAdaptedString>
-  VariantData *add(TAdaptedString key, MemoryPool *pool);
+  VariantData *addMember(TAdaptedString key, MemoryPool *pool);
 
-  void clear();
+  template <typename TAdaptedString>
+  VariantData *getMember(TAdaptedString key) const;
+
+  template <typename TAdaptedString>
+  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool);
+
+  template <typename TAdaptedString>
+  void removeMember(TAdaptedString key) {
+    removeSlot(getSlot(key));
+  }
 
   template <typename TAdaptedString>
   bool containsKey(const TAdaptedString &key) const;
 
-  bool copyFrom(const CollectionData &src, MemoryPool *pool);
-
-  bool equalsArray(const CollectionData &other) const;
   bool equalsObject(const CollectionData &other) const;
 
-  VariantData *get(size_t index) const;
+  // Generic
 
-  template <typename TAdaptedString>
-  VariantData *get(TAdaptedString key) const;
+  void clear();
+  size_t memoryUsage() const;
+  size_t nesting() const;
+  size_t size() const;
+
+  VariantSlot *addSlot(MemoryPool *);
+  void removeSlot(VariantSlot *slot);
+
+  bool copyFrom(const CollectionData &src, MemoryPool *pool);
 
   VariantSlot *head() const {
     return _head;
   }
-
-  void remove(size_t index);
-
-  template <typename TAdaptedString>
-  void remove(TAdaptedString key) {
-    remove(getSlot(key));
-  }
-
-  void remove(VariantSlot *slot);
-
-  size_t memoryUsage() const;
-  size_t nesting() const;
-  size_t size() const;
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance);
 

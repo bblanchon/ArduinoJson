@@ -301,6 +301,8 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   FORCE_INLINE VariantRef getElement(size_t) const;
 
+  FORCE_INLINE VariantRef getOrAddElement(size_t) const;
+
   // getMember(const char*) const
   // getMember(const __FlashStringHelper*) const
   template <typename TChar>
@@ -391,7 +393,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   template <typename TChar>
   FORCE_INLINE VariantConstRef getMember(TChar *key) const {
     const CollectionData *obj = variantAsObject(_data);
-    return VariantConstRef(obj ? obj->get(adaptString(key)) : 0);
+    return VariantConstRef(obj ? obj->getMember(adaptString(key)) : 0);
   }
 
   // operator[](const std::string&) const

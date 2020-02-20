@@ -139,7 +139,7 @@ class JsonDeserializer {
     for (;;) {
       if (memberFilter.allow()) {
         // Allocate slot in array
-        VariantData *value = array.add(_pool);
+        VariantData *value = array.addElement(_pool);
         if (!value)
           return DeserializationError::NoMemory;
 
@@ -231,7 +231,7 @@ class JsonDeserializer {
       TFilter memberFilter = filter[key];
 
       if (memberFilter.allow()) {
-        VariantData *variant = object.get(adaptString(key));
+        VariantData *variant = object.getMember(adaptString(key));
         if (!variant) {
           // Allocate slot in object
           VariantSlot *slot = object.addSlot(_pool);

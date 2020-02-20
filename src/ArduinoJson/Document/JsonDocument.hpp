@@ -192,6 +192,10 @@ class JsonDocument : public Visitable {
     return VariantConstRef(_data.getElement(index));
   }
 
+  FORCE_INLINE VariantRef getOrAddElement(size_t index) {
+    return VariantRef(&_pool, _data.getOrAddElement(index, &_pool));
+  }
+
   // JsonVariantConst getMember(char*) const
   // JsonVariantConst getMember(const char*) const
   // JsonVariantConst getMember(const __FlashStringHelper*) const

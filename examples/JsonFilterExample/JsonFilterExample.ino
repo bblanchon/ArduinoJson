@@ -33,12 +33,9 @@ void setup() {
       "1000000,\"timezone\":0,\"sunrise\":1581492085,\"sunset\":1581527294}}");
 
   // The filter: it contains "true" for each value we want to keep
-  const __FlashStringHelper* filter_json =
-      F("{\"list\":[{\"dt\":true,\"main\":{\"temp\":true}]}");
-
-  // Create the filter document
   StaticJsonDocument<200> filter;
-  deserializeJson(filter, filter_json);
+  filter["list"][0]["dt"] = true;
+  filter["list"][0]["main"]["temp"] = true;
 
   // Deserialize the document
   StaticJsonDocument<400> doc;

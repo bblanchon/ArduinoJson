@@ -160,19 +160,27 @@ inline CollectionData *variantToObject(VariantData *var) {
   return &var->toObject();
 }
 
-inline NO_INLINE VariantData *variantAdd(VariantData *var, MemoryPool *pool) {
+inline NO_INLINE VariantData *variantAddElement(VariantData *var,
+                                                MemoryPool *pool) {
   return var != 0 ? var->addElement(pool) : 0;
 }
 
+inline NO_INLINE VariantData *variantGetOrAddElement(VariantData *var,
+                                                     size_t index,
+                                                     MemoryPool *pool) {
+  return var != 0 ? var->getOrAddElement(index, pool) : 0;
+}
+
 template <typename TChar>
-NO_INLINE VariantData *variantGetOrCreate(VariantData *var, TChar *key,
-                                          MemoryPool *pool) {
+NO_INLINE VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
+                                             MemoryPool *pool) {
   return var != 0 ? var->getOrAddMember(adaptString(key), pool) : 0;
 }
 
 template <typename TString>
-NO_INLINE VariantData *variantGetOrCreate(VariantData *var, const TString &key,
-                                          MemoryPool *pool) {
+NO_INLINE VariantData *variantGetOrAddMember(VariantData *var,
+                                             const TString &key,
+                                             MemoryPool *pool) {
   return var != 0 ? var->getOrAddMember(adaptString(key), pool) : 0;
 }
 

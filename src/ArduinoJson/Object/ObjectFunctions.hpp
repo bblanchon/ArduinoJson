@@ -28,14 +28,14 @@ template <typename TAdaptedString>
 inline VariantData *objectGet(const CollectionData *obj, TAdaptedString key) {
   if (!obj)
     return 0;
-  return obj->get(key);
+  return obj->getMember(key);
 }
 
 template <typename TAdaptedString>
 void objectRemove(CollectionData *obj, TAdaptedString key) {
   if (!obj)
     return;
-  obj->remove(key);
+  obj->removeMember(key);
 }
 
 template <typename TAdaptedString>
@@ -49,10 +49,10 @@ inline VariantData *objectGetOrCreate(CollectionData *obj, TAdaptedString key,
     return 0;
 
   // search a matching key
-  VariantData *var = obj->get(key);
+  VariantData *var = obj->getMember(key);
   if (var)
     return var;
 
-  return obj->add(key, pool);
+  return obj->addMember(key, pool);
 }
 }  // namespace ARDUINOJSON_NAMESPACE
