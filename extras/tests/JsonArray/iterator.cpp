@@ -28,9 +28,25 @@ static void run_iterator_test() {
 }
 
 TEST_CASE("JsonArray::begin()/end()") {
-  run_iterator_test<JsonArray>();
+  SECTION("Non null JsonArray") {
+    run_iterator_test<JsonArray>();
+  }
+
+  SECTION("Null JsonArray") {
+    JsonArray array;
+
+    REQUIRE(array.begin() == array.end());
+  }
 }
 
 TEST_CASE("JsonArrayConst::begin()/end()") {
-  run_iterator_test<JsonArrayConst>();
+  SECTION("Non null JsonArrayConst") {
+    run_iterator_test<JsonArrayConst>();
+  }
+
+  SECTION("Null JsonArrayConst") {
+    JsonArrayConst array;
+
+    REQUIRE(array.begin() == array.end());
+  }
 }
