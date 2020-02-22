@@ -23,4 +23,12 @@ TEST_CASE("ElementProxy::add()") {
 
     REQUIRE(doc.as<std::string>() == "[[\"world\"]]");
   }
+
+  SECTION("set(char[])") {
+    char s[] = "world";
+    ep.add(s);
+    strcpy(s, "!!!!!");
+
+    REQUIRE(doc.as<std::string>() == "[[\"world\"]]");
+  }
 }

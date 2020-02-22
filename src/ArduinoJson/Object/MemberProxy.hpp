@@ -107,8 +107,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   }
 
   template <typename TValue>
-  FORCE_INLINE typename enable_if<!is_array<TValue>::value, bool>::type set(
-      const TValue &value) {
+  FORCE_INLINE bool set(const TValue &value) {
     return getOrAddUpstreamMember().set(value);
   }
 
@@ -116,7 +115,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   // set(const char*) const
   // set(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE bool set(const TChar *value) {
+  FORCE_INLINE bool set(TChar *value) {
     return getOrAddUpstreamMember().set(value);
   }
 

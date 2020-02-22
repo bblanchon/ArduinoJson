@@ -8,6 +8,7 @@ HEAD
 * Added example `JsonFilterExample.ino`
 * Changed the array subscript operator to automatically add missing elements
 * Fixed "deprecated-copy" warning on GCC 9 (fixes #1184)
+* Fixed `MemberProxy::set(char[])` not duplicating the string (issue #1191)
 
 v6.14.1 (2020-01-27)
 -------

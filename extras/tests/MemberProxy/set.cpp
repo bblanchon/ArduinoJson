@@ -22,4 +22,12 @@ TEST_CASE("MemberProxy::set()") {
 
     REQUIRE(doc.as<std::string>() == "{\"hello\":\"world\"}");
   }
+
+  SECTION("set(char[])") {  // issue #1191
+    char s[] = "world";
+    mp.set(s);
+    strcpy(s, "!!!!!");
+
+    REQUIRE(doc.as<std::string>() == "{\"hello\":\"world\"}");
+  }
 }
