@@ -384,7 +384,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   // getMember(const String&) const
   template <typename TString>
   FORCE_INLINE VariantConstRef getMember(const TString &key) const {
-    return VariantConstRef(objectGet(variantAsObject(_data), adaptString(key)));
+    return VariantConstRef(
+        objectGetMember(variantAsObject(_data), adaptString(key)));
   }
 
   // getMember(char*) const

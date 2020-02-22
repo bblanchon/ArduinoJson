@@ -129,7 +129,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
  private:
   template <typename TAdaptedString>
   FORCE_INLINE VariantConstRef get_impl(TAdaptedString key) const {
-    return VariantConstRef(objectGet(_data, key));
+    return VariantConstRef(objectGetMember(_data, key));
   }
 };
 
@@ -180,7 +180,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   // getMember(const String&) const
   template <typename TString>
   FORCE_INLINE VariantRef getMember(const TString& key) const {
-    return get_impl(adaptString(key));
+    return VariantRef(_pool, objectGetMember(_data, adaptString(key)));
   }
 
   // getMember(char*) const
@@ -188,14 +188,15 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   // getMember(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE VariantRef getMember(TChar* key) const {
-    return get_impl(adaptString(key));
+    return VariantRef(_pool, objectGetMember(_data, adaptString(key)));
   }
 
   // getOrAddMember(const std::string&) const
   // getOrAddMember(const String&) const
   template <typename TString>
   FORCE_INLINE VariantRef getOrAddMember(const TString& key) const {
-    return getOrCreate_impl(adaptString(key));
+    return VariantRef(_pool,
+                      objectGetOrAddMember(_data, adaptString(key), _pool));
   }
 
   // getOrAddMember(char*) const
@@ -203,7 +204,8 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   // getOrAddMember(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE VariantRef getOrAddMember(TChar* key) const {
-    return getOrCreate_impl(adaptString(key));
+    return VariantRef(_pool,
+                      objectGetOrAddMember(_data, adaptString(key), _pool));
   }
 
   FORCE_INLINE bool operator==(ObjectRef rhs) const {
@@ -232,16 +234,6 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   }
 
  private:
-  template <typename TAdaptedString>
-  FORCE_INLINE VariantRef get_impl(TAdaptedString key) const {
-    return VariantRef(_pool, objectGet(_data, key));
-  }
-
-  template <typename TAdaptedString>
-  FORCE_INLINE VariantRef getOrCreate_impl(TAdaptedString key) const {
-    return VariantRef(_pool, objectGetOrCreate(_data, key, _pool));
-  }
-
   MemoryPool* _pool;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

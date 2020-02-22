@@ -25,7 +25,8 @@ inline bool objectEquals(const CollectionData *lhs, const CollectionData *rhs) {
 }
 
 template <typename TAdaptedString>
-inline VariantData *objectGet(const CollectionData *obj, TAdaptedString key) {
+inline VariantData *objectGetMember(const CollectionData *obj,
+                                    TAdaptedString key) {
   if (!obj)
     return 0;
   return obj->getMember(key);
@@ -39,20 +40,11 @@ void objectRemove(CollectionData *obj, TAdaptedString key) {
 }
 
 template <typename TAdaptedString>
-inline VariantData *objectGetOrCreate(CollectionData *obj, TAdaptedString key,
-                                      MemoryPool *pool) {
+inline VariantData *objectGetOrAddMember(CollectionData *obj,
+                                         TAdaptedString key, MemoryPool *pool) {
   if (!obj)
     return 0;
 
-  // ignore null key
-  if (key.isNull())
-    return 0;
-
-  // search a matching key
-  VariantData *var = obj->getMember(key);
-  if (var)
-    return var;
-
-  return obj->addMember(key, pool);
+  return obj->getOrAddMember(key, pool);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

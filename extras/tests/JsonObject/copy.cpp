@@ -15,8 +15,9 @@ TEST_CASE("JsonObject::set()") {
   SECTION("doesn't copy static string in key or value") {
     obj1["hello"] = "world";
 
-    obj2.set(obj1);
+    bool success = obj2.set(obj1);
 
+    REQUIRE(success == true);
     REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
     REQUIRE(obj2["hello"] == std::string("world"));
   }
@@ -24,8 +25,9 @@ TEST_CASE("JsonObject::set()") {
   SECTION("copy local string value") {
     obj1["hello"] = std::string("world");
 
-    obj2.set(obj1);
+    bool success = obj2.set(obj1);
 
+    REQUIRE(success == true);
     REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
     REQUIRE(obj2["hello"] == std::string("world"));
   }
@@ -33,8 +35,9 @@ TEST_CASE("JsonObject::set()") {
   SECTION("copy local key") {
     obj1[std::string("hello")] = "world";
 
-    obj2.set(obj1);
+    bool success = obj2.set(obj1);
 
+    REQUIRE(success == true);
     REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
     REQUIRE(obj2["hello"] == std::string("world"));
   }
@@ -42,8 +45,9 @@ TEST_CASE("JsonObject::set()") {
   SECTION("copy string from deserializeJson()") {
     deserializeJson(doc1, "{'hello':'world'}");
 
-    obj2.set(obj1);
+    bool success = obj2.set(obj1);
 
+    REQUIRE(success == true);
     REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
     REQUIRE(obj2["hello"] == std::string("world"));
   }
@@ -51,8 +55,9 @@ TEST_CASE("JsonObject::set()") {
   SECTION("copy string from deserializeMsgPack()") {
     deserializeMsgPack(doc1, "\x81\xA5hello\xA5world");
 
-    obj2.set(obj1);
+    bool success = obj2.set(obj1);
 
+    REQUIRE(success == true);
     REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
     REQUIRE(obj2["hello"] == std::string("world"));
   }
@@ -64,5 +69,29 @@ TEST_CASE("JsonObject::set()") {
 
     REQUIRE(doc1.memoryUsage() == doc2.memoryUsage());
     REQUIRE(obj2["hello"] == std::string("world"));
+  }
+
+  SECTION("destination too small to store the key") {
+    StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc3;
+    JsonObject obj3 = doc3.to<JsonObject>();
+
+    obj1[std::string("hello")] = "world";
+
+    bool success = obj3.set(obj1);
+
+    REQUIRE(success == false);
+    REQUIRE(doc3.as<std::string>() == "{}");
+  }
+
+  SECTION("destination too small to store the value") {
+    StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc3;
+    JsonObject obj3 = doc3.to<JsonObject>();
+
+    obj1["hello"] = std::string("world");
+
+    bool success = obj3.set(obj1);
+
+    REQUIRE(success == false);
+    REQUIRE(doc3.as<std::string>() == "{\"hello\":null}");
   }
 }

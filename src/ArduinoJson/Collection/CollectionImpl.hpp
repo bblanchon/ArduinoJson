@@ -34,8 +34,10 @@ template <typename TAdaptedString>
 inline VariantData* CollectionData::addMember(TAdaptedString key,
                                               MemoryPool* pool) {
   VariantSlot* slot = addSlot(pool);
-  if (!slotSetKey(slot, key, pool))
+  if (!slotSetKey(slot, key, pool)) {
+    removeSlot(slot);
     return 0;
+  }
   return slot->data();
 }
 
@@ -132,8 +134,16 @@ inline VariantData* CollectionData::getMember(TAdaptedString key) const {
 template <typename TAdaptedString>
 inline VariantData* CollectionData::getOrAddMember(TAdaptedString key,
                                                    MemoryPool* pool) {
+  // ignore null key
+  if (key.isNull())
+    return 0;
+
+  // search a matching key
   VariantSlot* slot = getSlot(key);
-  return slot ? slot->data() : addMember(key, pool);
+  if (slot)
+    return slot->data();
+
+  return addMember(key, pool);
 }
 
 inline VariantData* CollectionData::getElement(size_t index) const {
