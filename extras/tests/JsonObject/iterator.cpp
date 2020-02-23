@@ -30,6 +30,11 @@ TEST_CASE("JsonObject::begin()/end()") {
     REQUIRE(obj.end()->key().isNull());
     REQUIRE(obj.end()->value().isNull());
   }
+
+  SECTION("null JsonObject") {
+    JsonObject null;
+    REQUIRE(null.begin() == null.end());
+  }
 }
 
 TEST_CASE("JsonObjectConst::begin()/end()") {
@@ -59,5 +64,10 @@ TEST_CASE("JsonObjectConst::begin()/end()") {
   SECTION("Dereferencing end() is safe") {
     REQUIRE(cobj.end()->key().isNull());
     REQUIRE(cobj.end()->value().isNull());
+  }
+
+  SECTION("null JsonObjectConst") {
+    JsonObjectConst null;
+    REQUIRE(null.begin() == null.end());
   }
 }

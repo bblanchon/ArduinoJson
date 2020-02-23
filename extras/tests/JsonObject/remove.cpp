@@ -69,4 +69,9 @@ TEST_CASE("JsonObject::remove()") {
     REQUIRE("{\"a\":0,\"c\":2}" == result);
   }
 #endif
+
+  SECTION("should work on null object") {
+    JsonObject null;
+    null.remove("key");
+  }
 }

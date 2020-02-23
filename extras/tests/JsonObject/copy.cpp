@@ -94,4 +94,22 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(success == false);
     REQUIRE(doc3.as<std::string>() == "{\"hello\":null}");
   }
+
+  SECTION("destination is null") {
+    JsonObject null;
+    obj1["hello"] = "world";
+
+    bool success = null.set(obj1);
+
+    REQUIRE(success == false);
+  }
+
+  SECTION("source is null") {
+    JsonObject null;
+    obj1["hello"] = "world";
+
+    bool success = obj1.set(null);
+
+    REQUIRE(success == false);
+  }
 }
