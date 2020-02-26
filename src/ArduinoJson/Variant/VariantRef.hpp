@@ -153,7 +153,9 @@ class VariantRef : public VariantRefBase<VariantData>,
   }
 
   // set(bool value)
-  FORCE_INLINE bool set(bool value) const {
+  template <typename T>
+  FORCE_INLINE bool set(
+      T value, typename enable_if<is_same<T, bool>::value>::type * = 0) const {
     return variantSetBoolean(_data, value);
   }
 
@@ -236,6 +238,13 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename TVariant>
   typename enable_if<IsVisitable<TVariant>::value, bool>::type set(
       const TVariant &value) const;
+
+  // set(enum value)
+  template <typename T>
+  FORCE_INLINE bool set(
+      T value, typename enable_if<is_enum<T>::value>::type * = 0) const {
+    return variantSetSignedInteger(_data, static_cast<Integer>(value));
+  }
 
   // Get the variant as the specified type.
   //

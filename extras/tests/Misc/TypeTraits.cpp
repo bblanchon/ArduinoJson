@@ -7,6 +7,9 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
+class EmptyClass {};
+enum EmptyEnum {};
+
 TEST_CASE("Polyfills/type_traits") {
   SECTION("is_base_of") {
     REQUIRE_FALSE(
@@ -46,6 +49,30 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK(is_unsigned<char>::value == false);
     CHECK(is_unsigned<float>::value == false);
     CHECK(is_unsigned<double>::value == false);
+  }
+
+  SECTION("is_convertible") {
+    CHECK((is_convertible<short, int>::value == true));
+    CHECK((is_convertible<int, int>::value == true));
+    CHECK((is_convertible<EmptyEnum, int>::value == true));
+    CHECK((is_convertible<int*, int>::value == false));
+    CHECK((is_convertible<EmptyClass, int>::value == false));
+  }
+
+  SECTION("is_class") {
+    CHECK((is_class<int>::value == false));
+    CHECK((is_class<EmptyEnum>::value == false));
+    CHECK((is_class<int*>::value == false));
+    CHECK((is_class<EmptyClass>::value == true));
+  }
+
+  SECTION("is_enum") {
+    CHECK(is_enum<int>::value == false);
+    CHECK(is_enum<EmptyEnum>::value == true);
+    CHECK(is_enum<int*>::value == false);
+    CHECK(is_enum<EmptyClass>::value == false);
+    CHECK(is_enum<bool>::value == false);
+    CHECK(is_enum<double>::value == false);
   }
 
   SECTION("IsVisitable") {

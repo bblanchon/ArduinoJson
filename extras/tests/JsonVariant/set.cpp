@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+enum ErrorCode { ERROR_01 = 1, ERROR_10 = 10 };
+
 TEST_CASE("JsonVariant and strings") {
   DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
@@ -90,6 +92,15 @@ TEST_CASE("JsonVariant and strings") {
     strcpy(str, "world");
 
     REQUIRE(variant == "hello");
+  }
+
+  SECTION("stores an enum as an integer") {
+    ErrorCode code = ERROR_10;
+
+    variant.set(code);
+
+    REQUIRE(variant.is<int>() == true);
+    REQUIRE(variant.as<int>() == 10);
   }
 }
 
