@@ -16,8 +16,8 @@ class SizedRamStringAdapter {
  public:
   SizedRamStringAdapter(const char* str, size_t n) : _str(str), _size(n) {}
 
-  int8_t compare(const char* other) const {
-    return safe_strncmp(_str, other, _size) == 0;
+  int compare(const char* other) const {
+    return safe_strncmp(_str, other, _size);
   }
 
   bool equals(const char* expected) const {

@@ -17,7 +17,7 @@ class ConstRamStringAdapter {
  public:
   ConstRamStringAdapter(const char* str = 0) : _str(str) {}
 
-  int8_t compare(const char* other) const {
+  int compare(const char* other) const {
     return safe_strcmp(_str, other);
   }
 

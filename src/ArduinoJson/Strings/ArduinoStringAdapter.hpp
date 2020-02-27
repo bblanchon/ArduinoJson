@@ -31,7 +31,7 @@ class ArduinoStringAdapter {
     return !_str->c_str();
   }
 
-  int8_t compare(const char* other) const {
+  int compare(const char* other) const {
     // Arduino's String::c_str() can return NULL
     const char* me = _str->c_str();
     return safe_strcmp(me, other);

@@ -15,14 +15,14 @@ class FlashStringAdapter {
  public:
   FlashStringAdapter(const __FlashStringHelper* str) : _str(str) {}
 
-  int8_t compare(const char* other) const {
+  int compare(const char* other) const {
     if (!other && !_str)
       return 0;
     if (!_str)
       return -1;
     if (!other)
       return 1;
-    return int8_t(-strcmp_P(other, reinterpret_cast<const char*>(_str)));
+    return -strcmp_P(other, reinterpret_cast<const char*>(_str));
   }
 
   bool equals(const char* expected) const {

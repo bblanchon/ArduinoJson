@@ -10,6 +10,7 @@ HEAD
 * Fixed "deprecated-copy" warning on GCC 9 (fixes #1184)
 * Fixed `MemberProxy::set(char[])` not duplicating the string (issue #1191)
 * Fixed enums serialized as booleans (issue #1197)
+* Fixed incorrect string comparison on some platforms (issue #1198)
 
 v6.14.1 (2020-01-27)
 -------

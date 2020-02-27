@@ -30,10 +30,10 @@ class StlStringAdapter {
     return false;
   }
 
-  int8_t compare(const char* other) const {
+  int compare(const char* other) const {
     if (!other)
       return 1;
-    return static_cast<int8_t>(_str->compare(other));
+    return _str->compare(other);
   }
 
   bool equals(const char* expected) const {
