@@ -12,6 +12,7 @@ HEAD
 * Fixed enums serialized as booleans (issue #1197)
 * Fixed incorrect string comparison on some platforms (issue #1198)
 * Added move-constructor and move-assignment to `BasicJsonDocument`
+* Added `BasicJsonDocument::garbageCollect()` (issue #1195)
 
 v6.14.1 (2020-01-27)
 -------

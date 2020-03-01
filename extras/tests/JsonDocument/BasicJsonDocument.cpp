@@ -30,22 +30,40 @@ class SpyingAllocator {
   std::ostream& _log;
 };
 
-typedef BasicJsonDocument<SpyingAllocator> MyJsonDocument;
+class ControllableAllocator {
+ public:
+  ControllableAllocator() : _enabled(true) {}
+
+  void* allocate(size_t n) {
+    return _enabled ? malloc(n) : 0;
+  }
+
+  void deallocate(void* p) {
+    free(p);
+  }
+
+  void disable() {
+    _enabled = false;
+  }
+
+ private:
+  bool _enabled;
+};
 
 TEST_CASE("BasicJsonDocument") {
   std::stringstream log;
 
   SECTION("Construct/Destruct") {
-    { MyJsonDocument doc(4096, log); }
+    { BasicJsonDocument<SpyingAllocator> doc(4096, log); }
     REQUIRE(log.str() == "A4096F");
   }
 
   SECTION("Copy construct") {
     {
-      MyJsonDocument doc1(4096, log);
+      BasicJsonDocument<SpyingAllocator> doc1(4096, log);
       doc1.set(std::string("The size of this string is 32!!"));
 
-      MyJsonDocument doc2(doc1);
+      BasicJsonDocument<SpyingAllocator> doc2(doc1);
 
       REQUIRE(doc1.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
@@ -55,10 +73,10 @@ TEST_CASE("BasicJsonDocument") {
 
   SECTION("Move construct") {
     {
-      MyJsonDocument doc1(4096, log);
+      BasicJsonDocument<SpyingAllocator> doc1(4096, log);
       doc1.set(std::string("The size of this string is 32!!"));
 
-      MyJsonDocument doc2(move(doc1));
+      BasicJsonDocument<SpyingAllocator> doc2(move(doc1));
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
 #if ARDUINOJSON_HAS_RVALUE_REFERENCES
@@ -76,9 +94,9 @@ TEST_CASE("BasicJsonDocument") {
 
   SECTION("Copy assign") {
     {
-      MyJsonDocument doc1(4096, log);
+      BasicJsonDocument<SpyingAllocator> doc1(4096, log);
       doc1.set(std::string("The size of this string is 32!!"));
-      MyJsonDocument doc2(8, log);
+      BasicJsonDocument<SpyingAllocator> doc2(8, log);
 
       doc2 = doc1;
 
@@ -90,9 +108,9 @@ TEST_CASE("BasicJsonDocument") {
 
   SECTION("Move assign") {
     {
-      MyJsonDocument doc1(4096, log);
+      BasicJsonDocument<SpyingAllocator> doc1(4096, log);
       doc1.set(std::string("The size of this string is 32!!"));
-      MyJsonDocument doc2(8, log);
+      BasicJsonDocument<SpyingAllocator> doc2(8, log);
 
       doc2 = move(doc1);
 
@@ -108,5 +126,38 @@ TEST_CASE("BasicJsonDocument") {
 #else
     REQUIRE(log.str() == "A4096A8FA32FF");
 #endif
+  }
+
+  SECTION("garbageCollect()") {
+    BasicJsonDocument<ControllableAllocator> doc(4096);
+
+    SECTION("when allocation succeeds") {
+      deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");
+      REQUIRE(doc.capacity() == 4096);
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2) + 16);
+      doc.remove("blanket");
+
+      bool result = doc.garbageCollect();
+
+      REQUIRE(result == true);
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + 8);
+      REQUIRE(doc.capacity() == 4096);
+      REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
+    }
+
+    SECTION("when allocation fails") {
+      deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");
+      REQUIRE(doc.capacity() == 4096);
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2) + 16);
+      doc.remove("blanket");
+      doc.allocator().disable();
+
+      bool result = doc.garbageCollect();
+
+      REQUIRE(result == false);
+      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2) + 16);
+      REQUIRE(doc.capacity() == 4096);
+      REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
+    }
   }
 }

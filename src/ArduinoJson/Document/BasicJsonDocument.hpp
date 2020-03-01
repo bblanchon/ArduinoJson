@@ -12,10 +12,10 @@ namespace ARDUINOJSON_NAMESPACE {
 // (we need to store the allocator before constructing JsonDocument)
 template <typename TAllocator>
 class AllocatorOwner {
- protected:
+ public:
   AllocatorOwner() {}
   AllocatorOwner(const AllocatorOwner& src) : _allocator(src._allocator) {}
-  AllocatorOwner(TAllocator allocator) : _allocator(allocator) {}
+  AllocatorOwner(TAllocator a) : _allocator(a) {}
 
   void* allocate(size_t size) {
     return _allocator.allocate(size);
@@ -29,6 +29,10 @@ class AllocatorOwner {
     return _allocator.reallocate(ptr, new_size);
   }
 
+  TAllocator& allocator() {
+    return _allocator;
+  }
+
  private:
   TAllocator _allocator;
 };
@@ -36,8 +40,8 @@ class AllocatorOwner {
 template <typename TAllocator>
 class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
  public:
-  explicit BasicJsonDocument(size_t capa, TAllocator allocator = TAllocator())
-      : AllocatorOwner<TAllocator>(allocator), JsonDocument(allocPool(capa)) {}
+  explicit BasicJsonDocument(size_t capa, TAllocator alloc = TAllocator())
+      : AllocatorOwner<TAllocator>(alloc), JsonDocument(allocPool(capa)) {}
 
   BasicJsonDocument(const BasicJsonDocument& src)
       : AllocatorOwner<TAllocator>(src),
@@ -78,11 +82,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
 #if ARDUINOJSON_HAS_RVALUE_REFERENCES
   BasicJsonDocument& operator=(BasicJsonDocument&& src) {
-    freePool();
-    _data = src._data;
-    _pool = src._pool;
-    src._data.setNull();
-    src._pool = MemoryPool(0, 0);
+    moveAssignFrom(src);
     return *this;
   }
 #endif
@@ -109,6 +109,18 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     _data.movePointers(ptr_offset, ptr_offset - bytes_reclaimed);
   }
 
+  bool garbageCollect() {
+    // make a temporary clone and move assign
+    BasicJsonDocument<TAllocator> tmp(capacity(), allocator());
+    if (!tmp.capacity())
+      return false;
+    tmp.set(*this);
+    moveAssignFrom(tmp);
+    return true;
+  }
+
+  using AllocatorOwner<TAllocator>::allocator;
+
  private:
   MemoryPool allocPool(size_t requiredSize) {
     size_t capa = addPadding(requiredSize);
@@ -124,6 +136,14 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   void freePool() {
     this->deallocate(memoryPool().buffer());
+  }
+
+  void moveAssignFrom(BasicJsonDocument& src) {
+    freePool();
+    _data = src._data;
+    _pool = src._pool;
+    src._data.setNull();
+    src._pool = MemoryPool(0, 0);
   }
 };
 
