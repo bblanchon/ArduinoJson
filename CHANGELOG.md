@@ -11,6 +11,7 @@ HEAD
 * Fixed `MemberProxy::set(char[])` not duplicating the string (issue #1191)
 * Fixed enums serialized as booleans (issue #1197)
 * Fixed incorrect string comparison on some platforms (issue #1198)
+* Added move-constructor and move-assignment to `BasicJsonDocument`
 
 v6.14.1 (2020-01-27)
 -------

@@ -52,6 +52,14 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     set(src);
   }
 
+#if ARDUINOJSON_HAS_RVALUE_REFERENCES
+  BasicJsonDocument(BasicJsonDocument&& src)
+      : AllocatorOwner<TAllocator>(src), JsonDocument(src) {
+    src._data.setNull();
+    src._pool = MemoryPool(0, 0);
+  }
+#endif
+
   // disambiguate
   BasicJsonDocument(VariantRef src)
       : JsonDocument(allocPool(src.memoryUsage())) {
@@ -67,6 +75,17 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     set(src);
     return *this;
   }
+
+#if ARDUINOJSON_HAS_RVALUE_REFERENCES
+  BasicJsonDocument& operator=(BasicJsonDocument&& src) {
+    freePool();
+    _data = src._data;
+    _pool = src._pool;
+    src._data.setNull();
+    src._pool = MemoryPool(0, 0);
+    return *this;
+  }
+#endif
 
   template <typename T>
   BasicJsonDocument& operator=(const T& src) {
