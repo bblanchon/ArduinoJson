@@ -120,7 +120,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   bool garbageCollect() {
     // make a temporary clone and move assign
-    BasicJsonDocument<TAllocator> tmp(*this);
+    BasicJsonDocument tmp(*this);
     if (!tmp.capacity())
       return false;
     tmp.set(*this);

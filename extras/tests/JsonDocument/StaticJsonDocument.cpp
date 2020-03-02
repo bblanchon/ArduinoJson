@@ -209,4 +209,16 @@ TEST_CASE("StaticJsonDocument") {
       REQUIRE_JSON(doc2, "42");
     }
   }
+
+  SECTION("garbageCollect()") {
+    StaticJsonDocument<256> doc;
+    doc[std::string("example")] = std::string("example");
+    doc.remove("example");
+    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + 16);
+
+    doc.garbageCollect();
+
+    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
+    REQUIRE_JSON(doc, "{}");
+  }
 }

@@ -44,6 +44,11 @@ class StaticJsonDocument : public JsonDocument {
     return *this;
   }
 
+  void garbageCollect() {
+    StaticJsonDocument tmp(*this);
+    set(tmp);
+  }
+
  private:
   char _buffer[_capacity];
 };

@@ -13,6 +13,7 @@ HEAD
 * Fixed incorrect string comparison on some platforms (issue #1198)
 * Added move-constructor and move-assignment to `BasicJsonDocument`
 * Added `BasicJsonDocument::garbageCollect()` (issue #1195)
+* Added `StaticJsonDocument::garbageCollect()`
 * Changed copy-constructor of `BasicJsonDocument` to preserve the capacity of the source.
 
 > ### BREAKING CHANGES
