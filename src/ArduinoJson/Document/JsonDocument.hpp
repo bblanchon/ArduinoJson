@@ -293,6 +293,10 @@ class JsonDocument : public Visitable {
   }
 
  protected:
+  JsonDocument() : _pool(0, 0) {
+    _data.setNull();
+  }
+
   JsonDocument(MemoryPool pool) : _pool(pool) {
     _data.setNull();
   }

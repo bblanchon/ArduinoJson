@@ -13,6 +13,29 @@ HEAD
 * Fixed incorrect string comparison on some platforms (issue #1198)
 * Added move-constructor and move-assignment to `BasicJsonDocument`
 * Added `BasicJsonDocument::garbageCollect()` (issue #1195)
+* Changed copy-constructor of `BasicJsonDocument` to preserve the capacity of the source.
+
+> ### BREAKING CHANGES
+> 
+> #### Copy-constructor of `BasicJsonDocument`
+>
+> In previous versions, the copy constructor of `BasicJsonDocument` looked at the source's `memoryUsage()` to choose its capacity.
+> Now, the copy constructor of `BasicJsonDocument` uses the same capacity as the source.
+>
+> Example:
+>
+> ```c++
+> DynamicJsonDocument doc1(64);
+> doc1.set(String("example"));
+>
+> DynamicJsonDocument doc2 = doc1;
+> Serial.print(doc2.capacity());  // 8 with ArduinoJson 6.14
+                                  // 64 with ArduinoJson 6.15
+> ```
+>
+> I made this change to get consistent results between copy-constructor and move-constructor, and whether RVO applies or not.
+>
+> If you use the copy-constructor to optimize your documents, you can use `garbageCollect()` or `shrinkToFit()` instead.
 
 v6.14.1 (2020-01-27)
 -------

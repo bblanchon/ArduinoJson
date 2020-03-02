@@ -22,7 +22,8 @@ class AllocatorOwner {
   }
 
   void deallocate(void* ptr) {
-    _allocator.deallocate(ptr);
+    if (ptr)
+      _allocator.deallocate(ptr);
   }
 
   void* reallocate(void* ptr, size_t new_size) {
@@ -43,26 +44,35 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   explicit BasicJsonDocument(size_t capa, TAllocator alloc = TAllocator())
       : AllocatorOwner<TAllocator>(alloc), JsonDocument(allocPool(capa)) {}
 
+  // Copy-constructor
   BasicJsonDocument(const BasicJsonDocument& src)
-      : AllocatorOwner<TAllocator>(src),
-        JsonDocument(allocPool(src.memoryUsage())) {
-    set(src);
+      : AllocatorOwner<TAllocator>(src), JsonDocument() {
+    copyAssignFrom(src);
   }
 
+  // Move-constructor
+#if ARDUINOJSON_HAS_RVALUE_REFERENCES
+  BasicJsonDocument(BasicJsonDocument&& src) : AllocatorOwner<TAllocator>(src) {
+    moveAssignFrom(src);
+  }
+#endif
+
+  BasicJsonDocument(const JsonDocument& src) {
+    copyAssignFrom(src);
+  }
+
+  // Construct from variant, array, or object
   template <typename T>
-  BasicJsonDocument(const T& src,
-                    typename enable_if<IsVisitable<T>::value>::type* = 0)
+  BasicJsonDocument(
+      const T& src,
+      typename enable_if<
+          is_same<T, VariantRef>::value || is_same<T, VariantConstRef>::value ||
+          is_same<T, ArrayRef>::value || is_same<T, ArrayConstRef>::value ||
+          is_same<T, ObjectRef>::value ||
+          is_same<T, ObjectConstRef>::value>::type* = 0)
       : JsonDocument(allocPool(src.memoryUsage())) {
     set(src);
   }
-
-#if ARDUINOJSON_HAS_RVALUE_REFERENCES
-  BasicJsonDocument(BasicJsonDocument&& src)
-      : AllocatorOwner<TAllocator>(src), JsonDocument(src) {
-    src._data.setNull();
-    src._pool = MemoryPool(0, 0);
-  }
-#endif
 
   // disambiguate
   BasicJsonDocument(VariantRef src)
@@ -75,8 +85,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   }
 
   BasicJsonDocument& operator=(const BasicJsonDocument& src) {
-    reallocPoolIfTooSmall(src.memoryUsage());
-    set(src);
+    copyAssignFrom(src);
     return *this;
   }
 
@@ -111,7 +120,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   bool garbageCollect() {
     // make a temporary clone and move assign
-    BasicJsonDocument<TAllocator> tmp(capacity(), allocator());
+    BasicJsonDocument<TAllocator> tmp(*this);
     if (!tmp.capacity())
       return false;
     tmp.set(*this);
@@ -136,6 +145,11 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   void freePool() {
     this->deallocate(memoryPool().buffer());
+  }
+
+  void copyAssignFrom(const JsonDocument& src) {
+    reallocPoolIfTooSmall(src.capacity());
+    set(src);
   }
 
   void moveAssignFrom(BasicJsonDocument& src) {

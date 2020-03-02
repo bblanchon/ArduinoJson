@@ -20,7 +20,7 @@ class SpyingAllocator {
     return malloc(n);
   }
   void deallocate(void* p) {
-    _log << (p ? "F" : "f");
+    _log << "F";
     free(p);
   }
 
@@ -67,10 +67,12 @@ TEST_CASE("BasicJsonDocument") {
 
       REQUIRE(doc1.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
+      REQUIRE(doc2.capacity() == 4096);
     }
-    REQUIRE(log.str() == "A4096A32FF");
+    REQUIRE(log.str() == "A4096A4096FF");
   }
 
+#if ARDUINOJSON_HAS_RVALUE_REFERENCES
   SECTION("Move construct") {
     {
       BasicJsonDocument<SpyingAllocator> doc1(4096, log);
@@ -79,18 +81,13 @@ TEST_CASE("BasicJsonDocument") {
       BasicJsonDocument<SpyingAllocator> doc2(move(doc1));
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
-#if ARDUINOJSON_HAS_RVALUE_REFERENCES
       REQUIRE(doc1.as<std::string>() == "null");
       REQUIRE(doc1.capacity() == 0);
       REQUIRE(doc2.capacity() == 4096);
-#endif
     }
-#if ARDUINOJSON_HAS_RVALUE_REFERENCES
-    REQUIRE(log.str() == "A4096Ff");
-#else
-    REQUIRE(log.str() == "A4096A32FF");
-#endif
+    REQUIRE(log.str() == "A4096F");
   }
+#endif
 
   SECTION("Copy assign") {
     {
@@ -102,10 +99,12 @@ TEST_CASE("BasicJsonDocument") {
 
       REQUIRE(doc1.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
+      REQUIRE(doc2.capacity() == 4096);
     }
-    REQUIRE(log.str() == "A4096A8FA32FF");
+    REQUIRE(log.str() == "A4096A8FA4096FF");
   }
 
+#if ARDUINOJSON_HAS_RVALUE_REFERENCES
   SECTION("Move assign") {
     {
       BasicJsonDocument<SpyingAllocator> doc1(4096, log);
@@ -115,18 +114,13 @@ TEST_CASE("BasicJsonDocument") {
       doc2 = move(doc1);
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
-#if ARDUINOJSON_HAS_RVALUE_REFERENCES
       REQUIRE(doc1.as<std::string>() == "null");
       REQUIRE(doc1.capacity() == 0);
       REQUIRE(doc2.capacity() == 4096);
-#endif
     }
-#if ARDUINOJSON_HAS_RVALUE_REFERENCES
-    REQUIRE(log.str() == "A4096A8FFf");
-#else
-    REQUIRE(log.str() == "A4096A8FA32FF");
-#endif
+    REQUIRE(log.str() == "A4096A8FF");
   }
+#endif
 
   SECTION("garbageCollect()") {
     BasicJsonDocument<ControllableAllocator> doc(4096);
