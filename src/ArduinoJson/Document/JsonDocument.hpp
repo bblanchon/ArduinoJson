@@ -319,6 +319,10 @@ class JsonDocument : public Visitable {
 
   MemoryPool _pool;
   VariantData _data;
+
+ private:
+  JsonDocument(const JsonDocument&);
+  JsonDocument& operator=(const JsonDocument&);
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

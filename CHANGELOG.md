@@ -15,6 +15,7 @@ HEAD
 * Added `BasicJsonDocument::garbageCollect()` (issue #1195)
 * Added `StaticJsonDocument::garbageCollect()`
 * Changed copy-constructor of `BasicJsonDocument` to preserve the capacity of the source.
+* Removed copy-constructor of `JsonDocument` (issue #1189)
 
 > ### BREAKING CHANGES
 > 
@@ -37,6 +38,23 @@ HEAD
 > I made this change to get consistent results between copy-constructor and move-constructor, and whether RVO applies or not.
 >
 > If you use the copy-constructor to optimize your documents, you can use `garbageCollect()` or `shrinkToFit()` instead.
+>
+> #### Copy-constructor of `JsonDocument`
+>
+> In previous versions, it was possible to create a function that take a `JsonDocument` by value.
+>
+> ```c++
+> void myFunction(JsonDocument doc) {}
+> ```
+>
+> This function gives the wrong clues because it doesn't receive a copy of the `JsonDocument`, only a sliced version.
+> It worked because the copy constructor copied the internal pointers, but it was an accident.
+>
+> From now, if you need to pass a `JsonDocument` to a function, you must use a reference:
+>
+> ```c++
+> void myFunction(JsonDocument& doc) {}
+> ```
 
 v6.14.1 (2020-01-27)
 -------
