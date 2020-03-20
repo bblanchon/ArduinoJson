@@ -4,7 +4,9 @@
 
 #pragma once
 
-#ifdef ARDUINOJSON_DEBUG
+#include <ArduinoJson/Configuration.hpp>
+
+#if ARDUINOJSON_DEBUG
 #include <assert.h>
 #define ARDUINOJSON_ASSERT(X) assert(X)
 #else

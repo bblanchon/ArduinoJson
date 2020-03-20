@@ -7,7 +7,7 @@ project(ArduinoJson)
 
 enable_testing()
 
-add_definitions(-DARDUINOJSON_DEBUG)
+add_definitions(-DARDUINOJSON_DEBUG=1)
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_compile_options(-g -O0)
 endif()

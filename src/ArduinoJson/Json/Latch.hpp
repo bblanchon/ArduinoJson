@@ -12,7 +12,7 @@ template <typename TReader>
 class Latch {
  public:
   Latch(TReader reader) : _reader(reader), _loaded(false) {
-#ifdef ARDUINOJSON_DEBUG
+#if ARDUINOJSON_DEBUG
     _ended = false;
 #endif
   }
@@ -36,7 +36,7 @@ class Latch {
   void load() {
     ARDUINOJSON_ASSERT(!_ended);
     int c = _reader.read();
-#ifdef ARDUINOJSON_DEBUG
+#if ARDUINOJSON_DEBUG
     if (c <= 0)
       _ended = true;
 #endif
@@ -47,7 +47,7 @@ class Latch {
   TReader _reader;
   char _current;
   bool _loaded;
-#ifdef ARDUINOJSON_DEBUG
+#if ARDUINOJSON_DEBUG
   bool _ended;
 #endif
 };

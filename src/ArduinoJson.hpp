@@ -4,15 +4,15 @@
 
 #pragma once
 
-#ifndef ARDUINOJSON_DEBUG
+#include "ArduinoJson/Configuration.hpp"
+
+#if ARDUINOJSON_DEBUG
 #ifdef __clang__
 #pragma clang system_header
 #elif defined __GNUC__
 #pragma GCC system_header
 #endif
 #endif
-
-#include "ArduinoJson/Namespace.hpp"
 
 #include "ArduinoJson/Array/ArrayRef.hpp"
 #include "ArduinoJson/Object/ObjectRef.hpp"
