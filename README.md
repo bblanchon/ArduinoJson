@@ -13,29 +13,30 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
 
 ## Features
 
-* [JSON deserialization](https://arduinojson.org/v6/api/json/deserializejson/)
-    * [Optionally decodes UTF-16 escape sequences to UTF-8](https://arduinojson.org/v6/api/config/decode_unicode/)
-    * [Optionally stores links to the input buffer (zero-copy)](https://arduinojson.org/v6/api/json/deserializejson/)
-    * [Optionally supports comments in the input](https://arduinojson.org/v6/api/config/enable_comments/)
-    * Optionally filters the input to keep only desired values
+* [JSON deserialization](https://arduinojson.org/v6/api/json/deserializejson/?utm_source=github&utm_medium=readme)
+    * [Optionally decodes UTF-16 escape sequences to UTF-8](https://arduinojson.org/v6/api/config/decode_unicode/?utm_source=github&utm_medium=readme)
+    * [Optionally stores links to the input buffer (zero-copy)](https://arduinojson.org/v6/api/json/deserializejson/?utm_source=github&utm_medium=readme)
+    * [Optionally supports comments in the input](https://arduinojson.org/v6/api/config/enable_comments/?utm_source=github&utm_medium=readme)
+    * [Optionally filters the input to keep only desired values](https://arduinojson.org/v6/api/json/deserializejson/#filtering?utm_source=github&utm_medium=readme)
     * Supports single quotes as a string delimiter
     * Compatible with NDJSON and JSON Lines
-* [JSON serialization](https://arduinojson.org/v6/api/json/serializejson/)
-    * [Can write to a buffer or a stream](https://arduinojson.org/v6/api/json/serializejson/)
-    * [Optionally indents the document (prettified JSON)](https://arduinojson.org/v6/api/json/serializejsonpretty/)
-* [MessagePack serialization](https://arduinojson.org/v6/api/msgpack/serializemsgpack/)
-* [MessagePack deserialization](https://arduinojson.org/v6/api/msgpack/deserializemsgpack/)
+* [JSON serialization](https://arduinojson.org/v6/api/json/serializejson/?utm_source=github&utm_medium=readme)
+    * [Can write to a buffer or a stream](https://arduinojson.org/v6/api/json/serializejson/?utm_source=github&utm_medium=readme)
+    * [Optionally indents the document (prettified JSON)](https://arduinojson.org/v6/api/json/serializejsonpretty/?utm_source=github&utm_medium=readme)
+* [MessagePack serialization](https://arduinojson.org/v6/api/msgpack/serializemsgpack/?utm_source=github&utm_medium=readme)
+* [MessagePack deserialization](https://arduinojson.org/v6/api/msgpack/deserializemsgpack/?utm_source=github&utm_medium=readme)
 * Efficient
-    * [Twice smaller than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/)
-    * [Almost 10% faster than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/)
-    * [Consumes roughly 10% less RAM than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/)
-    * [Fixed memory allocation, no heap fragmentation](https://arduinojson.org/v6/api/jsondocument/)
-    * [Optionally works without heap memory (zero malloc)](https://arduinojson.org/v6/api/staticjsondocument/)
+    * [Twice smaller than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/?utm_source=github&utm_medium=readme)
+    * [Almost 10% faster than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/?utm_source=github&utm_medium=readme)
+    * [Consumes roughly 10% less RAM than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/?utm_source=github&utm_medium=readme)
+    * [Fixed memory allocation, no heap fragmentation](https://arduinojson.org/v6/api/jsondocument/?utm_source=github&utm_medium=readme)
+    * [Optionally works without heap memory (zero malloc)](https://arduinojson.org/v6/api/staticjsondocument/?utm_source=github&utm_medium=readme)
 * Versatile
-    * [Supports custom allocators (to use external RAM chip, for example)](https://arduinojson.org/v6/how-to/use-external-ram-on-esp32/)
-    * Supports [Arduino's `String`](https://arduinojson.org/v6/api/config/enable_arduino_string/) and [STL's `std::string`](https://arduinojson.org/v6/api/config/enable_std_string/)
-    * Supports Arduino's `Stream` and [STL's `std::istream`/`std::ostream`](https://arduinojson.org/v6/api/config/enable_std_stream/)
-    * [Supports Flash strings](https://arduinojson.org/v6/api/config/enable_progmem/)
+    * [Supports custom allocators (to use external RAM chip, for example)](https://arduinojson.org/v6/how-to/use-external-ram-on-esp32/?utm_source=github&utm_medium=readme)
+    * Supports [Arduino's `String`](https://arduinojson.org/v6/api/config/enable_arduino_string/) and [STL's `std::string`](https://arduinojson.org/v6/api/config/enable_std_string/?utm_source=github&utm_medium=readme)
+    * Supports Arduino's `Stream` and [STL's `std::istream`/`std::ostream`](https://arduinojson.org/v6/api/config/enable_std_stream/?utm_source=github&utm_medium=readme)
+    * [Supports Flash strings](https://arduinojson.org/v6/api/config/enable_progmem/?utm_source=github&utm_medium=readme)
+    * Supports [custom readers](https://arduinojson.org/v6/api/json/deserializejson/#custom-reader) and [custom writers](https://arduinojson.org/v6/api/json/serializejson/#custom-writer?utm_source=github&utm_medium=readme)
 * Portable
     * Usable on any C++ project (not limited to Arduino)
     * Compatible with C++98
@@ -66,8 +67,9 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [Thread-safe](https://en.wikipedia.org/wiki/Thread_safety)
     * Self-contained (no external dependency)
     * `const` friendly
-    * `for` friendly
+    * [`for` friendly](https://arduinojson.org/v6/api/jsonobject/begin_end/?utm_source=github&utm_medium=readme)
     * [TMP friendly](https://en.wikipedia.org/wiki/Template_metaprogramming)
+    * Handles [integer overflows](https://arduinojson.org/v6/api/jsonvariant/as/#integer-overflows?utm_source=github&utm_medium=readme)
 * Well tested
     * [Unit test coverage close to 100%](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)
     * Continuously tested on
@@ -76,11 +78,11 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
         * [Clang 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 6.0, 7, 8](https://travis-ci.org/bblanchon/ArduinoJson)
     * [Continuously fuzzed with Google OSS Fuzz](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
 * Well documented
-    * [Tutorials](https://arduinojson.org/v6/doc/deserialization/)
-    * [Examples](https://arduinojson.org/v6/example/)
-    * [How-tos](https://arduinojson.org/v6/example/)
-    * [FAQ](https://arduinojson.org/v6/faq/)
-    * [Book](https://arduinojson.org/book/)
+    * [Tutorials](https://arduinojson.org/v6/doc/deserialization/?utm_source=github&utm_medium=readme)
+    * [Examples](https://arduinojson.org/v6/example/?utm_source=github&utm_medium=readme)
+    * [How-tos](https://arduinojson.org/v6/example/?utm_source=github&utm_medium=readme)
+    * [FAQ](https://arduinojson.org/v6/faq/?utm_source=github&utm_medium=readme)
+    * [Book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme)
 * Vibrant user community
     * Most popular of all Arduino libraries on [GitHub](https://github.com/search?o=desc&q=arduino+library&s=stars&type=Repositories) and [PlatformIO](https://platformio.org/lib/search)
     * [Used in hundreds of projects](https://www.hackster.io/search?i=projects&q=arduinojson)
@@ -132,4 +134,4 @@ See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/?utm_
 Do you like this library? Please [star this project on GitHub](https://github.com/bblanchon/ArduinoJson/stargazers)!
 
 What? You don't like it but you *love* it?
-We don't take donations anymore, but [we sell a book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme), so you can help and learn at the same time!
+We don't take donations anymore, but [we sell a book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme), so you can help and learn at the same time?utm_source=github&utm_medium=readme!
