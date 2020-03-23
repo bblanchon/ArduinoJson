@@ -32,7 +32,7 @@ v6.15.0 (2020-03-22)
 >
 > DynamicJsonDocument doc2 = doc1;
 > Serial.print(doc2.capacity());  // 8 with ArduinoJson 6.14
-                                  // 64 with ArduinoJson 6.15
+>                                 // 64 with ArduinoJson 6.15
 > ```
 >
 > I made this change to get consistent results between copy-constructor and move-constructor, and whether RVO applies or not.
