@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed "maybe-uninitialized" warning (issue #1217)
+
 v6.15.0 (2020-03-22)
 -------
 

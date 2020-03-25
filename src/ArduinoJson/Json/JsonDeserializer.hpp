@@ -22,6 +22,15 @@ class JsonDeserializer {
   typedef typename remove_reference<TStringStorage>::type::StringBuilder
       StringBuilder;
 
+  struct StringOrError {
+    DeserializationError err;
+    const char *value;
+
+    StringOrError(DeserializationError e) : err(e) {}
+    StringOrError(DeserializationError::Code c) : err(c) {}
+    StringOrError(const char *s) : err(DeserializationError::Ok), value(s) {}
+  };
+
  public:
   JsonDeserializer(MemoryPool &pool, TReader reader,
                    TStringStorage stringStorage)
@@ -216,8 +225,8 @@ class JsonDeserializer {
     // Read each key value pair
     for (;;) {
       // Parse key
-      const char *key;
-      err = parseKey(key);
+      StringOrError key = parseKey();
+      err = key.err;  // <- this trick saves 62 bytes on AVR
       if (err)
         return err;
 
@@ -228,17 +237,17 @@ class JsonDeserializer {
       if (!eat(':'))
         return DeserializationError::InvalidInput;
 
-      TFilter memberFilter = filter[key];
+      TFilter memberFilter = filter[key.value];
 
       if (memberFilter.allow()) {
-        VariantData *variant = object.getMember(adaptString(key));
+        VariantData *variant = object.getMember(adaptString(key.value));
         if (!variant) {
           // Allocate slot in object
           VariantSlot *slot = object.addSlot(_pool);
           if (!slot)
             return DeserializationError::NoMemory;
 
-          slot->setOwnedKey(make_not_null(key));
+          slot->setOwnedKey(make_not_null(key.value));
 
           variant = slot->data();
         }
@@ -248,7 +257,7 @@ class JsonDeserializer {
         if (err)
           return err;
       } else {
-        _stringStorage.reclaim(key);
+        _stringStorage.reclaim(key.value);
         err = skipVariant(nestingLimit.decrement());
         if (err)
           return err;
@@ -323,24 +332,23 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError parseKey(const char *&key) {
+  StringOrError parseKey() {
     if (isQuote(current())) {
-      return parseQuotedString(key);
+      return parseQuotedString();
     } else {
-      return parseNonQuotedString(key);
+      return parseNonQuotedString();
     }
   }
 
   DeserializationError parseStringValue(VariantData &variant) {
-    const char *value;
-    DeserializationError err = parseQuotedString(value);
-    if (err)
-      return err;
-    variant.setOwnedString(make_not_null(value));
+    StringOrError result = parseQuotedString();
+    if (result.err)
+      return result.err;
+    variant.setOwnedString(make_not_null(result.value));
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseQuotedString(const char *&result) {
+  StringOrError parseQuotedString() {
     StringBuilder builder = _stringStorage.startString();
 #if ARDUINOJSON_DECODE_UNICODE
     Utf16::Codepoint codepoint;
@@ -385,13 +393,13 @@ class JsonDeserializer {
       builder.append(c);
     }
 
-    result = builder.complete();
+    const char *result = builder.complete();
     if (!result)
       return DeserializationError::NoMemory;
-    return DeserializationError::Ok;
+    return result;
   }
 
-  DeserializationError parseNonQuotedString(const char *&result) {
+  StringOrError parseNonQuotedString() {
     StringBuilder builder = _stringStorage.startString();
 
     char c = current();
@@ -407,10 +415,10 @@ class JsonDeserializer {
       return DeserializationError::InvalidInput;
     }
 
-    result = builder.complete();
+    const char *result = builder.complete();
     if (!result)
       return DeserializationError::NoMemory;
-    return DeserializationError::Ok;
+    return result;
   }
 
   DeserializationError skipString() {

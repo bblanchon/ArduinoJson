@@ -8,6 +8,16 @@
 
 #include <stdint.h>  // uint16_t, uint32_t
 
+// The high surrogate may be uninitialized if the pair is invalid,
+// we choose to ignore the problem to reduce the size of the code
+// Garbage in => Garbage out
+#if defined(__GNUC__)
+#if __GNUC__ >= 7
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+#endif
+
 namespace ARDUINOJSON_NAMESPACE {
 
 namespace Utf16 {
@@ -47,3 +57,9 @@ class Codepoint {
 };
 }  // namespace Utf16
 }  // namespace ARDUINOJSON_NAMESPACE
+
+#if defined(__GNUC__)
+#if __GNUC__ >= 8
+#pragma GCC diagnostic pop
+#endif
+#endif

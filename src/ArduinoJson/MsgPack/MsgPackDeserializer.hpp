@@ -233,7 +233,7 @@ class MsgPackDeserializer {
   }
 
   DeserializationError readString(VariantData &variant, size_t n) {
-    const char *s;
+    const char *s = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
     DeserializationError err = readString(s, n);
     if (!err)
       variant.setOwnedString(make_not_null(s));
@@ -300,7 +300,7 @@ class MsgPackDeserializer {
       if (!slot)
         return DeserializationError::NoMemory;
 
-      const char *key;
+      const char *key = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
       DeserializationError err = parseKey(key);
       if (err)
         return err;

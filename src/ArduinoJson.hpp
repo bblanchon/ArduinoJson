@@ -6,7 +6,7 @@
 
 #include "ArduinoJson/Configuration.hpp"
 
-#if ARDUINOJSON_DEBUG
+#if !ARDUINOJSON_DEBUG
 #ifdef __clang__
 #pragma clang system_header
 #elif defined __GNUC__
