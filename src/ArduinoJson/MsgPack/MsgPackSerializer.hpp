@@ -125,7 +125,13 @@ class MsgPackSerializer {
     } else if (value <= 0xFFFF) {
       writeByte(0xCD);
       writeInteger(uint16_t(value));
-    } else if (value <= 0xFFFFFFFF) {
+    }
+#if ARDUINOJSON_USE_LONG_LONG
+    else if (value <= 0xFFFFFFFF)
+#else
+    else
+#endif
+    {
       writeByte(0xCE);
       writeInteger(uint32_t(value));
     }

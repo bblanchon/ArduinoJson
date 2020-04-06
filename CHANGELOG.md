@@ -6,6 +6,7 @@ HEAD
 
 * Fixed "maybe-uninitialized" warning (issue #1217)
 * Fixed "statement is unreachable" warning on IAR (issue #1233)
+* Fixed "pointless integer comparison" warning on IAR (issue #1233)
 
 v6.15.0 (2020-03-22)
 -------
