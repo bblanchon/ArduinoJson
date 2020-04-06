@@ -24,7 +24,6 @@ inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool,
   } else {
     return slotSetKey(var, key, pool, storage_policy::store_by_copy());
   }
-  return true;
 }
 
 template <typename TAdaptedString>
