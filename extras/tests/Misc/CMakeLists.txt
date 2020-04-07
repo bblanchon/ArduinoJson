@@ -15,7 +15,11 @@ add_executable(MiscTests
 	version.cpp
 )
 
-target_link_libraries(MiscTests catch)
+target_link_libraries(MiscTests
+	ArduinoJson
+	catch
+)
+
 set_target_properties(MiscTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(Misc MiscTests)

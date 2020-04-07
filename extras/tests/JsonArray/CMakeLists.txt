@@ -19,5 +19,9 @@ add_executable(JsonArrayTests
 	undefined.cpp
 )
 
-target_link_libraries(JsonArrayTests catch)
+target_link_libraries(JsonArrayTests
+	ArduinoJson
+	catch
+)
+
 add_test(JsonArray JsonArrayTests)

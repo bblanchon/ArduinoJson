@@ -5,6 +5,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(ArduinoJson)
 
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
+
 enable_testing()
 
 add_definitions(-DARDUINOJSON_DEBUG=1)
@@ -37,6 +39,6 @@ if(${COVERAGE})
 	set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
 endif()
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/src)
+add_subdirectory(src)
 add_subdirectory(extras/tests)
 add_subdirectory(extras/fuzzing)

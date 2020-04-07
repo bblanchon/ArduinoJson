@@ -7,7 +7,11 @@ add_executable(TextFormatterTests
 	writeString.cpp
 )
 
-target_link_libraries(TextFormatterTests catch)
+target_link_libraries(TextFormatterTests
+	ArduinoJson
+	catch
+)
+
 set_target_properties(TextFormatterTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(TextFormatter TextFormatterTests)

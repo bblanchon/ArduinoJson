@@ -10,5 +10,9 @@ add_executable(MemoryPoolTests
 	StringBuilder.cpp
 )
 
-target_link_libraries(MemoryPoolTests catch)
+target_link_libraries(MemoryPoolTests
+	ArduinoJson
+	catch
+)
+
 add_test(MemoryPool MemoryPoolTests)

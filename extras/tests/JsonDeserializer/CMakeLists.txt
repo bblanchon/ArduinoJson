@@ -18,7 +18,11 @@ add_executable(JsonDeserializerTests
 	string.cpp
 )
 
-target_link_libraries(JsonDeserializerTests catch)
+target_link_libraries(JsonDeserializerTests
+	ArduinoJson
+	catch
+)
+
 set_target_properties(JsonDeserializerTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(JsonDeserializer JsonDeserializerTests)

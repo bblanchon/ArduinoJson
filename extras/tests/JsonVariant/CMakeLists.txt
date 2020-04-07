@@ -24,5 +24,9 @@ add_executable(JsonVariantTests
 	undefined.cpp
 )
 
-target_link_libraries(JsonVariantTests catch)
+target_link_libraries(JsonVariantTests
+	ArduinoJson
+	catch
+)
+
 add_test(JsonVariant JsonVariantTests)

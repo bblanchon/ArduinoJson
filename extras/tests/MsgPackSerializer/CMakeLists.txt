@@ -11,5 +11,9 @@ add_executable(MsgPackSerializerTests
 	serializeVariant.cpp
 )
 
-target_link_libraries(MsgPackSerializerTests catch)
+target_link_libraries(MsgPackSerializerTests
+	ArduinoJson
+	catch
+)
+
 add_test(MsgPackSerializer MsgPackSerializerTests)

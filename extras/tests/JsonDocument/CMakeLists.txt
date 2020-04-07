@@ -18,5 +18,9 @@ add_executable(JsonDocumentTests
 	subscript.cpp
 )
 
-target_link_libraries(JsonDocumentTests catch)
+target_link_libraries(JsonDocumentTests
+	ArduinoJson
+	catch
+)
+
 add_test(JsonDocument JsonDocumentTests)
