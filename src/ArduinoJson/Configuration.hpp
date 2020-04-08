@@ -203,6 +203,14 @@
 #endif
 #endif
 
+#ifndef ARDUINOJSON_ENABLE_ALIGNMENT
+#if defined(__AVR)
+#define ARDUINOJSON_ENABLE_ALIGNMENT 0
+#else
+#define ARDUINOJSON_ENABLE_ALIGNMENT 1
+#endif
+#endif
+
 #ifndef ARDUINOJSON_TAB
 #define ARDUINOJSON_TAB "  "
 #endif

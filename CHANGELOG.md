@@ -8,6 +8,7 @@ HEAD
 * Fixed "statement is unreachable" warning on IAR (issue #1233)
 * Fixed "pointless integer comparison" warning on IAR (issue #1233)
 * Added CMake "install" target (issue #1209)
+* Disabled alignment on AVR (issue #1231)
 
 v6.15.0 (2020-03-22)
 -------

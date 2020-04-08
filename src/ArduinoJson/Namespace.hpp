@@ -7,6 +7,8 @@
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/version.hpp>
 
+#ifndef ARDUINOJSON_NAMESPACE
+
 #define ARDUINOJSON_DO_CONCAT(A, B) A##B
 #define ARDUINOJSON_CONCAT2(A, B) ARDUINOJSON_DO_CONCAT(A, B)
 #define ARDUINOJSON_CONCAT4(A, B, C, D) \
@@ -25,3 +27,5 @@
       ARDUINOJSON_USE_DOUBLE, ARDUINOJSON_DECODE_UNICODE,                \
       ARDUINOJSON_ENABLE_NAN, ARDUINOJSON_ENABLE_INFINITY,               \
       ARDUINOJSON_ENABLE_PROGMEM, ARDUINOJSON_ENABLE_COMMENTS)
+
+#endif
