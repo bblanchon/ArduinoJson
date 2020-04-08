@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.15.1 (2020-04-08)
+-------
 
 * Fixed "maybe-uninitialized" warning (issue #1217)
 * Fixed "statement is unreachable" warning on IAR (issue #1233)
