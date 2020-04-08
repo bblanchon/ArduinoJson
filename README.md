@@ -117,10 +117,8 @@ DynamicJsonDocument doc(1024);
 
 doc["sensor"] = "gps";
 doc["time"]   = 1351824120;
-
-JsonArray data = doc.createNestedArray("data");
-data.add(48.756080);
-data.add(2.302038);
+doc["data"][0] = 48.756080;
+doc["data"][1] = 2.302038;
 
 serializeJson(doc, Serial);
 // This prints:
@@ -133,5 +131,5 @@ See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/?utm_
 
 Do you like this library? Please [star this project on GitHub](https://github.com/bblanchon/ArduinoJson/stargazers)!
 
-What? You don't like it but you *love* it?
-We don't take donations anymore, but [we sell a book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme), so you can help and learn at the same time?utm_source=github&utm_medium=readme!
+What? You don't like it but you *love* it?  
+We don't take donations anymore, but [we sell a book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme), so you can help and learn at the same time.
