@@ -73,6 +73,11 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getUpstreamMember().template as<TValue>();
   }
 
+  template <typename T>
+  FORCE_INLINE operator T() const {
+    return getUpstreamMember();
+  }
+
   template <typename TValue>
   FORCE_INLINE bool is() const {
     return getUpstreamMember().template is<TValue>();

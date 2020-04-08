@@ -84,18 +84,6 @@ typename enable_if<IsVisitable<TVariant>::value, bool>::type VariantRef::set(
 }
 
 template <typename T>
-inline typename enable_if<is_same<T, ArrayRef>::value, T>::type VariantRef::as()
-    const {
-  return ArrayRef(_pool, _data != 0 ? _data->asArray() : 0);
-}
-
-template <typename T>
-inline typename enable_if<is_same<T, ObjectRef>::value, T>::type
-VariantRef::as() const {
-  return ObjectRef(_pool, variantAsObject(_data));
-}
-
-template <typename T>
 inline typename enable_if<is_same<T, ArrayRef>::value, ArrayRef>::type
 VariantRef::to() const {
   return ArrayRef(_pool, variantToArray(_data));

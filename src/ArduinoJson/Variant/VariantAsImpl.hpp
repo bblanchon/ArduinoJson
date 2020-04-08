@@ -39,4 +39,19 @@ inline typename enable_if<IsWriteableString<T>::value, T>::type variantAs(
   return s;
 }
 
+template <>
+inline ArrayRef variantAs<ArrayRef>(VariantData* data, MemoryPool* pool) {
+  return ArrayRef(pool, data != 0 ? data->asArray() : 0);
+}
+
+template <>
+inline ObjectRef variantAs<ObjectRef>(VariantData* data, MemoryPool* pool) {
+  return ObjectRef(pool, data != 0 ? data->asObject() : 0);
+}
+
+template <>
+inline VariantRef variantAs<VariantRef>(VariantData* data, MemoryPool* pool) {
+  return VariantRef(pool, data);
+}
+
 }  // namespace ARDUINOJSON_NAMESPACE

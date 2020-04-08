@@ -246,36 +246,14 @@ class VariantRef : public VariantRefBase<VariantData>,
     return variantSetSignedInteger(_data, static_cast<Integer>(value));
   }
 
-  // Get the variant as the specified type.
-  //
-  // std::string as<std::string>() const;
-  // String as<String>() const;
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, ArrayRef>::value &&
-                                      !is_same<T, ObjectRef>::value &&
-                                      !is_same<T, VariantRef>::value,
-                                  typename VariantAs<T>::type>::type
-  as() const {
-    return variantAs<T>(_data);
+  FORCE_INLINE typename VariantAs<T>::type as() const {
+    return variantAs<typename VariantAs<T>::type>(_data, _pool);
   }
-  //
-  // ArrayRef as<ArrayRef>() const;
-  // const ArrayRef as<const ArrayRef>() const;
+
   template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, ArrayRef>::value, T>::type as()
-      const;
-  //
-  // ObjectRef as<ObjectRef>() const;
-  // const ObjectRef as<const ObjectRef>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, ObjectRef>::value, T>::type as()
-      const;
-  //
-  // VariantRef as<VariantRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, VariantRef>::value, T>::type as()
-      const {
-    return *this;
+  FORCE_INLINE operator T() const {
+    return variantAs<T>(_data, _pool);
   }
 
   template <typename Visitor>
@@ -376,11 +354,14 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     variantAccept(_data, visitor);
   }
 
-  // Get the variant as the specified type.
-  //
   template <typename T>
   FORCE_INLINE typename VariantConstAs<T>::type as() const {
     return variantAs<typename VariantConstAs<T>::type>(_data);
+  }
+
+  template <typename T>
+  FORCE_INLINE operator T() const {
+    return variantAs<T>(_data);
   }
 
   FORCE_INLINE VariantConstRef getElement(size_t) const;

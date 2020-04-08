@@ -73,6 +73,11 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   template <typename T>
+  FORCE_INLINE operator T() const {
+    return getUpstreamElement();
+  }
+
+  template <typename T>
   FORCE_INLINE bool is() const {
     return getUpstreamElement().template is<T>();
   }

@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Operators/VariantCasts.hpp>
 #include <ArduinoJson/Operators/VariantComparisons.hpp>
 #include <ArduinoJson/Operators/VariantOr.hpp>
 #include <ArduinoJson/Operators/VariantShortcuts.hpp>
@@ -12,8 +11,7 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TImpl>
-class VariantOperators : public VariantCasts<TImpl>,
-                         public VariantComparisons<TImpl>,
+class VariantOperators : public VariantComparisons<TImpl>,
                          public VariantOr<TImpl>,
                          public VariantShortcuts<TImpl> {};
 }  // namespace ARDUINOJSON_NAMESPACE
