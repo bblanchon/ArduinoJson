@@ -35,7 +35,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
         "${PROJECT_BINARY_DIR}/ArduinoJsonConfigVersion.cmake"
     VERSION
-        6.15.0
+        ${PROJECT_VERSION}
     COMPATIBILITY
         SameMajorVersion
 )

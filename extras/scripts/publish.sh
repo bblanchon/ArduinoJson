@@ -19,6 +19,9 @@ update_version_in_source () {
 	sed -i~ -bE "4s/HEAD/$TAG ($DATE)/; 5s/-+/$UNDERLINE/" CHANGELOG.md
 	rm CHANGELOG.md*~
 
+	sed -i~ -bE "s/(project\\s*\\(ArduinoJson\\s+VERSION\\s+).*?\\)/\\1$MAJOR.$MINOR.$REVISION)/" CMakeLists.txt
+	rm CMakeLists.json*~
+
 	sed -i~ -bE "s/\"version\":.*$/\"version\": \"$VERSION\",/" library.json
 	rm library.json*~
 

@@ -3,7 +3,8 @@
 # MIT License
 
 cmake_minimum_required(VERSION 3.0)
-project(ArduinoJson)
+
+project(ArduinoJson VERSION 6.15.1)
 
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
 
