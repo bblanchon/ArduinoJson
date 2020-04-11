@@ -62,8 +62,9 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
         * [Visual Micro](http://www.visualmicro.com/)
         * [Visual Studio](https://www.visualstudio.com/)
     * [Even works with online compilers like wandbox.org](https://wandbox.org/permlink/t7KP7I6dVuLhqzDl)
+    * [CMake friendly](https://arduinojson.org/v6/how-to/use-arduinojson-with-cmake/?utm_source=github&utm_medium=readme)
 * Well designed
-    * [Elegant API](http://127.0.0.1:4000/v6/example/)
+    * [Elegant API](http://arduinojson.org/v6/example/?utm_source=github&utm_medium=readme)
     * [Thread-safe](https://en.wikipedia.org/wiki/Thread_safety)
     * Self-contained (no external dependency)
     * `const` friendly

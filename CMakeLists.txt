@@ -6,40 +6,42 @@ cmake_minimum_required(VERSION 3.0)
 
 project(ArduinoJson VERSION 6.15.1)
 
-set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
-
-enable_testing()
-
-add_definitions(-DARDUINOJSON_DEBUG=1)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL  "GNU")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8)
-		add_compile_options(-g -Og)
-	else()
-		add_compile_options(-g -O0)
-	endif()
-endif()
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.0)
-		add_compile_options(-g -Og)
-	else()
-		add_compile_options(-g -O0)
-	endif()
-endif()
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 9.0)
-		add_compile_options(-g -Og)
-	else()
-		add_compile_options(-g -O0)
-	endif()
-endif()
-
-if(${COVERAGE})
-	set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
 endif()
 
 add_subdirectory(src)
-add_subdirectory(extras/tests)
-add_subdirectory(extras/fuzzing)
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+
+	if(CMAKE_CXX_COMPILER_ID STREQUAL  "GNU")
+		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8)
+			add_compile_options(-g -Og)
+		else()
+			add_compile_options(-g -O0)
+		endif()
+	endif()
+
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.0)
+			add_compile_options(-g -Og)
+		else()
+			add_compile_options(-g -O0)
+		endif()
+	endif()
+
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+		if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 9.0)
+			add_compile_options(-g -Og)
+		else()
+			add_compile_options(-g -O0)
+		endif()
+	endif()
+
+	if(${COVERAGE})
+		set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
+	endif()
+
+	add_subdirectory(extras/tests)
+	add_subdirectory(extras/fuzzing)
+endif()

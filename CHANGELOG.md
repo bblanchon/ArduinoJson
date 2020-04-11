@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* CMake: don't build tests when imported in another project
+
 v6.15.1 (2020-04-08)
 -------
 

@@ -17,6 +17,11 @@ target_include_directories(ArduinoJson
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+target_compile_definitions(ArduinoJson
+    INTERFACE
+        ARDUINOJSON_DEBUG=$<CONFIG:Debug>
+)
+
 # locations are provided by GNUInstallDirs
 install(
     TARGETS
