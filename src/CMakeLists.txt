@@ -37,12 +37,18 @@ install(
 )
 
 include(CMakePackageConfigHelpers)
+
+if(${CMAKE_VERSION} VERSION_GREATER "3.14.0") 
+    set(ARCH_INDEPENDENT "ARCH_INDEPENDENT")
+endif()
+
 write_basic_package_version_file(
         "${PROJECT_BINARY_DIR}/ArduinoJsonConfigVersion.cmake"
     VERSION
         ${PROJECT_VERSION}
     COMPATIBILITY
         SameMajorVersion
+    ${ARCH_INDEPENDENT}
 )
 
 configure_package_config_file(

@@ -5,6 +5,7 @@ HEAD
 ----
 
 * CMake: don't build tests when imported in another project
+* CMake: made project arch-independent
 
 v6.15.1 (2020-04-08)
 -------
