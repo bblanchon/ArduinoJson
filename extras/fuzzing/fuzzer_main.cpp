@@ -21,7 +21,7 @@ std::vector<uint8_t> read(const char* path) {
   }
 
   fseek(f, 0, SEEK_END);
-  size_t size = ftell(f);
+  size_t size = static_cast<size_t>(ftell(f));
   fseek(f, 0, SEEK_SET);
 
   std::vector<uint8_t> buffer(size);
