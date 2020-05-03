@@ -19,9 +19,4 @@ add_executable(JsonObjectTests
 	subscript.cpp
 )
 
-target_link_libraries(JsonObjectTests
-	ArduinoJson
-	catch
-)
-
 add_test(JsonObject JsonObjectTests)

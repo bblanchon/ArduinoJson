@@ -15,11 +15,6 @@ add_executable(MiscTests
 	version.cpp
 )
 
-target_link_libraries(MiscTests
-	ArduinoJson
-	catch
-)
-
 set_target_properties(MiscTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(Misc MiscTests)
@@ -39,11 +34,9 @@ macro(build_should_fail target)
 	    	${CMAKE_BINARY_DIR}
 	)
 	set_tests_properties(${target} 
-
-
-
 		PROPERTIES
-			WILL_FAIL TRUE)
+			WILL_FAIL TRUE
+	)
 endmacro()
 
 

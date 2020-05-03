@@ -13,9 +13,4 @@ add_executable(MemberProxyTests
 	subscript.cpp
 )
 
-target_link_libraries(MemberProxyTests
-	ArduinoJson
-	catch
-)
-
 add_test(MemberProxy MemberProxyTests)

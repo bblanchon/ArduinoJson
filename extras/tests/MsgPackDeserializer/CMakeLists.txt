@@ -14,9 +14,4 @@ add_executable(MsgPackDeserializerTests
 	notSupported.cpp
 )
 
-target_link_libraries(MsgPackDeserializerTests
-	ArduinoJson
-	catch
-)
-
 add_test(MsgPackDeserializer MsgPackDeserializerTests)

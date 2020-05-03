@@ -24,11 +24,6 @@ add_executable(MixedConfigurationTests
 	use_long_long_1.cpp
 )
 
-target_link_libraries(MixedConfigurationTests
-	ArduinoJson
-	catch
-)
-
 set_target_properties(MixedConfigurationTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(MixedConfiguration MixedConfigurationTests)

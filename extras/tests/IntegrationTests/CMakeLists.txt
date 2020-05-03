@@ -16,9 +16,4 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	)
 endif()
 
-target_link_libraries(IntegrationTests
-	ArduinoJson
-	catch
-)
-
 add_test(IntegrationTests IntegrationTests)

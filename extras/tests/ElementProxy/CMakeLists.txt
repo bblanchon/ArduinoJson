@@ -11,9 +11,4 @@ add_executable(ElementProxyTests
 	size.cpp
 )
 
-target_link_libraries(ElementProxyTests
-	ArduinoJson
-	catch
-)
-
 add_test(ElementProxy ElementProxyTests)

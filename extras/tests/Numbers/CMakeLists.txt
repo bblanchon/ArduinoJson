@@ -8,10 +8,5 @@ add_executable(NumbersTests
 	parseNumber.cpp
 )
 
-target_link_libraries(NumbersTests
-	ArduinoJson
-	catch
-)
-
 
 add_test(Numbers NumbersTests)
