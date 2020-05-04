@@ -58,6 +58,12 @@ inline typename enable_if<is_integral<T>::value, T>::type variantAs(
 }
 
 template <typename T>
+inline typename enable_if<is_enum<T>::value, T>::type variantAs(
+    const VariantData* data) {
+  return data != 0 ? static_cast<T>(data->asIntegral<int>()) : T();
+}
+
+template <typename T>
 inline typename enable_if<is_same<T, bool>::value, T>::type variantAs(
     const VariantData* data) {
   return data != 0 ? data->asBoolean() : false;

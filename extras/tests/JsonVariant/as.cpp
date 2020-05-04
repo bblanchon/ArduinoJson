@@ -10,6 +10,8 @@ namespace my {
 using ARDUINOJSON_NAMESPACE::isinf;
 }  // namespace my
 
+enum MY_ENUM { ONE = 1, TWO = 2 };
+
 TEST_CASE("JsonVariant::as()") {
   static const char* null = 0;
 
@@ -211,5 +213,11 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(cvar.as<const char*>() == std::string("hello"));
     REQUIRE(cvar.as<char*>() == std::string("hello"));
     // REQUIRE(cvar.as<std::string>() == std::string("hello"));
+  }
+
+  SECTION("as<enum>()") {
+    variant.set(1);
+
+    REQUIRE(variant.as<MY_ENUM>() == ONE);
   }
 }

@@ -101,6 +101,11 @@ class VariantRefBase {
     return variantIsNull(_data);
   }
 #endif
+  // bool is<enum>() const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_enum<T>::value, bool>::type is() const {
+    return variantIsInteger<int>(_data);
+  }
 
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);

@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+enum MYENUM2 { ONE = 1, TWO = 2 };
+
 template <typename TVariant>
 void checkIsArray(TVariant var) {
   REQUIRE(var.template is<JsonArray>());
@@ -80,6 +82,7 @@ void checkIsInteger(TVariant var) {
   REQUIRE(var.template is<int>());
   REQUIRE(var.template is<float>());
   REQUIRE(var.template is<double>());
+  REQUIRE(var.template is<MYENUM2>());
 
   REQUIRE_FALSE(var.template is<bool>());
   REQUIRE_FALSE(var.template is<const char *>());
@@ -107,6 +110,7 @@ void checkIsString(TVariant var) {
   REQUIRE_FALSE(var.template is<double>());
   REQUIRE_FALSE(var.template is<float>());
   REQUIRE_FALSE(var.template is<long>());
+  REQUIRE_FALSE(var.template is<MYENUM2>());
   REQUIRE_FALSE(var.template is<JsonArray>());
   REQUIRE_FALSE(var.template is<JsonObject>());
 }
