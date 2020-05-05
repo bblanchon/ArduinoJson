@@ -37,6 +37,7 @@ struct BoundedReader {
 
 #include <ArduinoJson/Deserialization/Readers/IteratorReader.hpp>
 #include <ArduinoJson/Deserialization/Readers/RamReader.hpp>
+#include <ArduinoJson/Deserialization/Readers/VariantReader.hpp>
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STREAM
 #include <ArduinoJson/Deserialization/Readers/ArduinoStreamReader.hpp>

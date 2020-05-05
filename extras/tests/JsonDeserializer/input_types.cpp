@@ -126,3 +126,57 @@ TEST_CASE("deserializeJson(CustomReader)") {
   REQUIRE(doc[0] == 4);
   REQUIRE(doc[1] == 2);
 }
+
+TEST_CASE("deserializeJson(JsonDocument&, MemberProxy)") {
+  DynamicJsonDocument doc1(4096);
+  doc1["payload"] = "[4,2]";
+
+  DynamicJsonDocument doc2(4096);
+  DeserializationError err = deserializeJson(doc2, doc1["payload"]);
+
+  REQUIRE(err == DeserializationError::Ok);
+  REQUIRE(doc2.size() == 2);
+  REQUIRE(doc2[0] == 4);
+  REQUIRE(doc2[1] == 2);
+}
+
+TEST_CASE("deserializeJson(JsonDocument&, JsonVariant)") {
+  DynamicJsonDocument doc1(4096);
+  doc1["payload"] = "[4,2]";
+
+  DynamicJsonDocument doc2(4096);
+  DeserializationError err =
+      deserializeJson(doc2, doc1["payload"].as<JsonVariant>());
+
+  REQUIRE(err == DeserializationError::Ok);
+  REQUIRE(doc2.size() == 2);
+  REQUIRE(doc2[0] == 4);
+  REQUIRE(doc2[1] == 2);
+}
+
+TEST_CASE("deserializeJson(JsonDocument&, JsonVariantConst)") {
+  DynamicJsonDocument doc1(4096);
+  doc1["payload"] = "[4,2]";
+
+  DynamicJsonDocument doc2(4096);
+  DeserializationError err =
+      deserializeJson(doc2, doc1["payload"].as<JsonVariantConst>());
+
+  REQUIRE(err == DeserializationError::Ok);
+  REQUIRE(doc2.size() == 2);
+  REQUIRE(doc2[0] == 4);
+  REQUIRE(doc2[1] == 2);
+}
+
+TEST_CASE("deserializeJson(JsonDocument&, ElementProxy)") {
+  DynamicJsonDocument doc1(4096);
+  doc1[0] = "[4,2]";
+
+  DynamicJsonDocument doc2(4096);
+  DeserializationError err = deserializeJson(doc2, doc1[0]);
+
+  REQUIRE(err == DeserializationError::Ok);
+  REQUIRE(doc2.size() == 2);
+  REQUIRE(doc2[0] == 4);
+  REQUIRE(doc2[1] == 2);
+}

@@ -9,6 +9,8 @@ HEAD
 * Visual Studio: fixed error C2766 with flag `/Zc:__cplusplus` (issue #1250)
 * Added support for `JsonDocument` to `copyArray()` (issue #1255)
 * Added support for `enum`s in `as<T>()` and `is<T>()`  (issue #1256)
+* Added `JsonVariant` as an input type for `deserializeXxx()`  
+  For example, you can do: `deserializeJson(doc2, doc1["payload"])`
 
 v6.15.1 (2020-04-08)
 -------

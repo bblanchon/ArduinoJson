@@ -7,6 +7,8 @@
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Operators/VariantOperators.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Variant/VariantRef.hpp>
+#include <ArduinoJson/Variant/VariantTo.hpp>
 
 #ifdef _MSC_VER
 #pragma warning(push)
