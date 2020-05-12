@@ -105,14 +105,6 @@ inline bool variantSetOwnedRaw(VariantData *var, SerializedValue<T> value,
   return var != 0 && var->setOwnedRaw(value, pool);
 }
 
-template <typename T>
-inline bool variantSetSignedInteger(VariantData *var, T value) {
-  if (!var)
-    return false;
-  var->setSignedInteger(value);
-  return true;
-}
-
 inline bool variantSetLinkedString(VariantData *var, const char *value) {
   if (!var)
     return false;
@@ -138,10 +130,12 @@ inline bool variantSetOwnedString(VariantData *var, T value, MemoryPool *pool) {
   return var != 0 && var->setOwnedString(value, pool);
 }
 
-inline bool variantSetUnsignedInteger(VariantData *var, UInt value) {
+template <typename T>
+inline bool variantSetInteger(VariantData *var, T value) {
+  ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
   if (!var)
     return false;
-  var->setUnsignedInteger(value);
+  var->setInteger(value);
   return true;
 }
 

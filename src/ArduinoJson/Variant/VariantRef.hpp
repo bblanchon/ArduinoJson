@@ -178,22 +178,13 @@ class VariantRef : public VariantRefBase<VariantData>,
   // set(signed int)
   // set(signed long)
   // set(signed char)
-  template <typename T>
-  FORCE_INLINE bool set(
-      T value,
-      typename enable_if<is_integral<T>::value && is_signed<T>::value>::type * =
-          0) const {
-    return variantSetSignedInteger(_data, value);
-  }
-
   // set(unsigned short)
   // set(unsigned int)
   // set(unsigned long)
   template <typename T>
   FORCE_INLINE bool set(
-      T value, typename enable_if<is_integral<T>::value &&
-                                  is_unsigned<T>::value>::type * = 0) const {
-    return variantSetUnsignedInteger(_data, static_cast<UInt>(value));
+      T value, typename enable_if<is_integral<T>::value>::type * = 0) const {
+    return variantSetInteger<T>(_data, value);
   }
 
   // set(SerializedValue<const char *>)
@@ -248,7 +239,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename T>
   FORCE_INLINE bool set(
       T value, typename enable_if<is_enum<T>::value>::type * = 0) const {
-    return variantSetSignedInteger(_data, static_cast<Integer>(value));
+    return variantSetInteger(_data, static_cast<Integer>(value));
   }
 
   template <typename T>

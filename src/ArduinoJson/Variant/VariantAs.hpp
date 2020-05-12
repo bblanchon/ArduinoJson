@@ -55,6 +55,7 @@ struct VariantConstAs<ArrayRef> {
 template <typename T>
 inline typename enable_if<is_integral<T>::value, T>::type variantAs(
     const VariantData* data) {
+  ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
   return data != 0 ? data->asIntegral<T>() : T(0);
 }
 

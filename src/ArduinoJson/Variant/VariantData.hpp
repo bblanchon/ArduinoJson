@@ -258,6 +258,11 @@ class VariantData {
     }
   }
 
+  void setUnsignedInteger(UInt value) {
+    setType(VALUE_IS_POSITIVE_INTEGER);
+    _content.asInteger = static_cast<UInt>(value);
+  }
+
   void setPositiveInteger(UInt value) {
     setType(VALUE_IS_POSITIVE_INTEGER);
     _content.asInteger = value;
@@ -299,11 +304,6 @@ class VariantData {
   template <typename T>
   bool setOwnedString(T value, MemoryPool *pool) {
     return setOwnedString(value.save(pool));
-  }
-
-  void setUnsignedInteger(UInt value) {
-    setType(VALUE_IS_POSITIVE_INTEGER);
-    _content.asInteger = static_cast<UInt>(value);
   }
 
   CollectionData &toArray() {
