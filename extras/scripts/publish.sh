@@ -14,22 +14,22 @@ update_version_in_source () {
 	UNDERLINE=$(printf -- '-%.0s' $(seq 1 ${#TAG}))
 
 	sed -i~ -bE "s/version=$VERSION_REGEX/version=$VERSION/; s|ardu-badge.com/ArduinoJson/$VERSION_REGEX|ardu-badge.com/ArduinoJson/$VERSION|; " README.md
-	rm README.md*~
+	rm README.md~
 
 	sed -i~ -bE "4s/HEAD/$TAG ($DATE)/; 5s/-+/$UNDERLINE/" CHANGELOG.md
-	rm CHANGELOG.md*~
+	rm CHANGELOG.md~
 
 	sed -i~ -bE "s/(project\\s*\\(ArduinoJson\\s+VERSION\\s+).*?\\)/\\1$MAJOR.$MINOR.$REVISION)/" CMakeLists.txt
-	rm CMakeLists.json*~
+	rm CMakeLists.txt~
 
 	sed -i~ -bE "s/\"version\":.*$/\"version\": \"$VERSION\",/" library.json
-	rm library.json*~
+	rm library.json~
 
 	sed -i~ -bE "s/version=.*$/version=$VERSION/" library.properties
-	rm library.properties*~
+	rm library.properties~
 
 	sed -i~ -bE "s/version: .*$/version: $VERSION.{build}/" appveyor.yml
-	rm appveyor.yml*~
+	rm appveyor.yml~
 
 	sed -i~ -bE \
 		-e "s/ARDUINOJSON_VERSION .*$/ARDUINOJSON_VERSION \"$VERSION\"/" \
