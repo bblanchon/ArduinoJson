@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.15.2 (2020-05-15)
+-------
 
 * CMake: don't build tests when imported in another project
 * CMake: made project arch-independent
