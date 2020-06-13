@@ -5,7 +5,8 @@
 #pragma once
 
 #include <ArduinoJson/Configuration.hpp>
-#include <ArduinoJson/Operators/VariantOperators.hpp>
+#include <ArduinoJson/Variant/VariantOperators.hpp>
+#include <ArduinoJson/Variant/VariantShortcuts.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 
 #ifdef _MSC_VER
@@ -17,6 +18,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TArray>
 class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
+                     public VariantShortcuts<ElementProxy<TArray> >,
                      public Visitable {
   typedef ElementProxy<TArray> this_type;
 
@@ -75,6 +77,11 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   template <typename T>
   FORCE_INLINE operator T() const {
     return getUpstreamElement();
+  }
+
+  template <typename T>
+  FORCE_INLINE int compare(const T& rhs) const {
+    return getUpstreamElement().template compare<T>(rhs);
   }
 
   template <typename T>

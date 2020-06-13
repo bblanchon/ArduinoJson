@@ -9,11 +9,12 @@
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/Visitable.hpp>
-#include <ArduinoJson/Operators/VariantOperators.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Variant/VariantAs.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
+#include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
+#include <ArduinoJson/Variant/VariantShortcuts.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -107,6 +108,9 @@ class VariantRefBase {
     return variantIsInteger<int>(_data);
   }
 
+  template <typename T>
+  int compare(const T &) const;  // VariantCompare.cpp
+
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
   }
@@ -141,6 +145,7 @@ class VariantRefBase {
 // - a reference to a ArrayRef or ObjectRef
 class VariantRef : public VariantRefBase<VariantData>,
                    public VariantOperators<VariantRef>,
+                   public VariantShortcuts<VariantRef>,
                    public Visitable {
   typedef VariantRefBase<VariantData> base_type;
   friend class VariantConstRef;
@@ -336,6 +341,7 @@ class VariantRef : public VariantRefBase<VariantData>,
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
                         public VariantOperators<VariantConstRef>,
+                        public VariantShortcuts<VariantConstRef>,
                         public Visitable {
   typedef VariantRefBase<const VariantData> base_type;
   friend class VariantRef;

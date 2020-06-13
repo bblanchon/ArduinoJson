@@ -5,9 +5,10 @@
 #pragma once
 
 #include <ArduinoJson/Configuration.hpp>
-#include <ArduinoJson/Operators/VariantOperators.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
+#include <ArduinoJson/Variant/VariantShortcuts.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 
 #ifdef _MSC_VER
@@ -19,6 +20,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TObject, typename TStringRef>
 class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
+                    public VariantShortcuts<MemberProxy<TObject, TStringRef> >,
                     public Visitable {
   typedef MemberProxy<TObject, TStringRef> this_type;
 
@@ -78,6 +80,11 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   template <typename T>
   FORCE_INLINE operator T() const {
     return getUpstreamMember();
+  }
+
+  template <typename T>
+  FORCE_INLINE int compare(const T &rhs) const {
+    return getUpstreamMember().template compare<T>(rhs);
   }
 
   template <typename TValue>
