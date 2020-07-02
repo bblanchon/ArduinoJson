@@ -53,14 +53,6 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return *this;
   }
 
-  FORCE_INLINE bool operator==(VariantConstRef rhs) const {
-    return static_cast<VariantConstRef>(getUpstreamElement()) == rhs;
-  }
-
-  FORCE_INLINE bool operator!=(VariantConstRef rhs) const {
-    return static_cast<VariantConstRef>(getUpstreamElement()) != rhs;
-  }
-
   FORCE_INLINE void clear() const {
     getUpstreamElement().clear();
   }
@@ -77,11 +69,6 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   template <typename T>
   FORCE_INLINE operator T() const {
     return getUpstreamElement();
-  }
-
-  template <typename T>
-  FORCE_INLINE int compare(const T& rhs) const {
-    return getUpstreamElement().template compare<T>(rhs);
   }
 
   template <typename T>

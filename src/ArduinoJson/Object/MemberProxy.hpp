@@ -56,14 +56,6 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return *this;
   }
 
-  FORCE_INLINE bool operator==(VariantConstRef rhs) const {
-    return static_cast<VariantConstRef>(getUpstreamMember()) == rhs;
-  }
-
-  FORCE_INLINE bool operator!=(VariantConstRef rhs) const {
-    return static_cast<VariantConstRef>(getUpstreamMember()) != rhs;
-  }
-
   FORCE_INLINE void clear() const {
     getUpstreamMember().clear();
   }
@@ -80,11 +72,6 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   template <typename T>
   FORCE_INLINE operator T() const {
     return getUpstreamMember();
-  }
-
-  template <typename T>
-  FORCE_INLINE int compare(const T &rhs) const {
-    return getUpstreamMember().template compare<T>(rhs);
   }
 
   template <typename TValue>

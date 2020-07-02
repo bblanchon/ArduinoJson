@@ -3,6 +3,7 @@
 # MIT License
 
 add_executable(MiscTests
+	arithmeticCompare.cpp
 	conflicts.cpp
 	FloatParts.cpp
 	Readers.cpp

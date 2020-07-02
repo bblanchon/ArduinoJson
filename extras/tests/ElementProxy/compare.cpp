@@ -10,19 +10,39 @@ using namespace ARDUINOJSON_NAMESPACE;
 TEST_CASE("ElementProxy::operator==()") {
   DynamicJsonDocument doc(4096);
 
-  SECTION("same value") {
+  SECTION("1 vs 1") {
     doc.add(1);
     doc.add(1);
 
+    REQUIRE(doc[0] <= doc[1]);
     REQUIRE(doc[0] == doc[1]);
+    REQUIRE(doc[0] >= doc[1]);
     REQUIRE_FALSE(doc[0] != doc[1]);
+    REQUIRE_FALSE(doc[0] < doc[1]);
+    REQUIRE_FALSE(doc[0] > doc[1]);
   }
 
-  SECTION("different values") {
+  SECTION("1 vs 2") {
     doc.add(1);
     doc.add(2);
 
-    REQUIRE_FALSE(doc[0] == doc[1]);
     REQUIRE(doc[0] != doc[1]);
+    REQUIRE(doc[0] < doc[1]);
+    REQUIRE(doc[0] <= doc[1]);
+    REQUIRE_FALSE(doc[0] == doc[1]);
+    REQUIRE_FALSE(doc[0] > doc[1]);
+    REQUIRE_FALSE(doc[0] >= doc[1]);
+  }
+
+  SECTION("'abc' vs 'bcd'") {
+    doc.add("abc");
+    doc.add("bcd");
+
+    REQUIRE(doc[0] != doc[1]);
+    REQUIRE(doc[0] < doc[1]);
+    REQUIRE(doc[0] <= doc[1]);
+    REQUIRE_FALSE(doc[0] == doc[1]);
+    REQUIRE_FALSE(doc[0] > doc[1]);
+    REQUIRE_FALSE(doc[0] >= doc[1]);
   }
 }

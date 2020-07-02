@@ -40,13 +40,7 @@ inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
   return dst->copyFrom(*src, pool);
 }
 
-inline bool variantEquals(const VariantData *a, const VariantData *b) {
-  if (a == b)
-    return true;
-  if (!a || !b)
-    return false;
-  return a->equals(*b);
-}
+inline int variantCompare(const VariantData *a, const VariantData *b);
 
 inline bool variantIsArray(const VariantData *var) {
   return var && var->isArray();

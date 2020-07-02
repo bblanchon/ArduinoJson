@@ -42,8 +42,10 @@ class VariantRefBase {
   // bool is<unsigned int>() const;
   // bool is<unsigned long>() const;
   template <typename T>
-  FORCE_INLINE typename enable_if<is_integral<T>::value, bool>::type is()
-      const {
+  FORCE_INLINE
+      typename enable_if<is_integral<T>::value && !is_same<bool, T>::value,
+                         bool>::type
+      is() const {
     return variantIsInteger<T>(_data);
   }
   //
@@ -107,9 +109,6 @@ class VariantRefBase {
   FORCE_INLINE typename enable_if<is_enum<T>::value, bool>::type is() const {
     return variantIsInteger<int>(_data);
   }
-
-  template <typename T>
-  int compare(const T &) const;  // VariantCompare.cpp
 
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
@@ -188,7 +187,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   // set(unsigned long)
   template <typename T>
   FORCE_INLINE bool set(
-      T value, typename enable_if<is_integral<T>::value>::type * = 0) const {
+      T value, typename enable_if<is_integral<T>::value &&
+                                  !is_same<bool, T>::value>::type * = 0) const {
     return variantSetInteger<T>(_data, value);
   }
 
@@ -260,14 +260,6 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename Visitor>
   void accept(Visitor &visitor) const {
     variantAccept(_data, visitor);
-  }
-
-  FORCE_INLINE bool operator==(VariantRef lhs) const {
-    return variantEquals(_data, lhs._data);
-  }
-
-  FORCE_INLINE bool operator!=(VariantRef lhs) const {
-    return !variantEquals(_data, lhs._data);
   }
 
   // Change the type of the variant
@@ -406,14 +398,6 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
       typename enable_if<IsString<TChar *>::value, VariantConstRef>::type
       operator[](TChar *key) const {
     return getMember(key);
-  }
-
-  FORCE_INLINE bool operator==(VariantConstRef lhs) const {
-    return variantEquals(_data, lhs._data);
-  }
-
-  FORCE_INLINE bool operator!=(VariantConstRef lhs) const {
-    return !variantEquals(_data, lhs._data);
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

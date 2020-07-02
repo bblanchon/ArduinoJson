@@ -111,42 +111,6 @@ class VariantData {
     }
   }
 
-  bool equals(const VariantData &other) const {
-    // Check that variant have the same type, but ignore string ownership
-    if ((type() | VALUE_IS_OWNED) != (other.type() | VALUE_IS_OWNED))
-      return false;
-
-    switch (type()) {
-      case VALUE_IS_LINKED_STRING:
-      case VALUE_IS_OWNED_STRING:
-        return !strcmp(_content.asString, other._content.asString);
-
-      case VALUE_IS_LINKED_RAW:
-      case VALUE_IS_OWNED_RAW:
-        return _content.asRaw.size == other._content.asRaw.size &&
-               !memcmp(_content.asRaw.data, other._content.asRaw.data,
-                       _content.asRaw.size);
-
-      case VALUE_IS_BOOLEAN:
-      case VALUE_IS_POSITIVE_INTEGER:
-      case VALUE_IS_NEGATIVE_INTEGER:
-        return _content.asInteger == other._content.asInteger;
-
-      case VALUE_IS_ARRAY:
-        return _content.asCollection.equalsArray(other._content.asCollection);
-
-      case VALUE_IS_OBJECT:
-        return _content.asCollection.equalsObject(other._content.asCollection);
-
-      case VALUE_IS_FLOAT:
-        return _content.asFloat == other._content.asFloat;
-
-      case VALUE_IS_NULL:
-      default:
-        return true;
-    }
-  }
-
   bool isArray() const {
     return (_flags & VALUE_IS_ARRAY) != 0;
   }
