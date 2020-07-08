@@ -119,9 +119,42 @@ inline bool variantSetOwnedString(VariantData *var, char *value) {
   return true;
 }
 
-template <typename T>
-inline bool variantSetOwnedString(VariantData *var, T value, MemoryPool *pool) {
+template <typename TAdaptedString>
+inline bool variantSetOwnedString(VariantData *var, TAdaptedString value,
+                                  MemoryPool *pool) {
   return var != 0 && var->setOwnedString(value, pool);
+}
+
+template <typename TAdaptedString>
+inline bool variantSetString(VariantData *var, TAdaptedString value,
+                             MemoryPool *pool,
+                             storage_policies::decide_at_runtime) {
+  if (value.isStatic())
+    return variantSetString(var, value, pool,
+                            storage_policies::store_by_address());
+  else
+    return variantSetString(var, value, pool,
+                            storage_policies::store_by_copy());
+}
+
+template <typename TAdaptedString>
+inline bool variantSetString(VariantData *var, TAdaptedString value,
+                             MemoryPool *pool) {
+  return variantSetString(var, value, pool,
+                          typename TAdaptedString::storage_policy());
+}
+
+template <typename TAdaptedString>
+inline bool variantSetString(VariantData *var, TAdaptedString value,
+                             MemoryPool *, storage_policies::store_by_address) {
+  return variantSetLinkedString(var, value.data());
+}
+
+template <typename TAdaptedString>
+inline bool variantSetString(VariantData *var, TAdaptedString value,
+                             MemoryPool *pool,
+                             storage_policies::store_by_copy) {
+  return variantSetOwnedString(var, value, pool);
 }
 
 template <typename T>

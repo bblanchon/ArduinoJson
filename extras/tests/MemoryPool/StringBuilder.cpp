@@ -36,6 +36,6 @@ TEST_CASE("StringBuilder") {
     str.append('h');
     str.complete();
 
-    REQUIRE(JSON_STRING_SIZE(2) == pool.size());
+    REQUIRE(JSON_STRING_SIZE(1) == pool.size());
   }
 }

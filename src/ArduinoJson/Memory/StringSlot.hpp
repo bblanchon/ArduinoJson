@@ -8,7 +8,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-#define JSON_STRING_SIZE(SIZE) (SIZE)
+#define JSON_STRING_SIZE(SIZE) (SIZE + 1)
 
 namespace ARDUINOJSON_NAMESPACE {
 

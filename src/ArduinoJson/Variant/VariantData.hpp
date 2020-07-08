@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Polyfills/gsl/not_null.hpp>
@@ -191,7 +192,7 @@ class VariantData {
 
   template <typename T>
   bool setOwnedRaw(SerializedValue<T> value, MemoryPool *pool) {
-    char *dup = adaptString(value.data(), value.size()).save(pool);
+    char *dup = pool->saveString(adaptString(value.data(), value.size()));
     if (dup) {
       setType(VALUE_IS_OWNED_RAW);
       _content.asRaw.data = dup;
@@ -265,9 +266,9 @@ class VariantData {
     }
   }
 
-  template <typename T>
-  bool setOwnedString(T value, MemoryPool *pool) {
-    return setOwnedString(value.save(pool));
+  template <typename TAdaptedString>
+  bool setOwnedString(TAdaptedString value, MemoryPool *pool) {
+    return setOwnedString(pool->saveString(value));
   }
 
   CollectionData &toArray() {

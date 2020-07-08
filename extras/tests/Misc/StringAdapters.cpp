@@ -145,4 +145,12 @@ TEST_CASE("IsString<T>") {
   SECTION("const __FlashStringHelper*") {
     CHECK(IsString<const __FlashStringHelper*>::value == true);
   }
+
+  SECTION("const char*") {
+    CHECK(IsString<const char*>::value == true);
+  }
+
+  SECTION("const char[]") {
+    CHECK(IsString<const char[8]>::value == true);
+  }
 }

@@ -30,19 +30,19 @@ TEST_CASE("MemoryPool::size()") {
   SECTION("Decreases after freezeString()") {
     StringSlot a = pool.allocExpandableString();
     pool.freezeString(a, 1);
-    REQUIRE(pool.size() == JSON_STRING_SIZE(1));
+    REQUIRE(pool.size() == 1);
 
     StringSlot b = pool.allocExpandableString();
     pool.freezeString(b, 1);
-    REQUIRE(pool.size() == 2 * JSON_STRING_SIZE(1));
+    REQUIRE(pool.size() == 2);
   }
 
   SECTION("Increases after allocFrozenString()") {
-    pool.allocFrozenString(0);
-    REQUIRE(pool.size() == JSON_STRING_SIZE(0));
+    pool.allocFrozenString(1);
+    REQUIRE(pool.size() == 1);
 
-    pool.allocFrozenString(0);
-    REQUIRE(pool.size() == 2 * JSON_STRING_SIZE(0));
+    pool.allocFrozenString(2);
+    REQUIRE(pool.size() == 3);
   }
 
   SECTION("Doesn't grow when memory pool is full") {

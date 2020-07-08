@@ -60,6 +60,19 @@ class MemoryPool {
     return s;
   }
 
+  template <typename TAdaptedString>
+  char* saveString(const TAdaptedString& str) {
+    if (str.isNull())
+      return 0;
+    size_t n = str.size();
+    char* dup = allocFrozenString(n + 1);
+    if (dup) {
+      str.copyTo(dup, n);
+      dup[n] = 0;  // force null-terminator
+    }
+    return dup;
+  }
+
   StringSlot allocExpandableString() {
     StringSlot s;
     s.value = _left;

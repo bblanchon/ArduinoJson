@@ -10,6 +10,7 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/Visitable.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantAs.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
@@ -213,20 +214,15 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE bool set(
       const T &value,
       typename enable_if<IsString<T>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, adaptString(value), _pool);
+    return variantSetString(_data, adaptString(value), _pool);
   }
-
   // set(char*)
   // set(const __FlashStringHelper*)
+  // set(const char*)
   template <typename T>
   FORCE_INLINE bool set(
       T *value, typename enable_if<IsString<T *>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, adaptString(value), _pool);
-  }
-
-  // set(const char*);
-  FORCE_INLINE bool set(const char *value) const {
-    return variantSetLinkedString(_data, value);
+    return variantSetString(_data, adaptString(value), _pool);
   }
 
   // set(VariantRef)
@@ -246,6 +242,14 @@ class VariantRef : public VariantRefBase<VariantData>,
       T value, typename enable_if<is_enum<T>::value>::type * = 0) const {
     return variantSetInteger(_data, static_cast<Integer>(value));
   }
+
+#if ARDUINOJSON_HAS_NULLPTR
+  // set(nullptr_t)
+  FORCE_INLINE bool set(decltype(nullptr)) const {
+    variantSetNull(_data);
+    return true;
+  }
+#endif
 
   template <typename T>
   FORCE_INLINE typename VariantAs<T>::type as() const {

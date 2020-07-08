@@ -16,14 +16,8 @@ class ArduinoStringAdapter {
  public:
   ArduinoStringAdapter(const ::String& str) : _str(&str) {}
 
-  char* save(MemoryPool* pool) const {
-    if (isNull())
-      return NULL;
-    size_t n = _str->length() + 1;
-    char* dup = pool->allocFrozenString(n);
-    if (dup)
-      memcpy(dup, _str->c_str(), n);
-    return dup;
+  void copyTo(char* p, size_t n) const {
+    memcpy(p, _str->c_str(), n);
   }
 
   bool isNull() const {
@@ -45,7 +39,7 @@ class ArduinoStringAdapter {
     return _str->length();
   }
 
-  typedef storage_policy::store_by_copy storage_policy;
+  typedef storage_policies::store_by_copy storage_policy;
 
  private:
   const ::String* _str;

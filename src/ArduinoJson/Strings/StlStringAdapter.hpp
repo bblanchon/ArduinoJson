@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
@@ -18,12 +17,8 @@ class StlStringAdapter {
  public:
   StlStringAdapter(const TString& str) : _str(&str) {}
 
-  char* save(MemoryPool* pool) const {
-    size_t n = _str->length() + 1;
-    char* dup = pool->allocFrozenString(n);
-    if (dup)
-      memcpy(dup, _str->c_str(), n);
-    return dup;
+  void copyTo(char* p, size_t n) const {
+    memcpy(p, _str->c_str(), n);
   }
 
   bool isNull() const {
@@ -46,7 +41,7 @@ class StlStringAdapter {
     return _str->size();
   }
 
-  typedef storage_policy::store_by_copy storage_policy;
+  typedef storage_policies::store_by_copy storage_policy;
 
  private:
   const TString* _str;

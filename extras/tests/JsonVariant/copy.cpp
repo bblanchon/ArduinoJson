@@ -47,20 +47,20 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     var1.set(str);
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
   }
 
   SECTION("stores std::string by copy") {
     var1.set(std::string("hello!!"));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
   }
 
   SECTION("stores Serialized<const char*> by reference") {
-    var1.set(serialized("hello!!", JSON_STRING_SIZE(8)));
+    var1.set(serialized("hello!!", 8));
     var2.set(var1);
 
     REQUIRE(doc1.memoryUsage() == 0);
@@ -69,18 +69,18 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
   SECTION("stores Serialized<char*> by copy") {
     char str[] = "hello!!";
-    var1.set(serialized(str, 8));
+    var1.set(serialized(str, 7));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
   }
 
   SECTION("stores Serialized<std::string> by copy") {
-    var1.set(serialized(std::string("hello!!!")));
+    var1.set(serialized(std::string("hello!!")));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(8));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(8));
+    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
   }
 }

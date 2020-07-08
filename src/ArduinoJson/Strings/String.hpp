@@ -38,8 +38,6 @@ class String {
     return strcmp(lhs._data, rhs._data) == 0;
   }
 
-  typedef storage_policy::decide_at_runtime storage_policy;
-
  private:
   const char* _data;
   bool _isStatic;
@@ -54,11 +52,7 @@ class StringAdapter : public RamStringAdapter {
     return _isStatic;
   }
 
-  const char* save(MemoryPool* pool) const {
-    if (_isStatic)
-      return data();
-    return RamStringAdapter::save(pool);
-  }
+  typedef storage_policies::decide_at_runtime storage_policy;
 
  private:
   bool _isStatic;
