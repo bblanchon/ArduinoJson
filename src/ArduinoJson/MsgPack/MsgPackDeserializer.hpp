@@ -15,9 +15,6 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
-  typedef typename remove_reference<TStringStorage>::type::StringBuilder
-      StringBuilder;
-
  public:
   MsgPackDeserializer(MemoryPool &pool, TReader reader,
                       TStringStorage stringStorage)
@@ -241,16 +238,18 @@ class MsgPackDeserializer {
   }
 
   DeserializationError readString(const char *&result, size_t n) {
-    StringBuilder builder = _stringStorage.startString();
+    _stringStorage.startString(_pool);
     for (; n; --n) {
       uint8_t c;
       if (!readBytes(c))
         return DeserializationError::IncompleteInput;
-      builder.append(static_cast<char>(c));
+      _stringStorage.append(static_cast<char>(c));
     }
-    result = builder.complete();
-    if (!result)
+    _stringStorage.append('\0');
+    if (!_stringStorage.isValid())
       return DeserializationError::NoMemory;
+    _stringStorage.commit(_pool);
+    result = _stringStorage.c_str();
     return DeserializationError::Ok;
   }
 

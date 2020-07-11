@@ -7,7 +7,7 @@ add_executable(MemoryPoolTests
 	allocString.cpp
 	clear.cpp
 	size.cpp
-	StringBuilder.cpp
+	StringCopier.cpp
 )
 
 add_test(MemoryPool MemoryPoolTests)

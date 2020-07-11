@@ -10,36 +10,28 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class StringMover {
  public:
-  class StringBuilder {
-   public:
-    StringBuilder(char** ptr) : _writePtr(ptr), _startPtr(*ptr) {}
+  StringMover(char* ptr) : _writePtr(ptr) {}
 
-    void append(char c) {
-      *(*_writePtr)++ = char(c);
-    }
-
-    char* complete() const {
-      *(*_writePtr)++ = 0;
-      return _startPtr;
-    }
-
-   private:
-    char** _writePtr;
-    char* _startPtr;
-  };
-
-  StringMover(char* ptr) : _ptr(ptr) {}
-
-  StringBuilder startString() {
-    return StringBuilder(&_ptr);
+  void startString(MemoryPool*) {
+    _startPtr = _writePtr;
   }
 
-  // recover memory from last string
-  void reclaim(const char* str) {
-    _ptr = const_cast<char*>(str);
+  void commit(MemoryPool*) const {}
+
+  void append(char c) {
+    *_writePtr++ = c;
+  }
+
+  bool isValid() const {
+    return true;
+  }
+
+  const char* c_str() const {
+    return _startPtr;
   }
 
  private:
-  char* _ptr;
+  char* _writePtr;
+  char* _startPtr;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

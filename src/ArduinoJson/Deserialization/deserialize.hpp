@@ -32,9 +32,8 @@ deserialize(JsonDocument &doc, const TString &input, NestingLimit nestingLimit,
             TFilter filter) {
   Reader<TString> reader(input);
   doc.clear();
-  return makeDeserializer<TDeserializer>(
-             doc.memoryPool(), reader,
-             makeStringStorage(doc.memoryPool(), input))
+  return makeDeserializer<TDeserializer>(doc.memoryPool(), reader,
+                                         makeStringStorage(input))
       .parse(doc.data(), filter, nestingLimit);
 }
 //
@@ -48,9 +47,8 @@ DeserializationError deserialize(JsonDocument &doc, TChar *input,
                                  TFilter filter) {
   BoundedReader<TChar *> reader(input, inputSize);
   doc.clear();
-  return makeDeserializer<TDeserializer>(
-             doc.memoryPool(), reader,
-             makeStringStorage(doc.memoryPool(), input))
+  return makeDeserializer<TDeserializer>(doc.memoryPool(), reader,
+                                         makeStringStorage(input))
       .parse(doc.data(), filter, nestingLimit);
 }
 //
@@ -62,9 +60,8 @@ DeserializationError deserialize(JsonDocument &doc, TStream &input,
                                  NestingLimit nestingLimit, TFilter filter) {
   Reader<TStream> reader(input);
   doc.clear();
-  return makeDeserializer<TDeserializer>(
-             doc.memoryPool(), reader,
-             makeStringStorage(doc.memoryPool(), input))
+  return makeDeserializer<TDeserializer>(doc.memoryPool(), reader,
+                                         makeStringStorage(input))
       .parse(doc.data(), filter, nestingLimit);
 }
 

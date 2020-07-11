@@ -2,40 +2,44 @@
 // Copyright Benoit Blanchon 2014-2020
 // MIT License
 
-#include <ArduinoJson/Memory/MemoryPool.hpp>
-#include <ArduinoJson/Memory/StringBuilder.hpp>
+#include <ArduinoJson/StringStorage/StringCopier.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-TEST_CASE("StringBuilder") {
+TEST_CASE("StringCopier") {
   char buffer[4096];
 
   SECTION("Works when buffer is big enough") {
     MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
+    StringCopier str;
 
-    StringBuilder str(&pool);
+    str.startString(&pool);
     str.append("hello");
+    str.append('\0');
 
-    REQUIRE(str.complete() == std::string("hello"));
+    REQUIRE(str.isValid() == true);
+    REQUIRE(str.c_str() == std::string("hello"));
   }
 
   SECTION("Returns null when too small") {
     MemoryPool pool(buffer, sizeof(void*));
+    StringCopier str;
 
-    StringBuilder str(&pool);
+    str.startString(&pool);
     str.append("hello world!");
 
-    REQUIRE(str.complete() == 0);
+    REQUIRE(str.isValid() == false);
   }
 
   SECTION("Increases size of memory pool") {
     MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
+    StringCopier str;
 
-    StringBuilder str(&pool);
+    str.startString(&pool);
     str.append('h');
-    str.complete();
+    str.commit(&pool);
 
-    REQUIRE(JSON_STRING_SIZE(1) == pool.size());
+    REQUIRE(1 == pool.size());
   }
 }

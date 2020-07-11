@@ -77,19 +77,14 @@ class MemoryPool {
     StringSlot s;
     s.value = _left;
     s.size = size_t(_right - _left);
-    _left = _right;
     checkInvariants();
     return s;
   }
 
   void freezeString(StringSlot& s, size_t newSize) {
-    _left -= (s.size - newSize);
+    _left = (s.value + newSize);
     s.size = newSize;
     checkInvariants();
-  }
-
-  void reclaimLastString(const char* s) {
-    _left = const_cast<char*>(s);
   }
 
   void clear() {

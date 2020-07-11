@@ -22,11 +22,6 @@ TEST_CASE("MemoryPool::size()") {
     REQUIRE(0 == pool.size());
   }
 
-  SECTION("size() == capacity() after allocExpandableString()") {
-    pool.allocExpandableString();
-    REQUIRE(pool.size() == pool.capacity());
-  }
-
   SECTION("Decreases after freezeString()") {
     StringSlot a = pool.allocExpandableString();
     pool.freezeString(a, 1);

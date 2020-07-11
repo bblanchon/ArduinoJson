@@ -19,22 +19,10 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
-  typedef typename remove_reference<TStringStorage>::type::StringBuilder
-      StringBuilder;
-
-  struct StringOrError {
-    DeserializationError err;
-    const char *value;
-
-    StringOrError(DeserializationError e) : err(e) {}
-    StringOrError(DeserializationError::Code c) : err(c) {}
-    StringOrError(const char *s) : err(DeserializationError::Ok), value(s) {}
-  };
-
  public:
   JsonDeserializer(MemoryPool &pool, TReader reader,
                    TStringStorage stringStorage)
-      : _pool(&pool), _stringStorage(stringStorage), _latch(reader) {}
+      : _stringStorage(stringStorage), _latch(reader), _pool(&pool) {}
 
   template <typename TFilter>
   DeserializationError parse(VariantData &variant, TFilter filter,
@@ -224,9 +212,10 @@ class JsonDeserializer {
 
     // Read each key value pair
     for (;;) {
+      _stringStorage.startString(_pool);
+
       // Parse key
-      StringOrError key = parseKey();
-      err = key.err;  // <- this trick saves 62 bytes on AVR
+      err = parseKey();
       if (err)
         return err;
 
@@ -237,17 +226,21 @@ class JsonDeserializer {
       if (!eat(':'))
         return DeserializationError::InvalidInput;
 
-      TFilter memberFilter = filter[key.value];
+      const char *key = _stringStorage.c_str();
+
+      TFilter memberFilter = filter[key];
 
       if (memberFilter.allow()) {
-        VariantData *variant = object.getMember(adaptString(key.value));
+        VariantData *variant = object.getMember(adaptString(key));
         if (!variant) {
+          _stringStorage.commit(_pool);
+
           // Allocate slot in object
           VariantSlot *slot = object.addSlot(_pool);
           if (!slot)
             return DeserializationError::NoMemory;
 
-          slot->setOwnedKey(make_not_null(key.value));
+          slot->setOwnedKey(make_not_null(key));
 
           variant = slot->data();
         }
@@ -257,7 +250,6 @@ class JsonDeserializer {
         if (err)
           return err;
       } else {
-        _stringStorage.reclaim(key.value);
         err = skipVariant(nestingLimit.decrement());
         if (err)
           return err;
@@ -332,7 +324,7 @@ class JsonDeserializer {
     }
   }
 
-  StringOrError parseKey() {
+  DeserializationError parseKey() {
     if (isQuote(current())) {
       return parseQuotedString();
     } else {
@@ -341,15 +333,16 @@ class JsonDeserializer {
   }
 
   DeserializationError parseStringValue(VariantData &variant) {
-    StringOrError result = parseQuotedString();
-    if (result.err)
-      return result.err;
-    variant.setOwnedString(make_not_null(result.value));
+    _stringStorage.startString(_pool);
+    DeserializationError err = parseQuotedString();
+    if (err)
+      return err;
+    _stringStorage.commit(_pool);
+    variant.setOwnedString(make_not_null(_stringStorage.c_str()));
     return DeserializationError::Ok;
   }
 
-  StringOrError parseQuotedString() {
-    StringBuilder builder = _stringStorage.startString();
+  DeserializationError parseQuotedString() {
 #if ARDUINOJSON_DECODE_UNICODE
     Utf16::Codepoint codepoint;
 #endif
@@ -377,7 +370,7 @@ class JsonDeserializer {
           if (err)
             return err;
           if (codepoint.append(codeunit))
-            Utf8::encodeCodepoint(codepoint.value(), builder);
+            Utf8::encodeCodepoint(codepoint.value(), _stringStorage);
           continue;
 #else
           return DeserializationError::NotSupported;
@@ -390,35 +383,37 @@ class JsonDeserializer {
         move();
       }
 
-      builder.append(c);
+      _stringStorage.append(c);
     }
 
-    const char *result = builder.complete();
-    if (!result)
+    _stringStorage.append('\0');
+
+    if (!_stringStorage.isValid())
       return DeserializationError::NoMemory;
-    return result;
+
+    return DeserializationError::Ok;
   }
 
-  StringOrError parseNonQuotedString() {
-    StringBuilder builder = _stringStorage.startString();
-
+  DeserializationError parseNonQuotedString() {
     char c = current();
     ARDUINOJSON_ASSERT(c);
 
     if (canBeInNonQuotedString(c)) {  // no quotes
       do {
         move();
-        builder.append(c);
+        _stringStorage.append(c);
         c = current();
       } while (canBeInNonQuotedString(c));
     } else {
       return DeserializationError::InvalidInput;
     }
 
-    const char *result = builder.complete();
-    if (!result)
+    _stringStorage.append('\0');
+
+    if (!_stringStorage.isValid())
       return DeserializationError::NoMemory;
-    return result;
+
+    return DeserializationError::Ok;
   }
 
   DeserializationError skipString() {
@@ -597,9 +592,9 @@ class JsonDeserializer {
     }
   }
 
-  MemoryPool *_pool;
   TStringStorage _stringStorage;
   Latch<TReader> _latch;
+  MemoryPool *_pool;
 };
 
 // deserializeJson(JsonDocument&, const std::string&, ...)

@@ -525,7 +525,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::InvalidInput,
       "{}", 
-      JSON_OBJECT_SIZE(0) + 8
+      JSON_OBJECT_SIZE(0)
     },
     {
       // incomplete comment after key
@@ -534,7 +534,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::IncompleteInput,
       "{}", 
-      JSON_OBJECT_SIZE(0) + 8
+      JSON_OBJECT_SIZE(0)
     },
     {
       // invalid comment after colon
@@ -729,21 +729,4 @@ TEST_CASE("Overloads") {
     deserializeJson(doc, vla, NestingLimit(5), Filter(filter));
   }
 #endif
-}
-
-TEST_CASE("StringMover::reclaim()") {
-  StaticJsonDocument<200> filter;
-  filter["a"] = true;
-  filter["c"] = true;
-  char input[] = "{\"a\":1,\"b\":2,\"c\":1}";
-
-  StaticJsonDocument<200> doc;
-  deserializeJson(doc, input, DeserializationOption::Filter(filter));
-
-  REQUIRE(doc.as<std::string>() == "{\"a\":1,\"c\":1}");
-
-  CHECK(input[0] == 'a');
-  CHECK(input[1] == 0);
-  CHECK(input[2] == 'c');
-  CHECK(input[3] == 0);
 }

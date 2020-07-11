@@ -13,8 +13,8 @@ template <typename TInput, typename Enable = void>
 struct StringStorage {
   typedef StringCopier type;
 
-  static type create(MemoryPool& pool, TInput&) {
-    return type(&pool);
+  static type create(TInput&) {
+    return type();
   }
 };
 
@@ -23,20 +23,18 @@ struct StringStorage<TChar*,
                      typename enable_if<!is_const<TChar>::value>::type> {
   typedef StringMover type;
 
-  static type create(MemoryPool&, TChar* input) {
+  static type create(TChar* input) {
     return type(reinterpret_cast<char*>(input));
   }
 };
 
 template <typename TInput>
-typename StringStorage<TInput>::type makeStringStorage(MemoryPool& pool,
-                                                       TInput& input) {
-  return StringStorage<TInput>::create(pool, input);
+typename StringStorage<TInput>::type makeStringStorage(TInput& input) {
+  return StringStorage<TInput>::create(input);
 }
 
 template <typename TChar>
-typename StringStorage<TChar*>::type makeStringStorage(MemoryPool& pool,
-                                                       TChar* input) {
-  return StringStorage<TChar*>::create(pool, input);
+typename StringStorage<TChar*>::type makeStringStorage(TChar* input) {
+  return StringStorage<TChar*>::create(input);
 }
 }  // namespace ARDUINOJSON_NAMESPACE
