@@ -128,7 +128,12 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['clang-6.0','llvm-6.0']
-      env: SCRIPT=fuzz CLANG=6.0
+      env: SCRIPT=fuzz CLANG=6.0 FUZZER=json
+    - addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['clang-6.0','llvm-6.0']
+      env: SCRIPT=fuzz CLANG=6.0 FUZZER=msgpack
 cache:
   directories:
     - "~/.platformio"
