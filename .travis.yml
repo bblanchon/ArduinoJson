@@ -107,10 +107,14 @@ matrix:
           sources: ['ubuntu-toolchain-r-test','llvm-toolchain-trusty-8']
           packages: ['clang-8']
       env: SCRIPT=test _CC=clang-8 _CXX=clang++-8
+    - addons:
+        apt:
+          sources:
+            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+          packages: ['clang-9']
+      env: SCRIPT=test _CC=clang-9 _CXX=clang++-9
     - env: SCRIPT=coverage
-    - os: osx
-      osx_image: xcode7.3
-      env: SCRIPT=test
     - os: osx
       osx_image: xcode8.3
       env: SCRIPT=test
@@ -126,14 +130,18 @@ matrix:
     - env: SCRIPT=platformio BOARD=esp01
     - addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['clang-6.0','llvm-6.0']
-      env: SCRIPT=fuzz CLANG=6.0 FUZZER=json
+          sources:
+            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+          packages: ['clang-9','llvm-9']
+      env: SCRIPT=fuzz CLANG=9 FUZZER=json
     - addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['clang-6.0','llvm-6.0']
-      env: SCRIPT=fuzz CLANG=6.0 FUZZER=msgpack
+          sources:
+            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+          packages: ['clang-9','llvm-9']
+      env: SCRIPT=fuzz CLANG=9 FUZZER=msgpack
 cache:
   directories:
     - "~/.platformio"
