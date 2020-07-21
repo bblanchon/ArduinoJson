@@ -36,6 +36,10 @@ class SizedRamStringAdapter {
     return _size;
   }
 
+  const char* begin() const {
+    return _str;
+  }
+
   typedef storage_policies::store_by_copy storage_policy;
 
  private:

@@ -41,6 +41,10 @@ class StlStringAdapter {
     return _str->size();
   }
 
+  const char* begin() const {
+    return _str->c_str();
+  }
+
   typedef storage_policies::store_by_copy storage_policy;
 
  private:

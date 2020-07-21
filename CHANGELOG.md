@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added comparisons (`>`, `>=`, `==`, `!=`, `<`, and `<=`) between `JsonVariant`s
+* Added string deduplication (issue #1303)
 
 v6.15.2 (2020-05-15)
 -------

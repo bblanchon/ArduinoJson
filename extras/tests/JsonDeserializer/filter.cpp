@@ -239,7 +239,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "[{\"example\":1},{\"example\":3}]",
-      JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(1) + 16
+      JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(1) + 8
     },
     {
       "[',2,3]",

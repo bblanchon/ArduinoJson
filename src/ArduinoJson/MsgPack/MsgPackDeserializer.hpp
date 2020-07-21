@@ -248,8 +248,8 @@ class MsgPackDeserializer {
     _stringStorage.append('\0');
     if (!_stringStorage.isValid())
       return DeserializationError::NoMemory;
-    _stringStorage.commit(_pool);
-    result = _stringStorage.c_str();
+
+    result = _stringStorage.save(_pool);
     return DeserializationError::Ok;
   }
 

@@ -22,24 +22,6 @@ TEST_CASE("MemoryPool::size()") {
     REQUIRE(0 == pool.size());
   }
 
-  SECTION("Decreases after freezeString()") {
-    StringSlot a = pool.allocExpandableString();
-    pool.freezeString(a, 1);
-    REQUIRE(pool.size() == 1);
-
-    StringSlot b = pool.allocExpandableString();
-    pool.freezeString(b, 1);
-    REQUIRE(pool.size() == 2);
-  }
-
-  SECTION("Increases after allocFrozenString()") {
-    pool.allocFrozenString(1);
-    REQUIRE(pool.size() == 1);
-
-    pool.allocFrozenString(2);
-    REQUIRE(pool.size() == 3);
-  }
-
   SECTION("Doesn't grow when memory pool is full") {
     const size_t variantCount = sizeof(buffer) / sizeof(VariantSlot);
 

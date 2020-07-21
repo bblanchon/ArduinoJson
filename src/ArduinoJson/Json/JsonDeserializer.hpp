@@ -212,8 +212,6 @@ class JsonDeserializer {
 
     // Read each key value pair
     for (;;) {
-      _stringStorage.startString(_pool);
-
       // Parse key
       err = parseKey();
       if (err)
@@ -233,7 +231,9 @@ class JsonDeserializer {
       if (memberFilter.allow()) {
         VariantData *variant = object.getMember(adaptString(key));
         if (!variant) {
-          _stringStorage.commit(_pool);
+          // Save key in memory pool.
+          // This MUST be done before adding the slot.
+          key = _stringStorage.save(_pool);
 
           // Allocate slot in object
           VariantSlot *slot = object.addSlot(_pool);
@@ -325,6 +325,7 @@ class JsonDeserializer {
   }
 
   DeserializationError parseKey() {
+    _stringStorage.startString(_pool);
     if (isQuote(current())) {
       return parseQuotedString();
     } else {
@@ -337,8 +338,8 @@ class JsonDeserializer {
     DeserializationError err = parseQuotedString();
     if (err)
       return err;
-    _stringStorage.commit(_pool);
-    variant.setOwnedString(make_not_null(_stringStorage.c_str()));
+    const char *value = _stringStorage.save(_pool);
+    variant.setOwnedString(make_not_null(value));
     return DeserializationError::Ok;
   }
 

@@ -31,6 +31,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [Consumes roughly 10% less RAM than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/?utm_source=github&utm_medium=readme)
     * [Fixed memory allocation, no heap fragmentation](https://arduinojson.org/v6/api/jsondocument/?utm_source=github&utm_medium=readme)
     * [Optionally works without heap memory (zero malloc)](https://arduinojson.org/v6/api/staticjsondocument/?utm_source=github&utm_medium=readme)
+    * Deduplicates strings
 * Versatile
     * [Supports custom allocators (to use external RAM chip, for example)](https://arduinojson.org/v6/how-to/use-external-ram-on-esp32/?utm_source=github&utm_medium=readme)
     * Supports [Arduino's `String`](https://arduinojson.org/v6/api/config/enable_arduino_string/) and [STL's `std::string`](https://arduinojson.org/v6/api/config/enable_std_string/?utm_source=github&utm_medium=readme)

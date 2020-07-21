@@ -11,13 +11,13 @@ namespace ARDUINOJSON_NAMESPACE {
 class StringCopier {
  public:
   void startString(MemoryPool* pool) {
-    _slot = pool->allocExpandableString();
+    pool->getFreeZone(&_ptr, &_capacity);
     _size = 0;
   }
 
-  void commit(MemoryPool* pool) {
-    ARDUINOJSON_ASSERT(_slot.value);
-    pool->freezeString(_slot, _size);
+  const char* save(MemoryPool* pool) {
+    ARDUINOJSON_ASSERT(_ptr);
+    return pool->saveStringFromFreeZone(_size);
   }
 
   void append(const char* s) {
@@ -29,27 +29,28 @@ class StringCopier {
   }
 
   void append(char c) {
-    if (!_slot.value)
+    if (!_ptr)
       return;
 
-    if (_size >= _slot.size) {
-      _slot.value = 0;
+    if (_size >= _capacity) {
+      _ptr = 0;
       return;
     }
 
-    _slot.value[_size++] = c;
+    _ptr[_size++] = c;
   }
 
   bool isValid() {
-    return _slot.value != 0;
+    return _ptr != 0;
   }
 
   const char* c_str() {
-    return _slot.value;
+    return _ptr;
   }
 
  private:
+  char* _ptr;
   size_t _size;
-  StringSlot _slot;
+  size_t _capacity;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

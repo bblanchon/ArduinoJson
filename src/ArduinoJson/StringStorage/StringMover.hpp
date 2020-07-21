@@ -16,7 +16,9 @@ class StringMover {
     _startPtr = _writePtr;
   }
 
-  void commit(MemoryPool*) const {}
+  const char* save(MemoryPool*) const {
+    return _startPtr;
+  }
 
   void append(char c) {
     *_writePtr++ = c;

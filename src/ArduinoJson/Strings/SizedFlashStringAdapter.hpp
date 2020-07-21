@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Strings/FlashStringIterator.hpp>
 #include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 
@@ -39,6 +40,10 @@ class SizedFlashStringAdapter {
 
   size_t size() const {
     return _size;
+  }
+
+  FlashStringIterator begin() const {
+    return FlashStringIterator(_str);
   }
 
   typedef storage_policies::store_by_copy storage_policy;

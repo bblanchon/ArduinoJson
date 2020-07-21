@@ -9,6 +9,9 @@
 // Reproduces Arduino's String class
 class String {
  public:
+  String() {}
+  explicit String(const char* s) : _str(s) {}
+
   String& operator+=(const char* rhs) {
     _str += rhs;
     return *this;
