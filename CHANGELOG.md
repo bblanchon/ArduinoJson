@@ -6,6 +6,7 @@ HEAD
 
 * Added comparisons (`>`, `>=`, `==`, `!=`, `<`, and `<=`) between `JsonVariant`s
 * Added string deduplication (issue #1303)
+* Fixed `copyArray()` not working with `String`
 
 v6.15.2 (2020-05-15)
 -------

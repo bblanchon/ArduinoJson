@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("copyArray()") {
-  SECTION("1D -> JsonArray") {
+  SECTION("int[] -> JsonArray") {
     DynamicJsonDocument doc(4096);
     JsonArray array = doc.to<JsonArray>();
     char json[32];
@@ -19,7 +19,20 @@ TEST_CASE("copyArray()") {
     REQUIRE(std::string("[1,2,3]") == json);
   }
 
-  SECTION("1D -> JsonDocument") {
+  SECTION("std::string[] -> JsonArray") {
+    DynamicJsonDocument doc(4096);
+    JsonArray array = doc.to<JsonArray>();
+    char json[32];
+    std::string source[] = {"a", "b", "c"};
+
+    bool ok = copyArray(source, array);
+    REQUIRE(ok);
+
+    serializeJson(array, json, sizeof(json));
+    REQUIRE(std::string("[\"a\",\"b\",\"c\"]") == json);
+  }
+
+  SECTION("int[] -> JsonDocument") {
     DynamicJsonDocument doc(4096);
     char json[32];
     int source[] = {1, 2, 3};
@@ -31,7 +44,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(std::string("[1,2,3]") == json);
   }
 
-  SECTION("1D -> JsonArray, but not enough memory") {
+  SECTION("int[] -> JsonArray, but not enough memory") {
     const size_t SIZE = JSON_ARRAY_SIZE(2);
     StaticJsonDocument<SIZE> doc;
     JsonArray array = doc.to<JsonArray>();
@@ -45,7 +58,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(std::string("[1,2]") == json);
   }
 
-  SECTION("2D -> JsonArray") {
+  SECTION("int[][] -> JsonArray") {
     DynamicJsonDocument doc(4096);
     JsonArray array = doc.to<JsonArray>();
     char json[32];
@@ -58,7 +71,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(std::string("[[1,2,3],[4,5,6]]") == json);
   }
 
-  SECTION("2D -> JsonDocument") {
+  SECTION("int[][] -> JsonDocument") {
     DynamicJsonDocument doc(4096);
     char json[32];
     int source[][3] = {{1, 2, 3}, {4, 5, 6}};
@@ -70,7 +83,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(std::string("[[1,2,3],[4,5,6]]") == json);
   }
 
-  SECTION("2D -> JsonArray, but not enough memory") {
+  SECTION("int[][] -> JsonArray, but not enough memory") {
     const size_t SIZE =
         JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(2);
     StaticJsonDocument<SIZE> doc;
@@ -88,7 +101,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(std::string("[[1,2,3],[4,5]]") == json);
   }
 
-  SECTION("JsonArray -> 1D, with more space than needed") {
+  SECTION("JsonArray -> int[], with more space than needed") {
     DynamicJsonDocument doc(4096);
     char json[] = "[1,2,3]";
     DeserializationError err = deserializeJson(doc, json);
@@ -105,7 +118,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(0 == destination[3]);
   }
 
-  SECTION("JsonArray -> 1D, without enough space") {
+  SECTION("JsonArray -> int[], without enough space") {
     DynamicJsonDocument doc(4096);
     char json[] = "[1,2,3]";
     DeserializationError err = deserializeJson(doc, json);
@@ -120,7 +133,24 @@ TEST_CASE("copyArray()") {
     REQUIRE(2 == destination[1]);
   }
 
-  SECTION("JsonDocument -> 1D") {
+  SECTION("JsonArray -> std::string[]") {
+    DynamicJsonDocument doc(4096);
+    char json[] = "[\"a\",\"b\",\"c\"]";
+    DeserializationError err = deserializeJson(doc, json);
+    REQUIRE(err == DeserializationError::Ok);
+    JsonArray array = doc.as<JsonArray>();
+
+    std::string destination[4];
+    size_t result = copyArray(array, destination);
+
+    REQUIRE(3 == result);
+    CHECK("a" == destination[0]);
+    CHECK("b" == destination[1]);
+    CHECK("c" == destination[2]);
+    CHECK("" == destination[3]);
+  }
+
+  SECTION("JsonDocument -> int[]") {
     DynamicJsonDocument doc(4096);
     char json[] = "[1,2,3]";
     DeserializationError err = deserializeJson(doc, json);
@@ -136,7 +166,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(0 == destination[3]);
   }
 
-  SECTION("JsonArray -> 2D") {
+  SECTION("JsonArray -> int[][]") {
     DynamicJsonDocument doc(4096);
     char json[] = "[[1,2],[3],[4]]";
 
@@ -155,7 +185,7 @@ TEST_CASE("copyArray()") {
     REQUIRE(0 == destination[2][1]);
   }
 
-  SECTION("JsonDocument -> 2D") {
+  SECTION("JsonDocument -> int[][]") {
     DynamicJsonDocument doc(4096);
     char json[] = "[[1,2],[3],[4]]";
 

@@ -74,7 +74,7 @@ inline size_t copyArray(ArrayConstRef src, T* dst, size_t len) {
   size_t i = 0;
   for (ArrayConstRef::iterator it = src.begin(); it != src.end() && i < len;
        ++it)
-    dst[i++] = *it;
+    dst[i++] = it->as<T>();
   return i;
 }
 
