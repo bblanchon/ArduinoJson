@@ -7,7 +7,7 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-TEST_CASE("MemberProxy::operator[]") {
+TEST_CASE("ElementProxy::operator[]") {
   DynamicJsonDocument doc(4096);
   ElementProxy<JsonDocument&> ep = doc[1];
 

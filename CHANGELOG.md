@@ -7,6 +7,7 @@ HEAD
 * Added comparisons (`>`, `>=`, `==`, `!=`, `<`, and `<=`) between `JsonVariant`s
 * Added string deduplication (issue #1303)
 * Fixed `copyArray()` not working with `String`, `ElementProxy`, and `MemberProxy`
+* Fixed error `getOrAddElement is not a member of ElementProxy` (issue #1311)
 
 v6.15.2 (2020-05-15)
 -------

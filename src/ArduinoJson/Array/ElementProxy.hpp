@@ -135,6 +135,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return getOrAddUpstreamElement().getElement(index);
   }
 
+  VariantRef getOrAddElement(size_t index) const {
+    return getOrAddUpstreamElement().getOrAddElement(index);
+  }
+
   FORCE_INLINE void remove(size_t index) const {
     getUpstreamElement().remove(index);
   }
