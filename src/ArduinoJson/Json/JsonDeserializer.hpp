@@ -240,7 +240,7 @@ class JsonDeserializer {
           if (!slot)
             return DeserializationError::NoMemory;
 
-          slot->setOwnedKey(make_not_null(key));
+          slot->setKey(key, typename TStringStorage::storage_policy());
 
           variant = slot->data();
         }
@@ -339,7 +339,8 @@ class JsonDeserializer {
     if (err)
       return err;
     const char *value = _stringStorage.save(_pool);
-    variant.setOwnedString(make_not_null(value));
+    variant.setString(make_not_null(value),
+                      typename TStringStorage::storage_policy());
     return DeserializationError::Ok;
   }
 

@@ -233,7 +233,8 @@ class MsgPackDeserializer {
     const char *s = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
     DeserializationError err = readString(s, n);
     if (!err)
-      variant.setOwnedString(make_not_null(s));
+      variant.setString(make_not_null(s),
+                        typename TStringStorage::storage_policy());
     return err;
   }
 
@@ -303,7 +304,7 @@ class MsgPackDeserializer {
       DeserializationError err = parseKey(key);
       if (err)
         return err;
-      slot->setOwnedKey(make_not_null(key));
+      slot->setKey(key, typename TStringStorage::storage_policy());
 
       err = parse(*slot->data(), nestingLimit.decrement());
       if (err)

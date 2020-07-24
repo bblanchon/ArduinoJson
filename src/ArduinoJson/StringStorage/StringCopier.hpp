@@ -48,6 +48,8 @@ class StringCopier {
     return _ptr;
   }
 
+  typedef storage_policies::store_by_copy storage_policy;
+
  private:
   char* _ptr;
   size_t _size;

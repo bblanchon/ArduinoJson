@@ -30,7 +30,7 @@ template <typename TAdaptedString>
 inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool*,
                        storage_policies::store_by_address) {
   ARDUINOJSON_ASSERT(var);
-  var->setLinkedKey(make_not_null(key.data()));
+  var->setKey(key.data(), storage_policies::store_by_address());
   return true;
 }
 
@@ -41,7 +41,7 @@ inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool,
   if (!dup)
     return false;
   ARDUINOJSON_ASSERT(var);
-  var->setOwnedKey(make_not_null(dup));
+  var->setKey(dup, storage_policies::store_by_copy());
   return true;
 }
 

@@ -101,7 +101,7 @@ class VariantData {
       case VALUE_IS_OBJECT:
         return toObject().copyFrom(src._content.asCollection, pool);
       case VALUE_IS_OWNED_STRING:
-        return setOwnedString(RamStringAdapter(src._content.asString), pool);
+        return setString(RamStringAdapter(src._content.asString), pool);
       case VALUE_IS_OWNED_RAW:
         return setOwnedRaw(
             serialized(src._content.asRaw.data, src._content.asRaw.size), pool);
@@ -238,27 +238,24 @@ class VariantData {
     _content.asInteger = value;
   }
 
-  void setLinkedString(const char *value) {
-    if (value) {
-      setType(VALUE_IS_LINKED_STRING);
-      _content.asString = value;
-    } else {
-      setType(VALUE_IS_NULL);
-    }
-  }
-
   void setNull() {
     setType(VALUE_IS_NULL);
   }
 
-  void setOwnedString(not_null<const char *> s) {
+  void setString(not_null<const char *> s, storage_policies::store_by_copy) {
     setType(VALUE_IS_OWNED_STRING);
     _content.asString = s.get();
   }
 
-  bool setOwnedString(const char *s) {
+  void setString(not_null<const char *> s, storage_policies::store_by_address) {
+    setType(VALUE_IS_LINKED_STRING);
+    _content.asString = s.get();
+  }
+
+  template <typename TStoragePolicy>
+  bool setString(const char *s, TStoragePolicy storage_policy) {
     if (s) {
-      setOwnedString(make_not_null(s));
+      setString(make_not_null(s), storage_policy);
       return true;
     } else {
       setType(VALUE_IS_NULL);
@@ -267,8 +264,30 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  bool setOwnedString(TAdaptedString value, MemoryPool *pool) {
-    return setOwnedString(pool->saveString(value));
+  bool setString(TAdaptedString value, MemoryPool *pool) {
+    return setString(value, pool, typename TAdaptedString::storage_policy());
+  }
+
+  template <typename TAdaptedString>
+  inline bool setString(TAdaptedString value, MemoryPool *pool,
+                        storage_policies::decide_at_runtime) {
+    if (value.isStatic())
+      return setString(value, pool, storage_policies::store_by_address());
+    else
+      return setString(value, pool, storage_policies::store_by_copy());
+  }
+
+  template <typename TAdaptedString>
+  inline bool setString(TAdaptedString value, MemoryPool *,
+                        storage_policies::store_by_address) {
+    return setString(value.data(), storage_policies::store_by_address());
+  }
+
+  template <typename TAdaptedString>
+  inline bool setString(TAdaptedString value, MemoryPool *pool,
+                        storage_policies::store_by_copy) {
+    return setString(pool->saveString(value),
+                     storage_policies::store_by_copy());
   }
 
   CollectionData &toArray() {

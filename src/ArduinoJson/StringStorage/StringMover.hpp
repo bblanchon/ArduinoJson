@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -31,6 +32,8 @@ class StringMover {
   const char* c_str() const {
     return _startPtr;
   }
+
+  typedef storage_policies::store_by_address storage_policy;
 
  private:
   char* _writePtr;
