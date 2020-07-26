@@ -14,6 +14,8 @@ T parseInteger(const char *s) {
   // try to reuse the same parameters as JsonDeserializer
   typedef typename choose_largest<UInt, typename make_unsigned<T>::type>::type
       TUInt;
-  return parseNumber<Float, TUInt>(s).template as<T>();
+  ParsedNumber<Float, TUInt> value;
+  parseNumber(s, value);
+  return value.template as<T>();
 }
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -13,6 +13,8 @@ template <typename T>
 inline T parseFloat(const char* s) {
   // try to reuse the same parameters as JsonDeserializer
   typedef typename choose_largest<Float, T>::type TFloat;
-  return parseNumber<TFloat, UInt>(s).template as<T>();
+  ParsedNumber<TFloat, UInt> value;
+  parseNumber(s, value);
+  return value.template as<T>();
 }
 }  // namespace ARDUINOJSON_NAMESPACE

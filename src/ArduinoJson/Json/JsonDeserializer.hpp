@@ -466,7 +466,8 @@ class JsonDeserializer {
                     : DeserializationError::IncompleteInput;
     }
 
-    ParsedNumber<Float, UInt> num = parseNumber<Float, UInt>(_buffer);
+    ParsedNumber<Float, UInt> num;
+    parseNumber<Float, UInt>(_buffer, num);
 
     switch (num.type()) {
       case VALUE_IS_NEGATIVE_INTEGER:
