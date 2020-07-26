@@ -8,6 +8,7 @@ HEAD
 * Added string deduplication (issue #1303)
 * Fixed `copyArray()` not working with `String`, `ElementProxy`, and `MemberProxy`
 * Fixed error `getOrAddElement is not a member of ElementProxy` (issue #1311)
+* Fixed excessive stack usage when compiled with `-Og` (issues #1210 and #1314)
 
 v6.15.2 (2020-05-15)
 -------
