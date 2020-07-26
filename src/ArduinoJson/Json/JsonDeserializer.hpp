@@ -439,18 +439,17 @@ class JsonDeserializer {
   }
 
   DeserializationError parseNumericValue(VariantData &result) {
-    char buffer[64];
     uint8_t n = 0;
 
     char c = current();
     while (canBeInNonQuotedString(c) && n < 63) {
       move();
-      buffer[n++] = c;
+      _buffer[n++] = c;
       c = current();
     }
-    buffer[n] = 0;
+    _buffer[n] = 0;
 
-    c = buffer[0];
+    c = _buffer[0];
     if (c == 't') {  // true
       result.setBoolean(true);
       return n == 4 ? DeserializationError::Ok
@@ -467,7 +466,7 @@ class JsonDeserializer {
                     : DeserializationError::IncompleteInput;
     }
 
-    ParsedNumber<Float, UInt> num = parseNumber<Float, UInt>(buffer);
+    ParsedNumber<Float, UInt> num = parseNumber<Float, UInt>(_buffer);
 
     switch (num.type()) {
       case VALUE_IS_NEGATIVE_INTEGER:
@@ -597,6 +596,9 @@ class JsonDeserializer {
   TStringStorage _stringStorage;
   Latch<TReader> _latch;
   MemoryPool *_pool;
+  char _buffer[64];  // using a member instead of a local variable because it
+                     // ended in the recursive path after compiler inlined the
+                     // code
 };
 
 // deserializeJson(JsonDocument&, const std::string&, ...)
