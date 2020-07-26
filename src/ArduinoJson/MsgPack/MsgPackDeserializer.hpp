@@ -18,28 +18,34 @@ class MsgPackDeserializer {
  public:
   MsgPackDeserializer(MemoryPool &pool, TReader reader,
                       TStringStorage stringStorage)
-      : _pool(&pool), _reader(reader), _stringStorage(stringStorage) {}
+      : _pool(&pool),
+        _reader(reader),
+        _stringStorage(stringStorage),
+        _error(DeserializationError::Ok) {}
 
   // TODO: add support for filter
   DeserializationError parse(VariantData &variant, AllowAllFilter,
                              NestingLimit nestingLimit) {
-    return parse(variant, nestingLimit);
+    parseVariant(variant, nestingLimit);
+    return _error;
   }
 
-  DeserializationError parse(VariantData &variant, NestingLimit nestingLimit) {
+ private:
+  bool parseVariant(VariantData &variant, NestingLimit nestingLimit) {
     uint8_t code;
-    if (!readByte(code))
-      return DeserializationError::IncompleteInput;
+    if (!readByte(code)) {
+      _error = DeserializationError::IncompleteInput;
+      return false;
+    }
 
     if ((code & 0x80) == 0) {
       variant.setUnsignedInteger(code);
-      return DeserializationError::Ok;
+      return true;
     }
 
     if ((code & 0xe0) == 0xe0) {
-      // TODO: add setNegativeInteger()
       variant.setSignedInteger(static_cast<int8_t>(code));
-      return DeserializationError::Ok;
+      return true;
     }
 
     if ((code & 0xe0) == 0xa0) {
@@ -57,15 +63,15 @@ class MsgPackDeserializer {
     switch (code) {
       case 0xc0:
         // already null
-        return DeserializationError::Ok;
+        return true;
 
       case 0xc2:
         variant.setBoolean(false);
-        return DeserializationError::Ok;
+        return true;
 
       case 0xc3:
         variant.setBoolean(true);
-        return DeserializationError::Ok;
+        return true;
 
       case 0xcc:
         return readInteger<uint8_t>(variant);
@@ -76,11 +82,9 @@ class MsgPackDeserializer {
       case 0xce:
         return readInteger<uint32_t>(variant);
 
-      case 0xcf:
 #if ARDUINOJSON_USE_LONG_LONG
+      case 0xcf:
         return readInteger<uint64_t>(variant);
-#else
-        return DeserializationError::NotSupported;
 #endif
 
       case 0xd0:
@@ -92,11 +96,9 @@ class MsgPackDeserializer {
       case 0xd2:
         return readInteger<int32_t>(variant);
 
-      case 0xd3:
 #if ARDUINOJSON_USE_LONG_LONG
+      case 0xd3:
         return readInteger<int64_t>(variant);
-#else
-        return DeserializationError::NotSupported;
 #endif
 
       case 0xca:
@@ -127,7 +129,8 @@ class MsgPackDeserializer {
         return readObject<uint32_t>(variant.toObject(), nestingLimit);
 
       default:
-        return DeserializationError::NotSupported;
+        _error = DeserializationError::NotSupported;
+        return false;
     }
   }
 
@@ -137,27 +140,24 @@ class MsgPackDeserializer {
 
   bool readByte(uint8_t &value) {
     int c = _reader.read();
-    if (c < 0)
+    if (c < 0) {
+      _error = DeserializationError::IncompleteInput;
       return false;
+    }
     value = static_cast<uint8_t>(c);
     return true;
   }
 
   bool readBytes(uint8_t *p, size_t n) {
-    return _reader.readBytes(reinterpret_cast<char *>(p), n) == n;
+    if (_reader.readBytes(reinterpret_cast<char *>(p), n) == n)
+      return true;
+    _error = DeserializationError::IncompleteInput;
+    return false;
   }
 
   template <typename T>
   bool readBytes(T &value) {
     return readBytes(reinterpret_cast<uint8_t *>(&value), sizeof(value));
-  }
-
-  template <typename T>
-  T readInteger() {
-    T value;
-    readBytes(value);
-    fixEndianess(value);
-    return value;
   }
 
   template <typename T>
@@ -169,155 +169,159 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  DeserializationError readInteger(VariantData &variant) {
+  bool readInteger(VariantData &variant) {
     T value;
     if (!readInteger(value))
-      return DeserializationError::IncompleteInput;
+      return false;
     variant.setInteger(value);
-    return DeserializationError::Ok;
+    return true;
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 4, DeserializationError>::type readFloat(
+  typename enable_if<sizeof(T) == 4, bool>::type readFloat(
       VariantData &variant) {
     T value;
     if (!readBytes(value))
-      return DeserializationError::IncompleteInput;
+      return false;
     fixEndianess(value);
     variant.setFloat(value);
-    return DeserializationError::Ok;
+    return true;
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 8, DeserializationError>::type readDouble(
+  typename enable_if<sizeof(T) == 8, bool>::type readDouble(
       VariantData &variant) {
     T value;
     if (!readBytes(value))
-      return DeserializationError::IncompleteInput;
+      return false;
     fixEndianess(value);
     variant.setFloat(value);
-    return DeserializationError::Ok;
+    return true;
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 4, DeserializationError>::type readDouble(
+  typename enable_if<sizeof(T) == 4, bool>::type readDouble(
       VariantData &variant) {
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
     uint8_t *o = reinterpret_cast<uint8_t *>(&value);
     if (!readBytes(i, 8))
-      return DeserializationError::IncompleteInput;
+      return false;
     doubleToFloat(i, o);
     fixEndianess(value);
     variant.setFloat(value);
-    return DeserializationError::Ok;
+    return true;
   }
 
   template <typename T>
-  DeserializationError readString(VariantData &variant) {
+  bool readString(VariantData &variant) {
     T size;
     if (!readInteger(size))
-      return DeserializationError::IncompleteInput;
+      return false;
     return readString(variant, size);
   }
 
   template <typename T>
-  DeserializationError readString(const char *&str) {
+  bool readString(const char *&str) {
     T size;
     if (!readInteger(size))
-      return DeserializationError::IncompleteInput;
+      return false;
     return readString(str, size);
   }
 
-  DeserializationError readString(VariantData &variant, size_t n) {
+  bool readString(VariantData &variant, size_t n) {
     const char *s = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
-    DeserializationError err = readString(s, n);
-    if (!err)
-      variant.setString(make_not_null(s),
-                        typename TStringStorage::storage_policy());
-    return err;
+    if (!readString(s, n))
+      return false;
+    variant.setString(make_not_null(s),
+                      typename TStringStorage::storage_policy());
+    return true;
   }
 
-  DeserializationError readString(const char *&result, size_t n) {
+  bool readString(const char *&result, size_t n) {
     _stringStorage.startString(_pool);
     for (; n; --n) {
       uint8_t c;
       if (!readBytes(c))
-        return DeserializationError::IncompleteInput;
+        return false;
       _stringStorage.append(static_cast<char>(c));
     }
     _stringStorage.append('\0');
-    if (!_stringStorage.isValid())
-      return DeserializationError::NoMemory;
+    if (!_stringStorage.isValid()) {
+      _error = DeserializationError::NoMemory;
+      return false;
+    }
 
     result = _stringStorage.save(_pool);
-    return DeserializationError::Ok;
+    return true;
   }
 
   template <typename TSize>
-  DeserializationError readArray(CollectionData &array,
-                                 NestingLimit nestingLimit) {
+  bool readArray(CollectionData &array, NestingLimit nestingLimit) {
     TSize size;
     if (!readInteger(size))
-      return DeserializationError::IncompleteInput;
+      return false;
     return readArray(array, size, nestingLimit);
   }
 
-  DeserializationError readArray(CollectionData &array, size_t n,
-                                 NestingLimit nestingLimit) {
-    if (nestingLimit.reached())
-      return DeserializationError::TooDeep;
+  bool readArray(CollectionData &array, size_t n, NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) {
+      _error = DeserializationError::TooDeep;
+      return false;
+    }
 
     for (; n; --n) {
       VariantData *value = array.addElement(_pool);
-      if (!value)
-        return DeserializationError::NoMemory;
+      if (!value) {
+        _error = DeserializationError::NoMemory;
+        return false;
+      }
 
-      DeserializationError err = parse(*value, nestingLimit.decrement());
-      if (err)
-        return err;
+      if (!parseVariant(*value, nestingLimit.decrement()))
+        return false;
     }
 
-    return DeserializationError::Ok;
+    return true;
   }
 
   template <typename TSize>
-  DeserializationError readObject(CollectionData &object,
-                                  NestingLimit nestingLimit) {
+  bool readObject(CollectionData &object, NestingLimit nestingLimit) {
     TSize size;
     if (!readInteger(size))
-      return DeserializationError::IncompleteInput;
+      return false;
     return readObject(object, size, nestingLimit);
   }
 
-  DeserializationError readObject(CollectionData &object, size_t n,
-                                  NestingLimit nestingLimit) {
-    if (nestingLimit.reached())
-      return DeserializationError::TooDeep;
+  bool readObject(CollectionData &object, size_t n, NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) {
+      _error = DeserializationError::TooDeep;
+      return false;
+    }
 
     for (; n; --n) {
       VariantSlot *slot = object.addSlot(_pool);
-      if (!slot)
-        return DeserializationError::NoMemory;
+      if (!slot) {
+        _error = DeserializationError::NoMemory;
+        return false;
+      }
 
       const char *key = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
-      DeserializationError err = parseKey(key);
-      if (err)
-        return err;
+      if (!parseKey(key))
+        return false;
+
       slot->setKey(key, typename TStringStorage::storage_policy());
 
-      err = parse(*slot->data(), nestingLimit.decrement());
-      if (err)
-        return err;
+      if (!parseVariant(*slot->data(), nestingLimit.decrement()))
+        return false;
     }
 
-    return DeserializationError::Ok;
+    return true;
   }
 
-  DeserializationError parseKey(const char *&key) {
+  bool parseKey(const char *&key) {
     uint8_t code;
     if (!readByte(code))
-      return DeserializationError::IncompleteInput;
+      return false;
 
     if ((code & 0xe0) == 0xa0)
       return readString(key, code & 0x1f);
@@ -333,13 +337,15 @@ class MsgPackDeserializer {
         return readString<uint32_t>(key);
 
       default:
-        return DeserializationError::NotSupported;
+        _error = DeserializationError::NotSupported;
+        return false;
     }
   }
 
   MemoryPool *_pool;
   TReader _reader;
   TStringStorage _stringStorage;
+  DeserializationError _error;
 };
 
 template <typename TInput>
