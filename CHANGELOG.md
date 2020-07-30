@@ -6,6 +6,7 @@ HEAD
 
 * Added comparisons (`>`, `>=`, `==`, `!=`, `<`, and `<=`) between `JsonVariant`s
 * Added string deduplication (issue #1303)
+* Added `JsonString::operator!=`
 * Set `ARDUINOJSON_DECODE_UNICODE` to `1` by default
 * Fixed `copyArray()` not working with `String`, `ElementProxy`, and `MemberProxy`
 * Fixed error `getOrAddElement is not a member of ElementProxy` (issue #1311)

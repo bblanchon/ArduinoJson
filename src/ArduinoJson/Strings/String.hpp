@@ -38,6 +38,16 @@ class String {
     return strcmp(lhs._data, rhs._data) == 0;
   }
 
+  friend bool operator!=(String lhs, String rhs) {
+    if (lhs._data == rhs._data)
+      return false;
+    if (!lhs._data)
+      return true;
+    if (!rhs._data)
+      return true;
+    return strcmp(lhs._data, rhs._data) != 0;
+  }
+
  private:
   const char* _data;
   bool _isStatic;
