@@ -65,4 +65,15 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(_array[0] == 1);
     REQUIRE(_array[1] == 2);
   }
+
+  SECTION("In a loop") {
+    for (JsonArray::iterator it = _array.begin(); it != _array.end(); ++it) {
+      if (*it == 2)
+        _array.remove(it);
+    }
+
+    REQUIRE(2 == _array.size());
+    REQUIRE(_array[0] == 1);
+    REQUIRE(_array[1] == 3);
+  }
 }
