@@ -164,7 +164,7 @@
 
 // Convert unicode escape sequence (\u0123) to UTF-8
 #ifndef ARDUINOJSON_DECODE_UNICODE
-#define ARDUINOJSON_DECODE_UNICODE 0
+#define ARDUINOJSON_DECODE_UNICODE 1
 #endif
 
 // Ignore comments in input
