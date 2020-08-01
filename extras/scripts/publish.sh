@@ -41,7 +41,7 @@ update_version_in_source () {
 }
 
 commit_new_version () {
-	git add src/ArduinoJson/version.hpp README.md CHANGELOG.md library.json library.properties appveyor.yml
+	git add src/ArduinoJson/version.hpp README.md CHANGELOG.md library.json library.properties appveyor.yml CMakeLists.txt
 	git commit -m "Set version to $VERSION"
 }
 
