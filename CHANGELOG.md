@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.16.0 (2020-08-01)
+-------
 
 * Added comparisons (`>`, `>=`, `==`, `!=`, `<`, and `<=`) between `JsonVariant`s
 * Added string deduplication (issue #1303)
