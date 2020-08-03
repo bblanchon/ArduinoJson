@@ -128,20 +128,6 @@ matrix:
     - env: SCRIPT=arduino VERSION=1.8.2 BOARD=arduino:samd:mkr1000
     - env: SCRIPT=platformio BOARD=uno
     - env: SCRIPT=platformio BOARD=esp01
-    - addons:
-        apt:
-          sources:
-            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
-              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-          packages: ['clang-9','llvm-9']
-      env: SCRIPT=fuzz CLANG=9 FUZZER=json
-    - addons:
-        apt:
-          sources:
-            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
-              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-          packages: ['clang-9','llvm-9']
-      env: SCRIPT=fuzz CLANG=9 FUZZER=msgpack
 cache:
   directories:
     - "~/.platformio"
