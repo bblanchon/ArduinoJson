@@ -213,10 +213,8 @@ class JsonDeserializer {
       return false;
 
     // Empty object?
-    if (eat('}')) {
-      _error = DeserializationError::Ok;
-      return false;
-    }
+    if (eat('}'))
+      return true;
 
     // Read each key value pair
     for (;;) {
