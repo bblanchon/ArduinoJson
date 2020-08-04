@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.16.1 (2020-08-04)
+-------
 
 * Fixed `deserializeJson()` that stopped reading after `{}` (issue #1335)
 
