@@ -43,7 +43,7 @@ struct BoundedReader {
 #include <ArduinoJson/Deserialization/Readers/ArduinoStreamReader.hpp>
 #endif
 
-#if ARDUINOJSON_ENABLE_ARDUINO_STRING
+#if ARDUINOJSON_ENABLE_ARDUINO_STRING && (!ARDUINOJSON_ENABLE_ARDUINO_STREAM || !STRING_IS_STREAM)
 #include <ArduinoJson/Deserialization/Readers/ArduinoStringReader.hpp>
 #endif
 
