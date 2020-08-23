@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Added a build failure when nullptr is defined as a macro (issue #1355)
+
 v6.16.1 (2020-08-04)
 -------
 

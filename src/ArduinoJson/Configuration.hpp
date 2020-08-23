@@ -230,3 +230,8 @@
 #define ARDUINOJSON_DEBUG 0
 #endif
 #endif
+
+#if ARDUINOJSON_HAS_NULLPTR && defined(nullptr)
+#error nullptr is defined as a macro. Remove the faulty #define or #undef nullptr
+// See https://github.com/bblanchon/ArduinoJson/issues/1355
+#endif
