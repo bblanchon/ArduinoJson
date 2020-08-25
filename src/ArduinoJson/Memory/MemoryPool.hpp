@@ -5,12 +5,13 @@
 #pragma once
 
 #include <ArduinoJson/Memory/Alignment.hpp>
-#include <ArduinoJson/Memory/StringSlot.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/mpl/max.hpp>
 #include <ArduinoJson/Variant/VariantSlot.hpp>
 
 #include <string.h>  // memmove
+
+#define JSON_STRING_SIZE(SIZE) (SIZE + 1)
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -143,10 +144,6 @@ class MemoryPool {
   }
 
  private:
-  StringSlot* allocStringSlot() {
-    return allocRight<StringSlot>();
-  }
-
   void checkInvariants() {
     ARDUINOJSON_ASSERT(_begin <= _left);
     ARDUINOJSON_ASSERT(_left <= _right);
