@@ -27,9 +27,9 @@ class ArrayRefBase {
     return VariantConstRef(reinterpret_cast<const VariantData*>(data));
   }
 
-  template <typename Visitor>
-  FORCE_INLINE void accept(Visitor& visitor) const {
-    arrayAccept(_data, visitor);
+  template <typename TVisitor>
+  FORCE_INLINE typename TVisitor::result_type accept(TVisitor& visitor) const {
+    return arrayAccept(_data, visitor);
   }
 
   FORCE_INLINE bool isNull() const {

@@ -12,8 +12,7 @@ template <template <typename> class TSerializer, typename TSource,
           typename TWriter>
 size_t doSerialize(const TSource &source, TWriter writer) {
   TSerializer<TWriter> serializer(writer);
-  source.accept(serializer);
-  return serializer.bytesWritten();
+  return source.accept(serializer);
 }
 
 template <template <typename> class TSerializer, typename TSource,

@@ -8,12 +8,13 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename Visitor>
-void objectAccept(const CollectionData *obj, Visitor &visitor) {
+template <typename TVisitor>
+typename TVisitor::result_type objectAccept(const CollectionData *obj,
+                                            TVisitor &visitor) {
   if (obj)
-    visitor.visitObject(*obj);
+    return visitor.visitObject(*obj);
   else
-    visitor.visitNull();
+    return visitor.visitNull();
 }
 
 inline bool objectEquals(const CollectionData *lhs, const CollectionData *rhs) {

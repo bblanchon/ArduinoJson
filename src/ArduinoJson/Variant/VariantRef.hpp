@@ -261,9 +261,9 @@ class VariantRef : public VariantRefBase<VariantData>,
     return variantAs<T>(_data, _pool);
   }
 
-  template <typename Visitor>
-  void accept(Visitor &visitor) const {
-    variantAccept(_data, visitor);
+  template <typename TVisitor>
+  typename TVisitor::result_type accept(TVisitor &visitor) const {
+    return variantAccept(_data, visitor);
   }
 
   // Change the type of the variant
@@ -347,9 +347,9 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   VariantConstRef(const VariantData *data) : base_type(data) {}
   VariantConstRef(VariantRef var) : base_type(var._data) {}
 
-  template <typename Visitor>
-  void accept(Visitor &visitor) const {
-    variantAccept(_data, visitor);
+  template <typename TVisitor>
+  typename TVisitor::result_type accept(TVisitor &visitor) const {
+    return variantAccept(_data, visitor);
   }
 
   template <typename T>

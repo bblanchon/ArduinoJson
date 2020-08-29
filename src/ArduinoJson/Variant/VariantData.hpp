@@ -34,8 +34,8 @@ class VariantData {
   // - no virtual
   // - no inheritance
 
-  template <typename Visitor>
-  void accept(Visitor &visitor) const {
+  template <typename TVisitor>
+  typename TVisitor::result_type accept(TVisitor &visitor) const {
     switch (type()) {
       case VALUE_IS_FLOAT:
         return visitor.visitFloat(_content.asFloat);

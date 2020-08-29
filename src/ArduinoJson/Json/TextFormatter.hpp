@@ -12,17 +12,18 @@
 #include <ArduinoJson/Numbers/Integer.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
+#include <ArduinoJson/Serialization/CountingDecorator.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TWriter>
 class TextFormatter {
  public:
-  explicit TextFormatter(TWriter writer) : _writer(writer), _length(0) {}
+  explicit TextFormatter(TWriter writer) : _writer(writer) {}
 
   // Returns the number of bytes sent to the TWriter implementation.
   size_t bytesWritten() const {
-    return _length;
+    return _writer.count();
   }
 
   void writeBoolean(bool value) {
@@ -128,28 +129,28 @@ class TextFormatter {
   }
 
   void writeRaw(const char *s) {
-    _length += _writer.write(reinterpret_cast<const uint8_t *>(s), strlen(s));
+    _writer.write(reinterpret_cast<const uint8_t *>(s), strlen(s));
   }
 
   void writeRaw(const char *s, size_t n) {
-    _length += _writer.write(reinterpret_cast<const uint8_t *>(s), n);
+    _writer.write(reinterpret_cast<const uint8_t *>(s), n);
   }
 
   void writeRaw(const char *begin, const char *end) {
-    _length += _writer.write(reinterpret_cast<const uint8_t *>(begin),
-                             static_cast<size_t>(end - begin));
+    _writer.write(reinterpret_cast<const uint8_t *>(begin),
+                  static_cast<size_t>(end - begin));
   }
 
   template <size_t N>
   void writeRaw(const char (&s)[N]) {
-    _length += _writer.write(reinterpret_cast<const uint8_t *>(s), N - 1);
+    _writer.write(reinterpret_cast<const uint8_t *>(s), N - 1);
   }
   void writeRaw(char c) {
-    _length += _writer.write(static_cast<uint8_t>(c));
+    _writer.write(static_cast<uint8_t>(c));
   }
 
  protected:
-  TWriter _writer;
+  CountingDecorator<TWriter> _writer;
   size_t _length;
 
  private:

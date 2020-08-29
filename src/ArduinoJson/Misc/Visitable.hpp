@@ -8,6 +8,11 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+template <typename TResult>
+struct Visitor {
+  typedef TResult result_type;
+};
+
 struct Visitable {
   // template<Visitor>
   // void accept(Visitor&) const;

@@ -14,20 +14,34 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class CollectionData;
 
-struct ComparerBase {
-  CompareResult result;
-
-  ComparerBase() : result(COMPARE_RESULT_DIFFER) {}
-
-  void visitArray(const CollectionData &) {}
-  void visitBoolean(bool) {}
-  void visitFloat(Float) {}
-  void visitNegativeInteger(UInt) {}
-  void visitNull() {}
-  void visitObject(const CollectionData &) {}
-  void visitPositiveInteger(UInt) {}
-  void visitRawJson(const char *, size_t) {}
-  void visitString(const char *) {}
+struct ComparerBase : Visitor<CompareResult> {
+  CompareResult visitArray(const CollectionData &) {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitBoolean(bool) {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitFloat(Float) {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitNegativeInteger(UInt) {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitNull() {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitObject(const CollectionData &) {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitPositiveInteger(UInt) {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitRawJson(const char *, size_t) {
+    return COMPARE_RESULT_DIFFER;
+  }
+  CompareResult visitString(const char *) {
+    return COMPARE_RESULT_DIFFER;
+  }
 };
 
 template <typename T, typename Enable = void>
@@ -40,19 +54,21 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
 
   explicit Comparer(T value) : rhs(value) {}
 
-  void visitString(const char *lhs) {
+  CompareResult visitString(const char *lhs) {
     int i = adaptString(rhs).compare(lhs);
     if (i < 0)
-      result = COMPARE_RESULT_GREATER;
+      return COMPARE_RESULT_GREATER;
     else if (i > 0)
-      result = COMPARE_RESULT_LESS;
+      return COMPARE_RESULT_LESS;
     else
-      result = COMPARE_RESULT_EQUAL;
+      return COMPARE_RESULT_EQUAL;
   }
 
-  void visitNull() {
+  CompareResult visitNull() {
     if (adaptString(rhs).isNull())
-      result = COMPARE_RESULT_EQUAL;
+      return COMPARE_RESULT_EQUAL;
+    else
+      return COMPARE_RESULT_DIFFER;
   }
 };
 
@@ -64,26 +80,26 @@ struct Comparer<T, typename enable_if<is_integral<T>::value ||
 
   explicit Comparer(T value) : rhs(value) {}
 
-  void visitFloat(Float lhs) {
-    result = arithmeticCompare(lhs, rhs);
+  CompareResult visitFloat(Float lhs) {
+    return arithmeticCompare(lhs, rhs);
   }
 
-  void visitNegativeInteger(UInt lhs) {
-    result = arithmeticCompareNegateLeft(lhs, rhs);
+  CompareResult visitNegativeInteger(UInt lhs) {
+    return arithmeticCompareNegateLeft(lhs, rhs);
   }
 
-  void visitPositiveInteger(UInt lhs) {
-    result = arithmeticCompare(lhs, rhs);
+  CompareResult visitPositiveInteger(UInt lhs) {
+    return arithmeticCompare(lhs, rhs);
   }
 
-  void visitBoolean(bool lhs) {
-    visitPositiveInteger(static_cast<UInt>(lhs));
+  CompareResult visitBoolean(bool lhs) {
+    return visitPositiveInteger(static_cast<UInt>(lhs));
   }
 };
 
 struct NullComparer : ComparerBase {
-  void visitNull() {
-    result = COMPARE_RESULT_EQUAL;
+  CompareResult visitNull() {
+    return COMPARE_RESULT_EQUAL;
   }
 };
 
@@ -99,9 +115,11 @@ struct ArrayComparer : ComparerBase {
 
   explicit ArrayComparer(const CollectionData &rhs) : _rhs(&rhs) {}
 
-  void visitArray(const CollectionData &lhs) {
+  CompareResult visitArray(const CollectionData &lhs) {
     if (lhs.equalsArray(*_rhs))
-      result = COMPARE_RESULT_EQUAL;
+      return COMPARE_RESULT_EQUAL;
+    else
+      return COMPARE_RESULT_DIFFER;
   }
 };
 
@@ -110,20 +128,20 @@ struct NegativeIntegerComparer : ComparerBase {
 
   explicit NegativeIntegerComparer(UInt rhs) : _rhs(rhs) {}
 
-  void visitFloat(Float lhs) {
-    result = arithmeticCompareNegateRight(lhs, _rhs);
+  CompareResult visitFloat(Float lhs) {
+    return arithmeticCompareNegateRight(lhs, _rhs);
   }
 
-  void visitNegativeInteger(UInt lhs) {
-    result = arithmeticCompare(_rhs, lhs);
+  CompareResult visitNegativeInteger(UInt lhs) {
+    return arithmeticCompare(_rhs, lhs);
   }
 
-  void visitPositiveInteger(UInt) {
-    result = COMPARE_RESULT_GREATER;
+  CompareResult visitPositiveInteger(UInt) {
+    return COMPARE_RESULT_GREATER;
   }
 
-  void visitBoolean(bool) {
-    result = COMPARE_RESULT_GREATER;
+  CompareResult visitBoolean(bool) {
+    return COMPARE_RESULT_GREATER;
   }
 };
 
@@ -132,9 +150,11 @@ struct ObjectComparer : ComparerBase {
 
   explicit ObjectComparer(const CollectionData &rhs) : _rhs(&rhs) {}
 
-  void visitObject(const CollectionData &lhs) {
+  CompareResult visitObject(const CollectionData &lhs) {
     if (lhs.equalsObject(*_rhs))
-      result = COMPARE_RESULT_EQUAL;
+      return COMPARE_RESULT_EQUAL;
+    else
+      return COMPARE_RESULT_DIFFER;
   }
 };
 
@@ -145,15 +165,15 @@ struct RawComparer : ComparerBase {
   explicit RawComparer(const char *rhsData, size_t rhsSize)
       : _rhsData(rhsData), _rhsSize(rhsSize) {}
 
-  void visitRawJson(const char *lhsData, size_t lhsSize) {
+  CompareResult visitRawJson(const char *lhsData, size_t lhsSize) {
     size_t size = _rhsSize < lhsSize ? _rhsSize : lhsSize;
     int n = memcmp(lhsData, _rhsData, size);
     if (n < 0)
-      result = COMPARE_RESULT_LESS;
+      return COMPARE_RESULT_LESS;
     else if (n > 0)
-      result = COMPARE_RESULT_GREATER;
+      return COMPARE_RESULT_GREATER;
     else
-      result = COMPARE_RESULT_EQUAL;
+      return COMPARE_RESULT_EQUAL;
   }
 };
 
@@ -164,65 +184,62 @@ struct Comparer<T, typename enable_if<IsVisitable<T>::value>::type>
 
   explicit Comparer(T value) : rhs(value) {}
 
-  void visitArray(const CollectionData &lhs) {
+  CompareResult visitArray(const CollectionData &lhs) {
     ArrayComparer comparer(lhs);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitObject(const CollectionData &lhs) {
+  CompareResult visitObject(const CollectionData &lhs) {
     ObjectComparer comparer(lhs);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitFloat(Float lhs) {
+  CompareResult visitFloat(Float lhs) {
     Comparer<Float> comparer(lhs);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitString(const char *lhs) {
+  CompareResult visitString(const char *lhs) {
     Comparer<const char *> comparer(lhs);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitRawJson(const char *lhsData, size_t lhsSize) {
+  CompareResult visitRawJson(const char *lhsData, size_t lhsSize) {
     RawComparer comparer(lhsData, lhsSize);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitNegativeInteger(UInt lhs) {
+  CompareResult visitNegativeInteger(UInt lhs) {
     NegativeIntegerComparer comparer(lhs);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitPositiveInteger(UInt lhs) {
+  CompareResult visitPositiveInteger(UInt lhs) {
     Comparer<UInt> comparer(lhs);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitBoolean(bool lhs) {
+  CompareResult visitBoolean(bool lhs) {
     Comparer<bool> comparer(lhs);
-    accept(comparer);
+    return accept(comparer);
   }
 
-  void visitNull() {
+  CompareResult visitNull() {
     NullComparer comparer;
-    accept(comparer);
+    return accept(comparer);
   }
 
  private:
   template <typename TComparer>
-  void accept(TComparer &comparer) {
-    rhs.accept(comparer);
-    switch (comparer.result) {
+  CompareResult accept(TComparer &comparer) {
+    CompareResult reversedResult = rhs.accept(comparer);
+    switch (reversedResult) {
       case COMPARE_RESULT_GREATER:
-        result = COMPARE_RESULT_LESS;
-        break;
+        return COMPARE_RESULT_LESS;
       case COMPARE_RESULT_LESS:
-        result = COMPARE_RESULT_GREATER;
-        break;
+        return COMPARE_RESULT_GREATER;
       default:
-        result = comparer.result;
-        break;
+        return reversedResult;
     }
   }
 };
@@ -230,8 +247,7 @@ struct Comparer<T, typename enable_if<IsVisitable<T>::value>::type>
 template <typename T1, typename T2>
 CompareResult compare(const T1 &lhs, const T2 &rhs) {
   Comparer<T2> comparer(rhs);
-  lhs.accept(comparer);
-  return comparer.result;
+  return lhs.accept(comparer);
 }
 
 inline int variantCompare(const VariantData *a, const VariantData *b) {
