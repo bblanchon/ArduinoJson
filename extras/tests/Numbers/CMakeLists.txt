@@ -4,6 +4,7 @@
 
 add_executable(NumbersTests 
 	parseFloat.cpp
+	parseDouble.cpp
 	parseInteger.cpp
 	parseNumber.cpp
 )

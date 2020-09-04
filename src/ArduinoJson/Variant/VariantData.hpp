@@ -33,6 +33,9 @@ class VariantData {
   // - no destructor
   // - no virtual
   // - no inheritance
+  void init() {
+    _flags = 0;
+  }
 
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor &visitor) const {
@@ -365,11 +368,11 @@ class VariantData {
       _content.asCollection.movePointers(stringDistance, variantDistance);
   }
 
- private:
   uint8_t type() const {
     return _flags & VALUE_MASK;
   }
 
+ private:
   void setType(uint8_t t) {
     _flags &= KEY_IS_OWNED;
     _flags |= t;

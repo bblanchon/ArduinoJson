@@ -3,7 +3,8 @@
 // MIT License
 
 #include <stdint.h>
-#include <ArduinoJson/Numbers/parseInteger.hpp>
+#include <ArduinoJson/Numbers/parseNumber.hpp>
+#include <ArduinoJson/Variant/VariantImpl.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
@@ -11,11 +12,11 @@ using namespace ARDUINOJSON_NAMESPACE;
 template <typename T>
 void checkInteger(const char* input, T expected) {
   CAPTURE(input);
-  T actual = parseInteger<T>(input);
+  T actual = parseNumber<T>(input);
   REQUIRE(expected == actual);
 }
 
-TEST_CASE("parseInteger<int8_t>()") {
+TEST_CASE("parseNumber<int8_t>()") {
   checkInteger<int8_t>("-128", -128);
   checkInteger<int8_t>("127", 127);
   checkInteger<int8_t>("+127", 127);
@@ -25,7 +26,7 @@ TEST_CASE("parseInteger<int8_t>()") {
   checkInteger<int8_t>("-129", 0);  // overflow
 }
 
-TEST_CASE("parseInteger<int16_t>()") {
+TEST_CASE("parseNumber<int16_t>()") {
   checkInteger<int16_t>("-32768", -32768);
   checkInteger<int16_t>("32767", 32767);
   checkInteger<int16_t>("+32767", 32767);
@@ -35,7 +36,7 @@ TEST_CASE("parseInteger<int16_t>()") {
   checkInteger<int16_t>("32768", 0);   // overflow
 }
 
-TEST_CASE("parseInteger<int32_t>()") {
+TEST_CASE("parseNumber<int32_t>()") {
   checkInteger<int32_t>("-2147483648", (-2147483647 - 1));
   checkInteger<int32_t>("2147483647", 2147483647);
   checkInteger<int32_t>("+2147483647", 2147483647);
@@ -45,7 +46,7 @@ TEST_CASE("parseInteger<int32_t>()") {
   checkInteger<int32_t>("2147483648", 0);   // overflow
 }
 
-TEST_CASE("parseInteger<uint8_t>()") {
+TEST_CASE("parseNumber<uint8_t>()") {
   checkInteger<uint8_t>("0", 0);
   checkInteger<uint8_t>("255", 255);
   checkInteger<uint8_t>("+255", 255);
@@ -55,7 +56,7 @@ TEST_CASE("parseInteger<uint8_t>()") {
   checkInteger<uint8_t>("256", 0);
 }
 
-TEST_CASE("parseInteger<uint16_t>()") {
+TEST_CASE("parseNumber<uint16_t>()") {
   checkInteger<uint16_t>("0", 0);
   checkInteger<uint16_t>("65535", 65535);
   checkInteger<uint16_t>("+65535", 65535);

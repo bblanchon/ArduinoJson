@@ -4,10 +4,11 @@
 
 #pragma once
 
+#include <ArduinoJson/Array/ArrayRef.hpp>
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
-#include <ArduinoJson/Numbers/parseFloat.hpp>
-#include <ArduinoJson/Numbers/parseInteger.hpp>
+#include <ArduinoJson/Numbers/parseNumber.hpp>
+#include <ArduinoJson/Object/ObjectRef.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 
 #include <string.h>  // for strcmp
@@ -24,7 +25,7 @@ inline T VariantData::asIntegral() const {
       return convertNegativeInteger<T>(_content.asInteger);
     case VALUE_IS_LINKED_STRING:
     case VALUE_IS_OWNED_STRING:
-      return parseInteger<T>(_content.asString);
+      return parseNumber<T>(_content.asString);
     case VALUE_IS_FLOAT:
       return convertFloat<T>(_content.asFloat);
     default:
@@ -58,7 +59,7 @@ inline T VariantData::asFloat() const {
       return -static_cast<T>(_content.asInteger);
     case VALUE_IS_LINKED_STRING:
     case VALUE_IS_OWNED_STRING:
-      return parseFloat<T>(_content.asString);
+      return parseNumber<T>(_content.asString);
     case VALUE_IS_FLOAT:
       return static_cast<T>(_content.asFloat);
     default:

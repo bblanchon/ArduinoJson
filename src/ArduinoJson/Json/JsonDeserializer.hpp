@@ -499,26 +499,12 @@ class JsonDeserializer {
       return true;
     }
 
-    ParsedNumber<Float, UInt> num;
-    parseNumber<Float, UInt>(_buffer, num);
-
-    switch (num.type()) {
-      case VALUE_IS_NEGATIVE_INTEGER:
-        result.setNegativeInteger(num.uintValue);
-        return true;
-
-      case VALUE_IS_POSITIVE_INTEGER:
-        result.setPositiveInteger(num.uintValue);
-        return true;
-
-      case VALUE_IS_FLOAT:
-        result.setFloat(num.floatValue);
-        return true;
-
-      default:
-        _error = DeserializationError::InvalidInput;
-        return false;
+    if (!parseNumber(_buffer, result)) {
+      _error = DeserializationError::InvalidInput;
+      return false;
     }
+
+    return true;
   }
 
   bool skipNumericValue() {
