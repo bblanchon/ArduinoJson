@@ -239,7 +239,7 @@ class MsgPackDeserializer {
   }
 
   bool readString(const char *&result, size_t n) {
-    _stringStorage.startString(_pool);
+    _stringStorage.startString();
     for (; n; --n) {
       uint8_t c;
       if (!readBytes(c))
@@ -252,7 +252,7 @@ class MsgPackDeserializer {
       return false;
     }
 
-    result = _stringStorage.save(_pool);
+    result = _stringStorage.save();
     return true;
   }
 

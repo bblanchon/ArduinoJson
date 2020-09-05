@@ -10,14 +10,16 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class StringCopier {
  public:
-  void startString(MemoryPool* pool) {
-    pool->getFreeZone(&_ptr, &_capacity);
+  StringCopier(MemoryPool& pool) : _pool(&pool) {}
+
+  void startString() {
+    _pool->getFreeZone(&_ptr, &_capacity);
     _size = 0;
   }
 
-  const char* save(MemoryPool* pool) {
+  const char* save() {
     ARDUINOJSON_ASSERT(_ptr);
-    return pool->saveStringFromFreeZone(_size);
+    return _pool->saveStringFromFreeZone(_size);
   }
 
   void append(const char* s) {
@@ -34,6 +36,7 @@ class StringCopier {
 
     if (_size >= _capacity) {
       _ptr = 0;
+      _pool->markAsOverflowed();
       return;
     }
 
@@ -51,6 +54,7 @@ class StringCopier {
   typedef storage_policies::store_by_copy storage_policy;
 
  private:
+  MemoryPool* _pool;
   char* _ptr;
   size_t _size;
   size_t _capacity;

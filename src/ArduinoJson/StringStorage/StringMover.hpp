@@ -13,11 +13,11 @@ class StringMover {
  public:
   StringMover(char* ptr) : _writePtr(ptr) {}
 
-  void startString(MemoryPool*) {
+  void startString() {
     _startPtr = _writePtr;
   }
 
-  const char* save(MemoryPool*) const {
+  const char* save() const {
     return _startPtr;
   }
 

@@ -241,7 +241,7 @@ class JsonDeserializer {
         if (!variant) {
           // Save key in memory pool.
           // This MUST be done before adding the slot.
-          key = _stringStorage.save(_pool);
+          key = _stringStorage.save();
 
           // Allocate slot in object
           VariantSlot *slot = object.addSlot(_pool);
@@ -334,7 +334,7 @@ class JsonDeserializer {
   }
 
   bool parseKey() {
-    _stringStorage.startString(_pool);
+    _stringStorage.startString();
     if (isQuote(current())) {
       return parseQuotedString();
     } else {
@@ -343,10 +343,10 @@ class JsonDeserializer {
   }
 
   bool parseStringValue(VariantData &variant) {
-    _stringStorage.startString(_pool);
+    _stringStorage.startString();
     if (!parseQuotedString())
       return false;
-    const char *value = _stringStorage.save(_pool);
+    const char *value = _stringStorage.save();
     variant.setString(make_not_null(value),
                       typename TStringStorage::storage_policy());
     return true;

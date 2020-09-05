@@ -12,9 +12,9 @@ TEST_CASE("StringCopier") {
 
   SECTION("Works when buffer is big enough") {
     MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
-    StringCopier str;
+    StringCopier str(pool);
 
-    str.startString(&pool);
+    str.startString();
     str.append("hello");
     str.append('\0');
 
@@ -24,9 +24,9 @@ TEST_CASE("StringCopier") {
 
   SECTION("Returns null when too small") {
     MemoryPool pool(buffer, sizeof(void*));
-    StringCopier str;
+    StringCopier str(pool);
 
-    str.startString(&pool);
+    str.startString();
     str.append("hello world!");
 
     REQUIRE(str.isValid() == false);
@@ -34,22 +34,22 @@ TEST_CASE("StringCopier") {
 
   SECTION("Increases size of memory pool") {
     MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
-    StringCopier str;
+    StringCopier str(pool);
 
-    str.startString(&pool);
+    str.startString();
     str.append('h');
-    str.save(&pool);
+    str.save();
 
     REQUIRE(1 == pool.size());
   }
 }
 
-static const char* addStringToPool(MemoryPool* pool, const char* s) {
-  StringCopier str;
-  str.startString(pool);
+static const char* addStringToPool(MemoryPool& pool, const char* s) {
+  StringCopier str(pool);
+  str.startString();
   str.append(s);
   str.append('\0');
-  return str.save(pool);
+  return str.save();
 }
 
 TEST_CASE("StringCopier::save() deduplicates strings") {
@@ -57,9 +57,9 @@ TEST_CASE("StringCopier::save() deduplicates strings") {
   MemoryPool pool(buffer, 4096);
 
   SECTION("Basic") {
-    const char* s1 = addStringToPool(&pool, "hello");
-    const char* s2 = addStringToPool(&pool, "world");
-    const char* s3 = addStringToPool(&pool, "hello");
+    const char* s1 = addStringToPool(pool, "hello");
+    const char* s2 = addStringToPool(pool, "world");
+    const char* s3 = addStringToPool(pool, "hello");
 
     REQUIRE(s1 == s3);
     REQUIRE(s2 != s3);
@@ -67,16 +67,16 @@ TEST_CASE("StringCopier::save() deduplicates strings") {
   }
 
   SECTION("Requires terminator") {
-    const char* s1 = addStringToPool(&pool, "hello world");
-    const char* s2 = addStringToPool(&pool, "hello");
+    const char* s1 = addStringToPool(pool, "hello world");
+    const char* s2 = addStringToPool(pool, "hello");
 
     REQUIRE(s2 != s1);
     REQUIRE(pool.size() == 12 + 6);
   }
 
   SECTION("Don't overrun") {
-    const char* s1 = addStringToPool(&pool, "hello world");
-    const char* s2 = addStringToPool(&pool, "wor");
+    const char* s1 = addStringToPool(pool, "hello world");
+    const char* s2 = addStringToPool(pool, "wor");
 
     REQUIRE(s2 != s1);
     REQUIRE(pool.size() == 12 + 4);

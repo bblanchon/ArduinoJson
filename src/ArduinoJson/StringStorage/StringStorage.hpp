@@ -9,32 +9,15 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TInput, typename Enable = void>
-struct StringStorage {
-  typedef StringCopier type;
-
-  static type create(TInput&) {
-    return type();
-  }
-};
-
-template <typename TChar>
-struct StringStorage<TChar*,
-                     typename enable_if<!is_const<TChar>::value>::type> {
-  typedef StringMover type;
-
-  static type create(TChar* input) {
-    return type(reinterpret_cast<char*>(input));
-  }
-};
-
 template <typename TInput>
-typename StringStorage<TInput>::type makeStringStorage(TInput& input) {
-  return StringStorage<TInput>::create(input);
+StringCopier makeStringStorage(TInput&, MemoryPool& pool) {
+  return StringCopier(pool);
 }
 
 template <typename TChar>
-typename StringStorage<TChar*>::type makeStringStorage(TChar* input) {
-  return StringStorage<TChar*>::create(input);
+StringMover makeStringStorage(
+    TChar* input, MemoryPool&,
+    typename enable_if<!is_const<TChar>::value>::type* = 0) {
+  return StringMover(reinterpret_cast<char*>(input));
 }
 }  // namespace ARDUINOJSON_NAMESPACE

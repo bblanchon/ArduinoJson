@@ -11,6 +11,7 @@ add_executable(JsonDocumentTests
 	DynamicJsonDocument.cpp
 	isNull.cpp
 	nesting.cpp
+	overflowed.cpp
 	remove.cpp
 	shrinkToFit.cpp
 	size.cpp

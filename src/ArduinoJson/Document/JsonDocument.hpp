@@ -48,6 +48,10 @@ class JsonDocument : public Visitable {
     return _pool.size();
   }
 
+  bool overflowed() const {
+    return _pool.overflowed();
+  }
+
   size_t nesting() const {
     return _data.nesting();
   }
@@ -81,6 +85,7 @@ class JsonDocument : public Visitable {
     return _pool;
   }
 
+  // for internal use only
   VariantData& data() {
     return _data;
   }

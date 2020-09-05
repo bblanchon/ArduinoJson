@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Added a build failure when nullptr is defined as a macro (issue #1355)
+* Added `JsonDocument::overflowed()` which tells if the memory pool was too small (issue #1358)
 
 v6.16.1 (2020-08-04)
 -------
