@@ -347,8 +347,7 @@ class JsonDeserializer {
     if (!parseQuotedString())
       return false;
     const char *value = _stringStorage.save();
-    variant.setString(make_not_null(value),
-                      typename TStringStorage::storage_policy());
+    variant.setStringPointer(value, typename TStringStorage::storage_policy());
     return true;
   }
 

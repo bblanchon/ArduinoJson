@@ -6,7 +6,6 @@
 
 #include <stdint.h>  // int8_t, int16_t
 
-#include <ArduinoJson/Polyfills/gsl/not_null.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>

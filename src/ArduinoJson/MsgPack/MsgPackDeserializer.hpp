@@ -233,8 +233,7 @@ class MsgPackDeserializer {
     const char *s = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
     if (!readString(s, n))
       return false;
-    variant.setString(make_not_null(s),
-                      typename TStringStorage::storage_policy());
+    variant.setStringPointer(s, typename TStringStorage::storage_policy());
     return true;
   }
 

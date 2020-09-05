@@ -7,7 +7,6 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
-#include <ArduinoJson/Polyfills/gsl/not_null.hpp>
 #include <ArduinoJson/Strings/RamStringAdapter.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
 
@@ -245,25 +244,14 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setString(not_null<const char *> s, storage_policies::store_by_copy) {
+  void setStringPointer(const char *s, storage_policies::store_by_copy) {
     setType(VALUE_IS_OWNED_STRING);
-    _content.asString = s.get();
+    _content.asString = s;
   }
 
-  void setString(not_null<const char *> s, storage_policies::store_by_address) {
+  void setStringPointer(const char *s, storage_policies::store_by_address) {
     setType(VALUE_IS_LINKED_STRING);
-    _content.asString = s.get();
-  }
-
-  template <typename TStoragePolicy>
-  bool setString(const char *s, TStoragePolicy storage_policy) {
-    if (s) {
-      setString(make_not_null(s), storage_policy);
-      return true;
-    } else {
-      setType(VALUE_IS_NULL);
-      return false;
-    }
+    _content.asString = s;
   }
 
   template <typename TAdaptedString>
@@ -283,14 +271,27 @@ class VariantData {
   template <typename TAdaptedString>
   inline bool setString(TAdaptedString value, MemoryPool *,
                         storage_policies::store_by_address) {
-    return setString(value.data(), storage_policies::store_by_address());
+    if (value.isNull())
+      setNull();
+    else
+      setStringPointer(value.data(), storage_policies::store_by_address());
+    return true;
   }
 
   template <typename TAdaptedString>
   inline bool setString(TAdaptedString value, MemoryPool *pool,
                         storage_policies::store_by_copy) {
-    return setString(pool->saveString(value),
-                     storage_policies::store_by_copy());
+    if (value.isNull()) {
+      setNull();
+      return true;
+    }
+    const char *copy = pool->saveString(value);
+    if (!copy) {
+      setNull();
+      return false;
+    }
+    setStringPointer(copy, storage_policies::store_by_copy());
+    return true;
   }
 
   CollectionData &toArray() {
