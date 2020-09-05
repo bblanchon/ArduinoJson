@@ -65,9 +65,13 @@ endmacro()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6)
 	add_fuzzer(json address)
-	add_fuzzer(json memory)
 	add_fuzzer(json undefined)
 	add_fuzzer(msgpack address)
-	add_fuzzer(msgpack memory)
 	add_fuzzer(msgpack undefined)
+endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7)
+	# We're getting false positive with Clang 6
+	add_fuzzer(json memory)
+	add_fuzzer(msgpack memory)
 endif()
