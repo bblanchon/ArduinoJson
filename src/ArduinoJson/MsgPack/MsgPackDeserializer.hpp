@@ -21,22 +21,23 @@ class MsgPackDeserializer {
       : _pool(&pool),
         _reader(reader),
         _stringStorage(stringStorage),
-        _error(DeserializationError::Ok) {}
+        _error(DeserializationError::Ok),
+        _foundSomething(false) {}
 
   // TODO: add support for filter
   DeserializationError parse(VariantData &variant, AllowAllFilter,
                              NestingLimit nestingLimit) {
     parseVariant(variant, nestingLimit);
-    return _error;
+    return _foundSomething ? _error : DeserializationError::EmptyInput;
   }
 
  private:
   bool parseVariant(VariantData &variant, NestingLimit nestingLimit) {
     uint8_t code;
-    if (!readByte(code)) {
-      _error = DeserializationError::IncompleteInput;
+    if (!readByte(code))
       return false;
-    }
+
+    _foundSomething = true;
 
     if ((code & 0x80) == 0) {
       variant.setUnsignedInteger(code);
@@ -345,6 +346,7 @@ class MsgPackDeserializer {
   TReader _reader;
   TStringStorage _stringStorage;
   DeserializationError _error;
+  bool _foundSomething;
 };
 
 template <typename TInput>

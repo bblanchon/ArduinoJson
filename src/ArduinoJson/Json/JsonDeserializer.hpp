@@ -23,6 +23,7 @@ class JsonDeserializer {
   JsonDeserializer(MemoryPool &pool, TReader reader,
                    TStringStorage stringStorage)
       : _stringStorage(stringStorage),
+        _foundSomething(false),
         _latch(reader),
         _pool(&pool),
         _error(DeserializationError::Ok) {}
@@ -34,7 +35,7 @@ class JsonDeserializer {
 
     if (!_error && _latch.last() != 0 && !variant.isEnclosed()) {
       // We don't detect trailing characters earlier, so we need to check now
-      _error = DeserializationError::InvalidInput;
+      return DeserializationError::InvalidInput;
     }
 
     return _error;
@@ -559,7 +560,8 @@ class JsonDeserializer {
       switch (current()) {
         // end of string
         case '\0':
-          _error = DeserializationError::IncompleteInput;
+          _error = _foundSomething ? DeserializationError::IncompleteInput
+                                   : DeserializationError::EmptyInput;
           return false;
 
         // spaces
@@ -619,12 +621,14 @@ class JsonDeserializer {
 #endif
 
         default:
+          _foundSomething = true;
           return true;
       }
     }
   }
 
   TStringStorage _stringStorage;
+  bool _foundSomething;
   Latch<TReader> _latch;
   MemoryPool *_pool;
   char _buffer[64];  // using a member instead of a local variable because it

@@ -6,6 +6,7 @@ HEAD
 
 * Added a build failure when nullptr is defined as a macro (issue #1355)
 * Added `JsonDocument::overflowed()` which tells if the memory pool was too small (issue #1358)
+* Added `DeserializationError::EmptyInput` which tells if the input was empty
 * Fixed `JsonVariant::set((char*)0)` which returned false instead of true (issue #1368)
 
 v6.16.1 (2020-08-04)

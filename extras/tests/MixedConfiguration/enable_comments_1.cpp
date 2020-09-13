@@ -373,16 +373,22 @@ TEST_CASE("Comments in objects") {
 TEST_CASE("Comments alone") {
   DynamicJsonDocument doc(2048);
 
-  SECTION("Just a trailing comment") {
+  SECTION("Just a trailing comment with no line break") {
     DeserializationError err = deserializeJson(doc, "// comment");
 
     REQUIRE(err == DeserializationError::IncompleteInput);
   }
 
+  SECTION("Just a trailing comment with no a break") {
+    DeserializationError err = deserializeJson(doc, "// comment\n");
+
+    REQUIRE(err == DeserializationError::EmptyInput);
+  }
+
   SECTION("Just a block comment") {
     DeserializationError err = deserializeJson(doc, "/*comment*/");
 
-    REQUIRE(err == DeserializationError::IncompleteInput);
+    REQUIRE(err == DeserializationError::EmptyInput);
   }
 
   SECTION("Just a slash") {

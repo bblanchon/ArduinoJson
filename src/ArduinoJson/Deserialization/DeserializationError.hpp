@@ -20,6 +20,7 @@ class DeserializationError {
  public:
   enum Code {
     Ok,
+    EmptyInput,
     IncompleteInput,
     InvalidInput,
     NoMemory,
@@ -77,22 +78,12 @@ class DeserializationError {
   }
 
   const char* c_str() const {
-    switch (_code) {
-      case Ok:
-        return "Ok";
-      case TooDeep:
-        return "TooDeep";
-      case NoMemory:
-        return "NoMemory";
-      case InvalidInput:
-        return "InvalidInput";
-      case IncompleteInput:
-        return "IncompleteInput";
-      case NotSupported:
-        return "NotSupported";
-      default:
-        return "???";
-    }
+    static const char* messages[] = {
+        "Ok",       "EmptyInput",   "IncompleteInput", "InvalidInput",
+        "NoMemory", "NotSupported", "TooDeep"};
+    ARDUINOJSON_ASSERT(static_cast<size_t>(_code) <
+                       sizeof(messages) / sizeof(messages[0]));
+    return messages[_code];
   }
 
  private:

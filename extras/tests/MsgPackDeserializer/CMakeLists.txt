@@ -10,6 +10,7 @@ add_executable(MsgPackDeserializerTests
 	doubleToFloat.cpp
 	incompleteInput.cpp
 	input_types.cpp
+	misc.cpp
 	nestingLimit.cpp
 	notSupported.cpp
 )

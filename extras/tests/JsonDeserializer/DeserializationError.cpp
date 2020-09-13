@@ -30,20 +30,22 @@ void testBoolification(DeserializationError error, bool expected) {
 TEST_CASE("DeserializationError") {
   SECTION("c_str()") {
     TEST_STRINGIFICATION(Ok);
-    TEST_STRINGIFICATION(TooDeep);
-    TEST_STRINGIFICATION(NoMemory);
-    TEST_STRINGIFICATION(InvalidInput);
+    TEST_STRINGIFICATION(EmptyInput);
     TEST_STRINGIFICATION(IncompleteInput);
+    TEST_STRINGIFICATION(InvalidInput);
+    TEST_STRINGIFICATION(NoMemory);
     TEST_STRINGIFICATION(NotSupported);
+    TEST_STRINGIFICATION(TooDeep);
   }
 
   SECTION("as boolean") {
     TEST_BOOLIFICATION(Ok, false);
-    TEST_BOOLIFICATION(TooDeep, true);
-    TEST_BOOLIFICATION(NoMemory, true);
-    TEST_BOOLIFICATION(InvalidInput, true);
+    TEST_BOOLIFICATION(EmptyInput, true);
     TEST_BOOLIFICATION(IncompleteInput, true);
+    TEST_BOOLIFICATION(InvalidInput, true);
+    TEST_BOOLIFICATION(NoMemory, true);
     TEST_BOOLIFICATION(NotSupported, true);
+    TEST_BOOLIFICATION(TooDeep, true);
   }
 
   SECTION("ostream DeserializationError") {
@@ -56,13 +58,6 @@ TEST_CASE("DeserializationError") {
     std::stringstream s;
     s << DeserializationError::InvalidInput;
     REQUIRE(s.str() == "InvalidInput");
-  }
-
-  SECTION("out of range") {
-    int code = 666;
-    DeserializationError err(
-        *reinterpret_cast<DeserializationError::Code*>(&code));
-    REQUIRE(err.c_str() == std::string("???"));
   }
 
   SECTION("switch") {
