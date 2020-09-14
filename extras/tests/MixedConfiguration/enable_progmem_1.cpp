@@ -53,33 +53,33 @@ TEST_CASE("Flash strings") {
 }
 
 TEST_CASE("strlen_P") {
-  CHECK(strlen_P(FC("")) == 0);
-  CHECK(strlen_P(FC("a")) == 1);
-  CHECK(strlen_P(FC("ac")) == 2);
+  CHECK(strlen_P(PSTR("")) == 0);
+  CHECK(strlen_P(PSTR("a")) == 1);
+  CHECK(strlen_P(PSTR("ac")) == 2);
 }
 
 TEST_CASE("strncmp_P") {
-  CHECK(strncmp_P("a", FC("b"), 0) == 0);
-  CHECK(strncmp_P("a", FC("b"), 1) == -1);
-  CHECK(strncmp_P("b", FC("a"), 1) == 1);
-  CHECK(strncmp_P("a", FC("a"), 0) == 0);
-  CHECK(strncmp_P("a", FC("b"), 2) == -1);
-  CHECK(strncmp_P("b", FC("a"), 2) == 1);
-  CHECK(strncmp_P("a", FC("a"), 2) == 0);
+  CHECK(strncmp_P("a", PSTR("b"), 0) == 0);
+  CHECK(strncmp_P("a", PSTR("b"), 1) == -1);
+  CHECK(strncmp_P("b", PSTR("a"), 1) == 1);
+  CHECK(strncmp_P("a", PSTR("a"), 0) == 0);
+  CHECK(strncmp_P("a", PSTR("b"), 2) == -1);
+  CHECK(strncmp_P("b", PSTR("a"), 2) == 1);
+  CHECK(strncmp_P("a", PSTR("a"), 2) == 0);
 }
 
 TEST_CASE("strcmp_P") {
-  CHECK(strcmp_P("a", FC("b")) == -1);
-  CHECK(strcmp_P("b", FC("a")) == 1);
-  CHECK(strcmp_P("a", FC("a")) == 0);
-  CHECK(strcmp_P("aa", FC("ab")) == -1);
-  CHECK(strcmp_P("ab", FC("aa")) == 1);
-  CHECK(strcmp_P("aa", FC("aa")) == 0);
+  CHECK(strcmp_P("a", PSTR("b")) == -1);
+  CHECK(strcmp_P("b", PSTR("a")) == 1);
+  CHECK(strcmp_P("a", PSTR("a")) == 0);
+  CHECK(strcmp_P("aa", PSTR("ab")) == -1);
+  CHECK(strcmp_P("ab", PSTR("aa")) == 1);
+  CHECK(strcmp_P("aa", PSTR("aa")) == 0);
 }
 
 TEST_CASE("memcpy_P") {
   char dst[4];
-  CHECK(memcpy_P(dst, FC("ABC"), 4) == dst);
+  CHECK(memcpy_P(dst, PSTR("ABC"), 4) == dst);
   CHECK(dst[0] == 'A');
   CHECK(dst[1] == 'B');
   CHECK(dst[2] == 'C');

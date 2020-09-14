@@ -82,7 +82,7 @@ void setup() {
   DeserializationError error = deserializeJson(doc, client);
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
-    Serial.println(error.c_str());
+    Serial.println(error.f_str());
     return;
   }
 

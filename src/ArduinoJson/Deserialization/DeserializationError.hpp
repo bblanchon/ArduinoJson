@@ -86,6 +86,23 @@ class DeserializationError {
     return messages[_code];
   }
 
+#if ARDUINOJSON_ENABLE_PROGMEM
+  const __FlashStringHelper* f_str() const {
+    static const char s0[] PROGMEM = "Ok";
+    static const char s1[] PROGMEM = "EmptyInput";
+    static const char s2[] PROGMEM = "IncompleteInput";
+    static const char s3[] PROGMEM = "InvalidInput";
+    static const char s4[] PROGMEM = "NoMemory";
+    static const char s5[] PROGMEM = "NotSupported";
+    static const char s6[] PROGMEM = "TooDeep";
+    static const char* const messages[] PROGMEM = {s0, s1, s2, s3, s4, s5, s6};
+    ARDUINOJSON_ASSERT(static_cast<size_t>(_code) <
+                       sizeof(messages) / sizeof(messages[0]));
+    return reinterpret_cast<const __FlashStringHelper*>(
+        pgm_read_ptr(messages + _code));
+  }
+#endif
+
  private:
   Code _code;
 };
