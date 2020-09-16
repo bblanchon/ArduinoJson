@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <WString.h>
+#include <Arduino.h>
 
 #include <ArduinoJson/Polyfills/safe_strcmp.hpp>
 #include <ArduinoJson/Strings/IsString.hpp>

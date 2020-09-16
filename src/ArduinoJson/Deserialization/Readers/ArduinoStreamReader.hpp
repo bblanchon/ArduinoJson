@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <Stream.h>
+#include <Arduino.h>
 
 namespace ARDUINOJSON_NAMESPACE {
 

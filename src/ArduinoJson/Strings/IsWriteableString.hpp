@@ -8,7 +8,7 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#include <WString.h>
+#include <Arduino.h>
 #endif
 
 #if ARDUINOJSON_ENABLE_STD_STRING
