@@ -76,3 +76,13 @@ inline void* memcpy_P(void* dst, ARDUINOJSON_NAMESPACE::pgm_p src, size_t n) {
   return dst;
 }
 #endif
+
+#ifndef ARDUINOJSON_DEFINE_PROGMEM_ARRAY
+#ifdef PROGMEM
+#define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, value) \
+  static type const name[] PROGMEM = value;
+#else
+#define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, value) \
+  static type const name[] = value;
+#endif
+#endif

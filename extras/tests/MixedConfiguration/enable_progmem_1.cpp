@@ -165,3 +165,22 @@ TEST_CASE("Reader<const __FlashStringHelper*>") {
     REQUIRE(buffer[6] == 'g');
   }
 }
+
+static void testStringification(DeserializationError error,
+                                std::string expected) {
+  const __FlashStringHelper* s = error.f_str();
+  CHECK(reinterpret_cast<const char*>(convertFlashToPtr(s)) == expected);
+}
+
+#define TEST_STRINGIFICATION(symbol) \
+  testStringification(DeserializationError::symbol, #symbol)
+
+TEST_CASE("DeserializationError::f_str()") {
+  TEST_STRINGIFICATION(Ok);
+  TEST_STRINGIFICATION(EmptyInput);
+  TEST_STRINGIFICATION(IncompleteInput);
+  TEST_STRINGIFICATION(InvalidInput);
+  TEST_STRINGIFICATION(NoMemory);
+  TEST_STRINGIFICATION(NotSupported);
+  TEST_STRINGIFICATION(TooDeep);
+}
