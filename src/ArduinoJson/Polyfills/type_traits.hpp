@@ -15,6 +15,7 @@
 #include "type_traits/is_enum.hpp"
 #include "type_traits/is_floating_point.hpp"
 #include "type_traits/is_integral.hpp"
+#include "type_traits/is_pointer.hpp"
 #include "type_traits/is_same.hpp"
 #include "type_traits/is_signed.hpp"
 #include "type_traits/is_unsigned.hpp"
