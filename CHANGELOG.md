@@ -8,6 +8,7 @@ HEAD
 * Added `JsonDocument::overflowed()` which tells if the memory pool was too small (issue #1358)
 * Added `DeserializationError::EmptyInput` which tells if the input was empty
 * Added `DeserializationError::f_str()` which returns a `const __FlashStringHelper*` (issue #846)
+* Added `operator|(JsonVariantConst, JsonVariantConst)`
 * Moved float convertion tables to PROGMEM
 * Fixed `JsonVariant::set((char*)0)` which returned false instead of true (issue #1368)
 * Fixed error `No such file or directory #include <WString.h>` (issue #1381)

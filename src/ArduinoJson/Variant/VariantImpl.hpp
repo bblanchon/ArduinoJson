@@ -139,4 +139,9 @@ template <typename TString>
 inline VariantRef VariantRef::getOrAddMember(const TString &key) const {
   return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
 }
+
+inline VariantConstRef operator|(VariantConstRef preferedValue,
+                                 VariantConstRef defaultValue) {
+  return preferedValue ? preferedValue : defaultValue;
+}
 }  // namespace ARDUINOJSON_NAMESPACE
