@@ -215,6 +215,15 @@ TEST_CASE("Filtering") {
       2 * JSON_OBJECT_SIZE(1) + 16
     },
     {
+      // wildcard
+      "{\"example\":{\"type\":\"int\",\"outcome\":42}}",
+      "{\"*\":{\"outcome\":true}}",
+      10,
+      DeserializationError::Ok,
+      "{\"example\":{\"outcome\":42}}",
+      2 * JSON_OBJECT_SIZE(1) + 16
+    },
+    {
       // only the first element of array counts
       "[1,2,3]",
       "[true, false]",

@@ -24,6 +24,7 @@ v6.16.0 (2020-08-01)
 * Added comparisons (`>`, `>=`, `==`, `!=`, `<`, and `<=`) between `JsonVariant`s
 * Added string deduplication (issue #1303)
 * Added `JsonString::operator!=`
+* Added wildcard key (`*`) for filters (issue #1309)
 * Set `ARDUINOJSON_DECODE_UNICODE` to `1` by default
 * Fixed `copyArray()` not working with `String`, `ElementProxy`, and `MemberProxy`
 * Fixed error `getOrAddElement is not a member of ElementProxy` (issue #1311)
