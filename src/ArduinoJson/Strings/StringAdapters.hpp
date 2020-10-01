@@ -9,7 +9,7 @@
 #include <ArduinoJson/Strings/SizedRamStringAdapter.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-#include <ArduinoJson/Strings/StlStringAdapter.hpp>
+#include <ArduinoJson/Strings/StdStringAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING

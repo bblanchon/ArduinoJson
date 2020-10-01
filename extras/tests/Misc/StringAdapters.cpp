@@ -10,7 +10,7 @@
 #include <ArduinoJson/Strings/ConstRamStringAdapter.hpp>
 #include <ArduinoJson/Strings/FlashStringAdapter.hpp>
 #include <ArduinoJson/Strings/SizedRamStringAdapter.hpp>
-#include <ArduinoJson/Strings/StlStringAdapter.hpp>
+#include <ArduinoJson/Strings/StdStringAdapter.hpp>
 
 #include <catch.hpp>
 
@@ -102,7 +102,7 @@ TEST_CASE("FlashStringAdapter") {
 
 TEST_CASE("std::string") {
   std::string str("bravo");
-  StlStringAdapter<std::string> adapter = adaptString(str);
+  StdStringAdapter<std::string> adapter = adaptString(str);
 
   CHECK(adapter.compare(NULL) > 0);
   CHECK(adapter.compare("alpha") > 0);
@@ -132,7 +132,7 @@ TEST_CASE("Arduino String") {
 
 TEST_CASE("custom_string") {
   custom_string str("bravo");
-  StlStringAdapter<custom_string> adapter = adaptString(str);
+  StdStringAdapter<custom_string> adapter = adaptString(str);
 
   CHECK(adapter.compare(NULL) > 0);
   CHECK(adapter.compare("alpha") > 0);
