@@ -135,6 +135,105 @@ class MsgPackDeserializer {
     }
   }
 
+bool skipVariant(NestingLimit nestingLimit) {
+    uint8_t code;
+    if (!readByte(code))
+      return false;
+
+    _foundSomething = true;
+
+    if ((code & 0x80) == 0) {
+      return true;
+    }
+
+    if ((code & 0xe0) == 0xe0) {
+      return true;
+    }
+
+    if ((code & 0xe0) == 0xa0) {
+      return skipString(code & 0x1f);
+    }
+
+    if ((code & 0xf0) == 0x90) {
+      return skipArray(code & 0x0F, nestingLimit);
+    }
+
+    if ((code & 0xf0) == 0x80) {
+      return skipObject(code & 0x0F, nestingLimit);
+    }
+
+    switch (code) {
+      case 0xc0:
+        // already null
+        return true;
+
+      case 0xc2:
+        return true;
+
+      case 0xc3:
+        return true;
+
+      case 0xcc:
+        return skipInteger<uint8_t>();
+
+      case 0xcd:
+        return skipInteger<uint16_t>();
+
+      case 0xce:
+        return skipInteger<uint32_t>();
+
+#if ARDUINOJSON_USE_LONG_LONG
+      case 0xcf:
+        return skipInteger<uint64_t>();
+#endif
+
+      case 0xd0:
+        return skipInteger<int8_t>();
+
+      case 0xd1:
+        return skipInteger<int16_t>();
+
+      case 0xd2:
+        return skipInteger<int32_t>();
+
+#if ARDUINOJSON_USE_LONG_LONG
+      case 0xd3:
+        return skipInteger<int64_t>();
+#endif
+
+      case 0xca:
+        return skipFloat<float>();
+
+      case 0xcb:
+        return skipDouble<double>();
+
+      case 0xd9:
+        return skipString<uint8_t>();
+
+      case 0xda:
+        return skipString<uint16_t>();
+
+      case 0xdb:
+        return skipString<uint32_t>();
+
+      case 0xdc:
+        return skipArray<uint16_t>(nestingLimit);
+
+      case 0xdd:
+        return skipArray<uint32_t>(nestingLimit);
+
+      case 0xde:
+        return skipObject<uint16_t>(nestingLimit);
+
+      case 0xdf:
+        return skipObject<uint32_t>(nestingLimit);
+
+      default:
+        _error = DeserializationError::NotSupported;
+        return false;
+    }
+  }
+
  private:
   // Prevent VS warning "assignment operator could not be generated"
   MsgPackDeserializer &operator=(const MsgPackDeserializer &);
@@ -156,10 +255,27 @@ class MsgPackDeserializer {
     return false;
   }
 
+  bool skipBytes(size_t n) {
+    for (; n; --n){
+      if (_reader.read() < 0){
+        _error = DeserializationError::IncompleteInput;
+        return false;
+      }
+    }
+    return true;
+  }
+
+
   template <typename T>
   bool readBytes(T &value) {
     return readBytes(reinterpret_cast<uint8_t *>(&value), sizeof(value));
   }
+
+  template <typename T>
+  bool skipBytes() {
+    return skipBytes(sizeof(T));
+  }
+
 
   template <typename T>
   bool readInteger(T &value) {
@@ -169,6 +285,7 @@ class MsgPackDeserializer {
     return true;
   }
 
+
   template <typename T>
   bool readInteger(VariantData &variant) {
     T value;
@@ -177,6 +294,14 @@ class MsgPackDeserializer {
     variant.setInteger(value);
     return true;
   }
+
+  template <typename T>
+  bool skipInteger() {
+    return skipBytes<T>();
+  }
+
+
+
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, bool>::type readFloat(
@@ -190,6 +315,12 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
+  typename enable_if<sizeof(T) == 4, bool>::type skipFloat() {
+    return skipBytes<T>();
+  }
+
+
+  template <typename T>
   typename enable_if<sizeof(T) == 8, bool>::type readDouble(
       VariantData &variant) {
     T value;
@@ -199,6 +330,7 @@ class MsgPackDeserializer {
     variant.setFloat(value);
     return true;
   }
+
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, bool>::type readDouble(
@@ -214,6 +346,13 @@ class MsgPackDeserializer {
     return true;
   }
 
+
+  template <typename T>
+  bool skipDouble(){
+    return skipBytes(8);
+  }
+
+
   template <typename T>
   bool readString(VariantData &variant) {
     T size;
@@ -228,6 +367,14 @@ class MsgPackDeserializer {
     if (!readInteger(size))
       return false;
     return readString(str, size);
+  }
+
+  template <typename T>
+  bool skipString() {
+    T size;
+    if (!readInteger(size))
+      return false;
+    return skipString(size);
   }
 
   bool readString(VariantData &variant, size_t n) {
@@ -256,6 +403,11 @@ class MsgPackDeserializer {
     return true;
   }
 
+  bool skipString(size_t n) {
+    return skipBytes(n);
+  }
+
+
   template <typename TSize>
   bool readArray(CollectionData &array, NestingLimit nestingLimit) {
     TSize size;
@@ -263,6 +415,15 @@ class MsgPackDeserializer {
       return false;
     return readArray(array, size, nestingLimit);
   }
+
+  template <typename TSize>
+  bool skipArray(NestingLimit nestingLimit) {
+    TSize size;
+    if (!readInteger(size))
+      return false;
+    return skipArray(size, nestingLimit);
+  }
+
 
   bool readArray(CollectionData &array, size_t n, NestingLimit nestingLimit) {
     if (nestingLimit.reached()) {
@@ -284,6 +445,21 @@ class MsgPackDeserializer {
     return true;
   }
 
+  bool skipArray(size_t n, NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) {
+      _error = DeserializationError::TooDeep;
+      return false;
+    }
+
+    for (; n; --n) {
+      if (!skipVariant(nestingLimit.decrement()))
+        return false;
+    }
+
+    return true;
+  }
+
+
   template <typename TSize>
   bool readObject(CollectionData &object, NestingLimit nestingLimit) {
     TSize size;
@@ -291,6 +467,15 @@ class MsgPackDeserializer {
       return false;
     return readObject(object, size, nestingLimit);
   }
+
+  template <typename TSize>
+  bool skipObject(NestingLimit nestingLimit) {
+    TSize size;
+    if (!readInteger(size))
+      return false;
+    return skipObject(size, nestingLimit);
+  }
+
 
   bool readObject(CollectionData &object, size_t n, NestingLimit nestingLimit) {
     if (nestingLimit.reached()) {
@@ -318,6 +503,23 @@ class MsgPackDeserializer {
     return true;
   }
 
+  bool skipObject(size_t n, NestingLimit nestingLimit) {
+    if (nestingLimit.reached()) {
+      _error = DeserializationError::TooDeep;
+      return false;
+    }
+
+    for (; n; --n) {
+      if (!skipKey())
+        return false;
+
+      if (!skipVariant(nestingLimit.decrement()))
+        return false;
+    }
+
+    return true;
+  }
+
   bool parseKey(const char *&key) {
     uint8_t code;
     if (!readByte(code))
@@ -335,6 +537,30 @@ class MsgPackDeserializer {
 
       case 0xdb:
         return readString<uint32_t>(key);
+
+      default:
+        _error = DeserializationError::NotSupported;
+        return false;
+    }
+  }
+
+  bool skipKey() {
+    uint8_t code;
+    if (!readByte(code))
+      return false;
+
+    if ((code & 0xe0) == 0xa0)
+      return skipString(code & 0x1f);
+
+    switch (code) {
+      case 0xd9:
+        return skipString<uint8_t>(key);
+
+      case 0xda:
+        return skipString<uint16_t>(key);
+
+      case 0xdb:
+        return skipString<uint32_t>(key);
 
       default:
         _error = DeserializationError::NotSupported;
