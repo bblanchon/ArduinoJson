@@ -64,14 +64,14 @@ class MsgPackDeserializer {
 
     if ((code & 0xf0) == 0x90) {
       if (filter.allowArray())
-        return readArray(variant.toArray(), code & 0x0F, nestingLimit);
+        return readArray(variant.toArray(), code & 0x0F, filter, nestingLimit);
       else
         return skipArray(code & 0x0F, nestingLimit);
     }
 
     if ((code & 0xf0) == 0x80) {
       if (filter.allowObject())
-        return readObject(variant.toObject(), code & 0x0F, nestingLimit);
+        return readObject(variant.toObject(), code & 0x0F, filter, nestingLimit);
       else
         return skipObject(code & 0x0F, nestingLimit);
       
@@ -177,26 +177,26 @@ class MsgPackDeserializer {
 
       case 0xdc:
         if (filter.allowArray())
-          return readArray<uint16_t>(variant.toArray(), nestingLimit);
+          return readArray<uint16_t>(variant.toArray(), filter, nestingLimit);
         else
           return skipArray<uint16_t>(nestingLimit);
         
       case 0xdd:
         if (filter.allowArray())
-          return readArray<uint32_t>(variant.toArray(), nestingLimit);
+          return readArray<uint32_t>(variant.toArray(), filter, nestingLimit);
         else
           return skipArray<uint32_t>(nestingLimit);          
 
       case 0xde:
         if (filter.allowObject())
-          return readObject<uint16_t>(variant.toObject(), nestingLimit);
+          return readObject<uint16_t>(variant.toObject(), filter, nestingLimit);
         else
           return skipObject<uint16_t>(nestingLimit);
         
 
       case 0xdf:
         if (filter.allowObject())
-          return readObject<uint32_t>(variant.toObject(), nestingLimit);
+          return readObject<uint32_t>(variant.toObject(), filter, nestingLimit);
         else
           return skipObject<uint32_t>(nestingLimit);
         
@@ -421,7 +421,7 @@ bool skipVariant(NestingLimit nestingLimit) {
 
   template <typename T>
   bool skipDouble(){
-    return skipBytes(8);
+    return skipBytes(8U);
   }
 
 
@@ -649,13 +649,13 @@ bool skipVariant(NestingLimit nestingLimit) {
 
     switch (code) {
       case 0xd9:
-        return skipString<uint8_t>(key);
+        return skipString<uint8_t>();
 
       case 0xda:
-        return skipString<uint16_t>(key);
+        return skipString<uint16_t>();
 
       case 0xdb:
-        return skipString<uint32_t>(key);
+        return skipString<uint32_t>();
 
       default:
         _error = DeserializationError::NotSupported;
@@ -670,34 +670,86 @@ bool skipVariant(NestingLimit nestingLimit) {
   bool _foundSomething;
 };
 
+// deserializeMsgPack(JsonDocument&, const std::string&, ...)
 template <typename TInput>
 DeserializationError deserializeMsgPack(
     JsonDocument &doc, const TInput &input,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<MsgPackDeserializer>(doc, input, nestingLimit,
-                                          AllowAllFilter());
+                                       AllowAllFilter());
 }
-
 template <typename TInput>
 DeserializationError deserializeMsgPack(
-    JsonDocument &doc, TInput *input, Filter filter,
+    JsonDocument &doc, const TInput &input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
 }
-
 template <typename TInput>
-DeserializationError deserializeMsgPack(
-    JsonDocument &doc, TInput *input, size_t inputSize,
-    NestingLimit nestingLimit = NestingLimit()) {
-  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit,
-                                          AllowAllFilter());
+DeserializationError deserializeMsgPack(JsonDocument &doc, const TInput &input,
+                                     NestingLimit nestingLimit, Filter filter) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
 }
 
+// deserializeMsgPack(JsonDocument&, const std::istream&, ...)
 template <typename TInput>
 DeserializationError deserializeMsgPack(
     JsonDocument &doc, TInput &input,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<MsgPackDeserializer>(doc, input, nestingLimit,
-                                          AllowAllFilter());
+                                       AllowAllFilter());
+}
+template <typename TInput>
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TInput &input, Filter filter,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
+}
+template <typename TInput>
+DeserializationError deserializeMsgPack(JsonDocument &doc, TInput &input,
+                                     NestingLimit nestingLimit, Filter filter) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
+}
+
+// deserializeMsgPack(JsonDocument&, char*, ...)
+template <typename TChar>
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TChar *input,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit,
+                                       AllowAllFilter());
+}
+template <typename TChar>
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TChar *input, Filter filter,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
+}
+template <typename TChar>
+DeserializationError deserializeMsgPack(JsonDocument &doc, TChar *input,
+                                     NestingLimit nestingLimit, Filter filter) {
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
+}
+
+// deserializeMsgPack(JsonDocument&, char*, size_t, ...)
+template <typename TChar>
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TChar *input, size_t inputSize,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit,
+                                       AllowAllFilter());
+}
+template <typename TChar>
+DeserializationError deserializeMsgPack(
+    JsonDocument &doc, TChar *input, size_t inputSize, Filter filter,
+    NestingLimit nestingLimit = NestingLimit()) {
+  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit,
+                                       filter);
+}
+template <typename TChar>
+DeserializationError deserializeMsgPack(JsonDocument &doc, TChar *input,
+                                     size_t inputSize,
+                                     NestingLimit nestingLimit, Filter filter) {
+  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit,
+                                       filter);
 }
 }  // namespace ARDUINOJSON_NAMESPACE
