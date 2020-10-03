@@ -25,14 +25,17 @@ class MsgPackDeserializer {
         _foundSomething(false) {}
 
   // TODO: add support for filter
-  DeserializationError parse(VariantData &variant, AllowAllFilter,
+  template <typename TFilter>
+  DeserializationError parse(VariantData &variant, TFilter filter,
                              NestingLimit nestingLimit) {
-    parseVariant(variant, nestingLimit);
+    parseVariant(variant, filter, nestingLimit);
     return _foundSomething ? _error : DeserializationError::EmptyInput;
   }
 
  private:
-  bool parseVariant(VariantData &variant, NestingLimit nestingLimit) {
+  template <typename TFilter>
+  bool parseVariant(VariantData &variant, TFilter filter,
+                    NestingLimit nestingLimit) {
     uint8_t code;
     if (!readByte(code))
       return false;
@@ -40,25 +43,38 @@ class MsgPackDeserializer {
     _foundSomething = true;
 
     if ((code & 0x80) == 0) {
-      variant.setUnsignedInteger(code);
+      if (filter.allowValue())
+        variant.setUnsignedInteger(code);
       return true;
     }
 
     if ((code & 0xe0) == 0xe0) {
-      variant.setSignedInteger(static_cast<int8_t>(code));
+      if (filter.allowValue())
+        variant.setSignedInteger(static_cast<int8_t>(code));
       return true;
     }
 
     if ((code & 0xe0) == 0xa0) {
-      return readString(variant, code & 0x1f);
+      if (filter.allowValue())
+        return readString(variant, code & 0x1f);
+      else
+        return skipString(code & 0x1f);
+      
     }
 
     if ((code & 0xf0) == 0x90) {
-      return readArray(variant.toArray(), code & 0x0F, nestingLimit);
+      if (filter.allowArray())
+        return readArray(variant.toArray(), code & 0x0F, nestingLimit);
+      else
+        return skipArray(code & 0x0F, nestingLimit);
     }
 
     if ((code & 0xf0) == 0x80) {
-      return readObject(variant.toObject(), code & 0x0F, nestingLimit);
+      if (filter.allowObject())
+        return readObject(variant.toObject(), code & 0x0F, nestingLimit);
+      else
+        return skipObject(code & 0x0F, nestingLimit);
+      
     }
 
     switch (code) {
@@ -67,67 +83,123 @@ class MsgPackDeserializer {
         return true;
 
       case 0xc2:
-        variant.setBoolean(false);
+        if (filter.allowValue())
+          variant.setBoolean(false);
         return true;
 
       case 0xc3:
-        variant.setBoolean(true);
+        if (filter.allowValue())
+          variant.setBoolean(true);
         return true;
 
       case 0xcc:
-        return readInteger<uint8_t>(variant);
+        if (filter.allowValue())
+          return readInteger<uint8_t>(variant);
+        else
+          return skipInteger<uint8_t>();
+        
 
       case 0xcd:
-        return readInteger<uint16_t>(variant);
+        if (filter.allowValue())
+          return readInteger<uint16_t>(variant);
+        else
+          return skipInteger<uint16_t>();
 
       case 0xce:
-        return readInteger<uint32_t>(variant);
+        if (filter.allowValue())
+          return readInteger<uint32_t>(variant);
+        else
+          return skipInteger<uint32_t>();
 
 #if ARDUINOJSON_USE_LONG_LONG
       case 0xcf:
-        return readInteger<uint64_t>(variant);
+        if (filter.allowValue())
+          return readInteger<uint64_t>(variant);
+        else
+          return skipInteger<uint64_t>();
 #endif
 
       case 0xd0:
-        return readInteger<int8_t>(variant);
+        if (filter.allowValue())
+          return readInteger<int8_t>(variant);
+        else
+          return skipInteger<int8_t>();        
 
       case 0xd1:
-        return readInteger<int16_t>(variant);
+        if (filter.allowValue())
+          return readInteger<int16_t>(variant);
+        else
+          return skipInteger<int16_t>();
 
       case 0xd2:
-        return readInteger<int32_t>(variant);
+        if (filter.allowValue())
+          return readInteger<int32_t>(variant);
+        else
+          return skipInteger<int32_t>();          
 
 #if ARDUINOJSON_USE_LONG_LONG
       case 0xd3:
-        return readInteger<int64_t>(variant);
+        if (filter.allowValue())
+          return readInteger<int64_t>(variant);
+        else
+          return skipInteger<int64_t>();             
 #endif
 
       case 0xca:
-        return readFloat<float>(variant);
+        if (filter.allowValue())
+          return readFloat<float>(variant);
+        else
+          return skipFloat<float>();         
 
       case 0xcb:
-        return readDouble<double>(variant);
+        if (filter.allowValue())
+          return readDouble<double>(variant);
+        else
+          return skipDouble<double>();                   
 
       case 0xd9:
-        return readString<uint8_t>(variant);
+        if (filter.allowValue())
+          return readString<uint8_t>(variant);
+        else
+          return skipString<uint8_t>();                   
 
       case 0xda:
-        return readString<uint16_t>(variant);
+        if (filter.allowValue())
+          return readString<uint16_t>(variant);
+        else
+          return skipString<uint16_t>();                   
 
       case 0xdb:
-        return readString<uint32_t>(variant);
+        if (filter.allowValue())
+          return readString<uint32_t>(variant);
+        else
+          return skipString<uint32_t>();         
 
       case 0xdc:
-        return readArray<uint16_t>(variant.toArray(), nestingLimit);
-
+        if (filter.allowArray())
+          return readArray<uint16_t>(variant.toArray(), nestingLimit);
+        else
+          return skipArray<uint16_t>(nestingLimit);
+        
       case 0xdd:
-        return readArray<uint32_t>(variant.toArray(), nestingLimit);
+        if (filter.allowArray())
+          return readArray<uint32_t>(variant.toArray(), nestingLimit);
+        else
+          return skipArray<uint32_t>(nestingLimit);          
 
       case 0xde:
-        return readObject<uint16_t>(variant.toObject(), nestingLimit);
+        if (filter.allowObject())
+          return readObject<uint16_t>(variant.toObject(), nestingLimit);
+        else
+          return skipObject<uint16_t>(nestingLimit);
+        
 
       case 0xdf:
-        return readObject<uint32_t>(variant.toObject(), nestingLimit);
+        if (filter.allowObject())
+          return readObject<uint32_t>(variant.toObject(), nestingLimit);
+        else
+          return skipObject<uint32_t>(nestingLimit);
+        
 
       default:
         _error = DeserializationError::NotSupported;
@@ -408,12 +480,13 @@ bool skipVariant(NestingLimit nestingLimit) {
   }
 
 
-  template <typename TSize>
-  bool readArray(CollectionData &array, NestingLimit nestingLimit) {
+  template <typename TSize, typename TFilter>
+  bool readArray(CollectionData &array, TFilter filter,
+                 NestingLimit nestingLimit) {
     TSize size;
     if (!readInteger(size))
       return false;
-    return readArray(array, size, nestingLimit);
+    return readArray(array, size, filter, nestingLimit);
   }
 
   template <typename TSize>
@@ -424,22 +497,30 @@ bool skipVariant(NestingLimit nestingLimit) {
     return skipArray(size, nestingLimit);
   }
 
-
-  bool readArray(CollectionData &array, size_t n, NestingLimit nestingLimit) {
+  template <typename TFilter>
+  bool readArray(CollectionData &array, size_t n, TFilter filter,
+                 NestingLimit nestingLimit) {
     if (nestingLimit.reached()) {
       _error = DeserializationError::TooDeep;
       return false;
     }
 
-    for (; n; --n) {
-      VariantData *value = array.addElement(_pool);
-      if (!value) {
-        _error = DeserializationError::NoMemory;
-        return false;
-      }
+    TFilter memberFilter = filter[0UL];
 
-      if (!parseVariant(*value, nestingLimit.decrement()))
-        return false;
+    for (; n; --n) {
+      if (memberFilter.allow()) {
+        VariantData *value = array.addElement(_pool);
+        if (!value) {
+          _error = DeserializationError::NoMemory;
+          return false;
+        }
+
+        if (!parseVariant(*value, filter, nestingLimit.decrement()))
+          return false;
+      } else {
+        if (!skipVariant(nestingLimit.decrement()))
+          return false;
+      }
     }
 
     return true;
@@ -460,12 +541,13 @@ bool skipVariant(NestingLimit nestingLimit) {
   }
 
 
-  template <typename TSize>
-  bool readObject(CollectionData &object, NestingLimit nestingLimit) {
+  template <typename TSize, typename TFilter>
+  bool readObject(CollectionData &object, TFilter filter,
+                  NestingLimit nestingLimit) {
     TSize size;
     if (!readInteger(size))
       return false;
-    return readObject(object, size, nestingLimit);
+    return readObject(object, size, filter, nestingLimit);
   }
 
   template <typename TSize>
@@ -476,28 +558,41 @@ bool skipVariant(NestingLimit nestingLimit) {
     return skipObject(size, nestingLimit);
   }
 
-
-  bool readObject(CollectionData &object, size_t n, NestingLimit nestingLimit) {
+  template <typename TFilter>
+  bool readObject(CollectionData &object, size_t n, TFilter filter,
+                  NestingLimit nestingLimit) {
     if (nestingLimit.reached()) {
       _error = DeserializationError::TooDeep;
       return false;
     }
 
     for (; n; --n) {
-      VariantSlot *slot = object.addSlot(_pool);
-      if (!slot) {
-        _error = DeserializationError::NoMemory;
-        return false;
-      }
 
       const char *key = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
+      
       if (!parseKey(key))
         return false;
 
-      slot->setKey(key, typename TStringStorage::storage_policy());
+      TFilter memberFilter = filter[key];
 
-      if (!parseVariant(*slot->data(), nestingLimit.decrement()))
-        return false;
+      if (memberFilter.allow()) {
+
+        VariantSlot *slot = object.addSlot(_pool);
+        if (!slot) {
+          _error = DeserializationError::NoMemory;
+          return false;
+        }
+
+        slot->setKey(key, typename TStringStorage::storage_policy());
+
+        if (!parseVariant(*slot->data(), memberFilter, nestingLimit.decrement()))
+          return false;
+
+      } else {
+        if (!skipVariant(nestingLimit.decrement()))
+          return false;
+      }
+      
     }
 
     return true;
@@ -585,10 +680,9 @@ DeserializationError deserializeMsgPack(
 
 template <typename TInput>
 DeserializationError deserializeMsgPack(
-    JsonDocument &doc, TInput *input,
+    JsonDocument &doc, TInput *input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit,
-                                          AllowAllFilter());
+  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
 }
 
 template <typename TInput>
