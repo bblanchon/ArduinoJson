@@ -41,8 +41,7 @@ class MsgPackDeserializer {
       return false;
 
     _foundSomething = true;
-
-    // static_assert((0x93 & 12) == 0, "TEST");
+    
 
     if ((code & 0x80) == 0) {
       if (filter.allowValue())
@@ -113,13 +112,19 @@ class MsgPackDeserializer {
         else
           return skipInteger<uint32_t>();
 
-#if ARDUINOJSON_USE_LONG_LONG
+
       case 0xcf:
-        if (filter.allowValue())
-          return readInteger<uint64_t>(variant);
-        else
+        if (filter.allowValue()){
+          #if ARDUINOJSON_USE_LONG_LONG
+            return readInteger<uint64_t>(variant);
+          #else
+            _error = DeserializationError::NotSupported;
+            return false;
+          #endif
+
+        } else
           return skipInteger<uint64_t>();
-#endif
+
 
       case 0xd0:
         if (filter.allowValue())
@@ -139,13 +144,17 @@ class MsgPackDeserializer {
         else
           return skipInteger<int32_t>();          
 
-#if ARDUINOJSON_USE_LONG_LONG
       case 0xd3:
-        if (filter.allowValue())
-          return readInteger<int64_t>(variant);
-        else
+        if (filter.allowValue()){
+          #if ARDUINOJSON_USE_LONG_LONG
+            return readInteger<int64_t>(variant);
+          #else
+            _error = DeserializationError::NotSupported;
+            return false;
+          #endif
+        } else
           return skipInteger<int64_t>();             
-#endif
+
 
       case 0xca:
         if (filter.allowValue())
@@ -256,10 +265,11 @@ bool skipVariant(NestingLimit nestingLimit) {
       case 0xce:
         return skipInteger<uint32_t>();
 
-#if ARDUINOJSON_USE_LONG_LONG
+// #if ARDUINOJSON_USE_LONG_LONG
+      //ALLOW SKIPPING OF LONG_LONG
       case 0xcf:
         return skipInteger<uint64_t>();
-#endif
+// #endif
 
       case 0xd0:
         return skipInteger<int8_t>();
@@ -270,10 +280,11 @@ bool skipVariant(NestingLimit nestingLimit) {
       case 0xd2:
         return skipInteger<int32_t>();
 
-#if ARDUINOJSON_USE_LONG_LONG
+// #if ARDUINOJSON_USE_LONG_LONG
+      //ALLOW SKIPPING OF LONG_LONG
       case 0xd3:
         return skipInteger<int64_t>();
-#endif
+// #endif
 
       case 0xca:
         return skipFloat<float>();
