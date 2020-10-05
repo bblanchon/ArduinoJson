@@ -13,6 +13,7 @@ add_executable(MsgPackDeserializerTests
 	misc.cpp
 	nestingLimit.cpp
 	notSupported.cpp
+	filter.cpp
 )
 
 add_test(MsgPackDeserializer MsgPackDeserializerTests)

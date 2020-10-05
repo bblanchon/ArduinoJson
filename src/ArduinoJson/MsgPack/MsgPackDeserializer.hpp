@@ -42,6 +42,8 @@ class MsgPackDeserializer {
 
     _foundSomething = true;
 
+    // static_assert((0x93 & 12) == 0, "TEST");
+
     if ((code & 0x80) == 0) {
       if (filter.allowValue())
         variant.setUnsignedInteger(code);
@@ -424,6 +426,30 @@ bool skipVariant(NestingLimit nestingLimit) {
     return skipBytes(8U);
   }
 
+  bool loadString(size_t n) {
+    _stringStorage.startString();
+    for (; n; --n) {
+      uint8_t c;
+      if (!readBytes(c))
+        return false;
+      _stringStorage.append(static_cast<char>(c));
+    }
+    _stringStorage.append('\0');
+    if (!_stringStorage.isValid()) {
+      _error = DeserializationError::NoMemory;
+      return false;
+    }
+    return true;
+  }
+  
+  template <typename T>
+  bool loadString() {
+    T size;
+    if (!readInteger(size))
+      return false;
+    return loadString(size);
+  }
+
 
   template <typename T>
   bool readString(VariantData &variant) {
@@ -458,22 +484,14 @@ bool skipVariant(NestingLimit nestingLimit) {
   }
 
   bool readString(const char *&result, size_t n) {
-    _stringStorage.startString();
-    for (; n; --n) {
-      uint8_t c;
-      if (!readBytes(c))
-        return false;
-      _stringStorage.append(static_cast<char>(c));
+    if(loadString(n)){
+      result = _stringStorage.save();
+      return true;
     }
-    _stringStorage.append('\0');
-    if (!_stringStorage.isValid()) {
-      _error = DeserializationError::NoMemory;
-      return false;
-    }
-
-    result = _stringStorage.save();
-    return true;
+    return false;
   }
+
+
 
   bool skipString(size_t n) {
     return skipBytes(n);
@@ -515,7 +533,7 @@ bool skipVariant(NestingLimit nestingLimit) {
           return false;
         }
 
-        if (!parseVariant(*value, filter, nestingLimit.decrement()))
+        if (!parseVariant(*value, memberFilter, nestingLimit.decrement()))
           return false;
       } else {
         if (!skipVariant(nestingLimit.decrement()))
@@ -568,24 +586,34 @@ bool skipVariant(NestingLimit nestingLimit) {
 
     for (; n; --n) {
 
-      const char *key = 0;  // <- mute "maybe-uninitialized" (+4 bytes on AVR)
-      
-      if (!parseKey(key))
+      if (!parseKey())
         return false;
 
+      const char *key = _stringStorage.c_str();
+      
       TFilter memberFilter = filter[key];
 
       if (memberFilter.allow()) {
+        VariantData *variant = object.getMember(adaptString(key));
+        if (!variant) {
+          // Save key in memory pool.
+          // This MUST be done before adding the slot.
+          key = _stringStorage.save();
 
-        VariantSlot *slot = object.addSlot(_pool);
-        if (!slot) {
-          _error = DeserializationError::NoMemory;
-          return false;
+          // Allocate slot in object
+          VariantSlot *slot = object.addSlot(_pool);
+          if (!slot) {
+            _error = DeserializationError::NoMemory;
+            return false;
+          }
+
+          slot->setKey(key, typename TStringStorage::storage_policy());
+
+          variant = slot->data();
         }
 
-        slot->setKey(key, typename TStringStorage::storage_policy());
-
-        if (!parseVariant(*slot->data(), memberFilter, nestingLimit.decrement()))
+        // Parse value
+        if (!parseVariant(*variant, memberFilter, nestingLimit.decrement()))
           return false;
 
       } else {
@@ -615,23 +643,23 @@ bool skipVariant(NestingLimit nestingLimit) {
     return true;
   }
 
-  bool parseKey(const char *&key) {
+  bool parseKey() {
     uint8_t code;
     if (!readByte(code))
       return false;
 
     if ((code & 0xe0) == 0xa0)
-      return readString(key, code & 0x1f);
+      return loadString(code & 0x1f);
 
     switch (code) {
       case 0xd9:
-        return readString<uint8_t>(key);
+        return loadString<uint8_t>();
 
       case 0xda:
-        return readString<uint16_t>(key);
+        return loadString<uint16_t>();
 
       case 0xdb:
-        return readString<uint32_t>(key);
+        return loadString<uint32_t>();
 
       default:
         _error = DeserializationError::NotSupported;

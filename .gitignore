@@ -10,3 +10,4 @@
 /extras/fuzzing/*_fuzzer.options
 /extras/fuzzing/*_fuzzer_seed_corpus.zip
 .vs/
+/tool
