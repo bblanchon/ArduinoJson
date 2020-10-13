@@ -63,6 +63,15 @@ TEST_CASE("Filtering") {
       0
     },
     {
+      // Member is a string, but filter wants an array
+      "{\"example\":\"example\"}",
+      "{\"example\":[true]}",
+      10,
+      DeserializationError::Ok,
+      "{\"example\":null}",
+      JSON_OBJECT_SIZE(1) + 8
+    },
+    {
       // Input is an array, but filter wants an object
       "[\"hello\",\"world\"]",
       "{}",

@@ -9,6 +9,7 @@ HEAD
 * Added `DeserializationError::EmptyInput` which tells if the input was empty
 * Added `DeserializationError::f_str()` which returns a `const __FlashStringHelper*` (issue #846)
 * Added `operator|(JsonVariantConst, JsonVariantConst)`
+* Added filtering for MessagePack (issue #1298, PR #1394 by Luca Passarella)
 * Moved float convertion tables to PROGMEM
 * Fixed `JsonVariant::set((char*)0)` which returned false instead of true (issue #1368)
 * Fixed error `No such file or directory #include <WString.h>` (issue #1381)

@@ -637,47 +637,60 @@ class JsonDeserializer {
   DeserializationError _error;
 };
 
+//
 // deserializeJson(JsonDocument&, const std::string&, ...)
-template <typename TInput>
+//
+// ... = NestingLimit
+template <typename TString>
 DeserializationError deserializeJson(
-    JsonDocument &doc, const TInput &input,
+    JsonDocument &doc, const TString &input,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
 }
-template <typename TInput>
+// ... = Filter, NestingLimit
+template <typename TString>
 DeserializationError deserializeJson(
-    JsonDocument &doc, const TInput &input, Filter filter,
+    JsonDocument &doc, const TString &input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
-template <typename TInput>
-DeserializationError deserializeJson(JsonDocument &doc, const TInput &input,
+// ... = NestingLimit, Filter
+template <typename TString>
+DeserializationError deserializeJson(JsonDocument &doc, const TString &input,
                                      NestingLimit nestingLimit, Filter filter) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
-// deserializeJson(JsonDocument&, const std::istream&, ...)
-template <typename TInput>
+//
+// deserializeJson(JsonDocument&, std::istream&, ...)
+//
+// ... = NestingLimit
+template <typename TStream>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TInput &input,
+    JsonDocument &doc, TStream &input,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
 }
-template <typename TInput>
+// ... = Filter, NestingLimit
+template <typename TStream>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TInput &input, Filter filter,
+    JsonDocument &doc, TStream &input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
-template <typename TInput>
-DeserializationError deserializeJson(JsonDocument &doc, TInput &input,
+// ... = NestingLimit, Filter
+template <typename TStream>
+DeserializationError deserializeJson(JsonDocument &doc, TStream &input,
                                      NestingLimit nestingLimit, Filter filter) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
+//
 // deserializeJson(JsonDocument&, char*, ...)
+//
+// ... = NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
     JsonDocument &doc, TChar *input,
@@ -685,19 +698,24 @@ DeserializationError deserializeJson(
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
 }
+// ... = Filter, NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
     JsonDocument &doc, TChar *input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
+// ... = NestingLimit, Filter
 template <typename TChar>
 DeserializationError deserializeJson(JsonDocument &doc, TChar *input,
                                      NestingLimit nestingLimit, Filter filter) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
+//
 // deserializeJson(JsonDocument&, char*, size_t, ...)
+//
+// ... = NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
     JsonDocument &doc, TChar *input, size_t inputSize,
@@ -705,6 +723,7 @@ DeserializationError deserializeJson(
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,
                                        AllowAllFilter());
 }
+// ... = Filter, NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
     JsonDocument &doc, TChar *input, size_t inputSize, Filter filter,
@@ -712,6 +731,7 @@ DeserializationError deserializeJson(
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,
                                        filter);
 }
+// ... = NestingLimit, Filter
 template <typename TChar>
 DeserializationError deserializeJson(JsonDocument &doc, TChar *input,
                                      size_t inputSize,

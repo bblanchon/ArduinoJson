@@ -8,6 +8,7 @@ add_executable(MsgPackDeserializerTests
 	deserializeStaticVariant.cpp
 	deserializeVariant.cpp
 	doubleToFloat.cpp
+	filter.cpp
 	incompleteInput.cpp
 	input_types.cpp
 	misc.cpp
