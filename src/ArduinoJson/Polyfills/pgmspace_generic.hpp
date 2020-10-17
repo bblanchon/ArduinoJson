@@ -15,7 +15,11 @@ typename enable_if<is_pointer<T>::value, T>::type pgm_read(const void* p) {
 }
 
 template <typename T>
-typename enable_if<is_same<T, float>::value, T>::type pgm_read(const void* p) {
+typename enable_if<is_floating_point<T>::value &&
+                       sizeof(T) == sizeof(float),  // on AVR sizeof(double) ==
+                                                    // sizeof(float)
+                   T>::type
+pgm_read(const void* p) {
   return pgm_read_float(p);
 }
 
