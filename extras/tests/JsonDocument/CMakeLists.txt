@@ -9,6 +9,7 @@ add_executable(JsonDocumentTests
 	containsKey.cpp
 	createNested.cpp
 	DynamicJsonDocument.cpp
+	ElementProxy.cpp
 	isNull.cpp
 	nesting.cpp
 	overflowed.cpp

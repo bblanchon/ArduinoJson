@@ -7,7 +7,6 @@ add_subdirectory(catch)
 link_libraries(ArduinoJson catch)
 
 include_directories(Helpers)
-add_subdirectory(ElementProxy)
 add_subdirectory(FailingBuilds)
 add_subdirectory(IntegrationTests)
 add_subdirectory(JsonArray)
