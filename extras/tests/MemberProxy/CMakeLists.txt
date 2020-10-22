@@ -7,6 +7,7 @@ add_executable(MemberProxyTests
 	clear.cpp
 	compare.cpp
 	containsKey.cpp
+	or.cpp
 	remove.cpp
 	set.cpp
 	size.cpp

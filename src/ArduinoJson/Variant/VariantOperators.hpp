@@ -20,20 +20,11 @@ struct VariantOperators {
   // Returns the default value if the VariantRef is undefined of incompatible
   template <typename T>
   friend typename enable_if<!IsVisitable<T>::value, T>::type operator|(
-      const TVariant &variant, const T &defaultValue) {
+      const TVariant &variant, T defaultValue) {
     if (variant.template is<T>())
       return variant.template as<T>();
     else
       return defaultValue;
-  }
-
-  // Returns the default value if the VariantRef is undefined of incompatible
-  // Special case for string: null is treated as undefined
-  template <typename T>
-  friend typename enable_if<is_same<T, const char *>::value, T>::type operator|(
-      const TVariant &variant, T defaultValue) {
-    const char *value = variant.template as<const char *>();
-    return value ? value : defaultValue;
   }
 
   // value == TVariant

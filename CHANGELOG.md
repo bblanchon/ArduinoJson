@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed error `ambiguous overload for 'operator|'` (issue #1411)
+
 v6.17.0 (2020-10-19)
 -------
 
