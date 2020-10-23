@@ -16,6 +16,7 @@
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 #include <ArduinoJson/Variant/VariantShortcuts.hpp>
+#include <ArduinoJson/Variant/VariantTag.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -23,12 +24,9 @@ namespace ARDUINOJSON_NAMESPACE {
 class ArrayRef;
 class ObjectRef;
 
-template <typename, typename>
-class MemberProxy;
-
 // Contains the methods shared by VariantRef and VariantConstRef
 template <typename TData>
-class VariantRefBase {
+class VariantRefBase : public VariantTag {
  public:
   // Tells wether the variant has the specified type.
   // Returns true if the variant has type type T, false otherwise.

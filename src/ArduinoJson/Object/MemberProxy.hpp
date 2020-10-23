@@ -21,10 +21,13 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TObject, typename TStringRef>
 class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
                     public VariantShortcuts<MemberProxy<TObject, TStringRef> >,
-                    public Visitable {
+                    public Visitable,
+                    public VariantTag {
   typedef MemberProxy<TObject, TStringRef> this_type;
 
  public:
+  typedef VariantRef variant_type;
+
   FORCE_INLINE MemberProxy(TObject variant, TStringRef key)
       : _object(variant), _key(key) {}
 

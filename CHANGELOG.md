@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed error `ambiguous overload for 'operator|'` (issue #1411)
+* Fixed `operator|(MemberProxy, JsonObject)` (issue #1415)
 
 v6.17.0 (2020-10-19)
 -------

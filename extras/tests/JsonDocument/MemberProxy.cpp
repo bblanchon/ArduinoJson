@@ -121,6 +121,17 @@ TEST_CASE("MemberProxy::operator|()") {
 
     REQUIRE(sensor == std::string("gps"));
   }
+
+  SECTION("Issue #1415") {
+    JsonObject object = doc.to<JsonObject>();
+    object["hello"] = "world";
+
+    StaticJsonDocument<0> emptyDoc;
+    JsonObject anotherObject = object["hello"] | emptyDoc.to<JsonObject>();
+
+    REQUIRE(anotherObject.isNull() == false);
+    REQUIRE(anotherObject.size() == 0);
+  }
 }
 
 TEST_CASE("MemberProxy::remove()") {
