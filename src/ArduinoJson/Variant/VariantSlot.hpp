@@ -6,6 +6,7 @@
 
 #include <stdint.h>  // int8_t, int16_t
 
+#include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
@@ -61,11 +62,19 @@ class VariantSlot {
   }
 
   void setNext(VariantSlot* slot) {
+    ARDUINOJSON_ASSERT(!slot || slot - this >=
+                       numeric_limits<VariantSlotDiff>::lowest());
+    ARDUINOJSON_ASSERT(!slot || slot - this <=
+                       numeric_limits<VariantSlotDiff>::highest());
     _next = VariantSlotDiff(slot ? slot - this : 0);
   }
 
   void setNextNotNull(VariantSlot* slot) {
     ARDUINOJSON_ASSERT(slot != 0);
+    ARDUINOJSON_ASSERT(slot - this >=
+                       numeric_limits<VariantSlotDiff>::lowest());
+    ARDUINOJSON_ASSERT(slot - this <=
+                       numeric_limits<VariantSlotDiff>::highest());
     _next = VariantSlotDiff(slot - this);
   }
 
