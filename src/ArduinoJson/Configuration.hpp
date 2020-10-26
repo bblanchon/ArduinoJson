@@ -5,6 +5,9 @@
 #pragma once
 
 #if __cplusplus >= 201103L
+#ifdef nullptr
+#undef nullptr
+#endif
 #define ARDUINOJSON_HAS_LONG_LONG 1
 #define ARDUINOJSON_HAS_NULLPTR 1
 #define ARDUINOJSON_HAS_RVALUE_REFERENCES 1
