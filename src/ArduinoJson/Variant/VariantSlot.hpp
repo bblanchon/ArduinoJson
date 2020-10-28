@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <stdint.h>  // int8_t, int16_t
-
+#include <ArduinoJson/Polyfills/integer.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
@@ -13,7 +12,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-typedef conditional<sizeof(void*) <= 2, int8_t, int16_t>::type VariantSlotDiff;
+typedef int_t<ARDUINOJSON_SLOT_OFFSET_SIZE * 8>::type VariantSlotDiff;
 
 class VariantSlot {
   // CAUTION: same layout as VariantData
@@ -63,9 +62,9 @@ class VariantSlot {
 
   void setNext(VariantSlot* slot) {
     ARDUINOJSON_ASSERT(!slot || slot - this >=
-                       numeric_limits<VariantSlotDiff>::lowest());
+                                    numeric_limits<VariantSlotDiff>::lowest());
     ARDUINOJSON_ASSERT(!slot || slot - this <=
-                       numeric_limits<VariantSlotDiff>::highest());
+                                    numeric_limits<VariantSlotDiff>::highest());
     _next = VariantSlotDiff(slot ? slot - this : 0);
   }
 

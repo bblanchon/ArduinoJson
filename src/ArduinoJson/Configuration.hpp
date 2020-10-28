@@ -83,6 +83,18 @@
 #define ARDUINOJSON_DEFAULT_NESTING_LIMIT 10
 #endif
 
+// Number of bits to store the pointer to next node
+// (saves RAM but limits the number of values in a document)
+#ifndef ARDUINOJSON_SLOT_OFFSET_SIZE
+#if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ == 2
+// Address space == 16-bit => max 127 values
+#define ARDUINOJSON_SLOT_OFFSET_SIZE 1
+#else
+// Address space > 16-bit => max 32767 values
+#define ARDUINOJSON_SLOT_OFFSET_SIZE 2
+#endif
+#endif
+
 #else  // ARDUINOJSON_EMBEDDED_MODE
 
 // On a computer we have plenty of memory so we can use doubles
@@ -112,6 +124,11 @@
 // On a computer, the stack is large so we can increase nesting limit
 #ifndef ARDUINOJSON_DEFAULT_NESTING_LIMIT
 #define ARDUINOJSON_DEFAULT_NESTING_LIMIT 50
+#endif
+
+// Number of bits to store the pointer to next node
+#ifndef ARDUINOJSON_SLOT_OFFSET_SIZE
+#define ARDUINOJSON_SLOT_OFFSET_SIZE 4
 #endif
 
 #endif  // ARDUINOJSON_EMBEDDED_MODE
