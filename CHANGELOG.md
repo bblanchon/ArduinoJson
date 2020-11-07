@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.17.1 (2020-11-07)
+-------
 
 * Fixed error `ambiguous overload for 'operator|'` (issue #1411)
 * Fixed `operator|(MemberProxy, JsonObject)` (issue #1415)
