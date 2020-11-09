@@ -19,15 +19,23 @@ CompareResult compare(const T1 &lhs, const T2 &rhs);  // VariantCompare.cpp
 template <typename TVariant>
 struct VariantOperators {
   // Returns the default value if the VariantRef is undefined or incompatible
+  //
+  // int operator|(JsonVariant, int)
+  // float operator|(JsonVariant, float)
+  // bool operator|(JsonVariant, bool)
+  // const char* operator|(JsonVariant, const char*)
+  // char* operator|(JsonVariant, const char*)
   template <typename T>
-  friend typename enable_if<!IsVariant<T>::value, T>::type operator|(
-      const TVariant &variant, T defaultValue) {
+  friend typename enable_if<!IsVariant<T>::value,
+                            typename VariantAs<T>::type>::type
+  operator|(const TVariant &variant, T defaultValue) {
     if (variant.template is<T>())
       return variant.template as<T>();
     else
       return defaultValue;
   }
-  // Returns the default value if the VariantRef is undefined or incompatible
+  //
+  // JsonVariant operator|(JsonVariant, JsonVariant)
   template <typename T>
   friend typename enable_if<IsVariant<T>::value, typename T::variant_type>::type
   operator|(const TVariant &variant, T defaultValue) {

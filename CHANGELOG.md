@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed invalid conversion error in `operator|(JsonVariant, char*)` (issue #1432)
+
 v6.17.1 (2020-11-07)
 -------
 

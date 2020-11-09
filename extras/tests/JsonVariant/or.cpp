@@ -137,6 +137,20 @@ TEST_CASE("JsonVariant::operator|()") {
     REQUIRE(result == "not default");
   }
 
+  SECTION("const char* | char*") {
+    char dflt[] = "default";
+    variant.set("not default");
+    std::string result = variant | dflt;
+    REQUIRE(result == "not default");
+  }
+
+  SECTION("int | char*") {
+    char dflt[] = "default";
+    variant.set(42);
+    std::string result = variant | dflt;
+    REQUIRE(result == "default");
+  }
+
   SECTION("const char* | int") {
     variant.set("not default");
     int result = variant | 42;
