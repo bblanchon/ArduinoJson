@@ -128,6 +128,7 @@ matrix:
     - env: SCRIPT=arduino VERSION=1.8.2 BOARD=arduino:samd:mkr1000
     - env: SCRIPT=platformio BOARD=uno
     - env: SCRIPT=platformio BOARD=esp01
+    - env: SCRIPT=particle BOARD=argon
 cache:
   directories:
     - "~/.platformio"
