@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project(ArduinoJson VERSION 6.17.1)
+project(ArduinoJson VERSION 6.17.2)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)

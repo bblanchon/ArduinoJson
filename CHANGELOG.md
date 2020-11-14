@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.17.2 (2020-11-14)
+-------
 
 * Fixed invalid conversion error in `operator|(JsonVariant, char*)` (issue #1432)
 * Changed the default value of `ARDUINOJSON_ENABLE_PROGMEM` (issue #1433).
