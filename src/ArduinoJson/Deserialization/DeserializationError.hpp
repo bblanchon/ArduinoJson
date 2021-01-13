@@ -1,10 +1,12 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Polyfills/preprocessor.hpp>
+#include <ArduinoJson/Polyfills/static_array.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 #include <ostream>
@@ -20,6 +22,7 @@ class DeserializationError {
  public:
   enum Code {
     Ok,
+    EmptyInput,
     IncompleteInput,
     InvalidInput,
     NoMemory,
@@ -77,23 +80,30 @@ class DeserializationError {
   }
 
   const char* c_str() const {
-    switch (_code) {
-      case Ok:
-        return "Ok";
-      case TooDeep:
-        return "TooDeep";
-      case NoMemory:
-        return "NoMemory";
-      case InvalidInput:
-        return "InvalidInput";
-      case IncompleteInput:
-        return "IncompleteInput";
-      case NotSupported:
-        return "NotSupported";
-      default:
-        return "???";
-    }
+    static const char* messages[] = {
+        "Ok",       "EmptyInput",   "IncompleteInput", "InvalidInput",
+        "NoMemory", "NotSupported", "TooDeep"};
+    ARDUINOJSON_ASSERT(static_cast<size_t>(_code) <
+                       sizeof(messages) / sizeof(messages[0]));
+    return messages[_code];
   }
+
+#if ARDUINOJSON_ENABLE_PROGMEM
+  const __FlashStringHelper* f_str() const {
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s0, "Ok");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s1, "EmptyInput");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s2, "IncompleteInput");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s3, "InvalidInput");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s4, "NoMemory");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s5, "NotSupported");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s6, "TooDeep");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(
+        const char*, messages,
+        ARDUINOJSON_EXPAND7({s0, s1, s2, s3, s4, s5, s6}));
+    return ARDUINOJSON_READ_STATIC_ARRAY(const __FlashStringHelper*, messages,
+                                         _code);
+  }
+#endif
 
  private:
   Code _code;

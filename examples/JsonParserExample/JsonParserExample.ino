@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 //
 // This example shows how to deserialize a JSON document with ArduinoJson.
@@ -42,7 +42,7 @@ void setup() {
   // Test if parsing succeeds.
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
-    Serial.println(error.c_str());
+    Serial.println(error.f_str());
     return;
   }
 

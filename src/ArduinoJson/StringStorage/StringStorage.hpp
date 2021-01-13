@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
@@ -9,34 +9,15 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TInput, typename Enable = void>
-struct StringStorage {
-  typedef StringCopier type;
-
-  static type create(MemoryPool& pool, TInput&) {
-    return type(&pool);
-  }
-};
-
-template <typename TChar>
-struct StringStorage<TChar*,
-                     typename enable_if<!is_const<TChar>::value>::type> {
-  typedef StringMover type;
-
-  static type create(MemoryPool&, TChar* input) {
-    return type(reinterpret_cast<char*>(input));
-  }
-};
-
 template <typename TInput>
-typename StringStorage<TInput>::type makeStringStorage(MemoryPool& pool,
-                                                       TInput& input) {
-  return StringStorage<TInput>::create(pool, input);
+StringCopier makeStringStorage(TInput&, MemoryPool& pool) {
+  return StringCopier(pool);
 }
 
 template <typename TChar>
-typename StringStorage<TChar*>::type makeStringStorage(MemoryPool& pool,
-                                                       TChar* input) {
-  return StringStorage<TChar*>::create(pool, input);
+StringMover makeStringStorage(
+    TChar* input, MemoryPool&,
+    typename enable_if<!is_const<TChar>::value>::type* = 0) {
+  return StringMover(reinterpret_cast<char*>(input));
 }
 }  // namespace ARDUINOJSON_NAMESPACE

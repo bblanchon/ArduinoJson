@@ -1,47 +1,42 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
 
-#include <ArduinoJson/Configuration.hpp>
-#include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
-#include <ArduinoJson/Serialization/StaticStringWriter.hpp>
-
-#if ARDUINOJSON_ENABLE_STD_STREAM
-#include <ArduinoJson/Serialization/StreamWriter.hpp>
-#endif
-
-#if ARDUINOJSON_ENABLE_ARDUINO_PRINT
-#include <ArduinoJson/Serialization/PrintWriter.hpp>
-#endif
+#include <ArduinoJson/Serialization/Writer.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename> class TSerializer, typename TSource,
           typename TWriter>
-size_t doSerialize(const TSource &source, TWriter &writer) {
+size_t doSerialize(const TSource &source, TWriter writer) {
   TSerializer<TWriter> serializer(writer);
-  source.accept(serializer);
-  return serializer.bytesWritten();
+  return source.accept(serializer);
 }
 
 template <template <typename> class TSerializer, typename TSource,
           typename TDestination>
 size_t serialize(const TSource &source, TDestination &destination) {
-  typename WriterSelector<TDestination>::writer_type writer(destination);
+  Writer<TDestination> writer(destination);
   return doSerialize<TSerializer>(source, writer);
 }
 
 template <template <typename> class TSerializer, typename TSource>
-size_t serialize(const TSource &source, char *buffer, size_t bufferSize) {
-  StaticStringWriter writer(buffer, bufferSize);
+size_t serialize(const TSource &source, void *buffer, size_t bufferSize) {
+  StaticStringWriter writer(reinterpret_cast<char *>(buffer), bufferSize);
   return doSerialize<TSerializer>(source, writer);
 }
 
-template <template <typename> class TSerializer, typename TSource, size_t N>
-size_t serialize(const TSource &source, char (&buffer)[N]) {
-  StaticStringWriter writer(buffer, N);
+template <template <typename> class TSerializer, typename TSource,
+          typename TChar, size_t N>
+#if defined _MSC_VER && _MSC_VER < 1900
+typename enable_if<sizeof(remove_reference<TChar>::type) == 1, size_t>::type
+#else
+typename enable_if<sizeof(TChar) == 1, size_t>::type
+#endif
+serialize(const TSource &source, TChar (&buffer)[N]) {
+  StaticStringWriter writer(reinterpret_cast<char *>(buffer), N);
   return doSerialize<TSerializer>(source, writer);
 }
 

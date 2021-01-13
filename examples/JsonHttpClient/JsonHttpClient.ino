@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 //
 // This example shows how to parse a JSON document in an HTTP response.
@@ -82,7 +82,7 @@ void setup() {
   DeserializationError error = deserializeJson(doc, client);
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
-    Serial.println(error.c_str());
+    Serial.println(error.f_str());
     return;
   }
 

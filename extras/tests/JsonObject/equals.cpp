@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -49,5 +49,19 @@ TEST_CASE("JsonObject::operator==()") {
 
     REQUIRE(obj1 == obj2);
     REQUIRE(obj1c == obj2c);
+  }
+
+  SECTION("should return false when RHS is null") {
+    JsonObject null;
+
+    REQUIRE_FALSE(obj1 == null);
+    REQUIRE_FALSE(obj1c == null);
+  }
+
+  SECTION("should return false when LHS is null") {
+    JsonObject null;
+
+    REQUIRE_FALSE(null == obj2);
+    REQUIRE_FALSE(null == obj2c);
   }
 }

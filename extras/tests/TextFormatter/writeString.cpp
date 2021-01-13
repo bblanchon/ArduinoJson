@@ -1,11 +1,11 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <catch.hpp>
 
 #include <ArduinoJson/Json/TextFormatter.hpp>
-#include <ArduinoJson/Serialization/StaticStringWriter.hpp>
+#include <ArduinoJson/Serialization/Writers/StaticStringWriter.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 
@@ -19,10 +19,6 @@ void check(const char* input, std::string expected) {
 }
 
 TEST_CASE("TextFormatter::writeString()") {
-  SECTION("Null") {
-    check(0, "null");
-  }
-
   SECTION("EmptyString") {
     check("", "\"\"");
   }

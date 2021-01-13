@@ -1,5 +1,5 @@
 # ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2019
+# Copyright Benoit Blanchon 2014-2020
 # MIT License
 
 add_executable(JsonSerializerTests
@@ -14,5 +14,4 @@ add_executable(JsonSerializerTests
 	std_string.cpp
 )
 
-target_link_libraries(JsonSerializerTests catch)
 add_test(JsonSerializer JsonSerializerTests)

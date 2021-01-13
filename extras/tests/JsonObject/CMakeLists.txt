@@ -1,5 +1,5 @@
 # ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2019
+# Copyright Benoit Blanchon 2014-2020
 # MIT License
 
 add_executable(JsonObjectTests 
@@ -19,5 +19,4 @@ add_executable(JsonObjectTests
 	subscript.cpp
 )
 
-target_link_libraries(JsonObjectTests catch)
 add_test(JsonObject JsonObjectTests)

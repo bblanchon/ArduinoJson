@@ -1,22 +1,20 @@
 {
   "name": "ArduinoJson",
   "keywords": "json, rest, http, web",
-  "description": "An elegant and efficient JSON library for embedded systems",
+  "description": "A simple and efficient JSON library for embedded C++. ArduinoJson supports ✔ serialization, ✔ deserialization, ✔ MessagePack, ✔ fixed allocation, ✔ zero-copy, ✔ streams, ✔ filtering, and more. It is the most popular Arduino library on GitHub ❤❤❤❤❤. Check out arduinojson.org for a comprehensive documentation.",
   "homepage": "https://arduinojson.org/?utm_source=meta&utm_medium=library.json",
   "repository": {
     "type": "git",
     "url": "https://github.com/bblanchon/ArduinoJson.git"
   },
-  "version": "6.12.0",
+  "version": "6.17.2",
   "authors": {
     "name": "Benoit Blanchon",
     "url": "https://blog.benoitblanchon.fr"
   },
   "exclude": [
-    "fuzzing",
-    "scripts",
-    "test",
-    "third-party"
+    ".github",
+    "extras"
   ],
   "frameworks": "arduino",
   "platforms": "*"

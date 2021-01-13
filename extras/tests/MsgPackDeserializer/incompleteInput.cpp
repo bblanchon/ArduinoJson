@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -46,6 +46,7 @@ TEST_CASE("deserializeMsgPack() returns IncompleteInput") {
 
   SECTION("map 32") {
     checkAllSizes("\xDF\x00\x00\x00\x01\xA3one\x01", 10);
+    checkAllSizes("\xDF\x00\x00\x00\x01\xd9\x03one\x01", 11);
   }
 
   SECTION("uint 8") {

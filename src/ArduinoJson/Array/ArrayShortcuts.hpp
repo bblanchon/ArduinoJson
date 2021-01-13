@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
@@ -16,7 +16,7 @@ template <typename TArray>
 class ArrayShortcuts {
  public:
   // Returns the element at specified index if the variant is an array.
-  FORCE_INLINE ElementProxy<const TArray &> operator[](size_t index) const;
+  FORCE_INLINE ElementProxy<TArray> operator[](size_t index) const;
 
   FORCE_INLINE ObjectRef createNestedObject() const;
 

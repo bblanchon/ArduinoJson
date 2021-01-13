@@ -1,11 +1,11 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-static void check(JsonArray array, std::string expected) {
+static void checkArray(JsonArray array, std::string expected) {
   std::string actual;
   size_t actualLen = serializeJsonPretty(array, actual);
   size_t measuredLen = measureJsonPretty(array);
@@ -19,38 +19,38 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("Empty") {
-    check(array, "[]");
+    checkArray(array, "[]");
   }
 
   SECTION("OneElement") {
     array.add(1);
 
-    check(array,
-          "[\r\n"
-          "  1\r\n"
-          "]");
+    checkArray(array,
+               "[\r\n"
+               "  1\r\n"
+               "]");
   }
 
   SECTION("TwoElements") {
     array.add(1);
     array.add(2);
 
-    check(array,
-          "[\r\n"
-          "  1,\r\n"
-          "  2\r\n"
-          "]");
+    checkArray(array,
+               "[\r\n"
+               "  1,\r\n"
+               "  2\r\n"
+               "]");
   }
 
   SECTION("EmptyNestedArrays") {
     array.createNestedArray();
     array.createNestedArray();
 
-    check(array,
-          "[\r\n"
-          "  [],\r\n"
-          "  []\r\n"
-          "]");
+    checkArray(array,
+               "[\r\n"
+               "  [],\r\n"
+               "  []\r\n"
+               "]");
   }
 
   SECTION("NestedArrays") {
@@ -61,15 +61,15 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
     JsonObject nested2 = array.createNestedObject();
     nested2["key"] = 3;
 
-    check(array,
-          "[\r\n"
-          "  [\r\n"
-          "    1,\r\n"
-          "    2\r\n"
-          "  ],\r\n"
-          "  {\r\n"
-          "    \"key\": 3\r\n"
-          "  }\r\n"
-          "]");
+    checkArray(array,
+               "[\r\n"
+               "  [\r\n"
+               "    1,\r\n"
+               "    2\r\n"
+               "  ],\r\n"
+               "  {\r\n"
+               "    \"key\": 3\r\n"
+               "  }\r\n"
+               "]");
   }
 }

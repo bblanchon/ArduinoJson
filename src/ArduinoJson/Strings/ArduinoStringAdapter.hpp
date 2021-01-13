@@ -1,12 +1,14 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
 
-#include <WString.h>
+#include <Arduino.h>
 
 #include <ArduinoJson/Polyfills/safe_strcmp.hpp>
+#include <ArduinoJson/Strings/IsString.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -14,12 +16,8 @@ class ArduinoStringAdapter {
  public:
   ArduinoStringAdapter(const ::String& str) : _str(&str) {}
 
-  char* save(MemoryPool* pool) const {
-    if (isNull()) return NULL;
-    size_t n = _str->length() + 1;
-    char* dup = pool->allocFrozenString(n);
-    if (dup) memcpy(dup, _str->c_str(), n);
-    return dup;
+  void copyTo(char* p, size_t n) const {
+    memcpy(p, _str->c_str(), n);
   }
 
   bool isNull() const {
@@ -27,7 +25,7 @@ class ArduinoStringAdapter {
     return !_str->c_str();
   }
 
-  int8_t compare(const char* other) const {
+  int compare(const char* other) const {
     // Arduino's String::c_str() can return NULL
     const char* me = _str->c_str();
     return safe_strcmp(me, other);
@@ -37,17 +35,15 @@ class ArduinoStringAdapter {
     return compare(expected) == 0;
   }
 
-  const char* data() const {
-    return _str->c_str();
-  }
-
   size_t size() const {
     return _str->length();
   }
 
-  bool isStatic() const {
-    return false;
+  const char* begin() const {
+    return _str->c_str();
   }
+
+  typedef storage_policies::store_by_copy storage_policy;
 
  private:
   const ::String* _str;

@@ -1,12 +1,13 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
 #include <string>
 
-void check(const JsonObject obj, const std::string expected) {
+static void checkObjectPretty(const JsonObject obj,
+                              const std::string expected) {
   char json[256];
 
   size_t actualLen = serializeJsonPretty(obj, json);
@@ -22,38 +23,38 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("EmptyObject") {
-    check(obj, "{}");
+    checkObjectPretty(obj, "{}");
   }
 
   SECTION("OneMember") {
     obj["key"] = "value";
 
-    check(obj,
-          "{\r\n"
-          "  \"key\": \"value\"\r\n"
-          "}");
+    checkObjectPretty(obj,
+                      "{\r\n"
+                      "  \"key\": \"value\"\r\n"
+                      "}");
   }
 
   SECTION("TwoMembers") {
     obj["key1"] = "value1";
     obj["key2"] = "value2";
 
-    check(obj,
-          "{\r\n"
-          "  \"key1\": \"value1\",\r\n"
-          "  \"key2\": \"value2\"\r\n"
-          "}");
+    checkObjectPretty(obj,
+                      "{\r\n"
+                      "  \"key1\": \"value1\",\r\n"
+                      "  \"key2\": \"value2\"\r\n"
+                      "}");
   }
 
   SECTION("EmptyNestedContainers") {
     obj.createNestedObject("key1");
     obj.createNestedArray("key2");
 
-    check(obj,
-          "{\r\n"
-          "  \"key1\": {},\r\n"
-          "  \"key2\": []\r\n"
-          "}");
+    checkObjectPretty(obj,
+                      "{\r\n"
+                      "  \"key1\": {},\r\n"
+                      "  \"key2\": []\r\n"
+                      "}");
   }
 
   SECTION("NestedContainers") {
@@ -63,14 +64,14 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
     JsonArray nested2 = obj.createNestedArray("key2");
     nested2.add(2);
 
-    check(obj,
-          "{\r\n"
-          "  \"key1\": {\r\n"
-          "    \"a\": 1\r\n"
-          "  },\r\n"
-          "  \"key2\": [\r\n"
-          "    2\r\n"
-          "  ]\r\n"
-          "}");
+    checkObjectPretty(obj,
+                      "{\r\n"
+                      "  \"key1\": {\r\n"
+                      "    \"a\": 1\r\n"
+                      "  },\r\n"
+                      "  \"key2\": [\r\n"
+                      "    2\r\n"
+                      "  ]\r\n"
+                      "}");
   }
 }

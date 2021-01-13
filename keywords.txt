@@ -10,6 +10,9 @@ serialized	KEYWORD2
 serializeJson	KEYWORD2
 serializeJsonPretty	KEYWORD2
 serializeMsgPack	KEYWORD2
+measureJson	KEYWORD2
+measureJsonPretty	KEYWORD2
+measureMsgPack	KEYWORD2
 
 # Methods
 add	KEYWORD2
@@ -25,6 +28,7 @@ DeserializationError	KEYWORD1	DATA_TYPE
 DynamicJsonDocument	KEYWORD1	DATA_TYPE
 JsonArray	KEYWORD1	DATA_TYPE
 JsonArrayConst	KEYWORD1	DATA_TYPE
+JsonDocument	KEYWORD1	DATA_TYPE
 JsonFloat	KEYWORD1	DATA_TYPE
 JsonInteger	KEYWORD1	DATA_TYPE
 JsonObject	KEYWORD1	DATA_TYPE

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <catch.hpp>
@@ -9,15 +9,15 @@
 #define ARDUINOJSON_ENABLE_NAN 1
 #define ARDUINOJSON_ENABLE_INFINITY 1
 #include <ArduinoJson/Json/TextFormatter.hpp>
-#include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
+#include <ArduinoJson/Serialization/Writer.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
 
 template <typename TFloat>
 void check(TFloat input, const std::string& expected) {
   std::string output;
-  DynamicStringWriter<std::string> sb(output);
-  TextFormatter<DynamicStringWriter<std::string> > writer(sb);
+  Writer<std::string> sb(output);
+  TextFormatter<Writer<std::string> > writer(sb);
   writer.writeFloat(input);
   REQUIRE(writer.bytesWritten() == output.size());
   CHECK(expected == output);

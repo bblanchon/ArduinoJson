@@ -1,18 +1,18 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
 
-#ifndef ARDUINOJSON_DEBUG
+#include "ArduinoJson/Configuration.hpp"
+
+#if !ARDUINOJSON_DEBUG
 #ifdef __clang__
 #pragma clang system_header
 #elif defined __GNUC__
 #pragma GCC system_header
 #endif
 #endif
-
-#include "ArduinoJson/Namespace.hpp"
 
 #include "ArduinoJson/Array/ArrayRef.hpp"
 #include "ArduinoJson/Object/ObjectRef.hpp"
@@ -28,6 +28,7 @@
 #include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Object/ObjectImpl.hpp"
 #include "ArduinoJson/Variant/VariantAsImpl.hpp"
+#include "ArduinoJson/Variant/VariantCompare.hpp"
 #include "ArduinoJson/Variant/VariantImpl.hpp"
 
 #include "ArduinoJson/Json/JsonDeserializer.hpp"
@@ -46,6 +47,7 @@ typedef ARDUINOJSON_NAMESPACE::Integer JsonInteger;
 typedef ARDUINOJSON_NAMESPACE::ObjectConstRef JsonObjectConst;
 typedef ARDUINOJSON_NAMESPACE::ObjectRef JsonObject;
 typedef ARDUINOJSON_NAMESPACE::Pair JsonPair;
+typedef ARDUINOJSON_NAMESPACE::PairConst JsonPairConst;
 typedef ARDUINOJSON_NAMESPACE::String JsonString;
 typedef ARDUINOJSON_NAMESPACE::UInt JsonUInt;
 typedef ARDUINOJSON_NAMESPACE::VariantConstRef JsonVariantConst;
@@ -65,6 +67,7 @@ using ARDUINOJSON_NAMESPACE::serializeMsgPack;
 using ARDUINOJSON_NAMESPACE::StaticJsonDocument;
 
 namespace DeserializationOption {
+using ARDUINOJSON_NAMESPACE::Filter;
 using ARDUINOJSON_NAMESPACE::NestingLimit;
-}
+}  // namespace DeserializationOption
 }  // namespace ArduinoJson

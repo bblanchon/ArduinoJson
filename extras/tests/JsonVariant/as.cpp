@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -10,9 +10,11 @@ namespace my {
 using ARDUINOJSON_NAMESPACE::isinf;
 }  // namespace my
 
-static const char* null = 0;
+enum MY_ENUM { ONE = 1, TWO = 2 };
 
 TEST_CASE("JsonVariant::as()") {
+  static const char* null = 0;
+
   DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
@@ -211,5 +213,11 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(cvar.as<const char*>() == std::string("hello"));
     REQUIRE(cvar.as<char*>() == std::string("hello"));
     // REQUIRE(cvar.as<std::string>() == std::string("hello"));
+  }
+
+  SECTION("as<enum>()") {
+    variant.set(1);
+
+    REQUIRE(variant.as<MY_ENUM>() == ONE);
   }
 }

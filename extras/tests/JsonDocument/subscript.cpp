@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -42,4 +42,12 @@ TEST_CASE("JsonDocument automatically promotes to object") {
   doc["one"]["two"]["three"] = 4;
 
   REQUIRE(doc["one"]["two"]["three"] == 4);
+}
+
+TEST_CASE("JsonDocument automatically promotes to array") {
+  DynamicJsonDocument doc(4096);
+
+  doc[2] = 2;
+
+  REQUIRE(doc.as<std::string>() == "[null,null,2]");
 }

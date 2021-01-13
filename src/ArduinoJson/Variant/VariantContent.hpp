@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
@@ -16,14 +16,14 @@ namespace ARDUINOJSON_NAMESPACE {
 enum {
   VALUE_MASK = 0x7F,
 
-  OWNERSHIP_BIT = 0x01,
+  VALUE_IS_OWNED = 0x01,
   VALUE_IS_NULL = 0,
   VALUE_IS_LINKED_RAW = 0x02,
   VALUE_IS_OWNED_RAW = 0x03,
   VALUE_IS_LINKED_STRING = 0x04,
   VALUE_IS_OWNED_STRING = 0x05,
 
-  // CAUTION: no OWNERSHIP_BIT below
+  // CAUTION: no VALUE_IS_OWNED below
   VALUE_IS_BOOLEAN = 0x06,
   VALUE_IS_POSITIVE_INTEGER = 0x08,
   VALUE_IS_NEGATIVE_INTEGER = 0x0A,

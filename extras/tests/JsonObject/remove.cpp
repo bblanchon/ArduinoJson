@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -69,4 +69,9 @@ TEST_CASE("JsonObject::remove()") {
     REQUIRE("{\"a\":0,\"c\":2}" == result);
   }
 #endif
+
+  SECTION("should work on null object") {
+    JsonObject null;
+    null.remove("key");
+  }
 }

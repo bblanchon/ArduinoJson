@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #pragma once
@@ -9,11 +9,14 @@
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/Visitable.hpp>
-#include <ArduinoJson/Operators/VariantOperators.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantAs.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
+#include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
+#include <ArduinoJson/Variant/VariantShortcuts.hpp>
+#include <ArduinoJson/Variant/VariantTag.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -21,12 +24,9 @@ namespace ARDUINOJSON_NAMESPACE {
 class ArrayRef;
 class ObjectRef;
 
-template <typename, typename>
-class MemberProxy;
-
 // Contains the methods shared by VariantRef and VariantConstRef
 template <typename TData>
-class VariantRefBase {
+class VariantRefBase : public VariantTag {
  public:
   // Tells wether the variant has the specified type.
   // Returns true if the variant has type type T, false otherwise.
@@ -41,8 +41,10 @@ class VariantRefBase {
   // bool is<unsigned int>() const;
   // bool is<unsigned long>() const;
   template <typename T>
-  FORCE_INLINE typename enable_if<is_integral<T>::value, bool>::type is()
-      const {
+  FORCE_INLINE
+      typename enable_if<is_integral<T>::value && !is_same<bool, T>::value,
+                         bool>::type
+      is() const {
     return variantIsInteger<T>(_data);
   }
   //
@@ -91,6 +93,21 @@ class VariantRefBase {
   is() const {
     return variantIsObject(_data);
   }
+#if ARDUINOJSON_HAS_NULLPTR
+  //
+  // bool is<nullptr_t> const;
+  template <typename T>
+  FORCE_INLINE
+      typename enable_if<is_same<T, decltype(nullptr)>::value, bool>::type
+      is() const {
+    return variantIsNull(_data);
+  }
+#endif
+  // bool is<enum>() const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_enum<T>::value, bool>::type is() const {
+    return variantIsInteger<int>(_data);
+  }
 
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
@@ -126,6 +143,7 @@ class VariantRefBase {
 // - a reference to a ArrayRef or ObjectRef
 class VariantRef : public VariantRefBase<VariantData>,
                    public VariantOperators<VariantRef>,
+                   public VariantShortcuts<VariantRef>,
                    public Visitable {
   typedef VariantRefBase<VariantData> base_type;
   friend class VariantConstRef;
@@ -143,7 +161,9 @@ class VariantRef : public VariantRefBase<VariantData>,
   }
 
   // set(bool value)
-  FORCE_INLINE bool set(bool value) const {
+  template <typename T>
+  FORCE_INLINE bool set(
+      T value, typename enable_if<is_same<T, bool>::value>::type * = 0) const {
     return variantSetBoolean(_data, value);
   }
 
@@ -161,22 +181,14 @@ class VariantRef : public VariantRefBase<VariantData>,
   // set(signed int)
   // set(signed long)
   // set(signed char)
-  template <typename T>
-  FORCE_INLINE bool set(
-      T value,
-      typename enable_if<is_integral<T>::value && is_signed<T>::value>::type * =
-          0) const {
-    return variantSetSignedInteger(_data, value);
-  }
-
   // set(unsigned short)
   // set(unsigned int)
   // set(unsigned long)
   template <typename T>
   FORCE_INLINE bool set(
       T value, typename enable_if<is_integral<T>::value &&
-                                  is_unsigned<T>::value>::type * = 0) const {
-    return variantSetUnsignedInteger(_data, static_cast<UInt>(value));
+                                  !is_same<bool, T>::value>::type * = 0) const {
+    return variantSetInteger<T>(_data, value);
   }
 
   // set(SerializedValue<const char *>)
@@ -200,20 +212,15 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE bool set(
       const T &value,
       typename enable_if<IsString<T>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, adaptString(value), _pool);
+    return variantSetString(_data, adaptString(value), _pool);
   }
-
   // set(char*)
   // set(const __FlashStringHelper*)
+  // set(const char*)
   template <typename T>
   FORCE_INLINE bool set(
       T *value, typename enable_if<IsString<T *>::value>::type * = 0) const {
-    return variantSetOwnedString(_data, adaptString(value), _pool);
-  }
-
-  // set(const char*);
-  FORCE_INLINE bool set(const char *value) const {
-    return variantSetLinkedString(_data, value);
+    return variantSetString(_data, adaptString(value), _pool);
   }
 
   // set(VariantRef)
@@ -227,49 +234,34 @@ class VariantRef : public VariantRefBase<VariantData>,
   typename enable_if<IsVisitable<TVariant>::value, bool>::type set(
       const TVariant &value) const;
 
-  // Get the variant as the specified type.
-  //
-  // std::string as<std::string>() const;
-  // String as<String>() const;
+  // set(enum value)
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, ArrayRef>::value &&
-                                      !is_same<T, ObjectRef>::value &&
-                                      !is_same<T, VariantRef>::value,
-                                  typename VariantAs<T>::type>::type
-  as() const {
-    return variantAs<T>(_data);
-  }
-  //
-  // ArrayRef as<ArrayRef>() const;
-  // const ArrayRef as<const ArrayRef>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, ArrayRef>::value, T>::type as()
-      const;
-  //
-  // ObjectRef as<ObjectRef>() const;
-  // const ObjectRef as<const ObjectRef>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, ObjectRef>::value, T>::type as()
-      const;
-  //
-  // VariantRef as<VariantRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, VariantRef>::value, T>::type as()
-      const {
-    return *this;
+  FORCE_INLINE bool set(
+      T value, typename enable_if<is_enum<T>::value>::type * = 0) const {
+    return variantSetInteger(_data, static_cast<Integer>(value));
   }
 
-  template <typename Visitor>
-  void accept(Visitor &visitor) const {
-    variantAccept(_data, visitor);
+#if ARDUINOJSON_HAS_NULLPTR
+  // set(nullptr_t)
+  FORCE_INLINE bool set(decltype(nullptr)) const {
+    variantSetNull(_data);
+    return true;
+  }
+#endif
+
+  template <typename T>
+  FORCE_INLINE typename VariantAs<T>::type as() const {
+    return variantAs<typename VariantAs<T>::type>(_data, _pool);
   }
 
-  FORCE_INLINE bool operator==(VariantRef lhs) const {
-    return variantEquals(_data, lhs._data);
+  template <typename T>
+  FORCE_INLINE operator T() const {
+    return variantAs<T>(_data, _pool);
   }
 
-  FORCE_INLINE bool operator!=(VariantRef lhs) const {
-    return !variantEquals(_data, lhs._data);
+  template <typename TVisitor>
+  typename TVisitor::result_type accept(TVisitor &visitor) const {
+    return variantAccept(_data, visitor);
   }
 
   // Change the type of the variant
@@ -290,6 +282,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   VariantRef addElement() const;
 
   FORCE_INLINE VariantRef getElement(size_t) const;
+
+  FORCE_INLINE VariantRef getOrAddElement(size_t) const;
 
   // getMember(const char*) const
   // getMember(const __FlashStringHelper*) const
@@ -314,7 +308,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE VariantRef getOrAddMember(const TString &) const;
 
   FORCE_INLINE void remove(size_t index) const {
-    if (_data) _data->remove(index);
+    if (_data)
+      _data->remove(index);
   }
   // remove(char*) const
   // remove(const char*) const
@@ -322,14 +317,16 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar *>::value>::type remove(
       TChar *key) const {
-    if (_data) _data->remove(adaptString(key));
+    if (_data)
+      _data->remove(adaptString(key));
   }
   // remove(const std::string&) const
   // remove(const String&) const
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
       const TString &key) const {
-    if (_data) _data->remove(adaptString(key));
+    if (_data)
+      _data->remove(adaptString(key));
   }
 
  private:
@@ -338,6 +335,7 @@ class VariantRef : public VariantRefBase<VariantData>,
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
                         public VariantOperators<VariantConstRef>,
+                        public VariantShortcuts<VariantConstRef>,
                         public Visitable {
   typedef VariantRefBase<const VariantData> base_type;
   friend class VariantRef;
@@ -347,19 +345,43 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   VariantConstRef(const VariantData *data) : base_type(data) {}
   VariantConstRef(VariantRef var) : base_type(var._data) {}
 
-  template <typename Visitor>
-  void accept(Visitor &visitor) const {
-    variantAccept(_data, visitor);
+  template <typename TVisitor>
+  typename TVisitor::result_type accept(TVisitor &visitor) const {
+    return variantAccept(_data, visitor);
   }
 
-  // Get the variant as the specified type.
-  //
   template <typename T>
   FORCE_INLINE typename VariantConstAs<T>::type as() const {
     return variantAs<typename VariantConstAs<T>::type>(_data);
   }
 
-  FORCE_INLINE VariantConstRef operator[](size_t index) const;
+  template <typename T>
+  FORCE_INLINE operator T() const {
+    return variantAs<T>(_data);
+  }
+
+  FORCE_INLINE VariantConstRef getElement(size_t) const;
+
+  FORCE_INLINE VariantConstRef operator[](size_t index) const {
+    return getElement(index);
+  }
+
+  // getMember(const std::string&) const
+  // getMember(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantConstRef getMember(const TString &key) const {
+    return VariantConstRef(
+        objectGetMember(variantAsObject(_data), adaptString(key)));
+  }
+
+  // getMember(char*) const
+  // getMember(const char*) const
+  // getMember(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantConstRef getMember(TChar *key) const {
+    const CollectionData *obj = variantAsObject(_data);
+    return VariantConstRef(obj ? obj->getMember(adaptString(key)) : 0);
+  }
 
   // operator[](const std::string&) const
   // operator[](const String&) const
@@ -367,7 +389,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString &key) const {
-    return VariantConstRef(objectGet(variantAsObject(_data), adaptString(key)));
+    return getMember(key);
   }
 
   // operator[](char*) const
@@ -377,16 +399,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TChar *>::value, VariantConstRef>::type
       operator[](TChar *key) const {
-    const CollectionData *obj = variantAsObject(_data);
-    return VariantConstRef(obj ? obj->get(adaptString(key)) : 0);
-  }
-
-  FORCE_INLINE bool operator==(VariantConstRef lhs) const {
-    return variantEquals(_data, lhs._data);
-  }
-
-  FORCE_INLINE bool operator!=(VariantConstRef lhs) const {
-    return !variantEquals(_data, lhs._data);
+    return getMember(key);
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

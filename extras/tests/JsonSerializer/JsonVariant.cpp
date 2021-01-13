@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -31,6 +31,38 @@ TEST_CASE("serializeJson(JsonVariant)") {
 
   SECTION("string") {
     check(std::string("hello"), "\"hello\"");
+
+    SECTION("Escape quotation mark") {
+      check(std::string("hello \"world\""), "\"hello \\\"world\\\"\"");
+    }
+
+    SECTION("Escape reverse solidus") {
+      check(std::string("hello\\world"), "\"hello\\\\world\"");
+    }
+
+    SECTION("Don't escape solidus") {
+      check(std::string("fifty/fifty"), "\"fifty/fifty\"");
+    }
+
+    SECTION("Escape backspace") {
+      check(std::string("hello\bworld"), "\"hello\\bworld\"");
+    }
+
+    SECTION("Escape formfeed") {
+      check(std::string("hello\fworld"), "\"hello\\fworld\"");
+    }
+
+    SECTION("Escape linefeed") {
+      check(std::string("hello\nworld"), "\"hello\\nworld\"");
+    }
+
+    SECTION("Escape carriage return") {
+      check(std::string("hello\rworld"), "\"hello\\rworld\"");
+    }
+
+    SECTION("Escape tab") {
+      check(std::string("hello\tworld"), "\"hello\\tworld\"");
+    }
   }
 
   SECTION("SerializedValue<const char*>") {

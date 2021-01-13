@@ -1,11 +1,11 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 // Include any header that might use the conflicting macros
 #include <cmath>
-#include <string>
 #include <iostream>
+#include <string>
 
 // All cores
 #define bit()

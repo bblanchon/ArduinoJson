@@ -1,11 +1,14 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
+
+class EmptyClass {};
+enum EmptyEnum {};
 
 TEST_CASE("Polyfills/type_traits") {
   SECTION("is_base_of") {
@@ -24,6 +27,24 @@ TEST_CASE("Polyfills/type_traits") {
   SECTION("is_const") {
     CHECK(is_const<char>::value == false);
     CHECK(is_const<const char>::value == true);
+  }
+
+  SECTION("is_integral") {
+    CHECK(is_integral<double>::value == false);
+    CHECK(is_integral<float>::value == false);
+
+    CHECK(is_integral<bool>::value == true);
+    CHECK(is_integral<char>::value == true);
+    CHECK(is_integral<signed char>::value == true);
+    CHECK(is_integral<signed int>::value == true);
+    CHECK(is_integral<signed long>::value == true);
+    CHECK(is_integral<signed short>::value == true);
+    CHECK(is_integral<unsigned char>::value == true);
+    CHECK(is_integral<unsigned int>::value == true);
+    CHECK(is_integral<unsigned long>::value == true);
+    CHECK(is_integral<unsigned short>::value == true);
+
+    CHECK(is_integral<UInt>::value == true);
   }
 
   SECTION("is_signed") {
@@ -46,6 +67,30 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK(is_unsigned<char>::value == false);
     CHECK(is_unsigned<float>::value == false);
     CHECK(is_unsigned<double>::value == false);
+  }
+
+  SECTION("is_convertible") {
+    CHECK((is_convertible<short, int>::value == true));
+    CHECK((is_convertible<int, int>::value == true));
+    CHECK((is_convertible<EmptyEnum, int>::value == true));
+    CHECK((is_convertible<int*, int>::value == false));
+    CHECK((is_convertible<EmptyClass, int>::value == false));
+  }
+
+  SECTION("is_class") {
+    CHECK((is_class<int>::value == false));
+    CHECK((is_class<EmptyEnum>::value == false));
+    CHECK((is_class<int*>::value == false));
+    CHECK((is_class<EmptyClass>::value == true));
+  }
+
+  SECTION("is_enum") {
+    CHECK(is_enum<int>::value == false);
+    CHECK(is_enum<EmptyEnum>::value == true);
+    CHECK(is_enum<int*>::value == false);
+    CHECK(is_enum<EmptyClass>::value == false);
+    CHECK(is_enum<bool>::value == false);
+    CHECK(is_enum<double>::value == false);
   }
 
   SECTION("IsVisitable") {

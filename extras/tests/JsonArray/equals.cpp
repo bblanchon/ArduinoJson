@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -31,7 +31,7 @@ TEST_CASE("JsonArray::operator==()") {
     REQUIRE_FALSE(array1c == array2c);
   }
 
-  SECTION("should return false when RKS has more elements") {
+  SECTION("should return false when RHS has more elements") {
     array1.add(1);
     array2.add(1);
     array2.add(2);
@@ -46,5 +46,24 @@ TEST_CASE("JsonArray::operator==()") {
 
     REQUIRE(array1 == array2);
     REQUIRE(array1c == array2c);
+  }
+
+  SECTION("should return false when RHS is null") {
+    JsonArray null;
+
+    REQUIRE_FALSE(array1 == null);
+  }
+
+  SECTION("should return false when LHS is null") {
+    JsonArray null;
+
+    REQUIRE_FALSE(null == array1);
+  }
+
+  SECTION("should return true when both are null") {
+    JsonArray null1;
+    JsonArray null2;
+
+    REQUIRE(null1 == null2);
   }
 }

@@ -1,12 +1,173 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.17.2 (2020-11-14)
+-------
 
-* Added support for custom writer classes (issue #1088)
+* Fixed invalid conversion error in `operator|(JsonVariant, char*)` (issue #1432)
+* Changed the default value of `ARDUINOJSON_ENABLE_PROGMEM` (issue #1433).
+  It now checks that the `pgm_read_XXX` macros are defined before enabling `PROGMEM`.
+
+v6.17.1 (2020-11-07)
+-------
+
+* Fixed error `ambiguous overload for 'operator|'` (issue #1411)
+* Fixed `operator|(MemberProxy, JsonObject)` (issue #1415)
+* Allowed more than 32767 values in non-embedded mode (issue #1414)
+
+v6.17.0 (2020-10-19)
+-------
+
+* Added a build failure when nullptr is defined as a macro (issue #1355)
+* Added `JsonDocument::overflowed()` which tells if the memory pool was too small (issue #1358)
+* Added `DeserializationError::EmptyInput` which tells if the input was empty
+* Added `DeserializationError::f_str()` which returns a `const __FlashStringHelper*` (issue #846)
+* Added `operator|(JsonVariantConst, JsonVariantConst)`
+* Added filtering for MessagePack (issue #1298, PR #1394 by Luca Passarella)
+* Moved float convertion tables to PROGMEM
+* Fixed `JsonVariant::set((char*)0)` which returned false instead of true (issue #1368)
+* Fixed error `No such file or directory #include <WString.h>` (issue #1381)
+
+v6.16.1 (2020-08-04)
+-------
+
+* Fixed `deserializeJson()` that stopped reading after `{}` (issue #1335)
+
+v6.16.0 (2020-08-01)
+-------
+
+* Added comparisons (`>`, `>=`, `==`, `!=`, `<`, and `<=`) between `JsonVariant`s
+* Added string deduplication (issue #1303)
+* Added `JsonString::operator!=`
+* Added wildcard key (`*`) for filters (issue #1309)
+* Set `ARDUINOJSON_DECODE_UNICODE` to `1` by default
+* Fixed `copyArray()` not working with `String`, `ElementProxy`, and `MemberProxy`
+* Fixed error `getOrAddElement is not a member of ElementProxy` (issue #1311)
+* Fixed excessive stack usage when compiled with `-Og` (issues #1210 and #1314)
+* Fixed `Warning[Pa093]: implicit conversion from floating point to integer` on IAR compiler (PR #1328 by @stawiski)
+
+v6.15.2 (2020-05-15)
+-------
+
+* CMake: don't build tests when imported in another project
+* CMake: made project arch-independent
+* Visual Studio: fixed error C2766 with flag `/Zc:__cplusplus` (issue #1250)
+* Added support for `JsonDocument` to `copyArray()` (issue #1255)
+* Added support for `enum`s in `as<T>()` and `is<T>()`  (issue #1256)
+* Added `JsonVariant` as an input type for `deserializeXxx()`  
+  For example, you can do: `deserializeJson(doc2, doc1["payload"])`
+* Break the build if using 64-bit integers with ARDUINOJSON_USE_LONG_LONG==0
+
+v6.15.1 (2020-04-08)
+-------
+
+* Fixed "maybe-uninitialized" warning (issue #1217)
+* Fixed "statement is unreachable" warning on IAR (issue #1233)
+* Fixed "pointless integer comparison" warning on IAR (issue #1233)
+* Added CMake "install" target (issue #1209)
+* Disabled alignment on AVR (issue #1231)
+
+v6.15.0 (2020-03-22)
+-------
+
+* Added `DeserializationOption::Filter` (issue #959)
+* Added example `JsonFilterExample.ino`
+* Changed the array subscript operator to automatically add missing elements
+* Fixed "deprecated-copy" warning on GCC 9 (fixes #1184)
+* Fixed `MemberProxy::set(char[])` not duplicating the string (issue #1191)
+* Fixed enums serialized as booleans (issue #1197)
+* Fixed incorrect string comparison on some platforms (issue #1198)
+* Added move-constructor and move-assignment to `BasicJsonDocument`
+* Added `BasicJsonDocument::garbageCollect()` (issue #1195)
+* Added `StaticJsonDocument::garbageCollect()`
+* Changed copy-constructor of `BasicJsonDocument` to preserve the capacity of the source.
+* Removed copy-constructor of `JsonDocument` (issue #1189)
+
+> ### BREAKING CHANGES
+> 
+> #### Copy-constructor of `BasicJsonDocument`
+>
+> In previous versions, the copy constructor of `BasicJsonDocument` looked at the source's `memoryUsage()` to choose its capacity.
+> Now, the copy constructor of `BasicJsonDocument` uses the same capacity as the source.
+>
+> Example:
+>
+> ```c++
+> DynamicJsonDocument doc1(64);
+> doc1.set(String("example"));
+>
+> DynamicJsonDocument doc2 = doc1;
+> Serial.print(doc2.capacity());  // 8 with ArduinoJson 6.14
+>                                 // 64 with ArduinoJson 6.15
+> ```
+>
+> I made this change to get consistent results between copy-constructor and move-constructor, and whether RVO applies or not.
+>
+> If you use the copy-constructor to optimize your documents, you can use `garbageCollect()` or `shrinkToFit()` instead.
+>
+> #### Copy-constructor of `JsonDocument`
+>
+> In previous versions, it was possible to create a function that take a `JsonDocument` by value.
+>
+> ```c++
+> void myFunction(JsonDocument doc) {}
+> ```
+>
+> This function gives the wrong clues because it doesn't receive a copy of the `JsonDocument`, only a sliced version.
+> It worked because the copy constructor copied the internal pointers, but it was an accident.
+>
+> From now, if you need to pass a `JsonDocument` to a function, you must use a reference:
+>
+> ```c++
+> void myFunction(JsonDocument& doc) {}
+> ```
+
+v6.14.1 (2020-01-27)
+-------
+
+* Fixed regression in UTF16 decoding (issue #1173)
+* Fixed `containsKey()` on `JsonVariantConst`
+* Added `getElement()` and `getMember()` to `JsonVariantConst`
+
+v6.14.0 (2020-01-16)
+-------
+
+* Added `BasicJsonDocument::shrinkToFit()`
+* Added support of `uint8_t` for `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` (issue #1142)
+* Added `ARDUINOJSON_ENABLE_COMMENTS` to enable support for comments (defaults to 0)
+* Auto enable support for `std::string` and `std::stream` on modern compilers (issue #1156)
+  (No need to define `ARDUINOJSON_ENABLE_STD_STRING` and `ARDUINOJSON_ENABLE_STD_STREAM` anymore)
+* Improved decoding of UTF-16 surrogate pairs (PR #1157 by @kaysievers)
+  (ArduinoJson now produces standard UTF-8 instead of CESU-8)
+* Added `measureJson`, `measureJsonPretty`, and `measureMsgPack` to `keywords.txt`
+  (This file is used for syntax highlighting in the Arduino IDE) 
+* Fixed `variant.is<nullptr_t>()`
+* Fixed value returned by `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` when writing to a `String`
+* Improved speed of `serializeJson()`, `serializeJsonPretty()`, and `serializeMsgPack()` when writing to a `String`
+
+> ### BREAKING CHANGES
+> 
+> #### Comments
+> 
+> Support for comments in input is now optional and disabled by default.
+>
+> If you need support for comments, you must defined `ARDUINOJSON_ENABLE_COMMENTS` to `1`; otherwise, you'll receive `InvalidInput` errors.
+>
+> ```c++
+> #define ARDUINOJSON_ENABLE_COMMENTS 1
+> #include <ArduinoJson.h>
+> ```
+
+v6.13.0 (2019-11-01)
+-------
+
+* Added support for custom writer/reader classes (issue #1088)
 * Added conversion from `JsonArray` and `JsonObject` to `bool`, to be consistent with `JsonVariant`
 * Fixed `deserializeJson()` when input contains duplicate keys (issue #1095)
+* Improved `deserializeMsgPack()` speed by reading several bytes at once
+* Added detection of Atmel AVR8/GNU C Compiler (issue #1112)
+* Fixed deserializer that stopped reading at the first `0xFF` (PR #1118 by @mikee47)
+* Fixed dangling reference in copies of `MemberProxy` and `ElementProxy` (issue #1120)
 
 v6.12.0 (2019-09-05)
 -------

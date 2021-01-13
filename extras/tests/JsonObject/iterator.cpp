@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson.h>
@@ -30,6 +30,11 @@ TEST_CASE("JsonObject::begin()/end()") {
     REQUIRE(obj.end()->key().isNull());
     REQUIRE(obj.end()->value().isNull());
   }
+
+  SECTION("null JsonObject") {
+    JsonObject null;
+    REQUIRE(null.begin() == null.end());
+  }
 }
 
 TEST_CASE("JsonObjectConst::begin()/end()") {
@@ -40,15 +45,18 @@ TEST_CASE("JsonObjectConst::begin()/end()") {
 
   JsonObjectConst cobj = obj;
 
-  SECTION("NonConstIterator") {
+  SECTION("Iteration") {
     JsonObjectConst::iterator it = cobj.begin();
     REQUIRE(cobj.end() != it);
     REQUIRE(it->key() == "ab");
     REQUIRE(12 == it->value());
+
     ++it;
     REQUIRE(cobj.end() != it);
-    REQUIRE(it->key() == "cd");
-    REQUIRE(34 == it->value());
+    JsonPairConst pair = *it;
+    REQUIRE(pair.key() == "cd");
+    REQUIRE(34 == pair.value());
+
     ++it;
     REQUIRE(cobj.end() == it);
   }
@@ -56,5 +64,10 @@ TEST_CASE("JsonObjectConst::begin()/end()") {
   SECTION("Dereferencing end() is safe") {
     REQUIRE(cobj.end()->key().isNull());
     REQUIRE(cobj.end()->value().isNull());
+  }
+
+  SECTION("null JsonObjectConst") {
+    JsonObjectConst null;
+    REQUIRE(null.begin() == null.end());
   }
 }

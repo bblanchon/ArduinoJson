@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2020
 // MIT License
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
@@ -7,9 +7,9 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-static char buffer[4096];
-
 TEST_CASE("MemoryPool::allocVariant()") {
+  char buffer[4096];
+
   SECTION("Returns different pointer") {
     MemoryPool pool(buffer, sizeof(buffer));
 
