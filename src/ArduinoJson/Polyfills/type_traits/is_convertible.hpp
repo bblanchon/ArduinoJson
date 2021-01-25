@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -12,10 +12,12 @@
 #pragma warning(disable : 4244)
 #endif
 
+// clang-format off
 #ifdef __ICCARM__
 // Suppress IAR Compiler Warning[Pa093]: implicit conversion from floating point to integer
 #pragma diag_suppress=Pa093
 #endif
+// clang-format on
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -38,6 +40,8 @@ struct is_convertible {
 #pragma warning(pop)
 #endif
 
+// clang-format off
 #ifdef __ICCARM__
 #pragma diag_default=Pa093
 #endif
+// clang-format on
