@@ -101,6 +101,12 @@ void loop() {
   // not used in this example
 }
 
+// Performance issue?
+// ------------------
+//
+// EthernetClient is an unbuffered stream, which is not optimal for ArduinoJson.
+// See: https://arduinojson.org/v6/how-to/improve-speed/
+
 // See also
 // --------
 //

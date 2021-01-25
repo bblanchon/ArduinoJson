@@ -46,7 +46,8 @@ void loop() {
   EthernetClient client = server.available();
 
   // Do we have a client?
-  if (!client) return;
+  if (!client)
+    return;
 
   Serial.println(F("New client"));
 
@@ -95,6 +96,12 @@ void loop() {
   // Disconnect
   client.stop();
 }
+
+// Performance issue?
+// ------------------
+//
+// EthernetClient is an unbuffered stream, which is not optimal for ArduinoJson.
+// See: https://arduinojson.org/v6/how-to/improve-speed/
 
 // See also
 // --------
