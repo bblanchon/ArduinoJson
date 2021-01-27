@@ -310,6 +310,8 @@ class JsonDocument : public Visitable {
     _data.setNull();
   }
 
+  ~JsonDocument() {}
+
   void replacePool(MemoryPool pool) {
     _pool = pool;
   }

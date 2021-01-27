@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Made `JsonDocument`'s destructor protected (issue #1480)
+
 v6.17.2 (2020-11-14)
 -------
 
