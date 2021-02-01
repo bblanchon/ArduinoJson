@@ -53,6 +53,7 @@ void setup() {
   client.println(F("Connection: close"));
   if (client.println() == 0) {
     Serial.println(F("Failed to send request"));
+    client.stop();
     return;
   }
 
@@ -63,6 +64,7 @@ void setup() {
   if (strcmp(status + 9, "200 OK") != 0) {
     Serial.print(F("Unexpected response: "));
     Serial.println(status);
+    client.stop();
     return;
   }
 
@@ -70,6 +72,7 @@ void setup() {
   char endOfHeaders[] = "\r\n\r\n";
   if (!client.find(endOfHeaders)) {
     Serial.println(F("Invalid response"));
+    client.stop();
     return;
   }
 
@@ -83,6 +86,7 @@ void setup() {
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
+    client.stop();
     return;
   }
 
