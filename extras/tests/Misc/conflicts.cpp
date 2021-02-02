@@ -39,6 +39,15 @@
 #define _max()
 #define _min()
 
+// Realtek Ameba
+#define isdigit(c) (((c) >= '0') && ((c) <= '9'))
+#define isprint(c)
+#define isxdigit(c)
+#define isspace(c)
+#define isupper(c)
+#define islower(c)
+#define isalpha(c)
+
 // issue #839
 #define BLOCKSIZE
 #define CAPACITY
