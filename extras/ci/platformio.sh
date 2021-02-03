@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-pip install --user platformio
+BOARD=$1
 
 case $BOARD in
 uno)

@@ -3,8 +3,8 @@
 ---
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=6.17.2)](https://www.ardu-badge.com/ArduinoJson/6.17.2)
-[![Build Status](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/6.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
-[![Build Status](https://travis-ci.org/bblanchon/ArduinoJson.svg?branch=6.x)](https://travis-ci.org/bblanchon/ArduinoJson)
+[![Continuous Integration](https://github.com/bblanchon/ArduinoJson/workflows/Continuous%20Integration/badge.svg?branch=6.x)](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22+branch%3A6.x)
+[![Continuous Integration](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/6.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
 [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/arduinojson.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
 [![Coverage Status](https://coveralls.io/repos/github/bblanchon/ArduinoJson/badge.svg?branch=6.x)](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)
 [![GitHub stars](https://img.shields.io/github/stars/bblanchon/ArduinoJson?style=flat)](https://github.com/bblanchon/ArduinoJson/stargazers)
@@ -19,7 +19,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [Optionally supports comments in the input](https://arduinojson.org/v6/api/config/enable_comments/?utm_source=github&utm_medium=readme)
     * [Optionally filters the input to keep only desired values](https://arduinojson.org/v6/api/json/deserializejson/?utm_source=github&utm_medium=readme#filtering)
     * Supports single quotes as a string delimiter
-    * Compatible with NDJSON and JSON Lines
+    * Compatible with [NDJSON](http://ndjson.org/) and [JSON Lines](https://jsonlines.org/)
 * [JSON serialization](https://arduinojson.org/v6/api/json/serializejson/?utm_source=github&utm_medium=readme)
     * [Can write to a buffer or a stream](https://arduinojson.org/v6/api/json/serializejson/?utm_source=github&utm_medium=readme)
     * [Optionally indents the document (prettified JSON)](https://arduinojson.org/v6/api/json/serializejsonpretty/?utm_source=github&utm_medium=readme)
@@ -58,11 +58,12 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
         * [IAR Embedded Workbench](https://www.iar.com/iar-embedded-workbench/)
         * [Keil uVision](http://www.keil.com/)
         * [MPLAB X IDE](http://www.microchip.com/mplab/mplab-x-ide)
+        * [Particle](https://www.particle.io/)
         * [PlatformIO](http://platformio.org/)
         * [Sloeber plugin for Eclipse](https://eclipse.baeyens.it/)
         * [Visual Micro](http://www.visualmicro.com/)
         * [Visual Studio](https://www.visualstudio.com/)
-    * [Even works with online compilers like wandbox.org](https://wandbox.org/permlink/t7KP7I6dVuLhqzDl)
+    * [Even works with online compilers like wandbox.org](https://wandbox.org/permlink/RlZSKy17DjJ6HcdN)
     * [CMake friendly](https://arduinojson.org/v6/how-to/use-arduinojson-with-cmake/?utm_source=github&utm_medium=readme)
 * Well designed
     * [Elegant API](http://arduinojson.org/v6/example/?utm_source=github&utm_medium=readme)
@@ -76,8 +77,8 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [Unit test coverage close to 100%](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)
     * Continuously tested on
         * [Visual Studio 2010, 2012, 2013, 2015, 2017, 2019](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
-        * [GCC 4.4, 4.6, 4.7, 4.8, 4.9, 5, 6, 7, 8](https://travis-ci.org/bblanchon/ArduinoJson)
-        * [Clang 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 6.0, 7, 8](https://travis-ci.org/bblanchon/ArduinoJson)
+        * [GCC 4.4, 4.6, 4.7, 4.8, 4.9, 5, 6, 7, 8, 9, 10](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22)
+        * [Clang 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 5.0, 6.0, 7, 8, 9, 10](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22)
     * [Continuously fuzzed with Google OSS Fuzz](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
 * Well documented
     * [Tutorials](https://arduinojson.org/v6/doc/deserialization/?utm_source=github&utm_medium=readme)
@@ -85,6 +86,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [How-tos](https://arduinojson.org/v6/example/?utm_source=github&utm_medium=readme)
     * [FAQ](https://arduinojson.org/v6/faq/?utm_source=github&utm_medium=readme)
     * [Book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme)
+    * [Changelog](changelog.md)
 * Vibrant user community
     * Most popular of all Arduino libraries on [GitHub](https://github.com/search?o=desc&q=arduino+library&s=stars&type=Repositories) and [PlatformIO](https://platformio.org/lib/search)
     * [Used in hundreds of projects](https://www.hackster.io/search?i=projects&q=arduinojson)
