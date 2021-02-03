@@ -42,8 +42,6 @@ class JsonDeserializer {
   }
 
  private:
-  JsonDeserializer &operator=(const JsonDeserializer &);  // non-copiable
-
   char current() {
     return _latch.current();
   }
