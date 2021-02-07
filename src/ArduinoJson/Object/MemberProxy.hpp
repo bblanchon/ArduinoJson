@@ -46,6 +46,20 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   template <typename TValue>
   FORCE_INLINE typename enable_if<!is_array<TValue>::value, this_type &>::type
   operator=(const TValue &src) {
+    /********************************************************************
+     **                THIS IS NOT A BUG IN THE LIBRARY                **
+     **                --------------------------------                **
+     **  Get a compilation error pointing here?                        **
+     **  It doesn't mean the error *is* here.                          **
+     **  Often, it's because you try to assign the wrong value type.   **
+     **                                                                **
+     **  For example:                                                  **
+     **    char age = 42                                               **
+     **    doc["age"] = age;                                           **
+     **  Instead, use:                                                 **
+     **    int8_t age = 42;                                            **
+     **    doc["age"] = age;                                           **
+     ********************************************************************/
     getOrAddUpstreamMember().set(src);
     return *this;
   }

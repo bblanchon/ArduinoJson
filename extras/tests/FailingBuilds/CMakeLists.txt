@@ -43,3 +43,5 @@ build_should_fail(delete_jsondocument)
 add_executable(variant_as_char variant_as_char.cpp)
 build_should_fail(variant_as_char)
 
+add_executable(assign_char assign_char.cpp)
+build_should_fail(assign_char)

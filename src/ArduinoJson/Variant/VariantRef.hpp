@@ -186,8 +186,9 @@ class VariantRef : public VariantRefBase<VariantData>,
   // set(unsigned long)
   template <typename T>
   FORCE_INLINE bool set(
-      T value, typename enable_if<is_integral<T>::value &&
-                                  !is_same<bool, T>::value>::type * = 0) const {
+      T value,
+      typename enable_if<is_integral<T>::value && !is_same<bool, T>::value &&
+                         !is_same<char, T>::value>::type * = 0) const {
     return variantSetInteger<T>(_data, value);
   }
 
