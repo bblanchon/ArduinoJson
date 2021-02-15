@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.17.3 (2021-02-15)
+-------
 
 * Made `JsonDocument`'s destructor protected (issue #1480)
 * Added missing calls to `client.stop()` in `JsonHttpClient.ino` (issue #1485)
