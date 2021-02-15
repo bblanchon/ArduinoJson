@@ -16,6 +16,6 @@
     ".github",
     "extras"
   ],
-  "frameworks": "arduino",
+  "frameworks": "*",
   "platforms": "*"
 }

@@ -8,6 +8,7 @@ HEAD
 * Added missing calls to `client.stop()` in `JsonHttpClient.ino` (issue #1485)
 * Fixed error `expected ')' before 'char'` when `isdigit()` is a macro (issue #1487)
 * Fixed error `definition of implicit copy constructor is deprecated` on Clang 10
+* PlatformIO: set framework compatibility to `*` (PR #1490 by @maxgerhardt)
 
 v6.17.2 (2020-11-14)
 -------
