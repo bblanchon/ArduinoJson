@@ -68,9 +68,6 @@ TEST_CASE("JsonVariant set()/get()") {
   SECTION("Float") {
     checkNumericType<float>();
   }
-  SECTION("Char") {
-    checkNumericType<char>();
-  }
   SECTION("SChar") {
     checkNumericType<signed char>();
   }

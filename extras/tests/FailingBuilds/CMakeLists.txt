@@ -39,3 +39,7 @@ build_should_fail(write_long_long)
 
 add_executable(delete_jsondocument delete_jsondocument.cpp)
 build_should_fail(delete_jsondocument)
+
+add_executable(variant_as_char variant_as_char.cpp)
+build_should_fail(variant_as_char)
+

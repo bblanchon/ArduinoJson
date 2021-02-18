@@ -1,6 +1,22 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Removed `JsonVariant::as<char>()` (issue #1498)
+
+> ### BREAKING CHANGE
+>
+> We cannot cast a `JsonVariant` to a `char` anymore, so the following will break:
+> ```c++
+> char age = doc["age"];  //  error: no matching function for call to 'variantAs(VariantData*&)'
+> ```
+> Instead, you must use another integral type, such as `int8_t`:
+> ```c++
+> int8_t age = doc["age"];  // OK
+> ```
+
 v6.17.3 (2021-02-15)
 -------
 

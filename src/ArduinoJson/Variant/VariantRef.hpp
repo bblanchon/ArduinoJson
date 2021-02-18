@@ -251,6 +251,20 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   template <typename T>
   FORCE_INLINE typename VariantAs<T>::type as() const {
+    /********************************************************************
+     **                THIS IS NOT A BUG IN THE LIBRARY                **
+     **                --------------------------------                **
+     **  Get a compilation error pointing here?                        **
+     **  It doesn't mean the error *is* here.                          **
+     **  Often, it's because you try to extract the wrong value type.  **
+     **                                                                **
+     **  For example:                                                  **
+     **    char* name = doc["name"];                                   **
+     **    char age = doc["age"];                                      **
+     **  Instead, use:                                                 **
+     **    const char* name = doc["name"];                             **
+     **    int8_t age = doc["age"];                                    **
+     ********************************************************************/
     return variantAs<typename VariantAs<T>::type>(_data, _pool);
   }
 
