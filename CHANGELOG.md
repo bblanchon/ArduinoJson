@@ -6,6 +6,7 @@ HEAD
 
 * Removed support for `char` values, see below (issue #1498)
 * `deserializeJson()` leaves `\uXXXX` unchanged instead of returning `NotSupported`
+* `deserializeMsgPack()` inserts `null` instead of returning `NotSupported`
 
 > ### BREAKING CHANGES
 >

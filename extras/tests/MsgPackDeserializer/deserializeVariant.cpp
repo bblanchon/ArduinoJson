@@ -20,7 +20,8 @@ static void check(const char* input, U expected) {
 static void checkNotSupported(const char* input) {
   DynamicJsonDocument doc(4096);
   DeserializationError error = deserializeMsgPack(doc, input);
-  REQUIRE(error == DeserializationError::NotSupported);
+  REQUIRE(error == DeserializationError::Ok);
+  REQUIRE(doc.isNull());
 }
 #endif
 

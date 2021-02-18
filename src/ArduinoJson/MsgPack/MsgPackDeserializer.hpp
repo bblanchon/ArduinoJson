@@ -40,11 +40,6 @@ class MsgPackDeserializer {
     return false;
   }
 
-  bool notSupported() {
-    _error = DeserializationError::NotSupported;
-    return false;
-  }
-
   template <typename TFilter>
   bool parseVariant(VariantData &variant, TFilter filter,
                     NestingLimit nestingLimit) {
@@ -74,41 +69,23 @@ class MsgPackDeserializer {
           variant.setBoolean(true);
         return true;
 
-      case 0xc4:  // bin 8
-        if (allowValue)
-          return notSupported();
-        else
-          return skipString<uint8_t>();
+      case 0xc4:  // bin 8 (not supported)
+        return skipString<uint8_t>();
 
-      case 0xc5:  // bin 16
-        if (allowValue)
-          return notSupported();
-        else
-          return skipString<uint16_t>();
+      case 0xc5:  // bin 16 (not supported)
+        return skipString<uint16_t>();
 
-      case 0xc6:  // bin 32
-        if (allowValue)
-          return notSupported();
-        else
-          return skipString<uint32_t>();
+      case 0xc6:  // bin 32 (not supported)
+        return skipString<uint32_t>();
 
-      case 0xc7:  // ext 8
-        if (allowValue)
-          return notSupported();
-        else
-          return skipExt<uint8_t>();
+      case 0xc7:  // ext 8 (not supported)
+        return skipExt<uint8_t>();
 
-      case 0xc8:  // ext 16
-        if (allowValue)
-          return notSupported();
-        else
-          return skipExt<uint16_t>();
+      case 0xc8:  // ext 16 (not supported)
+        return skipExt<uint16_t>();
 
-      case 0xc9:  // ext 32
-        if (allowValue)
-          return notSupported();
-        else
-          return skipExt<uint32_t>();
+      case 0xc9:  // ext 32 (not supported)
+        return skipExt<uint32_t>();
 
       case 0xca:
         if (allowValue)
@@ -141,14 +118,14 @@ class MsgPackDeserializer {
           return skipBytes(4);
 
       case 0xcf:
-        if (allowValue)
 #if ARDUINOJSON_USE_LONG_LONG
+        if (allowValue)
           return readInteger<uint64_t>(variant);
-#else
-          return notSupported();
-#endif
         else
           return skipBytes(8);
+#else
+        return skipBytes(8);  // not supported
+#endif
 
       case 0xd0:
         if (allowValue)
@@ -169,44 +146,29 @@ class MsgPackDeserializer {
           return skipBytes(4);
 
       case 0xd3:
-        if (allowValue)
 #if ARDUINOJSON_USE_LONG_LONG
+        if (allowValue)
           return readInteger<int64_t>(variant);
+        else
+          return skipBytes(8);  // not supported
 #else
-          return notSupported();
+        return skipBytes(8);
 #endif
-        else
-          return skipBytes(8);
 
-      case 0xd4:  // fixext 1
-        if (allowValue)
-          return notSupported();
-        else
-          return skipBytes(2);
+      case 0xd4:  // fixext 1 (not supported)
+        return skipBytes(2);
 
-      case 0xd5:  // fixext 2
-        if (allowValue)
-          return notSupported();
-        else
-          return skipBytes(3);
+      case 0xd5:  // fixext 2 (not supported)
+        return skipBytes(3);
 
-      case 0xd6:  // fixext 4
-        if (allowValue)
-          return notSupported();
-        else
-          return skipBytes(5);
+      case 0xd6:  // fixext 4 (not supported)
+        return skipBytes(5);
 
-      case 0xd7:  // fixext 8
-        if (allowValue)
-          return notSupported();
-        else
-          return skipBytes(9);
+      case 0xd7:  // fixext 8 (not supported)
+        return skipBytes(9);
 
-      case 0xd8:  // fixext 16
-        if (allowValue)
-          return notSupported();
-        else
-          return skipBytes(17);
+      case 0xd8:  // fixext 16 (not supported)
+        return skipBytes(17);
 
       case 0xd9:
         if (allowValue)
@@ -508,7 +470,7 @@ class MsgPackDeserializer {
         return readString<uint32_t>();
 
       default:
-        return notSupported();
+        return invalidInput();
     }
   }
 
