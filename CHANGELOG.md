@@ -7,6 +7,7 @@ HEAD
 * Removed support for `char` values, see below (issue #1498)
 * `deserializeJson()` leaves `\uXXXX` unchanged instead of returning `NotSupported`
 * `deserializeMsgPack()` inserts `null` instead of returning `NotSupported`
+* Removed `DeserializationError::NotSupported`
 
 > ### BREAKING CHANGES
 >
@@ -29,6 +30,13 @@ HEAD
 > int8_t age;
 > doc["age"] = age;  // OK
 > ```
+>
+> On a different topic, `DeserializationError::NotSupported` has been removed.
+> Instead of returning this error:
+>
+> * `deserializeJson()` leaves `\uXXXX` unchanged (only when `ARDUINOJSON_DECODE_UNICODE` is `0`)
+> * `deserializeMsgPack()` replaces unsupported values with `null`s
+
 
 v6.17.3 (2021-02-15)
 -------
