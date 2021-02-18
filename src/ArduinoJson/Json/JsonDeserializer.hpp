@@ -384,11 +384,10 @@ class JsonDeserializer {
             return false;
           if (codepoint.append(codeunit))
             Utf8::encodeCodepoint(codepoint.value(), _stringStorage);
-          continue;
 #else
-          _error = DeserializationError::NotSupported;
-          return false;
+          _stringStorage.append('\\');
 #endif
+          continue;
         }
 
         // replace char
