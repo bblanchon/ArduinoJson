@@ -9,40 +9,13 @@
 #include <ArduinoJson/Numbers/arithmeticCompare.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/IsString.hpp>
+#include <ArduinoJson/Variant/Visitor.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 class CollectionData;
 
-struct ComparerBase : Visitor<CompareResult> {
-  CompareResult visitArray(const CollectionData &) {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitBoolean(bool) {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitFloat(Float) {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitNegativeInteger(UInt) {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitNull() {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitObject(const CollectionData &) {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitPositiveInteger(UInt) {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitRawJson(const char *, size_t) {
-    return COMPARE_RESULT_DIFFER;
-  }
-  CompareResult visitString(const char *) {
-    return COMPARE_RESULT_DIFFER;
-  }
-};
+struct ComparerBase : Visitor<CompareResult> {};
 
 template <typename T, typename Enable = void>
 struct Comparer;

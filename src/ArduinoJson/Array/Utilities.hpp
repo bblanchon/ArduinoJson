@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Array/ArrayRef.hpp>
 #include <ArduinoJson/Document/JsonDocument.hpp>
+#include <ArduinoJson/Variant/Visitor.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -81,38 +82,6 @@ class ArrayCopier1D : public Visitor<size_t> {
     return size;
   }
 
-  size_t visitObject(const CollectionData&) {
-    return 0;
-  }
-
-  size_t visitFloat(Float) {
-    return 0;
-  }
-
-  size_t visitString(const char*) {
-    return 0;
-  }
-
-  size_t visitRawJson(const char*, size_t) {
-    return 0;
-  }
-
-  size_t visitNegativeInteger(UInt) {
-    return 0;
-  }
-
-  size_t visitPositiveInteger(UInt) {
-    return 0;
-  }
-
-  size_t visitBoolean(bool) {
-    return 0;
-  }
-
-  size_t visitNull() {
-    return 0;
-  }
-
  private:
   T* _destination;
   size_t _capacity;
@@ -132,14 +101,6 @@ class ArrayCopier2D : public Visitor<void> {
       slot = slot->next();
     }
   }
-  void visitObject(const CollectionData&) {}
-  void visitFloat(Float) {}
-  void visitString(const char*) {}
-  void visitRawJson(const char*, size_t) {}
-  void visitNegativeInteger(UInt) {}
-  void visitPositiveInteger(UInt) {}
-  void visitBoolean(bool) {}
-  void visitNull() {}
 
  private:
   T (*_destination)[N1][N2];
