@@ -121,6 +121,16 @@ class VariantRefBase : public VariantTag {
   is() const {
     return !!_data;
   }
+  //
+  // bool is<VariantConstRef> const;
+  // bool is<const VariantConstRef> const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<
+      is_same<typename remove_const<T>::type, VariantConstRef>::value,
+      bool>::type
+  is() const {
+    return !!_data;
+  }
 #if ARDUINOJSON_HAS_NULLPTR
   //
   // bool is<nullptr_t> const;
