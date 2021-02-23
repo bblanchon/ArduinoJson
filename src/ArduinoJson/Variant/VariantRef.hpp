@@ -85,11 +85,30 @@ class VariantRefBase : public VariantTag {
     return variantIsArray(_data);
   }
   //
+  // bool is<ArrayConstRef> const;
+  // bool is<const ArrayConstRef> const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<
+      is_same<typename remove_const<T>::type, ArrayConstRef>::value, bool>::type
+  is() const {
+    return variantIsArray(_data);
+  }
+  //
   // bool is<ObjectRef> const;
   // bool is<const ObjectRef> const;
   template <typename T>
   FORCE_INLINE typename enable_if<
       is_same<typename remove_const<T>::type, ObjectRef>::value, bool>::type
+  is() const {
+    return variantIsObject(_data);
+  }
+  //
+  // bool is<ObjectConstRef> const;
+  // bool is<const ObjectConstRef> const;
+  template <typename T>
+  FORCE_INLINE typename enable_if<
+      is_same<typename remove_const<T>::type, ObjectConstRef>::value,
+      bool>::type
   is() const {
     return variantIsObject(_data);
   }

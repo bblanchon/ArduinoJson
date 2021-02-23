@@ -8,6 +8,7 @@ HEAD
 * `deserializeJson()` leaves `\uXXXX` unchanged instead of returning `NotSupported`
 * `deserializeMsgPack()` inserts `null` instead of returning `NotSupported`
 * Removed `DeserializationError::NotSupported`
+* Added `JsonVariant::is<JsonArrayConst/JsonObjectConst>()` (issue #1412)
 
 > ### BREAKING CHANGES
 >
