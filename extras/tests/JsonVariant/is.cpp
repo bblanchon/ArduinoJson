@@ -7,160 +7,225 @@
 
 enum MYENUM2 { ONE = 1, TWO = 2 };
 
-template <typename TVariant>
-void checkIsArray(TVariant var) {
-  REQUIRE(var.template is<JsonArray>());
-
-  REQUIRE_FALSE(var.template is<bool>());
-  REQUIRE_FALSE(var.template is<double>());
-  REQUIRE_FALSE(var.template is<float>());
-  REQUIRE_FALSE(var.template is<int>());
-  REQUIRE_FALSE(var.template is<long>());
-  REQUIRE_FALSE(var.template is<const char *>());
-  REQUIRE_FALSE(var.template is<JsonObject>());
-}
-
-void testArray(JsonArray value) {
+TEST_CASE("JsonVariant::is<T>()") {
   DynamicJsonDocument doc(4096);
+  JsonVariant variant = doc.to<JsonVariant>();
 
-  JsonVariant var = doc.to<JsonVariant>();
-  var.set(value);
-
-  checkIsArray(var);
-
-  JsonVariantConst cvar = var;
-  checkIsArray(cvar);
-}
-
-template <typename TVariant>
-void checkIsBool(TVariant var) {
-  REQUIRE(var.template is<bool>());
-
-  REQUIRE_FALSE(var.template is<double>());
-  REQUIRE_FALSE(var.template is<float>());
-  REQUIRE_FALSE(var.template is<int>());
-  REQUIRE_FALSE(var.template is<long>());
-  REQUIRE_FALSE(var.template is<const char *>());
-  REQUIRE_FALSE(var.template is<JsonArray>());
-  REQUIRE_FALSE(var.template is<JsonObject>());
-}
-
-void testBool(bool value) {
-  DynamicJsonDocument doc(4096);
-  JsonVariant var = doc.to<JsonVariant>();
-  var.set(value);
-
-  checkIsBool(var);
-  checkIsBool(JsonVariantConst(var));
-}
-
-template <typename TVariant>
-void checkIsFloat(TVariant var) {
-  REQUIRE(var.template is<double>());
-  REQUIRE(var.template is<float>());
-
-  REQUIRE_FALSE(var.template is<bool>());
-  REQUIRE_FALSE(var.template is<int>());
-  REQUIRE_FALSE(var.template is<long>());
-  REQUIRE_FALSE(var.template is<const char *>());
-  REQUIRE_FALSE(var.template is<JsonArray>());
-  REQUIRE_FALSE(var.template is<JsonObject>());
-}
-
-void testFloat(double value) {
-  DynamicJsonDocument doc(4096);
-  JsonVariant var = doc.to<JsonVariant>();
-  var.set(value);
-
-  checkIsFloat(var);
-  checkIsFloat(JsonVariantConst(var));
-}
-
-template <typename TVariant>
-void checkIsInteger(TVariant var) {
-  REQUIRE(var.template is<long>());
-  REQUIRE(var.template is<int>());
-  REQUIRE(var.template is<float>());
-  REQUIRE(var.template is<double>());
-  REQUIRE(var.template is<MYENUM2>());
-
-  REQUIRE_FALSE(var.template is<bool>());
-  REQUIRE_FALSE(var.template is<const char *>());
-  REQUIRE_FALSE(var.template is<JsonArray>());
-  REQUIRE_FALSE(var.template is<JsonObject>());
-}
-
-template <typename T>
-void testInteger(T value) {
-  DynamicJsonDocument doc(4096);
-  JsonVariant var = doc.to<JsonVariant>();
-  var.set(value);
-
-  checkIsInteger(var);
-  checkIsInteger(JsonVariantConst(var));
-}
-
-template <typename TVariant>
-void checkIsString(TVariant var) {
-  REQUIRE(var.template is<const char *>());
-  REQUIRE(var.template is<std::string>());
-
-  REQUIRE_FALSE(var.template is<bool>());
-  REQUIRE_FALSE(var.template is<int>());
-  REQUIRE_FALSE(var.template is<double>());
-  REQUIRE_FALSE(var.template is<float>());
-  REQUIRE_FALSE(var.template is<long>());
-  REQUIRE_FALSE(var.template is<MYENUM2>());
-  REQUIRE_FALSE(var.template is<JsonArray>());
-  REQUIRE_FALSE(var.template is<JsonObject>());
-}
-
-void testString(const char *value) {
-  DynamicJsonDocument doc(4096);
-  JsonVariant var = doc.to<JsonVariant>();
-  var.set(value);
-
-  checkIsString(var);
-  checkIsString(JsonVariantConst(var));
-}
-
-TEST_CASE("JsonVariant::is()") {
-  SECTION("JsonArray") {
-    DynamicJsonDocument doc(4096);
-    JsonArray array = doc.to<JsonArray>();
-    testArray(array);
+  SECTION("null") {
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<bool>() == false);
+    CHECK(variant.is<char *>() == false);
+    CHECK(variant.is<int>() == false);
+    CHECK(variant.is<std::string>() == false);
+    CHECK(variant.is<float>() == false);
+    CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("bool") {
-    testBool(true);
-    testBool(false);
+  SECTION("true") {
+    variant.set(true);
+
+    CHECK(variant.is<bool>() == true);
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<char *>() == false);
+    CHECK(variant.is<int>() == false);
+    CHECK(variant.is<std::string>() == false);
+    CHECK(variant.is<float>() == false);
+    CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("double") {
-    testFloat(4.2);
+  SECTION("false") {
+    variant.set(false);
+
+    CHECK(variant.is<bool>() == true);
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<char *>() == false);
+    CHECK(variant.is<int>() == false);
+    CHECK(variant.is<std::string>() == false);
+    CHECK(variant.is<float>() == false);
+    CHECK(variant.is<MYENUM2>() == false);
   }
 
   SECTION("int") {
-    testInteger(42);
+    variant.set(42);
+
+    CHECK(variant.is<int>() == true);
+    CHECK(variant.is<short>() == true);
+    CHECK(variant.is<long>() == true);
+    CHECK(variant.is<double>() == true);
+    CHECK(variant.is<float>() == true);
+    CHECK(variant.is<MYENUM2>() == true);
+    CHECK(variant.is<bool>() == false);
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<char *>() == false);
+    CHECK(variant.is<std::string>() == false);
   }
 
-  SECTION("long") {
-    testInteger(42L);
+  SECTION("double") {
+    variant.set(4.2);
+
+    CHECK(variant.is<double>() == true);
+    CHECK(variant.is<float>() == true);
+    CHECK(variant.is<bool>() == false);
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<char *>() == false);
+    CHECK(variant.is<int>() == false);
+    CHECK(variant.is<std::string>() == false);
+    CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("string") {
-    testString("42");
+  SECTION("const char*") {
+    variant.set("4.2");
+
+    CHECK(variant.is<char *>() == true);
+    CHECK(variant.is<const char *>() == true);
+    CHECK(variant.is<std::string>() == true);
+    CHECK(variant.is<double>() == false);
+    CHECK(variant.is<float>() == false);
+    CHECK(variant.is<bool>() == false);
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<int>() == false);
+    CHECK(variant.is<MYENUM2>() == false);
   }
+
+  SECTION("JsonArray") {
+    variant.to<JsonArray>();
+
+    CHECK(variant.is<JsonArray>() == true);
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<int>() == false);
+    CHECK(variant.is<float>() == false);
+    CHECK(variant.is<bool>() == false);
+    CHECK(variant.is<char *>() == false);
+    CHECK(variant.is<MYENUM2>() == false);
+  }
+
+  SECTION("JsonObject") {
+    variant.to<JsonObject>();
+
+    CHECK(variant.is<JsonObject>() == true);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<int>() == false);
+    CHECK(variant.is<float>() == false);
+    CHECK(variant.is<bool>() == false);
+    CHECK(variant.is<char *>() == false);
+    CHECK(variant.is<MYENUM2>() == false);
+  }
+}
+
+TEST_CASE("JsonVariantConst::is<T>()") {
+  DynamicJsonDocument doc(4096);
+  JsonVariant variant = doc.to<JsonVariant>();
+  JsonVariantConst cvariant = variant;
 
   SECTION("null") {
-    DynamicJsonDocument doc(4096);
-    deserializeJson(doc, "[null]");
-    JsonVariant v = doc[0];
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<bool>() == false);
+    CHECK(cvariant.is<char *>() == false);
+    CHECK(cvariant.is<int>() == false);
+    CHECK(cvariant.is<std::string>() == false);
+    CHECK(cvariant.is<float>() == false);
+    CHECK(cvariant.is<MYENUM2>() == false);
+  }
 
-    REQUIRE(v.is<bool>() == false);
-    REQUIRE(v.is<char *>() == false);
-    REQUIRE(v.is<int>() == false);
-    REQUIRE(v.is<std::string>() == false);
-    REQUIRE(v.is<float>() == false);
+  SECTION("true") {
+    variant.set(true);
+
+    CHECK(cvariant.is<bool>() == true);
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<char *>() == false);
+    CHECK(cvariant.is<int>() == false);
+    CHECK(cvariant.is<std::string>() == false);
+    CHECK(cvariant.is<float>() == false);
+    CHECK(cvariant.is<MYENUM2>() == false);
+  }
+
+  SECTION("false") {
+    variant.set(false);
+
+    CHECK(cvariant.is<bool>() == true);
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<char *>() == false);
+    CHECK(cvariant.is<int>() == false);
+    CHECK(cvariant.is<std::string>() == false);
+    CHECK(cvariant.is<float>() == false);
+    CHECK(cvariant.is<MYENUM2>() == false);
+  }
+
+  SECTION("int") {
+    variant.set(42);
+
+    CHECK(cvariant.is<int>() == true);
+    CHECK(cvariant.is<short>() == true);
+    CHECK(cvariant.is<long>() == true);
+    CHECK(cvariant.is<double>() == true);
+    CHECK(cvariant.is<float>() == true);
+    CHECK(cvariant.is<MYENUM2>() == true);
+    CHECK(cvariant.is<bool>() == false);
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<char *>() == false);
+    CHECK(cvariant.is<std::string>() == false);
+  }
+
+  SECTION("double") {
+    variant.set(4.2);
+
+    CHECK(cvariant.is<double>() == true);
+    CHECK(cvariant.is<float>() == true);
+    CHECK(cvariant.is<bool>() == false);
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<char *>() == false);
+    CHECK(cvariant.is<int>() == false);
+    CHECK(cvariant.is<std::string>() == false);
+    CHECK(cvariant.is<MYENUM2>() == false);
+  }
+
+  SECTION("const char*") {
+    variant.set("4.2");
+
+    CHECK(cvariant.is<char *>() == true);
+    CHECK(cvariant.is<const char *>() == true);
+    CHECK(cvariant.is<std::string>() == true);
+    CHECK(cvariant.is<double>() == false);
+    CHECK(cvariant.is<float>() == false);
+    CHECK(cvariant.is<bool>() == false);
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<int>() == false);
+    CHECK(cvariant.is<MYENUM2>() == false);
+  }
+
+  SECTION("JsonArray") {
+    variant.to<JsonArray>();
+
+    CHECK(cvariant.is<JsonArray>() == true);
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<int>() == false);
+    CHECK(cvariant.is<float>() == false);
+    CHECK(cvariant.is<bool>() == false);
+    CHECK(cvariant.is<char *>() == false);
+    CHECK(cvariant.is<MYENUM2>() == false);
+  }
+
+  SECTION("JsonObject") {
+    variant.to<JsonObject>();
+
+    CHECK(cvariant.is<JsonObject>() == true);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<int>() == false);
+    CHECK(cvariant.is<float>() == false);
+    CHECK(cvariant.is<bool>() == false);
+    CHECK(cvariant.is<char *>() == false);
+    CHECK(cvariant.is<MYENUM2>() == false);
   }
 }
