@@ -9,6 +9,7 @@ HEAD
 * `deserializeMsgPack()` inserts `null` instead of returning `NotSupported`
 * Removed `DeserializationError::NotSupported`
 * Added `JsonVariant::is<JsonArrayConst/JsonObjectConst>()` (issue #1412)
+* Added `JsonVariant::is<JsonVariant>()` (issue #1412)
 
 > ### BREAKING CHANGES
 >
