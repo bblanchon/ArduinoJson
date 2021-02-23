@@ -10,6 +10,7 @@ HEAD
 * Removed `DeserializationError::NotSupported`
 * Added `JsonVariant::is<JsonArrayConst/JsonObjectConst>()` (issue #1412)
 * Added `JsonVariant::is<JsonVariant/JsonVariantConst>()` (issue #1412)
+* Changed `JsonVariantConst::is<JsonArray/JsonObject>()` to return `false` (issue #1412)
 
 > ### BREAKING CHANGES
 >
@@ -38,7 +39,10 @@ HEAD
 >
 > * `deserializeJson()` leaves `\uXXXX` unchanged (only when `ARDUINOJSON_DECODE_UNICODE` is `0`)
 > * `deserializeMsgPack()` replaces unsupported values with `null`s
-
+>
+> Lastly, a very minor change conserns `JsonVariantConst::is<T>()`.
+> It used to return `true` for `JsonArray` and `JsonOject`, but now it returns `false`.
+> Instead, you must use `JsonArrayConst` and `JsonObjectConst`.
 
 v6.17.3 (2021-02-15)
 -------

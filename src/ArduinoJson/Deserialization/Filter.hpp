@@ -17,11 +17,11 @@ class Filter {
   }
 
   bool allowArray() const {
-    return _variant == true || _variant.is<ArrayRef>();
+    return _variant == true || _variant.is<ArrayConstRef>();
   }
 
   bool allowObject() const {
-    return _variant == true || _variant.is<ObjectRef>();
+    return _variant == true || _variant.is<ObjectConstRef>();
   }
 
   bool allowValue() const {

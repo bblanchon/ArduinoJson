@@ -13,6 +13,7 @@
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantAs.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
+#include <ArduinoJson/Variant/VariantIs.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 #include <ArduinoJson/Variant/VariantShortcuts.hpp>
@@ -28,123 +29,9 @@ class ObjectRef;
 template <typename TData>
 class VariantRefBase : public VariantTag {
  public:
-  // Tells wether the variant has the specified type.
-  // Returns true if the variant has type type T, false otherwise.
-  //
-  // bool is<char>() const;
-  // bool is<signed char>() const;
-  // bool is<signed short>() const;
-  // bool is<signed int>() const;
-  // bool is<signed long>() const;
-  // bool is<unsigned char>() const;
-  // bool is<unsigned short>() const;
-  // bool is<unsigned int>() const;
-  // bool is<unsigned long>() const;
   template <typename T>
-  FORCE_INLINE
-      typename enable_if<is_integral<T>::value && !is_same<bool, T>::value,
-                         bool>::type
-      is() const {
-    return variantIsInteger<T>(_data);
-  }
-  //
-  // bool is<double>() const;
-  // bool is<float>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_floating_point<T>::value, bool>::type is()
-      const {
-    return variantIsFloat(_data);
-  }
-  //
-  // bool is<bool>() const
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, bool>::value, bool>::type is()
-      const {
-    return variantIsBoolean(_data);
-  }
-  //
-  // bool is<const char*>() const;
-  // bool is<char*>() const;
-  // bool is<std::string>() const;
-  // bool is<String>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, const char *>::value ||
-                                      is_same<T, char *>::value ||
-                                      IsWriteableString<T>::value,
-                                  bool>::type
-  is() const {
-    return variantIsString(_data);
-  }
-  //
-  // bool is<ArrayRef> const;
-  // bool is<const ArrayRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, ArrayRef>::value, bool>::type
-  is() const {
-    return variantIsArray(_data);
-  }
-  //
-  // bool is<ArrayConstRef> const;
-  // bool is<const ArrayConstRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, ArrayConstRef>::value, bool>::type
-  is() const {
-    return variantIsArray(_data);
-  }
-  //
-  // bool is<ObjectRef> const;
-  // bool is<const ObjectRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, ObjectRef>::value, bool>::type
-  is() const {
-    return variantIsObject(_data);
-  }
-  //
-  // bool is<ObjectConstRef> const;
-  // bool is<const ObjectConstRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, ObjectConstRef>::value,
-      bool>::type
-  is() const {
-    return variantIsObject(_data);
-  }
-  //
-  // bool is<VariantRef> const;
-  // bool is<const VariantRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, VariantRef>::value, bool>::type
-  is() const {
-    return !!_data;
-  }
-  //
-  // bool is<VariantConstRef> const;
-  // bool is<const VariantConstRef> const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<
-      is_same<typename remove_const<T>::type, VariantConstRef>::value,
-      bool>::type
-  is() const {
-    return !!_data;
-  }
-#if ARDUINOJSON_HAS_NULLPTR
-  //
-  // bool is<nullptr_t> const;
-  template <typename T>
-  FORCE_INLINE
-      typename enable_if<is_same<T, decltype(nullptr)>::value, bool>::type
-      is() const {
-    return variantIsNull(_data);
-  }
-#endif
-  // bool is<enum>() const;
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_enum<T>::value, bool>::type is() const {
-    return variantIsInteger<int>(_data);
+  FORCE_INLINE bool is() const {
+    return variantIs<T>(_data);
   }
 
   FORCE_INLINE bool isNull() const {

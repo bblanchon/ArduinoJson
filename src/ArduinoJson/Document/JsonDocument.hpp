@@ -36,6 +36,11 @@ class JsonDocument : public Visitable {
   }
 
   template <typename T>
+  bool is() {
+    return getVariant().template is<T>();
+  }
+
+  template <typename T>
   bool is() const {
     return getVariant().template is<T>();
   }

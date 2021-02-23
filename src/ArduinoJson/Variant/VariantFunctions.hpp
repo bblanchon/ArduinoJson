@@ -43,35 +43,6 @@ inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
 
 inline int variantCompare(const VariantData *a, const VariantData *b);
 
-inline bool variantIsArray(const VariantData *var) {
-  return var && var->isArray();
-}
-
-inline bool variantIsBoolean(const VariantData *var) {
-  return var && var->isBoolean();
-}
-
-template <typename T>
-inline bool variantIsInteger(const VariantData *var) {
-  return var && var->isInteger<T>();
-}
-
-inline bool variantIsFloat(const VariantData *var) {
-  return var && var->isFloat();
-}
-
-inline bool variantIsString(const VariantData *var) {
-  return var && var->isString();
-}
-
-inline bool variantIsObject(const VariantData *var) {
-  return var && var->isObject();
-}
-
-inline bool variantIsNull(const VariantData *var) {
-  return var == 0 || var->isNull();
-}
-
 inline bool variantSetBoolean(VariantData *var, bool value) {
   if (!var)
     return false;
