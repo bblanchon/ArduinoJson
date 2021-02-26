@@ -3,8 +3,22 @@ name: Continuous Integration
 on: [push, pull_request]
 
 jobs:
+  clang-format:
+    name: Clang-Format
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y clang-format
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Format
+        run: find src/ extras/ -name '*.[ch]pp' | xargs clang-format -i --verbose --style=file
+      - name: Diff
+        run: git diff --exit-code
+
   gcc:
     name: GCC
+    needs: clang-format
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -51,6 +65,7 @@ jobs:
 
   clang:
     name: Clang
+    needs: clang-format
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
