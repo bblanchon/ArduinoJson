@@ -4,3 +4,4 @@ fuzzing/
 scripts/
 test/
 third-party/
+extras/
