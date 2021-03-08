@@ -99,8 +99,8 @@ TEST_CASE("deserialize JSON array") {
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
-      REQUIRE(arr[0].as<char*>() == 0);
-      REQUIRE(arr[1].as<char*>() == 0);
+      REQUIRE(arr[0].as<const char*>() == 0);
+      REQUIRE(arr[1].as<const char*>() == 0);
     }
   }
 

@@ -11,8 +11,11 @@ HEAD
 * Added `JsonVariant::is<JsonArrayConst/JsonObjectConst>()` (issue #1412)
 * Added `JsonVariant::is<JsonVariant/JsonVariantConst>()` (issue #1412)
 * Changed `JsonVariantConst::is<JsonArray/JsonObject>()` to return `false` (issue #1412)
+* Simplified `JsonVariant::as<T>()` to always return `T` (see below)
 
 > ### BREAKING CHANGES
+>
+> #### Support for `char` removed
 >
 > We cannot cast a `JsonVariant` to a `char` anymore, so the following will break:
 > ```c++
@@ -34,13 +37,39 @@ HEAD
 > doc["age"] = age;  // OK
 > ```
 >
+> #### `as<T>()` always returns `T`
+>
+> Previously, `JsonVariant::as<T>()` could return a type different from `T`.
+> The most common example is `as<char*>()` that returned a `const char*`.
+> While this feature simplified a few use cases, it was confusing and complicated the
+> implementation of custom converters.
+>
+> Starting from this version, `as<T>` doesn't try to auto-correct the return type and always return `T`,
+> which means that you cannot write this anymore:
+>
+> ```c++
+> Serial.println(doc["sensor"].as<char*>());  // error: invalid conversion from 'const char*' to 'char*' [-fpermissive]
+
+> ```
+> 
+> Instead, you must write:
+>
+> ```c++
+> Serial.println(doc["sensor"].as<const char*>());  // OK
+> ```
+>
+>
+> #### `DeserializationError::NotSupported` removed
+>
 > On a different topic, `DeserializationError::NotSupported` has been removed.
 > Instead of returning this error:
 >
 > * `deserializeJson()` leaves `\uXXXX` unchanged (only when `ARDUINOJSON_DECODE_UNICODE` is `0`)
 > * `deserializeMsgPack()` replaces unsupported values with `null`s
 >
-> Lastly, a very minor change conserns `JsonVariantConst::is<T>()`.
+> #### Const-aware `is<T>()`
+>
+> Lastly, a very minor change concerns `JsonVariantConst::is<T>()`.
 > It used to return `true` for `JsonArray` and `JsonOject`, but now it returns `false`.
 > Instead, you must use `JsonArrayConst` and `JsonObjectConst`.
 

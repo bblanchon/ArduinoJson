@@ -92,7 +92,7 @@ void setup() {
 
   // Extract values
   Serial.println(F("Response:"));
-  Serial.println(doc["sensor"].as<char*>());
+  Serial.println(doc["sensor"].as<const char*>());
   Serial.println(doc["time"].as<long>());
   Serial.println(doc["data"][0].as<float>(), 6);
   Serial.println(doc["data"][1].as<float>(), 6);

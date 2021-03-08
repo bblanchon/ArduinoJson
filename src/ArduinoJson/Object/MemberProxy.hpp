@@ -82,7 +82,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   }
 
   template <typename TValue>
-  FORCE_INLINE typename VariantAs<TValue>::type as() const {
+  FORCE_INLINE TValue as() const {
     return getUpstreamMember().template as<TValue>();
   }
 

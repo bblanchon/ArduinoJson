@@ -48,7 +48,6 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(true == obj["hello"].is<const char*>());
     REQUIRE(false == obj["hello"].is<long>());
     REQUIRE(std::string("h3110") == obj["hello"].as<const char*>());
-    REQUIRE(std::string("h3110") == obj["hello"].as<char*>());  // <- short hand
   }
 
   SECTION("array") {
@@ -189,7 +188,7 @@ TEST_CASE("JsonObject::operator[]") {
 
     obj["hello"] = vla;
 
-    REQUIRE(std::string("world") == obj["hello"].as<char*>());
+    REQUIRE(std::string("world") == obj["hello"].as<const char*>());
   }
 
   SECTION("obj.set(VLA, str)") {
@@ -209,7 +208,7 @@ TEST_CASE("JsonObject::operator[]") {
 
     obj["hello"].set(vla);
 
-    REQUIRE(std::string("world") == obj["hello"].as<char*>());
+    REQUIRE(std::string("world") == obj["hello"].as<const char*>());
   }
 
   SECTION("obj[VLA]") {

@@ -65,7 +65,7 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   template <typename T>
-  FORCE_INLINE typename VariantAs<T>::type as() const {
+  FORCE_INLINE T as() const {
     return getUpstreamElement().template as<T>();
   }
 

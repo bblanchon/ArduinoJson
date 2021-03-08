@@ -176,7 +176,7 @@ class VariantRef : public VariantRefBase<VariantData>,
 #endif
 
   template <typename T>
-  FORCE_INLINE typename VariantAs<T>::type as() const {
+  FORCE_INLINE T as() const {
     /********************************************************************
      **                THIS IS NOT A BUG IN THE LIBRARY                **
      **                --------------------------------                **
@@ -187,11 +187,13 @@ class VariantRef : public VariantRefBase<VariantData>,
      **  For example:                                                  **
      **    char* name = doc["name"];                                   **
      **    char age = doc["age"];                                      **
+     **    auto city = doc["city"].as<char*>()                         **
      **  Instead, use:                                                 **
      **    const char* name = doc["name"];                             **
      **    int8_t age = doc["age"];                                    **
+     **    auto city = doc["city"].as<const char*>()                   **
      ********************************************************************/
-    return variantAs<typename VariantAs<T>::type>(_data, _pool);
+    return variantAs<T>(_data, _pool);
   }
 
   template <typename T>
@@ -291,8 +293,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   }
 
   template <typename T>
-  FORCE_INLINE typename VariantConstAs<T>::type as() const {
-    return variantAs<typename VariantConstAs<T>::type>(_data);
+  FORCE_INLINE T as() const {
+    return variantAs<T>(_data);
   }
 
   template <typename T>

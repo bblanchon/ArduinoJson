@@ -182,8 +182,8 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
-      REQUIRE(obj["key1"].as<char*>() == 0);
-      REQUIRE(obj["key2"].as<char*>() == 0);
+      REQUIRE(obj["key1"].as<const char*>() == 0);
+      REQUIRE(obj["key2"].as<const char*>() == 0);
     }
 
     SECTION("Array") {
