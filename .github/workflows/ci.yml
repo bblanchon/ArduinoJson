@@ -157,15 +157,16 @@ jobs:
   arduino:
     name: Arduino
     needs: gcc
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
           - arduino: '1.6.7'
+            os: ubuntu-18.04  # java.lang.Error: Cannot load com.sun.java.swing.plaf.gtk.GTKLookAndFeel
             board: arduino:avr:uno
           - arduino: '1.8.2'
             board: arduino:samd:mkr1000
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
