@@ -337,4 +337,8 @@ class JsonDocument : public Visitable {
   JsonDocument& operator=(const JsonDocument&);
 };
 
+inline bool convertToJson(VariantRef variant, const JsonDocument& doc) {
+  return variant.set(doc.as<VariantConstRef>());
+}
+
 }  // namespace ARDUINOJSON_NAMESPACE

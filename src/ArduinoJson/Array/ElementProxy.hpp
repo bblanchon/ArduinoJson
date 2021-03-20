@@ -170,6 +170,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return _array.getOrAddElement(_index);
   }
 
+  friend bool convertToJson(VariantRef variant, const this_type& value) {
+    return variant.set(value.getUpstreamElement());
+  }
+
   TArray _array;
   const size_t _index;
 };

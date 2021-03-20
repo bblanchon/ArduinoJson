@@ -47,8 +47,8 @@ TEST_CASE("JsonVariant undefined") {
       REQUIRE(variant.is<unsigned>() == false);
     }
 
-    SECTION("char*") {
-      REQUIRE(variant.is<char*>() == false);
+    SECTION("const char*") {
+      REQUIRE(variant.is<const char*>() == false);
     }
 
     SECTION("double") {

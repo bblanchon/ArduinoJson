@@ -38,6 +38,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * Supports Arduino's `Stream` and [STL's `std::istream`/`std::ostream`](https://arduinojson.org/v6/api/config/enable_std_stream/?utm_source=github&utm_medium=readme)
     * [Supports Flash strings](https://arduinojson.org/v6/api/config/enable_progmem/?utm_source=github&utm_medium=readme)
     * Supports [custom readers](https://arduinojson.org/v6/api/json/deserializejson/?utm_source=github&utm_medium=readme#custom-reader) and [custom writers](https://arduinojson.org/v6/api/json/serializejson/?utm_source=github&utm_medium=readme#custom-writer)
+    * Supports custom converters
 * Portable
     * Usable on any C++ project (not limited to Arduino)
     * Compatible with C++98

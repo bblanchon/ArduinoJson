@@ -76,7 +76,8 @@ class ArrayCopier1D : public Visitor<size_t> {
     VariantSlot* slot = array.head();
 
     while (slot != 0 && size < _capacity) {
-      _destination[size++] = variantAs<T>(slot->data());
+      _destination[size++] =
+          Converter<T>::fromJson(VariantConstRef(slot->data()));
       slot = slot->next();
     }
     return size;

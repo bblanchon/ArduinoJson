@@ -11,9 +11,8 @@
 #include <ArduinoJson/Misc/Visitable.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
-#include <ArduinoJson/Variant/VariantAs.hpp>
+#include <ArduinoJson/Variant/Converter.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
-#include <ArduinoJson/Variant/VariantIs.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 #include <ArduinoJson/Variant/VariantShortcuts.hpp>
@@ -29,11 +28,6 @@ class ObjectRef;
 template <typename TData>
 class VariantRefBase : public VariantTag {
  public:
-  template <typename T>
-  FORCE_INLINE bool is() const {
-    return variantIs<T>(_data);
-  }
-
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
   }
@@ -57,6 +51,10 @@ class VariantRefBase : public VariantTag {
  protected:
   VariantRefBase(TData *data) : _data(data) {}
   TData *_data;
+
+  friend TData *getData(const VariantRefBase &variant) {
+    return variant._data;
+  }
 };
 
 // A variant that can be a any value serializable to a JSON value.
@@ -85,120 +83,29 @@ class VariantRef : public VariantRefBase<VariantData>,
     return variantSetNull(_data);
   }
 
-  // set(bool value)
   template <typename T>
-  FORCE_INLINE bool set(
-      T value, typename enable_if<is_same<T, bool>::value>::type * = 0) const {
-    return variantSetBoolean(_data, value);
+  FORCE_INLINE bool set(const T &value) const {
+    return Converter<T>::toJson(*this, value);
   }
 
-  // set(double value);
-  // set(float value);
   template <typename T>
-  FORCE_INLINE bool set(
-      T value,
-      typename enable_if<is_floating_point<T>::value>::type * = 0) const {
-    return variantSetFloat(_data, static_cast<Float>(value));
+  FORCE_INLINE bool set(T *value) const {
+    return Converter<T *>::toJson(*this, value);
   }
-
-  // set(char)
-  // set(signed short)
-  // set(signed int)
-  // set(signed long)
-  // set(signed char)
-  // set(unsigned short)
-  // set(unsigned int)
-  // set(unsigned long)
-  template <typename T>
-  FORCE_INLINE bool set(
-      T value,
-      typename enable_if<is_integral<T>::value && !is_same<bool, T>::value &&
-                         !is_same<char, T>::value>::type * = 0) const {
-    return variantSetInteger<T>(_data, value);
-  }
-
-  // set(SerializedValue<const char *>)
-  FORCE_INLINE bool set(SerializedValue<const char *> value) const {
-    return variantSetLinkedRaw(_data, value);
-  }
-
-  // set(SerializedValue<std::string>)
-  // set(SerializedValue<String>)
-  // set(SerializedValue<const __FlashStringHelper*>)
-  template <typename T>
-  FORCE_INLINE bool set(
-      SerializedValue<T> value,
-      typename enable_if<!is_same<const char *, T>::value>::type * = 0) const {
-    return variantSetOwnedRaw(_data, value, _pool);
-  }
-
-  // set(const std::string&)
-  // set(const String&)
-  template <typename T>
-  FORCE_INLINE bool set(
-      const T &value,
-      typename enable_if<IsString<T>::value>::type * = 0) const {
-    return variantSetString(_data, adaptString(value), _pool);
-  }
-  // set(char*)
-  // set(const __FlashStringHelper*)
-  // set(const char*)
-  template <typename T>
-  FORCE_INLINE bool set(
-      T *value, typename enable_if<IsString<T *>::value>::type * = 0) const {
-    return variantSetString(_data, adaptString(value), _pool);
-  }
-
-  // set(VariantRef)
-  // set(VariantConstRef)
-  // set(ArrayRef)
-  // set(ArrayConstRef)
-  // set(ObjectRef)
-  // set(ObjecConstRef)
-  // set(const JsonDocument&)
-  template <typename TVariant>
-  typename enable_if<IsVisitable<TVariant>::value, bool>::type set(
-      const TVariant &value) const;
-
-  // set(enum value)
-  template <typename T>
-  FORCE_INLINE bool set(
-      T value, typename enable_if<is_enum<T>::value>::type * = 0) const {
-    return variantSetInteger(_data, static_cast<Integer>(value));
-  }
-
-#if ARDUINOJSON_HAS_NULLPTR
-  // set(nullptr_t)
-  FORCE_INLINE bool set(decltype(nullptr)) const {
-    variantSetNull(_data);
-    return true;
-  }
-#endif
 
   template <typename T>
   FORCE_INLINE T as() const {
-    /********************************************************************
-     **                THIS IS NOT A BUG IN THE LIBRARY                **
-     **                --------------------------------                **
-     **  Get a compilation error pointing here?                        **
-     **  It doesn't mean the error *is* here.                          **
-     **  Often, it's because you try to extract the wrong value type.  **
-     **                                                                **
-     **  For example:                                                  **
-     **    char* name = doc["name"];                                   **
-     **    char age = doc["age"];                                      **
-     **    auto city = doc["city"].as<char*>()                         **
-     **  Instead, use:                                                 **
-     **    const char* name = doc["name"];                             **
-     **    int8_t age = doc["age"];                                    **
-     **    auto city = doc["city"].as<const char*>()                   **
-     ********************************************************************/
-    return variantAs<T>(_data, _pool);
+    return Converter<T>::fromJson(*this);
+  }
+
+  template <typename T>
+  FORCE_INLINE bool is() const {
+    return Converter<T>::checkJson(*this);
   }
 
   template <typename T>
   FORCE_INLINE operator T() const {
-    return variantAs<T>(_data, _pool);
+    return Converter<T>::fromJson(*this);
   }
 
   template <typename TVisitor>
@@ -273,7 +180,11 @@ class VariantRef : public VariantRefBase<VariantData>,
 
  private:
   MemoryPool *_pool;
-};  // namespace ARDUINOJSON_NAMESPACE
+
+  friend MemoryPool *getPool(const VariantRef &variant) {
+    return variant._pool;
+  }
+};
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
                         public VariantOperators<VariantConstRef>,
@@ -294,12 +205,17 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
 
   template <typename T>
   FORCE_INLINE T as() const {
-    return variantAs<T>(_data);
+    return Converter<T>::fromJson(*this);
+  }
+
+  template <typename T>
+  FORCE_INLINE bool is() const {
+    return Converter<T>::checkJson(*this);
   }
 
   template <typename T>
   FORCE_INLINE operator T() const {
-    return variantAs<T>(_data);
+    return Converter<T>::fromJson(*this);
   }
 
   FORCE_INLINE VariantConstRef getElement(size_t) const;
@@ -344,4 +260,38 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     return getMember(key);
   }
 };
+
+template <>
+struct Converter<VariantRef> {
+  static bool toJson(VariantRef variant, VariantRef value) {
+    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  }
+  static VariantRef fromJson(VariantRef variant) {
+    return variant;
+  }
+  static bool checkJson(VariantRef variant) {
+    VariantData *data = getData(variant);
+    return !!data;
+  }
+  static bool checkJson(VariantConstRef) {
+    return false;
+  }
+};
+
+template <>
+struct Converter<VariantConstRef> {
+  static bool toJson(VariantRef variant, VariantConstRef value) {
+    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  }
+
+  static VariantConstRef fromJson(VariantConstRef variant) {
+    return VariantConstRef(getData(variant));
+  }
+
+  static bool checkJson(VariantConstRef variant) {
+    const VariantData *data = getData(variant);
+    return !!data;
+  }
+};
+
 }  // namespace ARDUINOJSON_NAMESPACE

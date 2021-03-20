@@ -77,13 +77,6 @@ inline const char *VariantData::asString() const {
   }
 }
 
-template <typename TVariant>
-typename enable_if<IsVisitable<TVariant>::value, bool>::type VariantRef::set(
-    const TVariant &value) const {
-  VariantConstRef v = value;
-  return variantCopyFrom(_data, v._data, _pool);
-}
-
 template <typename T>
 inline typename enable_if<is_same<T, ArrayRef>::value, ArrayRef>::type
 VariantRef::to() const {

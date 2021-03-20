@@ -164,4 +164,42 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
  private:
   MemoryPool* _pool;
 };
+
+template <>
+struct Converter<ArrayConstRef> {
+  static bool toJson(VariantRef variant, VariantConstRef value) {
+    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  }
+
+  static ArrayConstRef fromJson(VariantConstRef variant) {
+    return ArrayConstRef(variantAsArray(getData(variant)));
+  }
+
+  static bool checkJson(VariantConstRef variant) {
+    const VariantData* data = getData(variant);
+    return data && data->isArray();
+  }
+};
+
+template <>
+struct Converter<ArrayRef> {
+  static bool toJson(VariantRef variant, VariantConstRef value) {
+    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  }
+
+  static ArrayRef fromJson(VariantRef variant) {
+    VariantData* data = getData(variant);
+    MemoryPool* pool = getPool(variant);
+    return ArrayRef(pool, data != 0 ? data->asArray() : 0);
+  }
+
+  static bool checkJson(VariantConstRef) {
+    return false;
+  }
+
+  static bool checkJson(VariantRef variant) {
+    VariantData* data = getData(variant);
+    return data && data->isArray();
+  }
+};
 }  // namespace ARDUINOJSON_NAMESPACE

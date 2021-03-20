@@ -2,9 +2,7 @@
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 
-#include <ArduinoJson/Numbers/Integer.hpp>
-#include <ArduinoJson/Numbers/parseNumber.hpp>
-#include <ArduinoJson/Variant/VariantImpl.hpp>
+#include <ArduinoJson.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;

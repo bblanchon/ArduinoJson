@@ -10,7 +10,7 @@
 #include <ArduinoJson/Polyfills/ctype.hpp>
 #include <ArduinoJson/Polyfills/math.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
-#include <ArduinoJson/Variant/VariantAs.hpp>
+#include <ArduinoJson/Variant/Converter.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -142,6 +142,6 @@ inline T parseNumber(const char* s) {
   VariantData value;
   value.init();  // VariantData is a POD, so it has no constructor
   parseNumber(s, value);
-  return variantAs<T>(&value);
+  return Converter<T>::fromJson(VariantConstRef(&value));
 }
 }  // namespace ARDUINOJSON_NAMESPACE

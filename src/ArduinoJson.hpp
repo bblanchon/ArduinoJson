@@ -27,7 +27,7 @@
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Object/ObjectImpl.hpp"
-#include "ArduinoJson/Variant/VariantAsImpl.hpp"
+#include "ArduinoJson/Variant/ConverterImpl.hpp"
 #include "ArduinoJson/Variant/VariantCompare.hpp"
 #include "ArduinoJson/Variant/VariantImpl.hpp"
 

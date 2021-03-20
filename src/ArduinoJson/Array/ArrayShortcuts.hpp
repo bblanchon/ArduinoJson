@@ -9,6 +9,8 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 // Forward declarations.
+class ArrayRef;
+class ObjectRef;
 template <typename>
 class ElementProxy;
 

@@ -3,7 +3,7 @@
 // MIT License
 
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
-#include <ArduinoJson/Deserialization/Reader.hpp>
+#include <ArduinoJson.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
