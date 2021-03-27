@@ -2,7 +2,7 @@
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 
-#define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
+#include <Arduino.h>
 #include <ArduinoJson.hpp>
 #include <catch.hpp>
 

@@ -206,4 +206,67 @@ struct Converter<decltype(nullptr)> {
 
 #endif
 
+#if ARDUINOJSON_ENABLE_ARDUINO_STREAM
+
+class MemoryPoolPrint : public Print {
+ public:
+  MemoryPoolPrint(MemoryPool* pool) : _pool(pool), _size(0) {
+    pool->getFreeZone(&_string, &_capacity);
+  }
+
+  const char* c_str() {
+    if (_size >= _capacity)
+      return 0;
+
+    _string[_size++] = 0;  // TODO: test overflow
+    return _pool->saveStringFromFreeZone(_size);
+  }
+
+  size_t write(uint8_t c) {
+    if (_size >= _capacity)
+      return 0;
+
+    _string[_size++] = char(c);
+    return 1;
+  }
+
+  size_t write(const uint8_t* buffer, size_t size) {
+    if (_size + size >= _capacity) {
+      _size = _capacity;  // mark as overflowed
+      return 0;
+    }
+    memcpy(&_string[_size], buffer, size);
+    _size += size;
+    return size;
+  }
+
+  bool overflowed() const {
+    return _size >= _capacity;
+  }
+
+ private:
+  MemoryPool* _pool;
+  size_t _size;
+  char* _string;
+  size_t _capacity;
+};
+
+inline bool convertToJson(VariantRef variant, const ::Printable& value) {
+  MemoryPool* pool = getPool(variant);
+  VariantData* data = getData(variant);
+  if (!pool || !data)
+    return false;
+  MemoryPoolPrint print(pool);
+  value.printTo(print);
+  if (print.overflowed()) {
+    pool->markAsOverflowed();
+    data->setNull();
+    return false;
+  }
+  data->setOwnedString(print.c_str());
+  return true;
+}
+
+#endif
+
 }  // namespace ARDUINOJSON_NAMESPACE

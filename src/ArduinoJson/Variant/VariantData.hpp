@@ -244,14 +244,24 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setStringPointer(const char *s, storage_policies::store_by_copy) {
+  void setOwnedString(const char *s) {
+    ARDUINOJSON_ASSERT(s != 0);
     setType(VALUE_IS_OWNED_STRING);
     _content.asString = s;
   }
 
-  void setStringPointer(const char *s, storage_policies::store_by_address) {
+  void setLinkedString(const char *s) {
+    ARDUINOJSON_ASSERT(s != 0);
     setType(VALUE_IS_LINKED_STRING);
     _content.asString = s;
+  }
+
+  void setStringPointer(const char *s, storage_policies::store_by_copy) {
+    setOwnedString(s);
+  }
+
+  void setStringPointer(const char *s, storage_policies::store_by_address) {
+    setLinkedString(s);
   }
 
   template <typename TAdaptedString>

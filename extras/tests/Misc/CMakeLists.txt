@@ -7,6 +7,7 @@ add_executable(MiscTests
 	conflicts.cpp
 	FloatParts.cpp
 	JsonString.cpp
+	printable.cpp
 	Readers.cpp
 	StringAdapters.cpp
 	StringWriter.cpp

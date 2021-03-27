@@ -4,5 +4,6 @@
 
 #pragma once
 
+#include "api/Print.h"
 #include "api/Stream.h"
 #include "api/String.h"
