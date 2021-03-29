@@ -51,7 +51,6 @@ HEAD
 >
 > ```c++
 > Serial.println(doc["sensor"].as<char*>());  // error: invalid conversion from 'const char*' to 'char*' [-fpermissive]
-
 > ```
 > 
 > Instead, you must write:
