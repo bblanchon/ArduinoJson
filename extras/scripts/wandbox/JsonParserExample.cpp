@@ -1,4 +1,4 @@
-// ArduinoJson - arduinojson.org
+// ArduinoJson - https://arduinojson.org
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
@@ -12,7 +12,7 @@ int main() {
   //
   // Inside the brackets, 200 is the capacity of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<300> doc;
 
   // StaticJsonDocument<N> allocates memory on the stack, it can be

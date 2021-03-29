@@ -1,11 +1,11 @@
-// ArduinoJson - arduinojson.org
+// ArduinoJson - https://arduinojson.org
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
 // This example shows how to parse a JSON document in an HTTP response.
 // It uses the Ethernet library, but can be easily adapted for Wifi.
 //
-// It performs a GET resquest on arduinojson.org/example.json
+// It performs a GET resquest on https://arduinojson.org/example.json
 // Here is the expected response:
 // {
 //   "sensor": "gps",
@@ -77,7 +77,7 @@ void setup() {
   }
 
   // Allocate the JSON document
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
   DynamicJsonDocument doc(capacity);
 

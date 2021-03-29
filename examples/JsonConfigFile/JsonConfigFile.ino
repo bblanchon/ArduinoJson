@@ -1,4 +1,4 @@
-// ArduinoJson - arduinojson.org
+// ArduinoJson - https://arduinojson.org
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
@@ -44,7 +44,7 @@ void loadConfiguration(const char *filename, Config &config) {
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<512> doc;
 
   // Deserialize the JSON document
@@ -76,7 +76,7 @@ void saveConfiguration(const char *filename, const Config &config) {
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/assistant to compute the capacity.
+  // Use https://arduinojson.org/assistant to compute the capacity.
   StaticJsonDocument<256> doc;
 
   // Set the values in the document
