@@ -244,64 +244,21 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setOwnedString(const char *s) {
+  void setStringPointer(const char *s, storage_policies::store_by_copy) {
     ARDUINOJSON_ASSERT(s != 0);
     setType(VALUE_IS_OWNED_STRING);
     _content.asString = s;
   }
 
-  void setLinkedString(const char *s) {
+  void setStringPointer(const char *s, storage_policies::store_by_address) {
     ARDUINOJSON_ASSERT(s != 0);
     setType(VALUE_IS_LINKED_STRING);
     _content.asString = s;
   }
 
-  void setStringPointer(const char *s, storage_policies::store_by_copy) {
-    setOwnedString(s);
-  }
-
-  void setStringPointer(const char *s, storage_policies::store_by_address) {
-    setLinkedString(s);
-  }
-
   template <typename TAdaptedString>
   bool setString(TAdaptedString value, MemoryPool *pool) {
-    return setString(value, pool, typename TAdaptedString::storage_policy());
-  }
-
-  template <typename TAdaptedString>
-  inline bool setString(TAdaptedString value, MemoryPool *pool,
-                        storage_policies::decide_at_runtime) {
-    if (value.isStatic())
-      return setString(value, pool, storage_policies::store_by_address());
-    else
-      return setString(value, pool, storage_policies::store_by_copy());
-  }
-
-  template <typename TAdaptedString>
-  inline bool setString(TAdaptedString value, MemoryPool *,
-                        storage_policies::store_by_address) {
-    if (value.isNull())
-      setNull();
-    else
-      setStringPointer(value.data(), storage_policies::store_by_address());
-    return true;
-  }
-
-  template <typename TAdaptedString>
-  inline bool setString(TAdaptedString value, MemoryPool *pool,
-                        storage_policies::store_by_copy) {
-    if (value.isNull()) {
-      setNull();
-      return true;
-    }
-    const char *copy = pool->saveString(value);
-    if (!copy) {
-      setNull();
-      return false;
-    }
-    setStringPointer(copy, storage_policies::store_by_copy());
-    return true;
+    return storeString(value, pool, typename TAdaptedString::storage_policy());
   }
 
   CollectionData &toArray() {
@@ -387,6 +344,41 @@ class VariantData {
   void setType(uint8_t t) {
     _flags &= KEY_IS_OWNED;
     _flags |= t;
+  }
+
+  template <typename TAdaptedString>
+  inline bool storeString(TAdaptedString value, MemoryPool *pool,
+                          storage_policies::decide_at_runtime) {
+    if (value.isStatic())
+      return storeString(value, pool, storage_policies::store_by_address());
+    else
+      return storeString(value, pool, storage_policies::store_by_copy());
+  }
+
+  template <typename TAdaptedString>
+  inline bool storeString(TAdaptedString value, MemoryPool *,
+                          storage_policies::store_by_address) {
+    if (value.isNull())
+      setNull();
+    else
+      setStringPointer(value.data(), storage_policies::store_by_address());
+    return true;
+  }
+
+  template <typename TAdaptedString>
+  inline bool storeString(TAdaptedString value, MemoryPool *pool,
+                          storage_policies::store_by_copy) {
+    if (value.isNull()) {
+      setNull();
+      return true;
+    }
+    const char *copy = pool->saveString(value);
+    if (!copy) {
+      setNull();
+      return false;
+    }
+    setStringPointer(copy, storage_policies::store_by_copy());
+    return true;
   }
 };
 

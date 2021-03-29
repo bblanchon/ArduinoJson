@@ -263,7 +263,7 @@ inline bool convertToJson(VariantRef variant, const ::Printable& value) {
     data->setNull();
     return false;
   }
-  data->setOwnedString(print.c_str());
+  data->setStringPointer(print.c_str(), storage_policies::store_by_copy());
   return true;
 }
 
