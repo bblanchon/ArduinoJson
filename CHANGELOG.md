@@ -14,6 +14,7 @@ HEAD
 * Added `JsonVariant::is<JsonVariant/JsonVariantConst>()` (issue #1412)
 * Changed `JsonVariantConst::is<JsonArray/JsonObject>()` to return `false` (issue #1412)
 * Simplified `JsonVariant::as<T>()` to always return `T` (see below)
+* Updated folders list in `.mbedignore` (PR #1515 by @AGlass0fMilk)
 
 > ### BREAKING CHANGES
 >
