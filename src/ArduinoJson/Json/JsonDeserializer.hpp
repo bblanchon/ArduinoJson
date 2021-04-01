@@ -471,7 +471,7 @@ class JsonDeserializer {
     _buffer[n] = 0;
 
     c = _buffer[0];
-    if (c == 't') {  // true
+    if (c == 't' || c == 'T') {  // true
       result.setBoolean(true);
       if (n != 4) {
         _error = DeserializationError::IncompleteInput;
@@ -479,7 +479,7 @@ class JsonDeserializer {
       }
       return true;
     }
-    if (c == 'f') {  // false
+    if (c == 'f' || c == 'F') {  // false
       result.setBoolean(false);
       if (n != 5) {
         _error = DeserializationError::IncompleteInput;
