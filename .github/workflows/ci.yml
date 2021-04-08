@@ -49,7 +49,6 @@ jobs:
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic universe' 
           sudo apt-get update
           sudo apt-get install -y gcc-${{ matrix.gcc }} g++-${{ matrix.gcc }}
-        if: ${{ matrix.gcc < 7 }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Configure
@@ -97,7 +96,6 @@ jobs:
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic universe' 
           sudo apt-get update
           sudo apt-get install -y clang-${{ matrix.clang }}
-        if: ${{ matrix.clang < 8 }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Configure
