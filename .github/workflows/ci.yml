@@ -24,20 +24,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - gcc: '4.4'
-          - gcc: '4.6'
-          - gcc: '4.7'
-          - gcc: '4.8'
-          - gcc: '4.9'
-          - gcc: '5'
-          - gcc: '6'
-          - gcc: '7'
+          - gcc: "4.4"
+          - gcc: "4.6"
+          - gcc: "4.7"
+          - gcc: "4.8"
+          - gcc: "4.9"
+          - gcc: "5"
+          - gcc: "6"
+          - gcc: "7"
             cxxflags: -fsanitize=leak
-          - gcc: '8'
+          - gcc: "8"
             cxxflags: -fsanitize=undefined
-          - gcc: '9'
+          - gcc: "9"
             cxxflags: -fsanitize=address
-          - gcc: '10'
+          - gcc: "10"
     steps:
       - name: Install
         run: |
@@ -70,20 +70,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - clang: '3.5'
-          - clang: '3.6'
-          - clang: '3.7'
-          - clang: '3.8'
-          - clang: '3.9'
-          - clang: '4.0'
-          - clang: '5.0'
-          - clang: '6.0'
-          - clang: '7'
-          - clang: '8'
+          - clang: "3.5"
+          - clang: "3.6"
+          - clang: "3.7"
+          - clang: "3.8"
+          - clang: "3.9"
+          - clang: "4.0"
+          - clang: "5.0"
+          - clang: "6.0"
+          - clang: "7"
+          - clang: "8"
             cxxflags: -fsanitize=leak
-          - clang: '9'
+          - clang: "9"
             cxxflags: -fsanitize=undefined
-          - clang: '10'
+          - clang: "10"
             cxxflags: -fsanitize=address
     steps:
       - name: Install
@@ -103,7 +103,7 @@ jobs:
         env:
           CC: clang-${{ matrix.clang }}
           CXX: clang++-${{ matrix.clang }}
-          CXXFLAGS: ${{ matrix.cxxflags }}          
+          CXXFLAGS: ${{ matrix.cxxflags }}
       - name: Build
         run: cmake --build .
       - name: Test
@@ -117,9 +117,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - xcode: '10.3'          
-          - xcode: '11.7'
-          - xcode: '12.4'
+          - xcode: "10.3"
+          - xcode: "11.7"
+          - xcode: "12.4"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -159,10 +159,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arduino: '1.6.7'
-            os: ubuntu-18.04  # java.lang.Error: Cannot load com.sun.java.swing.plaf.gtk.GTKLookAndFeel
+          - arduino: "1.6.7"
+            os: ubuntu-18.04 # java.lang.Error: Cannot load com.sun.java.swing.plaf.gtk.GTKLookAndFeel
             board: arduino:avr:uno
-          - arduino: '1.8.2'
+          - arduino: "1.8.2"
             board: arduino:samd:mkr1000
     runs-on: ${{ matrix.os || 'ubuntu-latest' }}
     steps:
@@ -171,8 +171,8 @@ jobs:
       - name: Build
         run: extras/ci/arduino.sh ${{ matrix.board }}
         env:
-           BOARD: ${{ matrix.board }}
-           VERSION: ${{ matrix.arduino }}
+          BOARD: ${{ matrix.board }}
+          VERSION: ${{ matrix.arduino }}
 
   platformio:
     name: PlatformIO
@@ -190,7 +190,7 @@ jobs:
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x' 
+          python-version: "3.x"
       - name: Install PlatformIO
         run: pip install platformio
       - name: Build
@@ -215,7 +215,6 @@ jobs:
         run: particle login -t "${{ secrets.PARTICLE_TOKEN }}"
       - name: Compile
         run: extras/ci/particle.sh ${{ matrix.board }}
-
 
   arm:
     name: GCC for ARM processor
