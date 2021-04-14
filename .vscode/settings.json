@@ -1,0 +1,9 @@
+{
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "cmake.generator": "Ninja",
+  "prettier.disableLanguages": [
+    "markdown"
+  ],
+  "git.inputValidationLength": 80,
+  "git.inputValidationSubjectLength": 72
+}
