@@ -57,16 +57,16 @@ struct Comparer<T, typename enable_if<is_integral<T>::value ||
     return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visitNegativeInteger(UInt lhs) {
-    return arithmeticCompareNegateLeft(lhs, rhs);
+  CompareResult visitSignedInteger(Integer lhs) {
+    return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visitPositiveInteger(UInt lhs) {
+  CompareResult visitUnsignedInteger(UInt lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
   CompareResult visitBoolean(bool lhs) {
-    return visitPositiveInteger(static_cast<UInt>(lhs));
+    return visitUnsignedInteger(static_cast<UInt>(lhs));
   }
 };
 
@@ -93,28 +93,6 @@ struct ArrayComparer : ComparerBase {
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
-  }
-};
-
-struct NegativeIntegerComparer : ComparerBase {
-  UInt _rhs;
-
-  explicit NegativeIntegerComparer(UInt rhs) : _rhs(rhs) {}
-
-  CompareResult visitFloat(Float lhs) {
-    return arithmeticCompareNegateRight(lhs, _rhs);
-  }
-
-  CompareResult visitNegativeInteger(UInt lhs) {
-    return arithmeticCompare(_rhs, lhs);
-  }
-
-  CompareResult visitPositiveInteger(UInt) {
-    return COMPARE_RESULT_GREATER;
-  }
-
-  CompareResult visitBoolean(bool) {
-    return COMPARE_RESULT_GREATER;
   }
 };
 
@@ -182,12 +160,12 @@ struct Comparer<T, typename enable_if<IsVisitable<T>::value>::type>
     return accept(comparer);
   }
 
-  CompareResult visitNegativeInteger(UInt lhs) {
-    NegativeIntegerComparer comparer(lhs);
+  CompareResult visitSignedInteger(Integer lhs) {
+    Comparer<Integer> comparer(lhs);
     return accept(comparer);
   }
 
-  CompareResult visitPositiveInteger(UInt lhs) {
+  CompareResult visitUnsignedInteger(UInt lhs) {
     Comparer<UInt> comparer(lhs);
     return accept(comparer);
   }

@@ -25,8 +25,8 @@ enum {
 
   // CAUTION: no VALUE_IS_OWNED below
   VALUE_IS_BOOLEAN = 0x06,
-  VALUE_IS_POSITIVE_INTEGER = 0x08,
-  VALUE_IS_NEGATIVE_INTEGER = 0x0A,
+  VALUE_IS_UNSIGNED_INTEGER = 0x08,
+  VALUE_IS_SIGNED_INTEGER = 0x0A,
   VALUE_IS_FLOAT = 0x0C,
 
   COLLECTION_MASK = 0x60,
@@ -43,7 +43,9 @@ struct RawData {
 
 union VariantContent {
   Float asFloat;
-  UInt asInteger;
+  bool asBoolean;
+  UInt asUnsignedInteger;
+  Integer asSignedInteger;
   CollectionData asCollection;
   const char *asString;
   struct {

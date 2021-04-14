@@ -56,14 +56,14 @@ class VariantData {
       case VALUE_IS_LINKED_RAW:
         return visitor.visitRawJson(_content.asRaw.data, _content.asRaw.size);
 
-      case VALUE_IS_NEGATIVE_INTEGER:
-        return visitor.visitNegativeInteger(_content.asInteger);
+      case VALUE_IS_SIGNED_INTEGER:
+        return visitor.visitSignedInteger(_content.asSignedInteger);
 
-      case VALUE_IS_POSITIVE_INTEGER:
-        return visitor.visitPositiveInteger(_content.asInteger);
+      case VALUE_IS_UNSIGNED_INTEGER:
+        return visitor.visitUnsignedInteger(_content.asUnsignedInteger);
 
       case VALUE_IS_BOOLEAN:
-        return visitor.visitBoolean(_content.asInteger != 0);
+        return visitor.visitBoolean(_content.asBoolean != 0);
 
       default:
         return visitor.visitNull();
@@ -129,11 +129,11 @@ class VariantData {
   template <typename T>
   bool isInteger() const {
     switch (type()) {
-      case VALUE_IS_POSITIVE_INTEGER:
-        return canStorePositiveInteger<T>(_content.asInteger);
+      case VALUE_IS_UNSIGNED_INTEGER:
+        return canConvertNumber<T>(_content.asUnsignedInteger);
 
-      case VALUE_IS_NEGATIVE_INTEGER:
-        return canStoreNegativeInteger<T>(_content.asInteger);
+      case VALUE_IS_SIGNED_INTEGER:
+        return canConvertNumber<T>(_content.asSignedInteger);
 
       default:
         return false;
@@ -141,8 +141,8 @@ class VariantData {
   }
 
   bool isFloat() const {
-    return type() == VALUE_IS_FLOAT || type() == VALUE_IS_POSITIVE_INTEGER ||
-           type() == VALUE_IS_NEGATIVE_INTEGER;
+    return type() == VALUE_IS_FLOAT || type() == VALUE_IS_UNSIGNED_INTEGER ||
+           type() == VALUE_IS_SIGNED_INTEGER;
   }
 
   bool isString() const {
@@ -174,7 +174,7 @@ class VariantData {
 
   void setBoolean(bool value) {
     setType(VALUE_IS_BOOLEAN);
-    _content.asInteger = static_cast<UInt>(value);
+    _content.asBoolean = value;
   }
 
   void setFloat(Float value) {
@@ -208,36 +208,14 @@ class VariantData {
 
   template <typename T>
   typename enable_if<is_unsigned<T>::value>::type setInteger(T value) {
-    setUnsignedInteger(value);
+    setType(VALUE_IS_UNSIGNED_INTEGER);
+    _content.asUnsignedInteger = static_cast<UInt>(value);
   }
 
   template <typename T>
   typename enable_if<is_signed<T>::value>::type setInteger(T value) {
-    setSignedInteger(value);
-  }
-
-  template <typename T>
-  void setSignedInteger(T value) {
-    if (value >= 0) {
-      setPositiveInteger(static_cast<UInt>(value));
-    } else {
-      setNegativeInteger(~static_cast<UInt>(value) + 1);
-    }
-  }
-
-  void setUnsignedInteger(UInt value) {
-    setType(VALUE_IS_POSITIVE_INTEGER);
-    _content.asInteger = static_cast<UInt>(value);
-  }
-
-  void setPositiveInteger(UInt value) {
-    setType(VALUE_IS_POSITIVE_INTEGER);
-    _content.asInteger = value;
-  }
-
-  void setNegativeInteger(UInt value) {
-    setType(VALUE_IS_NEGATIVE_INTEGER);
-    _content.asInteger = value;
+    setType(VALUE_IS_SIGNED_INTEGER);
+    _content.asSignedInteger = value;
   }
 
   void setNull() {

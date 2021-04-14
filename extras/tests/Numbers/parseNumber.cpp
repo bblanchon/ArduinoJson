@@ -23,7 +23,27 @@ TEST_CASE("Test unsigned integer overflow") {
     parseNumber("4294967296", second);
   }
 
-  REQUIRE(first.type() == uint8_t(VALUE_IS_POSITIVE_INTEGER));
+  REQUIRE(first.type() == uint8_t(VALUE_IS_UNSIGNED_INTEGER));
+  REQUIRE(second.type() == uint8_t(VALUE_IS_FLOAT));
+}
+
+TEST_CASE("Test signed integer overflow") {
+  VariantData first, second;
+  first.init();
+  second.init();
+
+  // Avoids MSVC warning C4127 (conditional expression is constant)
+  size_t integerSize = sizeof(Integer);
+
+  if (integerSize == 8) {
+    parseNumber("-9223372036854775808", first);
+    parseNumber("-9223372036854775809", second);
+  } else {
+    parseNumber("-2147483648", first);
+    parseNumber("-2147483649", second);
+  }
+
+  REQUIRE(first.type() == uint8_t(VALUE_IS_SIGNED_INTEGER));
   REQUIRE(second.type() == uint8_t(VALUE_IS_FLOAT));
 }
 

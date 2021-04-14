@@ -4,6 +4,7 @@
 
 add_executable(TextFormatterTests 
 	writeFloat.cpp
+	writeInteger.cpp
 	writeString.cpp
 )
 

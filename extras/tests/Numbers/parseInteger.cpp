@@ -47,6 +47,7 @@ TEST_CASE("parseNumber<int32_t>()") {
 
 TEST_CASE("parseNumber<uint8_t>()") {
   checkInteger<uint8_t>("0", 0);
+  checkInteger<uint8_t>("-0", 0);
   checkInteger<uint8_t>("255", 255);
   checkInteger<uint8_t>("+255", 255);
   checkInteger<uint8_t>("3.14", 3);
