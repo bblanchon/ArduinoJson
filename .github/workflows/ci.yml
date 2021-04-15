@@ -32,11 +32,11 @@ jobs:
           - gcc: "5"
           - gcc: "6"
           - gcc: "7"
-            cxxflags: -fsanitize=leak
+            cxxflags: -fsanitize=leak -fno-sanitize-recover=all
           - gcc: "8"
-            cxxflags: -fsanitize=undefined
+            cxxflags: -fsanitize=undefined -fno-sanitize-recover=all
           - gcc: "9"
-            cxxflags: -fsanitize=address
+            cxxflags: -fsanitize=address -fno-sanitize-recover=all
           - gcc: "10"
     steps:
       - name: Install
@@ -61,6 +61,8 @@ jobs:
         run: cmake --build .
       - name: Test
         run: ctest --output-on-failure -C Debug .
+        env:
+          UBSAN_OPTIONS: print_stacktrace=1
 
   clang:
     name: Clang
@@ -80,11 +82,11 @@ jobs:
           - clang: "6.0"
           - clang: "7"
           - clang: "8"
-            cxxflags: -fsanitize=leak
+            cxxflags: -fsanitize=leak -fno-sanitize-recover=all
           - clang: "9"
-            cxxflags: -fsanitize=undefined
+            cxxflags: -fsanitize=undefined -fno-sanitize-recover=all
           - clang: "10"
-            cxxflags: -fsanitize=address
+            cxxflags: -fsanitize=address -fno-sanitize-recover=all
     steps:
       - name: Install
         run: |
@@ -108,6 +110,8 @@ jobs:
         run: cmake --build .
       - name: Test
         run: ctest --output-on-failure -C Debug .
+        env:
+          UBSAN_OPTIONS: print_stacktrace=1
 
   xcode:
     name: XCode
