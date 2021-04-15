@@ -92,9 +92,9 @@ class TextFormatter {
     unsigned_type unsigned_value;
     if (value < 0) {
       writeRaw('-');
-      unsigned_value = static_cast<unsigned_type>(-value);
+      unsigned_value = unsigned_type(unsigned_type(~value) + 1);
     } else {
-      unsigned_value = static_cast<unsigned_type>(value);
+      unsigned_value = unsigned_type(value);
     }
     writeInteger(unsigned_value);
   }
