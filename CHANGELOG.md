@@ -15,6 +15,7 @@ HEAD
 * Changed `JsonVariantConst::is<JsonArray/JsonObject>()` to return `false` (issue #1412)
 * Simplified `JsonVariant::as<T>()` to always return `T` (see below)
 * Updated folders list in `.mbedignore` (PR #1515 by @AGlass0fMilk)
+* Fixed member-call-on-null-pointer in `getMember()` when array is empty
 
 > ### BREAKING CHANGES
 >

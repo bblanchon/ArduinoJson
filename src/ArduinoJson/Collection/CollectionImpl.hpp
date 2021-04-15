@@ -115,6 +115,8 @@ inline VariantSlot* CollectionData::getSlot(TAdaptedString key) const {
 }
 
 inline VariantSlot* CollectionData::getSlot(size_t index) const {
+  if (!_head)
+    return 0;
   return _head->next(index);
 }
 
