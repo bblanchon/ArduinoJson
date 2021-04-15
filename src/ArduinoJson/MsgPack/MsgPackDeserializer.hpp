@@ -27,7 +27,7 @@ class MsgPackDeserializer {
   template <typename TFilter>
   DeserializationError parse(VariantData &variant, TFilter filter,
                              NestingLimit nestingLimit) {
-    parseVariant(variant, filter, nestingLimit);
+    parseVariant(&variant, filter, nestingLimit);
     return _foundSomething ? _error : DeserializationError::EmptyInput;
   }
 
@@ -41,7 +41,7 @@ class MsgPackDeserializer {
   }
 
   template <typename TFilter>
-  bool parseVariant(VariantData &variant, TFilter filter,
+  bool parseVariant(VariantData *variant, TFilter filter,
                     NestingLimit nestingLimit) {
     uint8_t code = 0;  // TODO: why do we need to initialize this variable?
     if (!readByte(code))
@@ -61,12 +61,12 @@ class MsgPackDeserializer {
 
       case 0xc2:
         if (allowValue)
-          variant.setBoolean(false);
+          variant->setBoolean(false);
         return true;
 
       case 0xc3:
         if (allowValue)
-          variant.setBoolean(true);
+          variant->setBoolean(true);
         return true;
 
       case 0xc4:  // bin 8 (not supported)
@@ -217,7 +217,7 @@ class MsgPackDeserializer {
     }
 
     if (allowValue)
-      variant.setInteger(static_cast<int8_t>(code));
+      variant->setInteger(static_cast<int8_t>(code));
 
     return true;
   }
@@ -263,39 +263,39 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  bool readInteger(VariantData &variant) {
+  bool readInteger(VariantData *variant) {
     T value;
     if (!readInteger(value))
       return false;
-    variant.setInteger(value);
+    variant->setInteger(value);
     return true;
   }
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, bool>::type readFloat(
-      VariantData &variant) {
+      VariantData *variant) {
     T value;
     if (!readBytes(value))
       return false;
     fixEndianess(value);
-    variant.setFloat(value);
+    variant->setFloat(value);
     return true;
   }
 
   template <typename T>
   typename enable_if<sizeof(T) == 8, bool>::type readDouble(
-      VariantData &variant) {
+      VariantData *variant) {
     T value;
     if (!readBytes(value))
       return false;
     fixEndianess(value);
-    variant.setFloat(value);
+    variant->setFloat(value);
     return true;
   }
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, bool>::type readDouble(
-      VariantData &variant) {
+      VariantData *variant) {
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
     uint8_t *o = reinterpret_cast<uint8_t *>(&value);
@@ -303,12 +303,12 @@ class MsgPackDeserializer {
       return false;
     doubleToFloat(i, o);
     fixEndianess(value);
-    variant.setFloat(value);
+    variant->setFloat(value);
     return true;
   }
 
   template <typename T>
-  bool readString(VariantData &variant) {
+  bool readString(VariantData *variant) {
     T size;
     if (!readInteger(size))
       return false;
@@ -331,11 +331,11 @@ class MsgPackDeserializer {
     return skipBytes(size);
   }
 
-  bool readString(VariantData &variant, size_t n) {
+  bool readString(VariantData *variant, size_t n) {
     if (!readString(n))
       return false;
-    variant.setStringPointer(_stringStorage.save(),
-                             typename TStringStorage::storage_policy());
+    variant->setStringPointer(_stringStorage.save(),
+                              typename TStringStorage::storage_policy());
     return true;
   }
 
@@ -357,7 +357,7 @@ class MsgPackDeserializer {
   }
 
   template <typename TSize, typename TFilter>
-  bool readArray(VariantData &variant, TFilter filter,
+  bool readArray(VariantData *variant, TFilter filter,
                  NestingLimit nestingLimit) {
     TSize size;
     if (!readInteger(size))
@@ -366,7 +366,7 @@ class MsgPackDeserializer {
   }
 
   template <typename TFilter>
-  bool readArray(VariantData &variant, size_t n, TFilter filter,
+  bool readArray(VariantData *variant, size_t n, TFilter filter,
                  NestingLimit nestingLimit) {
     if (nestingLimit.reached()) {
       _error = DeserializationError::TooDeep;
@@ -375,7 +375,7 @@ class MsgPackDeserializer {
 
     bool allowArray = filter.allowArray();
 
-    CollectionData *array = allowArray ? &variant.toArray() : 0;
+    CollectionData *array = allowArray ? &variant->toArray() : 0;
 
     TFilter memberFilter = filter[0U];
 
@@ -392,7 +392,7 @@ class MsgPackDeserializer {
         value = 0;
       }
 
-      if (!parseVariant(*value, memberFilter, nestingLimit.decrement()))
+      if (!parseVariant(value, memberFilter, nestingLimit.decrement()))
         return false;
     }
 
@@ -400,7 +400,7 @@ class MsgPackDeserializer {
   }
 
   template <typename TSize, typename TFilter>
-  bool readObject(VariantData &variant, TFilter filter,
+  bool readObject(VariantData *variant, TFilter filter,
                   NestingLimit nestingLimit) {
     TSize size;
     if (!readInteger(size))
@@ -409,14 +409,14 @@ class MsgPackDeserializer {
   }
 
   template <typename TFilter>
-  bool readObject(VariantData &variant, size_t n, TFilter filter,
+  bool readObject(VariantData *variant, size_t n, TFilter filter,
                   NestingLimit nestingLimit) {
     if (nestingLimit.reached()) {
       _error = DeserializationError::TooDeep;
       return false;
     }
 
-    CollectionData *object = filter.allowObject() ? &variant.toObject() : 0;
+    CollectionData *object = filter.allowObject() ? &variant->toObject() : 0;
 
     for (; n; --n) {
       if (!readKey())
@@ -444,7 +444,7 @@ class MsgPackDeserializer {
         member = 0;
       }
 
-      if (!parseVariant(*member, memberFilter, nestingLimit.decrement()))
+      if (!parseVariant(member, memberFilter, nestingLimit.decrement()))
         return false;
     }
 
