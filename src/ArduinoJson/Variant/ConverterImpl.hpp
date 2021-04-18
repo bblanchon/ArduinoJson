@@ -215,10 +215,8 @@ class MemoryPoolPrint : public Print {
   }
 
   const char* c_str() {
-    if (_size >= _capacity)
-      return 0;
-
-    _string[_size++] = 0;  // TODO: test overflow
+    _string[_size++] = 0;
+    ARDUINOJSON_ASSERT(_size <= _capacity);
     return _pool->saveStringFromFreeZone(_size);
   }
 

@@ -47,34 +47,39 @@ struct PrintableString : public Printable {
 };
 
 TEST_CASE("Printable") {
-  SECTION("Enough space for the whole string") {
-    StaticJsonDocument<64> doc;
-    doc.set(666);
+  SECTION("Doesn't overflow") {
+    StaticJsonDocument<8> doc;
+    const char* value = "example";  // == 7 chars
+
+    doc.set(666);  // to make sure we override the value
 
     SECTION("Via Print::write(char)") {
-      PrintableString<PrintOneCharacterAtATime> printable = "Hello World!";
+      PrintableString<PrintOneCharacterAtATime> printable(value);
       CHECK(doc.set(printable) == true);
-      CHECK(doc.as<std::string>() == "Hello World!");
-      CHECK(printable.totalBytesWritten() == 12);
+      CHECK(doc.as<std::string>() == value);
+      CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(doc.memoryUsage() == 13);
+      CHECK(doc.memoryUsage() == 8);
     }
 
     SECTION("Via Print::write(const char* size_t)") {
-      PrintableString<PrintAllAtOnce> printable = "Hello World!";
+      PrintableString<PrintAllAtOnce> printable(value);
       CHECK(doc.set(printable) == true);
-      CHECK(doc.as<std::string>() == "Hello World!");
-      CHECK(printable.totalBytesWritten() == 12);
+      CHECK(doc.as<std::string>() == value);
+      CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(doc.memoryUsage() == 13);
+      CHECK(doc.memoryUsage() == 8);
     }
   }
 
-  SECTION("Too small memory pool") {
+  SECTION("Overflows early") {
     StaticJsonDocument<8> doc;
+    const char* value = "hello world";  // > 8 chars
+
+    doc.set(666);  // to make sure we override the value
 
     SECTION("Via Print::write(char)") {
-      PrintableString<PrintOneCharacterAtATime> printable = "Hello World!";
+      PrintableString<PrintOneCharacterAtATime> printable(value);
       CHECK(doc.set(printable) == false);
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 8);
@@ -82,8 +87,33 @@ TEST_CASE("Printable") {
       CHECK(doc.memoryUsage() == 0);
     }
 
-    SECTION("Via Print::write(const char* size_t)") {
-      PrintableString<PrintAllAtOnce> printable = "Hello World!";
+    SECTION("Via Print::write(const char*, size_t)") {
+      PrintableString<PrintAllAtOnce> printable(value);
+      CHECK(doc.set(printable) == false);
+      CHECK(doc.isNull());
+      CHECK(printable.totalBytesWritten() == 0);
+      CHECK(doc.overflowed() == true);
+      CHECK(doc.memoryUsage() == 0);
+    }
+  }
+
+  SECTION("Overflows adding terminator") {
+    StaticJsonDocument<8> doc;
+    const char* value = "overflow";  // == 8 chars
+
+    doc.set(666);  // to make sure we override the value
+
+    SECTION("Via Print::write(char)") {
+      PrintableString<PrintOneCharacterAtATime> printable(value);
+      CHECK(doc.set(printable) == false);
+      CHECK(doc.isNull());
+      CHECK(printable.totalBytesWritten() == 8);
+      CHECK(doc.overflowed() == true);
+      CHECK(doc.memoryUsage() == 0);
+    }
+
+    SECTION("Via Print::write(const char*, size_t)") {
+      PrintableString<PrintAllAtOnce> printable(value);
       CHECK(doc.set(printable) == false);
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
