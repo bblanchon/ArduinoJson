@@ -32,6 +32,7 @@ class JsonDocument : public Visitable {
 
   void clear() {
     _pool.clear();
+    _data.init();
     _data.setNull();
   }
 
