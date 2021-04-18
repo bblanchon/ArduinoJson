@@ -67,4 +67,30 @@ TEST_CASE("JsonVariant undefined") {
       REQUIRE(variant.is<JsonObject>() == false);
     }
   }
+
+  SECTION("set<T>()") {
+    SECTION("long") {
+      REQUIRE(variant.set(42L) == false);
+    }
+
+    SECTION("unsigned") {
+      REQUIRE(variant.set(42U) == false);
+    }
+
+    SECTION("const char*") {
+      REQUIRE(variant.set("42") == false);
+    }
+
+    SECTION("Serialized<const char*>") {
+      REQUIRE(variant.set(serialized("42")) == false);
+    }
+
+    SECTION("double") {
+      REQUIRE(variant.set(42.0) == false);
+    }
+
+    SECTION("bool") {
+      REQUIRE(variant.set(true) == false);
+    }
+  }
 }

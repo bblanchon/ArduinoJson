@@ -121,7 +121,6 @@ struct Converter<T, typename enable_if<is_floating_point<T>::value>::type> {
 template <>
 struct Converter<const char*> {
   static bool toJson(VariantRef variant, const char* value) {
-    // TODO: don't pass pool
     return variantSetString(getData(variant), adaptString(value),
                             getPool(variant));
   }
