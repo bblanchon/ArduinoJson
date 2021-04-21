@@ -141,8 +141,7 @@ class VariantData {
   }
 
   bool isFloat() const {
-    return type() == VALUE_IS_FLOAT || type() == VALUE_IS_UNSIGNED_INTEGER ||
-           type() == VALUE_IS_SIGNED_INTEGER;
+    return (_flags & NUMBER_BIT) != 0;
   }
 
   bool isString() const {
@@ -308,7 +307,7 @@ class VariantData {
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
-    if (_flags & VALUE_IS_OWNED)
+    if (_flags & OWNED_VALUE_BIT)
       _content.asString += stringDistance;
     if (_flags & COLLECTION_MASK)
       _content.asCollection.movePointers(stringDistance, variantDistance);
@@ -320,7 +319,7 @@ class VariantData {
 
  private:
   void setType(uint8_t t) {
-    _flags &= KEY_IS_OWNED;
+    _flags &= OWNED_KEY_BIT;
     _flags |= t;
   }
 
