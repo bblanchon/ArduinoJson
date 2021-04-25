@@ -26,3 +26,8 @@ add_executable(JsonVariantTests
 )
 
 add_test(JsonVariant JsonVariantTests)
+
+set_tests_properties(JsonVariant
+	PROPERTIES
+		LABELS 		"Catch"
+)

@@ -21,3 +21,8 @@ add_executable(JsonDeserializerTests
 set_target_properties(JsonDeserializerTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(JsonDeserializer JsonDeserializerTests)
+
+set_tests_properties(JsonDeserializer
+	PROPERTIES
+		LABELS 		"Catch"
+)

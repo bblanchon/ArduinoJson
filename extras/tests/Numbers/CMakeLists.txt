@@ -11,3 +11,8 @@ add_executable(NumbersTests
 
 
 add_test(Numbers NumbersTests)
+
+set_tests_properties(Numbers
+	PROPERTIES
+		LABELS 		"Catch"
+)

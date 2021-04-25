@@ -11,3 +11,8 @@ add_executable(MemoryPoolTests
 )
 
 add_test(MemoryPool MemoryPoolTests)
+
+set_tests_properties(MemoryPool
+	PROPERTIES
+		LABELS 		"Catch"
+)

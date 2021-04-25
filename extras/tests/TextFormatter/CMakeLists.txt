@@ -11,3 +11,8 @@ add_executable(TextFormatterTests
 set_target_properties(TextFormatterTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(TextFormatter TextFormatterTests)
+
+set_tests_properties(TextFormatter
+	PROPERTIES
+		LABELS 		"Catch"
+)

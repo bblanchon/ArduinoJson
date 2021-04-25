@@ -17,3 +17,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 add_test(IntegrationTests IntegrationTests)
+
+set_tests_properties(IntegrationTests
+	PROPERTIES
+		LABELS 		"Catch"
+)

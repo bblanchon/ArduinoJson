@@ -29,3 +29,8 @@ add_executable(MixedConfigurationTests
 set_target_properties(MixedConfigurationTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(MixedConfiguration MixedConfigurationTests)
+
+set_tests_properties(MixedConfiguration
+	PROPERTIES
+		LABELS 		"Catch"
+)

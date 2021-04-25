@@ -46,6 +46,11 @@ macro(add_fuzzer name)
 		COMMAND
 			"${FUZZER}" "${CORPUS_DIR}" "${SEED_CORPUS_DIR}" -max_total_time=5 -timeout=1
 	)
+
+	set_tests_properties("${FUZZER}"
+		PROPERTIES
+			LABELS 		"Fuzzing"
+	)
 endmacro()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6)

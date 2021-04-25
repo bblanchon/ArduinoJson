@@ -17,3 +17,8 @@ add_executable(MsgPackDeserializerTests
 )
 
 add_test(MsgPackDeserializer MsgPackDeserializerTests)
+
+set_tests_properties(MsgPackDeserializer
+	PROPERTIES
+		LABELS 		"Catch"
+)

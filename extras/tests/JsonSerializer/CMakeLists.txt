@@ -15,3 +15,8 @@ add_executable(JsonSerializerTests
 )
 
 add_test(JsonSerializer JsonSerializerTests)
+
+set_tests_properties(JsonSerializer
+	PROPERTIES
+		LABELS 		"Catch"
+)

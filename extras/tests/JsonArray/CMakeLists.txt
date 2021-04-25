@@ -20,3 +20,8 @@ add_executable(JsonArrayTests
 )
 
 add_test(JsonArray JsonArrayTests)
+
+set_tests_properties(JsonArray
+	PROPERTIES
+		LABELS 		"Catch"
+)

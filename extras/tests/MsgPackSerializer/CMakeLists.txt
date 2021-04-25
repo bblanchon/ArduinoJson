@@ -12,3 +12,8 @@ add_executable(MsgPackSerializerTests
 )
 
 add_test(MsgPackSerializer MsgPackSerializerTests)
+
+set_tests_properties(MsgPackSerializer
+	PROPERTIES
+		LABELS 		"Catch"
+)
