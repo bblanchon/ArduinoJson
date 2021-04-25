@@ -268,3 +268,23 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: coverage_filtered.info
+
+  valgrind:
+    needs: gcc
+    name: Valgrind
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y valgrind ninja-build
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -G Ninja -D MEMORYCHECK_COMMAND_OPTIONS="--error-exitcode=1 --leak-check=full"  .
+      - name: Build
+        run: ninja
+      - name: Memcheck
+        run: ctest -LE WillFail -T memcheck
+        id: memcheck
+      - name: MemoryChecker.*.log
+        run: cat Testing/Temporary/MemoryChecker.*.log
+        if: failure()
