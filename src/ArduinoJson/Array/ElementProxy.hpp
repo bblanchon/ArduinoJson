@@ -65,8 +65,15 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   template <typename T>
-  FORCE_INLINE T as() const {
+  FORCE_INLINE typename enable_if<!is_same<T, char*>::value, T>::type as()
+      const {
     return getUpstreamElement().template as<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char*>::value, const char*>::type
+  DEPRECATED("Replace as<char*>() with as<const char*>()") as() const {
+    return as<const char*>();
   }
 
   template <typename T>

@@ -5,6 +5,7 @@
 add_executable(MiscTests
 	arithmeticCompare.cpp
 	conflicts.cpp
+	deprecated.cpp
 	FloatParts.cpp
 	JsonString.cpp
 	printable.cpp

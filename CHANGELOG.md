@@ -61,6 +61,7 @@ HEAD
 > Serial.println(doc["sensor"].as<const char*>());  // OK
 > ```
 >
+> A deprecation warning with the message "Replace `as<char*>()` with `as<const char*>()`" was added to allow a smooth transition.
 >
 > #### `DeserializationError::NotSupported` removed
 >
