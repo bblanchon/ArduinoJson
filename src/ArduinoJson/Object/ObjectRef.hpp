@@ -239,29 +239,29 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
 
 template <>
 struct Converter<ObjectConstRef> {
-  static bool toJson(VariantRef variant, VariantConstRef value) {
-    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  static bool toJson(VariantConstRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ObjectConstRef fromJson(VariantConstRef variant) {
-    return ObjectConstRef(variantAsObject(getData(variant)));
+  static ObjectConstRef fromJson(VariantConstRef src) {
+    return ObjectConstRef(variantAsObject(getData(src)));
   }
 
-  static bool checkJson(VariantConstRef variant) {
-    const VariantData* data = getData(variant);
+  static bool checkJson(VariantConstRef src) {
+    const VariantData* data = getData(src);
     return data && data->isObject();
   }
 };
 
 template <>
 struct Converter<ObjectRef> {
-  static bool toJson(VariantRef variant, VariantConstRef value) {
-    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  static bool toJson(VariantConstRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ObjectRef fromJson(VariantRef variant) {
-    VariantData* data = getData(variant);
-    MemoryPool* pool = getPool(variant);
+  static ObjectRef fromJson(VariantRef src) {
+    VariantData* data = getData(src);
+    MemoryPool* pool = getPool(src);
     return ObjectRef(pool, data != 0 ? data->asObject() : 0);
   }
 
@@ -269,8 +269,8 @@ struct Converter<ObjectRef> {
     return false;
   }
 
-  static bool checkJson(VariantRef variant) {
-    VariantData* data = getData(variant);
+  static bool checkJson(VariantRef src) {
+    VariantData* data = getData(src);
     return data && data->isObject();
   }
 };

@@ -167,29 +167,29 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
 
 template <>
 struct Converter<ArrayConstRef> {
-  static bool toJson(VariantRef variant, VariantConstRef value) {
-    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  static bool toJson(VariantConstRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ArrayConstRef fromJson(VariantConstRef variant) {
-    return ArrayConstRef(variantAsArray(getData(variant)));
+  static ArrayConstRef fromJson(VariantConstRef src) {
+    return ArrayConstRef(variantAsArray(getData(src)));
   }
 
-  static bool checkJson(VariantConstRef variant) {
-    const VariantData* data = getData(variant);
+  static bool checkJson(VariantConstRef src) {
+    const VariantData* data = getData(src);
     return data && data->isArray();
   }
 };
 
 template <>
 struct Converter<ArrayRef> {
-  static bool toJson(VariantRef variant, VariantConstRef value) {
-    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  static bool toJson(VariantConstRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ArrayRef fromJson(VariantRef variant) {
-    VariantData* data = getData(variant);
-    MemoryPool* pool = getPool(variant);
+  static ArrayRef fromJson(VariantRef src) {
+    VariantData* data = getData(src);
+    MemoryPool* pool = getPool(src);
     return ArrayRef(pool, data != 0 ? data->asArray() : 0);
   }
 
@@ -197,8 +197,8 @@ struct Converter<ArrayRef> {
     return false;
   }
 
-  static bool checkJson(VariantRef variant) {
-    VariantData* data = getData(variant);
+  static bool checkJson(VariantRef src) {
+    VariantData* data = getData(src);
     return data && data->isArray();
   }
 };

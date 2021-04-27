@@ -186,8 +186,8 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return _object.getOrAddMember(_key);
   }
 
-  friend bool convertToJson(VariantRef variant, const this_type &value) {
-    return variant.set(value.getUpstreamMember());
+  friend bool convertToJson(const this_type &src, VariantRef dst) {
+    return dst.set(src.getUpstreamMember());
   }
 
   TObject _object;

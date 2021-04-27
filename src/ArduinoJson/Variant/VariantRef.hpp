@@ -85,12 +85,12 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   template <typename T>
   FORCE_INLINE bool set(const T &value) const {
-    return Converter<T>::toJson(*this, value);
+    return Converter<T>::toJson(value, *this);
   }
 
   template <typename T>
   FORCE_INLINE bool set(T *value) const {
-    return Converter<T *>::toJson(*this, value);
+    return Converter<T *>::toJson(value, *this);
   }
 
   template <typename T>
@@ -277,14 +277,14 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
 
 template <>
 struct Converter<VariantRef> {
-  static bool toJson(VariantRef variant, VariantRef value) {
-    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  static bool toJson(VariantRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
-  static VariantRef fromJson(VariantRef variant) {
-    return variant;
+  static VariantRef fromJson(VariantRef src) {
+    return src;
   }
-  static bool checkJson(VariantRef variant) {
-    VariantData *data = getData(variant);
+  static bool checkJson(VariantRef src) {
+    VariantData *data = getData(src);
     return !!data;
   }
   static bool checkJson(VariantConstRef) {
@@ -294,16 +294,16 @@ struct Converter<VariantRef> {
 
 template <>
 struct Converter<VariantConstRef> {
-  static bool toJson(VariantRef variant, VariantConstRef value) {
-    return variantCopyFrom(getData(variant), getData(value), getPool(variant));
+  static bool toJson(VariantConstRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static VariantConstRef fromJson(VariantConstRef variant) {
-    return VariantConstRef(getData(variant));
+  static VariantConstRef fromJson(VariantConstRef src) {
+    return VariantConstRef(getData(src));
   }
 
-  static bool checkJson(VariantConstRef variant) {
-    const VariantData *data = getData(variant);
+  static bool checkJson(VariantConstRef src) {
+    const VariantData *data = getData(src);
     return !!data;
   }
 };

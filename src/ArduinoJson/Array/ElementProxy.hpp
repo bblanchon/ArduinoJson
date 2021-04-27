@@ -177,8 +177,8 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return _array.getOrAddElement(_index);
   }
 
-  friend bool convertToJson(VariantRef variant, const this_type& value) {
-    return variant.set(value.getUpstreamElement());
+  friend bool convertToJson(const this_type& src, VariantRef dst) {
+    return dst.set(src.getUpstreamElement());
   }
 
   TArray _array;
