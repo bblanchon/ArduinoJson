@@ -23,9 +23,21 @@ size_t serialize(const TSource &source, TDestination &destination) {
 }
 
 template <template <typename> class TSerializer, typename TSource>
-size_t serialize(const TSource &source, void *buffer, size_t bufferSize) {
+typename enable_if<!TSerializer<StaticStringWriter>::producesText, size_t>::type
+serialize(const TSource &source, void *buffer, size_t bufferSize) {
   StaticStringWriter writer(reinterpret_cast<char *>(buffer), bufferSize);
   return doSerialize<TSerializer>(source, writer);
+}
+
+template <template <typename> class TSerializer, typename TSource>
+typename enable_if<TSerializer<StaticStringWriter>::producesText, size_t>::type
+serialize(const TSource &source, void *buffer, size_t bufferSize) {
+  StaticStringWriter writer(reinterpret_cast<char *>(buffer), bufferSize);
+  size_t n = doSerialize<TSerializer>(source, writer);
+  // add null-terminator for text output (not counted in the size)
+  if (n < bufferSize)
+    reinterpret_cast<char *>(buffer)[n] = 0;
+  return n;
 }
 
 template <template <typename> class TSerializer, typename TSource,
@@ -36,8 +48,7 @@ typename enable_if<sizeof(remove_reference<TChar>::type) == 1, size_t>::type
 typename enable_if<sizeof(TChar) == 1, size_t>::type
 #endif
 serialize(const TSource &source, TChar (&buffer)[N]) {
-  StaticStringWriter writer(reinterpret_cast<char *>(buffer), N);
-  return doSerialize<TSerializer>(source, writer);
+  return serialize<TSerializer>(source, buffer, N);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

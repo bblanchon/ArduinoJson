@@ -13,7 +13,7 @@ using namespace ARDUINOJSON_NAMESPACE;
 
 template <typename T>
 void checkWriteInteger(T value, std::string expected) {
-  char output[1024];
+  char output[64] = {0};
   StaticStringWriter sb(output, sizeof(output));
   TextFormatter<StaticStringWriter> writer(sb);
   writer.writeInteger<T>(value);

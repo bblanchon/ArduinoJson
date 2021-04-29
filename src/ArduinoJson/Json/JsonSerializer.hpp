@@ -14,6 +14,8 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TWriter>
 class JsonSerializer : public Visitor<size_t> {
  public:
+  static const bool producesText = true;
+
   JsonSerializer(TWriter writer) : _formatter(writer) {}
 
   FORCE_INLINE size_t visitArray(const CollectionData &array) {

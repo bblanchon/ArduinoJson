@@ -16,6 +16,8 @@ HEAD
 * Simplified `JsonVariant::as<T>()` to always return `T` (see below)
 * Updated folders list in `.mbedignore` (PR #1515 by @AGlass0fMilk)
 * Fixed member-call-on-null-pointer in `getMember()` when array is empty
+* `serializeMsgPack(doc, buffer, size)` doesn't add null-terminator anymore (issue #1545)
+* `serializeJson(doc, buffer, size)` adds null-terminator only if there is enough room
 
 > ### BREAKING CHANGES
 >

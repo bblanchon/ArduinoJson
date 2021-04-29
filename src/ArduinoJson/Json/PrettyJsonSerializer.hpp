@@ -16,7 +16,7 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
   typedef JsonSerializer<TWriter> base;
 
  public:
-  PrettyJsonSerializer(TWriter &writer) : base(writer), _nesting(0) {}
+  PrettyJsonSerializer(TWriter writer) : base(writer), _nesting(0) {}
 
   size_t visitArray(const CollectionData &array) {
     VariantSlot *slot = array.head();

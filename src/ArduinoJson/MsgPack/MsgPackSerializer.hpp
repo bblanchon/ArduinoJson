@@ -17,6 +17,8 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TWriter>
 class MsgPackSerializer : public Visitor<size_t> {
  public:
+  static const bool producesText = false;
+
   MsgPackSerializer(TWriter writer) : _writer(writer) {}
 
   template <typename T>

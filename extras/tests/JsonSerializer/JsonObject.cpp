@@ -8,12 +8,15 @@
 
 static void checkObject(const JsonObject obj, const std::string &expected) {
   char actual[256];
+  memset(actual, '!', sizeof(actual));
+
   size_t actualLen = serializeJson(obj, actual);
   size_t measuredLen = measureJson(obj);
 
-  REQUIRE(expected == actual);
-  REQUIRE(expected.size() == actualLen);
   REQUIRE(expected.size() == measuredLen);
+  REQUIRE(expected.size() == actualLen);
+  REQUIRE(actual[actualLen] == 0);  // serializeJson() adds a null terminator
+  REQUIRE(expected == actual);
 }
 
 TEST_CASE("serializeJson(JsonObject)") {
