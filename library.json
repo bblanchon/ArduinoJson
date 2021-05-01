@@ -17,5 +17,8 @@
     "extras"
   ],
   "frameworks": "*",
-  "platforms": "*"
+  "platforms": "*",
+  "build": {
+    "libArchive": false
+  }
 }
