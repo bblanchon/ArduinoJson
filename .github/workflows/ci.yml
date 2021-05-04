@@ -251,7 +251,7 @@ jobs:
       - name: Build
         run: ninja
       - name: Test
-        run: ninja test
+        run: ctest -LE 'WillFail|Fuzzing' -T test
       - name: lcov --capture
         run: lcov --capture --no-external --directory . --output-file coverage.info
       - name: lcov --remove
