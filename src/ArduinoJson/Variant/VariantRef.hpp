@@ -101,7 +101,8 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   template <typename T>
   FORCE_INLINE typename enable_if<is_same<T, char *>::value, const char *>::type
-  DEPRECATED("Replace as<char*>() with as<const char*>()") as() const {
+  ARDUINOJSON_DEPRECATED("Replace as<char*>() with as<const char*>()")
+      as() const {
     return as<const char *>();
   }
 
@@ -218,7 +219,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
 
   template <typename T>
   FORCE_INLINE typename enable_if<is_same<T, char *>::value, const char *>::type
-  DEPRECATED("Replace as<char*>() with as<const char*>()") as() const {
+  ARDUINOJSON_DEPRECATED("Replace as<char*>() with as<const char*>()")
+      as() const {
     return as<const char *>();
   }
 

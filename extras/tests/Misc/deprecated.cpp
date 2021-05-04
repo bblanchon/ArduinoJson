@@ -2,16 +2,10 @@
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 
+#define ARDUINOJSON_DEPRECATED(msg)  // nothing
+
 #include <ArduinoJson.h>
 #include <catch.hpp>
-
-#if defined(__GNUC__)
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-
-#ifdef _MSC_VER
-#pragma warning(disable : 4996)  // deprecation warning
-#endif
 
 TEST_CASE("Deprecated features") {
   StaticJsonDocument<256> doc;
