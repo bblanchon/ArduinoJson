@@ -88,14 +88,22 @@ class VariantRef : public VariantRefBase<VariantData>,
     return Converter<T>::toJson(value, *this);
   }
 
+  FORCE_INLINE bool ARDUINOJSON_DEPRECATED(
+      "Support for char is deprecated, use int8_t or uint8_t instead")
+      set(char value) const {
+    return set<signed char>(value);
+  }
+
   template <typename T>
   FORCE_INLINE bool set(T *value) const {
     return Converter<T *>::toJson(value, *this);
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, char *>::value, T>::type as()
-      const {
+  FORCE_INLINE
+      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+                         T>::type
+      as() const {
     return Converter<T>::fromJson(*this);
   }
 
@@ -107,13 +115,21 @@ class VariantRef : public VariantRefBase<VariantData>,
   }
 
   template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char>::value, char>::type
+  ARDUINOJSON_DEPRECATED(
+      "Support for char is deprecated, use int8_t or uint8_t instead")
+      as() const {
+    return as<signed char>();
+  }
+
+  template <typename T>
   FORCE_INLINE bool is() const {
     return Converter<T>::checkJson(*this);
   }
 
   template <typename T>
   FORCE_INLINE operator T() const {
-    return Converter<T>::fromJson(*this);
+    return as<T>();
   }
 
   template <typename TVisitor>
@@ -212,8 +228,10 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, char *>::value, T>::type as()
-      const {
+  FORCE_INLINE
+      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+                         T>::type
+      as() const {
     return Converter<T>::fromJson(*this);
   }
 
@@ -225,13 +243,21 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   }
 
   template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char>::value, char>::type
+  ARDUINOJSON_DEPRECATED(
+      "Support for char is deprecated, use int8_t or uint8_t instead")
+      as() const {
+    return as<signed char>();
+  }
+
+  template <typename T>
   FORCE_INLINE bool is() const {
     return Converter<T>::checkJson(*this);
   }
 
   template <typename T>
   FORCE_INLINE operator T() const {
-    return Converter<T>::fromJson(*this);
+    return as<T>();
   }
 
   FORCE_INLINE VariantConstRef getElement(size_t) const;

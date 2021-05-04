@@ -43,6 +43,7 @@ HEAD
 > int8_t age;
 > doc["age"] = age;  // OK
 > ```
+> A deprecation warning with the message "Support for `char` is deprecated, use `int8_t` or `uint8_t` instead" was added to allow a smooth transition.
 >
 > #### `as<T>()` always returns `T`
 >
