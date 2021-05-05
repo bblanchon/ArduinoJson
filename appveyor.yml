@@ -1,4 +1,4 @@
-version: 6.17.3.{build}
+version: 6.18.0.{build}
 environment:
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019

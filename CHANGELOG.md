@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.18.0 (2021-05-05)
+-------
 
 * Added support for custom converters (issue #687)
 * Added support for `Printable` (issue #1444)
