@@ -31,6 +31,16 @@ TEST_CASE("Deprecated features") {
     REQUIRE(v.as<char>() == '*');
   }
 
+  SECTION("JsonVariant::is<char*>()") {
+    JsonVariant v = doc["s"];
+    REQUIRE(v.is<char*>() == true);
+  }
+
+  SECTION("JsonVariant::is<char>()") {
+    JsonVariant v = doc["c"];
+    REQUIRE(v.is<char>() == true);
+  }
+
   SECTION("JsonVariant::set(char)") {
     JsonVariant v = doc.to<JsonVariant>();
     v.set('*');
@@ -47,6 +57,16 @@ TEST_CASE("Deprecated features") {
     REQUIRE(v.as<char>() == '*');
   }
 
+  SECTION("JsonVariantConst::is<char*>()") {
+    JsonVariantConst v = doc["s"];
+    REQUIRE(v.is<char*>() == true);
+  }
+
+  SECTION("JsonVariantConst::is<char>()") {
+    JsonVariantConst v = doc["c"];
+    REQUIRE(v.is<char>() == true);
+  }
+
   SECTION("MemberProxy::as<char*>()") {
     REQUIRE(doc["s"].as<char*>() == s);
   }
@@ -60,6 +80,16 @@ TEST_CASE("Deprecated features") {
     REQUIRE(doc["x"] == 42);
   }
 
+  SECTION("MemberProxy::is<char*>()") {
+    REQUIRE(doc["s"].is<char*>() == true);
+    REQUIRE(doc["c"].is<char*>() == false);
+  }
+
+  SECTION("MemberProxy::is<char>()") {
+    REQUIRE(doc["c"].is<char>() == true);
+    REQUIRE(doc["s"].is<char>() == false);
+  }
+
   SECTION("ElementProxy::as<char*>()") {
     REQUIRE(doc["a"][0].as<char*>() == s);
   }
@@ -71,5 +101,15 @@ TEST_CASE("Deprecated features") {
   SECTION("ElementProxy::as<char>()") {
     doc["a"][0].set('*');
     REQUIRE(doc["a"][0] == 42);
+  }
+
+  SECTION("ElementProxy::is<char*>()") {
+    REQUIRE(doc["a"][0].is<char*>() == true);
+    REQUIRE(doc["a"][1].is<char*>() == false);
+  }
+
+  SECTION("ElementProxy::is<char>()") {
+    REQUIRE(doc["a"][1].is<char>() == true);
+    REQUIRE(doc["a"][0].is<char>() == false);
   }
 }

@@ -123,8 +123,26 @@ class VariantRef : public VariantRefBase<VariantData>,
   }
 
   template <typename T>
-  FORCE_INLINE bool is() const {
+  FORCE_INLINE
+      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+                         bool>::type
+      is() const {
     return Converter<T>::checkJson(*this);
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char *>::value, bool>::type
+  ARDUINOJSON_DEPRECATED("Replace is<char*>() with is<const char*>()")
+      is() const {
+    return is<const char *>();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char>::value, bool>::type
+  ARDUINOJSON_DEPRECATED(
+      "Support for char is deprecated, use int8_t or uint8_t instead")
+      is() const {
+    return is<signed char>();
   }
 
   template <typename T>
@@ -251,8 +269,26 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   }
 
   template <typename T>
-  FORCE_INLINE bool is() const {
+  FORCE_INLINE
+      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+                         bool>::type
+      is() const {
     return Converter<T>::checkJson(*this);
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char *>::value, bool>::type
+  ARDUINOJSON_DEPRECATED("Replace is<char*>() with is<const char*>()")
+      is() const {
+    return is<const char *>();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char>::value, bool>::type
+  ARDUINOJSON_DEPRECATED(
+      "Support for char is deprecated, use int8_t or uint8_t instead")
+      is() const {
+    return is<signed char>();
   }
 
   template <typename T>
