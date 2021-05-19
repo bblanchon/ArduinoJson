@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
 // This example shows how to send a JSON document to a UDP socket.
@@ -46,7 +46,7 @@ void setup() {
 
 void loop() {
   // Allocate a temporary JsonDocument
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<500> doc;
 
   // Create the "analog" array
@@ -85,6 +85,12 @@ void loop() {
   // Wait
   delay(10000);
 }
+
+// Performance issue?
+// ------------------
+//
+// EthernetUDP is an unbuffered stream, which is not optimal for ArduinoJson.
+// See: https://arduinojson.org/v6/how-to/improve-speed/
 
 // See also
 // --------

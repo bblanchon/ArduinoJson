@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -79,7 +79,7 @@ class VariantSlot {
 
   void setKey(const char* k, storage_policies::store_by_copy) {
     ARDUINOJSON_ASSERT(k != NULL);
-    _flags |= KEY_IS_OWNED;
+    _flags |= OWNED_KEY_BIT;
     _key = k;
   }
 
@@ -94,7 +94,7 @@ class VariantSlot {
   }
 
   bool ownsKey() const {
-    return (_flags & KEY_IS_OWNED) != 0;
+    return (_flags & OWNED_KEY_BIT) != 0;
   }
 
   void clear() {
@@ -104,9 +104,9 @@ class VariantSlot {
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
-    if (_flags & KEY_IS_OWNED)
+    if (_flags & OWNED_KEY_BIT)
       _key += stringDistance;
-    if (_flags & VALUE_IS_OWNED)
+    if (_flags & OWNED_VALUE_BIT)
       _content.asString += stringDistance;
     if (_flags & COLLECTION_MASK)
       _content.asCollection.movePointers(stringDistance, variantDistance);

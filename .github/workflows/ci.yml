@@ -1,0 +1,298 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  clang-format:
+    name: Clang-Format
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y clang-format
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Format
+        run: find src/ extras/ -name '*.[ch]pp' | xargs clang-format -i --verbose --style=file
+      - name: Diff
+        run: git diff --exit-code
+
+  gcc:
+    name: GCC
+    needs: clang-format
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - gcc: "4.4"
+          - gcc: "4.6"
+          - gcc: "4.7"
+          - gcc: "4.8"
+          - gcc: "4.9"
+          - gcc: "5"
+          - gcc: "6"
+          - gcc: "7"
+            cxxflags: -fsanitize=leak -fno-sanitize-recover=all
+          - gcc: "8"
+            cxxflags: -fsanitize=undefined -fno-sanitize-recover=all
+          - gcc: "9"
+            cxxflags: -fsanitize=address -fno-sanitize-recover=all
+          - gcc: "10"
+    steps:
+      - name: Install
+        run: |
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty main'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty universe'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial main'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial universe' 
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic main'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic universe' 
+          sudo apt-get update
+          sudo apt-get install -y gcc-${{ matrix.gcc }} g++-${{ matrix.gcc }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -DCMAKE_BUILD_TYPE=Debug .
+        env:
+          CC: gcc-${{ matrix.gcc }}
+          CXX: g++-${{ matrix.gcc }}
+          CXXFLAGS: ${{ matrix.cxxflags }}
+      - name: Build
+        run: cmake --build .
+      - name: Test
+        run: ctest --output-on-failure -C Debug .
+        env:
+          UBSAN_OPTIONS: print_stacktrace=1
+
+  clang:
+    name: Clang
+    needs: clang-format
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - clang: "3.5"
+            cxxflags: "-stdlib=libc++"
+          - clang: "3.6"
+            cxxflags: "-stdlib=libc++"
+          - clang: "3.7"
+            cxxflags: "-stdlib=libc++"
+          - clang: "3.8"
+            cxxflags: "-stdlib=libc++"
+          - clang: "3.9"
+            cxxflags: "-stdlib=libc++"
+          - clang: "4.0"
+            cxxflags: "-stdlib=libc++"
+          - clang: "5.0"
+          - clang: "6.0"
+          - clang: "7"
+          - clang: "8"
+            cxxflags: -fsanitize=leak -fno-sanitize-recover=all
+          - clang: "9"
+            cxxflags: -fsanitize=undefined -fno-sanitize-recover=all
+          - clang: "10"
+            cxxflags: -fsanitize=address -fno-sanitize-recover=all
+    steps:
+      - name: Install
+        run: |
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty main'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty universe'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial main'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial universe' 
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic main'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic universe' 
+          sudo apt-get update
+          sudo apt-get install -y clang-${{ matrix.clang }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -DCMAKE_BUILD_TYPE=Debug .
+        env:
+          CC: clang-${{ matrix.clang }}
+          CXX: clang++-${{ matrix.clang }}
+          CXXFLAGS: >-
+            ${{ matrix.cxxflags }}
+            ${{ contains(matrix.cxxflags, 'libc++') && '-I/usr/lib/llvm-10/include/c++/v1/' || '' }}
+      - name: Build
+        run: cmake --build .
+      - name: Test
+        run: ctest --output-on-failure -C Debug .
+        env:
+          UBSAN_OPTIONS: print_stacktrace=1
+
+  xcode:
+    name: XCode
+    needs: clang
+    runs-on: macos-10.15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - xcode: "10.3"
+          - xcode: "11.7"
+          - xcode: "12.4"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Select XCode version
+        run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
+      - name: Configure
+        run: cmake -DCMAKE_BUILD_TYPE=Debug .
+      - name: Build
+        run: cmake --build .
+      - name: Test
+        run: ctest --output-on-failure -C Debug .
+
+  # DISABLED: Running on AppVeyor instead because it supports older versions of the compiler
+  # msvc:
+  #   name: Visual Studio
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - os: windows-2016
+  #         - os: windows-2019
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Configure
+  #       run: cmake -DCMAKE_BUILD_TYPE=Debug .
+  #     - name: Build
+  #       run: cmake --build .
+  #     - name: Test
+  #       run: ctest --output-on-failure -C Debug .
+
+  arduino:
+    name: Arduino
+    needs: gcc
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arduino: "1.6.7"
+            os: ubuntu-18.04 # java.lang.Error: Cannot load com.sun.java.swing.plaf.gtk.GTKLookAndFeel
+            board: arduino:avr:uno
+          - arduino: "1.8.2"
+            board: arduino:samd:mkr1000
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: extras/ci/arduino.sh ${{ matrix.board }}
+        env:
+          BOARD: ${{ matrix.board }}
+          VERSION: ${{ matrix.arduino }}
+
+  platformio:
+    name: PlatformIO
+    needs: gcc
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - board: uno
+          - board: esp01
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Build
+        run: extras/ci/platformio.sh ${{ matrix.board }}
+
+  particle:
+    name: Particle
+    needs: gcc
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - board: argon
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Particle CLI
+        run: sudo npm install -g particle-cli
+      - name: Login to Particle
+        run: particle login -t "${{ secrets.PARTICLE_TOKEN }}"
+      - name: Compile
+        run: extras/ci/particle.sh ${{ matrix.board }}
+
+  arm:
+    name: GCC for ARM processor
+    needs: gcc
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y g++-arm-linux-gnueabihf
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake .
+        env:
+          CC: arm-linux-gnueabihf-gcc
+          CXX: arm-linux-gnueabihf-g++
+      - name: Build
+        run: cmake --build .
+
+  coverage:
+    needs: gcc
+    name: Coverage
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y lcov ninja-build
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -G Ninja -DCOVERAGE=true .
+      - name: Build
+        run: ninja
+      - name: Test
+        run: ctest -LE 'WillFail|Fuzzing' -T test
+      - name: lcov --capture
+        run: lcov --capture --no-external --directory . --output-file coverage.info
+      - name: lcov --remove
+        run: lcov --remove coverage.info "$(pwd)/extras/*" --output-file coverage_filtered.info
+      - name: genhtml
+        run: mkdir coverage && genhtml coverage_filtered.info -o coverage -t ArduinoJson
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage_filtered.info
+
+  valgrind:
+    needs: gcc
+    name: Valgrind
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y valgrind ninja-build
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -G Ninja -D MEMORYCHECK_COMMAND_OPTIONS="--error-exitcode=1 --leak-check=full"  .
+      - name: Build
+        run: ninja
+      - name: Memcheck
+        run: ctest -LE WillFail -T memcheck
+        id: memcheck
+      - name: MemoryChecker.*.log
+        run: cat Testing/Temporary/MemoryChecker.*.log
+        if: failure()

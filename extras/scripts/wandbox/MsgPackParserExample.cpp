@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
 // This example shows how to generate a JSON document with ArduinoJson.
@@ -12,7 +12,7 @@ int main() {
   //
   // Inside the brackets, 300 is the size of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
-  // Use arduinojson.org/assistant to compute the capacity.
+  // Use https://arduinojson.org/assistant to compute the capacity.
   StaticJsonDocument<300> doc;
 
   // StaticJsonObject allocates memory on the stack, it can be

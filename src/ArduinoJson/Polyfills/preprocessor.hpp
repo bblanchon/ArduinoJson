@@ -1,11 +1,10 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
 
 #define ARDUINOJSON_EXPAND6(a, b, c, d, e, f) a, b, c, d, e, f
-#define ARDUINOJSON_EXPAND7(a, b, c, d, e, f, g) a, b, c, d, e, f, g
 #define ARDUINOJSON_EXPAND9(a, b, c, d, e, f, g, h, i) a, b, c, d, e, f, g, h, i
 #define ARDUINOJSON_EXPAND18(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, \
                              q, r)                                           \

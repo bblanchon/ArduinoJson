@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -17,6 +17,8 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TWriter>
 class MsgPackSerializer : public Visitor<size_t> {
  public:
+  static const bool producesText = false;
+
   MsgPackSerializer(TWriter writer) : _writer(writer) {}
 
   template <typename T>
@@ -101,30 +103,37 @@ class MsgPackSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitNegativeInteger(UInt value) {
-    UInt negated = UInt(~value + 1);
-    if (value <= 0x20) {
-      writeInteger(int8_t(negated));
-    } else if (value <= 0x80) {
+  size_t visitSignedInteger(Integer value) {
+    if (value > 0) {
+      visitUnsignedInteger(static_cast<UInt>(value));
+    } else if (value >= -0x20) {
+      writeInteger(int8_t(value));
+    } else if (value >= -0x80) {
       writeByte(0xD0);
-      writeInteger(int8_t(negated));
-    } else if (value <= 0x8000) {
+      writeInteger(int8_t(value));
+    } else if (value >= -0x8000) {
       writeByte(0xD1);
-      writeInteger(int16_t(negated));
-    } else if (value <= 0x80000000) {
+      writeInteger(int16_t(value));
+    }
+#if ARDUINOJSON_USE_LONG_LONG
+    else if (value >= -0x80000000LL)
+#else
+    else
+#endif
+    {
       writeByte(0xD2);
-      writeInteger(int32_t(negated));
+      writeInteger(int32_t(value));
     }
 #if ARDUINOJSON_USE_LONG_LONG
     else {
       writeByte(0xD3);
-      writeInteger(int64_t(negated));
+      writeInteger(int64_t(value));
     }
 #endif
     return bytesWritten();
   }
 
-  size_t visitPositiveInteger(UInt value) {
+  size_t visitUnsignedInteger(UInt value) {
     if (value <= 0x7F) {
       writeInteger(uint8_t(value));
     } else if (value <= 0xFF) {

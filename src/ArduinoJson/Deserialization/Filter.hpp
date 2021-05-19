@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -17,11 +17,11 @@ class Filter {
   }
 
   bool allowArray() const {
-    return _variant == true || _variant.is<ArrayRef>();
+    return _variant == true || _variant.is<ArrayConstRef>();
   }
 
   bool allowObject() const {
-    return _variant == true || _variant.is<ObjectRef>();
+    return _variant == true || _variant.is<ObjectConstRef>();
   }
 
   bool allowValue() const {

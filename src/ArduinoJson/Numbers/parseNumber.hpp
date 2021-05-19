@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -10,7 +10,7 @@
 #include <ArduinoJson/Polyfills/ctype.hpp>
 #include <ArduinoJson/Polyfills/math.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
-#include <ArduinoJson/Variant/VariantAs.hpp>
+#include <ArduinoJson/Variant/Converter.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -69,11 +69,17 @@ inline bool parseNumber(const char* s, VariantData& result) {
   }
 
   if (*s == '\0') {
-    if (is_negative)
-      result.setNegativeInteger(UInt(mantissa));
-    else
-      result.setPositiveInteger(UInt(mantissa));
-    return true;
+    if (is_negative) {
+      const mantissa_t sintMantissaMax = mantissa_t(1)
+                                         << (sizeof(Integer) * 8 - 1);
+      if (mantissa <= sintMantissaMax) {
+        result.setInteger(Integer(~mantissa + 1));
+        return true;
+      }
+    } else {
+      result.setInteger(UInt(mantissa));
+      return true;
+    }
   }
 
   // avoid mantissa overflow
@@ -142,6 +148,6 @@ inline T parseNumber(const char* s) {
   VariantData value;
   value.init();  // VariantData is a POD, so it has no constructor
   parseNumber(s, value);
-  return variantAs<T>(&value);
+  return Converter<T>::fromJson(VariantConstRef(&value));
 }
 }  // namespace ARDUINOJSON_NAMESPACE

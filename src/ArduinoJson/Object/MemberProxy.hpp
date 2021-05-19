@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -67,9 +67,17 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getUpstreamMember().isNull();
   }
 
-  template <typename TValue>
-  FORCE_INLINE typename VariantAs<TValue>::type as() const {
-    return getUpstreamMember().template as<TValue>();
+  template <typename T>
+  FORCE_INLINE typename enable_if<!is_same<T, char *>::value, T>::type as()
+      const {
+    return getUpstreamMember().template as<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, char *>::value, const char *>::type
+  ARDUINOJSON_DEPRECATED("Replace as<char*>() with as<const char*>()")
+      as() const {
+    return as<const char *>();
   }
 
   template <typename T>
@@ -177,6 +185,10 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
 
   FORCE_INLINE VariantRef getOrAddUpstreamMember() const {
     return _object.getOrAddMember(_key);
+  }
+
+  friend bool convertToJson(const this_type &src, VariantRef dst) {
+    return dst.set(src.getUpstreamMember());
   }
 
   TObject _object;

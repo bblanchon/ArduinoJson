@@ -1,10 +1,10 @@
-# ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2020
+# ArduinoJson - https://arduinojson.org
+# Copyright Benoit Blanchon 2014-2021
 # MIT License
 
 cmake_minimum_required(VERSION 3.0)
 
-project(ArduinoJson VERSION 6.17.2)
+project(ArduinoJson VERSION 6.18.0)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)

@@ -1,11 +1,11 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
 // This example shows how to parse a JSON document in an HTTP response.
 // It uses the Ethernet library, but can be easily adapted for Wifi.
 //
-// It performs a GET resquest on arduinojson.org/example.json
+// It performs a GET resquest on https://arduinojson.org/example.json
 // Here is the expected response:
 // {
 //   "sensor": "gps",
@@ -53,6 +53,7 @@ void setup() {
   client.println(F("Connection: close"));
   if (client.println() == 0) {
     Serial.println(F("Failed to send request"));
+    client.stop();
     return;
   }
 
@@ -63,6 +64,7 @@ void setup() {
   if (strcmp(status + 9, "200 OK") != 0) {
     Serial.print(F("Unexpected response: "));
     Serial.println(status);
+    client.stop();
     return;
   }
 
@@ -70,11 +72,12 @@ void setup() {
   char endOfHeaders[] = "\r\n\r\n";
   if (!client.find(endOfHeaders)) {
     Serial.println(F("Invalid response"));
+    client.stop();
     return;
   }
 
   // Allocate the JSON document
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
   DynamicJsonDocument doc(capacity);
 
@@ -83,12 +86,13 @@ void setup() {
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
+    client.stop();
     return;
   }
 
   // Extract values
   Serial.println(F("Response:"));
-  Serial.println(doc["sensor"].as<char*>());
+  Serial.println(doc["sensor"].as<const char*>());
   Serial.println(doc["time"].as<long>());
   Serial.println(doc["data"][0].as<float>(), 6);
   Serial.println(doc["data"][1].as<float>(), 6);
@@ -100,6 +104,12 @@ void setup() {
 void loop() {
   // not used in this example
 }
+
+// Performance issue?
+// ------------------
+//
+// EthernetClient is an unbuffered stream, which is not optimal for ArduinoJson.
+// See: https://arduinojson.org/v6/how-to/improve-speed/
 
 // See also
 // --------

@@ -1,73 +1,82 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-static void checkNotSupported(const char* input) {
+static void checkMsgPackDocument(const char* input, size_t inputSize,
+                                 const char* expectedJson) {
   DynamicJsonDocument doc(4096);
 
-  DeserializationError error = deserializeMsgPack(doc, input);
+  DeserializationError error = deserializeMsgPack(doc, input, inputSize);
 
-  REQUIRE(error == DeserializationError::NotSupported);
+  REQUIRE(error == DeserializationError::Ok);
+  std::string actualJson;
+  serializeJson(doc, actualJson);
+  REQUIRE(actualJson == expectedJson);
+}
+
+static void checkMsgPackError(const char* input, size_t inputSize,
+                              DeserializationError expectedError) {
+  DynamicJsonDocument doc(4096);
+
+  DeserializationError error = deserializeMsgPack(doc, input, inputSize);
+
+  REQUIRE(error == expectedError);
 }
 
 TEST_CASE("deserializeMsgPack() return NotSupported") {
   SECTION("bin 8") {
-    checkNotSupported("\xc4");
+    checkMsgPackDocument("\x92\xc4\x01X\x2A", 5, "[null,42]");
   }
 
   SECTION("bin 16") {
-    checkNotSupported("\xc5");
+    checkMsgPackDocument("\x92\xc5\x00\x01X\x2A", 6, "[null,42]");
   }
 
   SECTION("bin 32") {
-    checkNotSupported("\xc6");
+    checkMsgPackDocument("\x92\xc6\x00\x00\x00\x01X\x2A", 8, "[null,42]");
   }
 
   SECTION("ext 8") {
-    checkNotSupported("\xc7");
+    checkMsgPackDocument("\x92\xc7\x01\x01\x01\x2A", 6, "[null,42]");
   }
 
   SECTION("ext 16") {
-    checkNotSupported("\xc8");
+    checkMsgPackDocument("\x92\xc8\x00\x01\x01\x01\x2A", 7, "[null,42]");
   }
 
   SECTION("ext 32") {
-    checkNotSupported("\xc9");
+    checkMsgPackDocument("\x92\xc9\x00\x00\x00\x01\x01\x01\x2A", 9,
+                         "[null,42]");
   }
 
   SECTION("fixext 1") {
-    checkNotSupported("\xd4");
+    checkMsgPackDocument("\x92\xd4\x01\x01\x2A", 5, "[null,42]");
   }
 
   SECTION("fixext 2") {
-    checkNotSupported("\xd5");
+    checkMsgPackDocument("\x92\xd5\x01\x01\x02\x2A", 6, "[null,42]");
   }
 
   SECTION("fixext 4") {
-    checkNotSupported("\xd6");
+    checkMsgPackDocument("\x92\xd6\x01\x01\x02\x03\x04\x2A", 8, "[null,42]");
   }
 
   SECTION("fixext 8") {
-    checkNotSupported("\xd7");
+    checkMsgPackDocument("\x92\xd7\x01\x01\x02\x03\x04\x05\x06\x07\x08\x2A", 12,
+                         "[null,42]");
   }
 
   SECTION("fixext 16") {
-    checkNotSupported("\xd8");
-  }
-
-  SECTION("unsupported in array") {
-    checkNotSupported("\x91\xc4");
-  }
-
-  SECTION("unsupported in map") {
-    checkNotSupported("\x81\xc4\x00\xA1H");
-    checkNotSupported("\x81\xA1H\xc4\x00");
+    checkMsgPackDocument(
+        "\x92\xd8\x01\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E"
+        "\x0F\x10\x2A",
+        20, "[null,42]");
   }
 
   SECTION("integer as key") {
-    checkNotSupported("\x81\x01\xA1H");
+    checkMsgPackError("\x81\x01\xA1H", 3, DeserializationError::InvalidInput);
   }
 }

@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -42,8 +42,6 @@ class JsonDeserializer {
   }
 
  private:
-  JsonDeserializer &operator=(const JsonDeserializer &);  // non-copiable
-
   char current() {
     return _latch.current();
   }
@@ -386,11 +384,10 @@ class JsonDeserializer {
             return false;
           if (codepoint.append(codeunit))
             Utf8::encodeCodepoint(codepoint.value(), _stringStorage);
-          continue;
 #else
-          _error = DeserializationError::NotSupported;
-          return false;
+          _stringStorage.append('\\');
 #endif
+          continue;
         }
 
         // replace char

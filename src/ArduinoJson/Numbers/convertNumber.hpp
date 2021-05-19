@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -15,84 +15,86 @@
 #endif
 
 #include <ArduinoJson/Numbers/Float.hpp>
-#include <ArduinoJson/Numbers/FloatTraits.hpp>
-#include <ArduinoJson/Numbers/Integer.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
+// uint32 -> int32
+// uint64 -> int32
 template <typename TOut, typename TIn>
-typename enable_if<is_integral<TOut>::value && sizeof(TOut) <= sizeof(TIn),
+typename enable_if<is_integral<TIn>::value && is_unsigned<TIn>::value &&
+                       is_integral<TOut>::value && sizeof(TOut) <= sizeof(TIn),
                    bool>::type
-canStorePositiveInteger(TIn value) {
+canConvertNumber(TIn value) {
   return value <= TIn(numeric_limits<TOut>::highest());
 }
 
+// uint32 -> int64
 template <typename TOut, typename TIn>
-typename enable_if<is_integral<TOut>::value && sizeof(TIn) < sizeof(TOut),
+typename enable_if<is_integral<TIn>::value && is_unsigned<TIn>::value &&
+                       is_integral<TOut>::value && sizeof(TIn) < sizeof(TOut),
                    bool>::type
-canStorePositiveInteger(TIn) {
+canConvertNumber(TIn) {
   return true;
 }
 
+// uint32 -> float
+// int32 -> float
 template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TOut>::value, bool>::type
-canStorePositiveInteger(TIn) {
+typename enable_if<is_integral<TIn>::value && is_floating_point<TOut>::value,
+                   bool>::type
+canConvertNumber(TIn) {
   return true;
 }
 
+// int64 -> int32
 template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TOut>::value, bool>::type
-canStoreNegativeInteger(TIn) {
+typename enable_if<is_integral<TIn>::value && is_signed<TIn>::value &&
+                       is_integral<TOut>::value && is_signed<TOut>::value &&
+                       sizeof(TOut) < sizeof(TIn),
+                   bool>::type
+canConvertNumber(TIn value) {
+  return value >= TIn(numeric_limits<TOut>::lowest()) &&
+         value <= TIn(numeric_limits<TOut>::highest());
+}
+
+// int32 -> int32
+// int32 -> int64
+template <typename TOut, typename TIn>
+typename enable_if<is_integral<TIn>::value && is_signed<TIn>::value &&
+                       is_integral<TOut>::value && is_signed<TOut>::value &&
+                       sizeof(TIn) <= sizeof(TOut),
+                   bool>::type
+canConvertNumber(TIn) {
   return true;
 }
 
+// int32 -> uint32
 template <typename TOut, typename TIn>
-typename enable_if<is_integral<TOut>::value && is_signed<TOut>::value &&
-                       sizeof(TOut) <= sizeof(TIn),
+typename enable_if<is_integral<TIn>::value && is_signed<TIn>::value &&
+                       is_integral<TOut>::value && is_unsigned<TOut>::value,
                    bool>::type
-canStoreNegativeInteger(TIn value) {
-  return value <= TIn(numeric_limits<TOut>::highest()) + 1;
+canConvertNumber(TIn value) {
+  if (value < 0)
+    return false;
+  return value <= TIn(numeric_limits<TOut>::highest());
 }
 
+// float -> int32
+// float -> int64
 template <typename TOut, typename TIn>
-typename enable_if<is_integral<TOut>::value && is_signed<TOut>::value &&
-                       sizeof(TIn) < sizeof(TOut),
+typename enable_if<is_floating_point<TIn>::value &&
+                       !is_floating_point<TOut>::value,
                    bool>::type
-canStoreNegativeInteger(TIn) {
-  return true;
-}
-
-template <typename TOut, typename TIn>
-typename enable_if<is_integral<TOut>::value && is_unsigned<TOut>::value,
-                   bool>::type
-canStoreNegativeInteger(TIn) {
-  return false;
-}
-
-template <typename TOut, typename TIn>
-TOut convertPositiveInteger(TIn value) {
-  return canStorePositiveInteger<TOut>(value) ? TOut(value) : 0;
-}
-
-template <typename TOut, typename TIn>
-TOut convertNegativeInteger(TIn value) {
-  return canStoreNegativeInteger<TOut>(value) ? TOut(~value + 1) : 0;
-}
-
-template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TOut>::value, TOut>::type convertFloat(
-    TIn value) {
-  return TOut(value);
-}
-
-template <typename TOut, typename TIn>
-typename enable_if<!is_floating_point<TOut>::value, TOut>::type convertFloat(
-    TIn value) {
+canConvertNumber(TIn value) {
   return value >= numeric_limits<TOut>::lowest() &&
-                 value <= numeric_limits<TOut>::highest()
-             ? TOut(value)
-             : 0;
+         value <= numeric_limits<TOut>::highest();
+}
+
+template <typename TOut, typename TIn>
+TOut convertNumber(TIn value) {
+  return canConvertNumber<TOut>(value) ? TOut(value) : 0;
 }
 }  // namespace ARDUINOJSON_NAMESPACE
 

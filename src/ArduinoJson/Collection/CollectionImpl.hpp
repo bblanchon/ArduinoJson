@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -115,6 +115,8 @@ inline VariantSlot* CollectionData::getSlot(TAdaptedString key) const {
 }
 
 inline VariantSlot* CollectionData::getSlot(size_t index) const {
+  if (!_head)
+    return 0;
   return _head->next(index);
 }
 

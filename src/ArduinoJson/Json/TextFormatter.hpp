@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -12,6 +12,7 @@
 #include <ArduinoJson/Numbers/Integer.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
+#include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Serialization/CountingDecorator.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -75,28 +76,31 @@ class TextFormatter {
 
     FloatParts<T> parts(value);
 
-    writePositiveInteger(parts.integral);
+    writeInteger(parts.integral);
     if (parts.decimalPlaces)
       writeDecimals(parts.decimal, parts.decimalPlaces);
 
-    if (parts.exponent < 0) {
-      writeRaw("e-");
-      writePositiveInteger(-parts.exponent);
-    }
-
-    if (parts.exponent > 0) {
+    if (parts.exponent) {
       writeRaw('e');
-      writePositiveInteger(parts.exponent);
+      writeInteger(parts.exponent);
     }
-  }
-
-  void writeNegativeInteger(UInt value) {
-    writeRaw('-');
-    writePositiveInteger(value);
   }
 
   template <typename T>
-  void writePositiveInteger(T value) {
+  typename enable_if<is_signed<T>::value>::type writeInteger(T value) {
+    typedef typename make_unsigned<T>::type unsigned_type;
+    unsigned_type unsigned_value;
+    if (value < 0) {
+      writeRaw('-');
+      unsigned_value = unsigned_type(unsigned_type(~value) + 1);
+    } else {
+      unsigned_value = unsigned_type(value);
+    }
+    writeInteger(unsigned_value);
+  }
+
+  template <typename T>
+  typename enable_if<is_unsigned<T>::value>::type writeInteger(T value) {
     char buffer[22];
     char *end = buffer + sizeof(buffer);
     char *begin = end;

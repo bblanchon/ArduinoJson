@@ -1,5 +1,5 @@
-# ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2020
+# ArduinoJson - https://arduinojson.org
+# Copyright Benoit Blanchon 2014-2021
 # MIT License
 
 # we need C++11 for 'long long'
@@ -29,3 +29,8 @@ add_executable(MixedConfigurationTests
 set_target_properties(MixedConfigurationTests PROPERTIES UNITY_BUILD OFF)
 
 add_test(MixedConfiguration MixedConfigurationTests)
+
+set_tests_properties(MixedConfiguration
+	PROPERTIES
+		LABELS 		"Catch"
+)

@@ -1,10 +1,9 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include <stdint.h>
-#include <ArduinoJson/Numbers/parseNumber.hpp>
-#include <ArduinoJson/Variant/VariantImpl.hpp>
+#include <ArduinoJson.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;
@@ -48,6 +47,7 @@ TEST_CASE("parseNumber<int32_t>()") {
 
 TEST_CASE("parseNumber<uint8_t>()") {
   checkInteger<uint8_t>("0", 0);
+  checkInteger<uint8_t>("-0", 0);
   checkInteger<uint8_t>("255", 255);
   checkInteger<uint8_t>("+255", 255);
   checkInteger<uint8_t>("3.14", 3);

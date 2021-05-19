@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include <ArduinoJson.h>
@@ -107,5 +107,52 @@ TEST_CASE("deserializeMsgPack() returns IncompleteInput") {
 
   SECTION("str 32") {
     checkAllSizes("\xdb\x00\x00\x00\x05hello", 10);
+  }
+
+  SECTION("bin 8") {
+    checkAllSizes("\xc4\x01X", 3);
+  }
+
+  SECTION("bin 16") {
+    checkAllSizes("\xc5\x00\x01X", 4);
+  }
+
+  SECTION("bin 32") {
+    checkAllSizes("\xc6\x00\x00\x00\x01X", 6);
+  }
+
+  SECTION("ext 8") {
+    checkAllSizes("\xc7\x01\x01\x01", 4);
+  }
+
+  SECTION("ext 16") {
+    checkAllSizes("\xc8\x00\x01\x01\x01", 5);
+  }
+
+  SECTION("ext 32") {
+    checkAllSizes("\xc9\x00\x00\x00\x01\x01\x01", 7);
+  }
+
+  SECTION("fixext 1") {
+    checkAllSizes("\xd4\x01\x01", 3);
+  }
+
+  SECTION("fixext 2") {
+    checkAllSizes("\xd5\x01\x01\x02", 4);
+  }
+
+  SECTION("fixext 4") {
+    checkAllSizes("\xd6\x01\x01\x02\x03\x04", 6);
+  }
+
+  SECTION("fixext 8") {
+    checkAllSizes("\xd7\x01\x01\x02\x03\x04\x05\x06\x07\x08", 10);
+  }
+
+  SECTION("fixext 16") {
+    checkAllSizes(
+        "\xd8\x01\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E"
+        "\x0F\x10",
+        18);
   }
 }

@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include "progmem_emulation.hpp"
@@ -181,6 +181,5 @@ TEST_CASE("DeserializationError::f_str()") {
   TEST_STRINGIFICATION(IncompleteInput);
   TEST_STRINGIFICATION(InvalidInput);
   TEST_STRINGIFICATION(NoMemory);
-  TEST_STRINGIFICATION(NotSupported);
   TEST_STRINGIFICATION(TooDeep);
 }

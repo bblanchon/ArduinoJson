@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -163,5 +163,43 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
 
  private:
   MemoryPool* _pool;
+};
+
+template <>
+struct Converter<ArrayConstRef> {
+  static bool toJson(VariantConstRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
+  }
+
+  static ArrayConstRef fromJson(VariantConstRef src) {
+    return ArrayConstRef(variantAsArray(getData(src)));
+  }
+
+  static bool checkJson(VariantConstRef src) {
+    const VariantData* data = getData(src);
+    return data && data->isArray();
+  }
+};
+
+template <>
+struct Converter<ArrayRef> {
+  static bool toJson(VariantConstRef src, VariantRef dst) {
+    return variantCopyFrom(getData(dst), getData(src), getPool(dst));
+  }
+
+  static ArrayRef fromJson(VariantRef src) {
+    VariantData* data = getData(src);
+    MemoryPool* pool = getPool(src);
+    return ArrayRef(pool, data != 0 ? data->asArray() : 0);
+  }
+
+  static bool checkJson(VariantConstRef) {
+    return false;
+  }
+
+  static bool checkJson(VariantRef src) {
+    VariantData* data = getData(src);
+    return data && data->isArray();
+  }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

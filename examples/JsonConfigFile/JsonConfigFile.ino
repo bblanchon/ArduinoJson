@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
 // This example shows how to store your project configuration in a file.
@@ -44,7 +44,7 @@ void loadConfiguration(const char *filename, Config &config) {
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<512> doc;
 
   // Deserialize the JSON document
@@ -76,7 +76,7 @@ void saveConfiguration(const char *filename, const Config &config) {
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/assistant to compute the capacity.
+  // Use https://arduinojson.org/assistant to compute the capacity.
   StaticJsonDocument<256> doc;
 
   // Set the values in the document
@@ -139,6 +139,12 @@ void setup() {
 void loop() {
   // not used in this example
 }
+
+// Performance issue?
+// ------------------
+//
+// File is an unbuffered stream, which is not optimal for ArduinoJson.
+// See: https://arduinojson.org/v6/how-to/improve-speed/
 
 // See also
 // --------

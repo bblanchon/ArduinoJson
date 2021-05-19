@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -8,7 +8,6 @@
 #include <ArduinoJson/Numbers/arithmeticCompare.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
-#include <ArduinoJson/Variant/VariantAs.hpp>
 #include <ArduinoJson/Variant/VariantTag.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -23,14 +22,21 @@ struct VariantOperators {
   // int operator|(JsonVariant, int)
   // float operator|(JsonVariant, float)
   // bool operator|(JsonVariant, bool)
-  // const char* operator|(JsonVariant, const char*)
-  // char* operator|(JsonVariant, const char*)
   template <typename T>
-  friend typename enable_if<!IsVariant<T>::value,
-                            typename VariantAs<T>::type>::type
-  operator|(const TVariant &variant, T defaultValue) {
+  friend
+      typename enable_if<!IsVariant<T>::value && !is_array<T>::value, T>::type
+      operator|(const TVariant &variant, const T &defaultValue) {
     if (variant.template is<T>())
       return variant.template as<T>();
+    else
+      return defaultValue;
+  }
+  //
+  // const char* operator|(JsonVariant, const char*)
+  friend const char *operator|(const TVariant &variant,
+                               const char *defaultValue) {
+    if (variant.template is<const char *>())
+      return variant.template as<const char *>();
     else
       return defaultValue;
   }

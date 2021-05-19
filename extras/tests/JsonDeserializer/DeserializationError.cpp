@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include <ArduinoJson.h>
@@ -34,7 +34,6 @@ TEST_CASE("DeserializationError") {
     TEST_STRINGIFICATION(IncompleteInput);
     TEST_STRINGIFICATION(InvalidInput);
     TEST_STRINGIFICATION(NoMemory);
-    TEST_STRINGIFICATION(NotSupported);
     TEST_STRINGIFICATION(TooDeep);
   }
 
@@ -44,7 +43,6 @@ TEST_CASE("DeserializationError") {
     TEST_BOOLIFICATION(IncompleteInput, true);
     TEST_BOOLIFICATION(InvalidInput, true);
     TEST_BOOLIFICATION(NoMemory, true);
-    TEST_BOOLIFICATION(NotSupported, true);
     TEST_BOOLIFICATION(TooDeep, true);
   }
 

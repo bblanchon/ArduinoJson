@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include <ArduinoJson.h>
@@ -17,8 +17,8 @@ TEST_CASE("JsonVariant undefined") {
       REQUIRE(variant.as<unsigned>() == 0);
     }
 
-    SECTION("char*") {
-      REQUIRE(variant.as<char*>() == 0);
+    SECTION("const char*") {
+      REQUIRE(variant.as<const char*>() == 0);
     }
 
     SECTION("double") {
@@ -47,8 +47,8 @@ TEST_CASE("JsonVariant undefined") {
       REQUIRE(variant.is<unsigned>() == false);
     }
 
-    SECTION("char*") {
-      REQUIRE(variant.is<char*>() == false);
+    SECTION("const char*") {
+      REQUIRE(variant.is<const char*>() == false);
     }
 
     SECTION("double") {
@@ -65,6 +65,32 @@ TEST_CASE("JsonVariant undefined") {
 
     SECTION("JsonObject") {
       REQUIRE(variant.is<JsonObject>() == false);
+    }
+  }
+
+  SECTION("set<T>()") {
+    SECTION("long") {
+      REQUIRE(variant.set(42L) == false);
+    }
+
+    SECTION("unsigned") {
+      REQUIRE(variant.set(42U) == false);
+    }
+
+    SECTION("const char*") {
+      REQUIRE(variant.set("42") == false);
+    }
+
+    SECTION("Serialized<const char*>") {
+      REQUIRE(variant.set(serialized("42")) == false);
+    }
+
+    SECTION("double") {
+      REQUIRE(variant.set(42.0) == false);
+    }
+
+    SECTION("bool") {
+      REQUIRE(variant.set(true) == false);
     }
   }
 }

@@ -1,9 +1,9 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
-#define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
-#include <ArduinoJson/Deserialization/Reader.hpp>
+#include <Arduino.h>
+#include <ArduinoJson.hpp>
 #include <catch.hpp>
 
 using namespace ARDUINOJSON_NAMESPACE;

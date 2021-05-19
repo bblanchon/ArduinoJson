@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 //
 // This example shows how to implement an HTTP server that sends a JSON document
@@ -46,7 +46,8 @@ void loop() {
   EthernetClient client = server.available();
 
   // Do we have a client?
-  if (!client) return;
+  if (!client)
+    return;
 
   Serial.println(F("New client"));
 
@@ -54,7 +55,7 @@ void loop() {
   while (client.available()) client.read();
 
   // Allocate a temporary JsonDocument
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   StaticJsonDocument<500> doc;
 
   // Create the "analog" array
@@ -95,6 +96,12 @@ void loop() {
   // Disconnect
   client.stop();
 }
+
+// Performance issue?
+// ------------------
+//
+// EthernetClient is an unbuffered stream, which is not optimal for ArduinoJson.
+// See: https://arduinojson.org/v6/how-to/improve-speed/
 
 // See also
 // --------

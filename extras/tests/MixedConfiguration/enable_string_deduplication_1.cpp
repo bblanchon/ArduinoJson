@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include "progmem_emulation.hpp"
@@ -19,7 +19,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 1") {
       deserializeJson(doc, "[\"example\",\"example\"]");
 
       CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 8);
-      CHECK(doc[0].as<char*>() == doc[1].as<char*>());
+      CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
     }
 
     SECTION("Deduplicate keys") {
@@ -41,7 +41,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 1") {
         doc.add(std::string("example"));
 
         CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 8);
-        CHECK(doc[0].as<char*>() == doc[1].as<char*>());
+        CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
       }
 
       SECTION("char*") {
@@ -50,7 +50,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 1") {
         doc.add(value);
 
         CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 8);
-        CHECK(doc[0].as<char*>() == doc[1].as<char*>());
+        CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
       }
 
       SECTION("Arduino String") {
@@ -58,7 +58,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 1") {
         doc.add(String("example"));
 
         CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 8);
-        CHECK(doc[0].as<char*>() == doc[1].as<char*>());
+        CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
       }
 
       SECTION("Flash string") {
@@ -66,7 +66,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 1") {
         doc.add(F("example"));
 
         CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 8);
-        CHECK(doc[0].as<char*>() == doc[1].as<char*>());
+        CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
       }
     }
 

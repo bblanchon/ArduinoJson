@@ -1,6 +1,3 @@
 .github/
 examples/
-fuzzing/
-scripts/
-test/
-third-party/
+extras/

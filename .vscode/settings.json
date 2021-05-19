@@ -1,0 +1,8 @@
+{
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "cmake.generator": "Ninja",
+  "git.inputValidationLength": 80,
+  "git.inputValidationSubjectLength": 72,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
+}

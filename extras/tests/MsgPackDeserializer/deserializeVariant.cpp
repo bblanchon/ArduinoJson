@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #include <ArduinoJson.h>
@@ -20,7 +20,8 @@ static void check(const char* input, U expected) {
 static void checkNotSupported(const char* input) {
   DynamicJsonDocument doc(4096);
   DeserializationError error = deserializeMsgPack(doc, input);
-  REQUIRE(error == DeserializationError::NotSupported);
+  REQUIRE(error == DeserializationError::Ok);
+  REQUIRE(doc.isNull());
 }
 #endif
 

@@ -1,5 +1,5 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2020
+// ArduinoJson - https://arduinojson.org
+// Copyright Benoit Blanchon 2014-2021
 // MIT License
 
 #pragma once
@@ -26,7 +26,6 @@ class DeserializationError {
     IncompleteInput,
     InvalidInput,
     NoMemory,
-    NotSupported,
     TooDeep
   };
 
@@ -81,8 +80,8 @@ class DeserializationError {
 
   const char* c_str() const {
     static const char* messages[] = {
-        "Ok",       "EmptyInput",   "IncompleteInput", "InvalidInput",
-        "NoMemory", "NotSupported", "TooDeep"};
+        "Ok",           "EmptyInput", "IncompleteInput",
+        "InvalidInput", "NoMemory",   "TooDeep"};
     ARDUINOJSON_ASSERT(static_cast<size_t>(_code) <
                        sizeof(messages) / sizeof(messages[0]));
     return messages[_code];
@@ -95,11 +94,9 @@ class DeserializationError {
     ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s2, "IncompleteInput");
     ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s3, "InvalidInput");
     ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s4, "NoMemory");
-    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s5, "NotSupported");
-    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s6, "TooDeep");
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(char, s5, "TooDeep");
     ARDUINOJSON_DEFINE_STATIC_ARRAY(
-        const char*, messages,
-        ARDUINOJSON_EXPAND7({s0, s1, s2, s3, s4, s5, s6}));
+        const char*, messages, ARDUINOJSON_EXPAND6({s0, s1, s2, s3, s4, s5}));
     return ARDUINOJSON_READ_STATIC_ARRAY(const __FlashStringHelper*, messages,
                                          _code);
   }

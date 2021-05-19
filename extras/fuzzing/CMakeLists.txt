@@ -1,5 +1,5 @@
-# ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2020
+# ArduinoJson - https://arduinojson.org
+# Copyright Benoit Blanchon 2014-2021
 # MIT License
 
 if(MSVC)
@@ -22,11 +22,8 @@ target_link_libraries(json_reproducer
 	ArduinoJson
 )
 
-# Infer path of llvm-symbolizer from the path of clang
-string(REPLACE "clang++" "llvm-symbolizer" LLVM_SYMBOLIZER ${CMAKE_CXX_COMPILER})
-
-macro(add_fuzzer name mode)	
-	set(FUZZER "${name}_${mode}_fuzzer")
+macro(add_fuzzer name)	
+	set(FUZZER "${name}_fuzzer")
 	set(CORPUS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${name}_corpus")
 	set(SEED_CORPUS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${name}_seed_corpus")
 	add_executable("${FUZZER}"
@@ -38,9 +35,9 @@ macro(add_fuzzer name mode)
 	set_target_properties("${FUZZER}"
 		PROPERTIES 
 			COMPILE_FLAGS  
-				"-fprofile-instr-generate -fcoverage-mapping -fsanitize=${mode},fuzzer -fno-sanitize-recover=all"
+				"-fprofile-instr-generate -fcoverage-mapping -fsanitize=fuzzer -fno-sanitize-recover=all"
 			LINK_FLAGS
-				"-fprofile-instr-generate -fcoverage-mapping -fsanitize=${mode},fuzzer -fno-sanitize-recover=all"
+				"-fprofile-instr-generate -fcoverage-mapping -fsanitize=fuzzer -fno-sanitize-recover=all"
 	)
 
 	add_test(
@@ -52,26 +49,11 @@ macro(add_fuzzer name mode)
 
 	set_tests_properties("${FUZZER}"
 		PROPERTIES
-			ENVIRONMENT
-				ASAN_SYMBOLIZER_PATH=${LLVM_SYMBOLIZER}
-			ENVIRONMENT
-				LLVM_SYMBOLIZER_PATH=${LLVM_SYMBOLIZER}
-			ENVIRONMENT
-				MSAN_SYMBOLIZER_PATH=${LLVM_SYMBOLIZER}
-			ENVIRONMENT
-				UBSAN_SYMBOLIZER_PATH=${LLVM_SYMBOLIZER}
+			LABELS 		"Fuzzing"
 	)
 endmacro()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6)
-	add_fuzzer(json address)
-	add_fuzzer(json undefined)
-	add_fuzzer(msgpack address)
-	add_fuzzer(msgpack undefined)
-endif()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7)
-	# We're getting false positive with Clang 6
-	add_fuzzer(json memory)
-	add_fuzzer(msgpack memory)
+	add_fuzzer(json)
+	add_fuzzer(msgpack)
 endif()
