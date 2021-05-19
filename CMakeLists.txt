@@ -4,6 +4,13 @@
 
 cmake_minimum_required(VERSION 3.0)
 
+if(ESP_PLATFORM)
+   # Build ArduinoJson as an ESP-IDF component
+   idf_component_register(INCLUDE_DIRS src)
+   target_compile_definitions(${COMPONENT_LIB} INTERFACE ARDUINOJSON_EMBEDDED_MODE=1)
+   return()
+endif()
+
 project(ArduinoJson VERSION 6.18.0)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
