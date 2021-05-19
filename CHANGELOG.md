@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fixed support for `volatile float` and `volatile double` (issue #1557)
+
 v6.18.0 (2021-05-05)
 -------
 

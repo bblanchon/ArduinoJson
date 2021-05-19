@@ -135,3 +135,29 @@ TEST_CASE("JsonVariant set()/get()") {
     checkValue<JsonObject>(object);
   }
 }
+
+TEST_CASE("volatile") {
+  DynamicJsonDocument doc(4096);
+  JsonVariant variant = doc.to<JsonVariant>();
+
+  SECTION("volatile int") {
+    volatile int f = 42;
+    variant.set(f);
+    CHECK(variant.is<int>() == true);
+    CHECK(variant.as<int>() == 42);
+  }
+
+  SECTION("volatile float") {  // issue #1557
+    volatile float f = 3.14f;
+    variant.set(f);
+    CHECK(variant.is<float>() == true);
+    CHECK(variant.as<float>() == 3.14f);
+  }
+
+  SECTION("volatile double") {
+    volatile double f = 3.14;
+    variant.set(f);
+    CHECK(variant.is<double>() == true);
+    CHECK(variant.as<double>() == 3.14);
+  }
+}
