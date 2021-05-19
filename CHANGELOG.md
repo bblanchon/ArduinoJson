@@ -13,6 +13,7 @@ HEAD
 * Fixed warning `definition of implicit copy constructor for 'MsgPackDeserializer' is deprecated because it has a user-declared copy assignment operator`
 * Added `JsonArray::clear()` (issue #1597)
 * Fixed `JsonVariant::as<unsigned>()` (issue #1601)
+* Added support for ESP-IDF component build (PR #1562 by @qt1)
 
 v6.18.0 (2021-05-05)
 -------
