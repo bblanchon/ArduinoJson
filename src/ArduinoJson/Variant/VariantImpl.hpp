@@ -140,4 +140,9 @@ inline VariantConstRef operator|(VariantConstRef preferedValue,
                                  VariantConstRef defaultValue) {
   return preferedValue ? preferedValue : defaultValue;
 }
+
+// Out of class definition to avoid #1560
+inline bool VariantRef::set(char value) const {
+  return set<signed char>(value);
+}
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed support for `volatile float` and `volatile double` (issue #1557)
+* Fixed error `[Pe070]: incomplete type is not allowed` on IAR (issue #1560)
 
 v6.18.0 (2021-05-05)
 -------

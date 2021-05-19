@@ -88,11 +88,9 @@ class VariantRef : public VariantRefBase<VariantData>,
     return Converter<T>::toJson(value, *this);
   }
 
-  FORCE_INLINE bool ARDUINOJSON_DEPRECATED(
+  bool ARDUINOJSON_DEPRECATED(
       "Support for char is deprecated, use int8_t or uint8_t instead")
-      set(char value) const {
-    return set<signed char>(value);
-  }
+      set(char value) const;
 
   template <typename T>
   FORCE_INLINE bool set(T *value) const {
