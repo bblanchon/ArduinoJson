@@ -9,12 +9,15 @@
 // Reproduces Arduino's String class
 class String {
  public:
-  String() {}
-  explicit String(const char* s) : _str(s) {}
+  String() : _maxCapacity(1024) {}
+  explicit String(const char* s) : _str(s), _maxCapacity(1024) {}
 
-  String& operator+=(const char* rhs) {
-    _str += rhs;
-    return *this;
+  void limitCapacityTo(size_t maxCapacity) {
+    _maxCapacity = maxCapacity;
+  }
+
+  unsigned char concat(const char* s) {
+    return concat(s, strlen(s));
   }
 
   size_t length() const {
@@ -34,8 +37,18 @@ class String {
     return lhs;
   }
 
+ protected:
+  // This function is protected in most Arduino cores
+  unsigned char concat(const char* s, size_t n) {
+    if (_str.size() + n > _maxCapacity)
+      return 0;
+    _str.append(s, n);
+    return 1;
+  }
+
  private:
   std::string _str;
+  size_t _maxCapacity;
 };
 
 class StringSumHelper;
