@@ -194,19 +194,85 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - board: uno
-          - board: esp01
+          - platform: atmelavr
+            board: leonardo
+            libraries:
+              - SD
+              - Ethernet
+          - platform: espressif8266
+            board: huzzah
+          - platform: espressif32
+            board: esp32dev
+            libraries:
+              - Ethernet
+          - platform: atmelsam
+            board: mkr1000USB
+            libraries:
+              - SD
+              - Ethernet
+          - platform: teensy
+            board: teensy31
+          - platform: ststm32
+            board: adafruit_feather_f405
+            libraries:
+              - SD
+              - Ethernet
+          - platform: nordicnrf52
+            board: adafruit_feather_nrf52840
+            libraries:
+              - SD
+              - Ethernet
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up cache for pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
       - name: Install PlatformIO
         run: pip install platformio
-      - name: Build
-        run: extras/ci/platformio.sh ${{ matrix.board }}
+      - name: Install adafruit-nrfutil
+        if: ${{ matrix.platform == 'nordicnrf52' }}
+        run: pip install adafruit-nrfutil
+      - name: Set up cache for platformio
+        uses: actions/cache@v2
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-platformio-${{ matrix.platform }}
+      - name: Install platform "${{ matrix.platform }}"
+        run: platformio platform install ${{ matrix.platform }}
+      - name: Install libraries
+        if: ${{ matrix.libraries }}
+        run: platformio lib install arduino-libraries/${{ join(matrix.libraries, ' arduino-libraries/') }}
+      - name: Build JsonConfigFile
+        run: platformio ci "examples/JsonConfigFile/JsonConfigFile.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build JsonFilterExample
+        run: platformio ci "examples/JsonFilterExample/JsonFilterExample.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build JsonGeneratorExample
+        run: platformio ci "examples/JsonGeneratorExample/JsonGeneratorExample.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build JsonHttpClient
+        run: platformio ci "examples/JsonHttpClient/JsonHttpClient.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build JsonParserExample
+        run: platformio ci "examples/JsonParserExample/JsonParserExample.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build JsonServer
+        if: ${{ matrix.platform != 'espressif32' }}
+        run: platformio ci "examples/JsonServer/JsonServer.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build JsonUdpBeacon
+        run: platformio ci "examples/JsonUdpBeacon/JsonUdpBeacon.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build MsgPackParser
+        run: platformio ci "examples/MsgPackParser/MsgPackParser.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build ProgmemExample
+        run: platformio ci "examples/ProgmemExample/ProgmemExample.ino" -l '.' -b ${{ matrix.board }}
+      - name: Build StringExample
+        run: platformio ci "examples/StringExample/StringExample.ino" -l '.' -b ${{ matrix.board }}
+      - name: PlatformIO prune
+        if: ${{ always() }}
+        run: platformio system prune -f
 
   particle:
     name: Particle
