@@ -22,14 +22,14 @@ class Latch {
   }
 
   int last() const {
-    return _current;
+    return __current;
   }
 
   FORCE_INLINE char current() {
     if (!_loaded) {
       load();
     }
-    return _current;
+    return __current;
   }
 
  private:
@@ -40,12 +40,12 @@ class Latch {
     if (c <= 0)
       _ended = true;
 #endif
-    _current = static_cast<char>(c > 0 ? c : 0);
+    __current = static_cast<char>(c > 0 ? c : 0);
     _loaded = true;
   }
 
   TReader _reader;
-  char _current;
+  char __current;
   bool _loaded;
 #if ARDUINOJSON_DEBUG
   bool _ended;
