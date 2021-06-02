@@ -16,6 +16,22 @@ jobs:
       - name: Diff
         run: git diff --exit-code
 
+  clang-tidy:
+    name: Clang-Tidy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y clang-tidy cmake ninja-build
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -G Ninja -DCMAKE_CXX_CLANG_TIDY="clang-tidy" -DCMAKE_BUILD_TYPE=Debug .
+        env:
+          CC: clang-10
+          CXX: clang++-10
+      - name: Build
+        run: cmake --build .
+
   gcc:
     name: GCC
     needs: clang-format
