@@ -30,7 +30,7 @@ jobs:
           CC: clang-10
           CXX: clang++-10
       - name: Check
-        run: cmake --build .
+        run: cmake --build . -- -k 0
 
   gcc:
     name: GCC
