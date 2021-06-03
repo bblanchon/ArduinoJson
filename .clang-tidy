@@ -1,0 +1,10 @@
+---
+Checks: '
+    -clang-analyzer-security.insecureAPI.strcpy,
+'
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*'
+AnalyzeTemporaryDtors: false
+FormatStyle: none
+CheckOptions:
+...
