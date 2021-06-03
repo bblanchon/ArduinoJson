@@ -29,7 +29,7 @@ jobs:
         env:
           CC: clang-10
           CXX: clang++-10
-      - name: Build
+      - name: Check
         run: cmake --build .
 
   gcc:
