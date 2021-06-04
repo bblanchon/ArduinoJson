@@ -37,7 +37,8 @@ class MemoryPool {
   }
 
   void* buffer() {
-    return _begin;
+    return _begin;  // NOLINT(clang-analyzer-unix.Malloc)
+                    // movePointers() alters this pointer
   }
 
   // Gets the capacity of the memoryPool in bytes

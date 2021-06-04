@@ -33,7 +33,7 @@ class VariantData {
   // - no virtual
   // - no inheritance
   void init() {
-    _flags = 0;
+    _flags = VALUE_IS_NULL;
   }
 
   template <typename TVisitor>

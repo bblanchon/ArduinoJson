@@ -7,6 +7,7 @@ HEAD
 * Fixed support for `volatile float` and `volatile double` (issue #1557)
 * Fixed error `[Pe070]: incomplete type is not allowed` on IAR (issue #1560)
 * Fixed `serializeJson(doc, String)` when allocation fails (issue #1572)
+* Fixed clang-tidy warnings (issue #1574, PR #1577 by @armandas)
 
 v6.18.0 (2021-05-05)
 -------

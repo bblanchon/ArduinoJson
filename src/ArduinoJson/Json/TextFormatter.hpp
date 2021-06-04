@@ -155,7 +155,6 @@ class TextFormatter {
 
  protected:
   CountingDecorator<TWriter> _writer;
-  size_t _length;
 
  private:
   TextFormatter &operator=(const TextFormatter &);  // cannot be assigned
