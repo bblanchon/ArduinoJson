@@ -31,7 +31,7 @@ inline bool isLowSurrogate(uint16_t codeunit) {
 
 class Codepoint {
  public:
-  Codepoint() : _highSurrogate(0) {}
+  Codepoint() : _highSurrogate(0), _codepoint(0) {}
 
   bool append(uint16_t codeunit) {
     if (isHighSurrogate(codeunit)) {
