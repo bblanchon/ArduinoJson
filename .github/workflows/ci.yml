@@ -362,3 +362,20 @@ jobs:
       - name: MemoryChecker.*.log
         run: cat Testing/Temporary/MemoryChecker.*.log
         if: failure()
+
+  clang-tidy:
+    needs: clang
+    name: Clang-Tidy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y clang-tidy cmake ninja-build
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure
+        run: cmake -G Ninja -DCMAKE_CXX_CLANG_TIDY="clang-tidy-10;--warnings-as-errors=*" -DCMAKE_BUILD_TYPE=Debug .
+        env:
+          CC: clang-10
+          CXX: clang++-10
+      - name: Check
+        run: cmake --build . -- -k 0
