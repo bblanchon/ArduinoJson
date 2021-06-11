@@ -342,13 +342,19 @@ struct Converter<VariantRef> {
   static bool toJson(VariantRef src, VariantRef dst) {
     return variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
+
   static VariantRef fromJson(VariantRef src) {
     return src;
   }
+
+  static InvalidConversion<VariantConstRef, VariantRef> fromJson(
+      VariantConstRef);
+
   static bool checkJson(VariantRef src) {
     VariantData *data = getData(src);
     return !!data;
   }
+
   static bool checkJson(VariantConstRef) {
     return false;
   }

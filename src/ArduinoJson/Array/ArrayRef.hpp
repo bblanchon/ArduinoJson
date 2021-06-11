@@ -193,6 +193,8 @@ struct Converter<ArrayRef> {
     return ArrayRef(pool, data != 0 ? data->asArray() : 0);
   }
 
+  static InvalidConversion<VariantConstRef, ArrayRef> fromJson(VariantConstRef);
+
   static bool checkJson(VariantConstRef) {
     return false;
   }

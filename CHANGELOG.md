@@ -8,6 +8,7 @@ HEAD
 * Fixed error `[Pe070]: incomplete type is not allowed` on IAR (issue #1560)
 * Fixed `serializeJson(doc, String)` when allocation fails (issue #1572)
 * Fixed clang-tidy warnings (issue #1574, PR #1577 by @armandas)
+* Added fake class `InvalidConversion<T1,T2>` to easily identify invalid conversions (issue #1585)
 
 v6.18.0 (2021-05-05)
 -------

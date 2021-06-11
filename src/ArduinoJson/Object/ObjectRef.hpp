@@ -265,6 +265,9 @@ struct Converter<ObjectRef> {
     return ObjectRef(pool, data != 0 ? data->asObject() : 0);
   }
 
+  static InvalidConversion<VariantConstRef, ObjectRef> fromJson(
+      VariantConstRef);
+
   static bool checkJson(VariantConstRef) {
     return false;
   }
