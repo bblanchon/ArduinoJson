@@ -2,7 +2,7 @@
 # Copyright Benoit Blanchon 2014-2021
 # MIT License
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.3)
 
 project(ArduinoJson VERSION 6.18.0)
 

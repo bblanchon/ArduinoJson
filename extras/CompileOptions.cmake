@@ -23,12 +23,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wundef
 	)
 
-	if(NOT MINGW)
-		add_compile_options(
-			-std=c++98
-		)
-	endif()
-
 	if(${COVERAGE})
 		set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
 	endif()

@@ -2,40 +2,6 @@
 
 #include <catch.hpp>
 
-#if __cplusplus >= 201103L
-
-TEST_CASE("nullptr") {
-  DynamicJsonDocument doc(4096);
-  JsonVariant variant = doc.to<JsonVariant>();
-
-  SECTION("JsonVariant == nullptr") {
-    REQUIRE((variant == nullptr));
-    REQUIRE_FALSE((variant != nullptr));
-  }
-
-  SECTION("JsonVariant != nullptr") {
-    variant.set(42);
-
-    REQUIRE_FALSE((variant == nullptr));
-    REQUIRE((variant != nullptr));
-  }
-
-  SECTION("JsonVariant.set(nullptr)") {
-    variant.set(42);
-    variant.set(nullptr);
-
-    REQUIRE(variant.isNull());
-  }
-
-  SECTION("JsonVariant.is<nullptr_t>()") {
-    variant.set(42);
-    REQUIRE(variant.is<std::nullptr_t>() == false);
-
-    variant.clear();
-    REQUIRE(variant.is<std::nullptr_t>() == true);
-  }
-}
-
 TEST_CASE("Issue #1120") {
   StaticJsonDocument<500> doc;
   constexpr char str[] =
@@ -90,5 +56,3 @@ TEST_CASE("Issue #1120") {
     }
   }
 }
-
-#endif

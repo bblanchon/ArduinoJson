@@ -2,11 +2,7 @@
 # Copyright Benoit Blanchon 2014-2021
 # MIT License
 
-# we need C++11 for 'long long'
-set(CMAKE_CXX_STANDARD 11)
-
 add_executable(MixedConfigurationTests
-	cpp11.cpp
 	decode_unicode_0.cpp
 	decode_unicode_1.cpp
 	enable_alignment_0.cpp
@@ -22,8 +18,6 @@ add_executable(MixedConfigurationTests
 	enable_string_deduplication_1.cpp
 	use_double_0.cpp
 	use_double_1.cpp
-	use_long_long_0.cpp
-	use_long_long_1.cpp
 )
 
 set_target_properties(MixedConfigurationTests PROPERTIES UNITY_BUILD OFF)

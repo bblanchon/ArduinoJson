@@ -22,7 +22,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_NAN == 1") {
   }
 
   SECTION("deserializeJson()") {
-    auto err = deserializeJson(doc, "{\"X\":NaN}");
+    DeserializationError err = deserializeJson(doc, "{\"X\":NaN}");
     float x = doc["X"];
 
     REQUIRE(err == DeserializationError::Ok);

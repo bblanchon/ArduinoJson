@@ -6,7 +6,7 @@
 
 static void assertParseFails(const char* json) {
   DynamicJsonDocument doc(4096);
-  auto err = deserializeJson(doc, json);
+  DeserializationError err = deserializeJson(doc, json);
 
   REQUIRE(err == DeserializationError::InvalidInput);
 }
