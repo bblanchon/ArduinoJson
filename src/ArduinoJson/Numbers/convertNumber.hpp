@@ -5,13 +5,13 @@
 #pragma once
 
 #if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wconversion"
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wconversion"
 #elif defined(__GNUC__)
-#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-#pragma GCC diagnostic push
-#endif
-#pragma GCC diagnostic ignored "-Wconversion"
+#  if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#    pragma GCC diagnostic push
+#  endif
+#  pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
 #include <ArduinoJson/Numbers/Float.hpp>
@@ -99,9 +99,9 @@ TOut convertNumber(TIn value) {
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #if defined(__clang__)
-#pragma clang diagnostic pop
+#  pragma clang diagnostic pop
 #elif defined(__GNUC__)
-#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-#pragma GCC diagnostic pop
-#endif
+#  if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#    pragma GCC diagnostic pop
+#  endif
 #endif

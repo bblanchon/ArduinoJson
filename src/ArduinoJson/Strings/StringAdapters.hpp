@@ -9,14 +9,14 @@
 #include <ArduinoJson/Strings/SizedRamStringAdapter.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-#include <ArduinoJson/Strings/StdStringAdapter.hpp>
+#  include <ArduinoJson/Strings/StdStringAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#include <ArduinoJson/Strings/ArduinoStringAdapter.hpp>
+#  include <ArduinoJson/Strings/ArduinoStringAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_PROGMEM
-#include <ArduinoJson/Strings/FlashStringAdapter.hpp>
-#include <ArduinoJson/Strings/SizedFlashStringAdapter.hpp>
+#  include <ArduinoJson/Strings/FlashStringAdapter.hpp>
+#  include <ArduinoJson/Strings/SizedFlashStringAdapter.hpp>
 #endif

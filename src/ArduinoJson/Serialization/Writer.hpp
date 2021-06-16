@@ -31,17 +31,17 @@ class Writer {
 #include <ArduinoJson/Serialization/Writers/StaticStringWriter.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-#include <ArduinoJson/Serialization/Writers/StdStringWriter.hpp>
+#  include <ArduinoJson/Serialization/Writers/StdStringWriter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#include <ArduinoJson/Serialization/Writers/ArduinoStringWriter.hpp>
+#  include <ArduinoJson/Serialization/Writers/ArduinoStringWriter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-#include <ArduinoJson/Serialization/Writers/StdStreamWriter.hpp>
+#  include <ArduinoJson/Serialization/Writers/StdStreamWriter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_PRINT
-#include <ArduinoJson/Serialization/Writers/PrintWriter.hpp>
+#  include <ArduinoJson/Serialization/Writers/PrintWriter.hpp>
 #endif

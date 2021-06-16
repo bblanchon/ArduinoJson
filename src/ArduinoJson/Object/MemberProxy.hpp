@@ -12,8 +12,8 @@
 #include <ArduinoJson/Variant/VariantTo.hpp>
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4522)
+#  pragma warning(push)
+#  pragma warning(disable : 4522)
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -198,5 +198,5 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+#  pragma warning(pop)
 #endif

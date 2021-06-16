@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 #if defined(__clang__)
-#define CONFLICTS_WITH_BUILTIN_OPERATOR
+#  define CONFLICTS_WITH_BUILTIN_OPERATOR
 #endif
 
 TEST_CASE("unsigned char[]") {

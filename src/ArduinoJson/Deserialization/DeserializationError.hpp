@@ -9,7 +9,7 @@
 #include <ArduinoJson/Polyfills/static_array.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-#include <ostream>
+#  include <ostream>
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {

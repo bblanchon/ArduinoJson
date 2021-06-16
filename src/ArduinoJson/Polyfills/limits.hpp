@@ -7,8 +7,8 @@
 #include "type_traits.hpp"
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4310)
+#  pragma warning(push)
+#  pragma warning(disable : 4310)
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -41,5 +41,5 @@ struct numeric_limits<
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+#  pragma warning(pop)
 #endif

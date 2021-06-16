@@ -4,6 +4,7 @@ BasedOnStyle: Google
 Standard: Cpp03
 AllowShortFunctionsOnASingleLine: Empty
 IncludeBlocks: Preserve
+IndentPPDirectives: AfterHash
 
 # Always break after if to get accurate coverage
 AllowShortIfStatementsOnASingleLine: false

@@ -13,11 +13,11 @@
 // VariantData can't have a constructor (to be a POD), so we have no way to fix
 // this warning
 #if defined(__GNUC__)
-#if __GNUC__ >= 7
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#endif
+#  if __GNUC__ >= 7
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#    pragma GCC diagnostic ignored "-Wuninitialized"
+#  endif
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -362,7 +362,7 @@ class VariantData {
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #if defined(__GNUC__)
-#if __GNUC__ >= 8
-#pragma GCC diagnostic pop
-#endif
+#  if __GNUC__ >= 8
+#    pragma GCC diagnostic pop
+#  endif
 #endif

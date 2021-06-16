@@ -8,11 +8,11 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#include <Arduino.h>
+#  include <Arduino.h>
 #endif
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-#include <string>
+#  include <string>
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {

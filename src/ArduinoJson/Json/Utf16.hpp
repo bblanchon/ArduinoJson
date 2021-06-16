@@ -12,10 +12,10 @@
 // we choose to ignore the problem to reduce the size of the code
 // Garbage in => Garbage out
 #if defined(__GNUC__)
-#if __GNUC__ >= 7
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
+#  if __GNUC__ >= 7
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#  endif
 #endif
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -61,7 +61,7 @@ class Codepoint {
 }  // namespace ARDUINOJSON_NAMESPACE
 
 #if defined(__GNUC__)
-#if __GNUC__ >= 8
-#pragma GCC diagnostic pop
-#endif
+#  if __GNUC__ >= 8
+#    pragma GCC diagnostic pop
+#  endif
 #endif
