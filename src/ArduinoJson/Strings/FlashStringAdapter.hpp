@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Polyfills/pgmspace.hpp>
-#include <ArduinoJson/Strings/FlashStringIterator.hpp>
 #include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 
@@ -41,10 +40,6 @@ class FlashStringAdapter {
     if (!_str)
       return 0;
     return strlen_P(reinterpret_cast<const char*>(_str));
-  }
-
-  FlashStringIterator begin() const {
-    return FlashStringIterator(_str);
   }
 
   typedef storage_policies::store_by_copy storage_policy;

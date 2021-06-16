@@ -39,10 +39,6 @@ class ConstRamStringAdapter {
     return _str;
   }
 
-  const char* begin() const {
-    return _str;
-  }
-
   typedef storage_policies::store_by_address storage_policy;
 
  protected:
