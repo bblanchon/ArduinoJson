@@ -12,6 +12,10 @@
 #  include <ArduinoJson/Strings/StdStringAdapter.hpp>
 #endif
 
+#if ARDUINOJSON_ENABLE_STRING_VIEW
+#  include <ArduinoJson/Strings/StringViewAdapter.hpp>
+#endif
+
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
 #  include <ArduinoJson/Strings/ArduinoStringAdapter.hpp>
 #endif

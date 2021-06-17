@@ -62,6 +62,17 @@
 #  endif
 #endif
 
+#ifndef ARDUINOJSON_ENABLE_STRING_VIEW
+#  ifdef __has_include
+#    if __has_include(<string_view>) && __cplusplus >= 201703L
+#      define ARDUINOJSON_ENABLE_STRING_VIEW 1
+#    endif
+#  endif
+#endif
+#ifndef ARDUINOJSON_ENABLE_STRING_VIEW
+#  define ARDUINOJSON_ENABLE_STRING_VIEW 0
+#endif
+
 #if ARDUINOJSON_EMBEDDED_MODE
 
 // Store floats by default to reduce the memory usage (issue #134)

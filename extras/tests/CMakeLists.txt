@@ -11,6 +11,7 @@ link_libraries(ArduinoJson catch)
 
 include_directories(Helpers)
 add_subdirectory(Cpp11)
+add_subdirectory(Cpp17)
 add_subdirectory(FailingBuilds)
 add_subdirectory(IntegrationTests)
 add_subdirectory(JsonArray)
