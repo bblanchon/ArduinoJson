@@ -10,6 +10,7 @@ HEAD
 * Fixed clang-tidy warnings (issue #1574, PR #1577 by @armandas)
 * Added fake class `InvalidConversion<T1,T2>` to easily identify invalid conversions (issue #1585)
 * Added support for `std::string_view` (issue #1578, PR #1554 by @0xFEEDC0DE64)
+* Fixed warning `definition of implicit copy constructor for 'MsgPackDeserializer' is deprecated because it has a user-declared copy assignment operator`
 
 v6.18.0 (2021-05-05)
 -------

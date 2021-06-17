@@ -32,9 +32,6 @@ class MsgPackDeserializer {
   }
 
  private:
-  // Prevent VS warning "assignment operator could not be generated"
-  MsgPackDeserializer &operator=(const MsgPackDeserializer &);
-
   bool invalidInput() {
     _error = DeserializationError::InvalidInput;
     return false;
