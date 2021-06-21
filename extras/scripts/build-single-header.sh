@@ -2,10 +2,10 @@
 
 set -e
 
-RE_RELATIVE_INCLUDE='^#include[[:space:]]*"(.*)"'
-RE_ABSOLUTE_INCLUDE='^#include[[:space:]]*<(ArduinoJson/.*)>'
-RE_SYSTEM_INCLUDE='^#include[[:space:]]*<(.*)>'
-RE_EMPTY='^(#pragma[[:space:]]+once)?[[:space:]]*(//.*)?$'
+RE_RELATIVE_INCLUDE='^#[[:space:]]*include[[:space:]]*"(.*)"'
+RE_ABSOLUTE_INCLUDE='^#[[:space:]]*include[[:space:]]*<(ArduinoJson/.*)>'
+RE_SYSTEM_INCLUDE='^#[[:space:]]*include[[:space:]]*<(.*)>'
+RE_EMPTY='^(#[[:space:]]*pragma[[:space:]]+once)?[[:space:]]*(//.*)?$'
 SRC_DIRECTORY="$(realpath "$(dirname $0)/../../src")"
 
 
