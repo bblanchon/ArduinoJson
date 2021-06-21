@@ -2,7 +2,6 @@
 
 set -e
 
-TAG=$(git describe)
 RE_RELATIVE_INCLUDE='^#include[[:space:]]*"(.*)"'
 RE_ABSOLUTE_INCLUDE='^#include[[:space:]]*<(ArduinoJson/.*)>'
 RE_SYSTEM_INCLUDE='^#include[[:space:]]*<(.*)>'
@@ -58,25 +57,8 @@ simplify_namespaces() {
 	rm -f "$1.bak"
 }
 
-cd $(dirname $0)/../..
 INCLUDED=()
-process src/ArduinoJson.h true > ../ArduinoJson-$TAG.h
-simplify_namespaces ../ArduinoJson-$TAG.h
-g++ -x c++ -c -o ../smoketest.o - <<END
-#include "../ArduinoJson-$TAG.h"
-int main() {
-	StaticJsonDocument<300> doc;
-	deserializeJson(doc, "{}");
-}
-END
-
-INCLUDED=()
-process src/ArduinoJson.hpp true > ../ArduinoJson-$TAG.hpp
-simplify_namespaces ../ArduinoJson-$TAG.hpp
-g++ -x c++ -c -o ../smoketest.o - <<END
-#include "../ArduinoJson-$TAG.hpp"
-int main() {
-	ArduinoJson::StaticJsonDocument<300> doc;
-	ArduinoJson::deserializeJson(doc, "{}");
-}
-END
+INPUT=$1
+OUTPUT=$2
+process "$INPUT" true > "$OUTPUT"
+simplify_namespaces "$OUTPUT"

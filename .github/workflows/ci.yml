@@ -335,7 +335,7 @@ jobs:
       - name: Upload HTML report
         uses: actions/upload-artifact@v2
         with:
-          name: coverage
+          name: Coverage report
           path: coverage
       - name: Upload to Coveralls
         uses: coverallsapp/github-action@master
@@ -379,3 +379,71 @@ jobs:
           CXX: clang++-10
       - name: Check
         run: cmake --build . -- -k 0
+
+  amalgamate-h:
+    needs: gcc
+    name: Amalgamate ArduinoJson.h
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Amalgamate
+        id: amalgamate
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            VERSION=${GITHUB_SHA::7}
+          fi
+          INPUT=src/ArduinoJson.h
+          OUTPUT=ArduinoJson-$VERSION.h
+          extras/scripts/build-single-header.sh "$INPUT" "$OUTPUT"
+          echo ::set-output name=filename::${OUTPUT}
+      - name: Smoke test
+        run: |
+          g++ -x c++ - <<END
+          #include "${{ steps.amalgamate.outputs.filename }}"
+          int main() {
+            StaticJsonDocument<300> doc;
+            deserializeJson(doc, "{}");
+          }
+          END
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Single headers
+          path: ${{ steps.amalgamate.outputs.filename }}
+
+  amalgamate-hpp:
+    needs: gcc
+    name: Amalgamate ArduinoJson.hpp
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Amalgamate
+        id: amalgamate
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            VERSION=${GITHUB_SHA::7}
+          fi
+          INPUT=src/ArduinoJson.hpp
+          OUTPUT=ArduinoJson-$VERSION.hpp
+          extras/scripts/build-single-header.sh "$INPUT" "$OUTPUT"
+          echo ::set-output name=filename::${OUTPUT}
+      - name: Smoke test
+        run: |
+          g++ -x c++ - <<END
+          #include "${{ steps.amalgamate.outputs.filename }}"
+          int main() {
+            ArduinoJson::StaticJsonDocument<300> doc;
+            deserializeJson(doc, "{}");
+          }
+          END
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Single headers
+          path: ${{ steps.amalgamate.outputs.filename }}
