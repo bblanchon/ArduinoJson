@@ -208,6 +208,17 @@ jobs:
       - name: Build
         run: extras/ci/platformio.sh ${{ matrix.board }}
 
+  espidf:
+    name: ESP-IDF
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install ESP-IDF
+        run: source extras/ci/espidf/install.sh
+      - name: build examples
+        run: source extras/ci/espidf.sh
+
   particle:
     name: Particle
     needs: gcc
