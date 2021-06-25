@@ -449,3 +449,29 @@ jobs:
         with:
           name: Single headers
           path: ${{ steps.amalgamate.outputs.filename }}
+
+  esp-idf:
+    needs: gcc
+    name: ESP-IDF
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.espressif
+          key: ${{ runner.os }}-esp-idf
+      - name: Checkout ArduinoJson
+        uses: actions/checkout@v2
+      - name: Checkout ESP-IDF
+        uses: actions/checkout@v2
+        with:
+          repository: espressif/esp-idf
+          path: esp-idf
+          submodules: true
+      - name: Install ESP-IDF
+        run: ./esp-idf/install.sh
+      - name: Build example
+        run: |
+          source esp-idf/export.sh
+          cd extras/ci/espidf
+          idf.py build
