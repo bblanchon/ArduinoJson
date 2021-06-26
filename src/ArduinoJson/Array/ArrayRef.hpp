@@ -161,6 +161,12 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     _data->removeElement(index);
   }
 
+  void clear() const {
+    if (!_data)
+      return;
+    _data->clear();
+  }
+
  private:
   MemoryPool* _pool;
 };

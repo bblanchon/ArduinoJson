@@ -3,6 +3,7 @@
 # MIT License
 
 add_executable(JsonObjectTests 
+	clear.cpp
 	containsKey.cpp
 	copy.cpp
 	createNestedArray.cpp
