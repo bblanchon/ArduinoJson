@@ -300,7 +300,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Install
-        run: sudo apt-get install -y g++-arm-linux-gnueabihf
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-arm-linux-gnueabihf
       - name: Checkout
         uses: actions/checkout@v2
       - name: Configure
