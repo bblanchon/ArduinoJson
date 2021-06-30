@@ -12,6 +12,7 @@ HEAD
 * Added support for `std::string_view` (issue #1578, PR #1554 by @0xFEEDC0DE64)
 * Fixed warning `definition of implicit copy constructor for 'MsgPackDeserializer' is deprecated because it has a user-declared copy assignment operator`
 * Added `JsonArray::clear()` (issue #1597)
+* Fixed `JsonVariant::as<unsigned>()` (issue #1601)
 
 v6.18.0 (2021-05-05)
 -------

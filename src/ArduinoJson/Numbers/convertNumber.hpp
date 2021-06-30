@@ -71,9 +71,23 @@ canConvertNumber(TIn) {
 }
 
 // int32 -> uint32
+// int32 -> uint64
 template <typename TOut, typename TIn>
 typename enable_if<is_integral<TIn>::value && is_signed<TIn>::value &&
-                       is_integral<TOut>::value && is_unsigned<TOut>::value,
+                       is_integral<TOut>::value && is_unsigned<TOut>::value &&
+                       sizeof(TOut) >= sizeof(TIn),
+                   bool>::type
+canConvertNumber(TIn value) {
+  if (value < 0)
+    return false;
+  return TOut(value) <= numeric_limits<TOut>::highest();
+}
+
+// int32 -> uint16
+template <typename TOut, typename TIn>
+typename enable_if<is_integral<TIn>::value && is_signed<TIn>::value &&
+                       is_integral<TOut>::value && is_unsigned<TOut>::value &&
+                       sizeof(TOut) < sizeof(TIn),
                    bool>::type
 canConvertNumber(TIn value) {
   if (value < 0)

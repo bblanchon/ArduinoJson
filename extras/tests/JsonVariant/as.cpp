@@ -61,6 +61,16 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<std::string>() == "true");
   }
 
+  SECTION("set(42)") {
+    variant.set(42);
+
+    REQUIRE(variant.as<bool>() == true);
+    REQUIRE(variant.as<double>() == 42.0);
+    REQUIRE(variant.as<int>() == 42);
+    REQUIRE(variant.as<unsigned int>() == 42U);  // issue #1601
+    REQUIRE(variant.as<std::string>() == "42");
+  }
+
   SECTION("set(42L)") {
     variant.set(42L);
 
