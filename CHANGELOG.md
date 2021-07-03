@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.18.1 (2021-07-03)
+-------
 
 * Fixed support for `volatile float` and `volatile double` (issue #1557)
 * Fixed error `[Pe070]: incomplete type is not allowed` on IAR (issue #1560)
