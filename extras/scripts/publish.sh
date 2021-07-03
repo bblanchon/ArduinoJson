@@ -60,5 +60,6 @@ add_tag
 push
 
 extras/scripts/build-arduino-package.sh
-extras/scripts/build-single-header.sh
+extras/scripts/build-single-header.sh "src/ArduinoJson.h" "../ArduinoJson-$TAG.h"
+extras/scripts/build-single-header.sh "src/ArduinoJson.hpp" "../ArduinoJson-$TAG.hpp"
 extras/scripts/wandbox/publish.sh "../ArduinoJson-$TAG.h"

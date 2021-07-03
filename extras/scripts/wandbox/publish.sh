@@ -21,7 +21,7 @@ compile() {
 END
 	URL=$(curl -sS -H "Content-type: application/json" -d @parameters.json  https://wandbox.org/api/compile.json | jq --raw-output .url)
 	rm parameters.json
-	echo "  $1: $URL"
+	echo "$1: $URL"
 }
 
 compile "JsonGeneratorExample"
