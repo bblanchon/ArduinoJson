@@ -472,6 +472,11 @@ jobs:
           submodules: true
       - name: Install ESP-IDF
         run: ./esp-idf/install.sh
+      - name: Add component
+        # NOTE: we cannot commit the symlink because the Arduino Library Specification forbids it.
+        run: |
+          mkdir -p extras/ci/espidf/components
+          ln -s $PWD extras/ci/espidf/components/ArduinoJson
       - name: Build example
         run: |
           source esp-idf/export.sh
