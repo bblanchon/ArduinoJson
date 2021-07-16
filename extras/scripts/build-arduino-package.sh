@@ -1,21 +1,23 @@
 #!/bin/bash
 
-TAG=$(git describe)
-OUTPUT="ArduinoJson-$TAG.zip"
+set -eu
 
-cd $(dirname $0)/../../..
+INPUT=$1
+OUTPUT=$2
+
+cd "$INPUT"
 
 # remove existing file
-rm -f $OUTPUT
+rm -f "$OUTPUT"
 
 # create zip
-7z a $OUTPUT \
-    -xr!.vs \
-	ArduinoJson/CHANGELOG.md \
-	ArduinoJson/examples \
-	ArduinoJson/src \
-	ArduinoJson/keywords.txt \
-	ArduinoJson/library.properties \
-	ArduinoJson/LICENSE.md \
-	ArduinoJson/README.md \
-	ArduinoJson/ArduinoJson.h
+7z a "$OUTPUT" \
+	-xr!.vs \
+	CHANGELOG.md \
+	examples \
+	src \
+	keywords.txt \
+	library.properties \
+	LICENSE.md \
+	README.md \
+	ArduinoJson.h
