@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Set variables
+        id: init
+        run: |
+          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+          echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Write release body
+        id: body
+        run: |
+          FILENAME=RELEASE.md
+          extras/scripts/get-release-body.sh ${{ steps.init.outputs.tag }} CHANGELOG.md | tee $FILENAME
+          echo ::set-output name=filename::$FILENAME
+      - name: Amalgamate ArduinoJson.h
+        id: amalgamate_h
+        run: |
+          FILENAME=ArduinoJson-${{ steps.init.outputs.tag }}.h
+          extras/scripts/build-single-header.sh src/ArduinoJson.h "$FILENAME"
+          echo ::set-output name=filename::$FILENAME
+      - name: Amalgamate ArduinoJson.hpp
+        id: amalgamate_hpp
+        run: |
+          FILENAME=ArduinoJson-${{ steps.init.outputs.tag }}.hpp
+          extras/scripts/build-single-header.sh src/ArduinoJson.hpp "$FILENAME"
+          echo ::set-output name=filename::$FILENAME
+      - name: Create Arduino package
+        id: arduino
+        run: |
+          FILENAME=ArduinoJson-${{ steps.init.outputs.tag }}.zip
+          extras/scripts/build-arduino-package.sh . "$FILENAME"
+          echo ::set-output name=filename::$FILENAME
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          bodyFile: ${{ steps.body.outputs.filename }}
+          draft: true
+          name: ArduinoJson ${{ steps.init.outputs.version }}
+          artifacts: ${{ steps.amalgamate_h.outputs.filename }},${{ steps.amalgamate_hpp.outputs.filename }},${{ steps.arduino.outputs.filename }}
+          token: ${{ secrets.GITHUB_TOKEN }}
