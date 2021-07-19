@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.18.2 (2021-07-19)
+-------
 
 * Removed a symlink because the Arduino Library Specification forbids it
 
