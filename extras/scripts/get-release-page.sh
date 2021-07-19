@@ -2,14 +2,14 @@
 
 set -eu
 
-TAG="$1"
+VERSION="$1"
 CHANGELOG="$2"
 FRONTMATTER="$3"
 
 cat << END
 ---
 branch: v6
-version: $TAG
+version: $VERSION
 date: '$(date +'%Y-%m-%d')'
 $(cat "$FRONTMATTER")
 ---
