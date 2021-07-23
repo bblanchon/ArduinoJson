@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Changed return type of `convertToJson()` and `Converter<T>::toJson()` to `void`
+
 v6.18.2 (2021-07-19)
 -------
 

@@ -13,11 +13,10 @@ struct Date {
   int year;
 };
 
-bool convertToJson(const Date& src, JsonVariant dst) {
+void convertToJson(const Date& src, JsonVariant dst) {
   dst["day"] = src.day;
   dst["month"] = src.month;
   dst["year"] = src.year;
-  return true;
 }
 
 void convertFromJson(JsonVariantConst src, Date& dst) {
@@ -92,10 +91,9 @@ class Complex {
 namespace ARDUINOJSON_NAMESPACE {
 template <>
 struct Converter<Complex> {
-  static bool toJson(const Complex& src, VariantRef dst) {
+  static void toJson(const Complex& src, VariantRef dst) {
     dst["real"] = src.real();
     dst["imag"] = src.imag();
-    return true;
   }
 
   static Complex fromJson(VariantConstRef src) {
