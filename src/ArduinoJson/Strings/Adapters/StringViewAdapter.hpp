@@ -5,16 +5,17 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 #include <string_view>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class StringViewAdapter {
+template <>
+class StringAdapter<std::string_view> {
  public:
-  StringViewAdapter(std::string_view str) : _str(str) {}
+  StringAdapter(std::string_view str) : _str(str) {}
 
   void copyTo(char* p, size_t n) const {
     memcpy(p, _str.data(), n);
@@ -45,12 +46,5 @@ class StringViewAdapter {
  private:
   std::string_view _str;
 };
-
-template <>
-struct IsString<std::string_view> : true_type {};
-
-inline StringViewAdapter adaptString(const std::string_view& str) {
-  return StringViewAdapter(str);
-}
 
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -5,17 +5,19 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 #include <string>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TString>
-class StdStringAdapter {
+template <typename TCharTraits, typename TAllocator>
+class StringAdapter<std::basic_string<char, TCharTraits, TAllocator> > {
  public:
-  StdStringAdapter(const TString& str) : _str(&str) {}
+  typedef std::basic_string<char, TCharTraits, TAllocator> string_type;
+
+  StringAdapter(const string_type& str) : _str(&str) {}
 
   void copyTo(char* p, size_t n) const {
     memcpy(p, _str->c_str(), n);
@@ -44,18 +46,7 @@ class StdStringAdapter {
   typedef storage_policies::store_by_copy storage_policy;
 
  private:
-  const TString* _str;
+  const string_type* _str;
 };
-
-template <typename TCharTraits, typename TAllocator>
-struct IsString<std::basic_string<char, TCharTraits, TAllocator> > : true_type {
-};
-
-template <typename TCharTraits, typename TAllocator>
-inline StdStringAdapter<std::basic_string<char, TCharTraits, TAllocator> >
-adaptString(const std::basic_string<char, TCharTraits, TAllocator>& str) {
-  return StdStringAdapter<std::basic_string<char, TCharTraits, TAllocator> >(
-      str);
-}
 
 }  // namespace ARDUINOJSON_NAMESPACE

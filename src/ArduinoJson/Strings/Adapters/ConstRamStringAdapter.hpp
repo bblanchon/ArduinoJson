@@ -8,14 +8,15 @@
 #include <string.h>  // strcmp
 
 #include <ArduinoJson/Polyfills/safe_strcmp.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ConstRamStringAdapter {
+template <>
+class StringAdapter<const char*> {
  public:
-  ConstRamStringAdapter(const char* str = 0) : _str(str) {}
+  StringAdapter(const char* str = 0) : _str(str) {}
 
   int compare(const char* other) const {
     return safe_strcmp(_str, other);
@@ -45,14 +46,10 @@ class ConstRamStringAdapter {
   const char* _str;
 };
 
-template <>
-struct IsString<const char*> : true_type {};
-
 template <int N>
-struct IsString<const char[N]> : true_type {};
-
-inline ConstRamStringAdapter adaptString(const char* str) {
-  return ConstRamStringAdapter(str);
-}
+class StringAdapter<const char[N]> : public StringAdapter<const char*> {
+ public:
+  StringAdapter<const char[N]>(const char* s) : StringAdapter<const char*>(s) {}
+};
 
 }  // namespace ARDUINOJSON_NAMESPACE

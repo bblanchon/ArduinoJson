@@ -4,23 +4,24 @@
 
 #pragma once
 
-#include <ArduinoJson/Strings/ConstRamStringAdapter.hpp>
-#include <ArduinoJson/Strings/RamStringAdapter.hpp>
-#include <ArduinoJson/Strings/SizedRamStringAdapter.hpp>
+#include <ArduinoJson/Strings/Adapters/ConstRamStringAdapter.hpp>
+#include <ArduinoJson/Strings/Adapters/JsonStringAdapter.hpp>
+#include <ArduinoJson/Strings/Adapters/RamStringAdapter.hpp>
+#include <ArduinoJson/Strings/Adapters/SizedRamStringAdapter.hpp>
 
 #if ARDUINOJSON_ENABLE_STD_STRING
-#  include <ArduinoJson/Strings/StdStringAdapter.hpp>
+#  include <ArduinoJson/Strings/Adapters/StdStringAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_STRING_VIEW
-#  include <ArduinoJson/Strings/StringViewAdapter.hpp>
+#  include <ArduinoJson/Strings/Adapters/StringViewAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#  include <ArduinoJson/Strings/ArduinoStringAdapter.hpp>
+#  include <ArduinoJson/Strings/Adapters/ArduinoStringAdapter.hpp>
 #endif
 
 #if ARDUINOJSON_ENABLE_PROGMEM
-#  include <ArduinoJson/Strings/FlashStringAdapter.hpp>
-#  include <ArduinoJson/Strings/SizedFlashStringAdapter.hpp>
+#  include <ArduinoJson/Strings/Adapters/FlashStringAdapter.hpp>
+#  include <ArduinoJson/Strings/Adapters/SizedFlashStringAdapter.hpp>
 #endif

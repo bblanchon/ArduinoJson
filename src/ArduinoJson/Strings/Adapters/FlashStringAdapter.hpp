@@ -5,14 +5,15 @@
 #pragma once
 
 #include <ArduinoJson/Polyfills/pgmspace.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class FlashStringAdapter {
+template <>
+class StringAdapter<const __FlashStringHelper*> {
  public:
-  FlashStringAdapter(const __FlashStringHelper* str) : _str(str) {}
+  StringAdapter(const __FlashStringHelper* str) : _str(str) {}
 
   int compare(const char* other) const {
     if (!other && !_str)
@@ -48,10 +49,4 @@ class FlashStringAdapter {
   const __FlashStringHelper* _str;
 };
 
-inline FlashStringAdapter adaptString(const __FlashStringHelper* str) {
-  return FlashStringAdapter(str);
-}
-
-template <>
-struct IsString<const __FlashStringHelper*> : true_type {};
 }  // namespace ARDUINOJSON_NAMESPACE
