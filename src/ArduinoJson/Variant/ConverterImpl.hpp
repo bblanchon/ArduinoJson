@@ -256,4 +256,18 @@ inline void convertToJson(const ::Printable& src, VariantRef dst) {
 
 #endif
 
+#if ARDUINOJSON_ENABLE_STRING_VIEW
+
+inline void convertFromJson(VariantConstRef src, std::string_view& dst) {
+  const char* str = src.as<const char*>();
+  if (str)  // the standard doesn't allow passing null to the constructor
+    dst = std::string_view(str);
+}
+
+inline bool canConvertFromJson(VariantConstRef src, const std::string_view&) {
+  return src.is<const char*>();
+}
+
+#endif
+
 }  // namespace ARDUINOJSON_NAMESPACE

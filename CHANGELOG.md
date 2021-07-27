@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Changed return type of `convertToJson()` and `Converter<T>::toJson()` to `void`
+* Added `as<std::string_view>()` and `is<std::string_view>()`
 
 v6.18.2 (2021-07-19)
 -------

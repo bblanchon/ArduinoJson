@@ -58,6 +58,20 @@ TEST_CASE("string_view") {
     doc.add(std::string_view("example two", 7));
     REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 8);
   }
+
+  SECTION("as<std::string_view>()") {
+    doc["s"] = "Hello World";
+    doc["i"] = 42;
+    REQUIRE(doc["s"].as<std::string_view>() == std::string_view("Hello World"));
+    REQUIRE(doc["i"].as<std::string_view>() == std::string_view());
+  }
+
+  SECTION("is<std::string_view>()") {
+    doc["s"] = "Hello World";
+    doc["i"] = 42;
+    REQUIRE(doc["s"].is<std::string_view>() == true);
+    REQUIRE(doc["i"].is<std::string_view>() == false);
+  }
 }
 
 using ARDUINOJSON_NAMESPACE::adaptString;
