@@ -25,10 +25,6 @@ class StringAdapter<const __FlashStringHelper*> {
     return -strcmp_P(other, reinterpret_cast<const char*>(_str));
   }
 
-  bool equals(const char* expected) const {
-    return compare(expected) == 0;
-  }
-
   bool isNull() const {
     return !_str;
   }

@@ -107,7 +107,7 @@ template <typename TAdaptedString>
 inline VariantSlot* CollectionData::getSlot(TAdaptedString key) const {
   VariantSlot* slot = _head;
   while (slot) {
-    if (key.equals(slot->key()))
+    if (key.compare(slot->key()) == 0)
       break;
     slot = slot->next();
   }

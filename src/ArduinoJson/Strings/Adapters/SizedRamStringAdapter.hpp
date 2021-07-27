@@ -21,10 +21,6 @@ class StringAdapter<TChar*, true> {
     return safe_strncmp(_str, other, _size);
   }
 
-  bool equals(const char* expected) const {
-    return compare(expected) == 0;
-  }
-
   bool isNull() const {
     return !_str;
   }

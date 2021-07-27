@@ -22,10 +22,6 @@ class StringAdapter<const char*> {
     return safe_strcmp(_str, other);
   }
 
-  bool equals(const char* expected) const {
-    return compare(expected) == 0;
-  }
-
   bool isNull() const {
     return !_str;
   }

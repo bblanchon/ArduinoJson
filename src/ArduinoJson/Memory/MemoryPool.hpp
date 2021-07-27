@@ -167,7 +167,7 @@ class MemoryPool {
   template <typename TAdaptedString>
   const char* findString(const TAdaptedString& str) {
     for (char* next = _begin; next < _left; ++next) {
-      if (str.equals(next))
+      if (str.compare(next) == 0)
         return next;
 
       // jump to next terminator

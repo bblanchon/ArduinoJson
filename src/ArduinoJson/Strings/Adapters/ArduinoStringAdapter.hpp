@@ -32,10 +32,6 @@ class StringAdapter< ::String> {
     return safe_strcmp(me, other);
   }
 
-  bool equals(const char* expected) const {
-    return compare(expected) == 0;
-  }
-
   size_t size() const {
     return _str->length();
   }

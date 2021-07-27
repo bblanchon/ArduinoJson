@@ -31,12 +31,6 @@ class StringAdapter<std::string_view> {
     return _str.compare(other);
   }
 
-  bool equals(const char* expected) const {
-    if (!expected)
-      return false;
-    return _str == expected;
-  }
-
   size_t size() const {
     return _str.size();
   }

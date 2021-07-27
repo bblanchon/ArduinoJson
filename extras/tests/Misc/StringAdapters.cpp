@@ -22,9 +22,6 @@ TEST_CASE("const char*") {
     CHECK(adapter.compare("bravo") < 0);
     CHECK(adapter.compare(NULL) == 0);
 
-    CHECK(adapter.equals(NULL));
-    CHECK_FALSE(adapter.equals("charlie"));
-
     CHECK(adapter.size() == 0);
   }
 
@@ -35,9 +32,6 @@ TEST_CASE("const char*") {
     CHECK(adapter.compare("alpha") > 0);
     CHECK(adapter.compare("bravo") == 0);
     CHECK(adapter.compare("charlie") < 0);
-
-    CHECK(adapter.equals("bravo"));
-    CHECK_FALSE(adapter.equals("charlie"));
 
     CHECK(adapter.size() == 5);
   }
@@ -50,9 +44,6 @@ TEST_CASE("const char* + size") {
     CHECK(adapter.compare("bravo") < 0);
     CHECK(adapter.compare(NULL) == 0);
 
-    CHECK(adapter.equals(NULL));
-    CHECK_FALSE(adapter.equals("charlie"));
-
     CHECK(adapter.size() == 10);
   }
 
@@ -63,9 +54,6 @@ TEST_CASE("const char* + size") {
     CHECK(adapter.compare("alpha") > 0);
     CHECK(adapter.compare("bravo") == 0);
     CHECK(adapter.compare("charlie") < 0);
-
-    CHECK(adapter.equals("bravo"));
-    CHECK_FALSE(adapter.equals("charlie"));
 
     CHECK(adapter.size() == 5);
   }
@@ -78,9 +66,6 @@ TEST_CASE("const __FlashStringHelper*") {
     CHECK(adapter.compare("bravo") < 0);
     CHECK(adapter.compare(NULL) == 0);
 
-    CHECK(adapter.equals(NULL));
-    CHECK_FALSE(adapter.equals("charlie"));
-
     CHECK(adapter.size() == 0);
   }
 
@@ -91,9 +76,6 @@ TEST_CASE("const __FlashStringHelper*") {
     CHECK(adapter.compare("alpha") > 0);
     CHECK(adapter.compare("bravo") == 0);
     CHECK(adapter.compare("charlie") < 0);
-
-    CHECK(adapter.equals("bravo"));
-    CHECK_FALSE(adapter.equals("charlie"));
 
     CHECK(adapter.size() == 5);
   }
@@ -108,9 +90,6 @@ TEST_CASE("std::string") {
   CHECK(adapter.compare("bravo") == 0);
   CHECK(adapter.compare("charlie") < 0);
 
-  CHECK(adapter.equals("bravo"));
-  CHECK_FALSE(adapter.equals("charlie"));
-
   CHECK(adapter.size() == 5);
 }
 
@@ -123,9 +102,6 @@ TEST_CASE("Arduino String") {
   CHECK(adapter.compare("bravo") == 0);
   CHECK(adapter.compare("charlie") < 0);
 
-  CHECK(adapter.equals("bravo"));
-  CHECK_FALSE(adapter.equals("charlie"));
-
   CHECK(adapter.size() == 5);
 }
 
@@ -137,9 +113,6 @@ TEST_CASE("custom_string") {
   CHECK(adapter.compare("alpha") > 0);
   CHECK(adapter.compare("bravo") == 0);
   CHECK(adapter.compare("charlie") < 0);
-
-  CHECK(adapter.equals("bravo"));
-  CHECK_FALSE(adapter.equals("charlie"));
 
   CHECK(adapter.size() == 5);
 }

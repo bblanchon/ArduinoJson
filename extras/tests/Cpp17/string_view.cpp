@@ -71,9 +71,5 @@ TEST_CASE("StringViewAdapter") {
   CHECK(adapter.compare("bravo") == 0);
   CHECK(adapter.compare("charlie") < 0);
 
-  CHECK(adapter.equals("bravo"));
-  CHECK_FALSE(adapter.equals("charlie"));
-  CHECK_FALSE(adapter.equals(NULL));
-
   CHECK(adapter.size() == 5);
 }
