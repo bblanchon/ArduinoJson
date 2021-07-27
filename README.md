@@ -2,7 +2,7 @@
 
 ---
 
-[![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=6.18.2)](https://www.ardu-badge.com/ArduinoJson/6.18.2)
+[![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=6.18.3)](https://www.ardu-badge.com/ArduinoJson/6.18.3)
 [![Continuous Integration](https://github.com/bblanchon/ArduinoJson/workflows/Continuous%20Integration/badge.svg?branch=6.x)](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22+branch%3A6.x)
 [![Continuous Integration](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/6.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
 [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/arduinojson.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
