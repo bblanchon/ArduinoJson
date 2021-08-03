@@ -45,7 +45,7 @@ class StringAdapter<const char*> {
 template <int N>
 class StringAdapter<const char[N]> : public StringAdapter<const char*> {
  public:
-  StringAdapter<const char[N]>(const char* s) : StringAdapter<const char*>(s) {}
+  StringAdapter(const char* s) : StringAdapter<const char*>(s) {}
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

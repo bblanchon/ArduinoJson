@@ -45,8 +45,7 @@ class StringAdapter< ::String> {
 template <>
 class StringAdapter< ::StringSumHelper> : public StringAdapter< ::String> {
  public:
-  StringAdapter< ::StringSumHelper>(const ::String& s)
-      : StringAdapter< ::String>(s) {}
+  StringAdapter(const ::String& s) : StringAdapter< ::String>(s) {}
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

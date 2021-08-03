@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fixed error `'dummy' may be used uninitialized` on GCC 11
+* Fixed error `expected unqualified-id before 'const'` on GCC 11 (issue #1622)
 
 v6.18.3 (2021-07-27)
 -------
