@@ -40,6 +40,7 @@ jobs:
           - gcc: "9"
             cxxflags: -fsanitize=address -fno-sanitize-recover=all
           - gcc: "10"
+          - gcc: "11"
     steps:
       - name: Install
         run: |
@@ -49,6 +50,7 @@ jobs:
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial universe' 
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic main'
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic universe' 
+          sudo add-apt-repository -yn 'deb http://mirrors.kernel.org/ubuntu hirsute main universe' 
           sudo apt-get update
           sudo apt-get install -y gcc-${{ matrix.gcc }} g++-${{ matrix.gcc }}
       - name: Checkout

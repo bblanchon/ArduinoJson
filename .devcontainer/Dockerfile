@@ -13,7 +13,8 @@ RUN add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty main' &
   add-apt-repository -yn 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-6.0 main' && \
   add-apt-repository -yn 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main' && \
   add-apt-repository -yn 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main' && \
-  add-apt-repository -yn 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
+  add-apt-repository -yn 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main' && \
+  add-apt-repository -yn 'deb http://mirrors.kernel.org/ubuntu hirsute main universe'
 
 RUN apt-get update && apt-get -y install \
   cmake \
@@ -30,6 +31,7 @@ RUN apt-get update && apt-get -y install \
   g++-8 \
   g++-9 \
   g++-10 \
+  g++-11 \
   clang-3.5 \
   clang-3.6 \
   clang-3.7 \
