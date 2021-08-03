@@ -27,7 +27,7 @@ struct Converter {
   }
 
   static bool checkJson(VariantConstRef src) {
-    T dummy;
+    T dummy = T();
     // clang-format off
     return canConvertFromJson(src, dummy);  // Error here? See https://arduinojson.org/v6/unsupported-is/
     // clang-format on
