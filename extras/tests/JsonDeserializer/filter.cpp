@@ -233,6 +233,15 @@ TEST_CASE("Filtering") {
       2 * JSON_OBJECT_SIZE(1) + 16
     },
     {
+      // exclusion filter (issue #1628)
+      "{\"example\":1,\"ignored\":2}",
+      "{\"*\":true,\"ignored\":false}",
+      10,
+      DeserializationError::Ok,
+      "{\"example\":1}",
+      JSON_OBJECT_SIZE(1) + 8
+    },
+    {
       // only the first element of array counts
       "[1,2,3]",
       "[true, false]",

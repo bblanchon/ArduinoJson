@@ -32,8 +32,8 @@ class Filter {
   Filter operator[](const TKey& key) const {
     if (_variant == true)  // "true" means "allow recursively"
       return *this;
-    else
-      return Filter(_variant[key] | _variant["*"]);
+    VariantConstRef member = _variant[key];
+    return Filter(member.isNull() ? _variant["*"] : member);
   }
 
  private:
