@@ -243,6 +243,9 @@ jobs:
       - name: Install adafruit-nrfutil
         if: ${{ matrix.platform == 'nordicnrf52' }}
         run: pip install adafruit-nrfutil
+      - name: Include Adafruit_TinyUSB.h # https://github.com/adafruit/Adafruit_nRF52_Arduino/issues/653
+        if: ${{ matrix.platform == 'nordicnrf52' }}
+        run: find examples/ -name '*.ino' -exec sed -i 's/\(#include <ArduinoJson.h>\)/\1\n#include <Adafruit_TinyUSB.h>/' {} +
       - name: Set up cache for platformio
         uses: actions/cache@v2
         with:
