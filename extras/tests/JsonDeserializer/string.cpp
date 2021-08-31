@@ -46,6 +46,25 @@ TEST_CASE("Valid JSON strings value") {
   }
 }
 
+TEST_CASE("\\u0000") {
+  StaticJsonDocument<200> doc;
+
+  DeserializationError err = deserializeJson(doc, "\"wx\\u0000yz\"");
+  REQUIRE(err == DeserializationError::Ok);
+
+  const char* result = doc.as<const char*>();
+  CHECK(result[0] == 'w');
+  CHECK(result[1] == 'x');
+  CHECK(result[2] == 0);
+  CHECK(result[3] == 'y');
+  CHECK(result[4] == 'z');
+  CHECK(result[5] == 0);
+
+  // ArduinoJson strings doesn't store string length, so the following returns 2
+  // instead of 5 (issue #1646)
+  CHECK(doc.as<std::string>().size() == 2);
+}
+
 TEST_CASE("Truncated JSON string") {
   const char* testCases[] = {"\"hello", "\'hello", "'\\u", "'\\u00", "'\\u000"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
