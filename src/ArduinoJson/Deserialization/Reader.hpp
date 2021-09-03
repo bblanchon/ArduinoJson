@@ -17,7 +17,7 @@ struct Reader {
   Reader(TSource& source) : _source(&source) {}
 
   int read() {
-    return _source->read();
+    return _source->read();  // Error here? You passed an unsupported input type
   }
 
   size_t readBytes(char* buffer, size_t length) {
