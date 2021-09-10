@@ -12,7 +12,6 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-//
 enum {
   VALUE_MASK = 0x7F,
 

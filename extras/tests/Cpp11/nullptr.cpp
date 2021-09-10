@@ -29,6 +29,14 @@ TEST_CASE("nullptr") {
     REQUIRE(variant.isNull());
   }
 
+  SECTION("JsonVariant.set(nullptr) with unbound reference") {
+    JsonVariant unboundReference;
+
+    unboundReference.set(nullptr);
+
+    REQUIRE(variant.isNull());
+  }
+
   SECTION("JsonVariant.is<nullptr_t>()") {
     variant.set(42);
     REQUIRE(variant.is<std::nullptr_t>() == false);

@@ -7,73 +7,83 @@
 
 TEST_CASE("JsonArray::remove()") {
   DynamicJsonDocument doc(4096);
-  JsonArray _array = doc.to<JsonArray>();
-  _array.add(1);
-  _array.add(2);
-  _array.add(3);
+  JsonArray array = doc.to<JsonArray>();
+  array.add(1);
+  array.add(2);
+  array.add(3);
 
-  SECTION("RemoveFirstByIndex") {
-    _array.remove(0);
+  SECTION("remove first by index") {
+    array.remove(0);
 
-    REQUIRE(2 == _array.size());
-    REQUIRE(_array[0] == 2);
-    REQUIRE(_array[1] == 3);
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 2);
+    REQUIRE(array[1] == 3);
   }
 
-  SECTION("RemoveMiddleByIndex") {
-    _array.remove(1);
+  SECTION("remove middle by index") {
+    array.remove(1);
 
-    REQUIRE(2 == _array.size());
-    REQUIRE(_array[0] == 1);
-    REQUIRE(_array[1] == 3);
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 1);
+    REQUIRE(array[1] == 3);
   }
 
-  SECTION("RemoveLastByIndex") {
-    _array.remove(2);
+  SECTION("remove last by index") {
+    array.remove(2);
 
-    REQUIRE(2 == _array.size());
-    REQUIRE(_array[0] == 1);
-    REQUIRE(_array[1] == 2);
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 1);
+    REQUIRE(array[1] == 2);
   }
 
-  SECTION("RemoveFirstByIterator") {
-    JsonArray::iterator it = _array.begin();
-    _array.remove(it);
+  SECTION("remove first by iterator") {
+    JsonArray::iterator it = array.begin();
+    array.remove(it);
 
-    REQUIRE(2 == _array.size());
-    REQUIRE(_array[0] == 2);
-    REQUIRE(_array[1] == 3);
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 2);
+    REQUIRE(array[1] == 3);
   }
 
-  SECTION("RemoveMiddleByIterator") {
-    JsonArray::iterator it = _array.begin();
+  SECTION("remove middle by iterator") {
+    JsonArray::iterator it = array.begin();
     ++it;
-    _array.remove(it);
+    array.remove(it);
 
-    REQUIRE(2 == _array.size());
-    REQUIRE(_array[0] == 1);
-    REQUIRE(_array[1] == 3);
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 1);
+    REQUIRE(array[1] == 3);
   }
 
-  SECTION("RemoveLastByIterator") {
-    JsonArray::iterator it = _array.begin();
+  SECTION("remove last bty iterator") {
+    JsonArray::iterator it = array.begin();
     ++it;
     ++it;
-    _array.remove(it);
+    array.remove(it);
 
-    REQUIRE(2 == _array.size());
-    REQUIRE(_array[0] == 1);
-    REQUIRE(_array[1] == 2);
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 1);
+    REQUIRE(array[1] == 2);
   }
 
   SECTION("In a loop") {
-    for (JsonArray::iterator it = _array.begin(); it != _array.end(); ++it) {
+    for (JsonArray::iterator it = array.begin(); it != array.end(); ++it) {
       if (*it == 2)
-        _array.remove(it);
+        array.remove(it);
     }
 
-    REQUIRE(2 == _array.size());
-    REQUIRE(_array[0] == 1);
-    REQUIRE(_array[1] == 3);
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 1);
+    REQUIRE(array[1] == 3);
+  }
+
+  SECTION("remove by index on unbound reference") {
+    JsonArray unboundArray;
+    unboundArray.remove(20);
+  }
+
+  SECTION("remove by iterator on unbound reference") {
+    JsonArray unboundArray;
+    unboundArray.remove(unboundArray.begin());
   }
 }

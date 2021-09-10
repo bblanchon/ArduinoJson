@@ -15,6 +15,11 @@ static size_t print(StringWriter& writer, const char* s) {
   return writer.write(reinterpret_cast<const uint8_t*>(s), strlen(s));
 }
 
+template <typename StringWriter>
+static size_t print(StringWriter& writer, char c) {
+  return writer.write(static_cast<uint8_t>(c));
+}
+
 template <typename StringWriter, typename String>
 void common_tests(StringWriter& writer, const String& output) {
   SECTION("InitialState") {
@@ -47,6 +52,7 @@ TEST_CASE("StaticStringWriter") {
   SECTION("OverCapacity") {
     REQUIRE(20 == print(writer, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
     REQUIRE(0 == print(writer, "ABC"));
+    REQUIRE(0 == print(writer, 'D'));
     REQUIRE("ABCDEFGHIJKLMNOPQRST" == std::string(output, 20));
   }
 }

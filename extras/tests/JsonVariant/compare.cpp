@@ -158,6 +158,18 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
+  SECTION("42 vs 42U") {
+    a.set(42);
+    b.set(42U);
+
+    CHECK(a == b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
+  }
+
   SECTION("42 vs 42.0") {
     a.set(42);
     b.set(42.0);
@@ -228,6 +240,30 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a < b);
     CHECK_FALSE(a <= b);
     CHECK_FALSE(a == b);
+  }
+
+  SECTION("42U vs 42U") {
+    a.set(42U);
+    b.set(42U);
+
+    CHECK(a == b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
+  }
+
+  SECTION("42U vs 42") {
+    a.set(42U);
+    b.set(42);
+
+    CHECK(a == b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
   }
 
   SECTION("[1] vs [1]") {
