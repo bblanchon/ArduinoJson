@@ -12,7 +12,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/bblanchon/ArduinoJson?style=flat&logo=github)](https://github.com/bblanchon/ArduinoJson/stargazers)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/bblanchon?logo=github)](https://github.com/sponsors/bblanchon)
 
-[![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=6.18.4)](https://www.ardu-badge.com/ArduinoJson/6.18.4)
+[![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=6.18.5)](https://www.ardu-badge.com/ArduinoJson/6.18.5)
 
 ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
 

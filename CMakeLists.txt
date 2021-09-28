@@ -11,7 +11,7 @@ if(ESP_PLATFORM)
    return()
 endif()
 
-project(ArduinoJson VERSION 6.18.4)
+project(ArduinoJson VERSION 6.18.5)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
