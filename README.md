@@ -36,10 +36,10 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [Consumes roughly 10% less RAM than the "official" Arduino_JSON library](https://arduinojson.org/2019/11/19/arduinojson-vs-arduino_json/?utm_source=github&utm_medium=readme)
     * [Fixed memory allocation, no heap fragmentation](https://arduinojson.org/v6/api/jsondocument/?utm_source=github&utm_medium=readme)
     * [Optionally works without heap memory (zero malloc)](https://arduinojson.org/v6/api/staticjsondocument/?utm_source=github&utm_medium=readme)
-    * Deduplicates strings
+    * [Deduplicates strings](https://arduinojson.org/news/2020/08/01/version-6-16-0/?utm_source=github&utm_medium=readme)
 * Versatile
     * Supports [custom allocators (to use external RAM chip, for example)](https://arduinojson.org/v6/how-to/use-external-ram-on-esp32/?utm_source=github&utm_medium=readme)
-    * Supports [`String`](https://arduinojson.org/v6/api/config/enable_arduino_string/?utm_source=github&utm_medium=readme), [`std::string`](https://arduinojson.org/v6/api/config/enable_std_string/?utm_source=github&utm_medium=readme) and [`std::string_view`](https://arduinojson.org/v6/api/config/enable_string_view/?utm_source=github&utm_medium=readme)
+    * Supports [`String`](https://arduinojson.org/v6/api/config/enable_arduino_string/?utm_source=github&utm_medium=readme), [`std::string`](https://arduinojson.org/v6/api/config/enable_std_string/?utm_source=github&utm_medium=readme), and [`std::string_view`](https://arduinojson.org/v6/api/config/enable_string_view/?utm_source=github&utm_medium=readme)
     * Supports [`Stream`](https://arduinojson.org/v6/api/config/enable_arduino_stream/?utm_source=github&utm_medium=readme) and [`std::istream`/`std::ostream`](https://arduinojson.org/v6/api/config/enable_std_stream/?utm_source=github&utm_medium=readme)
     * Supports [Flash strings](https://arduinojson.org/v6/api/config/enable_progmem/?utm_source=github&utm_medium=readme)
     * Supports [custom readers](https://arduinojson.org/v6/api/json/deserializejson/?utm_source=github&utm_medium=readme#custom-reader) and [custom writers](https://arduinojson.org/v6/api/json/serializejson/?utm_source=github&utm_medium=readme#custom-writer)
@@ -56,6 +56,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
         * Teensy boards: [4.0](https://amzn.to/30ljXGq), [3.2](https://amzn.to/2FT0EuC), [2.0](https://amzn.to/2QXUMXj) 
         * Particle boards: [Argon](https://amzn.to/2FQHa9X), [Boron](https://amzn.to/36WgLUd), [Electron](https://amzn.to/30vEc4k), [Photon](https://amzn.to/387F9Cd)...
         * Texas Instruments boards: [MSP430](https://amzn.to/30nJWgg)...
+        * Soft cores: [Nios II](https://en.wikipedia.org/wiki/Nios_II)...
     * Tested on all major development environments
         * [Arduino IDE](https://www.arduino.cc/en/Main/Software)
         * [Atmel Studio](http://www.atmel.com/microsite/atmel-studio/)
@@ -99,6 +100,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * Most popular of all Arduino libraries on [GitHub](https://github.com/search?o=desc&q=arduino+library&s=stars&type=Repositories)
     * [Used in hundreds of projects](https://www.hackster.io/search?i=projects&q=arduinojson)
     * [Responsive support](https://github.com/bblanchon/ArduinoJson/issues?q=is%3Aissue+is%3Aclosed)
+    * [Discord server](https://discord.gg/DzN6hHHD4h)
 
 ## Quickstart
 
@@ -144,6 +146,6 @@ See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/?utm_
 Do you like this library?  
 Please [star this project on GitHub](https://github.com/bblanchon/ArduinoJson/stargazers)!
 
-What? You don't like it but you *love* it?  
+What? You don't like it, but you *love* it?  
 You can support the project by [purchasing my book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme).
 Alternatively, you can make a recurring donation via [GitHub Sponsors](https://github.com/sponsors/bblanchon).  
