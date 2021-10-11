@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 👨‍🏫 ArduinoJson Assistant
+    url: https://arduinojson.org/v6/assistant/
+    about: An online tool that computes memory requirements and generates scaffolding code for your project.
+  - name: 👨‍⚕️ ArduinoJson Troubleshooter
+    url: https://arduinojson.org/v6/troubleshooter/
+    about: An online tool that helps you diagnose the most common issues with ArduinoJson.
