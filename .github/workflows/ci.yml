@@ -135,11 +135,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: GCC 32-bit
-        run: g++ -std=c++11 -m32 -Isrc extras/conf_test/x86-linux.cpp
+        run: g++ -std=c++11 -m32 -Isrc extras/conf_test/x86.cpp
       - name: GCC 64-bit
         run: g++ -std=c++11 -m64 -Isrc extras/conf_test/x64.cpp
       - name: Clang 32-bit
-        run: clang++ -std=c++11 -m32 -Isrc extras/conf_test/x86-linux.cpp
+        run: clang++ -std=c++11 -m32 -Isrc extras/conf_test/x86.cpp
       - name: Clang 64-bit
         run: clang++ -std=c++11 -m64 -Isrc extras/conf_test/x64.cpp
 
@@ -153,7 +153,7 @@ jobs:
       - name: 32-bit
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
-          cl /Isrc extras/conf_test/x86-windows.cpp
+          cl /Isrc extras/conf_test/x86.cpp
         shell: cmd
       - name: 64-bit
         run: |
