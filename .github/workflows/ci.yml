@@ -125,6 +125,42 @@ jobs:
         env:
           UBSAN_OPTIONS: print_stacktrace=1
 
+  conf_test:
+    name: Test configuration on Linux
+    needs: [gcc, clang]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install
+        run: sudo apt-get install -y g++-multilib
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: GCC 32-bit
+        run: g++ -std=c++11 -m32 -Isrc extras/conf_test/x86-linux.cpp
+      - name: GCC 64-bit
+        run: g++ -std=c++11 -m64 -Isrc extras/conf_test/x64.cpp
+      - name: Clang 32-bit
+        run: clang++ -std=c++11 -m32 -Isrc extras/conf_test/x86-linux.cpp
+      - name: Clang 64-bit
+        run: clang++ -std=c++11 -m64 -Isrc extras/conf_test/x64.cpp
+
+  conf_test_windows:
+    name: Test configuration on Windows
+    runs-on: windows-2019
+    needs: [gcc, clang]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: 32-bit
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
+          cl /Isrc extras/conf_test/x86-windows.cpp
+        shell: cmd
+      - name: 64-bit
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cl /Isrc extras/conf_test/x64.cpp
+        shell: cmd
+
   xcode:
     name: XCode
     needs: clang
@@ -203,29 +239,36 @@ jobs:
             libraries:
               - SD
               - Ethernet
+            conf_test: avr
           - platform: espressif8266
             board: huzzah
+            conf_test: esp8266
           - platform: espressif32
             board: esp32dev
             libraries:
               - Ethernet
+            conf_test: esp8266
           - platform: atmelsam
             board: mkr1000USB
             libraries:
               - SD
               - Ethernet
+            conf_test: esp8266
           - platform: teensy
             board: teensy31
+            conf_test: esp8266
           - platform: ststm32
             board: adafruit_feather_f405
             libraries:
               - SD
               - Ethernet
+            conf_test: esp8266
           - platform: nordicnrf52
             board: adafruit_feather_nrf52840
             libraries:
               - SD
               - Ethernet
+            conf_test: esp8266
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -256,6 +299,9 @@ jobs:
       - name: Install libraries
         if: ${{ matrix.libraries }}
         run: platformio lib install arduino-libraries/${{ join(matrix.libraries, ' arduino-libraries/') }}
+      - name: Test configuration
+        run: platformio ci "extras/conf_test/${{ matrix.conf_test }}.cpp" -l '.' -b ${{ matrix.board }}
+        if: ${{ matrix.conf_test }}
       - name: Build JsonConfigFile
         run: platformio ci "examples/JsonConfigFile/JsonConfigFile.ino" -l '.' -b ${{ matrix.board }}
       - name: Build JsonFilterExample
