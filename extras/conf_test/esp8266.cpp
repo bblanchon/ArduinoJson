@@ -1,6 +1,6 @@
 #include <ArduinoJson.h>
 
-static_assert(ARDUINOJSON_USE_LONG_LONG == 0, "ARDUINOJSON_USE_LONG_LONG");
+static_assert(ARDUINOJSON_USE_LONG_LONG == 1, "ARDUINOJSON_USE_LONG_LONG");
 
 static_assert(ARDUINOJSON_SLOT_OFFSET_SIZE == 2,
               "ARDUINOJSON_SLOT_OFFSET_SIZE");

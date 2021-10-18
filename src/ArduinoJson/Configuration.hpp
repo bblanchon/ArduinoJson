@@ -83,6 +83,13 @@
 
 // Store integral values with long (0) or long long (1)
 #ifndef ARDUINOJSON_USE_LONG_LONG
+#  if ARDUINOJSON_HAS_LONG_LONG && defined(__SIZEOF_POINTER__) && \
+          __SIZEOF_POINTER__ >= 4 ||                              \
+      defined(_MSC_VER)
+#    define ARDUINOJSON_USE_LONG_LONG 1
+#  endif
+#endif
+#ifndef ARDUINOJSON_USE_LONG_LONG
 #  define ARDUINOJSON_USE_LONG_LONG 0
 #endif
 
