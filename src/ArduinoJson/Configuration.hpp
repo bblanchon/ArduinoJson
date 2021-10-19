@@ -78,7 +78,7 @@
 
 // Store floating-point values with float (0) or double (1)
 #ifndef ARDUINOJSON_USE_DOUBLE
-#  define ARDUINOJSON_USE_DOUBLE 0
+#  define ARDUINOJSON_USE_DOUBLE 1
 #endif
 
 // Store integral values with long (0) or long long (1)
