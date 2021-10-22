@@ -15,5 +15,8 @@
     "xlocnum": "cpp",
     "xloctime": "cpp",
     "xstring": "cpp"
+  },
+  "search.exclude": {
+    "/extras/tests/catch/*": true
   }
 }
