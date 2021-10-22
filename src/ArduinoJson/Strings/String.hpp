@@ -4,9 +4,11 @@
 
 #pragma once
 
+#include <ArduinoJson/Misc/SafeBoolIdiom.hpp>
+
 namespace ARDUINOJSON_NAMESPACE {
 
-class String {
+class String : public SafeBoolIdom<String> {
  public:
   String() : _data(0), _isStatic(true) {}
   String(const char* data, bool isStaticData = true)
@@ -22,6 +24,11 @@ class String {
 
   bool isStatic() const {
     return _isStatic;
+  }
+
+  // safe bool idiom
+  operator bool_type() const {
+    return _data ? safe_true() : safe_false();
   }
 
   friend bool operator==(String lhs, String rhs) {

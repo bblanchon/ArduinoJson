@@ -14,6 +14,23 @@ TEST_CASE("JsonString") {
     CHECK(s.isStatic() == true);
   }
 
+  SECTION("Compare null with boolean") {
+    JsonString s;
+
+    CHECK(bool(s) == false);
+    CHECK(false == bool(s));
+    CHECK(bool(s) != true);
+    CHECK(true != bool(s));
+  }
+
+  SECTION("Compare non-null with boolean") {
+    JsonString s("hello");
+    CHECK(bool(s) == true);
+    CHECK(true == bool(s));
+    CHECK(bool(s) != false);
+    CHECK(false != bool(s));
+  }
+
   SECTION("Compare null with null") {
     JsonString a, b;
 
