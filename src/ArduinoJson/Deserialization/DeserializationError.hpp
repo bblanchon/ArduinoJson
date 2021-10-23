@@ -57,18 +57,6 @@ class DeserializationError : public SafeBoolIdom<DeserializationError> {
   operator bool_type() const {
     return _code != Ok ? safe_true() : safe_false();
   }
-  friend bool operator==(bool value, const DeserializationError& err) {
-    return static_cast<bool>(err) == value;
-  }
-  friend bool operator==(const DeserializationError& err, bool value) {
-    return static_cast<bool>(err) == value;
-  }
-  friend bool operator!=(bool value, const DeserializationError& err) {
-    return static_cast<bool>(err) != value;
-  }
-  friend bool operator!=(const DeserializationError& err, bool value) {
-    return static_cast<bool>(err) != value;
-  }
 
   // Returns internal enum, useful for switch statement
   Code code() const {

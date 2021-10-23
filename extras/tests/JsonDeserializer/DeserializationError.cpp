@@ -11,14 +11,14 @@ void testStringification(DeserializationError error, std::string expected) {
 
 void testBoolification(DeserializationError error, bool expected) {
   // DeserializationError on left-hand side
-  CHECK(error == expected);
-  CHECK(error != !expected);
-  CHECK(!error == !expected);
+  CHECK(bool(error) == expected);
+  CHECK(bool(error) != !expected);
+  CHECK(!bool(error) == !expected);
 
   // DeserializationError on right-hand side
-  CHECK(expected == error);
-  CHECK(!expected != error);
-  CHECK(!expected == !error);
+  CHECK(expected == bool(error));
+  CHECK(!expected != bool(error));
+  CHECK(!expected == !bool(error));
 }
 
 #define TEST_STRINGIFICATION(symbol) \
@@ -70,34 +70,24 @@ TEST_CASE("DeserializationError") {
     }
   }
 
-  SECTION("Comparisons") {
+  SECTION("Use in a condition") {
     DeserializationError invalidInput(DeserializationError::InvalidInput);
     DeserializationError ok(DeserializationError::Ok);
 
-    SECTION("DeserializationError == bool") {
-      REQUIRE(invalidInput == true);
-      REQUIRE(ok == false);
+    SECTION("if (!err)") {
+      if (!invalidInput)
+        FAIL();
     }
 
-    SECTION("bool == DeserializationError") {
-      REQUIRE(true == invalidInput);
-      REQUIRE(false == ok);
+    SECTION("if (err)") {
+      if (ok)
+        FAIL();
     }
+  }
 
-    SECTION("DeserializationError != bool") {
-      REQUIRE(invalidInput != false);
-      REQUIRE(ok != true);
-    }
-
-    SECTION("bool != DeserializationError") {
-      REQUIRE(false != invalidInput);
-      REQUIRE(true != ok);
-    }
-
-    SECTION("Negations") {
-      REQUIRE(!invalidInput == false);
-      REQUIRE(!ok == true);
-    }
+  SECTION("Comparisons") {
+    DeserializationError invalidInput(DeserializationError::InvalidInput);
+    DeserializationError ok(DeserializationError::Ok);
 
     SECTION("DeserializationError == Code") {
       REQUIRE(invalidInput == DeserializationError::InvalidInput);
