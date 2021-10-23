@@ -97,12 +97,19 @@ TEST_CASE("Not enough room to save the key") {
   DynamicJsonDocument doc(JSON_OBJECT_SIZE(1) + 8);
 
   SECTION("Quoted string") {
+    REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
+            DeserializationError::Ok);
     REQUIRE(deserializeJson(doc, "{\"accuracy\":1}") ==
             DeserializationError::NoMemory);
+    REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
+            DeserializationError::NoMemory);  // fails in the second string
   }
 
   SECTION("Non-quoted string") {
+    REQUIRE(deserializeJson(doc, "{example:1}") == DeserializationError::Ok);
     REQUIRE(deserializeJson(doc, "{accuracy:1}") ==
             DeserializationError::NoMemory);
+    REQUIRE(deserializeJson(doc, "{hello:1,world}") ==
+            DeserializationError::NoMemory);  // fails in the second string
   }
 }
