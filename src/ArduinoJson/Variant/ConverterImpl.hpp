@@ -129,6 +129,18 @@ struct Converter<const char*> {
   }
 };
 
+template <>
+struct Converter<String> {
+  static void toJson(String src, VariantRef dst) {
+    variantSetString(getData(dst), adaptString(src), getPool(dst));
+  }
+
+  static String fromJson(VariantConstRef src) {
+    const VariantData* data = getData(src);
+    return data ? String(data->asString(), false) : 0;
+  }
+};
+
 template <typename T>
 inline typename enable_if<IsString<T>::value, bool>::type convertToJson(
     const T& src, VariantRef dst) {
