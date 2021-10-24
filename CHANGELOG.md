@@ -8,7 +8,7 @@ HEAD
   Dependent settings (like `ARDUINOJSON_DEFAULT_NESTING_LIMIT`) must be set individually.
 * Change the default of `ARDUINOJSON_USE_DOUBLE` to `1`
 * Change the default of `ARDUINOJSON_USE_LONG_LONG` to `1` on 32-bit platforms
-* Add `as<JsonString>()`
+* Add `as<JsonString>()` and `is<JsonString>()`
 
 v6.18.5 (2021-09-28)
 -------

@@ -139,6 +139,11 @@ struct Converter<String> {
     const VariantData* data = getData(src);
     return data ? String(data->asString(), false) : 0;
   }
+
+  static bool checkJson(VariantConstRef src) {
+    const VariantData* data = getData(src);
+    return data && data->isString();
+  }
 };
 
 template <typename T>
