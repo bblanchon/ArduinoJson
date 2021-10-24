@@ -70,11 +70,12 @@ inline T VariantData::asFloat() const {
   }
 }
 
-inline const char *VariantData::asString() const {
+inline String VariantData::asString() const {
   switch (type()) {
     case VALUE_IS_LINKED_STRING:
+      return String(_content.asString, true);
     case VALUE_IS_OWNED_STRING:
-      return _content.asString;
+      return String(_content.asString, false);
     default:
       return 0;
   }

@@ -7,6 +7,7 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
+#include <ArduinoJson/Strings/String.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
 
@@ -76,7 +77,7 @@ class VariantData {
   template <typename T>
   T asFloat() const;
 
-  const char *asString() const;
+  String asString() const;
 
   bool asBoolean() const;
 

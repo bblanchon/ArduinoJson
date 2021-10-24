@@ -120,7 +120,7 @@ struct Converter<const char*> {
 
   static const char* fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->asString() : 0;
+    return data ? data->asString().c_str() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {
@@ -137,7 +137,7 @@ struct Converter<String> {
 
   static String fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? String(data->asString(), false) : 0;
+    return data ? data->asString() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {
@@ -158,9 +158,9 @@ template <typename T>
 inline typename enable_if<IsWriteableString<T>::value>::type convertFromJson(
     VariantConstRef src, T& dst) {
   const VariantData* data = getData(src);
-  const char* cstr = data != 0 ? data->asString() : 0;
-  if (cstr)
-    dst = cstr;
+  String str = data != 0 ? data->asString() : 0;
+  if (str)
+    dst = str.c_str();
   else
     serializeJson(src, dst);
 }

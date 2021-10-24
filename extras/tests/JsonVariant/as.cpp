@@ -136,6 +136,7 @@ TEST_CASE("JsonVariant::as()") {
 
     REQUIRE(variant.as<long>() == 42L);
     REQUIRE(variant.as<JsonString>() == "42");
+    REQUIRE(variant.as<JsonString>().isStatic() == true);
   }
 
   SECTION("set(\"hello\")") {
@@ -158,6 +159,7 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<const char*>() == std::string("4.2"));
     REQUIRE(variant.as<std::string>() == std::string("4.2"));
     REQUIRE(variant.as<JsonString>() == "4.2");
+    REQUIRE(variant.as<JsonString>().isStatic() == false);
   }
 
   SECTION("set(\"true\")") {
