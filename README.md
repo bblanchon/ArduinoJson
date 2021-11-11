@@ -138,11 +138,24 @@ serializeJson(doc, Serial);
 
 See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/?utm_source=github&utm_medium=readme)
 
-## Support the project ❤️
+## Sponsors
 
-Do you like this library?  
-Please [star this project on GitHub](https://github.com/bblanchon/ArduinoJson/stargazers)!
+ArduinoJson is thankful to its sponsors. Please give them a visit; they deserve it!
 
-What? You don't like it, but you *love* it?  
-You can support the project by [purchasing my book](https://arduinojson.org/book/?utm_source=github&utm_medium=readme).
-Alternatively, you can make a recurring donation via [GitHub Sponsors](https://github.com/sponsors/bblanchon).  
+<p>
+  <a href="https://techexplorations.com/" rel="sponsored">
+    <img alt="Tech Explorations" src="https://arduinojson.org/images/2021/10/techexplorations.png" width="200">
+  </a>
+  <a href="https://www.programmingelectronics.com/" rel="sponsored">
+    <img src="https://arduinojson.org/images/2021/10/programmingeleactronicsacademy.png" alt="Programming Electronics Academy" width="200">
+  </a>
+</p>
+<p>
+  <a href="https://github.com/1technophile" rel="sponsored">
+    <img alt="1technophile" src="https://avatars.githubusercontent.com/u/12672732?s=40&v=4">
+  </a>
+</p>
+
+If you run a commercial project that embeds ArduinoJson, think about [sponsoring the library's development](https://github.com/sponsors/bblanchon): it ensures the code that your products rely on stays actively maintained. It can also give your project some exposure to the makers' community.
+
+If you are an individual user and want to support the development (or give a sign of appreciation), consider purchasing the book [Mastering ArduinoJson](https://arduinojson.org/book/)&nbsp;❤, or simply [cast a star](https://github.com/bblanchon/ArduinoJson/stargazers)&nbsp;⭐.
