@@ -32,6 +32,11 @@ class String {
     return _str == s;
   }
 
+  String& operator=(const char* s) {
+    _str.assign(s);
+    return *this;
+  }
+
   friend std::ostream& operator<<(std::ostream& lhs, const ::String& rhs) {
     lhs << rhs._str;
     return lhs;

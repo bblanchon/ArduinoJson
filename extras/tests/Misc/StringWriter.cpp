@@ -135,20 +135,6 @@ TEST_CASE("Writer<custom_string>") {
   REQUIRE("ABCD" == output);
 }
 
-TEST_CASE("IsWriteableString") {
-  SECTION("std::string") {
-    REQUIRE(IsWriteableString<std::string>::value == true);
-  }
-
-  SECTION("custom_string") {
-    REQUIRE(IsWriteableString<custom_string>::value == true);
-  }
-
-  SECTION("basic_string<wchar_t>") {
-    REQUIRE(IsWriteableString<std::basic_string<wchar_t> >::value == false);
-  }
-}
-
 TEST_CASE("serializeJson(doc, String)") {
   StaticJsonDocument<1024> doc;
   doc["hello"] = "world";

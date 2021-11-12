@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Strings/IsWriteableString.hpp>
+#include <ArduinoJson/Json/JsonSerializer.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 
@@ -154,24 +154,6 @@ inline typename enable_if<IsString<T>::value, bool>::type convertToJson(
   return variantSetString(data, adaptString(src), pool);
 }
 
-template <typename T>
-inline typename enable_if<IsWriteableString<T>::value>::type convertFromJson(
-    VariantConstRef src, T& dst) {
-  const VariantData* data = getData(src);
-  String str = data != 0 ? data->asString() : 0;
-  if (str)
-    dst = str.c_str();
-  else
-    serializeJson(src, dst);
-}
-
-template <typename T>
-inline typename enable_if<IsWriteableString<T>::value, bool>::type
-canConvertFromJson(VariantConstRef src, const T&) {
-  const VariantData* data = getData(src);
-  return data && data->isString();
-}
-
 template <>
 struct Converter<SerializedValue<const char*> > {
   static void toJson(SerializedValue<const char*> src, VariantRef dst) {
@@ -269,6 +251,42 @@ inline void convertToJson(const ::Printable& src, VariantRef dst) {
     return;
   }
   data->setStringPointer(print.c_str(), storage_policies::store_by_copy());
+}
+
+#endif
+
+#if ARDUINOJSON_ENABLE_ARDUINO_STRING
+
+inline void convertFromJson(VariantConstRef src, ::String& dst) {
+  const VariantData* data = getData(src);
+  String str = data != 0 ? data->asString() : String();
+  if (str)
+    dst = str.c_str();
+  else
+    serializeJson(src, dst);
+}
+
+inline bool canConvertFromJson(VariantConstRef src, const ::String&) {
+  const VariantData* data = getData(src);
+  return data && data->isString();
+}
+
+#endif
+
+#if ARDUINOJSON_ENABLE_STD_STRING
+
+inline void convertFromJson(VariantConstRef src, std::string& dst) {
+  const VariantData* data = getData(src);
+  String str = data != 0 ? data->asString() : String();
+  if (str)
+    dst.assign(str.c_str());
+  else
+    serializeJson(src, dst);
+}
+
+inline bool canConvertFromJson(VariantConstRef src, const std::string&) {
+  const VariantData* data = getData(src);
+  return data && data->isString();
 }
 
 #endif
