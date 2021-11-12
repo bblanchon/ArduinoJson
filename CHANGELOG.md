@@ -11,6 +11,7 @@ HEAD
 * Add `as<JsonString>()` and `is<JsonString>()`
 * Add safe bool idiom in `JsonString`
 * Remove `DeserializationError == bool` and `DeserializationError != bool`
+* Fix `JsonVariant::memoryUsage()` for raw strings
 
 v6.18.5 (2021-09-28)
 -------

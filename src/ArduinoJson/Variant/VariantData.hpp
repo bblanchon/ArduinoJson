@@ -257,7 +257,9 @@ class VariantData {
       case VALUE_IS_OWNED_STRING:
         return strlen(_content.asString) + 1;
       case VALUE_IS_OWNED_RAW:
-        return _content.asRaw.size;
+        // We always add a zero at the end: the deduplication function uses it
+        // to detect the beginning of the next string.
+        return _content.asRaw.size + 1;
       case VALUE_IS_OBJECT:
       case VALUE_IS_ARRAY:
         return _content.asCollection.memoryUsage();
