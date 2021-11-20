@@ -343,7 +343,6 @@ class MsgPackDeserializer {
         return false;
       _stringStorage.append(static_cast<char>(c));
     }
-    _stringStorage.append('\0');
     if (!_stringStorage.isValid()) {
       _error = DeserializationError::NoMemory;
       return false;

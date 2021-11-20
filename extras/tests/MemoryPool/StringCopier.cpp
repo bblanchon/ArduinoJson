@@ -11,12 +11,11 @@ TEST_CASE("StringCopier") {
   char buffer[4096];
 
   SECTION("Works when buffer is big enough") {
-    MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
+    MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(5)));
     StringCopier str(pool);
 
     str.startString();
     str.append("hello");
-    str.append('\0');
 
     REQUIRE(str.isValid() == true);
     REQUIRE(std::string(str.str()) == "hello");
@@ -31,6 +30,7 @@ TEST_CASE("StringCopier") {
     str.append("hello world!");
 
     REQUIRE(str.isValid() == false);
+    REQUIRE(pool.overflowed() == true);
   }
 
   SECTION("Increases size of memory pool") {
@@ -38,10 +38,19 @@ TEST_CASE("StringCopier") {
     StringCopier str(pool);
 
     str.startString();
-    str.append('h');
     str.save();
 
     REQUIRE(1 == pool.size());
+    REQUIRE(pool.overflowed() == false);
+  }
+
+  SECTION("Works when memory pool is 0 bytes") {
+    MemoryPool pool(buffer, 0);
+    StringCopier str(pool);
+
+    str.startString();
+    REQUIRE(str.isValid() == false);
+    REQUIRE(pool.overflowed() == true);
   }
 }
 
@@ -49,7 +58,6 @@ static const char* addStringToPool(MemoryPool& pool, const char* s) {
   StringCopier str(pool);
   str.startString();
   str.append(s);
-  str.append('\0');
   return str.save().c_str();
 }
 

@@ -113,3 +113,21 @@ TEST_CASE("Not enough room to save the key") {
             DeserializationError::NoMemory);  // fails in the second string
   }
 }
+
+TEST_CASE("Empty memory pool") {
+  // NOLINTNEXTLINE(clang-analyzer-optin.portability.UnixAPI)
+  DynamicJsonDocument doc(0);
+
+  SECTION("Input is const char*") {
+    REQUIRE(deserializeJson(doc, "\"hello\"") ==
+            DeserializationError::NoMemory);
+    REQUIRE(deserializeJson(doc, "\"\"") == DeserializationError::NoMemory);
+  }
+
+  SECTION("Input is const char*") {
+    char hello[] = "\"hello\"";
+    REQUIRE(deserializeJson(doc, hello) == DeserializationError::Ok);
+    char empty[] = "\"hello\"";
+    REQUIRE(deserializeJson(doc, empty) == DeserializationError::Ok);
+  }
+}

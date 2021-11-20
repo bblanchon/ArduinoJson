@@ -18,7 +18,6 @@ static void testCodepoint(uint32_t codepoint, std::string expected) {
   CAPTURE(codepoint);
   Utf8::encodeCodepoint(codepoint, str);
 
-  str.append('\0');
   REQUIRE(str.str().c_str() == expected);
 }
 

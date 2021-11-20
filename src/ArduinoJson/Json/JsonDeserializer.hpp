@@ -401,8 +401,6 @@ class JsonDeserializer {
       _stringStorage.append(c);
     }
 
-    _stringStorage.append('\0');
-
     if (!_stringStorage.isValid()) {
       _error = DeserializationError::NoMemory;
       return false;
@@ -425,8 +423,6 @@ class JsonDeserializer {
       _error = DeserializationError::InvalidInput;
       return false;
     }
-
-    _stringStorage.append('\0');
 
     if (!_stringStorage.isValid()) {
       _error = DeserializationError::NoMemory;

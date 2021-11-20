@@ -20,7 +20,10 @@ class StringMover {
   }
 
   FORCE_INLINE string_type save() {
-    return _startPtr;
+    _writePtr[0] = 0;  // terminator
+    string_type s = str();
+    _writePtr++;
+    return s;
   }
 
   void append(char c) {
@@ -33,6 +36,10 @@ class StringMover {
 
   string_type str() const {
     return string_type(_startPtr);
+  }
+
+  size_t size() const {
+    return size_t(_writePtr - _startPtr);
   }
 
  private:

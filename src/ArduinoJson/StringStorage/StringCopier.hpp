@@ -17,10 +17,13 @@ class StringCopier {
   void startString() {
     _pool->getFreeZone(&_ptr, &_capacity);
     _size = 0;
+    if (_capacity == 0)
+      _pool->markAsOverflowed();
   }
 
   string_type save() {
     ARDUINOJSON_ASSERT(_ptr);
+    ARDUINOJSON_ASSERT(_size < _capacity);  // needs room for the terminator
     return _pool->saveStringFromFreeZone(_size);
   }
 
@@ -33,23 +36,24 @@ class StringCopier {
   }
 
   void append(char c) {
-    if (!_ptr)
-      return;
-
-    if (_size >= _capacity) {
-      _ptr = 0;
+    if (_size + 1 < _capacity)
+      _ptr[_size++] = c;
+    else
       _pool->markAsOverflowed();
-      return;
-    }
-
-    _ptr[_size++] = c;
   }
 
-  bool isValid() {
-    return _ptr != 0;
+  bool isValid() const {
+    return !_pool->overflowed();
+  }
+
+  size_t size() const {
+    return _size;
   }
 
   string_type str() const {
+    ARDUINOJSON_ASSERT(_ptr);
+    ARDUINOJSON_ASSERT(_size < _capacity);
+    _ptr[_size] = 0;
     return _ptr;
   }
 

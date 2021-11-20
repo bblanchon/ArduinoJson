@@ -60,6 +60,7 @@ TEST_CASE("Printable") {
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
       CHECK(doc.memoryUsage() == 8);
+      CHECK(doc.as<JsonVariant>().memoryUsage() == 8);
     }
 
     SECTION("Via Print::write(const char* size_t)") {
@@ -69,6 +70,7 @@ TEST_CASE("Printable") {
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
       CHECK(doc.memoryUsage() == 8);
+      CHECK(doc.as<JsonVariant>().memoryUsage() == 8);
     }
   }
 
