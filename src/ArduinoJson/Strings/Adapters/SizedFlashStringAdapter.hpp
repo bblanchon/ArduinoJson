@@ -34,6 +34,14 @@ class StringAdapter<const __FlashStringHelper*, true> {
     memcpy_P(p, reinterpret_cast<const char*>(_str), n);
   }
 
+  // TODO: not covered by the tests
+  char operator[](size_t i) const {
+    ARDUINOJSON_ASSERT(_str != 0);
+    ARDUINOJSON_ASSERT(i <= _size);
+    return static_cast<char>(
+        pgm_read_byte(reinterpret_cast<const char*>(_str) + i));
+  }
+
   size_t size() const {
     return _size;
   }

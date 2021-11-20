@@ -37,6 +37,12 @@ class String {
     return *this;
   }
 
+  char operator[](unsigned int index) const {
+    if (index >= _str.size())
+      return 0;
+    return _str[index];
+  }
+
   friend std::ostream& operator<<(std::ostream& lhs, const ::String& rhs) {
     lhs << rhs._str;
     return lhs;

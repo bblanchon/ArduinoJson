@@ -39,6 +39,13 @@ class StringAdapter<const __FlashStringHelper*> {
     return strlen_P(reinterpret_cast<const char*>(_str));
   }
 
+  char operator[](size_t i) const {
+    ARDUINOJSON_ASSERT(_str != 0);
+    ARDUINOJSON_ASSERT(i <= size());
+    return static_cast<char>(
+        pgm_read_byte(reinterpret_cast<const char*>(_str) + i));
+  }
+
   typedef storage_policies::store_by_copy storage_policy;
 
  private:

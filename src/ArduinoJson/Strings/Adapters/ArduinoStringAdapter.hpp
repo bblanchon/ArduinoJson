@@ -32,6 +32,11 @@ class StringAdapter< ::String> {
     return safe_strcmp(me, other);
   }
 
+  char operator[](size_t i) const {
+    ARDUINOJSON_ASSERT(_str != 0);
+    return _str->operator[](static_cast<unsigned int>(i));
+  }
+
   size_t size() const {
     return _str->length();
   }

@@ -7,6 +7,7 @@
 #include <stddef.h>  // size_t
 #include <string.h>  // strcmp
 
+#include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/safe_strcmp.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
@@ -30,6 +31,12 @@ class StringAdapter<const char*> {
     if (!_str)
       return 0;
     return strlen(_str);
+  }
+
+  char operator[](size_t i) const {
+    ARDUINOJSON_ASSERT(_str != 0);
+    ARDUINOJSON_ASSERT(i <= size());
+    return _str[i];
   }
 
   const char* data() const {

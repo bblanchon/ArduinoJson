@@ -33,6 +33,12 @@ class StringAdapter<TChar*, true> {
     return _size;
   }
 
+  char operator[](size_t i) const {
+    ARDUINOJSON_ASSERT(_str != 0);
+    ARDUINOJSON_ASSERT(i <= _size);
+    return _str[i];
+  }
+
   typedef storage_policies::store_by_copy storage_policy;
 
  private:

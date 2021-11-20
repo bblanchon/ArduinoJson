@@ -31,6 +31,11 @@ class StringAdapter<std::string_view> {
     return _str.compare(other);
   }
 
+  char operator[](size_t i) const {
+    ARDUINOJSON_ASSERT(i <= size());
+    return _str[i];
+  }
+
   size_t size() const {
     return _str.size();
   }
