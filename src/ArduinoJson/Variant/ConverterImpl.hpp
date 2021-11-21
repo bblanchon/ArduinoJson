@@ -115,7 +115,8 @@ struct Converter<T, typename enable_if<is_floating_point<T>::value>::type> {
 template <>
 struct Converter<const char*> {
   static void toJson(const char* src, VariantRef dst) {
-    variantSetString(getData(dst), adaptString(src), getPool(dst));
+    variantSetString(getData(dst), adaptString(src), getPool(dst),
+                     getStringStoragePolicy(src));
   }
 
   static const char* fromJson(VariantConstRef src) {
@@ -132,7 +133,8 @@ struct Converter<const char*> {
 template <>
 struct Converter<String> {
   static void toJson(String src, VariantRef dst) {
-    variantSetString(getData(dst), adaptString(src), getPool(dst));
+    variantSetString(getData(dst), adaptString(src), getPool(dst),
+                     getStringStoragePolicy(src));
   }
 
   static String fromJson(VariantConstRef src) {
@@ -151,7 +153,8 @@ inline typename enable_if<IsString<T>::value, bool>::type convertToJson(
     const T& src, VariantRef dst) {
   VariantData* data = getData(dst);
   MemoryPool* pool = getPool(dst);
-  return variantSetString(data, adaptString(src), pool);
+  return variantSetString(data, adaptString(src), pool,
+                          getStringStoragePolicy(src));
 }
 
 template <>

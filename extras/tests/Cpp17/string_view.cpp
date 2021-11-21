@@ -92,10 +92,9 @@ TEST_CASE("StringViewAdapter") {
   std::string_view str("bravoXXX", 5);
   auto adapter = adaptString(str);
 
-  CHECK(adapter.compare(NULL) > 0);
-  CHECK(adapter.compare("alpha") > 0);
-  CHECK(adapter.compare("bravo") == 0);
-  CHECK(adapter.compare("charlie") < 0);
+  CHECK(stringCompare(adapter, adaptString("alpha", 5)) > 0);
+  CHECK(stringCompare(adapter, adaptString("bravo", 5)) == 0);
+  CHECK(stringCompare(adapter, adaptString("charlie", 7)) < 0);
 
   CHECK(adapter.size() == 5);
 }

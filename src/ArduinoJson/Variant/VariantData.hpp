@@ -99,27 +99,7 @@ class VariantData {
     return const_cast<VariantData *>(this)->asObject();
   }
 
-  bool copyFrom(const VariantData &src, MemoryPool *pool) {
-    switch (src.type()) {
-      case VALUE_IS_ARRAY:
-        return toArray().copyFrom(src._content.asCollection, pool);
-      case VALUE_IS_OBJECT:
-        return toObject().copyFrom(src._content.asCollection, pool);
-      case VALUE_IS_OWNED_STRING:
-        return storeString(
-            adaptString(const_cast<char *>(src._content.asString.data),
-                        src._content.asString.size),
-            pool);
-      case VALUE_IS_OWNED_RAW:
-        return storeOwnedRaw(
-            serialized(src._content.asString.data, src._content.asString.size),
-            pool);
-      default:
-        setType(src.type());
-        _content = src._content;
-        return true;
-    }
-  }
+  bool copyFrom(const VariantData &src, MemoryPool *pool);
 
   bool isArray() const {
     return (_flags & VALUE_IS_ARRAY) != 0;
@@ -242,11 +222,6 @@ class VariantData {
     _content.asString.size = s.size();
   }
 
-  template <typename TAdaptedString>
-  bool storeString(TAdaptedString value, MemoryPool *pool) {
-    return storeString(value, pool, typename TAdaptedString::storage_policy());
-  }
-
   CollectionData &toArray() {
     setType(VALUE_IS_ARRAY);
     _content.asCollection.clear();
@@ -307,13 +282,14 @@ class VariantData {
     return isObject() ? _content.asCollection.getMember(key) : 0;
   }
 
-  template <typename TAdaptedString>
-  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool) {
+  template <typename TAdaptedString, typename TStoragePolicy>
+  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool,
+                              TStoragePolicy storage_policy) {
     if (isNull())
       toObject();
     if (!isObject())
       return 0;
-    return _content.asCollection.getOrAddMember(key, pool);
+    return _content.asCollection.getOrAddMember(key, pool, storage_policy);
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
@@ -327,46 +303,36 @@ class VariantData {
     return _flags & VALUE_MASK;
   }
 
+  template <typename TAdaptedString, typename TStoragePolicy>
+  inline bool storeString(TAdaptedString value, MemoryPool *pool,
+                          TStoragePolicy storage) {
+    if (value.isNull()) {
+      setNull();
+      return true;
+    }
+
+    return storage.store(value, pool, VariantStringSetter(this));
+  }
+
  private:
   void setType(uint8_t t) {
     _flags &= OWNED_KEY_BIT;
     _flags |= t;
   }
 
-  template <typename TAdaptedString>
-  inline bool storeString(TAdaptedString value, MemoryPool *pool,
-                          storage_policies::decide_at_runtime) {
-    if (value.isStatic())
-      return storeString(value, pool, storage_policies::store_by_address());
-    else
-      return storeString(value, pool, storage_policies::store_by_copy());
-  }
+  struct VariantStringSetter {
+    VariantStringSetter(VariantData *instance) : _instance(instance) {}
 
-  template <typename TAdaptedString>
-  inline bool storeString(TAdaptedString value, MemoryPool *,
-                          storage_policies::store_by_address) {
-    if (value.isNull())
-      setNull();
-    else
-      setString(LinkedString(value.data(), value.size()));
-    return true;
-  }
+    template <typename TStoredString>
+    void operator()(TStoredString s) {
+      if (s)
+        _instance->setString(s);
+      else
+        _instance->setNull();
+    }
 
-  template <typename TAdaptedString>
-  inline bool storeString(TAdaptedString value, MemoryPool *pool,
-                          storage_policies::store_by_copy) {
-    if (value.isNull()) {
-      setNull();
-      return true;
-    }
-    const char *copy = pool->saveString(value);
-    if (!copy) {
-      setNull();
-      return false;
-    }
-    setString(CopiedString(copy, value.size()));
-    return true;
-  }
+    VariantData *_instance;
+  };
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

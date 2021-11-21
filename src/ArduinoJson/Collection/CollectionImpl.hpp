@@ -5,6 +5,8 @@
 #pragma once
 
 #include <ArduinoJson/Collection/CollectionData.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -34,11 +36,12 @@ inline VariantData* CollectionData::addElement(MemoryPool* pool) {
   return slotData(addSlot(pool));
 }
 
-template <typename TAdaptedString>
+template <typename TAdaptedString, typename TStoragePolicy>
 inline VariantData* CollectionData::addMember(TAdaptedString key,
-                                              MemoryPool* pool) {
+                                              MemoryPool* pool,
+                                              TStoragePolicy storage) {
   VariantSlot* slot = addSlot(pool);
-  if (!slotSetKey(slot, key, pool)) {
+  if (!slotSetKey(slot, key, pool, storage)) {
     removeSlot(slot);
     return 0;
   }
@@ -61,10 +64,8 @@ inline bool CollectionData::copyFrom(const CollectionData& src,
   for (VariantSlot* s = src._head; s; s = s->next()) {
     VariantData* var;
     if (s->key() != 0) {
-      if (s->ownsKey())
-        var = addMember(adaptString(const_cast<char*>(s->key())), pool);
-      else
-        var = addMember(adaptString(s->key()), pool);
+      String key(s->key(), !s->ownsKey());
+      var = addMember(adaptString(key), pool, getStringStoragePolicy(key));
     } else {
       var = addElement(pool);
     }
@@ -105,9 +106,11 @@ inline bool CollectionData::equalsArray(const CollectionData& other) const {
 
 template <typename TAdaptedString>
 inline VariantSlot* CollectionData::getSlot(TAdaptedString key) const {
+  if (key.isNull())
+    return 0;
   VariantSlot* slot = _head;
   while (slot) {
-    if (key.compare(slot->key()) == 0)
+    if (stringEquals(key, adaptString(slot->key())))
       break;
     slot = slot->next();
   }
@@ -137,9 +140,9 @@ inline VariantData* CollectionData::getMember(TAdaptedString key) const {
   return slot ? slot->data() : 0;
 }
 
-template <typename TAdaptedString>
-inline VariantData* CollectionData::getOrAddMember(TAdaptedString key,
-                                                   MemoryPool* pool) {
+template <typename TAdaptedString, typename TStoragePolicy>
+inline VariantData* CollectionData::getOrAddMember(
+    TAdaptedString key, MemoryPool* pool, TStoragePolicy storage_policy) {
   // ignore null key
   if (key.isNull())
     return 0;
@@ -149,7 +152,7 @@ inline VariantData* CollectionData::getOrAddMember(TAdaptedString key,
   if (slot)
     return slot->data();
 
-  return addMember(key, pool);
+  return addMember(key, pool, storage_policy);
 }
 
 inline VariantData* CollectionData::getElement(size_t index) const {

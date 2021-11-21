@@ -4,12 +4,9 @@
 
 #pragma once
 
-#include <ArduinoJson/Polyfills/safe_strcmp.hpp>
-#include <ArduinoJson/Strings/StoragePolicy.hpp>
-
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TStoragePolicy>
+template <bool linked>
 class StoredString {
  public:
   StoredString() : _data(0), _size(0) {}
@@ -32,7 +29,7 @@ class StoredString {
   size_t _size;
 };
 
-typedef StoredString<storage_policies::store_by_address> LinkedString;
-typedef StoredString<storage_policies::store_by_copy> CopiedString;
+typedef StoredString<true> LinkedString;
+typedef StoredString<false> CopiedString;
 
 }  // namespace ARDUINOJSON_NAMESPACE

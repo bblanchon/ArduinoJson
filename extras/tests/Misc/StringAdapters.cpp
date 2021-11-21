@@ -15,106 +15,75 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
-TEST_CASE("const char*") {
+TEST_CASE("ZeroTerminatedRamString") {
   SECTION("null") {
-    StringAdapter<const char*> adapter(NULL);
+    ZeroTerminatedRamString s = adaptString(static_cast<const char*>(0));
 
-    CHECK(adapter.compare("bravo") < 0);
-    CHECK(adapter.compare(NULL) == 0);
-
-    CHECK(adapter.size() == 0);
+    CHECK(s.isNull() == true);
+    CHECK(s.size() == 0);
   }
 
   SECTION("non-null") {
-    StringAdapter<const char*> adapter("bravo");
+    ZeroTerminatedRamString s = adaptString("bravo");
 
-    CHECK(adapter.compare(NULL) > 0);
-    CHECK(adapter.compare("alpha") > 0);
-    CHECK(adapter.compare("bravo") == 0);
-    CHECK(adapter.compare("charlie") < 0);
-
-    CHECK(adapter.size() == 5);
+    CHECK(s.isNull() == false);
+    CHECK(s.size() == 5);
   }
 }
 
-TEST_CASE("const char* + size") {
+TEST_CASE("SizedRamString") {
   SECTION("null") {
-    StringAdapter<const char*, true> adapter(NULL, 10);
+    SizedRamString s = adaptString(static_cast<const char*>(0), 10);
 
-    CHECK(adapter.compare("bravo") < 0);
-    CHECK(adapter.compare(NULL) == 0);
-
-    CHECK(adapter.size() == 10);
+    CHECK(s.isNull() == true);
   }
 
   SECTION("non-null") {
-    StringAdapter<const char*, true> adapter("bravo", 5);
+    SizedRamString s = adaptString("bravo", 5);
 
-    CHECK(adapter.compare(NULL) > 0);
-    CHECK(adapter.compare("alpha") > 0);
-    CHECK(adapter.compare("bravo") == 0);
-    CHECK(adapter.compare("charlie") < 0);
-
-    CHECK(adapter.size() == 5);
+    CHECK(s.isNull() == false);
+    CHECK(s.size() == 5);
   }
 }
 
-TEST_CASE("const __FlashStringHelper*") {
+TEST_CASE("FlashString") {
   SECTION("null") {
-    StringAdapter<const __FlashStringHelper*> adapter(NULL);
+    FlashString s = adaptString(static_cast<const __FlashStringHelper*>(0));
 
-    CHECK(adapter.compare("bravo") < 0);
-    CHECK(adapter.compare(NULL) == 0);
-
-    CHECK(adapter.size() == 0);
+    CHECK(s.isNull() == true);
+    CHECK(s.size() == 0);
   }
 
   SECTION("non-null") {
-    StringAdapter<const __FlashStringHelper*> adapter = adaptString(F("bravo"));
+    FlashString s = adaptString(F("bravo"));
 
-    CHECK(adapter.compare(NULL) > 0);
-    CHECK(adapter.compare("alpha") > 0);
-    CHECK(adapter.compare("bravo") == 0);
-    CHECK(adapter.compare("charlie") < 0);
-
-    CHECK(adapter.size() == 5);
+    CHECK(s.isNull() == false);
+    CHECK(s.size() == 5);
   }
 }
 
 TEST_CASE("std::string") {
-  std::string str("bravo");
-  StringAdapter<std::string> adapter(str);
+  std::string orig("bravo");
+  SizedRamString s = adaptString(orig);
 
-  CHECK(adapter.compare(NULL) > 0);
-  CHECK(adapter.compare("alpha") > 0);
-  CHECK(adapter.compare("bravo") == 0);
-  CHECK(adapter.compare("charlie") < 0);
-
-  CHECK(adapter.size() == 5);
+  CHECK(s.isNull() == false);
+  CHECK(s.size() == 5);
 }
 
 TEST_CASE("Arduino String") {
-  ::String str("bravo");
-  StringAdapter< ::String> adapter(str);
+  ::String orig("bravo");
+  SizedRamString s = adaptString(orig);
 
-  CHECK(adapter.compare(NULL) > 0);
-  CHECK(adapter.compare("alpha") > 0);
-  CHECK(adapter.compare("bravo") == 0);
-  CHECK(adapter.compare("charlie") < 0);
-
-  CHECK(adapter.size() == 5);
+  CHECK(s.isNull() == false);
+  CHECK(s.size() == 5);
 }
 
 TEST_CASE("custom_string") {
-  custom_string str("bravo");
-  StringAdapter<custom_string> adapter(str);
+  custom_string orig("bravo");
+  SizedRamString s = adaptString(orig);
 
-  CHECK(adapter.compare(NULL) > 0);
-  CHECK(adapter.compare("alpha") > 0);
-  CHECK(adapter.compare("bravo") == 0);
-  CHECK(adapter.compare("charlie") < 0);
-
-  CHECK(adapter.size() == 5);
+  CHECK(s.isNull() == false);
+  CHECK(s.size() == 5);
 }
 
 TEST_CASE("IsString<T>") {
@@ -140,5 +109,95 @@ TEST_CASE("IsString<T>") {
 
   SECTION("const char[]") {
     CHECK(IsString<const char[8]>::value == true);
+  }
+}
+
+TEST_CASE("stringCompare") {
+  SECTION("ZeroTerminatedRamString vs ZeroTerminatedRamString") {
+    CHECK(stringCompare(adaptString("bravo"), adaptString("alpha")) > 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString("bravo")) == 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString("charlie")) < 0);
+  }
+
+  SECTION("ZeroTerminatedRamString vs SizedRamString") {
+    CHECK(stringCompare(adaptString("bravo"), adaptString("alpha?", 5)) > 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString("bravo?", 4)) > 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString("bravo?", 5)) == 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString("bravo?", 6)) < 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString("charlie?", 7)) < 0);
+  }
+
+  SECTION("SizedRamString vs SizedRamString") {
+    // clang-format off
+    CHECK(stringCompare(adaptString("bravo!", 5), adaptString("alpha?", 5)) > 0);
+    CHECK(stringCompare(adaptString("bravo!", 5), adaptString("bravo?", 5)) == 0);
+    CHECK(stringCompare(adaptString("bravo!", 5), adaptString("charlie?", 7)) < 0);
+
+    CHECK(stringCompare(adaptString("bravo!", 5), adaptString("bravo!", 4)) > 0);
+    CHECK(stringCompare(adaptString("bravo!", 5), adaptString("bravo!", 5)) == 0);
+    CHECK(stringCompare(adaptString("bravo!", 5), adaptString("bravo!", 6)) < 0);
+    // clang-format on
+  }
+
+  SECTION("FlashString vs FlashString") {
+    // clang-format off
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString(F("alpha"))) > 0);
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString(F("bravo"))) == 0);
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString(F("charlie"))) < 0);
+    // clang-format on
+  }
+
+  SECTION("FlashString vs SizedRamString") {
+    // clang-format off
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString("alpha?", 5)) > 0);
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString("bravo?", 5)) == 0);
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString("charlie?", 7)) < 0);
+
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString("bravo!", 4)) > 0);
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString("bravo!", 5)) == 0);
+    CHECK(stringCompare(adaptString(F("bravo")), adaptString("bravo!", 6)) < 0);
+    // clang-format on
+  }
+
+  SECTION("ZeroTerminatedRamString vs FlashString") {
+    // clang-format off
+    CHECK(stringCompare(adaptString("bravo"), adaptString(F("alpha?"), 5)) > 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString(F("bravo?"), 4)) > 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString(F("bravo?"), 5)) == 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString(F("bravo?"), 6)) < 0);
+    CHECK(stringCompare(adaptString("bravo"), adaptString(F("charlie?"), 7)) < 0);
+    // clang-format on
+  }
+}
+
+TEST_CASE("stringEquals()") {
+  SECTION("ZeroTerminatedRamString vs ZeroTerminatedRamString") {
+    CHECK(stringEquals(adaptString("bravo"), adaptString("brav")) == false);
+    CHECK(stringEquals(adaptString("bravo"), adaptString("bravo")) == true);
+    CHECK(stringEquals(adaptString("bravo"), adaptString("bravo!")) == false);
+  }
+
+  SECTION("ZeroTerminatedRamString vs SizedRamString") {
+    // clang-format off
+    CHECK(stringEquals(adaptString("bravo"), adaptString("bravo!", 4)) == false);
+    CHECK(stringEquals(adaptString("bravo"), adaptString("bravo!", 5)) == true);
+    CHECK(stringEquals(adaptString("bravo"), adaptString("bravo!", 6)) == false);
+    // clang-format on
+  }
+
+  SECTION("FlashString vs SizedRamString") {
+    // clang-format off
+    CHECK(stringEquals(adaptString(F("bravo")), adaptString("bravo!", 4)) == false);
+    CHECK(stringEquals(adaptString(F("bravo")), adaptString("bravo!", 5)) == true);
+    CHECK(stringEquals(adaptString(F("bravo")), adaptString("bravo!", 6)) == false);
+    // clang-format on
+  }
+
+  SECTION("SizedRamString vs SizedRamString") {
+    // clang-format off
+    CHECK(stringEquals(adaptString("bravo?", 5), adaptString("bravo!", 4)) == false);
+    CHECK(stringEquals(adaptString("bravo?", 5), adaptString("bravo!", 5)) == true);
+    CHECK(stringEquals(adaptString("bravo?", 5), adaptString("bravo!", 6)) == false);
+    // clang-format on
   }
 }

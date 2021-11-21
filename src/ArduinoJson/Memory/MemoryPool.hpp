@@ -60,7 +60,7 @@ class MemoryPool {
   }
 
   template <typename TAdaptedString>
-  const char* saveString(const TAdaptedString& str) {
+  const char* saveString(TAdaptedString str) {
     if (str.isNull())
       return CopiedString();
 
@@ -74,7 +74,7 @@ class MemoryPool {
 
     char* newCopy = allocString(n + 1);
     if (newCopy) {
-      str.copyTo(newCopy, n);
+      stringGetChars(str, newCopy, n);
       newCopy[n] = 0;  // force null-terminator
     }
     return CopiedString(newCopy, n);
@@ -166,21 +166,10 @@ class MemoryPool {
 
 #if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
   template <typename TAdaptedString>
-  static bool stringEquals(const char* p, size_t n, const TAdaptedString& s) {
-    if (p[n])  // check terminator first
-      return false;
-    for (size_t i = 0; i < n; i++) {
-      if (p[i] != s[i])
-        return false;
-    }
-    return true;
-  }
-
-  template <typename TAdaptedString>
   const char* findString(const TAdaptedString& str) const {
     size_t n = str.size();
     for (char* next = _begin; next + n < _left; ++next) {
-      if (stringEquals(next, n, str))
+      if (next[n] == '\0' && stringEquals(str, adaptString(next, n)))
         return next;
 
       // jump to next terminator

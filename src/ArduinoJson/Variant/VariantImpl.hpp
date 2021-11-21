@@ -81,6 +81,28 @@ inline String VariantData::asString() const {
   }
 }
 
+inline bool VariantData::copyFrom(const VariantData &src, MemoryPool *pool) {
+  switch (src.type()) {
+    case VALUE_IS_ARRAY:
+      return toArray().copyFrom(src._content.asCollection, pool);
+    case VALUE_IS_OBJECT:
+      return toObject().copyFrom(src._content.asCollection, pool);
+    case VALUE_IS_OWNED_STRING: {
+      String value = src.asString();
+      return storeString(adaptString(value), pool,
+                         getStringStoragePolicy(value));
+    }
+    case VALUE_IS_OWNED_RAW:
+      return storeOwnedRaw(
+          serialized(src._content.asString.data, src._content.asString.size),
+          pool);
+    default:
+      setType(src.type());
+      _content = src._content;
+      return true;
+  }
+}
+
 template <typename T>
 inline typename enable_if<is_same<T, ArrayRef>::value, ArrayRef>::type
 VariantRef::to() const {
@@ -146,4 +168,15 @@ inline VariantConstRef operator|(VariantConstRef preferedValue,
 inline bool VariantRef::set(char value) const {
   return set<signed char>(value);
 }
+
+// TODO: move somewhere else
+template <typename TAdaptedString, typename TCallback>
+bool CopyStringStoragePolicy::store(TAdaptedString str, MemoryPool *pool,
+                                    TCallback callback) {
+  const char *copy = pool->saveString(str);
+  CopiedString storedString(copy, str.size());
+  callback(storedString);
+  return copy != 0;
+}
+
 }  // namespace ARDUINOJSON_NAMESPACE

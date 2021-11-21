@@ -7,7 +7,6 @@
 #include <ArduinoJson/Polyfills/integer.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
-#include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Strings/StoredString.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
 

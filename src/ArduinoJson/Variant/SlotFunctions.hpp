@@ -9,40 +9,24 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TAdaptedString>
-inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool) {
-  if (!var)
-    return false;
-  return slotSetKey(var, key, pool, typename TAdaptedString::storage_policy());
-}
+struct SlotKeySetter {
+  SlotKeySetter(VariantSlot* instance) : _instance(instance) {}
 
-template <typename TAdaptedString>
-inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool,
-                       storage_policies::decide_at_runtime) {
-  if (key.isStatic()) {
-    return slotSetKey(var, key, pool, storage_policies::store_by_address());
-  } else {
-    return slotSetKey(var, key, pool, storage_policies::store_by_copy());
+  template <typename TStoredString>
+  void operator()(TStoredString s) {
+    if (!s)
+      return;
+    ARDUINOJSON_ASSERT(_instance != 0);
+    _instance->setKey(s);
   }
-}
 
-template <typename TAdaptedString>
-inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool*,
-                       storage_policies::store_by_address) {
-  ARDUINOJSON_ASSERT(var);
-  var->setKey(LinkedString(key.data(), key.size()));
-  return true;
-}
+  VariantSlot* _instance;
+};
 
-template <typename TAdaptedString>
+template <typename TAdaptedString, typename TStoragePolicy>
 inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool,
-                       storage_policies::store_by_copy) {
-  CopiedString dup(pool->saveString(key), key.size());
-  if (!dup)
-    return false;
-  ARDUINOJSON_ASSERT(var);
-  var->setKey(dup);
-  return true;
+                       TStoragePolicy storage) {
+  return storage.store(key, pool, SlotKeySetter(var));
 }
 
 inline size_t slotSize(const VariantSlot* var) {

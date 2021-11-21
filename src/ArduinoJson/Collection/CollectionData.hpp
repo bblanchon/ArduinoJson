@@ -40,14 +40,15 @@ class CollectionData {
 
   // Object only
 
-  template <typename TAdaptedString>
-  VariantData *addMember(TAdaptedString key, MemoryPool *pool);
+  template <typename TAdaptedString, typename TStoragePolicy>
+  VariantData *addMember(TAdaptedString key, MemoryPool *pool, TStoragePolicy);
 
   template <typename TAdaptedString>
   VariantData *getMember(TAdaptedString key) const;
 
-  template <typename TAdaptedString>
-  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool);
+  template <typename TAdaptedString, typename TStoragePolicy>
+  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool,
+                              TStoragePolicy);
 
   template <typename TAdaptedString>
   void removeMember(TAdaptedString key) {

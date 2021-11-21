@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Polyfills/attributes.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -49,12 +50,10 @@ inline void variantSetNull(VariantData *var) {
   var->setNull();
 }
 
-template <typename TAdaptedString>
+template <typename TAdaptedString, typename TStoragePolicy>
 inline bool variantSetString(VariantData *var, TAdaptedString value,
-                             MemoryPool *pool) {
-  if (!var)
-    return false;
-  return var->storeString(value, pool);
+                             MemoryPool *pool, TStoragePolicy storage_policy) {
+  return var != 0 ? var->storeString(value, pool, storage_policy) : 0;
 }
 
 inline size_t variantSize(const VariantData *var) {
@@ -87,14 +86,18 @@ inline NO_INLINE VariantData *variantGetOrAddElement(VariantData *var,
 template <typename TChar>
 NO_INLINE VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
                                              MemoryPool *pool) {
-  return var != 0 ? var->getOrAddMember(adaptString(key), pool) : 0;
+  return var != 0 ? var->getOrAddMember(adaptString(key), pool,
+                                        getStringStoragePolicy(key))
+                  : 0;
 }
 
 template <typename TString>
 NO_INLINE VariantData *variantGetOrAddMember(VariantData *var,
                                              const TString &key,
                                              MemoryPool *pool) {
-  return var != 0 ? var->getOrAddMember(adaptString(key), pool) : 0;
+  return var != 0 ? var->getOrAddMember(adaptString(key), pool,
+                                        getStringStoragePolicy(key))
+                  : 0;
 }
 
 inline bool variantIsNull(const VariantData *var) {

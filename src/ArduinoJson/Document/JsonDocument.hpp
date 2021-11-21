@@ -8,6 +8,7 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
 #include <ArduinoJson/Object/ObjectRef.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 
@@ -244,14 +245,18 @@ class JsonDocument : public Visitable {
   // getOrAddMember(const __FlashStringHelper*)
   template <typename TChar>
   FORCE_INLINE VariantRef getOrAddMember(TChar* key) {
-    return VariantRef(&_pool, _data.getOrAddMember(adaptString(key), &_pool));
+    return VariantRef(&_pool,
+                      _data.getOrAddMember(adaptString(key), &_pool,
+                                           getStringStoragePolicy(key)));
   }
 
   // getOrAddMember(const std::string&)
   // getOrAddMember(const String&)
   template <typename TString>
   FORCE_INLINE VariantRef getOrAddMember(const TString& key) {
-    return VariantRef(&_pool, _data.getOrAddMember(adaptString(key), &_pool));
+    return VariantRef(&_pool,
+                      _data.getOrAddMember(adaptString(key), &_pool,
+                                           getStringStoragePolicy(key)));
   }
 
   FORCE_INLINE VariantRef addElement() {
