@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include <sstream>
+
 TEST_CASE("JsonString") {
   SECTION("Default constructor creates a null JsonString") {
     JsonString s;
@@ -73,5 +75,11 @@ TEST_CASE("JsonString") {
 
     CHECK(a == b);
     CHECK_FALSE(a != b);
+  }
+
+  SECTION("std::stream") {
+    std::stringstream ss;
+    ss << JsonString("hello world!");
+    CHECK(ss.str() == "hello world!");
   }
 }

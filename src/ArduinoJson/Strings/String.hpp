@@ -6,6 +6,10 @@
 
 #include <ArduinoJson/Misc/SafeBoolIdiom.hpp>
 
+#if ARDUINOJSON_ENABLE_STD_STREAM
+#  include <ostream>
+#endif
+
 namespace ARDUINOJSON_NAMESPACE {
 
 class String : public SafeBoolIdom<String> {
@@ -60,6 +64,13 @@ class String : public SafeBoolIdom<String> {
       return true;
     return strcmp(lhs._data, rhs._data) != 0;
   }
+
+#if ARDUINOJSON_ENABLE_STD_STREAM
+  friend std::ostream& operator<<(std::ostream& lhs, const String& rhs) {
+    lhs.write(rhs.c_str(), static_cast<std::streamsize>(rhs.size()));
+    return lhs;
+  }
+#endif
 
  private:
   const char* _data;
