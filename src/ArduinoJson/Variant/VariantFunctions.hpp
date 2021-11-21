@@ -86,18 +86,20 @@ inline NO_INLINE VariantData *variantGetOrAddElement(VariantData *var,
 template <typename TChar>
 NO_INLINE VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
                                              MemoryPool *pool) {
-  return var != 0 ? var->getOrAddMember(adaptString(key), pool,
-                                        getStringStoragePolicy(key))
-                  : 0;
+  if (!var)
+    return 0;
+  return var->getOrAddMember(adaptString(key), pool,
+                             getStringStoragePolicy(key));
 }
 
 template <typename TString>
 NO_INLINE VariantData *variantGetOrAddMember(VariantData *var,
                                              const TString &key,
                                              MemoryPool *pool) {
-  return var != 0 ? var->getOrAddMember(adaptString(key), pool,
-                                        getStringStoragePolicy(key))
-                  : 0;
+  if (!var)
+    return 0;
+  return var->getOrAddMember(adaptString(key), pool,
+                             getStringStoragePolicy(key));
 }
 
 inline bool variantIsNull(const VariantData *var) {
