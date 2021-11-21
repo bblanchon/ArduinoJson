@@ -46,7 +46,7 @@ struct Visitor {
     return TResult();
   }
 
-  TResult visitString(const char *) {
+  TResult visitString(const char *, size_t) {
     return TResult();
   }
 };

@@ -12,7 +12,8 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TStoragePolicy>
 class StoredString {
  public:
-  StoredString(const char* p) : _data(p) {}
+  StoredString() : _data(0), _size(0) {}
+  StoredString(const char* p, size_t n) : _data(p), _size(n) {}
 
   operator const char*() const {
     return _data;
@@ -22,8 +23,13 @@ class StoredString {
     return _data;
   }
 
+  size_t size() const {
+    return _size;
+  }
+
  private:
   const char* _data;
+  size_t _size;
 };
 
 typedef StoredString<storage_policies::store_by_address> LinkedString;

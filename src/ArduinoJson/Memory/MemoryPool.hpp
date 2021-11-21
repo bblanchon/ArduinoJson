@@ -62,12 +62,12 @@ class MemoryPool {
   template <typename TAdaptedString>
   const char* saveString(const TAdaptedString& str) {
     if (str.isNull())
-      return 0;
+      return CopiedString();
 
 #if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
     const char* existingCopy = findString(str);
     if (existingCopy)
-      return existingCopy;
+      return CopiedString(existingCopy, str.size());
 #endif
 
     size_t n = str.size();
@@ -77,7 +77,7 @@ class MemoryPool {
       str.copyTo(newCopy, n);
       newCopy[n] = 0;  // force null-terminator
     }
-    return newCopy;
+    return CopiedString(newCopy, n);
   }
 
   void getFreeZone(char** zoneStart, size_t* zoneSize) const {
@@ -89,14 +89,14 @@ class MemoryPool {
 #if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
     const char* dup = findString(adaptString(_left, len));
     if (dup)
-      return dup;
+      return CopiedString(dup, len);
 #endif
 
     const char* str = _left;
     _left += len;
     *_left++ = 0;
     checkInvariants();
-    return str;
+    return CopiedString(str, len);
   }
 
   void markAsOverflowed() {

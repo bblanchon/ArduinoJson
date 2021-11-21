@@ -12,6 +12,10 @@ static const char *saveString(MemoryPool &pool, const char *s) {
   return pool.saveString(adaptString(const_cast<char *>(s)));
 }
 
+static const char *saveString(MemoryPool &pool, const char *s, size_t n) {
+  return pool.saveString(adaptString(s, n));
+}
+
 TEST_CASE("MemoryPool::saveString()") {
   char buffer[32];
   MemoryPool pool(buffer, 32);
@@ -28,6 +32,27 @@ TEST_CASE("MemoryPool::saveString()") {
     const char *b = saveString(pool, "hello");
     REQUIRE(a == b);
     REQUIRE(pool.size() == 6);
+  }
+
+  SECTION("Deduplicates identical strings that contain NUL") {
+    const char *a = saveString(pool, "hello\0world", 11);
+    const char *b = saveString(pool, "hello\0world", 11);
+    REQUIRE(a == b);
+    REQUIRE(pool.size() == 12);
+  }
+
+  SECTION("Reuse part of a string if it ends with NUL") {
+    const char *a = saveString(pool, "hello\0world", 11);
+    const char *b = saveString(pool, "hello");
+    REQUIRE(a == b);
+    REQUIRE(pool.size() == 12);
+  }
+
+  SECTION("Don't stop on first NUL") {
+    const char *a = saveString(pool, "hello");
+    const char *b = saveString(pool, "hello\0world", 11);
+    REQUIRE(a != b);
+    REQUIRE(pool.size() == 18);
   }
 
   SECTION("Returns NULL when full") {

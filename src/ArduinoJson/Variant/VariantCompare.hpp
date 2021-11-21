@@ -27,7 +27,7 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
 
   explicit Comparer(T value) : rhs(value) {}
 
-  CompareResult visitString(const char *lhs) {
+  CompareResult visitString(const char *lhs, size_t) {
     int i = adaptString(rhs).compare(lhs);
     if (i < 0)
       return COMPARE_RESULT_GREATER;
@@ -150,7 +150,7 @@ struct Comparer<T, typename enable_if<IsVisitable<T>::value>::type>
     return accept(comparer);
   }
 
-  CompareResult visitString(const char *lhs) {
+  CompareResult visitString(const char *lhs, size_t) {
     Comparer<const char *> comparer(lhs);
     return accept(comparer);
   }

@@ -63,6 +63,10 @@ TEST_CASE("serializeJson(JsonVariant)") {
     SECTION("Escape tab") {
       check(std::string("hello\tworld"), "\"hello\\tworld\"");
     }
+
+    SECTION("NUL char") {
+      check(std::string("hello\0world", 11), "\"hello\\u0000world\"");
+    }
   }
 
   SECTION("SerializedValue<const char*>") {

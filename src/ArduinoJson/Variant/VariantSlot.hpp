@@ -108,7 +108,7 @@ class VariantSlot {
     if (_flags & OWNED_KEY_BIT)
       _key += stringDistance;
     if (_flags & OWNED_VALUE_BIT)
-      _content.asString += stringDistance;
+      _content.asString.data += stringDistance;
     if (_flags & COLLECTION_MASK)
       _content.asCollection.movePointers(stringDistance, variantDistance);
   }

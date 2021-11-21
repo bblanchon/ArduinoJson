@@ -35,7 +35,7 @@ class StringMover {
   }
 
   string_type str() const {
-    return string_type(_startPtr);
+    return string_type(_startPtr, size());
   }
 
   size_t size() const {

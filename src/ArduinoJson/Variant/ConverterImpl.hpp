@@ -205,7 +205,7 @@ class MemoryPoolPrint : public Print {
 
   CopiedString str() {
     ARDUINOJSON_ASSERT(_size < _capacity);
-    return _pool->saveStringFromFreeZone(_size);
+    return CopiedString(_pool->saveStringFromFreeZone(_size), _size);
   }
 
   size_t write(uint8_t c) {
@@ -257,8 +257,7 @@ inline void convertToJson(const ::Printable& src, VariantRef dst) {
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
 
 inline void convertFromJson(VariantConstRef src, ::String& dst) {
-  const VariantData* data = getData(src);
-  String str = data != 0 ? data->asString() : String();
+  String str = src.as<String>();
   if (str)
     dst = str.c_str();
   else
@@ -266,8 +265,7 @@ inline void convertFromJson(VariantConstRef src, ::String& dst) {
 }
 
 inline bool canConvertFromJson(VariantConstRef src, const ::String&) {
-  const VariantData* data = getData(src);
-  return data && data->isString();
+  return src.is<String>();
 }
 
 #endif
@@ -275,17 +273,15 @@ inline bool canConvertFromJson(VariantConstRef src, const ::String&) {
 #if ARDUINOJSON_ENABLE_STD_STRING
 
 inline void convertFromJson(VariantConstRef src, std::string& dst) {
-  const VariantData* data = getData(src);
-  String str = data != 0 ? data->asString() : String();
+  String str = src.as<String>();
   if (str)
-    dst.assign(str.c_str());
+    dst.assign(str.c_str(), str.size());
   else
     serializeJson(src, dst);
 }
 
 inline bool canConvertFromJson(VariantConstRef src, const std::string&) {
-  const VariantData* data = getData(src);
-  return data && data->isString();
+  return src.is<String>();
 }
 
 #endif
@@ -293,13 +289,13 @@ inline bool canConvertFromJson(VariantConstRef src, const std::string&) {
 #if ARDUINOJSON_ENABLE_STRING_VIEW
 
 inline void convertFromJson(VariantConstRef src, std::string_view& dst) {
-  const char* str = src.as<const char*>();
+  String str = src.as<String>();
   if (str)  // the standard doesn't allow passing null to the constructor
-    dst = std::string_view(str);
+    dst = std::string_view(str.c_str(), str.size());
 }
 
 inline bool canConvertFromJson(VariantConstRef src, const std::string_view&) {
-  return src.is<const char*>();
+  return src.is<String>();
 }
 
 #endif

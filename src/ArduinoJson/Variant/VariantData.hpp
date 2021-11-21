@@ -51,11 +51,13 @@ class VariantData {
 
       case VALUE_IS_LINKED_STRING:
       case VALUE_IS_OWNED_STRING:
-        return visitor.visitString(_content.asString);
+        return visitor.visitString(_content.asString.data,
+                                   _content.asString.size);
 
       case VALUE_IS_OWNED_RAW:
       case VALUE_IS_LINKED_RAW:
-        return visitor.visitRawJson(_content.asRaw.data, _content.asRaw.size);
+        return visitor.visitRawJson(_content.asString.data,
+                                    _content.asString.size);
 
       case VALUE_IS_SIGNED_INTEGER:
         return visitor.visitSignedInteger(_content.asSignedInteger);
@@ -105,10 +107,13 @@ class VariantData {
         return toObject().copyFrom(src._content.asCollection, pool);
       case VALUE_IS_OWNED_STRING:
         return storeString(
-            adaptString(const_cast<char *>(src._content.asString)), pool);
+            adaptString(const_cast<char *>(src._content.asString.data),
+                        src._content.asString.size),
+            pool);
       case VALUE_IS_OWNED_RAW:
         return storeOwnedRaw(
-            serialized(src._content.asRaw.data, src._content.asRaw.size), pool);
+            serialized(src._content.asString.data, src._content.asString.size),
+            pool);
       default:
         setType(src.type());
         _content = src._content;
@@ -186,8 +191,8 @@ class VariantData {
   void setLinkedRaw(SerializedValue<const char *> value) {
     if (value.data()) {
       setType(VALUE_IS_LINKED_RAW);
-      _content.asRaw.data = value.data();
-      _content.asRaw.size = value.size();
+      _content.asString.data = value.data();
+      _content.asString.size = value.size();
     } else {
       setType(VALUE_IS_NULL);
     }
@@ -198,8 +203,8 @@ class VariantData {
     const char *dup = pool->saveString(adaptString(value.data(), value.size()));
     if (dup) {
       setType(VALUE_IS_OWNED_RAW);
-      _content.asRaw.data = dup;
-      _content.asRaw.size = value.size();
+      _content.asString.data = dup;
+      _content.asString.size = value.size();
       return true;
     } else {
       setType(VALUE_IS_NULL);
@@ -226,13 +231,15 @@ class VariantData {
   void setString(CopiedString s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_OWNED_STRING);
-    _content.asString = s.c_str();
+    _content.asString.data = s.c_str();
+    _content.asString.size = s.size();
   }
 
   void setString(LinkedString s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_LINKED_STRING);
-    _content.asString = s.c_str();
+    _content.asString.data = s.c_str();
+    _content.asString.size = s.size();
   }
 
   template <typename TAdaptedString>
@@ -255,11 +262,10 @@ class VariantData {
   size_t memoryUsage() const {
     switch (type()) {
       case VALUE_IS_OWNED_STRING:
-        return strlen(_content.asString) + 1;
       case VALUE_IS_OWNED_RAW:
         // We always add a zero at the end: the deduplication function uses it
         // to detect the beginning of the next string.
-        return _content.asRaw.size + 1;
+        return _content.asString.size + 1;
       case VALUE_IS_OBJECT:
       case VALUE_IS_ARRAY:
         return _content.asCollection.memoryUsage();
@@ -312,7 +318,7 @@ class VariantData {
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
     if (_flags & OWNED_VALUE_BIT)
-      _content.asString += stringDistance;
+      _content.asString.data += stringDistance;
     if (_flags & COLLECTION_MASK)
       _content.asCollection.movePointers(stringDistance, variantDistance);
   }
@@ -342,7 +348,7 @@ class VariantData {
     if (value.isNull())
       setNull();
     else
-      setString(LinkedString(value.data()));
+      setString(LinkedString(value.data(), value.size()));
     return true;
   }
 
@@ -358,7 +364,7 @@ class VariantData {
       setNull();
       return false;
     }
-    setString(CopiedString(copy));
+    setString(CopiedString(copy, value.size()));
     return true;
   }
 };

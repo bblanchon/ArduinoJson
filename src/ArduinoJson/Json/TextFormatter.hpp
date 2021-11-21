@@ -41,13 +41,22 @@ class TextFormatter {
     writeRaw('\"');
   }
 
+  void writeString(const char *value, size_t n) {
+    ARDUINOJSON_ASSERT(value != NULL);
+    writeRaw('\"');
+    while (n--) writeChar(*value++);
+    writeRaw('\"');
+  }
+
   void writeChar(char c) {
     char specialChar = EscapeSequence::escapeChar(c);
     if (specialChar) {
       writeRaw('\\');
       writeRaw(specialChar);
-    } else {
+    } else if (c) {
       writeRaw(c);
+    } else {
+      writeRaw("\\u0000");
     }
   }
 

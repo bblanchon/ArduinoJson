@@ -60,9 +60,8 @@ TEST_CASE("\\u0000") {
   CHECK(result[4] == 'z');
   CHECK(result[5] == 0);
 
-  // ArduinoJson strings doesn't store string length, so the following returns 2
-  // instead of 5 (issue #1646)
-  CHECK(doc.as<std::string>().size() == 2);
+  CHECK(doc.as<JsonString>().size() == 5);
+  CHECK(doc.as<std::string>().size() == 5);
 }
 
 TEST_CASE("Truncated JSON string") {

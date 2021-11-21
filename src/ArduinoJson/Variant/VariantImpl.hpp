@@ -26,7 +26,7 @@ inline T VariantData::asIntegral() const {
       return convertNumber<T>(_content.asSignedInteger);
     case VALUE_IS_LINKED_STRING:
     case VALUE_IS_OWNED_STRING:
-      return parseNumber<T>(_content.asString);
+      return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return convertNumber<T>(_content.asFloat);
     default:
@@ -62,7 +62,7 @@ inline T VariantData::asFloat() const {
       return static_cast<T>(_content.asSignedInteger);
     case VALUE_IS_LINKED_STRING:
     case VALUE_IS_OWNED_STRING:
-      return parseNumber<T>(_content.asString);
+      return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return static_cast<T>(_content.asFloat);
     default:
@@ -73,11 +73,11 @@ inline T VariantData::asFloat() const {
 inline String VariantData::asString() const {
   switch (type()) {
     case VALUE_IS_LINKED_STRING:
-      return String(_content.asString, true);
+      return String(_content.asString.data, _content.asString.size, true);
     case VALUE_IS_OWNED_STRING:
-      return String(_content.asString, false);
+      return String(_content.asString.data, _content.asString.size, false);
     default:
-      return 0;
+      return String();
   }
 }
 

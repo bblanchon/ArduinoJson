@@ -49,10 +49,9 @@ union VariantContent {
   UInt asUnsignedInteger;
   Integer asSignedInteger;
   CollectionData asCollection;
-  const char *asString;
   struct {
     const char *data;
     size_t size;
-  } asRaw;
+  } asString;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

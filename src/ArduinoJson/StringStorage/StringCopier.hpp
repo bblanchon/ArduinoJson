@@ -24,7 +24,7 @@ class StringCopier {
   string_type save() {
     ARDUINOJSON_ASSERT(_ptr);
     ARDUINOJSON_ASSERT(_size < _capacity);  // needs room for the terminator
-    return _pool->saveStringFromFreeZone(_size);
+    return string_type(_pool->saveStringFromFreeZone(_size), _size);
   }
 
   void append(const char* s) {
@@ -54,7 +54,7 @@ class StringCopier {
     ARDUINOJSON_ASSERT(_ptr);
     ARDUINOJSON_ASSERT(_size < _capacity);
     _ptr[_size] = 0;
-    return _ptr;
+    return string_type(_ptr, _size);
   }
 
  private:

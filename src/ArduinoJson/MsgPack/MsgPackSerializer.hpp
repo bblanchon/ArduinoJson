@@ -78,9 +78,11 @@ class MsgPackSerializer : public Visitor<size_t> {
   }
 
   size_t visitString(const char* value) {
-    ARDUINOJSON_ASSERT(value != NULL);
+    return visitString(value, strlen(value));
+  }
 
-    size_t n = strlen(value);
+  size_t visitString(const char* value, size_t n) {
+    ARDUINOJSON_ASSERT(value != NULL);
 
     if (n < 0x20) {
       writeByte(uint8_t(0xA0 + n));

@@ -10,9 +10,15 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class String : public SafeBoolIdom<String> {
  public:
-  String() : _data(0), _isStatic(true) {}
+  String() : _data(0), _size(0), _isStatic(true) {}
+
   String(const char* data, bool isStaticData = true)
-      : _data(data), _isStatic(isStaticData) {}
+      : _data(data),
+        _size(data ? ::strlen(data) : 0),
+        _isStatic(isStaticData) {}
+
+  String(const char* data, size_t sz, bool isStaticData = true)
+      : _data(data), _size(sz), _isStatic(isStaticData) {}
 
   const char* c_str() const {
     return _data;
@@ -24,6 +30,10 @@ class String : public SafeBoolIdom<String> {
 
   bool isStatic() const {
     return _isStatic;
+  }
+
+  size_t size() const {
+    return _size;
   }
 
   // safe bool idiom
@@ -53,6 +63,7 @@ class String : public SafeBoolIdom<String> {
 
  private:
   const char* _data;
+  size_t _size;
   bool _isStatic;
 };
 
