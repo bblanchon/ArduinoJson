@@ -7,6 +7,7 @@
 #include <ArduinoJson/Namespace.hpp>
 
 #include <stdint.h>  // int8_t
+#include <string.h>  // strcmp
 
 namespace ARDUINOJSON_NAMESPACE {
 

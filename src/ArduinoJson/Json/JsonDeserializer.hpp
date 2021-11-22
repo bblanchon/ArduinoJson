@@ -231,12 +231,12 @@ class JsonDeserializer {
         return false;
       }
 
-      const char *key = _stringStorage.c_str();
+      typename TStringStorage::string_type key = _stringStorage.str();
 
-      TFilter memberFilter = filter[key];
+      TFilter memberFilter = filter[key.c_str()];
 
       if (memberFilter.allow()) {
-        VariantData *variant = object.getMember(adaptString(key));
+        VariantData *variant = object.getMember(adaptString(key.c_str()));
         if (!variant) {
           // Save key in memory pool.
           // This MUST be done before adding the slot.
@@ -249,7 +249,7 @@ class JsonDeserializer {
             return false;
           }
 
-          slot->setKey(key, typename TStringStorage::storage_policy());
+          slot->setKey(key);
 
           variant = slot->data();
         }
@@ -345,8 +345,7 @@ class JsonDeserializer {
     _stringStorage.startString();
     if (!parseQuotedString())
       return false;
-    const char *value = _stringStorage.save();
-    variant.setStringPointer(value, typename TStringStorage::storage_policy());
+    variant.setString(_stringStorage.save());
     return true;
   }
 

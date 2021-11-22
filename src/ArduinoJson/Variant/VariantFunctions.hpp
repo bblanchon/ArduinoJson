@@ -54,7 +54,7 @@ inline bool variantSetString(VariantData *var, TAdaptedString value,
                              MemoryPool *pool) {
   if (!var)
     return false;
-  return var->setString(value, pool);
+  return var->storeString(value, pool);
 }
 
 inline size_t variantSize(const VariantData *var) {

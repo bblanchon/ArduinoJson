@@ -173,7 +173,7 @@ struct Converter<SerializedValue<T>,
     VariantData* data = getData(dst);
     MemoryPool* pool = getPool(dst);
     if (data)
-      data->setOwnedRaw(src, pool);
+      data->storeOwnedRaw(src, pool);
   }
 };
 
@@ -203,7 +203,7 @@ class MemoryPoolPrint : public Print {
     pool->getFreeZone(&_string, &_capacity);
   }
 
-  const char* c_str() {
+  CopiedString str() {
     _string[_size++] = 0;
     ARDUINOJSON_ASSERT(_size <= _capacity);
     return _pool->saveStringFromFreeZone(_size);
@@ -250,7 +250,7 @@ inline void convertToJson(const ::Printable& src, VariantRef dst) {
     data->setNull();
     return;
   }
-  data->setStringPointer(print.c_str(), storage_policies::store_by_copy());
+  data->setString(print.str());
 }
 
 #endif

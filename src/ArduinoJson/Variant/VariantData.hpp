@@ -104,10 +104,10 @@ class VariantData {
       case VALUE_IS_OBJECT:
         return toObject().copyFrom(src._content.asCollection, pool);
       case VALUE_IS_OWNED_STRING:
-        return setString(adaptString(const_cast<char *>(src._content.asString)),
-                         pool);
+        return storeString(
+            adaptString(const_cast<char *>(src._content.asString)), pool);
       case VALUE_IS_OWNED_RAW:
-        return setOwnedRaw(
+        return storeOwnedRaw(
             serialized(src._content.asRaw.data, src._content.asRaw.size), pool);
       default:
         setType(src.type());
@@ -194,7 +194,7 @@ class VariantData {
   }
 
   template <typename T>
-  bool setOwnedRaw(SerializedValue<T> value, MemoryPool *pool) {
+  bool storeOwnedRaw(SerializedValue<T> value, MemoryPool *pool) {
     const char *dup = pool->saveString(adaptString(value.data(), value.size()));
     if (dup) {
       setType(VALUE_IS_OWNED_RAW);
@@ -223,20 +223,20 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setStringPointer(const char *s, storage_policies::store_by_copy) {
-    ARDUINOJSON_ASSERT(s != 0);
+  void setString(CopiedString s) {
+    ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_OWNED_STRING);
-    _content.asString = s;
+    _content.asString = s.c_str();
   }
 
-  void setStringPointer(const char *s, storage_policies::store_by_address) {
-    ARDUINOJSON_ASSERT(s != 0);
+  void setString(LinkedString s) {
+    ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_LINKED_STRING);
-    _content.asString = s;
+    _content.asString = s.c_str();
   }
 
   template <typename TAdaptedString>
-  bool setString(TAdaptedString value, MemoryPool *pool) {
+  bool storeString(TAdaptedString value, MemoryPool *pool) {
     return storeString(value, pool, typename TAdaptedString::storage_policy());
   }
 
@@ -342,7 +342,7 @@ class VariantData {
     if (value.isNull())
       setNull();
     else
-      setStringPointer(value.data(), storage_policies::store_by_address());
+      setString(LinkedString(value.data()));
     return true;
   }
 
@@ -358,7 +358,7 @@ class VariantData {
       setNull();
       return false;
     }
-    setStringPointer(copy, storage_policies::store_by_copy());
+    setString(CopiedString(copy));
     return true;
   }
 };

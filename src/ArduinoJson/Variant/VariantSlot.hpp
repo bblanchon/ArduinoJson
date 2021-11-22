@@ -8,6 +8,7 @@
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StoredString.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -77,16 +78,16 @@ class VariantSlot {
     _next = VariantSlotDiff(slot - this);
   }
 
-  void setKey(const char* k, storage_policies::store_by_copy) {
-    ARDUINOJSON_ASSERT(k != NULL);
+  void setKey(CopiedString k) {
+    ARDUINOJSON_ASSERT(k);
     _flags |= OWNED_KEY_BIT;
-    _key = k;
+    _key = k.c_str();
   }
 
-  void setKey(const char* k, storage_policies::store_by_address) {
-    ARDUINOJSON_ASSERT(k != NULL);
+  void setKey(LinkedString k) {
+    ARDUINOJSON_ASSERT(k);
     _flags &= VALUE_MASK;
-    _key = k;
+    _key = k.c_str();
   }
 
   const char* key() const {

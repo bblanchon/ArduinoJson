@@ -5,19 +5,21 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
-#include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StoredString.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 class StringMover {
  public:
+  typedef LinkedString string_type;
+
   StringMover(char* ptr) : _writePtr(ptr) {}
 
   void startString() {
     _startPtr = _writePtr;
   }
 
-  const char* save() const {
+  FORCE_INLINE string_type save() {
     return _startPtr;
   }
 
@@ -29,11 +31,9 @@ class StringMover {
     return true;
   }
 
-  const char* c_str() const {
-    return _startPtr;
+  string_type str() const {
+    return string_type(_startPtr);
   }
-
-  typedef storage_policies::store_by_address storage_policy;
 
  private:
   char* _writePtr;

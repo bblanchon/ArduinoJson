@@ -19,7 +19,8 @@ TEST_CASE("StringCopier") {
     str.append('\0');
 
     REQUIRE(str.isValid() == true);
-    REQUIRE(str.c_str() == std::string("hello"));
+    REQUIRE(std::string(str.str()) == "hello");
+    REQUIRE(pool.overflowed() == false);
   }
 
   SECTION("Returns null when too small") {
@@ -49,7 +50,7 @@ static const char* addStringToPool(MemoryPool& pool, const char* s) {
   str.startString();
   str.append(s);
   str.append('\0');
-  return str.save();
+  return str.save().c_str();
 }
 
 TEST_CASE("StringCopier::save() deduplicates strings") {

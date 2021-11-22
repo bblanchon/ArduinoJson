@@ -19,7 +19,7 @@ static void testCodepoint(uint32_t codepoint, std::string expected) {
   Utf8::encodeCodepoint(codepoint, str);
 
   str.append('\0');
-  REQUIRE(str.c_str() == expected);
+  REQUIRE(str.str().c_str() == expected);
 }
 
 TEST_CASE("Utf8::encodeCodepoint()") {
