@@ -19,6 +19,7 @@ add_executable(JsonDocumentTests
 	size.cpp
 	StaticJsonDocument.cpp
 	subscript.cpp
+	swap.cpp
 )
 
 add_test(JsonDocument JsonDocumentTests)

@@ -6,9 +6,9 @@
 #include <stdlib.h>  // malloc, free
 #include <catch.hpp>
 #include <sstream>
+#include <utility>
 
 using ARDUINOJSON_NAMESPACE::addPadding;
-using ARDUINOJSON_NAMESPACE::move;
 
 class SpyingAllocator {
  public:
@@ -78,7 +78,7 @@ TEST_CASE("BasicJsonDocument") {
       BasicJsonDocument<SpyingAllocator> doc1(4096, log);
       doc1.set(std::string("The size of this string is 32!!"));
 
-      BasicJsonDocument<SpyingAllocator> doc2(move(doc1));
+      BasicJsonDocument<SpyingAllocator> doc2(std::move(doc1));
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc1.as<std::string>() == "null");
@@ -111,7 +111,7 @@ TEST_CASE("BasicJsonDocument") {
       doc1.set(std::string("The size of this string is 32!!"));
       BasicJsonDocument<SpyingAllocator> doc2(8, log);
 
-      doc2 = move(doc1);
+      doc2 = std::move(doc1);
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc1.as<std::string>() == "null");

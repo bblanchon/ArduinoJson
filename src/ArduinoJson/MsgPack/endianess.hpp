@@ -5,25 +5,30 @@
 #pragma once
 
 #include <ArduinoJson/Polyfills/type_traits.hpp>
-#include <ArduinoJson/Polyfills/utility.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 #if ARDUINOJSON_LITTLE_ENDIAN
+inline void swapBytes(uint8_t &a, uint8_t &b) {
+  uint8_t t(a);
+  a = b;
+  b = t;
+}
+
 inline void fixEndianess(uint8_t *p, integral_constant<size_t, 8>) {
-  swap(p[0], p[7]);
-  swap(p[1], p[6]);
-  swap(p[2], p[5]);
-  swap(p[3], p[4]);
+  swapBytes(p[0], p[7]);
+  swapBytes(p[1], p[6]);
+  swapBytes(p[2], p[5]);
+  swapBytes(p[3], p[4]);
 }
 
 inline void fixEndianess(uint8_t *p, integral_constant<size_t, 4>) {
-  swap(p[0], p[3]);
-  swap(p[1], p[2]);
+  swapBytes(p[0], p[3]);
+  swapBytes(p[1], p[2]);
 }
 
 inline void fixEndianess(uint8_t *p, integral_constant<size_t, 2>) {
-  swap(p[0], p[1]);
+  swapBytes(p[0], p[1]);
 }
 
 inline void fixEndianess(uint8_t *, integral_constant<size_t, 1>) {}

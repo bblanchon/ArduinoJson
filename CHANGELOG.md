@@ -12,6 +12,7 @@ HEAD
 * Add safe bool idiom in `JsonString`
 * Remove `DeserializationError == bool` and `DeserializationError != bool`
 * Fix `JsonVariant::memoryUsage()` for raw strings
+* Fix `call of overloaded 'swap(BasicJsonDocument&, BasicJsonDocument&)' is ambiguous` (issue #1678)
 
 v6.18.5 (2021-09-28)
 -------
