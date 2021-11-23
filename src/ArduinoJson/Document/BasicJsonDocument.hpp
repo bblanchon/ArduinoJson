@@ -98,7 +98,9 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   template <typename T>
   BasicJsonDocument& operator=(const T& src) {
-    reallocPoolIfTooSmall(src.memoryUsage());
+    size_t requiredSize = src.memoryUsage();
+    if (requiredSize > capacity())
+      reallocPool(requiredSize);
     set(src);
     return *this;
   }
@@ -136,9 +138,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     return MemoryPool(reinterpret_cast<char*>(this->allocate(capa)), capa);
   }
 
-  void reallocPoolIfTooSmall(size_t requiredSize) {
-    if (requiredSize <= capacity())
-      return;
+  void reallocPool(size_t requiredSize) {
     freePool();
     replacePool(allocPool(addPadding(requiredSize)));
   }
@@ -148,7 +148,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   }
 
   void copyAssignFrom(const JsonDocument& src) {
-    reallocPoolIfTooSmall(src.capacity());
+    reallocPool(src.capacity());
     set(src);
   }
 
