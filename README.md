@@ -7,7 +7,6 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bblanchon/ArduinoJson/Continuous%20Integration?logo=github)](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22+branch%3A6.x)
 [![Continuous Integration](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/6.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
 [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/arduinojson.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
-[![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/bblanchon/ArduinoJson?label=quality&logo=lgtm)](https://lgtm.com/projects/g/bblanchon/ArduinoJson/)
 [![Coveralls branch](https://img.shields.io/coveralls/github/bblanchon/ArduinoJson/6.x?logo=coveralls)](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)  
 [![Arduino Library Manager](https://img.shields.io/static/v1?label=Arduino&message=v6.19.4&logo=arduino&logoColor=white&color=blue)](https://www.ardu-badge.com/ArduinoJson/6.19.4)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/bblanchon/library/ArduinoJson.svg?version=6.19.4)](https://registry.platformio.org/packages/libraries/bblanchon/ArduinoJson?version=6.19.4) 
