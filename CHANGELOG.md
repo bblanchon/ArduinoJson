@@ -10,11 +10,11 @@ HEAD
 * Change the default of `ARDUINOJSON_USE_LONG_LONG` to `1` on 32-bit platforms
 * Add `as<JsonString>()` and `is<JsonString>()`
 * Add safe bool idiom in `JsonString`
+* Add support for NUL in string values (issue #1646)
 * Remove `DeserializationError == bool` and `DeserializationError != bool`
 * Fix `JsonVariant::memoryUsage()` for raw strings
 * Fix `call of overloaded 'swap(BasicJsonDocument&, BasicJsonDocument&)' is ambiguous` (issue #1678)
 * Fix inconsistent pool size in `BasicJsonDocument`'s copy constructor
-* Support NUL in string values (issue #1646)
 * Fix return type of `StaticJsonDocument::operator=`
 
 v6.18.5 (2021-09-28)
