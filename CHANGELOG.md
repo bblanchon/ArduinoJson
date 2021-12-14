@@ -15,6 +15,7 @@ HEAD
 * Fix `call of overloaded 'swap(BasicJsonDocument&, BasicJsonDocument&)' is ambiguous` (issue #1678)
 * Fix inconsistent pool size in `BasicJsonDocument`'s copy constructor
 * Support NUL in string values (issue #1646)
+* Fix return type of `StaticJsonDocument::operator=`
 
 v6.18.5 (2021-09-28)
 -------
