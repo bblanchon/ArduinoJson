@@ -139,14 +139,14 @@ class JsonDocument : public Visitable {
   // containsKey(const __FlashStringHelper*) const
   template <typename TChar>
   bool containsKey(TChar* key) const {
-    return !getMember(key).isUndefined();
+    return !getMember(key).isUnbound();
   }
 
   // containsKey(const std::string&) const
   // containsKey(const String&) const
   template <typename TString>
   bool containsKey(const TString& key) const {
-    return !getMember(key).isUndefined();
+    return !getMember(key).isUnbound();
   }
 
   // operator[](const std::string&)

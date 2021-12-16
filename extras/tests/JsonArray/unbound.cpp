@@ -7,7 +7,7 @@
 
 using namespace Catch::Matchers;
 
-TEST_CASE("Undefined JsonArray") {
+TEST_CASE("Unbound JsonArray") {
   JsonArray array;
 
   SECTION("SubscriptFails") {

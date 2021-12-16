@@ -9,7 +9,7 @@ TEST_CASE("JsonVariant::operator[]") {
   DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
 
-  SECTION("The JsonVariant is undefined") {
+  SECTION("The JsonVariant is null") {
     REQUIRE(0 == var.size());
     REQUIRE(var["0"].isNull());
     REQUIRE(var[0].isNull());
@@ -136,7 +136,7 @@ TEST_CASE("JsonVariantConst::operator[]") {
   JsonVariant var = doc.to<JsonVariant>();
   JsonVariantConst cvar = var;
 
-  SECTION("The JsonVariant is undefined") {
+  SECTION("The JsonVariant is null") {
     REQUIRE(0 == cvar.size());
     REQUIRE(cvar["0"].isNull());
     REQUIRE(cvar[0].isNull());

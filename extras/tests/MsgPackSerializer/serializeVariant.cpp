@@ -31,7 +31,7 @@ static void checkVariant(T value, const std::string& expected) {
 }
 
 TEST_CASE("serialize MsgPack value") {
-  SECTION("undefined") {
+  SECTION("unbound") {
     checkVariant(JsonVariant(), "\xC0");  // we represent undefined as nil
   }
 

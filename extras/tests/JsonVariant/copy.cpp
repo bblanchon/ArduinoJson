@@ -89,7 +89,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     unboundVariant.set(var1);
 
-    REQUIRE(unboundVariant.isUndefined());
+    REQUIRE(unboundVariant.isUnbound());
     REQUIRE(unboundVariant.isNull());
   }
 }

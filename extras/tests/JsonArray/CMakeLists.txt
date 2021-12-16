@@ -17,7 +17,7 @@ add_executable(JsonArrayTests
 	size.cpp
 	std_string.cpp
 	subscript.cpp
-	undefined.cpp
+	unbound.cpp
 )
 
 add_test(JsonArray JsonArrayTests)

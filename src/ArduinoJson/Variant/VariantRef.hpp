@@ -32,7 +32,7 @@ class VariantRefBase : public VariantTag {
     return variantIsNull(_data);
   }
 
-  FORCE_INLINE bool isUndefined() const {
+  FORCE_INLINE bool isUnbound() const {
     return !_data;
   }
 

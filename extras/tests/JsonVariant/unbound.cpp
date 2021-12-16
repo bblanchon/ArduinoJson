@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonVariant undefined") {
+TEST_CASE("Unbound JsonVariant") {
   JsonVariant variant;
 
   SECTION("as<T>()") {

@@ -11,7 +11,7 @@ TEST_CASE("JsonVariant::is<T>()") {
   DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("undefined") {
+  SECTION("unbound") {
     variant = JsonVariant();
 
     CHECK(variant.is<JsonObject>() == false);
@@ -168,7 +168,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
   JsonVariant variant = doc.to<JsonVariant>();
   JsonVariantConst cvariant = variant;
 
-  SECTION("undefined") {
+  SECTION("unbound") {
     cvariant = JsonVariantConst();
 
     CHECK(cvariant.is<JsonArray>() == false);

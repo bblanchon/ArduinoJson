@@ -17,7 +17,7 @@ CompareResult compare(const T1 &lhs, const T2 &rhs);  // VariantCompare.cpp
 
 template <typename TVariant>
 struct VariantOperators {
-  // Returns the default value if the VariantRef is undefined or incompatible
+  // Returns the default value if the VariantRef is unbound or incompatible
   //
   // int operator|(JsonVariant, int)
   // float operator|(JsonVariant, float)
