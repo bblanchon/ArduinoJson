@@ -139,6 +139,9 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   }
 
   void reallocPool(size_t requiredSize) {
+    size_t capa = addPadding(requiredSize);
+    if (capa == _pool.capacity())
+      return;
     freePool();
     replacePool(allocPool(addPadding(requiredSize)));
   }
