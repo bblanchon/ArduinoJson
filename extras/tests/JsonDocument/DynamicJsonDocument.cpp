@@ -138,27 +138,26 @@ TEST_CASE("DynamicJsonDocument constructor") {
 }
 
 TEST_CASE("DynamicJsonDocument assignment") {
-  SECTION("Copy assignment preserves the buffer when capacity is sufficient") {
+  SECTION("Copy assignment reallocates when capacity is smaller") {
     DynamicJsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
+    DynamicJsonDocument doc2(8);
 
-    DynamicJsonDocument doc2(doc1.capacity());
     doc2 = doc1;
 
     REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
-  SECTION("Copy assignment realloc the buffer when capacity is insufficient") {
-    DynamicJsonDocument doc1(1234);
+  SECTION("Copy assignment reallocates when capacity is larger") {
+    DynamicJsonDocument doc1(100);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
-    DynamicJsonDocument doc2(8);
+    DynamicJsonDocument doc2(1234);
 
-    REQUIRE(doc2.capacity() < doc1.memoryUsage());
     doc2 = doc1;
-    REQUIRE(doc2.capacity() >= doc1.memoryUsage());
 
     REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
   SECTION("Assign from StaticJsonDocument") {

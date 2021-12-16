@@ -14,7 +14,8 @@ HEAD
 * Remove `DeserializationError == bool` and `DeserializationError != bool`
 * Fix `JsonVariant::memoryUsage()` for raw strings
 * Fix `call of overloaded 'swap(BasicJsonDocument&, BasicJsonDocument&)' is ambiguous` (issue #1678)
-* Fix inconsistent pool size in `BasicJsonDocument`'s copy constructor
+* Fix inconsistent pool capacity between `BasicJsonDocument`'s copy and move constructors
+* Fix inconsistent pool capacity between `BasicJsonDocument`'s copy and move assignments
 * Fix return type of `StaticJsonDocument::operator=`
 
 v6.18.5 (2021-09-28)
