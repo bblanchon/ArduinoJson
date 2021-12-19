@@ -14,7 +14,6 @@ template <typename TAllocator>
 class AllocatorOwner {
  public:
   AllocatorOwner() {}
-  AllocatorOwner(const AllocatorOwner& src) : _allocator(src._allocator) {}
   AllocatorOwner(TAllocator a) : _allocator(a) {}
 
   void* allocate(size_t size) {
