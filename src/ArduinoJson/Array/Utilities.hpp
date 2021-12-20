@@ -6,128 +6,80 @@
 
 #include <ArduinoJson/Array/ArrayRef.hpp>
 #include <ArduinoJson/Document/JsonDocument.hpp>
-#include <ArduinoJson/Variant/Visitor.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-// Copy a 1D array to a JsonArray
+// Trivial form to stop the recursion
+template <typename T>
+inline typename enable_if<!is_array<T>::value, bool>::type copyArray(
+    const T& src, VariantRef dst) {
+  return dst.set(src);
+}
+
+// Copy array to a JsonArray/JsonVariant/MemberProxy/ElementProxy
 template <typename T, size_t N, typename TDestination>
-inline typename enable_if<!is_array<T>::value &&
-                              !is_base_of<JsonDocument, TDestination>::value,
+inline typename enable_if<!is_base_of<JsonDocument, TDestination>::value,
                           bool>::type
 copyArray(T (&src)[N], const TDestination& dst) {
   return copyArray(src, N, dst);
 }
 
-// Copy a 1D array to a JsonDocument
-template <typename T, size_t N>
-inline bool copyArray(T (&src)[N], JsonDocument& dst) {
-  return copyArray(src, dst.to<ArrayRef>());
-}
-
-// Copy a 1D array to a JsonArray
+// Copy ptr+size to a JsonArray/JsonVariant/MemberProxy/ElementProxy
 template <typename T, typename TDestination>
-inline typename enable_if<!is_array<T>::value &&
-                              !is_base_of<JsonDocument, TDestination>::value,
+inline typename enable_if<!is_base_of<JsonDocument, TDestination>::value,
                           bool>::type
-copyArray(T* src, size_t len, const TDestination& dst) {
+copyArray(const T* src, size_t len, const TDestination& dst) {
   bool ok = true;
   for (size_t i = 0; i < len; i++) {
-    ok &= dst.add(src[i]);
+    ok &= copyArray(src[i], dst.addElement());
   }
   return ok;
 }
 
-// Copy a 1D array to a JsonDocument
+// Copy array to a JsonDocument
 template <typename T>
-inline bool copyArray(T* src, size_t len, JsonDocument& dst) {
+inline bool copyArray(const T& src, JsonDocument& dst) {
+  return copyArray(src, dst.to<ArrayRef>());
+}
+
+// Copy a ptr+size array to a JsonDocument
+template <typename T>
+inline bool copyArray(const T* src, size_t len, JsonDocument& dst) {
   return copyArray(src, len, dst.to<ArrayRef>());
 }
 
-// Copy a 2D array to a JsonArray
-template <typename T, size_t N1, size_t N2, typename TDestination>
-inline typename enable_if<!is_base_of<JsonDocument, TDestination>::value,
-                          bool>::type
-copyArray(T (&src)[N1][N2], const TDestination& dst) {
-  bool ok = true;
-  for (size_t i = 0; i < N1; i++) {
-    ArrayRef nestedArray = dst.createNestedArray();
-    for (size_t j = 0; j < N2; j++) {
-      ok &= nestedArray.add(src[i][j]);
-    }
-  }
-  return ok;
-}
-
-// Copy a 2D array to a JsonDocument
-template <typename T, size_t N1, size_t N2>
-inline bool copyArray(T (&src)[N1][N2], JsonDocument& dst) {
-  return copyArray(src, dst.to<ArrayRef>());
-}
-
+// Trivial case form to stop the recursion
 template <typename T>
-class ArrayCopier1D : public Visitor<size_t> {
- public:
-  ArrayCopier1D(T* destination, size_t capacity)
-      : _destination(destination), _capacity(capacity) {}
-
-  size_t visitArray(const CollectionData& array) {
-    size_t size = 0;
-    VariantSlot* slot = array.head();
-
-    while (slot != 0 && size < _capacity) {
-      _destination[size++] =
-          Converter<T>::fromJson(VariantConstRef(slot->data()));
-      slot = slot->next();
-    }
-    return size;
-  }
-
- private:
-  T* _destination;
-  size_t _capacity;
-};
-
-template <typename T, size_t N1, size_t N2>
-class ArrayCopier2D : public Visitor<void> {
- public:
-  ArrayCopier2D(T (*destination)[N1][N2]) : _destination(destination) {}
-
-  void visitArray(const CollectionData& array) {
-    VariantSlot* slot = array.head();
-    size_t n = 0;
-    while (slot != 0 && n < N1) {
-      ArrayCopier1D<T> copier((*_destination)[n++], N2);
-      variantAccept(slot->data(), copier);
-      slot = slot->next();
-    }
-  }
-
- private:
-  T (*_destination)[N1][N2];
-  size_t _capacity1, _capacity2;
-};
-
-// Copy a JsonArray to a 1D array
-template <typename TSource, typename T, size_t N>
 inline typename enable_if<!is_array<T>::value, size_t>::type copyArray(
-    const TSource& src, T (&dst)[N]) {
+    VariantConstRef src, T& dst) {
+  dst = src.as<T>();
+  return 1;
+}
+
+// Copy a JsonArray to array
+template <typename T, size_t N>
+inline size_t copyArray(ArrayConstRef src, T (&dst)[N]) {
   return copyArray(src, dst, N);
 }
 
-// Copy a JsonArray to a 1D array
-template <typename TSource, typename T>
-inline size_t copyArray(const TSource& src, T* dst, size_t len) {
-  ArrayCopier1D<T> copier(dst, len);
-
-  return src.accept(copier);
+// Copy a JsonArray to ptr+size
+template <typename T>
+inline size_t copyArray(ArrayConstRef src, T* dst, size_t len) {
+  size_t i = 0;
+  for (ArrayConstRef::iterator it = src.begin(); it != src.end() && i < len;
+       ++it)
+    copyArray(*it, dst[i++]);
+  return i;
 }
 
-// Copy a JsonArray to a 2D array
-template <typename TSource, typename T, size_t N1, size_t N2>
-inline void copyArray(const TSource& src, T (&dst)[N1][N2]) {
-  ArrayCopier2D<T, N1, N2> copier(&dst);
-  src.accept(copier);
+// Copy a JsonDocument to an array
+// (JsonDocument doesn't implicitly convert to JsonArrayConst)
+template <typename TSource, typename T>
+inline typename enable_if<is_array<T>::value &&
+                              is_base_of<JsonDocument, TSource>::value,
+                          size_t>::type
+copyArray(const TSource& src, T& dst) {
+  return copyArray(src.template as<ArrayConstRef>(), dst);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

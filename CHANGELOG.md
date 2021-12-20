@@ -11,6 +11,7 @@ HEAD
 * Add `as<JsonString>()` and `is<JsonString>()`
 * Add safe bool idiom in `JsonString`
 * Add support for NUL in string values (issue #1646)
+* Add support for arbitrary array rank in `copyArray()`
 * Remove `DeserializationError == bool` and `DeserializationError != bool`
 * Renamed undocumented function `isUndefined()` to `isUnbound()`
 * Fix `JsonVariant::memoryUsage()` for raw strings
