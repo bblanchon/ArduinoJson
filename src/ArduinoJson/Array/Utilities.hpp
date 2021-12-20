@@ -36,6 +36,12 @@ copyArray(const T* src, size_t len, const TDestination& dst) {
   return ok;
 }
 
+// Special case for char[] which much be treated as const char*
+template <typename TDestination>
+inline bool copyArray(const char* src, size_t, const TDestination& dst) {
+  return dst.set(src);
+}
+
 // Copy array to a JsonDocument
 template <typename T>
 inline bool copyArray(const T& src, JsonDocument& dst) {
@@ -70,6 +76,18 @@ inline size_t copyArray(ArrayConstRef src, T* dst, size_t len) {
        ++it)
     copyArray(*it, dst[i++]);
   return i;
+}
+
+// Special case for char[] which must be treated as a string
+template <size_t N>
+inline size_t copyArray(VariantConstRef src, char (&dst)[N]) {
+  String s = src;
+  size_t len = N - 1;
+  if (len > s.size())
+    len = s.size();
+  memcpy(dst, s.c_str(), len);
+  dst[len] = 0;
+  return 1;
 }
 
 // Copy a JsonDocument to an array

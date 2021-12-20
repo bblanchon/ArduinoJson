@@ -32,6 +32,56 @@ TEST_CASE("copyArray()") {
     CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
   }
 
+  SECTION("const char*[] -> JsonArray") {
+    DynamicJsonDocument doc(4096);
+    JsonArray array = doc.to<JsonArray>();
+    char json[32];
+    const char* source[] = {"a", "b", "c"};
+
+    bool ok = copyArray(source, array);
+    CHECK(ok);
+
+    serializeJson(array, json);
+    CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
+  }
+
+  SECTION("const char[][] -> JsonArray") {
+    DynamicJsonDocument doc(4096);
+    JsonArray array = doc.to<JsonArray>();
+    char json[32];
+    char source[][2] = {"a", "b", "c"};
+
+    bool ok = copyArray(source, array);
+    CHECK(ok);
+
+    serializeJson(array, json);
+    CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
+  }
+
+  SECTION("const char[][] -> JsonDocument") {
+    DynamicJsonDocument doc(4096);
+    char json[32];
+    char source[][2] = {"a", "b", "c"};
+
+    bool ok = copyArray(source, doc);
+    CHECK(ok);
+
+    serializeJson(doc, json);
+    CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
+  }
+
+  SECTION("const char[][] -> MemberProxy") {
+    DynamicJsonDocument doc(4096);
+    char json[32];
+    char source[][2] = {"a", "b", "c"};
+
+    bool ok = copyArray(source, doc["data"]);
+    CHECK(ok);
+
+    serializeJson(doc, json);
+    CHECK(std::string("{\"data\":[\"a\",\"b\",\"c\"]}") == json);
+  }
+
   SECTION("int[] -> JsonDocument") {
     DynamicJsonDocument doc(4096);
     char json[32];
@@ -172,6 +222,23 @@ TEST_CASE("copyArray()") {
     CHECK("b" == destination[1]);
     CHECK("c" == destination[2]);
     CHECK("" == destination[3]);
+  }
+
+  SECTION("JsonArray -> char[N][]") {
+    DynamicJsonDocument doc(4096);
+    char json[] = "[\"a12345\",\"b123456\",\"c1234567\"]";
+    DeserializationError err = deserializeJson(doc, json);
+    CHECK(err == DeserializationError::Ok);
+    JsonArray array = doc.as<JsonArray>();
+
+    char destination[4][8] = {{0}};
+    size_t result = copyArray(array, destination);
+
+    CHECK(3 == result);
+    CHECK(std::string("a12345") == destination[0]);
+    CHECK(std::string("b123456") == destination[1]);
+    CHECK(std::string("c123456") == destination[2]);  // truncated
+    CHECK(std::string("") == destination[3]);
   }
 
   SECTION("JsonDocument -> int[]") {
