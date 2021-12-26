@@ -21,6 +21,8 @@ HEAD
 * Fix inconsistent pool capacity between `BasicJsonDocument`'s copy and move assignments
 * Fix return type of `StaticJsonDocument::operator=`
 * Avoid pool reallocation in `BasicJsonDocument`'s copy assignment if capacity is the same
+* Avoid including `Arduino.h` when all its features are disabled (issue #1692, PR #1693 by @paulocsanz)
+
 
 v6.18.5 (2021-09-28)
 -------

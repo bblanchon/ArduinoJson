@@ -8,6 +8,7 @@ add_executable(MiscTests
 	deprecated.cpp
 	FloatParts.cpp
 	JsonString.cpp
+	NoArduinoHeader.cpp
 	printable.cpp
 	Readers.cpp
 	StringAdapters.cpp

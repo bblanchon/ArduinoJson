@@ -116,8 +116,6 @@
 
 #ifdef ARDUINO
 
-#  include <Arduino.h>
-
 // Enable support for Arduino's String class
 #  ifndef ARDUINOJSON_ENABLE_ARDUINO_STRING
 #    define ARDUINOJSON_ENABLE_ARDUINO_STRING 1

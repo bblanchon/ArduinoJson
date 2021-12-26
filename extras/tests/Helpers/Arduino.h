@@ -7,3 +7,5 @@
 #include "api/Print.h"
 #include "api/Stream.h"
 #include "api/String.h"
+
+#define ARDUINO_H_INCLUDED 1
