@@ -166,9 +166,9 @@
 #  endif
 #endif
 
-#  if defined(ARDUINO) && ARDUINOJSON_ENABLE_PROGMEM
-#    include <Arduino.h>
-#  endif
+#if defined(ARDUINO) && ARDUINOJSON_ENABLE_PROGMEM
+#  include <Arduino.h>
+#endif
 
 // Convert unicode escape sequence (\u0123) to UTF-8
 #ifndef ARDUINOJSON_DECODE_UNICODE
