@@ -116,21 +116,22 @@
 
 #ifdef ARDUINO
 
-#  include <Arduino.h>
-
 // Enable support for Arduino's String class
 #  ifndef ARDUINOJSON_ENABLE_ARDUINO_STRING
 #    define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
+#    include <Arduino.h>
 #  endif
 
 // Enable support for Arduino's Stream class
 #  ifndef ARDUINOJSON_ENABLE_ARDUINO_STREAM
 #    define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
+#    include <Arduino.h>
 #  endif
 
 // Enable support for Arduino's Print class
 #  ifndef ARDUINOJSON_ENABLE_ARDUINO_PRINT
 #    define ARDUINOJSON_ENABLE_ARDUINO_PRINT 1
+#    include <Arduino.h>
 #  endif
 
 #else  // ARDUINO
