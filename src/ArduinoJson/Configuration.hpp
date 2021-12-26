@@ -132,7 +132,7 @@
 #  endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING || ARDUINO_JSON_ENABLE_ARDUINO_STREAM || ARDUINOJSON_ENABLE_ARDUINO_PRINT
-#  include <Arduino.h>
+#    include <Arduino.h>
 #endif
 
 #else  // ARDUINO
