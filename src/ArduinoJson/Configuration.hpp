@@ -156,6 +156,9 @@
 #ifndef ARDUINOJSON_ENABLE_PROGMEM
 #  if defined(PROGMEM) && defined(pgm_read_byte) && defined(pgm_read_dword) && \
       defined(pgm_read_ptr) && defined(pgm_read_float)
+#    if ARDUINO
+#       include <Arduino.h>
+#    endif
 #    define ARDUINOJSON_ENABLE_PROGMEM 1
 #  else
 #    define ARDUINOJSON_ENABLE_PROGMEM 0
