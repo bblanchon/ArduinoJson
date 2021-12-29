@@ -10,6 +10,7 @@
 /extras/fuzzing/*_fuzzer.options
 /extras/fuzzing/*_fuzzer_seed_corpus.zip
 .vs/
+/out/
 
 # Used by CI for Particle
 /src/*.ino
