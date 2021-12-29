@@ -14,8 +14,6 @@
 #include <ArduinoJson.h>
 
 void setup() {
-#ifdef PROGMEM  // <- check that Flash strings are supported
-
   DynamicJsonDocument doc(1024);
 
   // You can use a Flash String as your JSON input.
@@ -46,12 +44,6 @@ void setup() {
   if (obj["sensor"] == F("gps")) {
     // ...
   }
-
-#else
-
-#warning PROGMEM is not supported on this platform
-
-#endif
 }
 
 void loop() {

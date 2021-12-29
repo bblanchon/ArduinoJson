@@ -2,8 +2,6 @@
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 
-#include "progmem_emulation.hpp"
-
 #define ARDUINOJSON_ENABLE_PROGMEM 1
 #include <ArduinoJson.h>
 

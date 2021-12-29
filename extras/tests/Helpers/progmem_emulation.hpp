@@ -3,7 +3,6 @@
 // MIT License
 
 #include <stdint.h>  // uint8_t
-#include <string.h>  // strcmp, strlen...
 
 #define PROGMEM
 
