@@ -2,7 +2,7 @@
 # Copyright Benoit Blanchon 2014-2021
 # MIT License
 
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.15)
 
 if(ESP_PLATFORM)
    # Build ArduinoJson as an ESP-IDF component
