@@ -211,20 +211,40 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arduino: "1.6.7"
-            os: ubuntu-18.04 # java.lang.Error: Cannot load com.sun.java.swing.plaf.gtk.GTKLookAndFeel
+          - core: arduino:avr
             board: arduino:avr:uno
-          - arduino: "1.8.2"
+          - core: arduino:samd
             board: arduino:samd:mkr1000
-    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build
-        run: extras/ci/arduino.sh ${{ matrix.board }}
-        env:
-          BOARD: ${{ matrix.board }}
-          VERSION: ${{ matrix.arduino }}
+      - name: Install arduino-cli
+        run: brew update && brew install arduino-cli
+      - name: Install core
+        run: arduino-cli core install ${{ matrix.core }}
+      - name: Install libraries
+        run: arduino-cli lib install SD Ethernet
+      - name: Build JsonConfigFile
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/JsonConfigFile/JsonConfigFile.ino"
+      - name: Build JsonFilterExample
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/JsonFilterExample/JsonFilterExample.ino"
+      - name: Build JsonGeneratorExample
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/JsonGeneratorExample/JsonGeneratorExample.ino"
+      - name: Build JsonHttpClient
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/JsonHttpClient/JsonHttpClient.ino"
+      - name: Build JsonParserExample
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/JsonParserExample/JsonParserExample.ino"
+      - name: Build JsonServer
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/JsonServer/JsonServer.ino"
+      - name: Build JsonUdpBeacon
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/JsonUdpBeacon/JsonUdpBeacon.ino"
+      - name: Build MsgPackParser
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/MsgPackParser/MsgPackParser.ino"
+      - name: Build ProgmemExample
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/ProgmemExample/ProgmemExample.ino"
+      - name: Build StringExample
+        run: arduino-cli compile --library . --warnings all -b ${{ matrix.board }} "examples/StringExample/StringExample.ino"
 
   platformio:
     name: PlatformIO
