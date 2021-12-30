@@ -50,6 +50,14 @@ TEST_CASE("Flash strings") {
   }
 }
 
+TEST_CASE("parseNumber()") {  // tables are in Flash
+  using ARDUINOJSON_NAMESPACE::parseNumber;
+
+  CHECK(parseNumber<float>("1") == 1.f);
+  CHECK(parseNumber<float>("1.23") == 1.23f);
+  CHECK(parseNumber<float>("-1.23e34") == -1.23e34f);
+}
+
 TEST_CASE("strlen_P") {
   CHECK(strlen_P(PSTR("")) == 0);
   CHECK(strlen_P(PSTR("a")) == 1);

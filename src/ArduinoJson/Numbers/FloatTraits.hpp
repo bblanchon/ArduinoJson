@@ -158,24 +158,42 @@ struct FloatTraits<T, 4 /*32bits*/> {
   }
 
   static T positiveBinaryPowerOfTen(int index) {
-    ARDUINOJSON_DEFINE_STATIC_ARRAY(
-        T, factors,
-        ARDUINOJSON_EXPAND6({1e1f, 1e2f, 1e4f, 1e8f, 1e16f, 1e32f}));
-    return ARDUINOJSON_READ_STATIC_ARRAY(T, factors, index);
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(uint32_t, factors,
+                                    ARDUINOJSON_EXPAND6({
+                                        0x41200000,  // 1e1f
+                                        0x42c80000,  // 1e2f
+                                        0x461c4000,  // 1e4f
+                                        0x4cbebc20,  // 1e8f
+                                        0x5a0e1bca,  // 1e16f
+                                        0x749dc5ae   // 1e32f
+                                    }));
+    return forge(ARDUINOJSON_READ_STATIC_ARRAY(uint32_t, factors, index));
   }
 
   static T negativeBinaryPowerOfTen(int index) {
-    ARDUINOJSON_DEFINE_STATIC_ARRAY(
-        T, factors,
-        ARDUINOJSON_EXPAND6({1e-1f, 1e-2f, 1e-4f, 1e-8f, 1e-16f, 1e-32f}));
-    return ARDUINOJSON_READ_STATIC_ARRAY(T, factors, index);
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(uint32_t, factors,
+                                    ARDUINOJSON_EXPAND6({
+                                        0x3dcccccd,  // 1e-1f
+                                        0x3c23d70a,  // 1e-2f
+                                        0x38d1b717,  // 1e-4f
+                                        0x322bcc77,  // 1e-8f
+                                        0x24e69595,  // 1e-16f
+                                        0x0a4fb11f   // 1e-32f
+                                    }));
+    return forge(ARDUINOJSON_READ_STATIC_ARRAY(uint32_t, factors, index));
   }
 
   static T negativeBinaryPowerOfTenPlusOne(int index) {
-    ARDUINOJSON_DEFINE_STATIC_ARRAY(
-        T, factors,
-        ARDUINOJSON_EXPAND6({1e0f, 1e-1f, 1e-3f, 1e-7f, 1e-15f, 1e-31f}));
-    return ARDUINOJSON_READ_STATIC_ARRAY(T, factors, index);
+    ARDUINOJSON_DEFINE_STATIC_ARRAY(uint32_t, factors,
+                                    ARDUINOJSON_EXPAND6({
+                                        0x3f800000,  // 1e0f
+                                        0x3dcccccd,  // 1e-1f
+                                        0x3a83126f,  // 1e-3f
+                                        0x33d6bf95,  // 1e-7f
+                                        0x26901d7d,  // 1e-15f
+                                        0x0c01ceb3   // 1e-31f
+                                    }));
+    return forge(ARDUINOJSON_READ_STATIC_ARRAY(uint32_t, factors, index));
   }
 
   static T forge(uint32_t bits) {
