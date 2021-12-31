@@ -14,7 +14,7 @@ namespace ARDUINOJSON_NAMESPACE {
 // Wraps a const char* so that the our functions are picked only if the
 // originals are missing
 struct pgm_p {
-  pgm_p(const char* p) : address(p) {}
+  pgm_p(const void* p) : address(reinterpret_cast<const char*>(p)) {}
   const char* address;
 };
 }  // namespace ARDUINOJSON_NAMESPACE
@@ -93,5 +93,13 @@ inline void* memcpy_P(void* dst, ARDUINOJSON_NAMESPACE::pgm_p src, size_t n) {
     *d++ = pgm_read_byte(s++);
   }
   return dst;
+}
+#endif
+
+#ifndef pgm_read_dword
+inline uint32_t pgm_read_dword(ARDUINOJSON_NAMESPACE::pgm_p p) {
+  uint32_t result;
+  memcpy_P(&result, p, 4);
+  return result;
 }
 #endif
