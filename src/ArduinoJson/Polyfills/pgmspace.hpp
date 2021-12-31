@@ -103,3 +103,11 @@ inline uint32_t pgm_read_dword(ARDUINOJSON_NAMESPACE::pgm_p p) {
   return result;
 }
 #endif
+
+#ifndef pgm_read_ptr
+inline void* pgm_read_ptr(ARDUINOJSON_NAMESPACE::pgm_p p) {
+  void* result;
+  memcpy_P(&result, p, sizeof(result));
+  return result;
+}
+#endif
