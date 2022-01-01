@@ -12,10 +12,24 @@ environment:
   - CMAKE_GENERATOR: Visual Studio 12 2013
   - CMAKE_GENERATOR: Visual Studio 11 2012
   - CMAKE_GENERATOR: Visual Studio 10 2010
-  - CMAKE_GENERATOR: MinGW Makefiles
+  - CMAKE_GENERATOR: Ninja
+    MINGW: MinGW # MinGW 32-bit 5.3.0
+  - CMAKE_GENERATOR: Ninja
+    MINGW32: i686-5.3.0-posix-dwarf-rt_v4-rev0 # MinGW-w64 5.3.0
+  - CMAKE_GENERATOR: Ninja
+    MINGW32: i686-6.3.0-posix-dwarf-rt_v5-rev1 # MinGW-w64 6.3.0 i686
+  - CMAKE_GENERATOR: Ninja
+    MINGW64: x86_64-6.3.0-posix-seh-rt_v5-rev1 # MinGW-w64 6.3.0 x86_64
+  - CMAKE_GENERATOR: Ninja
+    MINGW64: x86_64-7.3.0-posix-seh-rt_v5-rev0 # MinGW-w64 7.3.0 x86_64
+  - CMAKE_GENERATOR: Ninja
+    MINGW64: x86_64-8.1.0-posix-seh-rt_v6-rev0 # MinGW-w64 8.1.0 x86_64
 configuration: Debug
 before_build:
-- set PATH=C:\MinGW\bin;%PATH:C:\Program Files\Git\usr\bin;=% # Workaround for CMake not wanting sh.exe on PATH for MinGW
+- set PATH=%PATH:C:\Program Files\Git\usr\bin;=% # Workaround for CMake not wanting sh.exe on PATH for MinGW
+- if defined MINGW set PATH=C:\%MINGW%\bin;%PATH%
+- if defined MINGW32 set PATH=C:\mingw-w64\%MINGW32%\mingw32\bin;%PATH%
+- if defined MINGW64 set PATH=C:\mingw-w64\%MINGW64%\mingw64\bin;%PATH%
 - cmake -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "%CMAKE_GENERATOR%" .
 build_script:
 - cmake --build . --config %CONFIGURATION%
