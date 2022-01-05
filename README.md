@@ -6,11 +6,11 @@
 [![Continuous Integration](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/6.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
 [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/arduinojson.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
 [![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/bblanchon/ArduinoJson?label=quality&logo=lgtm)](https://lgtm.com/projects/g/bblanchon/ArduinoJson/)
-[![Coveralls branch](https://img.shields.io/coveralls/github/bblanchon/ArduinoJson/6.x?logo=coveralls)](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)     
-[![Discord](https://img.shields.io/discord/844900310409150494.svg?logo=discord&logoColor=white&color=007ec6)](https://discord.gg/DzN6hHHD4h)
+[![Coveralls branch](https://img.shields.io/coveralls/github/bblanchon/ArduinoJson/6.x?logo=coveralls)](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)  
+[![Arduino Library Manager](https://img.shields.io/static/v1?label=Arduino&message=v6.18.5&logo=arduino&logoColor=white&color=blue)](https://www.ardu-badge.com/ArduinoJson/6.18.5)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/bblanchon/library/ArduinoJson.svg?version=6.18.5)](https://registry.platformio.org/packages/libraries/bblanchon/ArduinoJson?version=6.18.5) 
 [![GitHub stars](https://img.shields.io/github/stars/bblanchon/ArduinoJson?style=flat&logo=github)](https://github.com/bblanchon/ArduinoJson/stargazers)
-[![GitHub Sponsors](https://img.shields.io/github/sponsors/bblanchon?logo=github)](https://github.com/sponsors/bblanchon)  
-[![arduino-library-badge](https://www.ardu-badge.com/badge/ArduinoJson.svg?version=6.18.5)](https://www.ardu-badge.com/ArduinoJson/6.18.5)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/bblanchon?logo=github)](https://github.com/sponsors/bblanchon)
 
 ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
 
@@ -51,7 +51,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
         * Arduino boards: [Uno](https://amzn.to/38aL2ik), [Due](https://amzn.to/36YkWi2), [Micro](https://amzn.to/35WkdwG), [Nano](https://amzn.to/2QTvwRX), [Mega](https://amzn.to/36XWhuf), [Yun](https://amzn.to/30odURc), [Leonardo](https://amzn.to/36XWjlR)...
         * Espressif chips: [ESP8266](https://amzn.to/36YluV8), [ESP32](https://amzn.to/2G4pRCB)
         * Lolin (WeMos) boards: [D1 mini](https://amzn.to/2QUpz7q), [D1 Mini Pro](https://amzn.to/36UsGSs)...
-        * Teensy boards: [4.0](https://amzn.to/30ljXGq), [3.2](https://amzn.to/2FT0EuC), [2.0](https://amzn.to/2QXUMXj) 
+        * Teensy boards: [4.0](https://amzn.to/30ljXGq), [3.2](https://amzn.to/2FT0EuC), [2.0](https://amzn.to/2QXUMXj)
         * Particle boards: [Argon](https://amzn.to/2FQHa9X), [Boron](https://amzn.to/36WgLUd), [Electron](https://amzn.to/30vEc4k), [Photon](https://amzn.to/387F9Cd)...
         * Texas Instruments boards: [MSP430](https://amzn.to/30nJWgg)...
         * Soft cores: [Nios II](https://en.wikipedia.org/wiki/Nios_II)...
