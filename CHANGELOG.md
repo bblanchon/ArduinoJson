@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.19.0 (2022-01-08)
+-------
 
 * Remove `ARDUINOJSON_EMBEDDED_MODE` and assume we run on an embedded platform.  
   Dependent settings (like `ARDUINOJSON_DEFAULT_NESTING_LIMIT`) must be set individually.
