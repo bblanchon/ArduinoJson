@@ -2,6 +2,8 @@
 
 set -eu
 
+which awk sed jq 7z curl perl >/dev/null
+
 cd "$(dirname "$0")/../.."
 
 if ! git diff --quiet --exit-code; then
