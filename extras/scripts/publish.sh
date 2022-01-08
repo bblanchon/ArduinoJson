@@ -4,6 +4,11 @@ set -eu
 
 cd "$(dirname "$0")/../.."
 
+if ! git diff --quiet --exit-code; then
+	echo "Repository contains uncommitted changes"
+	exit
+fi
+
 VERSION="$1"
 DATE=$(date +%F)
 TAG="v$VERSION"
