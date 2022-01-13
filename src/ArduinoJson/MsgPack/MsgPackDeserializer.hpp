@@ -48,6 +48,11 @@ class MsgPackDeserializer {
 
     bool allowValue = filter.allowValue();
 
+    if (allowValue) {
+      // callers pass a null pointer only when value must be ignored
+      ARDUINOJSON_ASSERT(variant != 0);
+    }
+
     switch (code) {
       case 0xc0:
         // already null
@@ -422,6 +427,8 @@ class MsgPackDeserializer {
       VariantData *member;
 
       if (memberFilter.allow()) {
+        ARDUINOJSON_ASSERT(object);
+
         // Save key in memory pool.
         // This MUST be done before adding the slot.
         key = _stringStorage.save();
