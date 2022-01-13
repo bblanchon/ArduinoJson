@@ -24,7 +24,6 @@ v6.19.0 (2022-01-08)
 * Avoid including `Arduino.h` when all its features are disabled (issue #1692, PR #1693 by @paulocsanz)
 * Assume `PROGMEM` is available as soon as `ARDUINO` is defined (consequence of #1693)
 
-
 v6.18.5 (2021-09-28)
 -------
 
