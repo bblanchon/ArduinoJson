@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix crash when adding an object member in a too small `JsonDocument`
+
 v6.19.0 (2022-01-08)
 -------
 

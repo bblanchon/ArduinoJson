@@ -35,6 +35,12 @@ TEST_CASE("JsonDocument::overflowed()") {
     CHECK(doc.overflowed() == false);
   }
 
+  SECTION("returns true after a failed member add") {
+    StaticJsonDocument<1> doc;
+    doc["example"] = true;
+    CHECK(doc.overflowed() == true);
+  }
+
   SECTION("returns true after a failed deserialization") {
     StaticJsonDocument<JSON_ARRAY_SIZE(1)> doc;
     deserializeJson(doc, "[\"example\"]");
