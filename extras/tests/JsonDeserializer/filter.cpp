@@ -667,6 +667,20 @@ TEST_CASE("Filtering") {
   }
 }
 
+TEST_CASE("Zero-copy mode") {  // issue #1697
+  char input[] = "{\"include\":42,\"exclude\":666}";
+
+  StaticJsonDocument<256> filter;
+  filter["include"] = true;
+
+  StaticJsonDocument<256> doc;
+  DeserializationError err =
+      deserializeJson(doc, input, DeserializationOption::Filter(filter));
+
+  REQUIRE(err == DeserializationError::Ok);
+  CHECK(doc.as<std::string>() == "{\"include\":42}");
+}
+
 TEST_CASE("Overloads") {
   StaticJsonDocument<256> doc;
   StaticJsonDocument<256> filter;

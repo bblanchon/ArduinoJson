@@ -279,6 +279,22 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc["a"] == 2);
     }
+
+    SECTION("Repeated key with zero copy mode") {  // issue #1697
+      char input[] = "{a:{b:{c:1}},a:2}";
+      DeserializationError err = deserializeJson(doc, input);
+
+      REQUIRE(err == DeserializationError::Ok);
+      REQUIRE(doc["a"] == 2);
+    }
+
+    SECTION("NUL in keys") {  // we don't support NULs in keys
+      DeserializationError err =
+          deserializeJson(doc, "{\"x\\u0000a\":1,\"x\\u0000b\":2}");
+
+      REQUIRE(err == DeserializationError::Ok);
+      REQUIRE(doc.as<std::string>() == "{\"x\":2}");
+    }
   }
 
   SECTION("Should clear the JsonObject") {

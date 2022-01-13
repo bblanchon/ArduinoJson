@@ -18,7 +18,6 @@ class StringMover {
   }
 
   FORCE_INLINE String save() {
-    _writePtr[0] = 0;  // terminator
     String s = str();
     _writePtr++;
     return s;
@@ -33,6 +32,7 @@ class StringMover {
   }
 
   String str() const {
+    _writePtr[0] = 0;  // terminator
     return String(_startPtr, size(), true);
   }
 

@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fix crash when adding an object member in a too small `JsonDocument`
+* Fix filter not working in zero-copy mode (issue #1697)
 
 v6.19.0 (2022-01-08)
 -------
