@@ -174,7 +174,7 @@ template <typename TAdaptedString, typename TCallback>
 bool CopyStringStoragePolicy::store(TAdaptedString str, MemoryPool *pool,
                                     TCallback callback) {
   const char *copy = pool->saveString(str);
-  CopiedString storedString(copy, str.size());
+  String storedString(copy, str.size(), false);
   callback(storedString);
   return copy != 0;
 }

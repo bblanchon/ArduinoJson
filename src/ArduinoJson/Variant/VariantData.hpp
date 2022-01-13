@@ -208,16 +208,12 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setString(CopiedString s) {
+  void setString(String s) {
     ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_OWNED_STRING);
-    _content.asString.data = s.c_str();
-    _content.asString.size = s.size();
-  }
-
-  void setString(LinkedString s) {
-    ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_LINKED_STRING);
+    if (s.isStatic())
+      setType(VALUE_IS_LINKED_STRING);
+    else
+      setType(VALUE_IS_OWNED_STRING);
     _content.asString.data = s.c_str();
     _content.asString.size = s.size();
   }

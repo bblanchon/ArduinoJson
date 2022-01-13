@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
-#include <ArduinoJson/Strings/StoredString.hpp>
 #include <ArduinoJson/Strings/String.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -13,15 +12,13 @@ namespace ARDUINOJSON_NAMESPACE {
 struct LinkStringStoragePolicy {
   template <typename TAdaptedString, typename TCallback>
   bool store(TAdaptedString str, MemoryPool *, TCallback callback) {
-    LinkedString storedString(str.data(), str.size());
+    String storedString(str.data(), str.size(), true);
     callback(storedString);
     return !str.isNull();
   }
 };
 
 struct CopyStringStoragePolicy {
-  typedef CopiedString TResult;
-
   template <typename TAdaptedString, typename TCallback>
   bool store(TAdaptedString str, MemoryPool *pool, TCallback callback);
 };

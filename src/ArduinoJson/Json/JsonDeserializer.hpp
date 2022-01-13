@@ -231,7 +231,7 @@ class JsonDeserializer {
         return false;
       }
 
-      typename TStringStorage::string_type key = _stringStorage.str();
+      String key = _stringStorage.str();
 
       TFilter memberFilter = filter[key.c_str()];
 

@@ -18,7 +18,7 @@ TEST_CASE("StringCopier") {
     str.append("hello");
 
     REQUIRE(str.isValid() == true);
-    REQUIRE(std::string(str.str()) == "hello");
+    REQUIRE(str.str() == "hello");
     REQUIRE(pool.overflowed() == false);
   }
 

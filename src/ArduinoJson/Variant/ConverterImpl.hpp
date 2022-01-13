@@ -206,9 +206,9 @@ class MemoryPoolPrint : public Print {
     pool->getFreeZone(&_string, &_capacity);
   }
 
-  CopiedString str() {
+  String str() {
     ARDUINOJSON_ASSERT(_size < _capacity);
-    return CopiedString(_pool->saveStringFromFreeZone(_size), _size);
+    return String(_pool->saveStringFromFreeZone(_size), _size, false);
   }
 
   size_t write(uint8_t c) {
