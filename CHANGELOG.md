@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.19.1 (2022-01-14)
+-------
 
 * Fix crash when adding an object member in a too small `JsonDocument`
 * Fix filter not working in zero-copy mode (issue #1697)
