@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix `cannot convert 'pgm_p' to 'const void*'` (issue #1707)
+
 v6.19.1 (2022-01-14)
 -------
 

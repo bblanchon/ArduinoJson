@@ -99,7 +99,7 @@ inline void* memcpy_P(void* dst, ARDUINOJSON_NAMESPACE::pgm_p src, size_t n) {
 #ifndef pgm_read_dword
 inline uint32_t pgm_read_dword(ARDUINOJSON_NAMESPACE::pgm_p p) {
   uint32_t result;
-  memcpy_P(&result, p, 4);
+  memcpy_P(&result, p.address, 4);
   return result;
 }
 #endif
@@ -107,7 +107,7 @@ inline uint32_t pgm_read_dword(ARDUINOJSON_NAMESPACE::pgm_p p) {
 #ifndef pgm_read_ptr
 inline void* pgm_read_ptr(ARDUINOJSON_NAMESPACE::pgm_p p) {
   void* result;
-  memcpy_P(&result, p, sizeof(result));
+  memcpy_P(&result, p.address, sizeof(result));
   return result;
 }
 #endif
