@@ -14,44 +14,53 @@ TEST_CASE("JsonString") {
     CHECK(s.isNull() == true);
     CHECK(s.c_str() == 0);
     CHECK(s.isLinked() == true);
+    CHECK(s == JsonString());
+    CHECK(s != "");
   }
 
-  SECTION("Compare null with boolean") {
+  SECTION("Null converts to false") {
     JsonString s;
 
     CHECK(bool(s) == false);
-    CHECK(false == bool(s));
-    CHECK(bool(s) != true);
-    CHECK(true != bool(s));
   }
 
-  SECTION("Compare non-null with boolean") {
-    JsonString s("hello");
+  SECTION("Empty string converts to true") {
+    JsonString s("");
+
     CHECK(bool(s) == true);
-    CHECK(true == bool(s));
-    CHECK(bool(s) != false);
-    CHECK(false != bool(s));
   }
 
-  SECTION("Compare null with null") {
+  SECTION("Non-empty string converts to true") {
+    JsonString s("");
+
+    CHECK(bool(s) == true);
+  }
+
+  SECTION("Null strings equals each others") {
     JsonString a, b;
 
     CHECK(a == b);
     CHECK_FALSE(a != b);
   }
 
-  SECTION("Compare null with non-null") {
-    JsonString a(0), b("hello");
+  SECTION("Null and empty strings differ") {
+    JsonString a, b("");
 
     CHECK_FALSE(a == b);
     CHECK(a != b);
+
+    CHECK_FALSE(b == a);
+    CHECK(b != a);
   }
 
-  SECTION("Compare non-null with null") {
-    JsonString a("hello"), b(0);
+  SECTION("Null and non-empty strings differ") {
+    JsonString a, b("hello");
 
     CHECK_FALSE(a == b);
     CHECK(a != b);
+
+    CHECK_FALSE(b == a);
+    CHECK(b != a);
   }
 
   SECTION("Compare different strings") {
@@ -88,5 +97,7 @@ TEST_CASE("JsonString") {
 
     CHECK(s.size() == 5);
     CHECK(s.isLinked() == true);
+    CHECK(s == "hello");
+    CHECK(s != "hello world");
   }
 }

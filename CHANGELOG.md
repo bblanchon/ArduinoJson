@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fix `call of overloaded 'String(const char*, int)' is ambiguous`
+* Fix `JsonString` operator `==` and `!=` for non-zero-terminated string
 
 v6.19.2 (2022-02-14)
 -------

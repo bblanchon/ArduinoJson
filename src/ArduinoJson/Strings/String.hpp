@@ -46,23 +46,19 @@ class String : public SafeBoolIdom<String> {
   }
 
   friend bool operator==(String lhs, String rhs) {
+    if (lhs._size != rhs._size)
+      return false;
     if (lhs._data == rhs._data)
       return true;
     if (!lhs._data)
       return false;
     if (!rhs._data)
       return false;
-    return strcmp(lhs._data, rhs._data) == 0;
+    return memcmp(lhs._data, rhs._data, lhs._size) == 0;
   }
 
   friend bool operator!=(String lhs, String rhs) {
-    if (lhs._data == rhs._data)
-      return false;
-    if (!lhs._data)
-      return true;
-    if (!rhs._data)
-      return true;
-    return strcmp(lhs._data, rhs._data) != 0;
+    return !(lhs == rhs);
   }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
