@@ -33,7 +33,7 @@ class StringMover {
 
   String str() const {
     _writePtr[0] = 0;  // terminator
-    return String(_startPtr, size(), true);
+    return String(_startPtr, size(), String::Linked);
   }
 
   size_t size() const {

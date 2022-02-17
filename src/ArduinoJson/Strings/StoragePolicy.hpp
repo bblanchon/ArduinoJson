@@ -12,7 +12,7 @@ namespace ARDUINOJSON_NAMESPACE {
 struct LinkStringStoragePolicy {
   template <typename TAdaptedString, typename TCallback>
   bool store(TAdaptedString str, MemoryPool *, TCallback callback) {
-    String storedString(str.data(), str.size(), true);
+    String storedString(str.data(), str.size(), String::Linked);
     callback(storedString);
     return !str.isNull();
   }
@@ -50,7 +50,7 @@ inline LinkStringStoragePolicy getStringStoragePolicy(const char *) {
 }
 
 inline LinkOrCopyStringStoragePolicy getStringStoragePolicy(const String &s) {
-  return LinkOrCopyStringStoragePolicy(s.isStatic());
+  return LinkOrCopyStringStoragePolicy(s.isLinked());
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

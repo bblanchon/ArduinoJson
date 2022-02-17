@@ -13,7 +13,8 @@ class Pair {
  public:
   Pair(MemoryPool* pool, VariantSlot* slot) {
     if (slot) {
-      _key = String(slot->key(), !slot->ownsKey());
+      _key = String(slot->key(),
+                    slot->ownsKey() ? String::Copied : String::Linked);
       _value = VariantRef(pool, slot->data());
     }
   }
@@ -35,7 +36,8 @@ class PairConst {
  public:
   PairConst(const VariantSlot* slot) {
     if (slot) {
-      _key = String(slot->key(), !slot->ownsKey());
+      _key = String(slot->key(),
+                    slot->ownsKey() ? String::Copied : String::Linked);
       _value = VariantConstRef(slot->data());
     }
   }

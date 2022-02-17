@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix `call of overloaded 'String(const char*, int)' is ambiguous`
+
 v6.19.2 (2022-02-14)
 -------
 

@@ -13,7 +13,7 @@ TEST_CASE("JsonString") {
 
     CHECK(s.isNull() == true);
     CHECK(s.c_str() == 0);
-    CHECK(s.isStatic() == true);
+    CHECK(s.isLinked() == true);
   }
 
   SECTION("Compare null with boolean") {
@@ -81,5 +81,12 @@ TEST_CASE("JsonString") {
     std::stringstream ss;
     ss << JsonString("hello world!");
     CHECK(ss.str() == "hello world!");
+  }
+
+  SECTION("Construct with a size") {
+    JsonString s("hello world", 5);
+
+    CHECK(s.size() == 5);
+    CHECK(s.isLinked() == true);
   }
 }

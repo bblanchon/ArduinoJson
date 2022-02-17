@@ -141,13 +141,13 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("should duplicate a non-static JsonString key") {
-    obj[JsonString("hello", false)] = "world";
+    obj[JsonString("hello", JsonString::Copied)] = "world";
     const size_t expectedSize = JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(5);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should not duplicate a static JsonString key") {
-    obj[JsonString("hello", true)] = "world";
+    obj[JsonString("hello", JsonString::Linked)] = "world";
     const size_t expectedSize = JSON_OBJECT_SIZE(1);
     REQUIRE(expectedSize == doc.memoryUsage());
   }

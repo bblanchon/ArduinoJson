@@ -22,7 +22,7 @@ class StringCopier {
   String save() {
     ARDUINOJSON_ASSERT(_ptr);
     ARDUINOJSON_ASSERT(_size < _capacity);  // needs room for the terminator
-    return String(_pool->saveStringFromFreeZone(_size), _size, false);
+    return String(_pool->saveStringFromFreeZone(_size), _size, String::Copied);
   }
 
   void append(const char* s) {
@@ -52,7 +52,7 @@ class StringCopier {
     ARDUINOJSON_ASSERT(_ptr);
     ARDUINOJSON_ASSERT(_size < _capacity);
     _ptr[_size] = 0;
-    return String(_ptr, _size, false);
+    return String(_ptr, _size, String::Copied);
   }
 
  private:

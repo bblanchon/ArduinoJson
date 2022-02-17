@@ -210,7 +210,7 @@ class VariantData {
 
   void setString(String s) {
     ARDUINOJSON_ASSERT(s);
-    if (s.isStatic())
+    if (s.isLinked())
       setType(VALUE_IS_LINKED_STRING);
     else
       setType(VALUE_IS_OWNED_STRING);
