@@ -121,7 +121,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
 TEST_CASE("deserializeJson(VLA)") {
-  int i = 9;
+  size_t i = 9;
   char vla[i];
   strcpy(vla, "{\"a\":42}");
 

@@ -40,7 +40,7 @@ TEST_CASE("JsonArray::add()") {
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
   SECTION("vla") {
-    int i = 16;
+    size_t i = 16;
     char vla[i];
     strcpy(vla, "world");
 

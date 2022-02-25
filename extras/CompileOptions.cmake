@@ -18,6 +18,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wparentheses
 		-Wredundant-decls
 		-Wshadow
+		-Wsign-conversion
 		-Wsign-promo
 		-Wstrict-aliasing
 		-Wundef

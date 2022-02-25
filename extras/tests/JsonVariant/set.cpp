@@ -71,7 +71,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
   SECTION("VLA") {
-    int n = 16;
+    size_t n = 16;
     char str[n];
 
     strcpy(str, "hello");

@@ -481,7 +481,7 @@ class MsgPackDeserializer {
     T size;
     if (!readInteger(size))
       return false;
-    return skipBytes(size + 1);
+    return skipBytes(size + 1U);
   }
 
   MemoryPool *_pool;

@@ -60,7 +60,7 @@ TEST_CASE("JsonObject::remove()") {
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
   SECTION("key is a vla") {
-    int i = 16;
+    size_t i = 16;
     char vla[i];
     strcpy(vla, "b");
     obj.remove(vla);

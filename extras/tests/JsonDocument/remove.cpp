@@ -41,7 +41,7 @@ TEST_CASE("JsonDocument::remove()") {
     doc["a"] = 1;
     doc["b"] = 2;
 
-    int i = 4;
+    size_t i = 4;
     char vla[i];
     strcpy(vla, "b");
     doc.remove(vla);

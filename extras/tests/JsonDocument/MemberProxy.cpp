@@ -171,7 +171,7 @@ TEST_CASE("MemberProxy::remove()") {
     mp["a"] = 1;
     mp["b"] = 2;
 
-    int i = 4;
+    size_t i = 4;
     char vla[i];
     strcpy(vla, "b");
     mp.remove(vla);

@@ -108,7 +108,7 @@ TEST_CASE("JsonVariant::operator[]") {
 #if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
     !defined(SUBSCRIPT_CONFLICTS_WITH_BUILTIN_OPERATOR)
   SECTION("key is a VLA") {
-    int i = 16;
+    size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
 
@@ -119,7 +119,7 @@ TEST_CASE("JsonVariant::operator[]") {
   }
 
   SECTION("key is a VLA, const JsonVariant") {
-    int i = 16;
+    size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
 

@@ -708,7 +708,7 @@ TEST_CASE("Overloads") {
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
   SECTION("char[n], Filter") {
-    int i = 4;
+    size_t i = 4;
     char vla[i];
     strcpy(vla, "{}");
     deserializeJson(doc, vla, Filter(filter));
@@ -736,7 +736,7 @@ TEST_CASE("Overloads") {
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
   SECTION("char[n], Filter, NestingLimit") {
-    int i = 4;
+    size_t i = 4;
     char vla[i];
     strcpy(vla, "{}");
     deserializeJson(doc, vla, Filter(filter), NestingLimit(5));
@@ -764,7 +764,7 @@ TEST_CASE("Overloads") {
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
   SECTION("char[n], NestingLimit, Filter") {
-    int i = 4;
+    size_t i = 4;
     char vla[i];
     strcpy(vla, "{}");
     deserializeJson(doc, vla, NestingLimit(5), Filter(filter));

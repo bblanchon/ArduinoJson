@@ -106,13 +106,13 @@ inline SizedRamString adaptString(const char* s, size_t n) {
   return SizedRamString(s, n);
 }
 
-template <int N>
+template <size_t N>
 struct IsString<char[N]> : true_type {};
 
-template <int N>
+template <size_t N>
 struct IsString<const char[N]> : true_type {};
 
-template <int N>
+template <size_t N>
 inline SizedRamString adaptString(char s[N]) {
   return SizedRamString(s, strlen(s));
 }

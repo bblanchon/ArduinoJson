@@ -131,7 +131,7 @@ TEST_CASE("ElementProxy::remove()") {
     ep["a"] = 1;
     ep["b"] = 2;
 
-    int i = 4;
+    size_t i = 4;
     char vla[i];
     strcpy(vla, "b");
     ep.remove(vla);
