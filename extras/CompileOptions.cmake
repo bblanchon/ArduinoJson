@@ -92,3 +92,9 @@ if(MSVC)
 		)
 	endif()
 endif()
+
+if(MINGW)
+  # Static link on MinGW to avoid linking with the wrong DLLs when multiple
+	# versions are installed.
+	add_link_options(-static)
+endif()
