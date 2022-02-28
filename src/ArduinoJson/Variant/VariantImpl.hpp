@@ -168,7 +168,7 @@ inline VariantConstRef operator|(VariantConstRef preferedValue,
 
 // Out of class definition to avoid #1560
 inline bool VariantRef::set(char value) const {
-  return set<signed char>(value);
+  return set(static_cast<signed char>(value));
 }
 
 // TODO: move somewhere else

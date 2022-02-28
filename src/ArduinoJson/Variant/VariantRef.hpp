@@ -119,7 +119,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   ARDUINOJSON_DEPRECATED(
       "Support for char is deprecated, use int8_t or uint8_t instead")
       as() const {
-    return as<signed char>();
+    return static_cast<char>(as<signed char>());
   }
 
   template <typename T>
@@ -265,7 +265,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   ARDUINOJSON_DEPRECATED(
       "Support for char is deprecated, use int8_t or uint8_t instead")
       as() const {
-    return as<signed char>();
+    return static_cast<char>(as<signed char>());
   }
 
   template <typename T>
