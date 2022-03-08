@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.19.3 (2022-03-08)
+-------
 
 * Fix `call of overloaded 'String(const char*, int)' is ambiguous`
 * Fix `JsonString` operator `==` and `!=` for non-zero-terminated string
