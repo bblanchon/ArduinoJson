@@ -188,6 +188,21 @@ TEST_CASE("ElementProxy::size()") {
   }
 }
 
+TEST_CASE("ElementProxy::memoryUsage()") {
+  DynamicJsonDocument doc(4096);
+  doc.addElement();
+  ElementProxy<JsonDocument&> ep = doc[0];
+
+  SECTION("returns 0 for null") {
+    REQUIRE(ep.memoryUsage() == 0);
+  }
+
+  SECTION("returns size for string") {
+    ep.set(std::string("hello"));
+    REQUIRE(ep.memoryUsage() == 6);
+  }
+}
+
 TEST_CASE("ElementProxy::operator[]") {
   DynamicJsonDocument doc(4096);
   ElementProxy<JsonDocument&> ep = doc[1];

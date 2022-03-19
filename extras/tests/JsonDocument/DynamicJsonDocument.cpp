@@ -205,4 +205,26 @@ TEST_CASE("DynamicJsonDocument assignment") {
     REQUIRE_JSON(doc2, "42");
     REQUIRE(doc2.capacity() == 4096);
   }
+
+  SECTION("Assign from MemberProxy") {
+    StaticJsonDocument<200> doc1;
+    doc1["value"] = 42;
+
+    DynamicJsonDocument doc2(4096);
+    doc2 = doc1["value"];
+
+    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.capacity() == 4096);
+  }
+
+  SECTION("Assign from ElementProxy") {
+    StaticJsonDocument<200> doc1;
+    doc1[0] = 42;
+
+    DynamicJsonDocument doc2(4096);
+    doc2 = doc1[0];
+
+    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.capacity() == 4096);
+  }
 }

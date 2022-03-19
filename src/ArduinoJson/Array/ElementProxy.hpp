@@ -118,6 +118,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return getUpstreamElement().size();
   }
 
+  FORCE_INLINE size_t memoryUsage() const {
+    return getUpstreamElement().memoryUsage();
+  }
+
   template <typename TNestedKey>
   VariantRef getMember(TNestedKey* key) const {
     return getUpstreamElement().getMember(key);

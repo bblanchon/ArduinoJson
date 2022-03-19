@@ -94,6 +94,10 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getUpstreamMember().size();
   }
 
+  FORCE_INLINE size_t memoryUsage() const {
+    return getUpstreamMember().memoryUsage();
+  }
+
   FORCE_INLINE void remove(size_t index) const {
     getUpstreamMember().remove(index);
   }

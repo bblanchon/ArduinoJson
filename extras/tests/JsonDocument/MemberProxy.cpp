@@ -229,6 +229,20 @@ TEST_CASE("MemberProxy::size()") {
   }
 }
 
+TEST_CASE("MemberProxy::memoryUsage()") {
+  DynamicJsonDocument doc(4096);
+  MemberProxy<JsonDocument &, const char *> mp = doc["hello"];
+
+  SECTION("returns 0 when null") {
+    REQUIRE(mp.memoryUsage() == 0);
+  }
+
+  SECTION("return the size for a string") {
+    mp.set(std::string("hello"));
+    REQUIRE(mp.memoryUsage() == 6);
+  }
+}
+
 TEST_CASE("MemberProxy::operator[]") {
   DynamicJsonDocument doc(4096);
   MemberProxy<JsonDocument &, const char *> mp = doc["hello"];
