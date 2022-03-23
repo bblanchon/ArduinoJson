@@ -5,6 +5,7 @@
 add_executable(JsonDocumentTests
 	add.cpp
 	BasicJsonDocument.cpp
+	cast.cpp
 	compare.cpp
 	containsKey.cpp
 	createNested.cpp

@@ -259,3 +259,29 @@ TEST_CASE("MemberProxy::operator[]") {
     REQUIRE(doc.as<std::string>() == "{\"hello\":[null,null,42]}");
   }
 }
+
+TEST_CASE("MemberProxy cast to JsonVariantConst") {
+  DynamicJsonDocument doc(4096);
+  doc["hello"] = "world";
+
+  const MemberProxy<JsonDocument &, const char *> mp = doc["hello"];
+
+  JsonVariantConst var = mp;
+
+  CHECK(var.as<std::string>() == "world");
+}
+
+TEST_CASE("MemberProxy cast to JsonVariant") {
+  DynamicJsonDocument doc(4096);
+  doc["hello"] = "world";
+
+  MemberProxy<JsonDocument &, const char *> mp = doc["hello"];
+
+  JsonVariant var = mp;
+
+  CHECK(var.as<std::string>() == "world");
+
+  var.set("toto");
+
+  CHECK(doc.as<std::string>() == "{\"hello\":\"toto\"}");
+}

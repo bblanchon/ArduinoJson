@@ -6,6 +6,7 @@ HEAD
 
 * Add `ElementProxy::memoryUsage()`
 * Add `MemberProxy::memoryUsage()` (issue #1730)
+* Add implicit conversion from `JsonDocument` to `JsonVariant`
 
 v6.19.3 (2022-03-08)
 -------

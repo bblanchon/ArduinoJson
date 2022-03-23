@@ -219,3 +219,29 @@ TEST_CASE("ElementProxy::operator[]") {
     REQUIRE(doc.as<std::string>() == "[null,[null,null,42]]");
   }
 }
+
+TEST_CASE("ElementProxy cast to JsonVariantConst") {
+  DynamicJsonDocument doc(4096);
+  doc[0] = "world";
+
+  const ElementProxy<JsonDocument &> ep = doc[0];
+
+  JsonVariantConst var = ep;
+
+  CHECK(var.as<std::string>() == "world");
+}
+
+TEST_CASE("ElementProxy cast to JsonVariant") {
+  DynamicJsonDocument doc(4096);
+  doc[0] = "world";
+
+  ElementProxy<JsonDocument &> ep = doc[0];
+
+  JsonVariant var = ep;
+
+  CHECK(var.as<std::string>() == "world");
+
+  var.set("toto");
+
+  CHECK(doc.as<std::string>() == "[\"toto\"]");
+}
