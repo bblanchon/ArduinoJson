@@ -60,7 +60,7 @@ class JsonDocument : public Visitable,
   }
 
   size_t nesting() const {
-    return _data.nesting();
+    return variantNesting(&_data);
   }
 
   size_t capacity() const {

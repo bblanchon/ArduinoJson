@@ -91,6 +91,10 @@ class VariantData {
     return const_cast<VariantData *>(this)->asArray();
   }
 
+  const CollectionData *asCollection() const {
+    return isCollection() ? &_content.asCollection : 0;
+  }
+
   CollectionData *asObject() {
     return isObject() ? &_content.asCollection : 0;
   }
@@ -243,10 +247,6 @@ class VariantData {
       default:
         return 0;
     }
-  }
-
-  size_t nesting() const {
-    return isCollection() ? _content.asCollection.nesting() : 0;
   }
 
   size_t size() const {

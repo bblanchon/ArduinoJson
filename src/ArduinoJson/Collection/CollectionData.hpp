@@ -64,7 +64,6 @@ class CollectionData {
 
   void clear();
   size_t memoryUsage() const;
-  size_t nesting() const;
   size_t size() const;
 
   VariantSlot *addSlot(MemoryPool *);

@@ -203,16 +203,6 @@ inline size_t CollectionData::memoryUsage() const {
   return total;
 }
 
-inline size_t CollectionData::nesting() const {
-  size_t maxChildNesting = 0;
-  for (VariantSlot* s = _head; s; s = s->next()) {
-    size_t childNesting = s->data()->nesting();
-    if (childNesting > maxChildNesting)
-      maxChildNesting = childNesting;
-  }
-  return maxChildNesting + 1;
-}
-
 inline size_t CollectionData::size() const {
   return slotSize(_head);
 }
