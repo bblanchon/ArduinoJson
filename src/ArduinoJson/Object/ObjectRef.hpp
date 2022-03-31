@@ -81,7 +81,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   // containsKey(const String&) const
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return !getMember(key).isUnbound();
+    return !getMemberConst(key).isUnbound();
   }
 
   // containsKey(char*) const
@@ -89,22 +89,22 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   // containsKey(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
-    return !getMember(key).isUnbound();
+    return !getMemberConst(key).isUnbound();
   }
 
-  // getMember(const std::string&) const
-  // getMember(const String&) const
+  // getMemberConst(const std::string&) const
+  // getMemberConst(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantConstRef getMember(const TString& key) const {
-    return get_impl(adaptString(key));
+  FORCE_INLINE VariantConstRef getMemberConst(const TString& key) const {
+    return VariantConstRef(objectGetMember(_data, adaptString(key)));
   }
 
-  // getMember(char*) const
-  // getMember(const char*) const
-  // getMember(const __FlashStringHelper*) const
+  // getMemberConst(char*) const
+  // getMemberConst(const char*) const
+  // getMemberConst(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantConstRef getMember(TChar* key) const {
-    return get_impl(adaptString(key));
+  FORCE_INLINE VariantConstRef getMemberConst(TChar* key) const {
+    return VariantConstRef(objectGetMember(_data, adaptString(key)));
   }
 
   // operator[](const std::string&) const
@@ -113,7 +113,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString& key) const {
-    return get_impl(adaptString(key));
+    return getMemberConst(key);
   }
 
   // operator[](char*) const
@@ -123,7 +123,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   FORCE_INLINE
       typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
       operator[](TChar* key) const {
-    return get_impl(adaptString(key));
+    return getMemberConst(key);
   }
 
   FORCE_INLINE bool operator==(ObjectConstRef rhs) const {
@@ -143,10 +143,6 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   }
 
  private:
-  template <typename TAdaptedString>
-  FORCE_INLINE VariantConstRef get_impl(TAdaptedString key) const {
-    return VariantConstRef(objectGetMember(_data, key));
-  }
 };
 
 class ObjectRef : public ObjectRefBase<CollectionData>,
@@ -205,6 +201,21 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   template <typename TChar>
   FORCE_INLINE VariantRef getMember(TChar* key) const {
     return VariantRef(_pool, objectGetMember(_data, adaptString(key)));
+  }
+
+  // getMemberConst(const std::string&) const
+  // getMemberConst(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantConstRef getMemberConst(const TString& key) const {
+    return VariantConstRef(objectGetMember(_data, adaptString(key)));
+  }
+
+  // getMemberConst(char*) const
+  // getMemberConst(const char*) const
+  // getMemberConst(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantConstRef getMemberConst(TChar* key) const {
+    return VariantConstRef(objectGetMember(_data, adaptString(key)));
   }
 
   // getOrAddMember(const std::string&) const

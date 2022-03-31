@@ -61,12 +61,20 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   FORCE_INLINE bool isNull() const {
-    return getUpstreamElement().isNull();
+    return getUpstreamElementConst().isNull();
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, char*>::value, T>::type as()
-      const {
+  FORCE_INLINE typename enable_if<!is_same<T, char*>::value &&
+                                      !ConverterNeedsWriteableRef<T>::value,
+                                  T>::type
+  as() const {
+    return getUpstreamElementConst().template as<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
+  as() const {
     return getUpstreamElement().template as<T>();
   }
 
@@ -79,12 +87,21 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
 
   template <typename T>
   FORCE_INLINE operator T() const {
-    return getUpstreamElement();
+    return as<T>();
   }
 
   template <typename T>
-  FORCE_INLINE bool is() const {
+  FORCE_INLINE
+      typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
+      is() const {
     return getUpstreamElement().template is<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE
+      typename enable_if<!ConverterNeedsWriteableRef<T>::value, bool>::type
+      is() const {
+    return getUpstreamElementConst().template is<T>();
   }
 
   template <typename T>
@@ -111,15 +128,15 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
 
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor& visitor) const {
-    return getUpstreamElement().accept(visitor);
+    return getUpstreamElementConst().accept(visitor);
   }
 
   FORCE_INLINE size_t size() const {
-    return getUpstreamElement().size();
+    return getUpstreamElementConst().size();
   }
 
   FORCE_INLINE size_t memoryUsage() const {
-    return getUpstreamElement().memoryUsage();
+    return getUpstreamElementConst().memoryUsage();
   }
 
   template <typename TNestedKey>
@@ -130,6 +147,16 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   template <typename TNestedKey>
   VariantRef getMember(const TNestedKey& key) const {
     return getUpstreamElement().getMember(key);
+  }
+
+  template <typename TNestedKey>
+  VariantConstRef getMemberConst(TNestedKey* key) const {
+    return getUpstreamElementConst().getMemberConst(key);
+  }
+
+  template <typename TNestedKey>
+  VariantConstRef getMemberConst(const TNestedKey& key) const {
+    return getUpstreamElementConst().getMemberConst(key);
   }
 
   template <typename TNestedKey>
@@ -148,6 +175,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
 
   VariantRef getElement(size_t index) const {
     return getOrAddUpstreamElement().getElement(index);
+  }
+
+  VariantConstRef getElementConst(size_t index) const {
+    return getUpstreamElementConst().getElementConst(index);
   }
 
   VariantRef getOrAddElement(size_t index) const {
@@ -178,12 +209,16 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return _array.getElement(_index);
   }
 
+  FORCE_INLINE VariantConstRef getUpstreamElementConst() const {
+    return _array.getElementConst(_index);
+  }
+
   FORCE_INLINE VariantRef getOrAddUpstreamElement() const {
     return _array.getOrAddElement(_index);
   }
 
   friend void convertToJson(const this_type& src, VariantRef dst) {
-    dst.set(src.getUpstreamElement());
+    dst.set(src.getUpstreamElementConst());
   }
 
   TArray _array;

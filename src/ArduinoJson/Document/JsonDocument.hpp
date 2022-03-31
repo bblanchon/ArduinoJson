@@ -140,14 +140,14 @@ class JsonDocument : public Visitable,
   // containsKey(const __FlashStringHelper*) const
   template <typename TChar>
   bool containsKey(TChar* key) const {
-    return !getMember(key).isUnbound();
+    return !getMemberConst(key).isUnbound();
   }
 
   // containsKey(const std::string&) const
   // containsKey(const String&) const
   template <typename TString>
   bool containsKey(const TString& key) const {
-    return !getMember(key).isUnbound();
+    return !getMemberConst(key).isUnbound();
   }
 
   // operator[](const std::string&)
@@ -175,7 +175,7 @@ class JsonDocument : public Visitable,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString& key) const {
-    return getMember(key);
+    return getMemberConst(key);
   }
 
   // operator[](char*) const
@@ -185,7 +185,7 @@ class JsonDocument : public Visitable,
   FORCE_INLINE
       typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
       operator[](TChar* key) const {
-    return getMember(key);
+    return getMemberConst(key);
   }
 
   FORCE_INLINE ElementProxy<JsonDocument&> operator[](size_t index) {
@@ -193,14 +193,14 @@ class JsonDocument : public Visitable,
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return getElement(index);
+    return getElementConst(index);
   }
 
   FORCE_INLINE VariantRef getElement(size_t index) {
     return VariantRef(&_pool, _data.getElement(index));
   }
 
-  FORCE_INLINE VariantConstRef getElement(size_t index) const {
+  FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
     return VariantConstRef(_data.getElement(index));
   }
 
@@ -208,20 +208,20 @@ class JsonDocument : public Visitable,
     return VariantRef(&_pool, _data.getOrAddElement(index, &_pool));
   }
 
-  // JsonVariantConst getMember(char*) const
-  // JsonVariantConst getMember(const char*) const
-  // JsonVariantConst getMember(const __FlashStringHelper*) const
+  // JsonVariantConst getMemberConst(char*) const
+  // JsonVariantConst getMemberConst(const char*) const
+  // JsonVariantConst getMemberConst(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantConstRef getMember(TChar* key) const {
+  FORCE_INLINE VariantConstRef getMemberConst(TChar* key) const {
     return VariantConstRef(_data.getMember(adaptString(key)));
   }
 
-  // JsonVariantConst getMember(const std::string&) const
-  // JsonVariantConst getMember(const String&) const
+  // JsonVariantConst getMemberConst(const std::string&) const
+  // JsonVariantConst getMemberConst(const String&) const
   template <typename TString>
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
-      getMember(const TString& key) const {
+      getMemberConst(const TString& key) const {
     return VariantConstRef(_data.getMember(adaptString(key)));
   }
 

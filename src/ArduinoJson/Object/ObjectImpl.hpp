@@ -40,14 +40,14 @@ template <typename TObject>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, bool>::type
 ObjectShortcuts<TObject>::containsKey(const TString& key) const {
-  return !impl()->getMember(key).isUnbound();
+  return !impl()->getMemberConst(key).isUnbound();
 }
 
 template <typename TObject>
 template <typename TChar>
 inline typename enable_if<IsString<TChar*>::value, bool>::type
 ObjectShortcuts<TObject>::containsKey(TChar* key) const {
-  return !impl()->getMember(key).isUnbound();
+  return !impl()->getMemberConst(key).isUnbound();
 }
 
 template <typename TObject>
