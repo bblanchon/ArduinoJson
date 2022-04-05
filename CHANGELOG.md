@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.19.4 (2022-04-05)
+-------
 
 * Add `ElementProxy::memoryUsage()`
 * Add `MemberProxy::memoryUsage()` (issue #1730)
