@@ -17,14 +17,6 @@ typename TVisitor::result_type objectAccept(const CollectionData *obj,
     return visitor.visitNull();
 }
 
-inline bool objectEquals(const CollectionData *lhs, const CollectionData *rhs) {
-  if (lhs == rhs)
-    return true;
-  if (!lhs || !rhs)
-    return false;
-  return lhs->equalsObject(*rhs);
-}
-
 template <typename TAdaptedString>
 inline VariantData *objectGetMember(const CollectionData *obj,
                                     TAdaptedString key) {

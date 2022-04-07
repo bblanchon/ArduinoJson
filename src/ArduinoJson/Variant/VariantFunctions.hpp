@@ -43,8 +43,6 @@ inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
   return dst->copyFrom(*src, pool);
 }
 
-inline int variantCompare(const VariantData *a, const VariantData *b);
-
 inline void variantSetNull(VariantData *var) {
   if (!var)
     return;

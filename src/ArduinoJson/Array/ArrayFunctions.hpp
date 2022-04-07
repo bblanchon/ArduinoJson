@@ -20,12 +20,4 @@ inline typename TVisitor::result_type arrayAccept(const CollectionData *arr,
   else
     return visitor.visitNull();
 }
-
-inline bool arrayEquals(const CollectionData *lhs, const CollectionData *rhs) {
-  if (lhs == rhs)
-    return true;
-  if (!lhs || !rhs)
-    return false;
-  return lhs->equalsArray(*rhs);
-}
 }  // namespace ARDUINOJSON_NAMESPACE

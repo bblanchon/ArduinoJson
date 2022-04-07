@@ -127,7 +127,19 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   }
 
   FORCE_INLINE bool operator==(ObjectConstRef rhs) const {
-    return objectEquals(_data, rhs._data);
+    if (_data == rhs._data)
+      return true;
+
+    if (!_data || !rhs._data)
+      return false;
+
+    size_t count = 0;
+    for (iterator it = begin(); it != end(); ++it) {
+      if (it->value() != rhs[it->key()])
+        return false;
+      count++;
+    }
+    return count == rhs.size();
   }
 
  private:
@@ -215,7 +227,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   }
 
   FORCE_INLINE bool operator==(ObjectRef rhs) const {
-    return objectEquals(_data, rhs._data);
+    return ObjectConstRef(_data) == ObjectConstRef(rhs._data);
   }
 
   FORCE_INLINE void remove(iterator it) const {

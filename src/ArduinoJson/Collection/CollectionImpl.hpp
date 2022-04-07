@@ -11,10 +11,6 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline bool variantEquals(const VariantData* a, const VariantData* b) {
-  return variantCompare(a, b) == COMPARE_RESULT_EQUAL;
-}
-
 inline VariantSlot* CollectionData::addSlot(MemoryPool* pool) {
   VariantSlot* slot = pool->allocVariant();
   if (!slot)
@@ -75,33 +71,6 @@ inline bool CollectionData::copyFrom(const CollectionData& src,
       return false;
   }
   return true;
-}
-
-inline bool CollectionData::equalsObject(const CollectionData& other) const {
-  size_t count = 0;
-  for (VariantSlot* slot = _head; slot; slot = slot->next()) {
-    VariantData* v1 = slot->data();
-    VariantData* v2 = other.getMember(adaptString(slot->key()));
-    if (!variantEquals(v1, v2))
-      return false;
-    count++;
-  }
-  return count == other.size();
-}
-
-inline bool CollectionData::equalsArray(const CollectionData& other) const {
-  VariantSlot* s1 = _head;
-  VariantSlot* s2 = other._head;
-  for (;;) {
-    if (s1 == s2)
-      return true;
-    if (!s1 || !s2)
-      return false;
-    if (!variantEquals(s1->data(), s2->data()))
-      return false;
-    s1 = s1->next();
-    s2 = s2->next();
-  }
 }
 
 template <typename TAdaptedString>

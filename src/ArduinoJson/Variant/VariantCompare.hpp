@@ -89,7 +89,7 @@ struct ArrayComparer : ComparerBase {
   explicit ArrayComparer(const CollectionData &rhs) : _rhs(&rhs) {}
 
   CompareResult visitArray(const CollectionData &lhs) {
-    if (lhs.equalsArray(*_rhs))
+    if (ArrayConstRef(&lhs) == ArrayConstRef(_rhs))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -102,7 +102,7 @@ struct ObjectComparer : ComparerBase {
   explicit ObjectComparer(const CollectionData &rhs) : _rhs(&rhs) {}
 
   CompareResult visitObject(const CollectionData &lhs) {
-    if (lhs.equalsObject(*_rhs))
+    if (ObjectConstRef(&lhs) == ObjectConstRef(_rhs))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -199,10 +199,6 @@ template <typename T1, typename T2>
 CompareResult compare(const T1 &lhs, const T2 &rhs) {
   Comparer<T2> comparer(rhs);
   return lhs.accept(comparer);
-}
-
-inline int variantCompare(const VariantData *a, const VariantData *b) {
-  return compare(VariantConstRef(a), VariantConstRef(b));
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

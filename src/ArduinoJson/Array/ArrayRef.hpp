@@ -83,7 +83,26 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
   FORCE_INLINE ArrayConstRef(const CollectionData* data) : base_type(data) {}
 
   FORCE_INLINE bool operator==(ArrayConstRef rhs) const {
-    return arrayEquals(_data, rhs._data);
+    if (_data == rhs._data)
+      return true;
+    if (!_data || !rhs._data)
+      return false;
+
+    iterator it1 = begin();
+    iterator it2 = rhs.begin();
+
+    for (;;) {
+      bool end1 = it1 == end();
+      bool end2 = it2 == rhs.end();
+      if (end1 && end2)
+        return true;
+      if (end1 || end2)
+        return false;
+      if (*it1 != *it2)
+        return false;
+      ++it1;
+      ++it2;
+    }
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
@@ -138,7 +157,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
   }
 
   FORCE_INLINE bool operator==(ArrayRef rhs) const {
-    return arrayEquals(_data, rhs._data);
+    return ArrayConstRef(_data) == ArrayConstRef(rhs._data);
   }
 
   // Internal use
