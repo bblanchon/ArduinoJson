@@ -109,6 +109,7 @@ TEST_CASE("serialize MsgPack value") {
 
   SECTION("float 32") {
     checkVariant(1.25, "\xCA\x3F\xA0\x00\x00");
+    checkVariant(9.22337204e+18f, "\xca\x5f\x00\x00\x00");
   }
 
   SECTION("float 64") {
