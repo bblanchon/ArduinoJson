@@ -123,7 +123,9 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     return as<T>();
   }
 
-  FORCE_INLINE VariantConstRef getElement(size_t) const;
+  FORCE_INLINE VariantConstRef getElement(size_t index) const {
+    return VariantConstRef(_data != 0 ? _data->getElement(index) : 0);
+  }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
     return getElement(index);
@@ -282,33 +284,49 @@ class VariantRef : public VariantRefBase<VariantData>,
   typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type to()
       const;
 
-  VariantRef addElement() const;
+  VariantRef addElement() const {
+    return VariantRef(_pool, variantAddElement(_data, _pool));
+  }
 
-  FORCE_INLINE VariantRef getElement(size_t) const;
+  FORCE_INLINE VariantRef getElement(size_t index) const {
+    return VariantRef(_pool, _data != 0 ? _data->getElement(index) : 0);
+  }
 
-  FORCE_INLINE VariantRef getOrAddElement(size_t) const;
+  FORCE_INLINE VariantRef getOrAddElement(size_t index) const {
+    return VariantRef(_pool, variantGetOrAddElement(_data, index, _pool));
+  }
 
   // getMember(const char*) const
   // getMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef getMember(TChar *) const;
+  FORCE_INLINE VariantRef getMember(TChar *key) const {
+    return VariantRef(_pool,
+                      _data != 0 ? _data->getMember(adaptString(key)) : 0);
+  }
 
   // getMember(const std::string&) const
   // getMember(const String&) const
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
-  getMember(const TString &) const;
+  getMember(const TString &key) const {
+    return VariantRef(_pool,
+                      _data != 0 ? _data->getMember(adaptString(key)) : 0);
+  }
 
   // getOrAddMember(char*) const
   // getOrAddMember(const char*) const
   // getOrAddMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef getOrAddMember(TChar *) const;
+  FORCE_INLINE VariantRef getOrAddMember(TChar *key) const {
+    return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
+  }
 
   // getOrAddMember(const std::string&) const
   // getOrAddMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantRef getOrAddMember(const TString &) const;
+  FORCE_INLINE VariantRef getOrAddMember(const TString &key) const {
+    return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
+  }
 
   FORCE_INLINE void remove(size_t index) const {
     if (_data)

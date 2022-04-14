@@ -124,43 +124,6 @@ VariantRef::to() const {
   return *this;
 }
 
-inline VariantConstRef VariantConstRef::getElement(size_t index) const {
-  return ArrayConstRef(_data != 0 ? _data->asArray() : 0)[index];
-}
-
-inline VariantRef VariantRef::addElement() const {
-  return VariantRef(_pool, variantAddElement(_data, _pool));
-}
-
-inline VariantRef VariantRef::getElement(size_t index) const {
-  return VariantRef(_pool, _data != 0 ? _data->getElement(index) : 0);
-}
-
-inline VariantRef VariantRef::getOrAddElement(size_t index) const {
-  return VariantRef(_pool, variantGetOrAddElement(_data, index, _pool));
-}
-
-template <typename TChar>
-inline VariantRef VariantRef::getMember(TChar *key) const {
-  return VariantRef(_pool, _data != 0 ? _data->getMember(adaptString(key)) : 0);
-}
-
-template <typename TString>
-inline typename enable_if<IsString<TString>::value, VariantRef>::type
-VariantRef::getMember(const TString &key) const {
-  return VariantRef(_pool, _data != 0 ? _data->getMember(adaptString(key)) : 0);
-}
-
-template <typename TChar>
-inline VariantRef VariantRef::getOrAddMember(TChar *key) const {
-  return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
-}
-
-template <typename TString>
-inline VariantRef VariantRef::getOrAddMember(const TString &key) const {
-  return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
-}
-
 inline VariantConstRef operator|(VariantConstRef preferedValue,
                                  VariantConstRef defaultValue) {
   return preferedValue ? preferedValue : defaultValue;
