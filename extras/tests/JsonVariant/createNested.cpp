@@ -18,13 +18,6 @@ TEST_CASE("JsonVariant::createNestedObject()") {
     REQUIRE(variant[0]["value"] == 42);
     REQUIRE(obj.isNull() == false);
   }
-
-  SECTION("works on MemberProxy") {
-    JsonObject obj = variant["items"].createNestedObject();
-    obj["value"] = 42;
-
-    REQUIRE(variant["items"][0]["value"] == 42);
-  }
 }
 
 TEST_CASE("JsonVariant::createNestedArray()") {
@@ -36,13 +29,6 @@ TEST_CASE("JsonVariant::createNestedArray()") {
 
     REQUIRE(variant.is<JsonArray>() == true);
     REQUIRE(arr.isNull() == false);
-  }
-
-  SECTION("works on MemberProxy") {
-    JsonArray arr = variant["items"].createNestedArray();
-    arr.add(42);
-
-    REQUIRE(variant["items"][0][0] == 42);
   }
 }
 
@@ -57,13 +43,6 @@ TEST_CASE("JsonVariant::createNestedObject(key)") {
     REQUIRE(variant.is<JsonObject>() == true);
     REQUIRE(variant["weather"]["temp"] == 42);
   }
-
-  SECTION("works on MemberProxy") {
-    JsonObject obj = variant["status"].createNestedObject("weather");
-    obj["temp"] = 42;
-
-    REQUIRE(variant["status"]["weather"]["temp"] == 42);
-  }
 }
 
 TEST_CASE("JsonVariant::createNestedArray(key)") {
@@ -75,12 +54,5 @@ TEST_CASE("JsonVariant::createNestedArray(key)") {
 
     REQUIRE(variant.is<JsonObject>() == true);
     REQUIRE(arr.isNull() == false);
-  }
-
-  SECTION("works on MemberProxy") {
-    JsonArray arr = variant["weather"].createNestedArray("temp");
-    arr.add(42);
-
-    REQUIRE(variant["weather"]["temp"][0] == 42);
   }
 }
