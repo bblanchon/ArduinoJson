@@ -278,7 +278,7 @@ struct Converter<ObjectConstRef> {
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->isObject();
+    return data && data->resolve()->isObject();
   }
 };
 

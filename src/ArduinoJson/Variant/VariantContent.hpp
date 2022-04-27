@@ -31,6 +31,8 @@ enum {
   VALUE_IS_SIGNED_INTEGER = 0x0A,
   VALUE_IS_FLOAT = 0x0C,
 
+  VALUE_IS_POINTER = 0x10,
+
   COLLECTION_MASK = 0x60,
   VALUE_IS_OBJECT = 0x20,
   VALUE_IS_ARRAY = 0x40,
@@ -49,6 +51,7 @@ union VariantContent {
   UInt asUnsignedInteger;
   Integer asSignedInteger;
   CollectionData asCollection;
+  const class VariantData *asPointer;
   struct {
     const char *data;
     size_t size;

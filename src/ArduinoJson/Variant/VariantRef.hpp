@@ -124,7 +124,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   }
 
   FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
-    return VariantConstRef(_data != 0 ? _data->getElement(index) : 0);
+    return VariantConstRef(_data != 0 ? _data->resolve()->getElement(index)
+                                      : 0);
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
@@ -135,8 +136,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   // getMemberConst(const String&) const
   template <typename TString>
   FORCE_INLINE VariantConstRef getMemberConst(const TString &key) const {
-    return VariantConstRef(
-        objectGetMember(variantAsObject(_data), adaptString(key)));
+    return VariantConstRef(_data ? _data->resolve()->getMember(adaptString(key))
+                                 : 0);
   }
 
   // getMemberConst(char*) const
@@ -144,8 +145,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   // getMemberConst(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
-    const CollectionData *obj = variantAsObject(_data);
-    return VariantConstRef(obj ? obj->getMember(adaptString(key)) : 0);
+    return VariantConstRef(_data ? _data->resolve()->getMember(adaptString(key))
+                                 : 0);
   }
 
   // operator[](const std::string&) const
@@ -293,7 +294,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   }
 
   FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
-    return VariantConstRef(_data != 0 ? _data->getElement(index) : 0);
+    return VariantConstRef(_data != 0 ? _data->resolve()->getElement(index)
+                                      : 0);
   }
 
   FORCE_INLINE VariantRef getOrAddElement(size_t index) const {
@@ -321,7 +323,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   // getMemberConst(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
-    return VariantConstRef(_data ? _data->getMember(adaptString(key)) : 0);
+    return VariantConstRef(_data ? _data->resolve()->getMember(adaptString(key))
+                                 : 0);
   }
 
   // getMemberConst(const std::string&) const
@@ -330,7 +333,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       getMemberConst(const TString &key) const {
-    return VariantConstRef(_data ? _data->getMember(adaptString(key)) : 0);
+    return VariantConstRef(_data ? _data->resolve()->getMember(adaptString(key))
+                                 : 0);
   }
 
   // getOrAddMember(char*) const
@@ -368,6 +372,16 @@ class VariantRef : public VariantRefBase<VariantData>,
       const TString &key) const {
     if (_data)
       _data->remove(adaptString(key));
+  }
+
+  inline void link(VariantConstRef target) {
+    if (!_data)
+      return;
+    const VariantData *targetData = getData(target);
+    if (targetData)
+      _data->setPointer(targetData);
+    else
+      _data->setNull();
   }
 
  private:

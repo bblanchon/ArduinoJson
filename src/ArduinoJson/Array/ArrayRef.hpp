@@ -211,7 +211,7 @@ struct Converter<ArrayConstRef> {
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->isArray();
+    return data && data->resolve()->isArray();
   }
 };
 

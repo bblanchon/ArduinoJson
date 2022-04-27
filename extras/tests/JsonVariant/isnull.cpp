@@ -9,17 +9,17 @@ TEST_CASE("JsonVariant::isNull()") {
   DynamicJsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("return true when Undefined") {
+  SECTION("returns true when Undefined") {
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("return false when Integer") {
+  SECTION("returns false when Integer") {
     variant.set(42);
 
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("return false when EmptyArray") {
+  SECTION("returns false when EmptyArray") {
     DynamicJsonDocument doc2(4096);
     JsonArray array = doc2.to<JsonArray>();
 
@@ -27,7 +27,7 @@ TEST_CASE("JsonVariant::isNull()") {
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("return false when EmptyObject") {
+  SECTION("returns false when EmptyObject") {
     DynamicJsonDocument doc2(4096);
     JsonObject obj = doc2.to<JsonObject>();
 
@@ -35,39 +35,52 @@ TEST_CASE("JsonVariant::isNull()") {
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("return true after set(JsonArray())") {
+  SECTION("returns true after set(JsonArray())") {
     variant.set(JsonArray());
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("return true after set(JsonObject())") {
+  SECTION("returns true after set(JsonObject())") {
     variant.set(JsonObject());
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("return false after set('hello')") {
+  SECTION("returns false after set('hello')") {
     variant.set("hello");
     REQUIRE(variant.isNull() == false);
   }
 
-  SECTION("return true after set((char*)0)") {
+  SECTION("returns true after set((char*)0)") {
     variant.set(static_cast<char*>(0));
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("return true after set((const char*)0)") {
+  SECTION("returns true after set((const char*)0)") {
     variant.set(static_cast<const char*>(0));
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("return true after set(serialized((char*)0))") {
+  SECTION("returns true after set(serialized((char*)0))") {
     variant.set(serialized(static_cast<char*>(0)));
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("return true after set(serialized((const char*)0))") {
+  SECTION("returns true after set(serialized((const char*)0))") {
     variant.set(serialized(static_cast<const char*>(0)));
     REQUIRE(variant.isNull() == true);
+  }
+
+  SECTION("returns true for a linked null") {
+    StaticJsonDocument<128> doc2;
+    variant.link(doc2);
+    CHECK(variant.isNull() == true);
+  }
+
+  SECTION("returns false for a linked array") {
+    StaticJsonDocument<128> doc2;
+    doc2[0] = 42;
+    variant.link(doc2);
+    CHECK(variant.isNull() == false);
   }
 
   SECTION("works with JsonVariantConst") {

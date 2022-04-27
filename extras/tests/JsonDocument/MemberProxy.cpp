@@ -318,3 +318,10 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
   CHECK(doc["status"]["weather"]["temp"] == 42);
 }
 
+TEST_CASE("MemberProxy::link()") {
+  StaticJsonDocument<1024> doc1, doc2;
+  doc1["obj"].link(doc2);
+  doc2["hello"] = "world";
+
+  CHECK(doc1.as<std::string>() == "{\"obj\":{\"hello\":\"world\"}}");
+}

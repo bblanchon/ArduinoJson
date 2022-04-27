@@ -25,7 +25,7 @@ class JsonSerializer : public Visitor<size_t> {
     VariantSlot *slot = array.head();
 
     while (slot != 0) {
-      slot->data()->accept(*this);
+      slot->data()->resolve()->accept(*this);
 
       slot = slot->next();
       if (slot == 0)
@@ -46,7 +46,7 @@ class JsonSerializer : public Visitor<size_t> {
     while (slot != 0) {
       _formatter.writeString(slot->key());
       write(':');
-      slot->data()->accept(*this);
+      slot->data()->resolve()->accept(*this);
 
       slot = slot->next();
       if (slot == 0)

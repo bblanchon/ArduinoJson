@@ -109,6 +109,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return getOrAddUpstreamElement().template to<T>();
   }
 
+  FORCE_INLINE void link(VariantConstRef value) const {
+    getOrAddUpstreamElement().link(value);
+  }
+
   // Replaces the value
   //
   // bool set(const TValue&)

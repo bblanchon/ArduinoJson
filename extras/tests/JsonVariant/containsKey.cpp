@@ -12,18 +12,27 @@ TEST_CASE("JsonVariant::containsKey()") {
   DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
 
-  SECTION("containsKey(const char*) returns true") {
+  SECTION("containsKey(const char*)") {
     var["hello"] = "world";
 
     REQUIRE(var.containsKey("hello") == true);
     REQUIRE(var.containsKey("world") == false);
   }
 
-  SECTION("containsKey(std::string) returns true") {
+  SECTION("containsKey(std::string)") {
     var["hello"] = "world";
 
     REQUIRE(var.containsKey(std::string("hello")) == true);
     REQUIRE(var.containsKey(std::string("world")) == false);
+  }
+
+  SECTION("linked object") {
+    StaticJsonDocument<128> doc2;
+    doc2["hello"] = "world";
+    var.link(doc2);
+
+    CHECK(var.containsKey("hello") == true);
+    CHECK(var.containsKey("world") == false);
   }
 }
 

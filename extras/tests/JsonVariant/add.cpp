@@ -43,4 +43,14 @@ TEST_CASE("JsonVariant::add()") {
 
     REQUIRE(var.as<std::string>() == "{\"val\":123}");
   }
+
+  SECTION("add to linked array") {
+    StaticJsonDocument<1024> doc2;
+    doc2.add(42);
+    var.link(doc2);
+
+    var.add(666);  // no-op
+
+    CHECK(var.as<std::string>() == "[42]");
+  }
 }

@@ -25,4 +25,21 @@ TEST_CASE("JsonDocument::size()") {
 
     REQUIRE(doc.size() == 2);
   }
+
+  SECTION("linked array") {
+    StaticJsonDocument<128> doc2;
+    doc2.add(1);
+    doc2.add(2);
+    doc.as<JsonVariant>().link(doc2);
+
+    REQUIRE(doc.size() == 2);
+  }
+
+  SECTION("linked object") {
+    StaticJsonDocument<128> doc2;
+    doc2["hello"] = "world";
+    doc.as<JsonVariant>().link(doc2);
+
+    REQUIRE(doc.size() == 1);
+  }
 }

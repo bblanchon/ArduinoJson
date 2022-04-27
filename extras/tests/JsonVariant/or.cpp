@@ -156,4 +156,12 @@ TEST_CASE("JsonVariant::operator|()") {
     int result = variant | 42;
     REQUIRE(result == 42);
   }
+
+  SECTION("linked int | int") {
+    StaticJsonDocument<128> doc2;
+    doc2.set(42);
+    variant.link(doc2);
+    int result = variant | 666;
+    CHECK(result == 42);
+  }
 }

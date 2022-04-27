@@ -41,4 +41,13 @@ TEST_CASE("JsonVariant::size()") {
 
     CHECK(variant.size() == 1);
   }
+
+  SECTION("linked array") {
+    StaticJsonDocument<1024> doc2;
+    doc2.add(1);
+    doc2.add(2);
+    variant.link(doc2);
+
+    CHECK(variant.size() == 2);
+  }
 }

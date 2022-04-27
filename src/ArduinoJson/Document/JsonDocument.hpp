@@ -68,7 +68,7 @@ class JsonDocument : public Visitable,
   }
 
   size_t size() const {
-    return _data.size();
+    return _data.resolve()->size();
   }
 
   bool set(const JsonDocument& src) {

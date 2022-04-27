@@ -267,4 +267,97 @@ TEST_CASE("JsonVariant::as()") {
 
     REQUIRE(variant.as<MY_ENUM>() == ONE);
   }
+
+  SECTION("linked object") {
+    StaticJsonDocument<128> doc2;
+    doc2["hello"] = "world";
+    variant.link(doc2);
+
+    SECTION("as<std::string>()") {
+      CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
+    }
+
+    SECTION("as<JsonArray>()") {
+      JsonArray a = variant.as<JsonArray>();
+      CHECK(a.isNull() == true);
+    }
+
+    SECTION("as<JsonObject>()") {
+      JsonObject o = variant.as<JsonObject>();
+      CHECK(o.isNull() == true);
+    }
+
+    SECTION("as<JsonObjectConst>()") {
+      JsonObjectConst o = variant.as<JsonObjectConst>();
+      CHECK(o.isNull() == false);
+      CHECK(o.size() == 1);
+      CHECK(o["hello"] == "world");
+    }
+  }
+
+  SECTION("linked array") {
+    StaticJsonDocument<128> doc2;
+    doc2.add("hello");
+    doc2.add("world");
+    variant.link(doc2);
+
+    SECTION("as<std::string>()") {
+      CHECK(variant.as<std::string>() == "[\"hello\",\"world\"]");
+    }
+
+    SECTION("as<JsonArray>()") {
+      JsonArray a = variant.as<JsonArray>();
+      CHECK(a.isNull() == true);
+    }
+
+    SECTION("as<JsonArrayConst>()") {
+      JsonArrayConst a = variant.as<JsonArrayConst>();
+      CHECK(a.isNull() == false);
+      CHECK(a.size() == 2);
+      CHECK(a[0] == "hello");
+      CHECK(a[1] == "world");
+    }
+
+    SECTION("as<JsonObject>()") {
+      JsonObject o = variant.as<JsonObject>();
+      CHECK(o.isNull() == true);
+    }
+  }
+
+  SECTION("linked int") {
+    StaticJsonDocument<128> doc2;
+    doc2.set(42);
+    variant.link(doc2);
+
+    CHECK(variant.as<int>() == 42);
+    CHECK(variant.as<double>() == 42.0);
+  }
+
+  SECTION("linked double") {
+    StaticJsonDocument<128> doc2;
+    doc2.set(42.0);
+    variant.link(doc2);
+
+    CHECK(variant.as<int>() == 42);
+    CHECK(variant.as<double>() == 42.0);
+  }
+
+  SECTION("linked string") {
+    StaticJsonDocument<128> doc2;
+    doc2.set("hello");
+    variant.link(doc2);
+
+    CHECK(variant.as<std::string>() == "hello");
+  }
+
+  SECTION("linked bool") {
+    StaticJsonDocument<128> doc2;
+    variant.link(doc2);
+
+    doc2.set(true);
+    CHECK(variant.as<bool>() == true);
+
+    doc2.set(false);
+    CHECK(variant.as<bool>() == false);
+  }
 }

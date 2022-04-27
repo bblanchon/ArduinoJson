@@ -84,6 +84,16 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
   }
 
+  SECTION("stores linked object by pointer") {
+    StaticJsonDocument<128> doc3;
+    doc3["hello"] = "world";
+    var1.link(doc3);
+    var2.set(var1);
+
+    REQUIRE(doc1.memoryUsage() == 0);
+    REQUIRE(doc2.memoryUsage() == 0);
+  }
+
   SECTION("destination is unbound") {
     JsonVariant unboundVariant;
 

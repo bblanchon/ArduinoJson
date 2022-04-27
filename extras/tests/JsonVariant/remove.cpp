@@ -39,4 +39,24 @@ TEST_CASE("JsonVariant::remove()") {
 
     REQUIRE(var.as<std::string>() == "{\"a\":1}");
   }
+
+  SECTION("linked array") {
+    StaticJsonDocument<128> doc2;
+    doc2[0] = 42;
+    var.link(doc2);
+
+    var.remove(0);
+
+    CHECK(var.as<std::string>() == "[42]");
+  }
+
+  SECTION("linked object") {
+    StaticJsonDocument<128> doc2;
+    doc2["hello"] = "world";
+    var.link(doc2);
+
+    var.remove("hello");
+
+    CHECK(var.as<std::string>() == "{\"hello\":\"world\"}");
+  }
 }

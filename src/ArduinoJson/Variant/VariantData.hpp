@@ -83,6 +83,12 @@ class VariantData {
 
   bool asBoolean() const;
 
+  const VariantData *resolve() const {
+    if (isPointer())
+      return _content.asPointer->resolve();
+    return this;
+  }
+
   CollectionData *asArray() {
     return isArray() ? &_content.asCollection : 0;
   }
@@ -115,6 +121,10 @@ class VariantData {
 
   bool isCollection() const {
     return (_flags & COLLECTION_MASK) != 0;
+  }
+
+  bool isPointer() const {
+    return type() == VALUE_IS_POINTER;
   }
 
   template <typename T>
@@ -212,6 +222,12 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
+  void setPointer(const VariantData *p) {
+    ARDUINOJSON_ASSERT(p);
+    setType(VALUE_IS_POINTER);
+    _content.asPointer = p;
+  }
+
   void setString(String s) {
     ARDUINOJSON_ASSERT(s);
     if (s.isLinked())
@@ -262,7 +278,8 @@ class VariantData {
   }
 
   VariantData *getElement(size_t index) const {
-    return isArray() ? _content.asCollection.getElement(index) : 0;
+    const CollectionData *col = asArray();
+    return col ? col->getElement(index) : 0;
   }
 
   VariantData *getOrAddElement(size_t index, MemoryPool *pool) {
@@ -275,7 +292,8 @@ class VariantData {
 
   template <typename TAdaptedString>
   VariantData *getMember(TAdaptedString key) const {
-    return isObject() ? _content.asCollection.getMember(key) : 0;
+    const CollectionData *col = asObject();
+    return col ? col->getMember(key) : 0;
   }
 
   template <typename TAdaptedString, typename TStoragePolicy>

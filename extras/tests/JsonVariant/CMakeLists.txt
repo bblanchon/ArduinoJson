@@ -13,6 +13,7 @@ add_executable(JsonVariantTests
 	createNested.cpp
 	is.cpp
 	isnull.cpp
+	link.cpp
 	memoryUsage.cpp
 	misc.cpp
 	nesting.cpp

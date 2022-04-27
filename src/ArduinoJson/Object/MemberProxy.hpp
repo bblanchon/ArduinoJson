@@ -135,6 +135,10 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     getUpstreamMember().remove(key);
   }
 
+  FORCE_INLINE void link(VariantConstRef value) {
+    getOrAddUpstreamMember().link(value);
+  }
+
   template <typename TValue>
   FORCE_INLINE typename VariantTo<TValue>::type to() {
     return getOrAddUpstreamMember().template to<TValue>();

@@ -34,6 +34,20 @@ TEST_CASE("Compare JsonVariant with value") {
     CHECK_FALSE(a < b);
     CHECK_FALSE(a > b);
   }
+
+  SECTION("linked 42 vs 42") {
+    StaticJsonDocument<128> doc2;
+    doc2.set(42);
+    a.link(doc2);
+    int b = 42;
+
+    CHECK(a == b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
+  }
 }
 
 TEST_CASE("Compare JsonVariant with JsonVariant") {
@@ -312,5 +326,20 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
     CHECK_FALSE(a > b);
     CHECK_FALSE(a >= b);
+  }
+
+  SECTION("linked 42 vs link 42") {
+    StaticJsonDocument<128> doc2, doc3;
+    doc2.set(42);
+    doc3.set(42);
+    a.link(doc2);
+    b.link(doc3);
+
+    CHECK(a == b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
   }
 }
