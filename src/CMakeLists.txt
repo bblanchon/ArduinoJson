@@ -35,7 +35,7 @@ install(
     RUNTIME DESTINATION
         ${CMAKE_INSTALL_BINDIR}
 )
-
+ 
 include(CMakePackageConfigHelpers)
 
 if(${CMAKE_VERSION} VERSION_GREATER "3.14.0") 
@@ -82,9 +82,4 @@ install(
         include
 )
 
-install(
-    DIRECTORY
-        "${CMAKE_CURRENT_SOURCE_DIR}/ArduinoJson"
-    DESTINATION
-        include
-)
+
