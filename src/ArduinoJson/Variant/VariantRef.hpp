@@ -30,7 +30,9 @@ class VariantRefBase : public VariantTag {
  public:
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor &visitor) const {
-    return variantAccept(_data, visitor);
+    if (!_data)
+      return visitor.visitNull();
+    return _data->resolve()->accept(visitor);
   }
 
   FORCE_INLINE bool isNull() const {

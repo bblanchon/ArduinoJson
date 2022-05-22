@@ -11,15 +11,6 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TVisitor>
-inline typename TVisitor::result_type variantAccept(const VariantData *var,
-                                                    TVisitor &visitor) {
-  if (var != 0)
-    return var->resolve()->accept(visitor);
-  else
-    return visitor.visitNull();
-}
-
 inline const CollectionData *variantAsArray(const VariantData *var) {
   return var != 0 ? var->resolve()->asArray() : 0;
 }
