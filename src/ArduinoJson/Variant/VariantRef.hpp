@@ -28,6 +28,11 @@ class ObjectRef;
 template <typename TData>
 class VariantRefBase : public VariantTag {
  public:
+  template <typename TVisitor>
+  typename TVisitor::result_type accept(TVisitor &visitor) const {
+    return variantAccept(_data, visitor);
+  }
+
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
   }
@@ -66,11 +71,6 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
  public:
   VariantConstRef() : base_type(0) {}
   explicit VariantConstRef(const VariantData *data) : base_type(data) {}
-
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor &visitor) const {
-    return variantAccept(_data, visitor);
-  }
 
   template <typename T>
   FORCE_INLINE
@@ -263,11 +263,6 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   FORCE_INLINE operator VariantConstRef() const {
     return VariantConstRef(_data);
-  }
-
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor &visitor) const {
-    return variantAccept(_data, visitor);
   }
 
   // Change the type of the variant
