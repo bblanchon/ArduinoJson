@@ -22,7 +22,7 @@ class JsonSerializer : public Visitor<size_t> {
   FORCE_INLINE size_t visitArray(const CollectionData &array) {
     write('[');
 
-    VariantSlot *slot = array.head();
+    const VariantSlot *slot = array.head();
 
     while (slot != 0) {
       slot->data()->resolve()->accept(*this);
@@ -41,7 +41,7 @@ class JsonSerializer : public Visitor<size_t> {
   size_t visitObject(const CollectionData &object) {
     write('{');
 
-    VariantSlot *slot = object.head();
+    const VariantSlot *slot = object.head();
 
     while (slot != 0) {
       _formatter.writeString(slot->key());

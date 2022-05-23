@@ -19,7 +19,7 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
   PrettyJsonSerializer(TWriter writer) : base(writer), _nesting(0) {}
 
   size_t visitArray(const CollectionData &array) {
-    VariantSlot *slot = array.head();
+    const VariantSlot *slot = array.head();
     if (slot) {
       base::write("[\r\n");
       _nesting++;
@@ -40,7 +40,7 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
   }
 
   size_t visitObject(const CollectionData &object) {
-    VariantSlot *slot = object.head();
+    const VariantSlot *slot = object.head();
     if (slot) {
       base::write("{\r\n");
       _nesting++;
