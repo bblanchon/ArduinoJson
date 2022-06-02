@@ -116,18 +116,17 @@ class JsonSerializer : public Visitor<size_t> {
   TextFormatter<TWriter> _formatter;
 };
 
-template <typename TSource, typename TDestination>
-size_t serializeJson(const TSource &source, TDestination &destination) {
+template <typename TDestination>
+size_t serializeJson(VariantConstRef source, TDestination &destination) {
   return serialize<JsonSerializer>(source, destination);
 }
 
-template <typename TSource>
-size_t serializeJson(const TSource &source, void *buffer, size_t bufferSize) {
+inline size_t serializeJson(VariantConstRef source, void *buffer,
+                            size_t bufferSize) {
   return serialize<JsonSerializer>(source, buffer, bufferSize);
 }
 
-template <typename TSource>
-size_t measureJson(const TSource &source) {
+inline size_t measureJson(VariantConstRef source) {
   return measure<JsonSerializer>(source);
 }
 
