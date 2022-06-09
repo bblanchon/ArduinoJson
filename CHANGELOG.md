@@ -6,6 +6,7 @@ HEAD
 
 * Add `JsonVariant::link()` (issue #1343)
 * Fix `9.22337e+18 is outside the range of representable values of type 'long'`
+* Fix comparison operators for `JsonArray` and `JsonArrayConst`
 
 v6.19.4 (2022-04-05)
 -------

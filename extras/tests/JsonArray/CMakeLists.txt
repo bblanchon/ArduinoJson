@@ -2,9 +2,10 @@
 # Copyright © 2014-2022, Benoit BLANCHON
 # MIT License
 
-add_executable(JsonArrayTests 
+add_executable(JsonArrayTests
 	add.cpp
 	clear.cpp
+	compare.cpp
 	copyArray.cpp
 	createNested.cpp
 	equals.cpp
