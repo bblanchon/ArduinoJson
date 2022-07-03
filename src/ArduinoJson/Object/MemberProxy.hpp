@@ -154,11 +154,6 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getOrAddUpstreamMember().set(value);
   }
 
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor &visitor) const {
-    return getUpstreamMemberConst().accept(visitor);
-  }
-
   FORCE_INLINE VariantRef addElement() const {
     return getOrAddUpstreamMember().addElement();
   }

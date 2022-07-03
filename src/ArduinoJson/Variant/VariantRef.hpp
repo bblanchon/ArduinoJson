@@ -27,13 +27,6 @@ class ObjectRef;
 template <typename TData>
 class VariantRefBase : public VariantTag {
  public:
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor &visitor) const {
-    if (!_data)
-      return visitor.visitNull();
-    return _data->resolve()->accept(visitor);
-  }
-
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
   }

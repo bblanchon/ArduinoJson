@@ -21,11 +21,6 @@ class ObjectRefBase {
     return VariantConstRef(getVariantData());
   }
 
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor& visitor) const {
-    return objectAccept(_data, visitor);
-  }
-
   FORCE_INLINE bool isNull() const {
     return _data == 0;
   }

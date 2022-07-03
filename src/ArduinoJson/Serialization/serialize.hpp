@@ -5,13 +5,14 @@
 #pragma once
 
 #include <ArduinoJson/Serialization/Writer.hpp>
+#include <ArduinoJson/Variant/VariantFunctions.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename> class TSerializer, typename TWriter>
 size_t doSerialize(VariantConstRef source, TWriter writer) {
   TSerializer<TWriter> serializer(writer);
-  return source.accept(serializer);
+  return variantAccept(getData(source), serializer);
 }
 
 template <template <typename> class TSerializer, typename TDestination>

@@ -127,11 +127,6 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return getOrAddUpstreamElement().set(value);
   }
 
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor& visitor) const {
-    return getUpstreamElementConst().accept(visitor);
-  }
-
   FORCE_INLINE size_t size() const {
     return getUpstreamElementConst().size();
   }
