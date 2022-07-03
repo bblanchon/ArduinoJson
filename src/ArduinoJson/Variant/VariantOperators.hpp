@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Misc/Visitable.hpp>
 #include <ArduinoJson/Numbers/arithmeticCompare.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
@@ -12,11 +11,16 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename T1, typename T2>
-CompareResult compare(const T1 &lhs, const T2 &rhs);  // VariantCompare.cpp
+class VariantConstRef;
+
+template <typename T>
+CompareResult compare(VariantConstRef lhs,
+                      const T &rhs);  // VariantCompare.cpp
+
+struct VariantOperatorTag {};
 
 template <typename TVariant>
-struct VariantOperators {
+struct VariantOperators : VariantOperatorTag {
   // Returns the default value if the VariantRef is unbound or incompatible
   //
   // int operator|(JsonVariant, int)
@@ -43,7 +47,7 @@ struct VariantOperators {
   //
   // JsonVariant operator|(JsonVariant, JsonVariant)
   template <typename T>
-  friend typename enable_if<IsVariant<T>::value, typename T::variant_type>::type
+  friend typename enable_if<IsVariant<T>::value, VariantConstRef>::type
   operator|(const TVariant &variant, T defaultValue) {
     if (variant)
       return variant;
@@ -67,8 +71,9 @@ struct VariantOperators {
     return compare(lhs, rhs) == COMPARE_RESULT_EQUAL;
   }
   template <typename T>
-  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator==(
-      TVariant lhs, const T &rhs) {
+  friend
+      typename enable_if<!is_base_of<VariantOperatorTag, T>::value, bool>::type
+      operator==(TVariant lhs, const T &rhs) {
     return compare(lhs, rhs) == COMPARE_RESULT_EQUAL;
   }
 
@@ -88,8 +93,9 @@ struct VariantOperators {
     return compare(lhs, rhs) != COMPARE_RESULT_EQUAL;
   }
   template <typename T>
-  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator!=(
-      TVariant lhs, const T &rhs) {
+  friend
+      typename enable_if<!is_base_of<VariantOperatorTag, T>::value, bool>::type
+      operator!=(TVariant lhs, const T &rhs) {
     return compare(lhs, rhs) != COMPARE_RESULT_EQUAL;
   }
 
@@ -109,8 +115,9 @@ struct VariantOperators {
     return compare(lhs, rhs) == COMPARE_RESULT_LESS;
   }
   template <typename T>
-  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator<(
-      TVariant lhs, const T &rhs) {
+  friend
+      typename enable_if<!is_base_of<VariantOperatorTag, T>::value, bool>::type
+      operator<(TVariant lhs, const T &rhs) {
     return compare(lhs, rhs) == COMPARE_RESULT_LESS;
   }
 
@@ -130,8 +137,9 @@ struct VariantOperators {
     return (compare(lhs, rhs) & COMPARE_RESULT_LESS_OR_EQUAL) != 0;
   }
   template <typename T>
-  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator<=(
-      TVariant lhs, const T &rhs) {
+  friend
+      typename enable_if<!is_base_of<VariantOperatorTag, T>::value, bool>::type
+      operator<=(TVariant lhs, const T &rhs) {
     return (compare(lhs, rhs) & COMPARE_RESULT_LESS_OR_EQUAL) != 0;
   }
 
@@ -151,8 +159,9 @@ struct VariantOperators {
     return compare(lhs, rhs) == COMPARE_RESULT_GREATER;
   }
   template <typename T>
-  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator>(
-      TVariant lhs, const T &rhs) {
+  friend
+      typename enable_if<!is_base_of<VariantOperatorTag, T>::value, bool>::type
+      operator>(TVariant lhs, const T &rhs) {
     return compare(lhs, rhs) == COMPARE_RESULT_GREATER;
   }
 
@@ -172,8 +181,9 @@ struct VariantOperators {
     return (compare(lhs, rhs) & COMPARE_RESULT_GREATER_OR_EQUAL) != 0;
   }
   template <typename T>
-  friend typename enable_if<!IsVisitable<T>::value, bool>::type operator>=(
-      TVariant lhs, const T &rhs) {
+  friend
+      typename enable_if<!is_base_of<VariantOperatorTag, T>::value, bool>::type
+      operator>=(TVariant lhs, const T &rhs) {
     return (compare(lhs, rhs) & COMPARE_RESULT_GREATER_OR_EQUAL) != 0;
   }
 };

@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Json/TextFormatter.hpp>
-#include <ArduinoJson/Misc/Visitable.hpp>
 #include <ArduinoJson/Serialization/measure.hpp>
 #include <ArduinoJson/Serialization/serialize.hpp>
 #include <ArduinoJson/Variant/Visitor.hpp>
@@ -132,7 +131,8 @@ inline size_t measureJson(VariantConstRef source) {
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 template <typename T>
-inline typename enable_if<IsVisitable<T>::value, std::ostream &>::type
+inline typename enable_if<is_convertible<T, VariantConstRef>::value,
+                          std::ostream &>::type
 operator<<(std::ostream &os, const T &source) {
   serializeJson(source, os);
   return os;

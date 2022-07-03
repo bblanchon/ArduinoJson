@@ -57,8 +57,7 @@ class ObjectRefBase {
 };
 
 class ObjectConstRef : public ObjectRefBase<const CollectionData>,
-                       public VariantOperators<ObjectConstRef>,
-                       public Visitable {
+                       public VariantOperators<ObjectConstRef> {
   friend class ObjectRef;
   typedef ObjectRefBase<const CollectionData> base_type;
 
@@ -148,8 +147,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
 
 class ObjectRef : public ObjectRefBase<CollectionData>,
                   public ObjectShortcuts<ObjectRef>,
-                  public VariantOperators<ObjectRef>,
-                  public Visitable {
+                  public VariantOperators<ObjectRef> {
   typedef ObjectRefBase<CollectionData> base_type;
 
  public:

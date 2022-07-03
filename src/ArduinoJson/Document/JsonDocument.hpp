@@ -14,8 +14,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class JsonDocument : public Visitable,
-                     public VariantOperators<const JsonDocument&> {
+class JsonDocument : public VariantOperators<const JsonDocument&> {
  public:
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor& visitor) const {

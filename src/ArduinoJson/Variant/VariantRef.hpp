@@ -8,7 +8,6 @@
 #include <stdint.h>  // for uint8_t
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
-#include <ArduinoJson/Misc/Visitable.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/Converter.hpp>
@@ -66,8 +65,7 @@ class VariantRefBase : public VariantTag {
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
                         public VariantOperators<VariantConstRef>,
-                        public VariantShortcuts<VariantConstRef>,
-                        public Visitable {
+                        public VariantShortcuts<VariantConstRef> {
   typedef VariantRefBase<const VariantData> base_type;
 
  public:
@@ -180,8 +178,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
 // - a reference to a ArrayRef or ObjectRef
 class VariantRef : public VariantRefBase<VariantData>,
                    public VariantOperators<VariantRef>,
-                   public VariantShortcuts<VariantRef>,
-                   public Visitable {
+                   public VariantShortcuts<VariantRef> {
   typedef VariantRefBase<VariantData> base_type;
 
  public:

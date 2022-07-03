@@ -177,6 +177,24 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK((is_convertible<EmptyEnum, int>::value == true));
     CHECK((is_convertible<int*, int>::value == false));
     CHECK((is_convertible<EmptyClass, int>::value == false));
+
+    CHECK((is_convertible<DeserializationError, JsonVariantConst>::value ==
+           false));
+    CHECK((is_convertible<JsonPair, JsonVariantConst>::value == false));
+    CHECK((is_convertible<VariantRef, JsonVariantConst>::value == true));
+    CHECK((is_convertible<VariantConstRef, JsonVariantConst>::value == true));
+    CHECK((is_convertible<ArrayRef, JsonVariantConst>::value == true));
+    CHECK((is_convertible<ElementProxy<ArrayRef>, JsonVariantConst>::value ==
+           true));
+    CHECK((is_convertible<ArrayConstRef, JsonVariantConst>::value == true));
+    CHECK((is_convertible<ObjectRef, JsonVariantConst>::value == true));
+    CHECK((is_convertible<MemberProxy<ObjectRef, const char*>,
+                          JsonVariantConst>::value == true));
+    CHECK((is_convertible<ObjectConstRef, JsonVariantConst>::value == true));
+    CHECK(
+        (is_convertible<DynamicJsonDocument, JsonVariantConst>::value == true));
+    CHECK((is_convertible<StaticJsonDocument<10>, JsonVariantConst>::value ==
+           true));
   }
 
   SECTION("is_class") {
@@ -193,20 +211,5 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK(is_enum<EmptyClass>::value == false);
     CHECK(is_enum<bool>::value == false);
     CHECK(is_enum<double>::value == false);
-  }
-
-  SECTION("IsVisitable") {
-    CHECK(IsVisitable<DeserializationError>::value == false);
-    CHECK(IsVisitable<JsonPair>::value == false);
-    CHECK(IsVisitable<VariantRef>::value == true);
-    CHECK(IsVisitable<VariantConstRef>::value == true);
-    CHECK(IsVisitable<ArrayRef>::value == true);
-    CHECK(IsVisitable<ElementProxy<ArrayRef> >::value == true);
-    CHECK(IsVisitable<ArrayConstRef>::value == true);
-    CHECK(IsVisitable<ObjectRef>::value == true);
-    CHECK((IsVisitable<MemberProxy<ObjectRef, const char*> >::value == true));
-    CHECK(IsVisitable<ObjectConstRef>::value == true);
-    CHECK(IsVisitable<DynamicJsonDocument>::value == true);
-    CHECK(IsVisitable<StaticJsonDocument<10> >::value == true);
   }
 }

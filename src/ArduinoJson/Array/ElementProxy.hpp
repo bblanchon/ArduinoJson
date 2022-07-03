@@ -19,13 +19,10 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TArray>
 class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
                      public VariantShortcuts<ElementProxy<TArray> >,
-                     public Visitable,
                      public VariantTag {
   typedef ElementProxy<TArray> this_type;
 
  public:
-  typedef VariantRef variant_type;
-
   FORCE_INLINE ElementProxy(TArray array, size_t index)
       : _array(array), _index(index) {}
 
