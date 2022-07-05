@@ -70,16 +70,16 @@ TEST_CASE("JsonVariant::isNull()") {
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("returns true for a linked null") {
+  SECTION("returns true for a shallow null copy") {
     StaticJsonDocument<128> doc2;
-    variant.link(doc2);
+    variant.shallowCopy(doc2);
     CHECK(variant.isNull() == true);
   }
 
-  SECTION("returns false for a linked array") {
+  SECTION("returns false for a shallow array copy") {
     StaticJsonDocument<128> doc2;
     doc2[0] = 42;
-    variant.link(doc2);
+    variant.shallowCopy(doc2);
     CHECK(variant.isNull() == false);
   }
 

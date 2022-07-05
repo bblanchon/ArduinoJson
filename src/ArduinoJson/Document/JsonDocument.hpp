@@ -62,7 +62,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   }
 
   size_t size() const {
-    return _data.resolve()->size();
+    return _data.size();
   }
 
   bool set(const JsonDocument& src) {

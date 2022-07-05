@@ -132,8 +132,8 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     getUpstreamMember().remove(key);
   }
 
-  FORCE_INLINE void link(VariantConstRef value) {
-    getOrAddUpstreamMember().link(value);
+  FORCE_INLINE void shallowCopy(VariantConstRef value) {
+    getOrAddUpstreamMember().shallowCopy(value);
   }
 
   template <typename TValue>

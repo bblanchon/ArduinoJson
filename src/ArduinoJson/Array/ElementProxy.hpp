@@ -106,8 +106,8 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return getOrAddUpstreamElement().template to<T>();
   }
 
-  FORCE_INLINE void link(VariantConstRef value) const {
-    getOrAddUpstreamElement().link(value);
+  FORCE_INLINE void shallowCopy(VariantConstRef value) const {
+    getOrAddUpstreamElement().shallowCopy(value);
   }
 
   // Replaces the value

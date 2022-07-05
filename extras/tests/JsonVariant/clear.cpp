@@ -23,15 +23,4 @@ TEST_CASE("JsonVariant::clear()") {
 
     REQUIRE(var.isNull() == true);
   }
-
-  SECTION("doesn't alter linked object") {
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-    var.link(doc2);
-
-    var.clear();
-
-    CHECK(var.isNull() == true);
-    CHECK(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-  }
 }

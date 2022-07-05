@@ -15,7 +15,7 @@ template <typename TVisitor>
 inline typename TVisitor::result_type variantAccept(const VariantData *var,
                                                     TVisitor &visitor) {
   if (var != 0)
-    return var->resolve()->accept(visitor);
+    return var->accept(visitor);
   else
     return visitor.visitNull();
 }
@@ -44,7 +44,7 @@ inline bool variantSetString(VariantData *var, TAdaptedString value,
 }
 
 inline size_t variantSize(const VariantData *var) {
-  return var != 0 ? var->resolve()->size() : 0;
+  return var != 0 ? var->size() : 0;
 }
 
 inline CollectionData *variantToArray(VariantData *var) {
@@ -90,14 +90,14 @@ NO_INLINE VariantData *variantGetOrAddMember(VariantData *var,
 }
 
 inline bool variantIsNull(const VariantData *var) {
-  return var == 0 || var->resolve()->isNull();
+  return var == 0 || var->isNull();
 }
 
 inline size_t variantNesting(const VariantData *var) {
   if (!var)
     return 0;
 
-  const CollectionData *collection = var->resolve()->asCollection();
+  const CollectionData *collection = var->asCollection();
   if (!collection)
     return 0;
 

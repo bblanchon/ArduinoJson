@@ -38,12 +38,4 @@ TEST_CASE("JsonVariant::memoryUsage()") {
     REQUIRE(var.memoryUsage() == 6);
     REQUIRE(var.memoryUsage() == doc.memoryUsage());
   }
-
-  SECTION("ignore size of linked document") {
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-    var.link(doc2);
-    CHECK(var.memoryUsage() == 0);
-    CHECK(var.memoryUsage() == doc.memoryUsage());
-  }
 }

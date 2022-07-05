@@ -202,12 +202,12 @@ struct Converter<ArrayConstRef> {
 
   static ArrayConstRef fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->resolve()->asArray() : 0;
+    return data ? data->asArray() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->resolve()->isArray();
+    return data && data->isArray();
   }
 };
 

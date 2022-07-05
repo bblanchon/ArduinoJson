@@ -5,17 +5,16 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonVariant::link()") {
+TEST_CASE("JsonVariant::shallowCopy()") {
   StaticJsonDocument<1024> doc1, doc2;
   JsonVariant variant = doc1.to<JsonVariant>();
 
-  SECTION("JsonVariant::link(JsonDocument&)") {
+  SECTION("JsonVariant::shallowCopy(JsonDocument&)") {
     doc2["hello"] = "world";
 
-    variant.link(doc2);
+    variant.shallowCopy(doc2);
 
     CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
-    CHECK(variant.memoryUsage() == 0);
 
     // altering the linked document should change the result
     doc2["hello"] = "WORLD!";
@@ -23,13 +22,12 @@ TEST_CASE("JsonVariant::link()") {
     CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
   }
 
-  SECTION("JsonVariant::link(MemberProxy)") {
+  SECTION("JsonVariant::shallowCopy(MemberProxy)") {
     doc2["obj"]["hello"] = "world";
 
-    variant.link(doc2["obj"]);
+    variant.shallowCopy(doc2["obj"]);
 
     CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
-    CHECK(variant.memoryUsage() == 0);
 
     // altering the linked document should change the result
     doc2["obj"]["hello"] = "WORLD!";
@@ -37,13 +35,12 @@ TEST_CASE("JsonVariant::link()") {
     CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
   }
 
-  SECTION("JsonVariant::link(ElementProxy)") {
+  SECTION("JsonVariant::shallowCopy(ElementProxy)") {
     doc2[0]["hello"] = "world";
 
-    variant.link(doc2[0]);
+    variant.shallowCopy(doc2[0]);
 
     CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
-    CHECK(variant.memoryUsage() == 0);
 
     // altering the linked document should change the result
     doc2[0]["hello"] = "WORLD!";
@@ -55,7 +52,7 @@ TEST_CASE("JsonVariant::link()") {
     JsonVariant unbound;
     variant["hello"] = "world";
 
-    variant.link(unbound);
+    variant.shallowCopy(unbound);
 
     CHECK(variant.isUnbound() == false);
     CHECK(variant.isNull() == true);
@@ -67,11 +64,24 @@ TEST_CASE("JsonVariant::link()") {
     JsonVariant unbound;
     doc2["hello"] = "world";
 
-    unbound.link(doc2);
+    unbound.shallowCopy(doc2);
 
     CHECK(unbound.isUnbound() == true);
     CHECK(unbound.isNull() == true);
     CHECK(unbound.memoryUsage() == 0);
     CHECK(unbound.size() == 0);
+  }
+
+  SECTION("preserves owned key bit") {
+    doc2.set(42);
+
+    doc1["a"].shallowCopy(doc2);
+    doc1[std::string("b")].shallowCopy(doc2);
+
+    JsonObject::iterator it = doc1.as<JsonObject>().begin();
+
+    CHECK(it->key().isLinked() == true);
+    ++it;
+    CHECK(it->key().isLinked() == false);
   }
 }

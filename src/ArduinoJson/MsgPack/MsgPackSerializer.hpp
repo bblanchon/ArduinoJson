@@ -56,7 +56,7 @@ class MsgPackSerializer : public Visitor<size_t> {
       writeInteger(uint32_t(n));
     }
     for (const VariantSlot* slot = array.head(); slot; slot = slot->next()) {
-      slot->data()->resolve()->accept(*this);
+      slot->data()->accept(*this);
     }
     return bytesWritten();
   }
@@ -74,7 +74,7 @@ class MsgPackSerializer : public Visitor<size_t> {
     }
     for (const VariantSlot* slot = object.head(); slot; slot = slot->next()) {
       visitString(slot->key());
-      slot->data()->resolve()->accept(*this);
+      slot->data()->accept(*this);
     }
     return bytesWritten();
   }

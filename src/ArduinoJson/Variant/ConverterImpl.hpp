@@ -48,12 +48,12 @@ struct Converter<
   static T fromJson(VariantConstRef src) {
     ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
     const VariantData* data = getData(src);
-    return data ? data->resolve()->asIntegral<T>() : T();
+    return data ? data->asIntegral<T>() : T();
   }
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->resolve()->isInteger<T>();
+    return data && data->isInteger<T>();
   }
 };
 
@@ -65,12 +65,12 @@ struct Converter<T, typename enable_if<is_enum<T>::value>::type> {
 
   static T fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? static_cast<T>(data->resolve()->asIntegral<int>()) : T();
+    return data ? static_cast<T>(data->asIntegral<int>()) : T();
   }
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->resolve()->isInteger<int>();
+    return data && data->isInteger<int>();
   }
 };
 
@@ -84,12 +84,12 @@ struct Converter<bool> {
 
   static bool fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->resolve()->asBoolean() : false;
+    return data ? data->asBoolean() : false;
   }
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->resolve()->isBoolean();
+    return data && data->isBoolean();
   }
 };
 
@@ -103,12 +103,12 @@ struct Converter<T, typename enable_if<is_floating_point<T>::value>::type> {
 
   static T fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->resolve()->asFloat<T>() : 0;
+    return data ? data->asFloat<T>() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->resolve()->isFloat();
+    return data && data->isFloat();
   }
 };
 
@@ -121,12 +121,12 @@ struct Converter<const char*> {
 
   static const char* fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->resolve()->asString().c_str() : 0;
+    return data ? data->asString().c_str() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->resolve()->isString();
+    return data && data->isString();
   }
 };
 
@@ -139,12 +139,12 @@ struct Converter<String> {
 
   static String fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->resolve()->asString() : 0;
+    return data ? data->asString() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->resolve()->isString();
+    return data && data->isString();
   }
 };
 
@@ -192,7 +192,7 @@ struct Converter<decltype(nullptr)> {
   }
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data == 0 || data->resolve()->isNull();
+    return data == 0 || data->isNull();
   }
 };
 

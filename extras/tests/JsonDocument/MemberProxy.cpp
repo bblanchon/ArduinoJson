@@ -318,10 +318,10 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
   CHECK(doc["status"]["weather"]["temp"] == 42);
 }
 
-TEST_CASE("MemberProxy::link()") {
+TEST_CASE("MemberProxy::shallowCopy()") {
   StaticJsonDocument<1024> doc1, doc2;
-  doc1["obj"].link(doc2);
   doc2["hello"] = "world";
+  doc1["obj"].shallowCopy(doc2);
 
   CHECK(doc1.as<std::string>() == "{\"obj\":{\"hello\":\"world\"}}");
 }

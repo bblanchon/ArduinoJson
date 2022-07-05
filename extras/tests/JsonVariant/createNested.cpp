@@ -18,17 +18,6 @@ TEST_CASE("JsonVariant::createNestedObject()") {
     REQUIRE(variant[0]["value"] == 42);
     REQUIRE(obj.isNull() == false);
   }
-
-  SECTION("does nothing on linked array") {
-    StaticJsonDocument<128> doc2;
-    doc2[0] = 42;
-    variant.link(doc2);
-
-    variant.createNestedObject();
-
-    CHECK(variant.size() == 1);
-    CHECK(variant[0] == 42);
-  }
 }
 
 TEST_CASE("JsonVariant::createNestedArray()") {
@@ -40,17 +29,6 @@ TEST_CASE("JsonVariant::createNestedArray()") {
 
     REQUIRE(variant.is<JsonArray>() == true);
     REQUIRE(arr.isNull() == false);
-  }
-
-  SECTION("does nothing on linked array") {
-    StaticJsonDocument<128> doc2;
-    doc2[0] = 42;
-    variant.link(doc2);
-
-    variant.createNestedArray();
-
-    CHECK(variant.size() == 1);
-    CHECK(variant[0] == 42);
   }
 }
 
@@ -65,17 +43,6 @@ TEST_CASE("JsonVariant::createNestedObject(key)") {
     REQUIRE(variant.is<JsonObject>() == true);
     REQUIRE(variant["weather"]["temp"] == 42);
   }
-
-  SECTION("does nothing on linked object") {
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-    variant.link(doc2);
-
-    variant.createNestedObject("weather");
-
-    CHECK(variant.size() == 1);
-    CHECK(variant["hello"] == "world");
-  }
 }
 
 TEST_CASE("JsonVariant::createNestedArray(key)") {
@@ -87,16 +54,5 @@ TEST_CASE("JsonVariant::createNestedArray(key)") {
 
     REQUIRE(variant.is<JsonObject>() == true);
     REQUIRE(arr.isNull() == false);
-  }
-
-  SECTION("does nothing on linked object") {
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-    variant.link(doc2);
-
-    variant.createNestedArray("items");
-
-    CHECK(variant.size() == 1);
-    CHECK(variant["hello"] == "world");
   }
 }

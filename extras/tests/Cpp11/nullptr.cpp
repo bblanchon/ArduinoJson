@@ -43,13 +43,5 @@ TEST_CASE("nullptr") {
 
     variant.clear();
     REQUIRE(variant.is<std::nullptr_t>() == true);
-
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-    variant.link(doc2);
-    REQUIRE(variant.is<std::nullptr_t>() == false);
-
-    doc2.clear();
-    REQUIRE(variant.is<std::nullptr_t>() == true);
   }
 }

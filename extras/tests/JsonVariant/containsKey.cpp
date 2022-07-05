@@ -25,15 +25,6 @@ TEST_CASE("JsonVariant::containsKey()") {
     REQUIRE(var.containsKey(std::string("hello")) == true);
     REQUIRE(var.containsKey(std::string("world")) == false);
   }
-
-  SECTION("linked object") {
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-    var.link(doc2);
-
-    CHECK(var.containsKey("hello") == true);
-    CHECK(var.containsKey("world") == false);
-  }
 }
 
 TEST_CASE("JsonVariantConst::containsKey()") {

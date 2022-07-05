@@ -17,6 +17,7 @@ inline VariantSlot* CollectionData::addSlot(MemoryPool* pool) {
     return 0;
 
   if (_tail) {
+    ARDUINOJSON_ASSERT(pool->owns(_tail));  // Can't alter a linked array/object
     _tail->setNextNotNull(slot);
     _tail = slot;
   } else {

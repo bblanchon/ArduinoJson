@@ -37,6 +37,11 @@ class VariantData {
     _flags = VALUE_IS_NULL;
   }
 
+  void operator=(const VariantData &src) {
+    _content = src._content;
+    _flags = uint8_t((_flags & OWNED_KEY_BIT) | (src._flags & ~OWNED_KEY_BIT));
+  }
+
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor &visitor) const {
     switch (type()) {
@@ -83,12 +88,6 @@ class VariantData {
 
   bool asBoolean() const;
 
-  const VariantData *resolve() const {
-    if (isPointer())
-      return _content.asPointer->resolve();
-    return this;
-  }
-
   CollectionData *asArray() {
     return isArray() ? &_content.asCollection : 0;
   }
@@ -121,10 +120,6 @@ class VariantData {
 
   bool isCollection() const {
     return (_flags & COLLECTION_MASK) != 0;
-  }
-
-  bool isPointer() const {
-    return type() == VALUE_IS_POINTER;
   }
 
   template <typename T>
@@ -220,12 +215,6 @@ class VariantData {
 
   void setNull() {
     setType(VALUE_IS_NULL);
-  }
-
-  void setPointer(const VariantData *p) {
-    ARDUINOJSON_ASSERT(p);
-    setType(VALUE_IS_POINTER);
-    _content.asPointer = p;
   }
 
   void setString(String s) {
