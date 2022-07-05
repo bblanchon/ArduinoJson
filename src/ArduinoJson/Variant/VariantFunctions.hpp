@@ -20,18 +20,6 @@ inline typename TVisitor::result_type variantAccept(const VariantData *var,
     return visitor.visitNull();
 }
 
-inline const CollectionData *variantAsArray(const VariantData *var) {
-  return var != 0 ? var->resolve()->asArray() : 0;
-}
-
-inline const CollectionData *variantAsObject(const VariantData *var) {
-  return var != 0 ? var->resolve()->asObject() : 0;
-}
-
-inline CollectionData *variantAsObject(VariantData *var) {
-  return var != 0 ? var->asObject() : 0;
-}
-
 inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
                             MemoryPool *pool) {
   if (!dst)

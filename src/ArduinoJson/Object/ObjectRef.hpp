@@ -268,7 +268,8 @@ struct Converter<ObjectConstRef> {
   }
 
   static ObjectConstRef fromJson(VariantConstRef src) {
-    return ObjectConstRef(variantAsObject(getData(src)));
+    const VariantData* data = getData(src);
+    return data != 0 ? data->resolve()->asObject() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {

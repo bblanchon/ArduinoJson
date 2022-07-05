@@ -201,7 +201,8 @@ struct Converter<ArrayConstRef> {
   }
 
   static ArrayConstRef fromJson(VariantConstRef src) {
-    return ArrayConstRef(variantAsArray(getData(src)));
+    const VariantData* data = getData(src);
+    return data ? data->resolve()->asArray() : 0;
   }
 
   static bool checkJson(VariantConstRef src) {
