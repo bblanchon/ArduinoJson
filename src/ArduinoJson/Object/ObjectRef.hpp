@@ -18,7 +18,7 @@ template <typename TData>
 class ObjectRefBase {
  public:
   operator VariantConstRef() const {
-    return VariantConstRef(getVariantData());
+    return VariantConstRef(collectionToVariant(_data));
   }
 
   FORCE_INLINE bool isNull() const {
@@ -34,7 +34,7 @@ class ObjectRefBase {
   }
 
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(getVariantData());
+    return variantNesting(collectionToVariant(_data));
   }
 
   FORCE_INLINE size_t size() const {
@@ -42,11 +42,6 @@ class ObjectRefBase {
   }
 
  protected:
-  const VariantData* getVariantData() const {
-    const void* data = _data;  // prevent warning cast-align
-    return reinterpret_cast<const VariantData*>(data);
-  }
-
   ObjectRefBase(TData* data) : _data(data) {}
   TData* _data;
 };

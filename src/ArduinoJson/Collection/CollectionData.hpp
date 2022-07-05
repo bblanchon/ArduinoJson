@@ -81,4 +81,15 @@ class CollectionData {
 
   VariantSlot *getPreviousSlot(VariantSlot *) const;
 };
+
+inline const VariantData *collectionToVariant(
+    const CollectionData *collection) {
+  const void *data = collection;  // prevent warning cast-align
+  return reinterpret_cast<const VariantData *>(data);
+}
+
+inline VariantData *collectionToVariant(CollectionData *collection) {
+  void *data = collection;  // prevent warning cast-align
+  return reinterpret_cast<VariantData *>(data);
+}
 }  // namespace ARDUINOJSON_NAMESPACE
