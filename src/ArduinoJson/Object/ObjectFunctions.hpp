@@ -8,15 +8,6 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TVisitor>
-typename TVisitor::result_type objectAccept(const CollectionData *obj,
-                                            TVisitor &visitor) {
-  if (obj)
-    return visitor.visitObject(*obj);
-  else
-    return visitor.visitNull();
-}
-
 template <typename TAdaptedString>
 inline VariantData *objectGetMember(const CollectionData *obj,
                                     TAdaptedString key) {
