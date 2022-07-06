@@ -269,13 +269,11 @@ class VariantRef : public VariantRefBase<VariantData>,
   typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type to()
       const;
 
-  VariantRef addElement() const {
+  VariantRef add() const {
     return VariantRef(_pool, variantAddElement(_data, _pool));
   }
 
-  FORCE_INLINE VariantRef getElement(size_t index) const {
-    return VariantRef(_pool, _data != 0 ? _data->getElement(index) : 0);
-  }
+  using ArrayShortcuts<VariantRef>::add;
 
   FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
     return VariantConstRef(_data != 0 ? _data->getElement(index) : 0);

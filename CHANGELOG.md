@@ -8,6 +8,7 @@ HEAD
 * Fix `9.22337e+18 is outside the range of representable values of type 'long'`
 * Fix comparison operators for `JsonArray`, `JsonArrayConst`, `JsonObject`, and `JsonObjectConst`
 * Remove undocumented `accept()` functions
+* Rename `addElement()` to `add()`
 
 v6.19.4 (2022-04-05)
 -------

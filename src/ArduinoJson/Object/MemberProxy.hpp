@@ -154,9 +154,11 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getOrAddUpstreamMember().set(value);
   }
 
-  FORCE_INLINE VariantRef addElement() const {
-    return getOrAddUpstreamMember().addElement();
+  FORCE_INLINE VariantRef add() const {
+    return getOrAddUpstreamMember().add();
   }
+
+  using ArrayShortcuts<MemberProxy<TObject, TStringRef> >::add;
 
   FORCE_INLINE VariantRef getElement(size_t index) const {
     return getUpstreamMember().getElement(index);

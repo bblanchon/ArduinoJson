@@ -130,9 +130,11 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     return ArrayConstRef(_data);
   }
 
-  VariantRef addElement() const {
+  VariantRef add() const {
     return VariantRef(_pool, arrayAdd(_data, _pool));
   }
+
+  using ArrayShortcuts<ArrayRef>::add;
 
   FORCE_INLINE iterator begin() const {
     if (!_data)

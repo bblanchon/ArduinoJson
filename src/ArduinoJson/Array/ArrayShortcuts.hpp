@@ -31,14 +31,14 @@ class ArrayShortcuts {
   //          std::string, String, ObjectRef
   template <typename T>
   FORCE_INLINE bool add(const T &value) const {
-    return impl()->addElement().set(value);
+    return impl()->add().set(value);
   }
   //
   // bool add(TValue);
   // TValue = char*, const char*, const __FlashStringHelper*
   template <typename T>
   FORCE_INLINE bool add(T *value) const {
-    return impl()->addElement().set(value);
+    return impl()->add().set(value);
   }
 
  private:

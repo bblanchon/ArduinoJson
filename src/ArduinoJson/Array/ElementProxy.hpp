@@ -165,9 +165,11 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return getOrAddUpstreamElement().getOrAddMember(key);
   }
 
-  VariantRef addElement() const {
-    return getOrAddUpstreamElement().addElement();
+  VariantRef add() const {
+    return getOrAddUpstreamElement().add();
   }
+
+  using ArrayShortcuts<ElementProxy<TArray> >::add;
 
   VariantRef getElement(size_t index) const {
     return getOrAddUpstreamElement().getElement(index);

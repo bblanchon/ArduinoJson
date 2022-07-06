@@ -92,7 +92,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   }
 
   ArrayRef createNestedArray() {
-    return addElement().to<ArrayRef>();
+    return add().to<ArrayRef>();
   }
 
   // createNestedArray(char*)
@@ -111,7 +111,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   }
 
   ObjectRef createNestedObject() {
-    return addElement().to<ObjectRef>();
+    return add().to<ObjectRef>();
   }
 
   // createNestedObject(char*)
@@ -254,13 +254,13 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
                                            getStringStoragePolicy(key)));
   }
 
-  FORCE_INLINE VariantRef addElement() {
+  FORCE_INLINE VariantRef add() {
     return VariantRef(&_pool, _data.addElement(&_pool));
   }
 
   template <typename TValue>
   FORCE_INLINE bool add(const TValue& value) {
-    return addElement().set(value);
+    return add().set(value);
   }
 
   // add(char*) const
@@ -268,7 +268,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   // add(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE bool add(TChar* value) {
-    return addElement().set(value);
+    return add().set(value);
   }
 
   FORCE_INLINE void remove(size_t index) {

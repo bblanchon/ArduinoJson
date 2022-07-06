@@ -31,7 +31,7 @@ inline typename enable_if<!is_base_of<JsonDocument, TDestination>::value,
 copyArray(const T* src, size_t len, const TDestination& dst) {
   bool ok = true;
   for (size_t i = 0; i < len; i++) {
-    ok &= copyArray(src[i], dst.addElement());
+    ok &= copyArray(src[i], dst.add());
   }
   return ok;
 }
