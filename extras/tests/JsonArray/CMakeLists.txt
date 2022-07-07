@@ -9,7 +9,6 @@ add_executable(JsonArrayTests
 	copyArray.cpp
 	createNested.cpp
 	equals.cpp
-	get.cpp
 	isNull.cpp
 	iterator.cpp
 	memoryUsage.cpp

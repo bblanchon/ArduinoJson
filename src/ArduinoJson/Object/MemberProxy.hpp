@@ -160,74 +160,30 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
 
   using ArrayShortcuts<MemberProxy<TObject, TStringRef> >::add;
 
-  FORCE_INLINE VariantRef getElement(size_t index) const {
-    return getUpstreamMember().getElement(index);
+  FORCE_INLINE MemoryPool *getPool() const {
+    return _object.getPool();
   }
 
-  FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
-    return getUpstreamMemberConst().getElementConst(index);
+  FORCE_INLINE VariantData *getData() const {
+    return variantGetMember(_object.getData(), adaptString(_key));
   }
 
-  FORCE_INLINE VariantRef getOrAddElement(size_t index) const {
-    return getOrAddUpstreamMember().getOrAddElement(index);
-  }
-
-  // getMember(char*) const
-  // getMember(const char*) const
-  // getMember(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE VariantRef getMember(TChar *key) const {
-    return getUpstreamMember().getMember(key);
-  }
-
-  // getMember(const std::string&) const
-  // getMember(const String&) const
-  template <typename TString>
-  FORCE_INLINE VariantRef getMember(const TString &key) const {
-    return getUpstreamMember().getMember(key);
-  }
-
-  // getMemberConst(char*) const
-  // getMemberConst(const char*) const
-  // getMemberConst(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
-    return getUpstreamMemberConst().getMemberConst(key);
-  }
-
-  // getMemberConst(const std::string&) const
-  // getMemberConst(const String&) const
-  template <typename TString>
-  FORCE_INLINE VariantConstRef getMemberConst(const TString &key) const {
-    return getUpstreamMemberConst().getMemberConst(key);
-  }
-
-  // getOrAddMember(char*) const
-  // getOrAddMember(const char*) const
-  // getOrAddMember(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE VariantRef getOrAddMember(TChar *key) const {
-    return getOrAddUpstreamMember().getOrAddMember(key);
-  }
-
-  // getOrAddMember(const std::string&) const
-  // getOrAddMember(const String&) const
-  template <typename TString>
-  FORCE_INLINE VariantRef getOrAddMember(const TString &key) const {
-    return getOrAddUpstreamMember().getOrAddMember(key);
+  FORCE_INLINE VariantData *getOrCreateData() const {
+    return variantGetOrAddMember(_object.getOrCreateData(), _key,
+                                 _object.getPool());
   }
 
  private:
   FORCE_INLINE VariantRef getUpstreamMember() const {
-    return _object.getMember(_key);
+    return VariantRef(getPool(), getData());
   }
 
   FORCE_INLINE VariantConstRef getUpstreamMemberConst() const {
-    return _object.getMemberConst(_key);
+    return VariantConstRef(getData());
   }
 
   FORCE_INLINE VariantRef getOrAddUpstreamMember() const {
-    return _object.getOrAddMember(_key);
+    return VariantRef(getPool(), getOrCreateData());
   }
 
   friend void convertToJson(const this_type &src, VariantRef dst) {

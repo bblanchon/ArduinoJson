@@ -59,6 +59,10 @@ inline CollectionData *variantToObject(VariantData *var) {
   return &var->toObject();
 }
 
+inline VariantData *variantGetElement(const VariantData *var, size_t index) {
+  return var != 0 ? var->getElement(index) : 0;
+}
+
 inline NO_INLINE VariantData *variantAddElement(VariantData *var,
                                                 MemoryPool *pool) {
   return var != 0 ? var->addElement(pool) : 0;
@@ -70,9 +74,18 @@ inline NO_INLINE VariantData *variantGetOrAddElement(VariantData *var,
   return var != 0 ? var->getOrAddElement(index, pool) : 0;
 }
 
+template <typename AdaptedString>
+VariantData *variantGetMember(const VariantData *var, AdaptedString key) {
+  if (!var)
+    return 0;
+  return var->getMember(key);
+}
+
+// TODO: this function is inconsitent with the others:
+// it should take an adapted string
 template <typename TChar>
-NO_INLINE VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
-                                             MemoryPool *pool) {
+VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
+                                   MemoryPool *pool) {
   if (!var)
     return 0;
   return var->getOrAddMember(adaptString(key), pool,
@@ -80,9 +93,8 @@ NO_INLINE VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
 }
 
 template <typename TString>
-NO_INLINE VariantData *variantGetOrAddMember(VariantData *var,
-                                             const TString &key,
-                                             MemoryPool *pool) {
+VariantData *variantGetOrAddMember(VariantData *var, const TString &key,
+                                   MemoryPool *pool) {
   if (!var)
     return 0;
   return var->getOrAddMember(adaptString(key), pool,

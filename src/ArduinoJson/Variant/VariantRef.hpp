@@ -116,27 +116,8 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     return as<T>();
   }
 
-  FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
-    return VariantConstRef(_data != 0 ? _data->getElement(index) : 0);
-  }
-
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return getElementConst(index);
-  }
-
-  // getMemberConst(const std::string&) const
-  // getMemberConst(const String&) const
-  template <typename TString>
-  FORCE_INLINE VariantConstRef getMemberConst(const TString &key) const {
-    return VariantConstRef(_data ? _data->getMember(adaptString(key)) : 0);
-  }
-
-  // getMemberConst(char*) const
-  // getMemberConst(const char*) const
-  // getMemberConst(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
-    return VariantConstRef(_data ? _data->getMember(adaptString(key)) : 0);
+    return VariantConstRef(variantGetElement(_data, index));
   }
 
   // operator[](const std::string&) const
@@ -145,7 +126,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString &key) const {
-    return getMemberConst(key);
+    return VariantConstRef(variantGetMember(_data, adaptString(key)));
   }
 
   // operator[](char*) const
@@ -155,7 +136,11 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TChar *>::value, VariantConstRef>::type
       operator[](TChar *key) const {
-    return getMemberConst(key);
+    return VariantConstRef(variantGetMember(_data, adaptString(key)));
+  }
+
+  const VariantData *getData() const {
+    return _data;
   }
 };
 
@@ -275,62 +260,6 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   using ArrayShortcuts<VariantRef>::add;
 
-  FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
-    return VariantConstRef(_data != 0 ? _data->getElement(index) : 0);
-  }
-
-  FORCE_INLINE VariantRef getOrAddElement(size_t index) const {
-    return VariantRef(_pool, variantGetOrAddElement(_data, index, _pool));
-  }
-
-  // getMember(const char*) const
-  // getMember(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE VariantRef getMember(TChar *key) const {
-    return VariantRef(_pool,
-                      _data != 0 ? _data->getMember(adaptString(key)) : 0);
-  }
-
-  // getMember(const std::string&) const
-  // getMember(const String&) const
-  template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
-  getMember(const TString &key) const {
-    return VariantRef(_pool,
-                      _data != 0 ? _data->getMember(adaptString(key)) : 0);
-  }
-
-  // getMemberConst(const char*) const
-  // getMemberConst(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
-    return VariantConstRef(_data ? _data->getMember(adaptString(key)) : 0);
-  }
-
-  // getMemberConst(const std::string&) const
-  // getMemberConst(const String&) const
-  template <typename TString>
-  FORCE_INLINE
-      typename enable_if<IsString<TString>::value, VariantConstRef>::type
-      getMemberConst(const TString &key) const {
-    return VariantConstRef(_data ? _data->getMember(adaptString(key)) : 0);
-  }
-
-  // getOrAddMember(char*) const
-  // getOrAddMember(const char*) const
-  // getOrAddMember(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE VariantRef getOrAddMember(TChar *key) const {
-    return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
-  }
-
-  // getOrAddMember(const std::string&) const
-  // getOrAddMember(const String&) const
-  template <typename TString>
-  FORCE_INLINE VariantRef getOrAddMember(const TString &key) const {
-    return VariantRef(_pool, variantGetOrAddMember(_data, key, _pool));
-  }
-
   FORCE_INLINE void remove(size_t index) const {
     if (_data)
       _data->remove(index);
@@ -356,11 +285,23 @@ class VariantRef : public VariantRefBase<VariantData>,
   inline void shallowCopy(VariantConstRef target) {
     if (!_data)
       return;
-    const VariantData *targetData = getData(target);
+    const VariantData *targetData = target.getData();
     if (targetData)
       *_data = *targetData;
     else
       _data->setNull();
+  }
+
+  MemoryPool *getPool() const {
+    return _pool;
+  }
+
+  VariantData *getData() const {
+    return _data;
+  }
+
+  VariantData *getOrCreateData() const {
+    return _data;
   }
 
  private:

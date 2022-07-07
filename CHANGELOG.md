@@ -9,6 +9,26 @@ HEAD
 * Fix comparison operators for `JsonArray`, `JsonArrayConst`, `JsonObject`, and `JsonObjectConst`
 * Remove undocumented `accept()` functions
 * Rename `addElement()` to `add()`
+* Remove `getElement()`, `getOrAddElement()`, `getMember()`, and `getOrAddMember()`
+
+> ### BREAKING CHANGES
+>
+> This release hides `JsonVariant`'s functions that were only intended for internal use.
+> If you were using them in your programs, you must replace with `operator[]` and `to<JsonVariant>()`, like so:
+>
+> ```c++
+> // before
+> JsonVariant a = variant.getElement(idx);
+> JsonVariant b = variant.getOrAddElement(idx);
+> JsonVariant c = variant.getMember(key);
+> JsonVariant d = variant.getOrAddMember(key);
+>
+> // after
+> JsonVariant a = variant[idx];
+> JsonVariant b = variant[idx].to<JsonVariant>();
+> JsonVariant c = variant[key];
+> JsonVariant d = variant[key].to<JsonVariant>();
+> ```
 
 v6.19.4 (2022-04-05)
 -------

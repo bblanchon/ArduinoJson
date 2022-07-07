@@ -13,41 +13,41 @@ template <typename TObject>
 template <typename TString>
 inline ArrayRef ObjectShortcuts<TObject>::createNestedArray(
     const TString& key) const {
-  return impl()->getOrAddMember(key).template to<ArrayRef>();
+  return impl()->operator[](key).template to<ArrayRef>();
 }
 
 template <typename TObject>
 template <typename TChar>
 inline ArrayRef ObjectShortcuts<TObject>::createNestedArray(TChar* key) const {
-  return impl()->getOrAddMember(key).template to<ArrayRef>();
+  return impl()->operator[](key).template to<ArrayRef>();
 }
 
 template <typename TObject>
 template <typename TString>
 inline ObjectRef ObjectShortcuts<TObject>::createNestedObject(
     const TString& key) const {
-  return impl()->getOrAddMember(key).template to<ObjectRef>();
+  return impl()->operator[](key).template to<ObjectRef>();
 }
 
 template <typename TObject>
 template <typename TChar>
 inline ObjectRef ObjectShortcuts<TObject>::createNestedObject(
     TChar* key) const {
-  return impl()->getOrAddMember(key).template to<ObjectRef>();
+  return impl()->operator[](key).template to<ObjectRef>();
 }
 
 template <typename TObject>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, bool>::type
 ObjectShortcuts<TObject>::containsKey(const TString& key) const {
-  return !impl()->getMemberConst(key).isUnbound();
+  return variantGetMember(impl()->getData(), adaptString(key)) != 0;
 }
 
 template <typename TObject>
 template <typename TChar>
 inline typename enable_if<IsString<TChar*>::value, bool>::type
 ObjectShortcuts<TObject>::containsKey(TChar* key) const {
-  return !impl()->getMemberConst(key).isUnbound();
+  return variantGetMember(impl()->getData(), adaptString(key)) != 0;
 }
 
 template <typename TObject>

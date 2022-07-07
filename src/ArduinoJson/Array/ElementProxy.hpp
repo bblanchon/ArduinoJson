@@ -135,53 +135,11 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     return getUpstreamElementConst().memoryUsage();
   }
 
-  template <typename TNestedKey>
-  VariantRef getMember(TNestedKey* key) const {
-    return getUpstreamElement().getMember(key);
-  }
-
-  template <typename TNestedKey>
-  VariantRef getMember(const TNestedKey& key) const {
-    return getUpstreamElement().getMember(key);
-  }
-
-  template <typename TNestedKey>
-  VariantConstRef getMemberConst(TNestedKey* key) const {
-    return getUpstreamElementConst().getMemberConst(key);
-  }
-
-  template <typename TNestedKey>
-  VariantConstRef getMemberConst(const TNestedKey& key) const {
-    return getUpstreamElementConst().getMemberConst(key);
-  }
-
-  template <typename TNestedKey>
-  VariantRef getOrAddMember(TNestedKey* key) const {
-    return getOrAddUpstreamElement().getOrAddMember(key);
-  }
-
-  template <typename TNestedKey>
-  VariantRef getOrAddMember(const TNestedKey& key) const {
-    return getOrAddUpstreamElement().getOrAddMember(key);
-  }
-
   VariantRef add() const {
     return getOrAddUpstreamElement().add();
   }
 
   using ArrayShortcuts<ElementProxy<TArray> >::add;
-
-  VariantRef getElement(size_t index) const {
-    return getOrAddUpstreamElement().getElement(index);
-  }
-
-  VariantConstRef getElementConst(size_t index) const {
-    return getUpstreamElementConst().getElementConst(index);
-  }
-
-  VariantRef getOrAddElement(size_t index) const {
-    return getOrAddUpstreamElement().getOrAddElement(index);
-  }
 
   FORCE_INLINE void remove(size_t index) const {
     getUpstreamElement().remove(index);
@@ -202,17 +160,30 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     getUpstreamElement().remove(key);
   }
 
+  FORCE_INLINE MemoryPool* getPool() const {
+    return _array.getPool();
+  }
+
+  FORCE_INLINE VariantData* getData() const {
+    return variantGetElement(_array.getData(), _index);
+  }
+
+  FORCE_INLINE VariantData* getOrCreateData() const {
+    return variantGetOrAddElement(_array.getOrCreateData(), _index,
+                                  _array.getPool());
+  }
+
  private:
   FORCE_INLINE VariantRef getUpstreamElement() const {
-    return _array.getElement(_index);
+    return VariantRef(getPool(), getData());
   }
 
   FORCE_INLINE VariantConstRef getUpstreamElementConst() const {
-    return _array.getElementConst(_index);
+    return VariantConstRef(getData());
   }
 
   FORCE_INLINE VariantRef getOrAddUpstreamElement() const {
-    return _array.getOrAddElement(_index);
+    return VariantRef(getPool(), getOrCreateData());
   }
 
   friend void convertToJson(const this_type& src, VariantRef dst) {
