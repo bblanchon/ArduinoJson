@@ -15,6 +15,8 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 class JsonDocument : public VariantOperators<const JsonDocument&> {
+  friend class VariantAttorney;
+
  public:
   template <typename T>
   T as() {
@@ -268,7 +270,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   JsonDocument(const JsonDocument&);
   JsonDocument& operator=(const JsonDocument&);
 
- public:
+ protected:
   MemoryPool* getPool() {
     return &_pool;
   }

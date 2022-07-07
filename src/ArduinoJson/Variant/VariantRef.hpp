@@ -11,6 +11,7 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/Converter.hpp>
+#include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
@@ -50,16 +51,14 @@ class VariantRefBase : public VariantTag {
  protected:
   VariantRefBase(TData *data) : _data(data) {}
   TData *_data;
-
-  friend TData *getData(const VariantRefBase &variant) {
-    return variant._data;
-  }
 };
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
                         public VariantOperators<VariantConstRef>,
                         public VariantShortcuts<VariantConstRef> {
   typedef VariantRefBase<const VariantData> base_type;
+
+  friend class VariantAttorney;
 
  public:
   VariantConstRef() : base_type(0) {}
@@ -139,6 +138,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     return VariantConstRef(variantGetMember(_data, adaptString(key)));
   }
 
+ protected:
   const VariantData *getData() const {
     return _data;
   }
@@ -285,7 +285,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   inline void shallowCopy(VariantConstRef target) {
     if (!_data)
       return;
-    const VariantData *targetData = target.getData();
+    const VariantData *targetData = VariantAttorney::getData(target);
     if (targetData)
       *_data = *targetData;
     else
@@ -306,14 +306,10 @@ class VariantRef : public VariantRefBase<VariantData>,
 
  private:
   MemoryPool *_pool;
-
-  friend MemoryPool *getPool(const VariantRef &variant) {
-    return variant._pool;
-  }
 };
 
 template <>
-struct Converter<VariantRef> {
+struct Converter<VariantRef> : private VariantAttorney {
   static void toJson(VariantRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
@@ -336,7 +332,7 @@ struct Converter<VariantRef> {
 };
 
 template <>
-struct Converter<VariantConstRef> {
+struct Converter<VariantConstRef> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }

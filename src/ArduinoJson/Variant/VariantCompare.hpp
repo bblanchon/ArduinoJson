@@ -180,7 +180,8 @@ struct VariantComparer : ComparerBase {
  private:
   template <typename TComparer>
   CompareResult accept(TComparer &comparer) {
-    CompareResult reversedResult = variantAccept(getData(rhs), comparer);
+    CompareResult reversedResult =
+        variantAccept(VariantAttorney::getData(rhs), comparer);
     switch (reversedResult) {
       case COMPARE_RESULT_GREATER:
         return COMPARE_RESULT_LESS;
@@ -203,7 +204,7 @@ struct Comparer<
 template <typename T>
 CompareResult compare(VariantConstRef lhs, const T &rhs) {
   Comparer<T> comparer(rhs);
-  return variantAccept(getData(lhs), comparer);
+  return variantAccept(VariantAttorney::getData(lhs), comparer);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

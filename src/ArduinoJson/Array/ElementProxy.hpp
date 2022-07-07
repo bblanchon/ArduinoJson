@@ -22,6 +22,8 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
                      public VariantTag {
   typedef ElementProxy<TArray> this_type;
 
+  friend class VariantAttorney;
+
  public:
   FORCE_INLINE ElementProxy(TArray array, size_t index)
       : _array(array), _index(index) {}
@@ -160,17 +162,18 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
     getUpstreamElement().remove(key);
   }
 
+ protected:
   FORCE_INLINE MemoryPool* getPool() const {
-    return _array.getPool();
+    return VariantAttorney::getPool(_array);
   }
 
   FORCE_INLINE VariantData* getData() const {
-    return variantGetElement(_array.getData(), _index);
+    return variantGetElement(VariantAttorney::getData(_array), _index);
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {
-    return variantGetOrAddElement(_array.getOrCreateData(), _index,
-                                  _array.getPool());
+    return variantGetOrAddElement(VariantAttorney::getOrCreateData(_array),
+                                  _index, VariantAttorney::getPool(_array));
   }
 
  private:

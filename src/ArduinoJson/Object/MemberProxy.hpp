@@ -25,6 +25,8 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
                     public VariantTag {
   typedef MemberProxy<TObject, TStringRef> this_type;
 
+  friend class VariantAttorney;
+
  public:
   FORCE_INLINE MemberProxy(TObject variant, TStringRef key)
       : _object(variant), _key(key) {}
@@ -160,17 +162,19 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
 
   using ArrayShortcuts<MemberProxy<TObject, TStringRef> >::add;
 
+ protected:
   FORCE_INLINE MemoryPool *getPool() const {
-    return _object.getPool();
+    return VariantAttorney::getPool(_object);
   }
 
   FORCE_INLINE VariantData *getData() const {
-    return variantGetMember(_object.getData(), adaptString(_key));
+    return variantGetMember(VariantAttorney::getData(_object),
+                            adaptString(_key));
   }
 
   FORCE_INLINE VariantData *getOrCreateData() const {
-    return variantGetOrAddMember(_object.getOrCreateData(), _key,
-                                 _object.getPool());
+    return variantGetOrAddMember(VariantAttorney::getOrCreateData(_object),
+                                 _key, VariantAttorney::getPool(_object));
   }
 
  private:

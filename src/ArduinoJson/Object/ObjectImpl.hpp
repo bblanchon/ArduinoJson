@@ -40,14 +40,16 @@ template <typename TObject>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, bool>::type
 ObjectShortcuts<TObject>::containsKey(const TString& key) const {
-  return variantGetMember(impl()->getData(), adaptString(key)) != 0;
+  return variantGetMember(VariantAttorney::getData(*impl()),
+                          adaptString(key)) != 0;
 }
 
 template <typename TObject>
 template <typename TChar>
 inline typename enable_if<IsString<TChar*>::value, bool>::type
 ObjectShortcuts<TObject>::containsKey(TChar* key) const {
-  return variantGetMember(impl()->getData(), adaptString(key)) != 0;
+  return variantGetMember(VariantAttorney::getData(*impl()),
+                          adaptString(key)) != 0;
 }
 
 template <typename TObject>

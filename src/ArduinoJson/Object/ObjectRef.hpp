@@ -125,6 +125,8 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
                   public VariantOperators<ObjectRef> {
   typedef ObjectRefBase<CollectionData> base_type;
 
+  friend class VariantAttorney;
+
  public:
   typedef ObjectIterator iterator;
 
@@ -188,6 +190,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
     objectRemove(_data, adaptString(key));
   }
 
+ protected:
   MemoryPool* getPool() const {
     return _pool;
   }
@@ -205,7 +208,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
 };
 
 template <>
-struct Converter<ObjectConstRef> {
+struct Converter<ObjectConstRef> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
@@ -222,7 +225,7 @@ struct Converter<ObjectConstRef> {
 };
 
 template <>
-struct Converter<ObjectRef> {
+struct Converter<ObjectRef> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }

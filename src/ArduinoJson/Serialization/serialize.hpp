@@ -12,7 +12,7 @@ namespace ARDUINOJSON_NAMESPACE {
 template <template <typename> class TSerializer, typename TWriter>
 size_t doSerialize(VariantConstRef source, TWriter writer) {
   TSerializer<TWriter> serializer(writer);
-  return variantAccept(getData(source), serializer);
+  return variantAccept(VariantAttorney::getData(source), serializer);
 }
 
 template <template <typename> class TSerializer, typename TDestination>

@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Array/ArrayFunctions.hpp>
 #include <ArduinoJson/Array/ArrayIterator.hpp>
+#include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
 // Returns the size (in bytes) of an array with n elements.
@@ -105,6 +106,8 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
                  public VariantOperators<ArrayRef> {
   typedef ArrayRefBase<CollectionData> base_type;
 
+  friend class VariantAttorney;
+
  public:
   typedef ArrayIterator iterator;
 
@@ -168,6 +171,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     _data->clear();
   }
 
+ protected:
   MemoryPool* getPool() const {
     return _pool;
   }
@@ -185,7 +189,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
 };
 
 template <>
-struct Converter<ArrayConstRef> {
+struct Converter<ArrayConstRef> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
@@ -202,7 +206,7 @@ struct Converter<ArrayConstRef> {
 };
 
 template <>
-struct Converter<ArrayRef> {
+struct Converter<ArrayRef> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
