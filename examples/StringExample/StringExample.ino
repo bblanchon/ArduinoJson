@@ -20,42 +20,42 @@ void setup() {
   String input =
       "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
   deserializeJson(doc, input);
-  JsonObject obj = doc.as<JsonObject>();
 
-  // You can use a String to get an element of a JsonObject
+  // You can use a String as a key to get a member from JsonDocument
   // No duplication is done.
-  long time = obj[String("time")];
+  long time = doc[String("time")];
 
-  // You can use a String to set an element of a JsonObject
+  // You can use a String as a key to set a member of a JsonDocument
   // WARNING: the content of the String will be duplicated in the JsonDocument.
-  obj[String("time")] = time;
+  doc[String("time")] = time;
 
-  // You can get a String from a JsonObject or JsonArray:
+  // You can get the content of a JsonVariant as a String
   // No duplication is done, at least not in the JsonDocument.
-  String sensor = obj["sensor"];
+  String sensor = doc["sensor"];
 
   // Unfortunately, the following doesn't work (issue #118):
-  // sensor = obj["sensor"]; // <-  error "ambiguous overload for 'operator='"
+  // sensor = doc["sensor"]; // <-  error "ambiguous overload for 'operator='"
   // As a workaround, you need to replace by:
-  sensor = obj["sensor"].as<String>();
+  sensor = doc["sensor"].as<String>();
 
-  // You can set a String to a JsonObject or JsonArray:
+  // You can set a String as the content of a JsonVariant
   // WARNING: the content of the String will be duplicated in the JsonDocument.
-  obj["sensor"] = sensor;
+  doc["sensor"] = sensor;
 
   // It works with serialized() too:
-  obj["sensor"] = serialized(sensor);
+  doc["sensor"] = serialized(sensor);
 
   // You can also concatenate strings
   // WARNING: the content of the String will be duplicated in the JsonDocument.
-  obj[String("sen") + "sor"] = String("gp") + "s";
+  doc[String("sen") + "sor"] = String("gp") + "s";
 
   // You can compare the content of a JsonObject with a String
-  if (obj["sensor"] == sensor) {
+  if (doc["sensor"] == sensor) {
     // ...
   }
 
   // Lastly, you can print the resulting JSON to a String
+  // WARNING: it doesn't replace the content but appends to it
   String output;
   serializeJson(doc, output);
 }
