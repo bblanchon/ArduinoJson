@@ -25,9 +25,9 @@ HEAD
 >
 > // after
 > JsonVariant a = variant[idx];
-> JsonVariant b = variant[idx].to<JsonVariant>();
+> JsonVariant b = idx < variant.size() ? variant[idx] : variant[idx].to<JsonVariant>();
 > JsonVariant c = variant[key];
-> JsonVariant d = variant[key].to<JsonVariant>();
+> JsonVariant d = variant.containsKey(key) ? variant[key] : variant[key].to<JsonVariant>();
 > ```
 
 v6.19.4 (2022-04-05)
