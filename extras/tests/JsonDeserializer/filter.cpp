@@ -72,6 +72,15 @@ TEST_CASE("Filtering") {
       JSON_OBJECT_SIZE(1) + 8
     },
     {
+      // Member is a number, but filter wants an array
+      "{\"example\":42}",
+      "{\"example\":[true]}",
+      10,
+      DeserializationError::Ok,
+      "{\"example\":null}",
+      JSON_OBJECT_SIZE(1) + 8
+    },
+    {
       // Input is an array, but filter wants an object
       "[\"hello\",\"world\"]",
       "{}",
@@ -117,8 +126,26 @@ TEST_CASE("Filtering") {
       JSON_OBJECT_SIZE(1) + 8
     },
     {
-      // can skip a boolean
+      // skip false
       "{\"a_bool\":false,example:42}",
+      "{\"example\":true}",
+      10,
+      DeserializationError::Ok,
+      "{\"example\":42}",
+      JSON_OBJECT_SIZE(1) + 8
+    },
+    {
+      // skip true
+      "{\"a_bool\":true,example:42}",
+      "{\"example\":true}",
+      10,
+      DeserializationError::Ok,
+      "{\"example\":42}",
+      JSON_OBJECT_SIZE(1) + 8
+    },
+    {
+      // skip null
+      "{\"a_bool\":null,example:42}",
       "{\"example\":true}",
       10,
       DeserializationError::Ok,
@@ -618,7 +645,7 @@ TEST_CASE("Filtering") {
       0
     },
     {
-      // incomplete after after key of a skipped object
+      // incomplete comment after key of a skipped object
       "{\"example\"/*:2}",
       "false",
       10,
@@ -636,8 +663,17 @@ TEST_CASE("Filtering") {
       0
     },
     {
-      // incomplete after after value of a skipped object
+      // incomplete comment after value of a skipped object
       "{\"example\":2/*}",
+      "false",
+      10,
+      DeserializationError::IncompleteInput,
+      "null",
+      0
+    },
+     {
+      // incomplete comment after comma in skipped object
+      "{\"example\":2,/*}",
       "false",
       10,
       DeserializationError::IncompleteInput,

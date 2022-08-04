@@ -85,7 +85,22 @@ class JsonDeserializer {
         if (filter.allowValue())
           return parseStringValue(variant);
         else
-          return skipString();
+          return skipQuotedString();
+
+      case 't':
+        if (filter.allowValue())
+          variant.setBoolean(true);
+        return skipKeyword("true");
+
+      case 'f':
+        if (filter.allowValue())
+          variant.setBoolean(false);
+        return skipKeyword("false");
+
+      case 'n':
+        // the variant should already by null, except if the same object key was
+        // used twice, as in {"a":1,"a":null}
+        return skipKeyword("null");
 
       default:
         if (filter.allowValue())
@@ -111,7 +126,16 @@ class JsonDeserializer {
 
       case '\"':
       case '\'':
-        return skipString();
+        return skipQuotedString();
+
+      case 't':
+        return skipKeyword("true");
+
+      case 'f':
+        return skipKeyword("false");
+
+      case 'n':
+        return skipKeyword("null");
 
       default:
         return skipNumericValue();
@@ -310,7 +334,7 @@ class JsonDeserializer {
     // Read each key value pair
     for (;;) {
       // Skip key
-      err = skipVariant(nestingLimit.decrement());
+      err = skipKey();
       if (err)
         return err;
 
@@ -338,6 +362,10 @@ class JsonDeserializer {
         return DeserializationError::Ok;
       if (!eat(','))
         return DeserializationError::InvalidInput;
+
+      err = skipSpacesAndComments();
+      if (err)
+        return err;
     }
   }
 
@@ -438,7 +466,15 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError::Code skipString() {
+  DeserializationError::Code skipKey() {
+    if (isQuote(current())) {
+      return skipQuotedString();
+    } else {
+      return skipNonQuotedString();
+    }
+  }
+
+  DeserializationError::Code skipQuotedString() {
     const char stopChar = current();
 
     move();
@@ -458,36 +494,25 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
+  DeserializationError::Code skipNonQuotedString() {
+    char c = current();
+    while (canBeInNonQuotedString(c)) {
+      move();
+      c = current();
+    }
+    return DeserializationError::Ok;
+  }
+
   DeserializationError::Code parseNumericValue(VariantData &result) {
     uint8_t n = 0;
 
     char c = current();
-    while (canBeInNonQuotedString(c) && n < 63) {
+    while (canBeInNumber(c) && n < 63) {
       move();
       _buffer[n++] = c;
       c = current();
     }
     _buffer[n] = 0;
-
-    c = _buffer[0];
-    if (c == 't') {  // true
-      result.setBoolean(true);
-      if (n != 4)
-        return DeserializationError::IncompleteInput;
-      return DeserializationError::Ok;
-    }
-    if (c == 'f') {  // false
-      result.setBoolean(false);
-      if (n != 5)
-        return DeserializationError::IncompleteInput;
-      return DeserializationError::Ok;
-    }
-    if (c == 'n') {  // null
-      // the variant is already null
-      if (n != 4)
-        return DeserializationError::IncompleteInput;
-      return DeserializationError::Ok;
-    }
 
     if (!parseNumber(_buffer, result))
       return DeserializationError::InvalidInput;
@@ -497,7 +522,7 @@ class JsonDeserializer {
 
   DeserializationError::Code skipNumericValue() {
     char c = current();
-    while (canBeInNonQuotedString(c)) {
+    while (canBeInNumber(c)) {
       move();
       c = current();
     }
@@ -523,9 +548,18 @@ class JsonDeserializer {
     return min <= c && c <= max;
   }
 
+  static inline bool canBeInNumber(char c) {
+    return isBetween(c, '0', '9') || c == '+' || c == '-' || c == '.' ||
+#if ARDUINOJSON_ENABLE_NAN || ARDUINOJSON_ENABLE_INFINITY
+           isBetween(c, 'A', 'Z') || isBetween(c, 'a', 'z');
+#else
+           c == 'e' || c == 'E';
+#endif
+  }
+
   static inline bool canBeInNonQuotedString(char c) {
     return isBetween(c, '0', '9') || isBetween(c, '_', 'z') ||
-           isBetween(c, 'A', 'Z') || c == '+' || c == '-' || c == '.';
+           isBetween(c, 'A', 'Z');
   }
 
   static inline bool isQuote(char c) {
@@ -603,6 +637,19 @@ class JsonDeserializer {
           return DeserializationError::Ok;
       }
     }
+  }
+
+  DeserializationError::Code skipKeyword(const char *s) {
+    while (*s) {
+      char c = current();
+      if (c == '\0')
+        return DeserializationError::IncompleteInput;
+      if (*s != c)
+        return DeserializationError::InvalidInput;
+      ++s;
+      move();
+    }
+    return DeserializationError::Ok;
   }
 
   TStringStorage _stringStorage;
