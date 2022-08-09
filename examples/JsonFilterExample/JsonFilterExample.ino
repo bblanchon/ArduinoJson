@@ -2,7 +2,7 @@
 // Copyright © 2014-2022, Benoit BLANCHON
 // MIT License
 //
-// This example shows how to use DeserializationOpion::Filter
+// This example shows how to use DeserializationOption::Filter
 //
 // https://arduinojson.org/v6/example/filter/
 
