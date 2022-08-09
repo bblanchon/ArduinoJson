@@ -30,20 +30,20 @@ class ArrayShortcuts {
   // TValue = bool, long, int, short, float, double, serialized, VariantRef,
   //          std::string, String, ObjectRef
   template <typename T>
-  FORCE_INLINE bool add(const T &value) const {
+  FORCE_INLINE bool add(const T& value) const {
     return impl()->add().set(value);
   }
   //
   // bool add(TValue);
   // TValue = char*, const char*, const __FlashStringHelper*
   template <typename T>
-  FORCE_INLINE bool add(T *value) const {
+  FORCE_INLINE bool add(T* value) const {
     return impl()->add().set(value);
   }
 
  private:
-  const TArray *impl() const {
-    return static_cast<const TArray *>(this);
+  const TArray* impl() const {
+    return static_cast<const TArray*>(this);
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

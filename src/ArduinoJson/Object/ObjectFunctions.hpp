@@ -9,7 +9,7 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TAdaptedString>
-inline VariantData *objectGetMember(const CollectionData *obj,
+inline VariantData* objectGetMember(const CollectionData* obj,
                                     TAdaptedString key) {
   if (!obj)
     return 0;
@@ -17,7 +17,7 @@ inline VariantData *objectGetMember(const CollectionData *obj,
 }
 
 template <typename TAdaptedString>
-void objectRemove(CollectionData *obj, TAdaptedString key) {
+void objectRemove(CollectionData* obj, TAdaptedString key) {
   if (!obj)
     return;
   obj->removeMember(key);

@@ -20,7 +20,7 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
  public:
-  JsonDeserializer(MemoryPool *pool, TReader reader,
+  JsonDeserializer(MemoryPool* pool, TReader reader,
                    TStringStorage stringStorage)
       : _stringStorage(stringStorage),
         _foundSomething(false),
@@ -28,7 +28,7 @@ class JsonDeserializer {
         _pool(pool) {}
 
   template <typename TFilter>
-  DeserializationError parse(VariantData &variant, TFilter filter,
+  DeserializationError parse(VariantData& variant, TFilter filter,
                              NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
@@ -59,7 +59,7 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError::Code parseVariant(VariantData &variant, TFilter filter,
+  DeserializationError::Code parseVariant(VariantData& variant, TFilter filter,
                                           NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
@@ -143,7 +143,7 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError::Code parseArray(CollectionData &array, TFilter filter,
+  DeserializationError::Code parseArray(CollectionData& array, TFilter filter,
                                         NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
@@ -169,7 +169,7 @@ class JsonDeserializer {
     for (;;) {
       if (memberFilter.allow()) {
         // Allocate slot in array
-        VariantData *value = array.addElement(_pool);
+        VariantData* value = array.addElement(_pool);
         if (!value)
           return DeserializationError::NoMemory;
 
@@ -227,7 +227,7 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError::Code parseObject(CollectionData &object, TFilter filter,
+  DeserializationError::Code parseObject(CollectionData& object, TFilter filter,
                                          NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
@@ -268,14 +268,14 @@ class JsonDeserializer {
       TFilter memberFilter = filter[key.c_str()];
 
       if (memberFilter.allow()) {
-        VariantData *variant = object.getMember(adaptString(key.c_str()));
+        VariantData* variant = object.getMember(adaptString(key.c_str()));
         if (!variant) {
           // Save key in memory pool.
           // This MUST be done before adding the slot.
           key = _stringStorage.save();
 
           // Allocate slot in object
-          VariantSlot *slot = object.addSlot(_pool);
+          VariantSlot* slot = object.addSlot(_pool);
           if (!slot)
             return DeserializationError::NoMemory;
 
@@ -378,7 +378,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError::Code parseStringValue(VariantData &variant) {
+  DeserializationError::Code parseStringValue(VariantData& variant) {
     DeserializationError::Code err;
 
     _stringStorage.startString();
@@ -503,7 +503,7 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError::Code parseNumericValue(VariantData &result) {
+  DeserializationError::Code parseNumericValue(VariantData& result) {
     uint8_t n = 0;
 
     char c = current();
@@ -529,7 +529,7 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError::Code parseHex4(uint16_t &result) {
+  DeserializationError::Code parseHex4(uint16_t& result) {
     result = 0;
     for (uint8_t i = 0; i < 4; ++i) {
       char digit = current();
@@ -639,7 +639,7 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError::Code skipKeyword(const char *s) {
+  DeserializationError::Code skipKeyword(const char* s) {
     while (*s) {
       char c = current();
       if (c == '\0')
@@ -655,7 +655,7 @@ class JsonDeserializer {
   TStringStorage _stringStorage;
   bool _foundSomething;
   Latch<TReader> _latch;
-  MemoryPool *_pool;
+  MemoryPool* _pool;
   char _buffer[64];  // using a member instead of a local variable because it
                      // ended in the recursive path after compiler inlined the
                      // code
@@ -667,7 +667,7 @@ class JsonDeserializer {
 // ... = NestingLimit
 template <typename TString>
 DeserializationError deserializeJson(
-    JsonDocument &doc, const TString &input,
+    JsonDocument& doc, const TString& input,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
@@ -675,13 +675,13 @@ DeserializationError deserializeJson(
 // ... = Filter, NestingLimit
 template <typename TString>
 DeserializationError deserializeJson(
-    JsonDocument &doc, const TString &input, Filter filter,
+    JsonDocument& doc, const TString& input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 // ... = NestingLimit, Filter
 template <typename TString>
-DeserializationError deserializeJson(JsonDocument &doc, const TString &input,
+DeserializationError deserializeJson(JsonDocument& doc, const TString& input,
                                      NestingLimit nestingLimit, Filter filter) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
@@ -692,7 +692,7 @@ DeserializationError deserializeJson(JsonDocument &doc, const TString &input,
 // ... = NestingLimit
 template <typename TStream>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TStream &input,
+    JsonDocument& doc, TStream& input,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
@@ -700,13 +700,13 @@ DeserializationError deserializeJson(
 // ... = Filter, NestingLimit
 template <typename TStream>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TStream &input, Filter filter,
+    JsonDocument& doc, TStream& input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 // ... = NestingLimit, Filter
 template <typename TStream>
-DeserializationError deserializeJson(JsonDocument &doc, TStream &input,
+DeserializationError deserializeJson(JsonDocument& doc, TStream& input,
                                      NestingLimit nestingLimit, Filter filter) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
@@ -717,7 +717,7 @@ DeserializationError deserializeJson(JsonDocument &doc, TStream &input,
 // ... = NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TChar *input,
+    JsonDocument& doc, TChar* input,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
@@ -725,13 +725,13 @@ DeserializationError deserializeJson(
 // ... = Filter, NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TChar *input, Filter filter,
+    JsonDocument& doc, TChar* input, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 // ... = NestingLimit, Filter
 template <typename TChar>
-DeserializationError deserializeJson(JsonDocument &doc, TChar *input,
+DeserializationError deserializeJson(JsonDocument& doc, TChar* input,
                                      NestingLimit nestingLimit, Filter filter) {
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
@@ -742,7 +742,7 @@ DeserializationError deserializeJson(JsonDocument &doc, TChar *input,
 // ... = NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TChar *input, size_t inputSize,
+    JsonDocument& doc, TChar* input, size_t inputSize,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,
                                        AllowAllFilter());
@@ -750,14 +750,14 @@ DeserializationError deserializeJson(
 // ... = Filter, NestingLimit
 template <typename TChar>
 DeserializationError deserializeJson(
-    JsonDocument &doc, TChar *input, size_t inputSize, Filter filter,
+    JsonDocument& doc, TChar* input, size_t inputSize, Filter filter,
     NestingLimit nestingLimit = NestingLimit()) {
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,
                                        filter);
 }
 // ... = NestingLimit, Filter
 template <typename TChar>
-DeserializationError deserializeJson(JsonDocument &doc, TChar *input,
+DeserializationError deserializeJson(JsonDocument& doc, TChar* input,
                                      size_t inputSize,
                                      NestingLimit nestingLimit, Filter filter) {
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,

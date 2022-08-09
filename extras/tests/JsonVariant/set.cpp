@@ -15,7 +15,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     char str[16];
 
     strcpy(str, "hello");
-    bool result = variant.set(static_cast<const char *>(str));
+    bool result = variant.set(static_cast<const char*>(str));
     strcpy(str, "world");
 
     REQUIRE(result == true);
@@ -23,7 +23,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
   }
 
   SECTION("(const char*)0") {
-    bool result = variant.set(static_cast<const char *>(0));
+    bool result = variant.set(static_cast<const char*>(0));
 
     REQUIRE(result == true);
     REQUIRE(variant.isNull());
@@ -41,7 +41,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
   }
 
   SECTION("(char*)0") {
-    bool result = variant.set(static_cast<char *>(0));
+    bool result = variant.set(static_cast<char*>(0));
 
     REQUIRE(result == true);
     REQUIRE(variant.isNull());
@@ -51,7 +51,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     char str[16];
 
     strcpy(str, "hello");
-    bool result = variant.set(reinterpret_cast<unsigned char *>(str));
+    bool result = variant.set(reinterpret_cast<unsigned char*>(str));
     strcpy(str, "world");
 
     REQUIRE(result == true);
@@ -62,7 +62,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     char str[16];
 
     strcpy(str, "hello");
-    bool result = variant.set(reinterpret_cast<signed char *>(str));
+    bool result = variant.set(reinterpret_cast<signed char*>(str));
     strcpy(str, "world");
 
     REQUIRE(result == true);

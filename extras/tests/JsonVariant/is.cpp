@@ -19,7 +19,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<JsonVariant>() == false);
     CHECK(variant.is<JsonVariantConst>() == false);
     CHECK(variant.is<bool>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<int>() == false);
     CHECK(variant.is<std::string>() == false);
     CHECK(variant.is<JsonString>() == false);
@@ -34,7 +34,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<JsonObject>() == false);
     CHECK(variant.is<JsonArray>() == false);
     CHECK(variant.is<bool>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<int>() == false);
     CHECK(variant.is<std::string>() == false);
     CHECK(variant.is<JsonString>() == false);
@@ -50,7 +50,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<JsonVariantConst>() == true);
     CHECK(variant.is<JsonObject>() == false);
     CHECK(variant.is<JsonArray>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<int>() == false);
     CHECK(variant.is<std::string>() == false);
     CHECK(variant.is<JsonString>() == false);
@@ -66,7 +66,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<JsonVariantConst>() == true);
     CHECK(variant.is<JsonObject>() == false);
     CHECK(variant.is<JsonArray>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<int>() == false);
     CHECK(variant.is<std::string>() == false);
     CHECK(variant.is<JsonString>() == false);
@@ -88,7 +88,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<bool>() == false);
     CHECK(variant.is<JsonObject>() == false);
     CHECK(variant.is<JsonArray>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<std::string>() == false);
     CHECK(variant.is<JsonString>() == false);
   }
@@ -103,7 +103,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<bool>() == false);
     CHECK(variant.is<JsonObject>() == false);
     CHECK(variant.is<JsonArray>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<int>() == false);
     CHECK(variant.is<std::string>() == false);
     CHECK(variant.is<JsonString>() == false);
@@ -113,8 +113,8 @@ TEST_CASE("JsonVariant::is<T>()") {
   SECTION("const char*") {
     variant.set("4.2");
 
-    CHECK(variant.is<const char *>() == true);
-    CHECK(variant.is<const char *>() == true);
+    CHECK(variant.is<const char*>() == true);
+    CHECK(variant.is<const char*>() == true);
     CHECK(variant.is<std::string>() == true);
     CHECK(variant.is<JsonString>() == true);
     CHECK(variant.is<JsonVariant>() == true);
@@ -140,7 +140,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<int>() == false);
     CHECK(variant.is<float>() == false);
     CHECK(variant.is<bool>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<MYENUM2>() == false);
   }
 
@@ -156,7 +156,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<int>() == false);
     CHECK(variant.is<float>() == false);
     CHECK(variant.is<bool>() == false);
-    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<const char*>() == false);
     CHECK(variant.is<MYENUM2>() == false);
     CHECK(variant.is<JsonVariant>() == true);
     CHECK(variant.is<JsonVariantConst>() == true);
@@ -178,7 +178,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<JsonVariant>() == false);
     CHECK(cvariant.is<JsonVariantConst>() == false);
     CHECK(cvariant.is<bool>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<int>() == false);
     CHECK(cvariant.is<std::string>() == false);
     CHECK(cvariant.is<JsonString>() == false);
@@ -192,7 +192,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<JsonArray>() == false);
     CHECK(cvariant.is<JsonVariant>() == false);
     CHECK(cvariant.is<bool>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<int>() == false);
     CHECK(cvariant.is<std::string>() == false);
     CHECK(cvariant.is<JsonString>() == false);
@@ -208,7 +208,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<JsonVariant>() == false);
     CHECK(cvariant.is<JsonObject>() == false);
     CHECK(cvariant.is<JsonArray>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<int>() == false);
     CHECK(cvariant.is<std::string>() == false);
     CHECK(cvariant.is<JsonString>() == false);
@@ -224,7 +224,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<JsonVariant>() == false);
     CHECK(cvariant.is<JsonObject>() == false);
     CHECK(cvariant.is<JsonArray>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<int>() == false);
     CHECK(cvariant.is<std::string>() == false);
     CHECK(cvariant.is<JsonString>() == false);
@@ -246,7 +246,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<JsonObject>() == false);
     CHECK(cvariant.is<JsonArray>() == false);
     CHECK(cvariant.is<JsonVariant>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<std::string>() == false);
     CHECK(cvariant.is<JsonString>() == false);
   }
@@ -261,7 +261,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<JsonObject>() == false);
     CHECK(cvariant.is<JsonArray>() == false);
     CHECK(cvariant.is<JsonVariant>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<int>() == false);
     CHECK(cvariant.is<std::string>() == false);
     CHECK(cvariant.is<JsonString>() == false);
@@ -271,8 +271,8 @@ TEST_CASE("JsonVariantConst::is<T>()") {
   SECTION("const char*") {
     variant.set("4.2");
 
-    CHECK(cvariant.is<const char *>() == true);
-    CHECK(cvariant.is<const char *>() == true);
+    CHECK(cvariant.is<const char*>() == true);
+    CHECK(cvariant.is<const char*>() == true);
     CHECK(cvariant.is<std::string>() == true);
     CHECK(cvariant.is<JsonString>() == true);
     CHECK(cvariant.is<double>() == false);
@@ -297,7 +297,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<int>() == false);
     CHECK(cvariant.is<float>() == false);
     CHECK(cvariant.is<bool>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<MYENUM2>() == false);
   }
 
@@ -313,7 +313,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<int>() == false);
     CHECK(cvariant.is<float>() == false);
     CHECK(cvariant.is<bool>() == false);
-    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<const char*>() == false);
     CHECK(cvariant.is<MYENUM2>() == false);
   }
 }

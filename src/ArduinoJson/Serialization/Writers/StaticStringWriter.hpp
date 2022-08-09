@@ -10,7 +10,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class StaticStringWriter {
  public:
-  StaticStringWriter(char *buf, size_t size) : end(buf + size), p(buf) {}
+  StaticStringWriter(char* buf, size_t size) : end(buf + size), p(buf) {}
 
   size_t write(uint8_t c) {
     if (p >= end)
@@ -19,8 +19,8 @@ class StaticStringWriter {
     return 1;
   }
 
-  size_t write(const uint8_t *s, size_t n) {
-    char *begin = p;
+  size_t write(const uint8_t* s, size_t n) {
+    char* begin = p;
     while (p < end && n > 0) {
       *p++ = static_cast<char>(*s++);
       n--;
@@ -29,7 +29,7 @@ class StaticStringWriter {
   }
 
  private:
-  char *end;
-  char *p;
+  char* end;
+  char* p;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

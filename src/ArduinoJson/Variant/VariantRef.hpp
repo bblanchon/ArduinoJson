@@ -49,8 +49,8 @@ class VariantRefBase : public VariantTag {
   }
 
  protected:
-  VariantRefBase(TData *data) : _data(data) {}
-  TData *_data;
+  VariantRefBase(TData* data) : _data(data) {}
+  TData* _data;
 };
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
@@ -62,21 +62,21 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
 
  public:
   VariantConstRef() : base_type(0) {}
-  explicit VariantConstRef(const VariantData *data) : base_type(data) {}
+  explicit VariantConstRef(const VariantData* data) : base_type(data) {}
 
   template <typename T>
   FORCE_INLINE
-      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+      typename enable_if<!is_same<T, char*>::value && !is_same<T, char>::value,
                          T>::type
       as() const {
     return Converter<T>::fromJson(*this);
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char *>::value, const char *>::type
+  FORCE_INLINE typename enable_if<is_same<T, char*>::value, const char*>::type
   ARDUINOJSON_DEPRECATED("Replace as<char*>() with as<const char*>()")
       as() const {
-    return as<const char *>();
+    return as<const char*>();
   }
 
   template <typename T>
@@ -89,17 +89,17 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
 
   template <typename T>
   FORCE_INLINE
-      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+      typename enable_if<!is_same<T, char*>::value && !is_same<T, char>::value,
                          bool>::type
       is() const {
     return Converter<T>::checkJson(*this);
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char *>::value, bool>::type
+  FORCE_INLINE typename enable_if<is_same<T, char*>::value, bool>::type
   ARDUINOJSON_DEPRECATED("Replace is<char*>() with is<const char*>()")
       is() const {
-    return is<const char *>();
+    return is<const char*>();
   }
 
   template <typename T>
@@ -124,7 +124,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   template <typename TString>
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
-      operator[](const TString &key) const {
+      operator[](const TString& key) const {
     return VariantConstRef(variantGetMember(_data, adaptString(key)));
   }
 
@@ -133,13 +133,13 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   // operator[](const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE
-      typename enable_if<IsString<TChar *>::value, VariantConstRef>::type
-      operator[](TChar *key) const {
+      typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
+      operator[](TChar* key) const {
     return VariantConstRef(variantGetMember(_data, adaptString(key)));
   }
 
  protected:
-  const VariantData *getData() const {
+  const VariantData* getData() const {
     return _data;
   }
 };
@@ -158,7 +158,7 @@ class VariantRef : public VariantRefBase<VariantData>,
 
  public:
   // Intenal use only
-  FORCE_INLINE VariantRef(MemoryPool *pool, VariantData *data)
+  FORCE_INLINE VariantRef(MemoryPool* pool, VariantData* data)
       : base_type(data), _pool(pool) {}
 
   // Creates an uninitialized VariantRef
@@ -169,7 +169,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   }
 
   template <typename T>
-  FORCE_INLINE bool set(const T &value) const {
+  FORCE_INLINE bool set(const T& value) const {
     Converter<T>::toJson(value, *this);
     return _pool && !_pool->overflowed();
   }
@@ -179,24 +179,24 @@ class VariantRef : public VariantRefBase<VariantData>,
       set(char value) const;
 
   template <typename T>
-  FORCE_INLINE bool set(T *value) const {
-    Converter<T *>::toJson(value, *this);
+  FORCE_INLINE bool set(T* value) const {
+    Converter<T*>::toJson(value, *this);
     return _pool && !_pool->overflowed();
   }
 
   template <typename T>
   FORCE_INLINE
-      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+      typename enable_if<!is_same<T, char*>::value && !is_same<T, char>::value,
                          T>::type
       as() const {
     return Converter<T>::fromJson(*this);
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char *>::value, const char *>::type
+  FORCE_INLINE typename enable_if<is_same<T, char*>::value, const char*>::type
   ARDUINOJSON_DEPRECATED("Replace as<char*>() with as<const char*>()")
       as() const {
-    return as<const char *>();
+    return as<const char*>();
   }
 
   template <typename T>
@@ -209,17 +209,17 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   template <typename T>
   FORCE_INLINE
-      typename enable_if<!is_same<T, char *>::value && !is_same<T, char>::value,
+      typename enable_if<!is_same<T, char*>::value && !is_same<T, char>::value,
                          bool>::type
       is() const {
     return Converter<T>::checkJson(*this);
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char *>::value, bool>::type
+  FORCE_INLINE typename enable_if<is_same<T, char*>::value, bool>::type
   ARDUINOJSON_DEPRECATED("Replace is<char*>() with is<const char*>()")
       is() const {
-    return is<const char *>();
+    return is<const char*>();
   }
 
   template <typename T>
@@ -268,8 +268,8 @@ class VariantRef : public VariantRefBase<VariantData>,
   // remove(const char*) const
   // remove(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE typename enable_if<IsString<TChar *>::value>::type remove(
-      TChar *key) const {
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value>::type remove(
+      TChar* key) const {
     if (_data)
       _data->remove(adaptString(key));
   }
@@ -277,7 +277,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   // remove(const String&) const
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
-      const TString &key) const {
+      const TString& key) const {
     if (_data)
       _data->remove(adaptString(key));
   }
@@ -285,27 +285,27 @@ class VariantRef : public VariantRefBase<VariantData>,
   inline void shallowCopy(VariantConstRef target) {
     if (!_data)
       return;
-    const VariantData *targetData = VariantAttorney::getData(target);
+    const VariantData* targetData = VariantAttorney::getData(target);
     if (targetData)
       *_data = *targetData;
     else
       _data->setNull();
   }
 
-  MemoryPool *getPool() const {
+  MemoryPool* getPool() const {
     return _pool;
   }
 
-  VariantData *getData() const {
+  VariantData* getData() const {
     return _data;
   }
 
-  VariantData *getOrCreateData() const {
+  VariantData* getOrCreateData() const {
     return _data;
   }
 
  private:
-  MemoryPool *_pool;
+  MemoryPool* _pool;
 };
 
 template <>
@@ -322,7 +322,7 @@ struct Converter<VariantRef> : private VariantAttorney {
       VariantConstRef);
 
   static bool checkJson(VariantRef src) {
-    VariantData *data = getData(src);
+    VariantData* data = getData(src);
     return !!data;
   }
 
@@ -342,7 +342,7 @@ struct Converter<VariantConstRef> : private VariantAttorney {
   }
 
   static bool checkJson(VariantConstRef src) {
-    const VariantData *data = getData(src);
+    const VariantData* data = getData(src);
     return !!data;
   }
 };

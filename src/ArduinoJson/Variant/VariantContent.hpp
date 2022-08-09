@@ -39,7 +39,7 @@ enum {
 };
 
 struct RawData {
-  const char *data;
+  const char* data;
   size_t size;
 };
 
@@ -50,7 +50,7 @@ union VariantContent {
   Integer asSignedInteger;
   CollectionData asCollection;
   struct {
-    const char *data;
+    const char* data;
     size_t size;
   } asString;
 };

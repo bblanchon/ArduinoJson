@@ -18,8 +18,8 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
  public:
   PrettyJsonSerializer(TWriter writer) : base(writer), _nesting(0) {}
 
-  size_t visitArray(const CollectionData &array) {
-    const VariantSlot *slot = array.head();
+  size_t visitArray(const CollectionData& array) {
+    const VariantSlot* slot = array.head();
     if (slot) {
       base::write("[\r\n");
       _nesting++;
@@ -39,8 +39,8 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
     return this->bytesWritten();
   }
 
-  size_t visitObject(const CollectionData &object) {
-    const VariantSlot *slot = object.head();
+  size_t visitObject(const CollectionData& object) {
+    const VariantSlot* slot = object.head();
     if (slot) {
       base::write("{\r\n");
       _nesting++;
@@ -71,11 +71,11 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
 };
 
 template <typename TDestination>
-size_t serializeJsonPretty(VariantConstRef source, TDestination &destination) {
+size_t serializeJsonPretty(VariantConstRef source, TDestination& destination) {
   return serialize<PrettyJsonSerializer>(source, destination);
 }
 
-inline size_t serializeJsonPretty(VariantConstRef source, void *buffer,
+inline size_t serializeJsonPretty(VariantConstRef source, void* buffer,
                                   size_t bufferSize) {
   return serialize<PrettyJsonSerializer>(source, buffer, bufferSize);
 }

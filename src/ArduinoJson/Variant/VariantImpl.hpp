@@ -83,7 +83,7 @@ inline String VariantData::asString() const {
   }
 }
 
-inline bool VariantData::copyFrom(const VariantData &src, MemoryPool *pool) {
+inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
   switch (src.type()) {
     case VALUE_IS_ARRAY:
       return toArray().copyFrom(src._content.asCollection, pool);
@@ -131,9 +131,9 @@ inline bool VariantRef::set(char value) const {
 
 // TODO: move somewhere else
 template <typename TAdaptedString, typename TCallback>
-bool CopyStringStoragePolicy::store(TAdaptedString str, MemoryPool *pool,
+bool CopyStringStoragePolicy::store(TAdaptedString str, MemoryPool* pool,
                                     TCallback callback) {
-  const char *copy = pool->saveString(str);
+  const char* copy = pool->saveString(str);
   String storedString(copy, str.size(), String::Copied);
   callback(storedString);
   return copy != 0;

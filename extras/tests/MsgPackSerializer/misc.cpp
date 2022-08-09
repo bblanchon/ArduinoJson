@@ -3,7 +3,7 @@
 #include <limits>
 
 template <typename T>
-void check(T value, const std::string &expected) {
+void check(T value, const std::string& expected) {
   DynamicJsonDocument doc(4096);
   doc.to<JsonVariant>().set(value);
   char buffer[256] = "";

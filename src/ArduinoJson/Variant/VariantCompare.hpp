@@ -26,7 +26,7 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
 
   explicit Comparer(T value) : rhs(value) {}
 
-  CompareResult visitString(const char *lhs, size_t n) {
+  CompareResult visitString(const char* lhs, size_t n) {
     int i = stringCompare(adaptString(rhs), adaptString(lhs, n));
     if (i < 0)
       return COMPARE_RESULT_GREATER;
@@ -83,11 +83,11 @@ struct Comparer<decltype(nullptr), void> : NullComparer {
 #endif
 
 struct ArrayComparer : ComparerBase {
-  const CollectionData *_rhs;
+  const CollectionData* _rhs;
 
-  explicit ArrayComparer(const CollectionData &rhs) : _rhs(&rhs) {}
+  explicit ArrayComparer(const CollectionData& rhs) : _rhs(&rhs) {}
 
-  CompareResult visitArray(const CollectionData &lhs) {
+  CompareResult visitArray(const CollectionData& lhs) {
     if (ArrayConstRef(&lhs) == ArrayConstRef(_rhs))
       return COMPARE_RESULT_EQUAL;
     else
@@ -96,11 +96,11 @@ struct ArrayComparer : ComparerBase {
 };
 
 struct ObjectComparer : ComparerBase {
-  const CollectionData *_rhs;
+  const CollectionData* _rhs;
 
-  explicit ObjectComparer(const CollectionData &rhs) : _rhs(&rhs) {}
+  explicit ObjectComparer(const CollectionData& rhs) : _rhs(&rhs) {}
 
-  CompareResult visitObject(const CollectionData &lhs) {
+  CompareResult visitObject(const CollectionData& lhs) {
     if (ObjectConstRef(&lhs) == ObjectConstRef(_rhs))
       return COMPARE_RESULT_EQUAL;
     else
@@ -109,13 +109,13 @@ struct ObjectComparer : ComparerBase {
 };
 
 struct RawComparer : ComparerBase {
-  const char *_rhsData;
+  const char* _rhsData;
   size_t _rhsSize;
 
-  explicit RawComparer(const char *rhsData, size_t rhsSize)
+  explicit RawComparer(const char* rhsData, size_t rhsSize)
       : _rhsData(rhsData), _rhsSize(rhsSize) {}
 
-  CompareResult visitRawJson(const char *lhsData, size_t lhsSize) {
+  CompareResult visitRawJson(const char* lhsData, size_t lhsSize) {
     size_t size = _rhsSize < lhsSize ? _rhsSize : lhsSize;
     int n = memcmp(lhsData, _rhsData, size);
     if (n < 0)
@@ -132,12 +132,12 @@ struct VariantComparer : ComparerBase {
 
   explicit VariantComparer(VariantConstRef value) : rhs(value) {}
 
-  CompareResult visitArray(const CollectionData &lhs) {
+  CompareResult visitArray(const CollectionData& lhs) {
     ArrayComparer comparer(lhs);
     return accept(comparer);
   }
 
-  CompareResult visitObject(const CollectionData &lhs) {
+  CompareResult visitObject(const CollectionData& lhs) {
     ObjectComparer comparer(lhs);
     return accept(comparer);
   }
@@ -147,12 +147,12 @@ struct VariantComparer : ComparerBase {
     return accept(comparer);
   }
 
-  CompareResult visitString(const char *lhs, size_t) {
-    Comparer<const char *> comparer(lhs);
+  CompareResult visitString(const char* lhs, size_t) {
+    Comparer<const char*> comparer(lhs);
     return accept(comparer);
   }
 
-  CompareResult visitRawJson(const char *lhsData, size_t lhsSize) {
+  CompareResult visitRawJson(const char* lhsData, size_t lhsSize) {
     RawComparer comparer(lhsData, lhsSize);
     return accept(comparer);
   }
@@ -179,7 +179,7 @@ struct VariantComparer : ComparerBase {
 
  private:
   template <typename TComparer>
-  CompareResult accept(TComparer &comparer) {
+  CompareResult accept(TComparer& comparer) {
     CompareResult reversedResult =
         variantAccept(VariantAttorney::getData(rhs), comparer);
     switch (reversedResult) {
@@ -197,12 +197,12 @@ template <typename T>
 struct Comparer<
     T, typename enable_if<is_convertible<T, VariantConstRef>::value>::type>
     : VariantComparer {
-  explicit Comparer(const T &value)
+  explicit Comparer(const T& value)
       : VariantComparer(value.operator VariantConstRef()) {}
 };
 
 template <typename T>
-CompareResult compare(VariantConstRef lhs, const T &rhs) {
+CompareResult compare(VariantConstRef lhs, const T& rhs) {
   Comparer<T> comparer(rhs);
   return variantAccept(VariantAttorney::getData(lhs), comparer);
 }

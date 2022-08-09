@@ -27,10 +27,10 @@ struct is_convertible {
   typedef char Yes[1];
   typedef char No[2];
 
-  static Yes &probe(To);
-  static No &probe(...);
+  static Yes& probe(To);
+  static No& probe(...);
 
-  static From &_from;
+  static From& _from;
 
  public:
   static const bool value = sizeof(probe(_from)) == sizeof(Yes);

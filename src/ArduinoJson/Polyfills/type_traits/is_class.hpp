@@ -15,9 +15,9 @@ struct is_class {
   typedef char No[2];
 
   template <typename U>
-  static Yes &probe(void (U::*)(void));
+  static Yes& probe(void (U::*)(void));
   template <typename>
-  static No &probe(...);
+  static No& probe(...);
 
  public:
   static const bool value = sizeof(probe<T>(0)) == sizeof(Yes);

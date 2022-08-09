@@ -23,7 +23,7 @@ TEST_CASE("serializeJson(JsonArray)") {
   }
 
   SECTION("Null") {
-    array.add(static_cast<char *>(0));
+    array.add(static_cast<char*>(0));
 
     check(array, "[null]");
   }

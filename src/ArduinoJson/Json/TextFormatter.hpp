@@ -34,14 +34,14 @@ class TextFormatter {
       writeRaw("false");
   }
 
-  void writeString(const char *value) {
+  void writeString(const char* value) {
     ARDUINOJSON_ASSERT(value != NULL);
     writeRaw('\"');
     while (*value) writeChar(*value++);
     writeRaw('\"');
   }
 
-  void writeString(const char *value, size_t n) {
+  void writeString(const char* value, size_t n) {
     ARDUINOJSON_ASSERT(value != NULL);
     writeRaw('\"');
     while (n--) writeChar(*value++);
@@ -111,8 +111,8 @@ class TextFormatter {
   template <typename T>
   typename enable_if<is_unsigned<T>::value>::type writeInteger(T value) {
     char buffer[22];
-    char *end = buffer + sizeof(buffer);
-    char *begin = end;
+    char* end = buffer + sizeof(buffer);
+    char* begin = end;
 
     // write the string in reverse order
     do {
@@ -127,8 +127,8 @@ class TextFormatter {
   void writeDecimals(uint32_t value, int8_t width) {
     // buffer should be big enough for all digits and the dot
     char buffer[16];
-    char *end = buffer + sizeof(buffer);
-    char *begin = end;
+    char* end = buffer + sizeof(buffer);
+    char* begin = end;
 
     // write the string in reverse order
     while (width--) {
@@ -141,22 +141,22 @@ class TextFormatter {
     writeRaw(begin, end);
   }
 
-  void writeRaw(const char *s) {
-    _writer.write(reinterpret_cast<const uint8_t *>(s), strlen(s));
+  void writeRaw(const char* s) {
+    _writer.write(reinterpret_cast<const uint8_t*>(s), strlen(s));
   }
 
-  void writeRaw(const char *s, size_t n) {
-    _writer.write(reinterpret_cast<const uint8_t *>(s), n);
+  void writeRaw(const char* s, size_t n) {
+    _writer.write(reinterpret_cast<const uint8_t*>(s), n);
   }
 
-  void writeRaw(const char *begin, const char *end) {
-    _writer.write(reinterpret_cast<const uint8_t *>(begin),
+  void writeRaw(const char* begin, const char* end) {
+    _writer.write(reinterpret_cast<const uint8_t*>(begin),
                   static_cast<size_t>(end - begin));
   }
 
   template <size_t N>
   void writeRaw(const char (&s)[N]) {
-    _writer.write(reinterpret_cast<const uint8_t *>(s), N - 1);
+    _writer.write(reinterpret_cast<const uint8_t*>(s), N - 1);
   }
   void writeRaw(char c) {
     _writer.write(static_cast<uint8_t>(c));
@@ -166,6 +166,6 @@ class TextFormatter {
   CountingDecorator<TWriter> _writer;
 
  private:
-  TextFormatter &operator=(const TextFormatter &);  // cannot be assigned
+  TextFormatter& operator=(const TextFormatter&);  // cannot be assigned
 };
 }  // namespace ARDUINOJSON_NAMESPACE

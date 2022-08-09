@@ -16,11 +16,11 @@ class is_base_of {
   typedef char Yes[1];
   typedef char No[2];
 
-  static Yes &probe(const TBase *);
-  static No &probe(...);
+  static Yes& probe(const TBase*);
+  static No& probe(...);
 
  public:
   static const bool value =
-      sizeof(probe(reinterpret_cast<TDerived *>(0))) == sizeof(Yes);
+      sizeof(probe(reinterpret_cast<TDerived*>(0))) == sizeof(Yes);
 };
 }  // namespace ARDUINOJSON_NAMESPACE

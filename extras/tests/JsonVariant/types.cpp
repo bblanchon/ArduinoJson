@@ -17,9 +17,9 @@ void checkValue(T expected) {
 }
 
 template <typename T>
-void checkReference(T &expected) {
+void checkReference(T& expected) {
   JsonVariant variant = expected;
-  REQUIRE(expected == variant.as<T &>());
+  REQUIRE(expected == variant.as<T&>());
 }
 
 template <typename T>
@@ -46,10 +46,10 @@ TEST_CASE("JsonVariant set()/get()") {
 #endif
 
   SECTION("Null") {
-    checkValue<const char *>(NULL);
+    checkValue<const char*>(NULL);
   }
   SECTION("const char*") {
-    checkValue<const char *>("hello");
+    checkValue<const char*>("hello");
   }
   SECTION("std::string") {
     checkValue<std::string>("hello");

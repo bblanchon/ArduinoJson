@@ -22,7 +22,7 @@ TEST_CASE("MemoryPool::clear()") {
   }
 
   SECTION("Discards allocated strings") {
-    pool.saveString(adaptString(const_cast<char *>("123456789")));
+    pool.saveString(adaptString(const_cast<char*>("123456789")));
     REQUIRE(pool.size() == 10);
 
     pool.clear();

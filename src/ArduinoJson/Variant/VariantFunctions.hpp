@@ -12,16 +12,16 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TVisitor>
-inline typename TVisitor::result_type variantAccept(const VariantData *var,
-                                                    TVisitor &visitor) {
+inline typename TVisitor::result_type variantAccept(const VariantData* var,
+                                                    TVisitor& visitor) {
   if (var != 0)
     return var->accept(visitor);
   else
     return visitor.visitNull();
 }
 
-inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
-                            MemoryPool *pool) {
+inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
+                            MemoryPool* pool) {
   if (!dst)
     return false;
   if (!src) {
@@ -31,51 +31,51 @@ inline bool variantCopyFrom(VariantData *dst, const VariantData *src,
   return dst->copyFrom(*src, pool);
 }
 
-inline void variantSetNull(VariantData *var) {
+inline void variantSetNull(VariantData* var) {
   if (!var)
     return;
   var->setNull();
 }
 
 template <typename TAdaptedString, typename TStoragePolicy>
-inline bool variantSetString(VariantData *var, TAdaptedString value,
-                             MemoryPool *pool, TStoragePolicy storage_policy) {
+inline bool variantSetString(VariantData* var, TAdaptedString value,
+                             MemoryPool* pool, TStoragePolicy storage_policy) {
   return var != 0 ? var->storeString(value, pool, storage_policy) : 0;
 }
 
-inline size_t variantSize(const VariantData *var) {
+inline size_t variantSize(const VariantData* var) {
   return var != 0 ? var->size() : 0;
 }
 
-inline CollectionData *variantToArray(VariantData *var) {
+inline CollectionData* variantToArray(VariantData* var) {
   if (!var)
     return 0;
   return &var->toArray();
 }
 
-inline CollectionData *variantToObject(VariantData *var) {
+inline CollectionData* variantToObject(VariantData* var) {
   if (!var)
     return 0;
   return &var->toObject();
 }
 
-inline VariantData *variantGetElement(const VariantData *var, size_t index) {
+inline VariantData* variantGetElement(const VariantData* var, size_t index) {
   return var != 0 ? var->getElement(index) : 0;
 }
 
-inline NO_INLINE VariantData *variantAddElement(VariantData *var,
-                                                MemoryPool *pool) {
+inline NO_INLINE VariantData* variantAddElement(VariantData* var,
+                                                MemoryPool* pool) {
   return var != 0 ? var->addElement(pool) : 0;
 }
 
-inline NO_INLINE VariantData *variantGetOrAddElement(VariantData *var,
+inline NO_INLINE VariantData* variantGetOrAddElement(VariantData* var,
                                                      size_t index,
-                                                     MemoryPool *pool) {
+                                                     MemoryPool* pool) {
   return var != 0 ? var->getOrAddElement(index, pool) : 0;
 }
 
 template <typename AdaptedString>
-VariantData *variantGetMember(const VariantData *var, AdaptedString key) {
+VariantData* variantGetMember(const VariantData* var, AdaptedString key) {
   if (!var)
     return 0;
   return var->getMember(key);
@@ -84,8 +84,8 @@ VariantData *variantGetMember(const VariantData *var, AdaptedString key) {
 // TODO: this function is inconsitent with the others:
 // it should take an adapted string
 template <typename TChar>
-VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
-                                   MemoryPool *pool) {
+VariantData* variantGetOrAddMember(VariantData* var, TChar* key,
+                                   MemoryPool* pool) {
   if (!var)
     return 0;
   return var->getOrAddMember(adaptString(key), pool,
@@ -93,28 +93,28 @@ VariantData *variantGetOrAddMember(VariantData *var, TChar *key,
 }
 
 template <typename TString>
-VariantData *variantGetOrAddMember(VariantData *var, const TString &key,
-                                   MemoryPool *pool) {
+VariantData* variantGetOrAddMember(VariantData* var, const TString& key,
+                                   MemoryPool* pool) {
   if (!var)
     return 0;
   return var->getOrAddMember(adaptString(key), pool,
                              getStringStoragePolicy(key));
 }
 
-inline bool variantIsNull(const VariantData *var) {
+inline bool variantIsNull(const VariantData* var) {
   return var == 0 || var->isNull();
 }
 
-inline size_t variantNesting(const VariantData *var) {
+inline size_t variantNesting(const VariantData* var) {
   if (!var)
     return 0;
 
-  const CollectionData *collection = var->asCollection();
+  const CollectionData* collection = var->asCollection();
   if (!collection)
     return 0;
 
   size_t maxChildNesting = 0;
-  for (const VariantSlot *s = collection->head(); s; s = s->next()) {
+  for (const VariantSlot* s = collection->head(); s; s = s->next()) {
     size_t childNesting = variantNesting(s->data());
     if (childNesting > maxChildNesting)
       maxChildNesting = childNesting;

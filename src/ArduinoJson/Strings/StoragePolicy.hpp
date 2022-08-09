@@ -11,7 +11,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 struct LinkStringStoragePolicy {
   template <typename TAdaptedString, typename TCallback>
-  bool store(TAdaptedString str, MemoryPool *, TCallback callback) {
+  bool store(TAdaptedString str, MemoryPool*, TCallback callback) {
     String storedString(str.data(), str.size(), String::Linked);
     callback(storedString);
     return !str.isNull();
@@ -20,7 +20,7 @@ struct LinkStringStoragePolicy {
 
 struct CopyStringStoragePolicy {
   template <typename TAdaptedString, typename TCallback>
-  bool store(TAdaptedString str, MemoryPool *pool, TCallback callback);
+  bool store(TAdaptedString str, MemoryPool* pool, TCallback callback);
 };
 
 class LinkOrCopyStringStoragePolicy : LinkStringStoragePolicy,
@@ -29,7 +29,7 @@ class LinkOrCopyStringStoragePolicy : LinkStringStoragePolicy,
   LinkOrCopyStringStoragePolicy(bool link) : _link(link) {}
 
   template <typename TAdaptedString, typename TCallback>
-  bool store(TAdaptedString str, MemoryPool *pool, TCallback callback) {
+  bool store(TAdaptedString str, MemoryPool* pool, TCallback callback) {
     if (_link)
       return LinkStringStoragePolicy::store(str, pool, callback);
     else
@@ -41,15 +41,15 @@ class LinkOrCopyStringStoragePolicy : LinkStringStoragePolicy,
 };
 
 template <typename T>
-inline CopyStringStoragePolicy getStringStoragePolicy(const T &) {
+inline CopyStringStoragePolicy getStringStoragePolicy(const T&) {
   return CopyStringStoragePolicy();
 }
 
-inline LinkStringStoragePolicy getStringStoragePolicy(const char *) {
+inline LinkStringStoragePolicy getStringStoragePolicy(const char*) {
   return LinkStringStoragePolicy();
 }
 
-inline LinkOrCopyStringStoragePolicy getStringStoragePolicy(const String &s) {
+inline LinkOrCopyStringStoragePolicy getStringStoragePolicy(const String& s) {
   return LinkOrCopyStringStoragePolicy(s.isLinked());
 }
 

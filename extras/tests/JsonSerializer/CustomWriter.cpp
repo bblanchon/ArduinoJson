@@ -14,18 +14,18 @@ class CustomWriter {
     return 1;
   }
 
-  size_t write(const uint8_t *s, size_t n) {
-    _str.append(reinterpret_cast<const char *>(s), n);
+  size_t write(const uint8_t* s, size_t n) {
+    _str.append(reinterpret_cast<const char*>(s), n);
     return n;
   }
 
-  const std::string &str() const {
+  const std::string& str() const {
     return _str;
   }
 
  private:
-  CustomWriter(const CustomWriter &);  // non-copiable
-  CustomWriter &operator=(const CustomWriter &);
+  CustomWriter(const CustomWriter&);  // non-copiable
+  CustomWriter& operator=(const CustomWriter&);
 
   std::string _str;
 };

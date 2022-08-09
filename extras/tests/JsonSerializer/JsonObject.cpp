@@ -6,7 +6,7 @@
 #include <catch.hpp>
 #include <string>
 
-static void checkObject(const JsonObject obj, const std::string &expected) {
+static void checkObject(const JsonObject obj, const std::string& expected) {
   char actual[256];
   memset(actual, '!', sizeof(actual));
 
@@ -84,8 +84,8 @@ TEST_CASE("serializeJson(JsonObject)") {
   }
 
   SECTION("TwoNull") {
-    obj["a"] = static_cast<char *>(0);
-    obj["b"] = static_cast<char *>(0);
+    obj["a"] = static_cast<char*>(0);
+    obj["b"] = static_cast<char*>(0);
     checkObject(obj, "{\"a\":null,\"b\":null}");
   }
 

@@ -37,13 +37,13 @@ class VariantData {
     _flags = VALUE_IS_NULL;
   }
 
-  void operator=(const VariantData &src) {
+  void operator=(const VariantData& src) {
     _content = src._content;
     _flags = uint8_t((_flags & OWNED_KEY_BIT) | (src._flags & ~OWNED_KEY_BIT));
   }
 
   template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor &visitor) const {
+  typename TVisitor::result_type accept(TVisitor& visitor) const {
     switch (type()) {
       case VALUE_IS_FLOAT:
         return visitor.visitFloat(_content.asFloat);
@@ -88,27 +88,27 @@ class VariantData {
 
   bool asBoolean() const;
 
-  CollectionData *asArray() {
+  CollectionData* asArray() {
     return isArray() ? &_content.asCollection : 0;
   }
 
-  const CollectionData *asArray() const {
-    return const_cast<VariantData *>(this)->asArray();
+  const CollectionData* asArray() const {
+    return const_cast<VariantData*>(this)->asArray();
   }
 
-  const CollectionData *asCollection() const {
+  const CollectionData* asCollection() const {
     return isCollection() ? &_content.asCollection : 0;
   }
 
-  CollectionData *asObject() {
+  CollectionData* asObject() {
     return isObject() ? &_content.asCollection : 0;
   }
 
-  const CollectionData *asObject() const {
-    return const_cast<VariantData *>(this)->asObject();
+  const CollectionData* asObject() const {
+    return const_cast<VariantData*>(this)->asObject();
   }
 
-  bool copyFrom(const VariantData &src, MemoryPool *pool);
+  bool copyFrom(const VariantData& src, MemoryPool* pool);
 
   bool isArray() const {
     return (_flags & VALUE_IS_ARRAY) != 0;
@@ -177,7 +177,7 @@ class VariantData {
     _content.asFloat = value;
   }
 
-  void setLinkedRaw(SerializedValue<const char *> value) {
+  void setLinkedRaw(SerializedValue<const char*> value) {
     if (value.data()) {
       setType(VALUE_IS_LINKED_RAW);
       _content.asString.data = value.data();
@@ -188,8 +188,8 @@ class VariantData {
   }
 
   template <typename T>
-  bool storeOwnedRaw(SerializedValue<T> value, MemoryPool *pool) {
-    const char *dup = pool->saveString(adaptString(value.data(), value.size()));
+  bool storeOwnedRaw(SerializedValue<T> value, MemoryPool* pool) {
+    const char* dup = pool->saveString(adaptString(value.data(), value.size()));
     if (dup) {
       setType(VALUE_IS_OWNED_RAW);
       _content.asString.data = dup;
@@ -227,13 +227,13 @@ class VariantData {
     _content.asString.size = s.size();
   }
 
-  CollectionData &toArray() {
+  CollectionData& toArray() {
     setType(VALUE_IS_ARRAY);
     _content.asCollection.clear();
     return _content.asCollection;
   }
 
-  CollectionData &toObject() {
+  CollectionData& toObject() {
     setType(VALUE_IS_OBJECT);
     _content.asCollection.clear();
     return _content.asCollection;
@@ -258,7 +258,7 @@ class VariantData {
     return isCollection() ? _content.asCollection.size() : 0;
   }
 
-  VariantData *addElement(MemoryPool *pool) {
+  VariantData* addElement(MemoryPool* pool) {
     if (isNull())
       toArray();
     if (!isArray())
@@ -266,12 +266,12 @@ class VariantData {
     return _content.asCollection.addElement(pool);
   }
 
-  VariantData *getElement(size_t index) const {
-    const CollectionData *col = asArray();
+  VariantData* getElement(size_t index) const {
+    const CollectionData* col = asArray();
     return col ? col->getElement(index) : 0;
   }
 
-  VariantData *getOrAddElement(size_t index, MemoryPool *pool) {
+  VariantData* getOrAddElement(size_t index, MemoryPool* pool) {
     if (isNull())
       toArray();
     if (!isArray())
@@ -280,13 +280,13 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  VariantData *getMember(TAdaptedString key) const {
-    const CollectionData *col = asObject();
+  VariantData* getMember(TAdaptedString key) const {
+    const CollectionData* col = asObject();
     return col ? col->getMember(key) : 0;
   }
 
   template <typename TAdaptedString, typename TStoragePolicy>
-  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool,
+  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool,
                               TStoragePolicy storage_policy) {
     if (isNull())
       toObject();
@@ -307,7 +307,7 @@ class VariantData {
   }
 
   template <typename TAdaptedString, typename TStoragePolicy>
-  inline bool storeString(TAdaptedString value, MemoryPool *pool,
+  inline bool storeString(TAdaptedString value, MemoryPool* pool,
                           TStoragePolicy storage) {
     if (value.isNull()) {
       setNull();
@@ -324,7 +324,7 @@ class VariantData {
   }
 
   struct VariantStringSetter {
-    VariantStringSetter(VariantData *instance) : _instance(instance) {}
+    VariantStringSetter(VariantData* instance) : _instance(instance) {}
 
     template <typename TStoredString>
     void operator()(TStoredString s) {
@@ -334,7 +334,7 @@ class VariantData {
         _instance->setNull();
     }
 
-    VariantData *_instance;
+    VariantData* _instance;
   };
 };
 

@@ -16,8 +16,8 @@ class VariantData;
 class VariantSlot;
 
 class CollectionData {
-  VariantSlot *_head;
-  VariantSlot *_tail;
+  VariantSlot* _head;
+  VariantSlot* _tail;
 
  public:
   // Must be a POD!
@@ -28,24 +28,24 @@ class CollectionData {
 
   // Array only
 
-  VariantData *addElement(MemoryPool *pool);
+  VariantData* addElement(MemoryPool* pool);
 
-  VariantData *getElement(size_t index) const;
+  VariantData* getElement(size_t index) const;
 
-  VariantData *getOrAddElement(size_t index, MemoryPool *pool);
+  VariantData* getOrAddElement(size_t index, MemoryPool* pool);
 
   void removeElement(size_t index);
 
   // Object only
 
   template <typename TAdaptedString, typename TStoragePolicy>
-  VariantData *addMember(TAdaptedString key, MemoryPool *pool, TStoragePolicy);
+  VariantData* addMember(TAdaptedString key, MemoryPool* pool, TStoragePolicy);
 
   template <typename TAdaptedString>
-  VariantData *getMember(TAdaptedString key) const;
+  VariantData* getMember(TAdaptedString key) const;
 
   template <typename TAdaptedString, typename TStoragePolicy>
-  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool,
+  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool,
                               TStoragePolicy);
 
   template <typename TAdaptedString>
@@ -54,7 +54,7 @@ class CollectionData {
   }
 
   template <typename TAdaptedString>
-  bool containsKey(const TAdaptedString &key) const;
+  bool containsKey(const TAdaptedString& key) const;
 
   // Generic
 
@@ -62,34 +62,34 @@ class CollectionData {
   size_t memoryUsage() const;
   size_t size() const;
 
-  VariantSlot *addSlot(MemoryPool *);
-  void removeSlot(VariantSlot *slot);
+  VariantSlot* addSlot(MemoryPool*);
+  void removeSlot(VariantSlot* slot);
 
-  bool copyFrom(const CollectionData &src, MemoryPool *pool);
+  bool copyFrom(const CollectionData& src, MemoryPool* pool);
 
-  VariantSlot *head() const {
+  VariantSlot* head() const {
     return _head;
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance);
 
  private:
-  VariantSlot *getSlot(size_t index) const;
+  VariantSlot* getSlot(size_t index) const;
 
   template <typename TAdaptedString>
-  VariantSlot *getSlot(TAdaptedString key) const;
+  VariantSlot* getSlot(TAdaptedString key) const;
 
-  VariantSlot *getPreviousSlot(VariantSlot *) const;
+  VariantSlot* getPreviousSlot(VariantSlot*) const;
 };
 
-inline const VariantData *collectionToVariant(
-    const CollectionData *collection) {
-  const void *data = collection;  // prevent warning cast-align
-  return reinterpret_cast<const VariantData *>(data);
+inline const VariantData* collectionToVariant(
+    const CollectionData* collection) {
+  const void* data = collection;  // prevent warning cast-align
+  return reinterpret_cast<const VariantData*>(data);
 }
 
-inline VariantData *collectionToVariant(CollectionData *collection) {
-  void *data = collection;  // prevent warning cast-align
-  return reinterpret_cast<VariantData *>(data);
+inline VariantData* collectionToVariant(CollectionData* collection) {
+  void* data = collection;  // prevent warning cast-align
+  return reinterpret_cast<VariantData*>(data);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -20,30 +20,30 @@ class VariantAttorney {
     typedef char Yes[1];
     typedef char No[2];
 
-    static Yes &probe(const VariantData *);
-    static No &probe(VariantData *);
+    static Yes& probe(const VariantData*);
+    static No& probe(VariantData*);
 
-    static TClient &client;
+    static TClient& client;
 
    public:
     typedef typename conditional<sizeof(probe(client.getData())) == sizeof(Yes),
-                                 const VariantData *, VariantData *>::type type;
+                                 const VariantData*, VariantData*>::type type;
   };
 
  public:
   template <typename TClient>
-  FORCE_INLINE static MemoryPool *getPool(TClient &client) {
+  FORCE_INLINE static MemoryPool* getPool(TClient& client) {
     return client.getPool();
   }
 
   template <typename TClient>
   FORCE_INLINE static typename ResultOfGetData<TClient>::type getData(
-      TClient &client) {
+      TClient& client) {
     return client.getData();
   }
 
   template <typename TClient>
-  FORCE_INLINE static VariantData *getOrCreateData(TClient &client) {
+  FORCE_INLINE static VariantData* getOrCreateData(TClient& client) {
     return client.getOrCreateData();
   }
 };
