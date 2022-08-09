@@ -19,52 +19,43 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TObject, typename TStringRef>
-class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
-                    public VariantShortcuts<MemberProxy<TObject, TStringRef> >,
-                    public VariantTag {
-  typedef MemberProxy<TObject, TStringRef> this_type;
-
+template <typename TUpstream, typename TStringRef>
+class MemberProxy  //
+    : public VariantOperators<MemberProxy<TUpstream, TStringRef> >,
+      public VariantShortcuts<MemberProxy<TUpstream, TStringRef> >,
+      public VariantTag {
   friend class VariantAttorney;
 
  public:
-  FORCE_INLINE MemberProxy(TObject variant, TStringRef key)
-      : _object(variant), _key(key) {}
+  FORCE_INLINE MemberProxy(TUpstream upstream, TStringRef key)
+      : _upstream(upstream), _key(key) {}
 
   FORCE_INLINE MemberProxy(const MemberProxy& src)
-      : _object(src._object), _key(src._key) {}
+      : _upstream(src._upstream), _key(src._key) {}
 
-  FORCE_INLINE operator VariantConstRef() const {
-    return getUpstreamMemberConst();
-  }
-
-  FORCE_INLINE this_type& operator=(const this_type& src) {
-    getOrAddUpstreamMember().set(src);
+  FORCE_INLINE MemberProxy& operator=(const MemberProxy& src) {
+    getOrAddUpstreamVariant().set(src);
     return *this;
   }
 
-  template <typename TValue>
-  FORCE_INLINE typename enable_if<!is_array<TValue>::value, this_type&>::type
-  operator=(const TValue& src) {
-    getOrAddUpstreamMember().set(src);
+  template <typename T>
+  FORCE_INLINE MemberProxy& operator=(const T& src) {
+    getOrAddUpstreamVariant().set(src);
     return *this;
   }
 
-  // operator=(char*)
-  // operator=(const char*)
-  // operator=(const __FlashStringHelper*)
-  template <typename TChar>
-  FORCE_INLINE this_type& operator=(TChar* src) {
-    getOrAddUpstreamMember().set(src);
+  template <typename T>
+  FORCE_INLINE MemberProxy& operator=(T* src) {
+    getOrAddUpstreamVariant().set(src);
     return *this;
   }
 
   FORCE_INLINE void clear() const {
-    getUpstreamMember().clear();
+    getUpstreamVariant().clear();
   }
 
   FORCE_INLINE bool isNull() const {
-    return getUpstreamMemberConst().isNull();
+    return getUpstreamVariantConst().isNull();
   }
 
   template <typename T>
@@ -72,13 +63,13 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
                                       !ConverterNeedsWriteableRef<T>::value,
                                   T>::type
   as() const {
-    return getUpstreamMemberConst().template as<T>();
+    return getUpstreamVariantConst().template as<T>();
   }
 
   template <typename T>
   FORCE_INLINE typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
   as() const {
-    return getUpstreamMember().template as<T>();
+    return getUpstreamVariant().template as<T>();
   }
 
   template <typename T>
@@ -94,29 +85,54 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   }
 
   template <typename T>
+  FORCE_INLINE typename VariantTo<T>::type to() {
+    return getOrAddUpstreamVariant().template to<T>();
+  }
+
+  template <typename T>
   FORCE_INLINE
       typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
       is() const {
-    return getUpstreamMember().template is<T>();
+    return getUpstreamVariant().template is<T>();
   }
 
   template <typename T>
   FORCE_INLINE
       typename enable_if<!ConverterNeedsWriteableRef<T>::value, bool>::type
       is() const {
-    return getUpstreamMemberConst().template is<T>();
+    return getUpstreamVariantConst().template is<T>();
+  }
+
+  FORCE_INLINE void shallowCopy(VariantConstRef value) {
+    getOrAddUpstreamVariant().shallowCopy(value);
+  }
+
+  template <typename T>
+  FORCE_INLINE bool set(const T& value) {
+    return getOrAddUpstreamVariant().set(value);
+  }
+
+  template <typename T>
+  FORCE_INLINE bool set(T* value) {
+    return getOrAddUpstreamVariant().set(value);
   }
 
   FORCE_INLINE size_t size() const {
-    return getUpstreamMemberConst().size();
+    return getUpstreamVariantConst().size();
   }
 
   FORCE_INLINE size_t memoryUsage() const {
-    return getUpstreamMemberConst().memoryUsage();
+    return getUpstreamVariantConst().memoryUsage();
   }
 
+  FORCE_INLINE VariantRef add() const {
+    return getOrAddUpstreamVariant().add();
+  }
+
+  using ArrayShortcuts<MemberProxy<TUpstream, TStringRef> >::add;
+
   FORCE_INLINE void remove(size_t index) const {
-    getUpstreamMember().remove(index);
+    getUpstreamVariant().remove(index);
   }
   // remove(char*) const
   // remove(const char*) const
@@ -124,77 +140,49 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value>::type remove(
       TChar* key) const {
-    getUpstreamMember().remove(key);
+    getUpstreamVariant().remove(key);
   }
   // remove(const std::string&) const
   // remove(const String&) const
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
       const TString& key) const {
-    getUpstreamMember().remove(key);
+    getUpstreamVariant().remove(key);
   }
-
-  FORCE_INLINE void shallowCopy(VariantConstRef value) {
-    getOrAddUpstreamMember().shallowCopy(value);
-  }
-
-  template <typename TValue>
-  FORCE_INLINE typename VariantTo<TValue>::type to() {
-    return getOrAddUpstreamMember().template to<TValue>();
-  }
-
-  template <typename TValue>
-  FORCE_INLINE bool set(const TValue& value) {
-    return getOrAddUpstreamMember().set(value);
-  }
-
-  // set(char*) const
-  // set(const char*) const
-  // set(const __FlashStringHelper*) const
-  template <typename TChar>
-  FORCE_INLINE bool set(TChar* value) {
-    return getOrAddUpstreamMember().set(value);
-  }
-
-  FORCE_INLINE VariantRef add() const {
-    return getOrAddUpstreamMember().add();
-  }
-
-  using ArrayShortcuts<MemberProxy<TObject, TStringRef> >::add;
 
  protected:
   FORCE_INLINE MemoryPool* getPool() const {
-    return VariantAttorney::getPool(_object);
+    return VariantAttorney::getPool(_upstream);
   }
 
   FORCE_INLINE VariantData* getData() const {
-    return variantGetMember(VariantAttorney::getData(_object),
+    return variantGetMember(VariantAttorney::getData(_upstream),
                             adaptString(_key));
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {
-    return variantGetOrAddMember(VariantAttorney::getOrCreateData(_object),
-                                 _key, VariantAttorney::getPool(_object));
+    return variantGetOrAddMember(VariantAttorney::getOrCreateData(_upstream),
+                                 _key, VariantAttorney::getPool(_upstream));
   }
 
  private:
-  FORCE_INLINE VariantRef getUpstreamMember() const {
+  FORCE_INLINE VariantRef getUpstreamVariant() const {
     return VariantRef(getPool(), getData());
   }
 
-  FORCE_INLINE VariantConstRef getUpstreamMemberConst() const {
+  FORCE_INLINE VariantConstRef getUpstreamVariantConst() const {
     return VariantConstRef(getData());
   }
 
-  FORCE_INLINE VariantRef getOrAddUpstreamMember() const {
+  FORCE_INLINE VariantRef getOrAddUpstreamVariant() const {
     return VariantRef(getPool(), getOrCreateData());
   }
 
-  friend void convertToJson(const this_type& src, VariantRef dst) {
-    dst.set(src.getUpstreamMemberConst());
+  friend void convertToJson(const MemberProxy& src, VariantRef dst) {
+    dst.set(src.getUpstreamVariantConst());
   }
 
-  TObject _object;
+  TUpstream _upstream;
   TStringRef _key;
 };
 
