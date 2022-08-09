@@ -146,7 +146,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   }
 
   void freePool() {
-    this->deallocate(memoryPool().buffer());
+    this->deallocate(getPool()->buffer());
   }
 
   void copyAssignFrom(const JsonDocument& src) {

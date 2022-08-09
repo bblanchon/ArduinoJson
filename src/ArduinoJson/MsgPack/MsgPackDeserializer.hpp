@@ -16,9 +16,9 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
  public:
-  MsgPackDeserializer(MemoryPool &pool, TReader reader,
+  MsgPackDeserializer(MemoryPool *pool, TReader reader,
                       TStringStorage stringStorage)
-      : _pool(&pool),
+      : _pool(pool),
         _reader(reader),
         _stringStorage(stringStorage),
         _foundSomething(false) {}

@@ -20,12 +20,12 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
  public:
-  JsonDeserializer(MemoryPool &pool, TReader reader,
+  JsonDeserializer(MemoryPool *pool, TReader reader,
                    TStringStorage stringStorage)
       : _stringStorage(stringStorage),
         _foundSomething(false),
         _latch(reader),
-        _pool(&pool) {}
+        _pool(pool) {}
 
   template <typename TFilter>
   DeserializationError parse(VariantData &variant, TFilter filter,

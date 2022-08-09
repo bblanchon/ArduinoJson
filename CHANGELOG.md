@@ -11,6 +11,7 @@ HEAD
 * Remove undocumented `accept()` functions
 * Rename `addElement()` to `add()`
 * Remove `getElement()`, `getOrAddElement()`, `getMember()`, and `getOrAddMember()`
+* Remove `JsonDocument::data()` and `JsonDocument::memoryPool()`
 
 > ### BREAKING CHANGES
 >

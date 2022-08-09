@@ -14,9 +14,10 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename, typename> class TDeserializer, typename TReader,
           typename TWriter>
-TDeserializer<TReader, TWriter> makeDeserializer(MemoryPool &pool,
+TDeserializer<TReader, TWriter> makeDeserializer(MemoryPool *pool,
                                                  TReader reader,
                                                  TWriter writer) {
+  ARDUINOJSON_ASSERT(pool != 0);
   return TDeserializer<TReader, TWriter>(pool, reader, writer);
 }
 
@@ -31,11 +32,12 @@ typename enable_if<!is_array<TString>::value, DeserializationError>::type
 deserialize(JsonDocument &doc, const TString &input, NestingLimit nestingLimit,
             TFilter filter) {
   Reader<TString> reader(input);
+  VariantData *data = VariantAttorney::getData(doc);
+  MemoryPool *pool = VariantAttorney::getPool(doc);
   doc.clear();
-  return makeDeserializer<TDeserializer>(
-             doc.memoryPool(), reader,
-             makeStringStorage(input, doc.memoryPool()))
-      .parse(doc.data(), filter, nestingLimit);
+  return makeDeserializer<TDeserializer>(pool, reader,
+                                         makeStringStorage(input, pool))
+      .parse(*data, filter, nestingLimit);
 }
 //
 // deserialize(JsonDocument&, char*, size_t, NestingLimit, Filter);
@@ -47,11 +49,12 @@ DeserializationError deserialize(JsonDocument &doc, TChar *input,
                                  size_t inputSize, NestingLimit nestingLimit,
                                  TFilter filter) {
   BoundedReader<TChar *> reader(input, inputSize);
+  VariantData *data = VariantAttorney::getData(doc);
+  MemoryPool *pool = VariantAttorney::getPool(doc);
   doc.clear();
-  return makeDeserializer<TDeserializer>(
-             doc.memoryPool(), reader,
-             makeStringStorage(input, doc.memoryPool()))
-      .parse(doc.data(), filter, nestingLimit);
+  return makeDeserializer<TDeserializer>(pool, reader,
+                                         makeStringStorage(input, pool))
+      .parse(*data, filter, nestingLimit);
 }
 //
 // deserialize(JsonDocument&, std::istream&, NestingLimit, Filter);
@@ -61,11 +64,12 @@ template <template <typename, typename> class TDeserializer, typename TStream,
 DeserializationError deserialize(JsonDocument &doc, TStream &input,
                                  NestingLimit nestingLimit, TFilter filter) {
   Reader<TStream> reader(input);
+  VariantData *data = VariantAttorney::getData(doc);
+  MemoryPool *pool = VariantAttorney::getPool(doc);
   doc.clear();
-  return makeDeserializer<TDeserializer>(
-             doc.memoryPool(), reader,
-             makeStringStorage(input, doc.memoryPool()))
-      .parse(doc.data(), filter, nestingLimit);
+  return makeDeserializer<TDeserializer>(pool, reader,
+                                         makeStringStorage(input, pool))
+      .parse(*data, filter, nestingLimit);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

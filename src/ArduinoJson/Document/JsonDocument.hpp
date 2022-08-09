@@ -83,16 +83,6 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     return getVariant().template to<T>();
   }
 
-  // for internal use only
-  MemoryPool& memoryPool() {
-    return _pool;
-  }
-
-  // for internal use only
-  VariantData& data() {
-    return _data;
-  }
-
   ArrayRef createNestedArray() {
     return add().to<ArrayRef>();
   }

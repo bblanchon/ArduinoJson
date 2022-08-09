@@ -10,7 +10,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class StringCopier {
  public:
-  StringCopier(MemoryPool& pool) : _pool(&pool) {}
+  StringCopier(MemoryPool* pool) : _pool(pool) {}
 
   void startString() {
     _pool->getFreeZone(&_ptr, &_capacity);
