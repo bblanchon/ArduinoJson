@@ -54,18 +54,22 @@ ObjectShortcuts<TObject>::containsKey(TChar* key) const {
 
 template <typename TObject>
 template <typename TString>
-inline typename enable_if<IsString<TString*>::value,
-                          MemberProxy<TObject, TString*> >::type
+inline typename enable_if<
+    IsString<TString*>::value,
+    VariantProxy<MemberDataSource<TObject, TString*> > >::type
 ObjectShortcuts<TObject>::operator[](TString* key) const {
-  return MemberProxy<TObject, TString*>(*impl(), key);
+  return VariantProxy<MemberDataSource<TObject, TString*> >(
+      MemberDataSource<TObject, TString*>(*impl(), key));
 }
 
 template <typename TObject>
 template <typename TString>
-inline typename enable_if<IsString<TString>::value,
-                          MemberProxy<TObject, TString> >::type
-ObjectShortcuts<TObject>::operator[](const TString& key) const {
-  return MemberProxy<TObject, TString>(*impl(), key);
+inline
+    typename enable_if<IsString<TString>::value,
+                       VariantProxy<MemberDataSource<TObject, TString> > >::type
+    ObjectShortcuts<TObject>::operator[](const TString& key) const {
+  return VariantProxy<MemberDataSource<TObject, TString> >(
+      MemberDataSource<TObject, TString>(*impl(), key));
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -11,14 +11,19 @@ namespace ARDUINOJSON_NAMESPACE {
 // Forward declarations.
 class ArrayRef;
 class ObjectRef;
+
 template <typename>
-class ElementProxy;
+class ElementDataSource;
+
+template <typename>
+class VariantProxy;
 
 template <typename TArray>
 class ArrayShortcuts {
  public:
   // Returns the element at specified index if the variant is an array.
-  FORCE_INLINE ElementProxy<TArray> operator[](size_t index) const;
+  FORCE_INLINE VariantProxy<ElementDataSource<TArray> > operator[](
+      size_t index) const;
 
   FORCE_INLINE ObjectRef createNestedObject() const;
 

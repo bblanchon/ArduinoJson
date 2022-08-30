@@ -7,10 +7,12 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
+typedef VariantProxy<ElementDataSource<JsonDocument&> > ElementProxy;
+
 TEST_CASE("ElementProxy::add()") {
   DynamicJsonDocument doc(4096);
   doc.add();
-  ElementProxy<JsonDocument&> ep = doc[0];
+  ElementProxy ep = doc[0];
 
   SECTION("add(int)") {
     ep.add(42);
@@ -36,7 +38,7 @@ TEST_CASE("ElementProxy::add()") {
 TEST_CASE("ElementProxy::clear()") {
   DynamicJsonDocument doc(4096);
   doc.add();
-  ElementProxy<JsonDocument&> ep = doc[0];
+  ElementProxy ep = doc[0];
 
   SECTION("size goes back to zero") {
     ep.add(42);
@@ -96,7 +98,7 @@ TEST_CASE("ElementProxy::operator==()") {
 TEST_CASE("ElementProxy::remove()") {
   DynamicJsonDocument doc(4096);
   doc.add();
-  ElementProxy<JsonDocument&> ep = doc[0];
+  ElementProxy ep = doc[0];
 
   SECTION("remove(int)") {
     ep.add(1);
@@ -143,7 +145,7 @@ TEST_CASE("ElementProxy::remove()") {
 
 TEST_CASE("ElementProxy::set()") {
   DynamicJsonDocument doc(4096);
-  ElementProxy<JsonDocument&> ep = doc[0];
+  ElementProxy ep = doc[0];
 
   SECTION("set(int)") {
     ep.set(42);
@@ -169,7 +171,7 @@ TEST_CASE("ElementProxy::set()") {
 TEST_CASE("ElementProxy::size()") {
   DynamicJsonDocument doc(4096);
   doc.add();
-  ElementProxy<JsonDocument&> ep = doc[0];
+  ElementProxy ep = doc[0];
 
   SECTION("returns 0") {
     REQUIRE(ep.size() == 0);
@@ -191,7 +193,7 @@ TEST_CASE("ElementProxy::size()") {
 TEST_CASE("ElementProxy::memoryUsage()") {
   DynamicJsonDocument doc(4096);
   doc.add();
-  ElementProxy<JsonDocument&> ep = doc[0];
+  ElementProxy ep = doc[0];
 
   SECTION("returns 0 for null") {
     REQUIRE(ep.memoryUsage() == 0);
@@ -205,7 +207,7 @@ TEST_CASE("ElementProxy::memoryUsage()") {
 
 TEST_CASE("ElementProxy::operator[]") {
   DynamicJsonDocument doc(4096);
-  ElementProxy<JsonDocument&> ep = doc[1];
+  ElementProxy ep = doc[1];
 
   SECTION("set member") {
     ep["world"] = 42;
@@ -224,7 +226,7 @@ TEST_CASE("ElementProxy cast to JsonVariantConst") {
   DynamicJsonDocument doc(4096);
   doc[0] = "world";
 
-  const ElementProxy<JsonDocument&> ep = doc[0];
+  const ElementProxy ep = doc[0];
 
   JsonVariantConst var = ep;
 
@@ -235,7 +237,7 @@ TEST_CASE("ElementProxy cast to JsonVariant") {
   DynamicJsonDocument doc(4096);
   doc[0] = "world";
 
-  ElementProxy<JsonDocument&> ep = doc[0];
+  ElementProxy ep = doc[0];
 
   JsonVariant var = ep;
 

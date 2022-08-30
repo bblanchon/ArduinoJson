@@ -17,8 +17,6 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 class ObjectRef;
-template <typename>
-class ElementProxy;
 
 template <typename TData>
 class ArrayRefBase {

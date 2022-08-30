@@ -20,9 +20,10 @@ inline ObjectRef ArrayShortcuts<TArray>::createNestedObject() const {
 }
 
 template <typename TArray>
-inline ElementProxy<TArray> ArrayShortcuts<TArray>::operator[](
-    size_t index) const {
-  return ElementProxy<TArray>(*impl(), index);
+inline VariantProxy<ElementDataSource<TArray> >
+ArrayShortcuts<TArray>::operator[](size_t index) const {
+  return VariantProxy<ElementDataSource<TArray> >(
+      ElementDataSource<TArray>(*impl(), index));
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

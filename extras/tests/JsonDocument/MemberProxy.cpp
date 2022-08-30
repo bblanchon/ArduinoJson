@@ -7,9 +7,11 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
+typedef VariantProxy<MemberDataSource<JsonDocument&, const char*> > MemberProxy;
+
 TEST_CASE("MemberProxy::add()") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("add(int)") {
     mp.add(42);
@@ -26,7 +28,7 @@ TEST_CASE("MemberProxy::add()") {
 
 TEST_CASE("MemberProxy::clear()") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("size goes back to zero") {
     mp.add(42);
@@ -85,7 +87,7 @@ TEST_CASE("MemberProxy::operator==()") {
 
 TEST_CASE("MemberProxy::containsKey()") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("containsKey(const char*)") {
     mp["key"] = "value";
@@ -136,7 +138,7 @@ TEST_CASE("MemberProxy::operator|()") {
 
 TEST_CASE("MemberProxy::remove()") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("remove(int)") {
     mp.add(1);
@@ -183,7 +185,7 @@ TEST_CASE("MemberProxy::remove()") {
 
 TEST_CASE("MemberProxy::set()") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("set(int)") {
     mp.set(42);
@@ -208,7 +210,7 @@ TEST_CASE("MemberProxy::set()") {
 
 TEST_CASE("MemberProxy::size()") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("returns 0") {
     REQUIRE(mp.size() == 0);
@@ -231,7 +233,7 @@ TEST_CASE("MemberProxy::size()") {
 
 TEST_CASE("MemberProxy::memoryUsage()") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("returns 0 when null") {
     REQUIRE(mp.memoryUsage() == 0);
@@ -245,7 +247,7 @@ TEST_CASE("MemberProxy::memoryUsage()") {
 
 TEST_CASE("MemberProxy::operator[]") {
   DynamicJsonDocument doc(4096);
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   SECTION("set member") {
     mp["world"] = 42;
@@ -264,7 +266,7 @@ TEST_CASE("MemberProxy cast to JsonVariantConst") {
   DynamicJsonDocument doc(4096);
   doc["hello"] = "world";
 
-  const MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  const MemberProxy mp = doc["hello"];
 
   JsonVariantConst var = mp;
 
@@ -275,7 +277,7 @@ TEST_CASE("MemberProxy cast to JsonVariant") {
   DynamicJsonDocument doc(4096);
   doc["hello"] = "world";
 
-  MemberProxy<JsonDocument&, const char*> mp = doc["hello"];
+  MemberProxy mp = doc["hello"];
 
   JsonVariant var = mp;
 

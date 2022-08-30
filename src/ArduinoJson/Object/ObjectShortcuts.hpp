@@ -9,8 +9,11 @@
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
+template <typename TSource>
+class VariantProxy;
+
 template <typename TParent, typename TStringRef>
-class MemberProxy;
+class MemberDataSource;
 
 template <typename TObject>
 class ObjectShortcuts {
@@ -31,16 +34,18 @@ class ObjectShortcuts {
   // operator[](const std::string&) const
   // operator[](const String&) const
   template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value,
-                                  MemberProxy<TObject, TString> >::type
+  FORCE_INLINE typename enable_if<
+      IsString<TString>::value,
+      VariantProxy<MemberDataSource<TObject, TString> > >::type
   operator[](const TString& key) const;
 
   // operator[](char*) const
   // operator[](const char*) const
   // operator[](const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE typename enable_if<IsString<TChar*>::value,
-                                  MemberProxy<TObject, TChar*> >::type
+  FORCE_INLINE typename enable_if<
+      IsString<TChar*>::value,
+      VariantProxy<MemberDataSource<TObject, TChar*> > >::type
   operator[](TChar* key) const;
 
   // createNestedArray(const std::string&) const
