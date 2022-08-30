@@ -5,18 +5,10 @@
   "git.inputValidationSubjectLength": 72,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
-  "files.associations": {
-    "fstream": "cpp",
-    "iomanip": "cpp",
-    "string": "cpp",
-    "system_error": "cpp",
-    "vector": "cpp",
-    "xlocmon": "cpp",
-    "xlocnum": "cpp",
-    "xloctime": "cpp",
-    "xstring": "cpp"
-  },
   "search.exclude": {
     "/extras/tests/catch/*": true
-  }
+  },
+  "C_Cpp.default.includePath": [
+    "/src"
+  ]
 }
