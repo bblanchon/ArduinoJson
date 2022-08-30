@@ -16,6 +16,8 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TData>
 class ObjectRefBase {
+  friend class VariantAttorney;
+
  public:
   operator VariantConstRef() const {
     return VariantConstRef(collectionToVariant(_data));
@@ -42,6 +44,10 @@ class ObjectRefBase {
   }
 
  protected:
+  const VariantData* getData() const {
+    return collectionToVariant(_data);
+  }
+
   ObjectRefBase(TData* data) : _data(data) {}
   TData* _data;
 };
@@ -116,8 +122,6 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
     }
     return count == rhs.size();
   }
-
- private:
 };
 
 class ObjectRef : public ObjectRefBase<CollectionData>,

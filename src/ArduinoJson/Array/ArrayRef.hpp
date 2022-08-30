@@ -22,6 +22,8 @@ class ElementProxy;
 
 template <typename TData>
 class ArrayRefBase {
+  friend class VariantAttorney;
+
  public:
   operator VariantConstRef() const {
     return VariantConstRef(collectionToVariant(_data));
@@ -48,6 +50,10 @@ class ArrayRefBase {
   }
 
  protected:
+  const VariantData* getData() const {
+    return collectionToVariant(_data);
+  }
+
   ArrayRefBase(TData* data) : _data(data) {}
   TData* _data;
 };

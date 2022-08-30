@@ -128,9 +128,9 @@ struct RawComparer : ComparerBase {
 };
 
 struct VariantComparer : ComparerBase {
-  VariantConstRef rhs;
+  const VariantData* rhs;
 
-  explicit VariantComparer(VariantConstRef value) : rhs(value) {}
+  explicit VariantComparer(const VariantData* value) : rhs(value) {}
 
   CompareResult visitArray(const CollectionData& lhs) {
     ArrayComparer comparer(lhs);
@@ -180,8 +180,7 @@ struct VariantComparer : ComparerBase {
  private:
   template <typename TComparer>
   CompareResult accept(TComparer& comparer) {
-    CompareResult reversedResult =
-        variantAccept(VariantAttorney::getData(rhs), comparer);
+    CompareResult reversedResult = variantAccept(rhs, comparer);
     switch (reversedResult) {
       case COMPARE_RESULT_GREATER:
         return COMPARE_RESULT_LESS;
@@ -198,7 +197,7 @@ struct Comparer<
     T, typename enable_if<is_convertible<T, VariantConstRef>::value>::type>
     : VariantComparer {
   explicit Comparer(const T& value)
-      : VariantComparer(value.operator VariantConstRef()) {}
+      : VariantComparer(VariantAttorney::getData(value)) {}
 };
 
 template <typename T>
