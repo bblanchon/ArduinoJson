@@ -1,4 +1,6 @@
-![ArduinoJson](banner.svg)
+<p align="center">
+  <a href="https://arduinojson.org/"><img alt="ArduinoJson" src="logo.svg" /></a>
+</p>
 
 ---
 
