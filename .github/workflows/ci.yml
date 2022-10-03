@@ -219,7 +219,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install arduino-cli
-        run: brew update && brew install arduino-cli
+        run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
       - name: Install core
         run: arduino-cli core install ${{ matrix.core }}
       - name: Install libraries
