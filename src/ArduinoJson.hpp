@@ -23,7 +23,7 @@
 
 #include "ArduinoJson/Array/ArrayRef.hpp"
 #include "ArduinoJson/Object/ObjectRef.hpp"
-#include "ArduinoJson/Variant/VariantRef.hpp"
+#include "ArduinoJson/Variant/VariantConstRef.hpp"
 
 #include "ArduinoJson/Document/DynamicJsonDocument.hpp"
 #include "ArduinoJson/Document/StaticJsonDocument.hpp"

@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Strings/String.hpp>
+#include <ArduinoJson/Variant/VariantConstRef.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {

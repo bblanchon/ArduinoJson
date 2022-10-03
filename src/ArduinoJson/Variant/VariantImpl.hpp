@@ -105,28 +105,53 @@ inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
   }
 }
 
+template <typename TSource>
+inline VariantRef VariantRefBase<TSource>::add() const {
+  return VariantRef(getPool(), variantAddElement(getOrCreateData(), getPool()));
+}
+
+template <typename TSource>
+inline VariantRef VariantRefBase<TSource>::getVariant() const {
+  return VariantRef(getPool(), getData());
+}
+
+template <typename TSource>
+inline VariantRef VariantRefBase<TSource>::getOrCreateVariant() const {
+  return VariantRef(getPool(), getOrCreateData());
+}
+
+template <typename TSource>
 template <typename T>
 inline typename enable_if<is_same<T, ArrayRef>::value, ArrayRef>::type
-VariantRef::to() const {
-  return ArrayRef(_pool, variantToArray(_data));
+VariantRefBase<TSource>::to() const {
+  return ArrayRef(getPool(), variantToArray(getOrCreateData()));
 }
 
+template <typename TSource>
 template <typename T>
 typename enable_if<is_same<T, ObjectRef>::value, ObjectRef>::type
-VariantRef::to() const {
-  return ObjectRef(_pool, variantToObject(_data));
+VariantRefBase<TSource>::to() const {
+  return ObjectRef(getPool(), variantToObject(getOrCreateData()));
 }
 
+template <typename TSource>
 template <typename T>
 typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type
-VariantRef::to() const {
-  variantSetNull(_data);
+VariantRefBase<TSource>::to() const {
+  variantSetNull(getOrCreateData());
   return *this;
 }
 
 // Out of class definition to avoid #1560
-inline bool VariantRef::set(char value) const {
+template <typename TSource>
+inline bool VariantRefBase<TSource>::set(char value) const {
   return set(static_cast<signed char>(value));
+}
+
+template <typename TDataSource>
+inline void convertToJson(const VariantRefBase<TDataSource>& src,
+                          VariantRef dst) {
+  dst.set(src.template as<VariantConstRef>());
 }
 
 // TODO: move somewhere else
