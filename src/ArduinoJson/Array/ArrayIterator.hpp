@@ -26,6 +26,8 @@ class VariantPtr {
 };
 
 class ArrayIterator {
+  friend class ArrayRef;
+
  public:
   ArrayIterator() : _slot(0) {}
   explicit ArrayIterator(MemoryPool* pool, VariantSlot* slot)
@@ -56,10 +58,6 @@ class ArrayIterator {
     return *this;
   }
 
-  VariantSlot* internal() {
-    return _slot;
-  }
-
  private:
   MemoryPool* _pool;
   VariantSlot* _slot;
@@ -82,6 +80,8 @@ class VariantConstPtr {
 };
 
 class ArrayConstRefIterator {
+  friend class ArrayRef;
+
  public:
   ArrayConstRefIterator() : _slot(0) {}
   explicit ArrayConstRefIterator(const VariantSlot* slot) : _slot(slot) {}
@@ -109,10 +109,6 @@ class ArrayConstRefIterator {
   ArrayConstRefIterator& operator+=(size_t distance) {
     _slot = _slot->next(distance);
     return *this;
-  }
-
-  const VariantSlot* internal() {
-    return _slot;
   }
 
  private:

@@ -26,6 +26,8 @@ class PairPtr {
 };
 
 class ObjectIterator {
+  friend class ObjectRef;
+
  public:
   ObjectIterator() : _slot(0) {}
 
@@ -57,10 +59,6 @@ class ObjectIterator {
     return *this;
   }
 
-  VariantSlot* internal() {
-    return _slot;
-  }
-
  private:
   MemoryPool* _pool;
   VariantSlot* _slot;
@@ -83,6 +81,8 @@ class PairConstPtr {
 };
 
 class ObjectConstIterator {
+  friend class ObjectRef;
+
  public:
   ObjectConstIterator() : _slot(0) {}
 
@@ -111,10 +111,6 @@ class ObjectConstIterator {
   ObjectConstIterator& operator+=(size_t distance) {
     _slot = _slot->next(distance);
     return *this;
-  }
-
-  const VariantSlot* internal() {
-    return _slot;
   }
 
  private:

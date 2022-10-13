@@ -176,7 +176,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   FORCE_INLINE void remove(iterator it) const {
     if (!_data)
       return;
-    _data->removeSlot(it.internal());
+    _data->removeSlot(it._slot);
   }
 
   // remove(const std::string&) const

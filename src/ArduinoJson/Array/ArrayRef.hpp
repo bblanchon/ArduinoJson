@@ -159,7 +159,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
   FORCE_INLINE void remove(iterator it) const {
     if (!_data)
       return;
-    _data->removeSlot(it.internal());
+    _data->removeSlot(it._slot);
   }
 
   // Removes element at specified index.
