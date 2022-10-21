@@ -163,14 +163,14 @@ jobs:
   xcode:
     name: XCode
     needs: clang
-    runs-on: macos-10.15
+    runs-on: macos-11
     strategy:
       fail-fast: false
       matrix:
         include:
-          - xcode: "10.3"
           - xcode: "11.7"
           - xcode: "12.4"
+          - xcode: "13.2.1"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
