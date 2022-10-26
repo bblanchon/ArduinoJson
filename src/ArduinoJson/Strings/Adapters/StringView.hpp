@@ -19,7 +19,4 @@ struct StringAdapter<std::string_view, void> {
   }
 };
 
-template <>
-struct IsString<std::string_view> : true_type {};
-
 }  // namespace ARDUINOJSON_NAMESPACE

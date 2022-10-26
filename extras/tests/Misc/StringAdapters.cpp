@@ -8,6 +8,7 @@
 #include "custom_string.hpp"
 #include "weird_strcmp.hpp"
 
+#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 
 #include <catch.hpp>

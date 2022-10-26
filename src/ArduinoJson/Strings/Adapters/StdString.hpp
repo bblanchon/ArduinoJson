@@ -20,8 +20,4 @@ struct StringAdapter<std::basic_string<char, TCharTraits, TAllocator>, void> {
   }
 };
 
-template <typename TCharTraits, typename TAllocator>
-struct IsString<std::basic_string<char, TCharTraits, TAllocator> > : true_type {
-};
-
 }  // namespace ARDUINOJSON_NAMESPACE

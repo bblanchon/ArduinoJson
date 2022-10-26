@@ -5,13 +5,16 @@
 #pragma once
 
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename T, typename Enable = void>
 struct IsString : false_type {};
 
-template <typename TChar>
-struct IsString<const TChar*> : IsString<TChar*> {};
+template <typename T>
+struct IsString<
+    T, typename make_void<typename StringAdapter<T>::AdaptedString>::type>
+    : true_type {};
 
 }  // namespace ARDUINOJSON_NAMESPACE

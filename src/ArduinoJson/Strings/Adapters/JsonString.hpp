@@ -5,8 +5,8 @@
 #pragma once
 
 #include <ArduinoJson/Strings/Adapters/RamString.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/String.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -32,8 +32,5 @@ struct StringAdapter<String> {
     return AdaptedString(s);
   }
 };
-
-template <>
-struct IsString<String> : true_type {};
 
 }  // namespace ARDUINOJSON_NAMESPACE

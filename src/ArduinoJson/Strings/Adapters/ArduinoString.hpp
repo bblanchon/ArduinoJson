@@ -7,7 +7,6 @@
 #include <Arduino.h>
 
 #include <ArduinoJson/Strings/Adapters/RamString.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -22,11 +21,5 @@ struct StringAdapter<
     return AdaptedString(s.c_str(), s.length());
   }
 };
-
-template <>
-struct IsString< ::String> : true_type {};
-
-template <>
-struct IsString< ::StringSumHelper> : true_type {};
 
 }  // namespace ARDUINOJSON_NAMESPACE

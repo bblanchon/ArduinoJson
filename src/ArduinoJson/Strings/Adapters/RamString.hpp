@@ -8,7 +8,6 @@
 #include <string.h>  // strcmp
 
 #include <ArduinoJson/Polyfills/assert.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 
@@ -58,12 +57,6 @@ class ZeroTerminatedRamString {
   const char* _str;
 };
 
-template <>
-struct IsString<char*> : true_type {};
-
-template <>
-struct IsString<unsigned char*> : true_type {};
-
 template <typename TChar>
 struct StringAdapter<TChar*, typename enable_if<sizeof(TChar) == 1>::type> {
   typedef ZeroTerminatedRamString AdaptedString;
@@ -72,15 +65,6 @@ struct StringAdapter<TChar*, typename enable_if<sizeof(TChar) == 1>::type> {
     return AdaptedString(reinterpret_cast<const char*>(p));
   }
 };
-
-template <>
-struct IsString<signed char*> : true_type {};
-
-template <size_t N>
-struct IsString<char[N]> : true_type {};
-
-template <size_t N>
-struct IsString<const char[N]> : true_type {};
 
 template <typename TChar, size_t N>
 struct StringAdapter<TChar[N], typename enable_if<sizeof(TChar) == 1>::type> {

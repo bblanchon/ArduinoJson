@@ -7,7 +7,7 @@
 #include <Arduino.h>
 
 #include <ArduinoJson/Polyfills/pgmspace.hpp>
-#include <ArduinoJson/Strings/IsString.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -87,8 +87,5 @@ struct SizedStringAdapter<const __FlashStringHelper*, void> {
     return AdaptedString(s, n);
   }
 };
-
-template <>
-struct IsString<const __FlashStringHelper*> : true_type {};
 
 }  // namespace ARDUINOJSON_NAMESPACE
