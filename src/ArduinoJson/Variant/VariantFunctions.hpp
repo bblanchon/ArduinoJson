@@ -74,29 +74,19 @@ inline NO_INLINE VariantData* variantGetOrAddElement(VariantData* var,
   return var != 0 ? var->getOrAddElement(index, pool) : 0;
 }
 
-template <typename AdaptedString>
-VariantData* variantGetMember(const VariantData* var, AdaptedString key) {
+template <typename TAdaptedString>
+VariantData* variantGetMember(const VariantData* var, TAdaptedString key) {
   if (!var)
     return 0;
   return var->getMember(key);
 }
 
-// TODO: this function is inconsitent with the others:
-// it should take an adapted string
-template <typename TChar>
-VariantData* variantGetOrAddMember(VariantData* var, TChar* key,
+template <typename TAdaptedString>
+VariantData* variantGetOrAddMember(VariantData* var, TAdaptedString key,
                                    MemoryPool* pool) {
   if (!var)
     return 0;
-  return var->getOrAddMember(adaptString(key), pool);
-}
-
-template <typename TString>
-VariantData* variantGetOrAddMember(VariantData* var, const TString& key,
-                                   MemoryPool* pool) {
-  if (!var)
-    return 0;
-  return var->getOrAddMember(adaptString(key), pool);
+  return var->getOrAddMember(key, pool);
 }
 
 inline bool variantIsNull(const VariantData* var) {

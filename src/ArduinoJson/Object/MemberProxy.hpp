@@ -25,7 +25,8 @@ class MemberDataSource {
 
   FORCE_INLINE VariantData* getOrCreateData() const {
     return variantGetOrAddMember(VariantAttorney::getOrCreateData(_upstream),
-                                 _key, VariantAttorney::getPool(_upstream));
+                                 adaptString(_key),
+                                 VariantAttorney::getPool(_upstream));
   }
 
  private:
