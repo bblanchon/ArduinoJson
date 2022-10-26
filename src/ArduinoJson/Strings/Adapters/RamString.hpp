@@ -10,6 +10,7 @@
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
+#include <ArduinoJson/Strings/StringAdapter.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -60,23 +61,35 @@ class ZeroTerminatedRamString {
 template <>
 struct IsString<char*> : true_type {};
 
-inline ZeroTerminatedRamString adaptString(char* s) {
-  return ZeroTerminatedRamString(s);
-}
-
 template <>
 struct IsString<unsigned char*> : true_type {};
 
-inline ZeroTerminatedRamString adaptString(const unsigned char* s) {
-  return ZeroTerminatedRamString(reinterpret_cast<const char*>(s));
-}
+template <typename TChar>
+struct StringAdapter<TChar*, typename enable_if<sizeof(TChar) == 1>::type> {
+  typedef ZeroTerminatedRamString AdaptedString;
+
+  static AdaptedString adapt(const TChar* p) {
+    return AdaptedString(reinterpret_cast<const char*>(p));
+  }
+};
 
 template <>
 struct IsString<signed char*> : true_type {};
 
-inline ZeroTerminatedRamString adaptString(const signed char* s) {
-  return ZeroTerminatedRamString(reinterpret_cast<const char*>(s));
-}
+template <size_t N>
+struct IsString<char[N]> : true_type {};
+
+template <size_t N>
+struct IsString<const char[N]> : true_type {};
+
+template <typename TChar, size_t N>
+struct StringAdapter<TChar[N], typename enable_if<sizeof(TChar) == 1>::type> {
+  typedef ZeroTerminatedRamString AdaptedString;
+
+  static AdaptedString adapt(const TChar* p) {
+    return AdaptedString(reinterpret_cast<const char*>(p));
+  }
+};
 
 class StaticStringAdapter : public ZeroTerminatedRamString {
  public:
@@ -87,9 +100,14 @@ class StaticStringAdapter : public ZeroTerminatedRamString {
   }
 };
 
-inline StaticStringAdapter adaptString(const char* s) {
-  return StaticStringAdapter(s);
-}
+template <>
+struct StringAdapter<const char*, void> {
+  typedef StaticStringAdapter AdaptedString;
+
+  static AdaptedString adapt(const char* p) {
+    return AdaptedString(p);
+  }
+};
 
 class SizedRamString {
  public:
@@ -124,18 +142,14 @@ class SizedRamString {
   size_t _size;
 };
 
-inline SizedRamString adaptString(const char* s, size_t n) {
-  return SizedRamString(s, n);
-}
+template <typename TChar>
+struct SizedStringAdapter<TChar*,
+                          typename enable_if<sizeof(TChar) == 1>::type> {
+  typedef SizedRamString AdaptedString;
 
-template <size_t N>
-struct IsString<char[N]> : true_type {};
+  static AdaptedString adapt(const TChar* p, size_t n) {
+    return AdaptedString(reinterpret_cast<const char*>(p), n);
+  }
+};
 
-template <size_t N>
-struct IsString<const char[N]> : true_type {};
-
-template <size_t N>
-inline SizedRamString adaptString(char s[N]) {
-  return SizedRamString(s, strlen(s));
-}
 }  // namespace ARDUINOJSON_NAMESPACE

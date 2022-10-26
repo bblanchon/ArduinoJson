@@ -70,13 +70,23 @@ class FlashString {
   size_t _size;
 };
 
-inline FlashString adaptString(const __FlashStringHelper* s) {
-  return FlashString(s, s ? strlen_P(reinterpret_cast<const char*>(s)) : 0);
-}
+template <>
+struct StringAdapter<const __FlashStringHelper*, void> {
+  typedef FlashString AdaptedString;
 
-inline FlashString adaptString(const __FlashStringHelper* s, size_t n) {
-  return FlashString(s, n);
-}
+  static AdaptedString adapt(const __FlashStringHelper* s) {
+    return AdaptedString(s, s ? strlen_P(reinterpret_cast<const char*>(s)) : 0);
+  }
+};
+
+template <>
+struct SizedStringAdapter<const __FlashStringHelper*, void> {
+  typedef FlashString AdaptedString;
+
+  static AdaptedString adapt(const __FlashStringHelper* s, size_t n) {
+    return AdaptedString(s, n);
+  }
+};
 
 template <>
 struct IsString<const __FlashStringHelper*> : true_type {};

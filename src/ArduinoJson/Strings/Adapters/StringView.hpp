@@ -10,9 +10,14 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline SizedRamString adaptString(const std::string_view& s) {
-  return SizedRamString(s.data(), s.size());
-}
+template <>
+struct StringAdapter<std::string_view, void> {
+  typedef SizedRamString AdaptedString;
+
+  static AdaptedString adapt(const std::string_view& s) {
+    return AdaptedString(s.data(), s.size());
+  }
+};
 
 template <>
 struct IsString<std::string_view> : true_type {};

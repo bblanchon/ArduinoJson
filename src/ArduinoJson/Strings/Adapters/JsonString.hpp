@@ -24,9 +24,14 @@ class JsonStringAdapter : public SizedRamString {
   bool _linked;
 };
 
-inline JsonStringAdapter adaptString(const String& s) {
-  return JsonStringAdapter(s);
-}
+template <>
+struct StringAdapter<String> {
+  typedef JsonStringAdapter AdaptedString;
+
+  static AdaptedString adapt(const String& s) {
+    return AdaptedString(s);
+  }
+};
 
 template <>
 struct IsString<String> : true_type {};
