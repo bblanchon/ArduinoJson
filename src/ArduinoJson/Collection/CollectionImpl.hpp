@@ -33,12 +33,11 @@ inline VariantData* CollectionData::addElement(MemoryPool* pool) {
   return slotData(addSlot(pool));
 }
 
-template <typename TAdaptedString, typename TStoragePolicy>
+template <typename TAdaptedString>
 inline VariantData* CollectionData::addMember(TAdaptedString key,
-                                              MemoryPool* pool,
-                                              TStoragePolicy storage) {
+                                              MemoryPool* pool) {
   VariantSlot* slot = addSlot(pool);
-  if (!slotSetKey(slot, key, pool, storage)) {
+  if (!slotSetKey(slot, key, pool)) {
     removeSlot(slot);
     return 0;
   }
@@ -62,7 +61,7 @@ inline bool CollectionData::copyFrom(const CollectionData& src,
     VariantData* var;
     if (s->key() != 0) {
       String key(s->key(), s->ownsKey() ? String::Copied : String::Linked);
-      var = addMember(adaptString(key), pool, getStringStoragePolicy(key));
+      var = addMember(adaptString(key), pool);
     } else {
       var = addElement(pool);
     }
@@ -110,9 +109,9 @@ inline VariantData* CollectionData::getMember(TAdaptedString key) const {
   return slot ? slot->data() : 0;
 }
 
-template <typename TAdaptedString, typename TStoragePolicy>
-inline VariantData* CollectionData::getOrAddMember(
-    TAdaptedString key, MemoryPool* pool, TStoragePolicy storage_policy) {
+template <typename TAdaptedString>
+inline VariantData* CollectionData::getOrAddMember(TAdaptedString key,
+                                                   MemoryPool* pool) {
   // ignore null key
   if (key.isNull())
     return 0;
@@ -122,7 +121,7 @@ inline VariantData* CollectionData::getOrAddMember(
   if (slot)
     return slot->data();
 
-  return addMember(key, pool, storage_policy);
+  return addMember(key, pool);
 }
 
 inline VariantData* CollectionData::getElement(size_t index) const {

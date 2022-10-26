@@ -285,14 +285,13 @@ class VariantData {
     return col ? col->getMember(key) : 0;
   }
 
-  template <typename TAdaptedString, typename TStoragePolicy>
-  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool,
-                              TStoragePolicy storage_policy) {
+  template <typename TAdaptedString>
+  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool) {
     if (isNull())
       toObject();
     if (!isObject())
       return 0;
-    return _content.asCollection.getOrAddMember(key, pool, storage_policy);
+    return _content.asCollection.getOrAddMember(key, pool);
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
@@ -306,15 +305,14 @@ class VariantData {
     return _flags & VALUE_MASK;
   }
 
-  template <typename TAdaptedString, typename TStoragePolicy>
-  inline bool storeString(TAdaptedString value, MemoryPool* pool,
-                          TStoragePolicy storage) {
+  template <typename TAdaptedString>
+  inline bool setString(TAdaptedString value, MemoryPool* pool) {
     if (value.isNull()) {
       setNull();
       return true;
     }
 
-    return storage.store(value, pool, VariantStringSetter(this));
+    return storeString(pool, value, VariantStringSetter(this));
   }
 
  private:

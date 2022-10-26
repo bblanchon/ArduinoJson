@@ -91,8 +91,7 @@ inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
       return toObject().copyFrom(src._content.asCollection, pool);
     case VALUE_IS_OWNED_STRING: {
       String value = src.asString();
-      return storeString(adaptString(value), pool,
-                         getStringStoragePolicy(value));
+      return setString(adaptString(value), pool);
     }
     case VALUE_IS_OWNED_RAW:
       return storeOwnedRaw(
@@ -152,16 +151,6 @@ template <typename TDataSource>
 inline void convertToJson(const VariantRefBase<TDataSource>& src,
                           VariantRef dst) {
   dst.set(src.template as<VariantConstRef>());
-}
-
-// TODO: move somewhere else
-template <typename TAdaptedString, typename TCallback>
-bool CopyStringStoragePolicy::store(TAdaptedString str, MemoryPool* pool,
-                                    TCallback callback) {
-  const char* copy = pool->saveString(str);
-  String storedString(copy, str.size(), String::Copied);
-  callback(storedString);
-  return copy != 0;
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

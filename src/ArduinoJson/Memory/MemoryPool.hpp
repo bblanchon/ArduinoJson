@@ -208,4 +208,35 @@ class MemoryPool {
   bool _overflowed;
 };
 
+template <typename TAdaptedString, typename TCallback>
+bool storeString(MemoryPool* pool, TAdaptedString str, CopyStringStoragePolicy,
+                 TCallback callback) {
+  const char* copy = pool->saveString(str);
+  String storedString(copy, str.size(), String::Copied);
+  callback(storedString);
+  return copy != 0;
+}
+
+template <typename TAdaptedString, typename TCallback>
+bool storeString(MemoryPool*, TAdaptedString str, LinkStringStoragePolicy,
+                 TCallback callback) {
+  String storedString(str.data(), str.size(), String::Linked);
+  callback(storedString);
+  return !str.isNull();
+}
+
+template <typename TAdaptedString, typename TCallback>
+bool storeString(MemoryPool* pool, TAdaptedString str,
+                 LinkOrCopyStringStoragePolicy policy, TCallback callback) {
+  if (policy.link)
+    return storeString(pool, str, LinkStringStoragePolicy(), callback);
+  else
+    return storeString(pool, str, CopyStringStoragePolicy(), callback);
+}
+
+template <typename TAdaptedString, typename TCallback>
+bool storeString(MemoryPool* pool, TAdaptedString str, TCallback callback) {
+  return storeString(pool, str, str.storagePolicy(), callback);
+}
+
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -37,10 +37,10 @@ inline void variantSetNull(VariantData* var) {
   var->setNull();
 }
 
-template <typename TAdaptedString, typename TStoragePolicy>
+template <typename TAdaptedString>
 inline bool variantSetString(VariantData* var, TAdaptedString value,
-                             MemoryPool* pool, TStoragePolicy storage_policy) {
-  return var != 0 ? var->storeString(value, pool, storage_policy) : 0;
+                             MemoryPool* pool) {
+  return var != 0 ? var->setString(value, pool) : 0;
 }
 
 inline size_t variantSize(const VariantData* var) {
@@ -88,8 +88,7 @@ VariantData* variantGetOrAddMember(VariantData* var, TChar* key,
                                    MemoryPool* pool) {
   if (!var)
     return 0;
-  return var->getOrAddMember(adaptString(key), pool,
-                             getStringStoragePolicy(key));
+  return var->getOrAddMember(adaptString(key), pool);
 }
 
 template <typename TString>
@@ -97,8 +96,7 @@ VariantData* variantGetOrAddMember(VariantData* var, const TString& key,
                                    MemoryPool* pool) {
   if (!var)
     return 0;
-  return var->getOrAddMember(adaptString(key), pool,
-                             getStringStoragePolicy(key));
+  return var->getOrAddMember(adaptString(key), pool);
 }
 
 inline bool variantIsNull(const VariantData* var) {

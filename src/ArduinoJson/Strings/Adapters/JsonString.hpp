@@ -10,8 +10,21 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline SizedRamString adaptString(const String& s) {
-  return SizedRamString(s.c_str(), s.size());
+class JsonStringAdapter : public SizedRamString {
+ public:
+  JsonStringAdapter(const String& s)
+      : SizedRamString(s.c_str(), s.size()), _linked(s.isLinked()) {}
+
+  LinkOrCopyStringStoragePolicy storagePolicy() {
+    return LinkOrCopyStringStoragePolicy(_linked);
+  }
+
+ private:
+  bool _linked;
+};
+
+inline JsonStringAdapter adaptString(const String& s) {
+  return JsonStringAdapter(s);
 }
 
 template <>

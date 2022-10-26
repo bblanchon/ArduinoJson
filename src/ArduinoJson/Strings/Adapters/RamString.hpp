@@ -9,6 +9,7 @@
 
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Strings/IsString.hpp>
+#include <ArduinoJson/Strings/StoragePolicy.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -48,6 +49,10 @@ class ZeroTerminatedRamString {
     return stringCompare(a, b) == 0;
   }
 
+  CopyStringStoragePolicy storagePolicy() {
+    return CopyStringStoragePolicy();
+  }
+
  protected:
   const char* _str;
 };
@@ -55,7 +60,7 @@ class ZeroTerminatedRamString {
 template <>
 struct IsString<char*> : true_type {};
 
-inline ZeroTerminatedRamString adaptString(const char* s) {
+inline ZeroTerminatedRamString adaptString(char* s) {
   return ZeroTerminatedRamString(s);
 }
 
@@ -63,14 +68,27 @@ template <>
 struct IsString<unsigned char*> : true_type {};
 
 inline ZeroTerminatedRamString adaptString(const unsigned char* s) {
-  return adaptString(reinterpret_cast<const char*>(s));
+  return ZeroTerminatedRamString(reinterpret_cast<const char*>(s));
 }
 
 template <>
 struct IsString<signed char*> : true_type {};
 
 inline ZeroTerminatedRamString adaptString(const signed char* s) {
-  return adaptString(reinterpret_cast<const char*>(s));
+  return ZeroTerminatedRamString(reinterpret_cast<const char*>(s));
+}
+
+class StaticStringAdapter : public ZeroTerminatedRamString {
+ public:
+  StaticStringAdapter(const char* str) : ZeroTerminatedRamString(str) {}
+
+  LinkStringStoragePolicy storagePolicy() {
+    return LinkStringStoragePolicy();
+  }
+};
+
+inline StaticStringAdapter adaptString(const char* s) {
+  return StaticStringAdapter(s);
 }
 
 class SizedRamString {
@@ -95,6 +113,10 @@ class SizedRamString {
 
   const char* data() const {
     return _str;
+  }
+
+  CopyStringStoragePolicy storagePolicy() {
+    return CopyStringStoragePolicy();
   }
 
  protected:
