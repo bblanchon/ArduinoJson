@@ -49,8 +49,8 @@ class ZeroTerminatedRamString {
     return stringCompare(a, b) == 0;
   }
 
-  CopyStringStoragePolicy storagePolicy() {
-    return CopyStringStoragePolicy();
+  StringStoragePolicy::Copy storagePolicy() {
+    return StringStoragePolicy::Copy();
   }
 
  protected:
@@ -82,8 +82,8 @@ class StaticStringAdapter : public ZeroTerminatedRamString {
  public:
   StaticStringAdapter(const char* str) : ZeroTerminatedRamString(str) {}
 
-  LinkStringStoragePolicy storagePolicy() {
-    return LinkStringStoragePolicy();
+  StringStoragePolicy::Link storagePolicy() {
+    return StringStoragePolicy::Link();
   }
 };
 
@@ -115,8 +115,8 @@ class SizedRamString {
     return _str;
   }
 
-  CopyStringStoragePolicy storagePolicy() {
-    return CopyStringStoragePolicy();
+  StringStoragePolicy::Copy storagePolicy() {
+    return StringStoragePolicy::Copy();
   }
 
  protected:

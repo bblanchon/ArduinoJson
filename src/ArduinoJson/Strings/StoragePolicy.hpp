@@ -6,14 +6,13 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-struct LinkStringStoragePolicy {};
+namespace StringStoragePolicy {
 
-struct CopyStringStoragePolicy {};
-
-struct LinkOrCopyStringStoragePolicy {
-  LinkOrCopyStringStoragePolicy(bool l) : link(l) {}
-
+struct Link {};
+struct Copy {};
+struct LinkOrCopy {
   bool link;
 };
+}  // namespace StringStoragePolicy
 
 }  // namespace ARDUINOJSON_NAMESPACE

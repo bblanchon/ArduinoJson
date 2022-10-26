@@ -15,8 +15,9 @@ class JsonStringAdapter : public SizedRamString {
   JsonStringAdapter(const String& s)
       : SizedRamString(s.c_str(), s.size()), _linked(s.isLinked()) {}
 
-  LinkOrCopyStringStoragePolicy storagePolicy() {
-    return LinkOrCopyStringStoragePolicy(_linked);
+  StringStoragePolicy::LinkOrCopy storagePolicy() {
+    StringStoragePolicy::LinkOrCopy policy = {_linked};
+    return policy;
   }
 
  private:

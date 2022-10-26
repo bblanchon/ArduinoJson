@@ -209,8 +209,8 @@ class MemoryPool {
 };
 
 template <typename TAdaptedString, typename TCallback>
-bool storeString(MemoryPool* pool, TAdaptedString str, CopyStringStoragePolicy,
-                 TCallback callback) {
+bool storeString(MemoryPool* pool, TAdaptedString str,
+                 StringStoragePolicy::Copy, TCallback callback) {
   const char* copy = pool->saveString(str);
   String storedString(copy, str.size(), String::Copied);
   callback(storedString);
@@ -218,7 +218,7 @@ bool storeString(MemoryPool* pool, TAdaptedString str, CopyStringStoragePolicy,
 }
 
 template <typename TAdaptedString, typename TCallback>
-bool storeString(MemoryPool*, TAdaptedString str, LinkStringStoragePolicy,
+bool storeString(MemoryPool*, TAdaptedString str, StringStoragePolicy::Link,
                  TCallback callback) {
   String storedString(str.data(), str.size(), String::Linked);
   callback(storedString);
@@ -227,11 +227,11 @@ bool storeString(MemoryPool*, TAdaptedString str, LinkStringStoragePolicy,
 
 template <typename TAdaptedString, typename TCallback>
 bool storeString(MemoryPool* pool, TAdaptedString str,
-                 LinkOrCopyStringStoragePolicy policy, TCallback callback) {
+                 StringStoragePolicy::LinkOrCopy policy, TCallback callback) {
   if (policy.link)
-    return storeString(pool, str, LinkStringStoragePolicy(), callback);
+    return storeString(pool, str, StringStoragePolicy::Link(), callback);
   else
-    return storeString(pool, str, CopyStringStoragePolicy(), callback);
+    return storeString(pool, str, StringStoragePolicy::Copy(), callback);
 }
 
 template <typename TAdaptedString, typename TCallback>
