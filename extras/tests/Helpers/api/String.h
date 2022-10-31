@@ -62,7 +62,7 @@ class String {
   size_t _maxCapacity;
 };
 
-class StringSumHelper;
+class StringSumHelper : public ::String {};
 
 inline bool operator==(const std::string& lhs, const ::String& rhs) {
   return lhs == rhs.c_str();
