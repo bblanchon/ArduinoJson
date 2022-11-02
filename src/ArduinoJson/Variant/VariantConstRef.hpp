@@ -9,12 +9,12 @@
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Strings/IsString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantConstRef.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
-#include <ArduinoJson/Variant/VariantShortcuts.hpp>
 #include <ArduinoJson/Variant/VariantTag.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -24,8 +24,7 @@ class ArrayRef;
 class ObjectRef;
 
 class VariantConstRef : public VariantTag,
-                        public VariantOperators<VariantConstRef>,
-                        public VariantShortcuts<VariantConstRef> {
+                        public VariantOperators<VariantConstRef> {
   friend class VariantAttorney;
 
  public:
@@ -124,6 +123,23 @@ class VariantConstRef : public VariantTag,
       typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
       operator[](TChar* key) const {
     return VariantConstRef(variantGetMember(_data, adaptString(key)));
+  }
+
+  // containsKey(const std::string&) const
+  // containsKey(const String&) const
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
+  containsKey(const TString& key) const {
+    return variantGetMember(getData(), adaptString(key)) != 0;
+  }
+
+  // containsKey(char*) const
+  // containsKey(const char*) const
+  // containsKey(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value, bool>::type
+  containsKey(TChar* key) const {
+    return variantGetMember(getData(), adaptString(key)) != 0;
   }
 
  protected:

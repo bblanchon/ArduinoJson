@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Array/ArrayFunctions.hpp>
 #include <ArduinoJson/Array/ArrayIterator.hpp>
+#include <ArduinoJson/Array/ElementProxy.hpp>
 #include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
@@ -106,7 +107,6 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
 };
 
 class ArrayRef : public ArrayRefBase<CollectionData>,
-                 public ArrayShortcuts<ArrayRef>,
                  public VariantOperators<ArrayRef> {
   typedef ArrayRefBase<CollectionData> base_type;
 
@@ -132,7 +132,15 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     return VariantRef(_pool, arrayAdd(_data, _pool));
   }
 
-  using ArrayShortcuts<ArrayRef>::add;
+  template <typename T>
+  FORCE_INLINE bool add(const T& value) const {
+    return add().set(value);
+  }
+
+  template <typename T>
+  FORCE_INLINE bool add(T* value) const {
+    return add().set(value);
+  }
 
   FORCE_INLINE iterator begin() const {
     if (!_data)
@@ -173,6 +181,19 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     if (!_data)
       return;
     _data->clear();
+  }
+
+  // Returns the element at specified index if the variant is an array.
+  FORCE_INLINE VariantProxy<ElementDataSource<ArrayRef> > operator[](
+      size_t index) const {
+    return VariantProxy<ElementDataSource<ArrayRef> >(
+        ElementDataSource<ArrayRef>(*this, index));
+  }
+
+  FORCE_INLINE ObjectRef createNestedObject() const;
+
+  FORCE_INLINE ArrayRef createNestedArray() const {
+    return add().to<ArrayRef>();
   }
 
  protected:

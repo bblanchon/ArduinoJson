@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ArduinoJson/Object/MemberProxy.hpp>
 #include <ArduinoJson/Object/ObjectFunctions.hpp>
 #include <ArduinoJson/Object/ObjectIterator.hpp>
 
@@ -13,6 +14,8 @@
   ((NUMBER_OF_ELEMENTS) * sizeof(ARDUINOJSON_NAMESPACE::VariantSlot))
 
 namespace ARDUINOJSON_NAMESPACE {
+
+class ArrayRef;
 
 template <typename TData>
 class ObjectRefBase {
@@ -125,7 +128,6 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
 };
 
 class ObjectRef : public ObjectRefBase<CollectionData>,
-                  public ObjectShortcuts<ObjectRef>,
                   public VariantOperators<ObjectRef> {
   typedef ObjectRefBase<CollectionData> base_type;
 
@@ -173,6 +175,24 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
     return ObjectConstRef(_data) == ObjectConstRef(rhs._data);
   }
 
+  template <typename TString>
+  FORCE_INLINE typename enable_if<
+      IsString<TString>::value,
+      VariantProxy<MemberDataSource<ObjectRef, TString> > >::type
+  operator[](const TString& key) const {
+    return VariantProxy<MemberDataSource<ObjectRef, TString> >(
+        MemberDataSource<ObjectRef, TString>(*this, key));
+  }
+
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<
+      IsString<TChar*>::value,
+      VariantProxy<MemberDataSource<ObjectRef, TChar*> > >::type
+  operator[](TChar* key) const {
+    return VariantProxy<MemberDataSource<ObjectRef, TChar*> >(
+        MemberDataSource<ObjectRef, TChar*>(*this, key));
+  }
+
   FORCE_INLINE void remove(iterator it) const {
     if (!_data)
       return;
@@ -192,6 +212,34 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   template <typename TChar>
   FORCE_INLINE void remove(TChar* key) const {
     objectRemove(_data, adaptString(key));
+  }
+
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
+  containsKey(const TString& key) const {
+    return objectGetMember(_data, adaptString(key)) != 0;
+  }
+
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value, bool>::type
+  containsKey(TChar* key) const {
+    return objectGetMember(_data, adaptString(key)) != 0;
+  }
+
+  template <typename TString>
+  FORCE_INLINE ArrayRef createNestedArray(const TString& key) const;
+
+  template <typename TChar>
+  FORCE_INLINE ArrayRef createNestedArray(TChar* key) const;
+
+  template <typename TString>
+  ObjectRef createNestedObject(const TString& key) const {
+    return operator[](key).template to<ObjectRef>();
+  }
+
+  template <typename TChar>
+  ObjectRef createNestedObject(TChar* key) const {
+    return operator[](key).template to<ObjectRef>();
   }
 
  protected:

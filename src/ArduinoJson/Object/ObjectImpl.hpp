@@ -9,67 +9,78 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TObject>
 template <typename TString>
-inline ArrayRef ObjectShortcuts<TObject>::createNestedArray(
-    const TString& key) const {
-  return impl()->operator[](key).template to<ArrayRef>();
+inline ArrayRef ObjectRef::createNestedArray(const TString& key) const {
+  return operator[](key).template to<ArrayRef>();
 }
 
-template <typename TObject>
 template <typename TChar>
-inline ArrayRef ObjectShortcuts<TObject>::createNestedArray(TChar* key) const {
-  return impl()->operator[](key).template to<ArrayRef>();
+inline ArrayRef ObjectRef::createNestedArray(TChar* key) const {
+  return operator[](key).template to<ArrayRef>();
 }
 
-template <typename TObject>
+template <typename TDataSource>
 template <typename TString>
-inline ObjectRef ObjectShortcuts<TObject>::createNestedObject(
+inline ArrayRef VariantRefBase<TDataSource>::createNestedArray(
     const TString& key) const {
-  return impl()->operator[](key).template to<ObjectRef>();
+  return operator[](key).template to<ArrayRef>();
 }
 
-template <typename TObject>
+template <typename TDataSource>
 template <typename TChar>
-inline ObjectRef ObjectShortcuts<TObject>::createNestedObject(
+inline ArrayRef VariantRefBase<TDataSource>::createNestedArray(
     TChar* key) const {
-  return impl()->operator[](key).template to<ObjectRef>();
+  return operator[](key).template to<ArrayRef>();
 }
 
-template <typename TObject>
+template <typename TDataSource>
+template <typename TString>
+inline ObjectRef VariantRefBase<TDataSource>::createNestedObject(
+    const TString& key) const {
+  return operator[](key).template to<ObjectRef>();
+}
+
+template <typename TDataSource>
+template <typename TChar>
+inline ObjectRef VariantRefBase<TDataSource>::createNestedObject(
+    TChar* key) const {
+  return operator[](key).template to<ObjectRef>();
+}
+
+template <typename TDataSource>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, bool>::type
-ObjectShortcuts<TObject>::containsKey(const TString& key) const {
-  return variantGetMember(VariantAttorney::getData(*impl()),
-                          adaptString(key)) != 0;
+VariantRefBase<TDataSource>::containsKey(const TString& key) const {
+  return variantGetMember(VariantAttorney::getData(*this), adaptString(key)) !=
+         0;
 }
 
-template <typename TObject>
+template <typename TDataSource>
 template <typename TChar>
 inline typename enable_if<IsString<TChar*>::value, bool>::type
-ObjectShortcuts<TObject>::containsKey(TChar* key) const {
-  return variantGetMember(VariantAttorney::getData(*impl()),
-                          adaptString(key)) != 0;
+VariantRefBase<TDataSource>::containsKey(TChar* key) const {
+  return variantGetMember(VariantAttorney::getData(*this), adaptString(key)) !=
+         0;
 }
 
-template <typename TObject>
+template <typename TDataSource>
 template <typename TString>
-inline typename enable_if<
-    IsString<TString*>::value,
-    VariantProxy<MemberDataSource<TObject, TString*> > >::type
-ObjectShortcuts<TObject>::operator[](TString* key) const {
-  return VariantProxy<MemberDataSource<TObject, TString*> >(
-      MemberDataSource<TObject, TString*>(*impl(), key));
+inline typename enable_if<IsString<TString*>::value,
+                          VariantProxy<MemberDataSource<
+                              VariantRefBase<TDataSource>, TString*> > >::type
+VariantRefBase<TDataSource>::operator[](TString* key) const {
+  return VariantProxy<MemberDataSource<VariantRefBase, TString*> >(
+      MemberDataSource<VariantRefBase, TString*>(*this, key));
 }
 
-template <typename TObject>
+template <typename TDataSource>
 template <typename TString>
-inline
-    typename enable_if<IsString<TString>::value,
-                       VariantProxy<MemberDataSource<TObject, TString> > >::type
-    ObjectShortcuts<TObject>::operator[](const TString& key) const {
-  return VariantProxy<MemberDataSource<TObject, TString> >(
-      MemberDataSource<TObject, TString>(*impl(), key));
+inline typename enable_if<IsString<TString>::value,
+                          VariantProxy<MemberDataSource<
+                              VariantRefBase<TDataSource>, TString> > >::type
+VariantRefBase<TDataSource>::operator[](const TString& key) const {
+  return VariantProxy<MemberDataSource<VariantRefBase, TString> >(
+      MemberDataSource<VariantRefBase, TString>(*this, key));
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

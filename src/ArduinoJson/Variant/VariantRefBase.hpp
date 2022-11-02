@@ -8,16 +8,23 @@
 #include <ArduinoJson/Variant/Converter.hpp>
 #include <ArduinoJson/Variant/VariantConstRef.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
-#include <ArduinoJson/Variant/VariantShortcuts.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 class VariantRef;
 
+template <typename>
+class ElementDataSource;
+
+template <typename, typename>
+class MemberDataSource;
+
+template <typename>
+class VariantProxy;
+
 template <typename TDataSource>
-class VariantRefBase : public VariantShortcuts<VariantRefBase<TDataSource> >,
-                       public VariantTag {
+class VariantRefBase : public VariantTag {
   friend class VariantAttorney;
 
  public:
@@ -160,7 +167,17 @@ class VariantRefBase : public VariantShortcuts<VariantRefBase<TDataSource> >,
 
   FORCE_INLINE VariantRef add() const;
 
-  using ArrayShortcuts<VariantRefBase<TDataSource> >::add;
+  template <typename T>
+  FORCE_INLINE bool add(const T& value) const {
+    return add().set(value);
+  }
+  //
+  // bool add(TValue);
+  // TValue = char*, const char*, const __FlashStringHelper*
+  template <typename T>
+  FORCE_INLINE bool add(T* value) const {
+    return add().set(value);
+  }
 
   FORCE_INLINE void remove(size_t index) const {
     VariantData* data = getData();
@@ -186,6 +203,43 @@ class VariantRefBase : public VariantShortcuts<VariantRefBase<TDataSource> >,
     if (data)
       data->remove(adaptString(key));
   }
+
+  FORCE_INLINE ArrayRef createNestedArray() const;
+  FORCE_INLINE ObjectRef createNestedObject() const;
+  FORCE_INLINE VariantProxy<ElementDataSource<VariantRefBase> > operator[](
+      size_t index) const;
+
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
+  containsKey(const TString& key) const;
+
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value, bool>::type
+  containsKey(TChar* key) const;
+
+  template <typename TString>
+  FORCE_INLINE typename enable_if<
+      IsString<TString>::value,
+      VariantProxy<MemberDataSource<VariantRefBase, TString> > >::type
+  operator[](const TString& key) const;
+
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<
+      IsString<TChar*>::value,
+      VariantProxy<MemberDataSource<VariantRefBase, TChar*> > >::type
+  operator[](TChar* key) const;
+
+  template <typename TString>
+  FORCE_INLINE ArrayRef createNestedArray(const TString& key) const;
+
+  template <typename TChar>
+  FORCE_INLINE ArrayRef createNestedArray(TChar* key) const;
+
+  template <typename TString>
+  ObjectRef createNestedObject(const TString& key) const;
+
+  template <typename TChar>
+  ObjectRef createNestedObject(TChar* key) const;
 
  protected:
   FORCE_INLINE MemoryPool* getPool() const {
