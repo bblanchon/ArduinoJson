@@ -145,9 +145,6 @@ See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/)
 ArduinoJson is thankful to its sponsors. Please give them a visit; they deserve it!
 
 <p>
-  <a href="https://techexplorations.com/arduinojson/" rel="sponsored">
-    <img alt="Tech Explorations" src="https://arduinojson.org/images/2021/10/techexplorations.png" width="200">
-  </a>
   <a href="https://www.programmingelectronics.com/" rel="sponsored">
     <img src="https://arduinojson.org/images/2021/10/programmingeleactronicsacademy.png" alt="Programming Electronics Academy" width="200">
   </a>
