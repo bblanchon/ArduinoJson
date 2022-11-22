@@ -307,15 +307,12 @@ inline bool canConvertFromJson(VariantConstRef src, const std::string_view&) {
 template <typename T>
 struct ConverterNeedsWriteableRef {
  protected:  // <- to avoid GCC's "all member functions in class are private"
-  typedef char Yes[1];
-  typedef char No[2];
-
-  static Yes& probe(T (*f)(VariantRef));
-  static No& probe(T (*f)(VariantConstRef));
+  static int probe(T (*f)(VariantRef));
+  static char probe(T (*f)(VariantConstRef));
 
  public:
   static const bool value =
-      sizeof(probe(Converter<T>::fromJson)) == sizeof(Yes);
+      sizeof(probe(Converter<T>::fromJson)) == sizeof(int);
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -11,16 +11,13 @@ namespace ARDUINOJSON_NAMESPACE {
 template <typename T>
 struct is_class {
  protected:  // <- to avoid GCC's "all member functions in class are private"
-  typedef char Yes[1];
-  typedef char No[2];
-
   template <typename U>
-  static Yes& probe(void (U::*)(void));
+  static int probe(void (U::*)(void));
   template <typename>
-  static No& probe(...);
+  static char probe(...);
 
  public:
-  static const bool value = sizeof(probe<T>(0)) == sizeof(Yes);
+  static const bool value = sizeof(probe<T>(0)) == sizeof(int);
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE
