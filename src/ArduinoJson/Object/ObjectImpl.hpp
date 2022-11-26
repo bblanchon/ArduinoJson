@@ -19,68 +19,63 @@ inline ArrayRef ObjectRef::createNestedArray(TChar* key) const {
   return operator[](key).template to<ArrayRef>();
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TString>
-inline ArrayRef VariantRefBase<TDataSource>::createNestedArray(
+inline ArrayRef VariantRefBase<TDerived>::createNestedArray(
     const TString& key) const {
   return operator[](key).template to<ArrayRef>();
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TChar>
-inline ArrayRef VariantRefBase<TDataSource>::createNestedArray(
-    TChar* key) const {
+inline ArrayRef VariantRefBase<TDerived>::createNestedArray(TChar* key) const {
   return operator[](key).template to<ArrayRef>();
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TString>
-inline ObjectRef VariantRefBase<TDataSource>::createNestedObject(
+inline ObjectRef VariantRefBase<TDerived>::createNestedObject(
     const TString& key) const {
   return operator[](key).template to<ObjectRef>();
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TChar>
-inline ObjectRef VariantRefBase<TDataSource>::createNestedObject(
+inline ObjectRef VariantRefBase<TDerived>::createNestedObject(
     TChar* key) const {
   return operator[](key).template to<ObjectRef>();
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, bool>::type
-VariantRefBase<TDataSource>::containsKey(const TString& key) const {
-  return variantGetMember(VariantAttorney::getData(*this), adaptString(key)) !=
-         0;
+VariantRefBase<TDerived>::containsKey(const TString& key) const {
+  return variantGetMember(VariantAttorney::getData(derived()),
+                          adaptString(key)) != 0;
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TChar>
 inline typename enable_if<IsString<TChar*>::value, bool>::type
-VariantRefBase<TDataSource>::containsKey(TChar* key) const {
-  return variantGetMember(VariantAttorney::getData(*this), adaptString(key)) !=
-         0;
+VariantRefBase<TDerived>::containsKey(TChar* key) const {
+  return variantGetMember(VariantAttorney::getData(derived()),
+                          adaptString(key)) != 0;
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TString>
 inline typename enable_if<IsString<TString*>::value,
-                          VariantProxy<MemberDataSource<
-                              VariantRefBase<TDataSource>, TString*> > >::type
-VariantRefBase<TDataSource>::operator[](TString* key) const {
-  return VariantProxy<MemberDataSource<VariantRefBase, TString*> >(
-      MemberDataSource<VariantRefBase, TString*>(*this, key));
+                          MemberProxy<TDerived, TString*> >::type
+VariantRefBase<TDerived>::operator[](TString* key) const {
+  return MemberProxy<TDerived, TString*>(derived(), key);
 }
 
-template <typename TDataSource>
+template <typename TDerived>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value,
-                          VariantProxy<MemberDataSource<
-                              VariantRefBase<TDataSource>, TString> > >::type
-VariantRefBase<TDataSource>::operator[](const TString& key) const {
-  return VariantProxy<MemberDataSource<VariantRefBase, TString> >(
-      MemberDataSource<VariantRefBase, TString>(*this, key));
+                          MemberProxy<TDerived, TString> >::type
+VariantRefBase<TDerived>::operator[](const TString& key) const {
+  return MemberProxy<TDerived, TString>(derived(), key);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

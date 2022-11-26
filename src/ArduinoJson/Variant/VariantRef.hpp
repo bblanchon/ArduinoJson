@@ -8,12 +8,14 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class VariantDataSource {
- public:
-  VariantDataSource() : _data(0), _pool(0) {}
+class VariantRef : public VariantRefBase<VariantRef>,
+                   public VariantOperators<VariantRef> {
+  friend class VariantAttorney;
 
-  VariantDataSource(MemoryPool* pool, VariantData* data)
-      : _data(data), _pool(pool) {}
+ public:
+  VariantRef() : _data(0), _pool(0) {}
+
+  VariantRef(MemoryPool* pool, VariantData* data) : _data(data), _pool(pool) {}
 
   FORCE_INLINE MemoryPool* getPool() const {
     return _pool;
@@ -30,15 +32,6 @@ class VariantDataSource {
  private:
   VariantData* _data;
   MemoryPool* _pool;
-};
-
-class VariantRef : public VariantRefBase<VariantDataSource>,
-                   public VariantOperators<VariantRef> {
- public:
-  VariantRef() : VariantRefBase<VariantDataSource>(VariantDataSource()) {}
-
-  VariantRef(MemoryPool* pool, VariantData* data)
-      : VariantRefBase<VariantDataSource>(VariantDataSource(pool, data)) {}
 };
 
 template <>

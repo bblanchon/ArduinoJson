@@ -176,21 +176,17 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   }
 
   template <typename TString>
-  FORCE_INLINE typename enable_if<
-      IsString<TString>::value,
-      VariantProxy<MemberDataSource<ObjectRef, TString> > >::type
+  FORCE_INLINE typename enable_if<IsString<TString>::value,
+                                  MemberProxy<ObjectRef, TString> >::type
   operator[](const TString& key) const {
-    return VariantProxy<MemberDataSource<ObjectRef, TString> >(
-        MemberDataSource<ObjectRef, TString>(*this, key));
+    return MemberProxy<ObjectRef, TString>(*this, key);
   }
 
   template <typename TChar>
-  FORCE_INLINE typename enable_if<
-      IsString<TChar*>::value,
-      VariantProxy<MemberDataSource<ObjectRef, TChar*> > >::type
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value,
+                                  MemberProxy<ObjectRef, TChar*> >::type
   operator[](TChar* key) const {
-    return VariantProxy<MemberDataSource<ObjectRef, TChar*> >(
-        MemberDataSource<ObjectRef, TChar*>(*this, key));
+    return MemberProxy<ObjectRef, TChar*>(*this, key);
   }
 
   FORCE_INLINE void remove(iterator it) const {

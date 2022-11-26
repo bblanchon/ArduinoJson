@@ -4,16 +4,40 @@
 
 #pragma once
 
-#include <ArduinoJson/Variant/VariantProxy.hpp>
+#include <ArduinoJson/Variant/VariantRefBase.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TUpstream>
-class ElementDataSource {
+class ElementProxy : public VariantRefBase<ElementProxy<TUpstream> >,
+                     public VariantOperators<ElementProxy<TUpstream> > {
+  friend class VariantAttorney;
+
  public:
-  ElementDataSource(TUpstream upstream, size_t index)
+  ElementProxy(TUpstream upstream, size_t index)
       : _upstream(upstream), _index(index) {}
 
+  ElementProxy(const ElementProxy& src)
+      : _upstream(src._upstream), _index(src._index) {}
+
+  FORCE_INLINE ElementProxy& operator=(const ElementProxy& src) {
+    this->set(src);
+    return *this;
+  }
+
+  template <typename T>
+  FORCE_INLINE ElementProxy& operator=(const T& src) {
+    this->set(src);
+    return *this;
+  }
+
+  template <typename T>
+  FORCE_INLINE ElementProxy& operator=(T* src) {
+    this->set(src);
+    return *this;
+  }
+
+ private:
   FORCE_INLINE MemoryPool* getPool() const {
     return VariantAttorney::getPool(_upstream);
   }
@@ -26,12 +50,6 @@ class ElementDataSource {
     return variantGetOrAddElement(VariantAttorney::getOrCreateData(_upstream),
                                   _index, VariantAttorney::getPool(_upstream));
   }
-
- private:
-#if defined _MSC_VER && _MSC_VER <= 1800  // Visual Studio 2013 or below
-  // Prevent "assignment operator could not be generated"
-  ElementDataSource& operator=(const ElementDataSource&);
-#endif
 
   TUpstream _upstream;
   size_t _index;

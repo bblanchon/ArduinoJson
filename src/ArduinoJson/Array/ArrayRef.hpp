@@ -184,10 +184,8 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
   }
 
   // Returns the element at specified index if the variant is an array.
-  FORCE_INLINE VariantProxy<ElementDataSource<ArrayRef> > operator[](
-      size_t index) const {
-    return VariantProxy<ElementDataSource<ArrayRef> >(
-        ElementDataSource<ArrayRef>(*this, index));
+  FORCE_INLINE ElementProxy<ArrayRef> operator[](size_t index) const {
+    return ElementProxy<ArrayRef>(*this, index);
   }
 
   FORCE_INLINE ObjectRef createNestedObject() const;

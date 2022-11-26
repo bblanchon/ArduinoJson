@@ -139,24 +139,20 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   // operator[](const std::string&)
   // operator[](const String&)
   template <typename TString>
-  FORCE_INLINE typename enable_if<
-      IsString<TString>::value,
-      VariantProxy<MemberDataSource<JsonDocument&, TString> > >::type
+  FORCE_INLINE typename enable_if<IsString<TString>::value,
+                                  MemberProxy<JsonDocument&, TString> >::type
   operator[](const TString& key) {
-    return VariantProxy<MemberDataSource<JsonDocument&, TString> >(
-        MemberDataSource<JsonDocument&, TString>(*this, key));
+    return MemberProxy<JsonDocument&, TString>(*this, key);
   }
 
   // operator[](char*)
   // operator[](const char*)
   // operator[](const __FlashStringHelper*)
   template <typename TChar>
-  FORCE_INLINE typename enable_if<
-      IsString<TChar*>::value,
-      VariantProxy<MemberDataSource<JsonDocument&, TChar*> > >::type
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value,
+                                  MemberProxy<JsonDocument&, TChar*> >::type
   operator[](TChar* key) {
-    return VariantProxy<MemberDataSource<JsonDocument&, TChar*> >(
-        MemberDataSource<JsonDocument&, TChar*>(*this, key));
+    return MemberProxy<JsonDocument&, TChar*>(*this, key);
   }
 
   // operator[](const std::string&) const
@@ -178,10 +174,8 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     return VariantConstRef(_data.getMember(adaptString(key)));
   }
 
-  FORCE_INLINE VariantProxy<ElementDataSource<JsonDocument&> > operator[](
-      size_t index) {
-    return VariantProxy<ElementDataSource<JsonDocument&> >(
-        ElementDataSource<JsonDocument&>(*this, index));
+  FORCE_INLINE ElementProxy<JsonDocument&> operator[](size_t index) {
+    return ElementProxy<JsonDocument&>(*this, index);
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
