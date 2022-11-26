@@ -9,7 +9,6 @@ HEAD
 * Fix comparison operators for `JsonArray`, `JsonArrayConst`, `JsonObject`, and `JsonObjectConst`
 * Fix lax parsing of `true`, `false`, and `null` (issue #1781)
 * Remove undocumented `accept()` functions
-* Remove undocumented `ElementProxy` and `MemberProxy` classes
 * Rename `addElement()` to `add()`
 * Remove `getElement()`, `getOrAddElement()`, `getMember()`, and `getOrAddMember()`
 * Remove undocumented `JsonDocument::data()` and `JsonDocument::memoryPool()`

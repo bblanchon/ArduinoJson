@@ -4,16 +4,41 @@
 
 #pragma once
 
-#include <ArduinoJson/Variant/VariantProxy.hpp>
+#include <ArduinoJson/Variant/VariantRefBase.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TUpstream, typename TStringRef>
-class MemberDataSource {
+class MemberProxy
+    : public VariantRefBase<MemberProxy<TUpstream, TStringRef> >,
+      public VariantOperators<MemberProxy<TUpstream, TStringRef> > {
+  friend class VariantAttorney;
+
  public:
-  FORCE_INLINE MemberDataSource(TUpstream upstream, TStringRef key)
+  FORCE_INLINE MemberProxy(TUpstream upstream, TStringRef key)
       : _upstream(upstream), _key(key) {}
 
+  MemberProxy(const MemberProxy& src)
+      : _upstream(src._upstream), _key(src._key) {}
+
+  FORCE_INLINE MemberProxy& operator=(const MemberProxy& src) {
+    this->set(src);
+    return *this;
+  }
+
+  template <typename T>
+  FORCE_INLINE MemberProxy& operator=(const T& src) {
+    this->set(src);
+    return *this;
+  }
+
+  template <typename T>
+  FORCE_INLINE MemberProxy& operator=(T* src) {
+    this->set(src);
+    return *this;
+  }
+
+ private:
   FORCE_INLINE MemoryPool* getPool() const {
     return VariantAttorney::getPool(_upstream);
   }
@@ -30,11 +55,6 @@ class MemberDataSource {
   }
 
  private:
-#if defined _MSC_VER && _MSC_VER <= 1800  // Visual Studio 2013 or below
-  // Prevent "assignment operator could not be generated"
-  MemberDataSource& operator=(const MemberDataSource&);
-#endif
-
   TUpstream _upstream;
   TStringRef _key;
 };

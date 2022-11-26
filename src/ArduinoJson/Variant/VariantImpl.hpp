@@ -104,52 +104,51 @@ inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
   }
 }
 
-template <typename TSource>
-inline VariantRef VariantRefBase<TSource>::add() const {
+template <typename TDerived>
+inline VariantRef VariantRefBase<TDerived>::add() const {
   return VariantRef(getPool(), variantAddElement(getOrCreateData(), getPool()));
 }
 
-template <typename TSource>
-inline VariantRef VariantRefBase<TSource>::getVariant() const {
+template <typename TDerived>
+inline VariantRef VariantRefBase<TDerived>::getVariant() const {
   return VariantRef(getPool(), getData());
 }
 
-template <typename TSource>
-inline VariantRef VariantRefBase<TSource>::getOrCreateVariant() const {
+template <typename TDerived>
+inline VariantRef VariantRefBase<TDerived>::getOrCreateVariant() const {
   return VariantRef(getPool(), getOrCreateData());
 }
 
-template <typename TSource>
+template <typename TDerived>
 template <typename T>
 inline typename enable_if<is_same<T, ArrayRef>::value, ArrayRef>::type
-VariantRefBase<TSource>::to() const {
+VariantRefBase<TDerived>::to() const {
   return ArrayRef(getPool(), variantToArray(getOrCreateData()));
 }
 
-template <typename TSource>
+template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, ObjectRef>::value, ObjectRef>::type
-VariantRefBase<TSource>::to() const {
+VariantRefBase<TDerived>::to() const {
   return ObjectRef(getPool(), variantToObject(getOrCreateData()));
 }
 
-template <typename TSource>
+template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type
-VariantRefBase<TSource>::to() const {
+VariantRefBase<TDerived>::to() const {
   variantSetNull(getOrCreateData());
   return *this;
 }
 
 // Out of class definition to avoid #1560
-template <typename TSource>
-inline bool VariantRefBase<TSource>::set(char value) const {
+template <typename TDerived>
+inline bool VariantRefBase<TDerived>::set(char value) const {
   return set(static_cast<signed char>(value));
 }
 
-template <typename TDataSource>
-inline void convertToJson(const VariantRefBase<TDataSource>& src,
-                          VariantRef dst) {
+template <typename TDerived>
+inline void convertToJson(const VariantRefBase<TDerived>& src, VariantRef dst) {
   dst.set(src.template as<VariantConstRef>());
 }
 

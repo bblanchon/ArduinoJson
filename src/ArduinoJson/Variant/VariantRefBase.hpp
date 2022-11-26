@@ -15,21 +15,16 @@ namespace ARDUINOJSON_NAMESPACE {
 class VariantRef;
 
 template <typename>
-class ElementDataSource;
+class ElementProxy;
 
 template <typename, typename>
-class MemberDataSource;
+class MemberProxy;
 
-template <typename>
-class VariantProxy;
-
-template <typename TDataSource>
+template <typename TDerived>
 class VariantRefBase : public VariantTag {
   friend class VariantAttorney;
 
  public:
-  explicit FORCE_INLINE VariantRefBase(TDataSource source) : _source(source) {}
-
   FORCE_INLINE void clear() const {
     variantSetNull(getData());
   }
@@ -206,8 +201,7 @@ class VariantRefBase : public VariantTag {
 
   FORCE_INLINE ArrayRef createNestedArray() const;
   FORCE_INLINE ObjectRef createNestedObject() const;
-  FORCE_INLINE VariantProxy<ElementDataSource<VariantRefBase> > operator[](
-      size_t index) const;
+  FORCE_INLINE ElementProxy<TDerived> operator[](size_t index) const;
 
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
@@ -218,15 +212,13 @@ class VariantRefBase : public VariantTag {
   containsKey(TChar* key) const;
 
   template <typename TString>
-  FORCE_INLINE typename enable_if<
-      IsString<TString>::value,
-      VariantProxy<MemberDataSource<VariantRefBase, TString> > >::type
+  FORCE_INLINE typename enable_if<IsString<TString>::value,
+                                  MemberProxy<TDerived, TString> >::type
   operator[](const TString& key) const;
 
   template <typename TChar>
-  FORCE_INLINE typename enable_if<
-      IsString<TChar*>::value,
-      VariantProxy<MemberDataSource<VariantRefBase, TChar*> > >::type
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value,
+                                  MemberProxy<TDerived, TChar*> >::type
   operator[](TChar* key) const;
 
   template <typename TString>
@@ -241,17 +233,25 @@ class VariantRefBase : public VariantTag {
   template <typename TChar>
   ObjectRef createNestedObject(TChar* key) const;
 
- protected:
+ private:
+  TDerived& derived() {
+    return static_cast<TDerived&>(*this);
+  }
+
+  const TDerived& derived() const {
+    return static_cast<const TDerived&>(*this);
+  }
+
   FORCE_INLINE MemoryPool* getPool() const {
-    return _source.getPool();
+    return VariantAttorney::getPool(derived());
   }
 
   FORCE_INLINE VariantData* getData() const {
-    return _source.getData();
+    return VariantAttorney::getData(derived());
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {
-    return _source.getOrCreateData();
+    return VariantAttorney::getOrCreateData(derived());
   }
 
  private:
@@ -262,8 +262,6 @@ class VariantRefBase : public VariantTag {
   }
 
   FORCE_INLINE VariantRef getOrCreateVariant() const;
-
-  TDataSource _source;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

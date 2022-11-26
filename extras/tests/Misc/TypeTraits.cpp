@@ -184,13 +184,12 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK((is_convertible<VariantRef, JsonVariantConst>::value == true));
     CHECK((is_convertible<VariantConstRef, JsonVariantConst>::value == true));
     CHECK((is_convertible<ArrayRef, JsonVariantConst>::value == true));
-    CHECK((is_convertible<VariantProxy<ElementDataSource<ArrayRef> >,
-                          JsonVariantConst>::value == true));
+    CHECK((is_convertible<ElementProxy<ArrayRef>, JsonVariantConst>::value ==
+           true));
     CHECK((is_convertible<ArrayConstRef, JsonVariantConst>::value == true));
     CHECK((is_convertible<ObjectRef, JsonVariantConst>::value == true));
-    CHECK(
-        (is_convertible<VariantProxy<MemberDataSource<ObjectRef, const char*> >,
-                        JsonVariantConst>::value == true));
+    CHECK((is_convertible<MemberProxy<ObjectRef, const char*>,
+                          JsonVariantConst>::value == true));
     CHECK((is_convertible<ObjectConstRef, JsonVariantConst>::value == true));
     CHECK(
         (is_convertible<DynamicJsonDocument, JsonVariantConst>::value == true));

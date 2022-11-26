@@ -5,9 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
-
-typedef VariantProxy<MemberDataSource<JsonDocument&, const char*> > MemberProxy;
+typedef ARDUINOJSON_NAMESPACE::MemberProxy<JsonDocument&, const char*>
+    MemberProxy;
 
 TEST_CASE("MemberProxy::add()") {
   DynamicJsonDocument doc(4096);
