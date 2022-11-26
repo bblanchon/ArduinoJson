@@ -9,20 +9,11 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-template <typename TSource>
-struct Reader<VariantProxy<TSource>, void> : Reader<char*, void> {
-  explicit Reader(const VariantProxy<TSource>& x)
+template <typename TVariant>
+struct Reader<TVariant, typename enable_if<IsVariant<TVariant>::value>::type>
+    : Reader<char*, void> {
+  explicit Reader(const TVariant& x)
       : Reader<char*, void>(x.template as<const char*>()) {}
 };
 
-template <>
-struct Reader<VariantRef, void> : Reader<char*, void> {
-  explicit Reader(VariantRef x) : Reader<char*, void>(x.as<const char*>()) {}
-};
-
-template <>
-struct Reader<VariantConstRef, void> : Reader<char*, void> {
-  explicit Reader(VariantConstRef x)
-      : Reader<char*, void>(x.as<const char*>()) {}
-};
 }  // namespace ARDUINOJSON_NAMESPACE
