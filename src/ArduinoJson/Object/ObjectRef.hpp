@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Object/MemberProxy.hpp>
-#include <ArduinoJson/Object/ObjectFunctions.hpp>
 #include <ArduinoJson/Object/ObjectIterator.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -46,6 +45,13 @@ class ObjectRefBase {
     return collectionToVariant(_data);
   }
 
+  template <typename TAdaptedString>
+  inline VariantData* getMember(TAdaptedString key) const {
+    if (!_data)
+      return 0;
+    return _data->getMember(key);
+  }
+
   ObjectRefBase(TData* data) : _data(data) {}
   TData* _data;
 };
@@ -75,7 +81,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   // containsKey(const String&) const
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return objectGetMember(_data, adaptString(key)) != 0;
+    return getMember(adaptString(key)) != 0;
   }
 
   // containsKey(char*) const
@@ -83,7 +89,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   // containsKey(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
-    return objectGetMember(_data, adaptString(key)) != 0;
+    return getMember(adaptString(key)) != 0;
   }
 
   // operator[](const std::string&) const
@@ -92,7 +98,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString& key) const {
-    return VariantConstRef(objectGetMember(_data, adaptString(key)));
+    return VariantConstRef(getMember(adaptString(key)));
   }
 
   // operator[](char*) const
@@ -102,7 +108,7 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
   FORCE_INLINE
       typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
       operator[](TChar* key) const {
-    return VariantConstRef(objectGetMember(_data, adaptString(key)));
+    return VariantConstRef(getMember(adaptString(key)));
   }
 
   FORCE_INLINE bool operator==(ObjectConstRef rhs) const {
@@ -194,7 +200,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   // remove(const String&) const
   template <typename TString>
   FORCE_INLINE void remove(const TString& key) const {
-    objectRemove(_data, adaptString(key));
+    removeMember(adaptString(key));
   }
 
   // remove(char*) const
@@ -202,19 +208,19 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   // remove(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE void remove(TChar* key) const {
-    objectRemove(_data, adaptString(key));
+    removeMember(adaptString(key));
   }
 
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
   containsKey(const TString& key) const {
-    return objectGetMember(_data, adaptString(key)) != 0;
+    return getMember(adaptString(key)) != 0;
   }
 
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value, bool>::type
   containsKey(TChar* key) const {
-    return objectGetMember(_data, adaptString(key)) != 0;
+    return getMember(adaptString(key)) != 0;
   }
 
   template <typename TString>
@@ -244,6 +250,13 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
 
   VariantData* getOrCreateData() const {
     return collectionToVariant(_data);
+  }
+
+  template <typename TAdaptedString>
+  void removeMember(TAdaptedString key) const {
+    if (!_data)
+      return;
+    _data->removeMember(key);
   }
 
  private:

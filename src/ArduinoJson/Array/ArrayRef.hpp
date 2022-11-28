@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Array/ArrayFunctions.hpp>
 #include <ArduinoJson/Array/ArrayIterator.hpp>
 #include <ArduinoJson/Array/ElementProxy.hpp>
 #include <ArduinoJson/Variant/VariantAttorney.hpp>
@@ -124,7 +123,9 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
   }
 
   VariantRef add() const {
-    return VariantRef(_pool, arrayAdd(_data, _pool));
+    if (!_data)
+      return VariantRef();
+    return VariantRef(_pool, _data->addElement(_pool));
   }
 
   template <typename T>
