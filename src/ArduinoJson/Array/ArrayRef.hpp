@@ -13,48 +13,9 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class ObjectRef;
 
-template <typename TData>
-class ArrayRefBase {
-  friend class VariantAttorney;
-
- public:
-  operator VariantConstRef() const {
-    return VariantConstRef(collectionToVariant(_data));
-  }
-
-  FORCE_INLINE bool isNull() const {
-    return _data == 0;
-  }
-
-  FORCE_INLINE operator bool() const {
-    return _data != 0;
-  }
-
-  FORCE_INLINE size_t memoryUsage() const {
-    return _data ? _data->memoryUsage() : 0;
-  }
-
-  FORCE_INLINE size_t nesting() const {
-    return variantNesting(collectionToVariant(_data));
-  }
-
-  FORCE_INLINE size_t size() const {
-    return _data ? _data->size() : 0;
-  }
-
- protected:
-  const VariantData* getData() const {
-    return collectionToVariant(_data);
-  }
-
-  ArrayRefBase(TData* data) : _data(data) {}
-  TData* _data;
-};
-
-class ArrayConstRef : public ArrayRefBase<const CollectionData>,
-                      public VariantOperators<ArrayConstRef> {
+class ArrayConstRef : public VariantOperators<ArrayConstRef> {
   friend class ArrayRef;
-  typedef ArrayRefBase<const CollectionData> base_type;
+  friend class VariantAttorney;
 
  public:
   typedef ArrayConstRefIterator iterator;
@@ -69,8 +30,8 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
     return iterator();
   }
 
-  FORCE_INLINE ArrayConstRef() : base_type(0) {}
-  FORCE_INLINE ArrayConstRef(const CollectionData* data) : base_type(data) {}
+  FORCE_INLINE ArrayConstRef() : _data(0) {}
+  FORCE_INLINE ArrayConstRef(const CollectionData* data) : _data(data) {}
 
   FORCE_INLINE bool operator==(ArrayConstRef rhs) const {
     if (_data == rhs._data)
@@ -98,20 +59,48 @@ class ArrayConstRef : public ArrayRefBase<const CollectionData>,
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
     return VariantConstRef(_data ? _data->getElement(index) : 0);
   }
+
+  operator VariantConstRef() const {
+    return VariantConstRef(collectionToVariant(_data));
+  }
+
+  FORCE_INLINE bool isNull() const {
+    return _data == 0;
+  }
+
+  FORCE_INLINE operator bool() const {
+    return _data != 0;
+  }
+
+  FORCE_INLINE size_t memoryUsage() const {
+    return _data ? _data->memoryUsage() : 0;
+  }
+
+  FORCE_INLINE size_t nesting() const {
+    return variantNesting(collectionToVariant(_data));
+  }
+
+  FORCE_INLINE size_t size() const {
+    return _data ? _data->size() : 0;
+  }
+
+ private:
+  const VariantData* getData() const {
+    return collectionToVariant(_data);
+  }
+
+  const CollectionData* _data;
 };
 
-class ArrayRef : public ArrayRefBase<CollectionData>,
-                 public VariantOperators<ArrayRef> {
-  typedef ArrayRefBase<CollectionData> base_type;
-
+class ArrayRef : public VariantOperators<ArrayRef> {
   friend class VariantAttorney;
 
  public:
   typedef ArrayIterator iterator;
 
-  FORCE_INLINE ArrayRef() : base_type(0), _pool(0) {}
+  FORCE_INLINE ArrayRef() : _data(0), _pool(0) {}
   FORCE_INLINE ArrayRef(MemoryPool* pool, CollectionData* data)
-      : base_type(data), _pool(pool) {}
+      : _data(data), _pool(pool) {}
 
   operator VariantRef() {
     void* data = _data;  // prevent warning cast-align
@@ -190,7 +179,31 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     return add().to<ArrayRef>();
   }
 
- protected:
+  operator VariantConstRef() const {
+    return VariantConstRef(collectionToVariant(_data));
+  }
+
+  FORCE_INLINE bool isNull() const {
+    return _data == 0;
+  }
+
+  FORCE_INLINE operator bool() const {
+    return _data != 0;
+  }
+
+  FORCE_INLINE size_t memoryUsage() const {
+    return _data ? _data->memoryUsage() : 0;
+  }
+
+  FORCE_INLINE size_t nesting() const {
+    return variantNesting(collectionToVariant(_data));
+  }
+
+  FORCE_INLINE size_t size() const {
+    return _data ? _data->size() : 0;
+  }
+
+ private:
   MemoryPool* getPool() const {
     return _pool;
   }
@@ -203,7 +216,7 @@ class ArrayRef : public ArrayRefBase<CollectionData>,
     return collectionToVariant(_data);
   }
 
- private:
+  CollectionData* _data;
   MemoryPool* _pool;
 };
 
