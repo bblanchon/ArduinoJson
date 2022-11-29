@@ -8,11 +8,6 @@
 #include <ArduinoJson/Object/ObjectFunctions.hpp>
 #include <ArduinoJson/Object/ObjectIterator.hpp>
 
-// Returns the size (in bytes) of an object with n elements.
-// Can be very handy to determine the size of a StaticMemoryPool.
-#define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
-  ((NUMBER_OF_ELEMENTS) * sizeof(ARDUINOJSON_NAMESPACE::VariantSlot))
-
 namespace ARDUINOJSON_NAMESPACE {
 
 class ArrayRef;
