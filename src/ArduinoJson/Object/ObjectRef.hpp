@@ -11,11 +11,16 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class ArrayRef;
 
-template <typename TData>
-class ObjectRefBase {
+class ObjectConstRef : public VariantOperators<ObjectConstRef> {
+  friend class ObjectRef;
   friend class VariantAttorney;
 
  public:
+  typedef ObjectConstIterator iterator;
+
+  ObjectConstRef() : _data(0) {}
+  ObjectConstRef(const CollectionData* data) : _data(data) {}
+
   operator VariantConstRef() const {
     return VariantConstRef(collectionToVariant(_data));
   }
@@ -39,33 +44,6 @@ class ObjectRefBase {
   FORCE_INLINE size_t size() const {
     return _data ? _data->size() : 0;
   }
-
- protected:
-  const VariantData* getData() const {
-    return collectionToVariant(_data);
-  }
-
-  template <typename TAdaptedString>
-  inline VariantData* getMember(TAdaptedString key) const {
-    if (!_data)
-      return 0;
-    return _data->getMember(key);
-  }
-
-  ObjectRefBase(TData* data) : _data(data) {}
-  TData* _data;
-};
-
-class ObjectConstRef : public ObjectRefBase<const CollectionData>,
-                       public VariantOperators<ObjectConstRef> {
-  friend class ObjectRef;
-  typedef ObjectRefBase<const CollectionData> base_type;
-
- public:
-  typedef ObjectConstIterator iterator;
-
-  ObjectConstRef() : base_type(0) {}
-  ObjectConstRef(const CollectionData* data) : base_type(data) {}
 
   FORCE_INLINE iterator begin() const {
     if (!_data)
@@ -126,20 +104,31 @@ class ObjectConstRef : public ObjectRefBase<const CollectionData>,
     }
     return count == rhs.size();
   }
+
+ private:
+  const VariantData* getData() const {
+    return collectionToVariant(_data);
+  }
+
+  template <typename TAdaptedString>
+  const VariantData* getMember(TAdaptedString key) const {
+    if (!_data)
+      return 0;
+    return _data->getMember(key);
+  }
+
+  const CollectionData* _data;
 };
 
-class ObjectRef : public ObjectRefBase<CollectionData>,
-                  public VariantOperators<ObjectRef> {
-  typedef ObjectRefBase<CollectionData> base_type;
-
+class ObjectRef : public VariantOperators<ObjectRef> {
   friend class VariantAttorney;
 
  public:
   typedef ObjectIterator iterator;
 
-  FORCE_INLINE ObjectRef() : base_type(0), _pool(0) {}
+  FORCE_INLINE ObjectRef() : _data(0), _pool(0) {}
   FORCE_INLINE ObjectRef(MemoryPool* buf, CollectionData* data)
-      : base_type(data), _pool(buf) {}
+      : _data(data), _pool(buf) {}
 
   operator VariantRef() const {
     void* data = _data;  // prevent warning cast-align
@@ -148,6 +137,30 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
 
   operator ObjectConstRef() const {
     return ObjectConstRef(_data);
+  }
+
+  operator VariantConstRef() const {
+    return VariantConstRef(collectionToVariant(_data));
+  }
+
+  FORCE_INLINE bool isNull() const {
+    return _data == 0;
+  }
+
+  FORCE_INLINE operator bool() const {
+    return _data != 0;
+  }
+
+  FORCE_INLINE size_t memoryUsage() const {
+    return _data ? _data->memoryUsage() : 0;
+  }
+
+  FORCE_INLINE size_t nesting() const {
+    return variantNesting(collectionToVariant(_data));
+  }
+
+  FORCE_INLINE size_t size() const {
+    return _data ? _data->size() : 0;
   }
 
   FORCE_INLINE iterator begin() const {
@@ -239,7 +252,7 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
     return operator[](key).template to<ObjectRef>();
   }
 
- protected:
+ private:
   MemoryPool* getPool() const {
     return _pool;
   }
@@ -253,13 +266,20 @@ class ObjectRef : public ObjectRefBase<CollectionData>,
   }
 
   template <typename TAdaptedString>
+  inline VariantData* getMember(TAdaptedString key) const {
+    if (!_data)
+      return 0;
+    return _data->getMember(key);
+  }
+
+  template <typename TAdaptedString>
   void removeMember(TAdaptedString key) const {
     if (!_data)
       return;
     _data->removeMember(key);
   }
 
- private:
+  CollectionData* _data;
   MemoryPool* _pool;
 };
 
