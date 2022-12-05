@@ -119,7 +119,7 @@ double latitude    = doc["data"][0];
 double longitude   = doc["data"][1];
 ```
 
-See the [tutorial on arduinojson.org](https://arduinojson.org/doc/decoding/)
+See the [tutorial on arduinojson.org](https://arduinojson.org/v6/doc/deserialization/)
 
 ### Serialization
 
@@ -138,7 +138,7 @@ serializeJson(doc, Serial);
 // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
 ```
 
-See the [tutorial on arduinojson.org](https://arduinojson.org/doc/encoding/)
+See the [tutorial on arduinojson.org](https://arduinojson.org/v6/doc/serialization/)
 
 ## Sponsors
 
