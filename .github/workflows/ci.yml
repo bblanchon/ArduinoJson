@@ -21,7 +21,7 @@ jobs:
   gcc:
     name: GCC
     needs: lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -557,7 +557,7 @@ jobs:
 
   codeql:
     name: CodeQL
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: gcc
 
     permissions:
