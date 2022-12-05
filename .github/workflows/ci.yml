@@ -61,7 +61,11 @@ jobs:
       - name: Build
         run: cmake --build .
       - name: Test
-        run: ctest --output-on-failure -C Debug .
+        run: |
+          echo "## CTest output" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ctest --output-on-failure -C Debug . | tee -a $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
         env:
           UBSAN_OPTIONS: print_stacktrace=1
 
@@ -118,7 +122,11 @@ jobs:
       - name: Build
         run: cmake --build .
       - name: Test
-        run: ctest --output-on-failure -C Debug .
+        run: |
+          echo "## CTest output" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ctest --output-on-failure -C Debug . | tee -a $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
         env:
           UBSAN_OPTIONS: print_stacktrace=1
 
