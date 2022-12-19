@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Variant/Converter.hpp>
-#include <ArduinoJson/Variant/VariantConstRef.hpp>
+#include <ArduinoJson/Variant/JsonVariantConst.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 
@@ -119,7 +119,7 @@ class VariantRefBase : public VariantTag {
     return is<signed char>();
   }
 
-  FORCE_INLINE void shallowCopy(VariantConstRef target) {
+  FORCE_INLINE void shallowCopy(JsonVariantConst target) {
     VariantData* data = getOrCreateData();
     if (!data)
       return;
@@ -258,8 +258,8 @@ class VariantRefBase : public VariantTag {
  private:
   FORCE_INLINE VariantRef getVariant() const;
 
-  FORCE_INLINE VariantConstRef getVariantConst() const {
-    return VariantConstRef(getData());
+  FORCE_INLINE JsonVariantConst getVariantConst() const {
+    return JsonVariantConst(getData());
   }
 
   FORCE_INLINE VariantRef getOrCreateVariant() const;

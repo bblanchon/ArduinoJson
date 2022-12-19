@@ -22,13 +22,13 @@ namespace ARDUINOJSON_NAMESPACE {
 class JsonArray;
 class JsonObject;
 
-class VariantConstRef : public VariantTag,
-                        public VariantOperators<VariantConstRef> {
+class JsonVariantConst : public VariantTag,
+                         public VariantOperators<JsonVariantConst> {
   friend class VariantAttorney;
 
  public:
-  VariantConstRef() : _data(0) {}
-  explicit VariantConstRef(const VariantData* data) : _data(data) {}
+  JsonVariantConst() : _data(0) {}
+  explicit JsonVariantConst(const VariantData* data) : _data(data) {}
 
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
@@ -101,17 +101,17 @@ class VariantConstRef : public VariantTag,
     return as<T>();
   }
 
-  FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return VariantConstRef(variantGetElement(_data, index));
+  FORCE_INLINE JsonVariantConst operator[](size_t index) const {
+    return JsonVariantConst(variantGetElement(_data, index));
   }
 
   // operator[](const std::string&) const
   // operator[](const String&) const
   template <typename TString>
   FORCE_INLINE
-      typename enable_if<IsString<TString>::value, VariantConstRef>::type
+      typename enable_if<IsString<TString>::value, JsonVariantConst>::type
       operator[](const TString& key) const {
-    return VariantConstRef(variantGetMember(_data, adaptString(key)));
+    return JsonVariantConst(variantGetMember(_data, adaptString(key)));
   }
 
   // operator[](char*) const
@@ -119,9 +119,9 @@ class VariantConstRef : public VariantTag,
   // operator[](const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE
-      typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
+      typename enable_if<IsString<TChar*>::value, JsonVariantConst>::type
       operator[](TChar* key) const {
-    return VariantConstRef(variantGetMember(_data, adaptString(key)));
+    return JsonVariantConst(variantGetMember(_data, adaptString(key)));
   }
 
   // containsKey(const std::string&) const

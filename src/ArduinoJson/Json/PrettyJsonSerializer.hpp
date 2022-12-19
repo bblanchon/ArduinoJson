@@ -71,16 +71,16 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
 };
 
 template <typename TDestination>
-size_t serializeJsonPretty(VariantConstRef source, TDestination& destination) {
+size_t serializeJsonPretty(JsonVariantConst source, TDestination& destination) {
   return serialize<PrettyJsonSerializer>(source, destination);
 }
 
-inline size_t serializeJsonPretty(VariantConstRef source, void* buffer,
+inline size_t serializeJsonPretty(JsonVariantConst source, void* buffer,
                                   size_t bufferSize) {
   return serialize<PrettyJsonSerializer>(source, buffer, bufferSize);
 }
 
-inline size_t measureJsonPretty(VariantConstRef source) {
+inline size_t measureJsonPretty(JsonVariantConst source) {
   return measure<PrettyJsonSerializer>(source);
 }
 

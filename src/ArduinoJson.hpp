@@ -23,7 +23,7 @@
 
 #include "ArduinoJson/Array/JsonArray.hpp"
 #include "ArduinoJson/Object/JsonObject.hpp"
-#include "ArduinoJson/Variant/VariantConstRef.hpp"
+#include "ArduinoJson/Variant/JsonVariantConst.hpp"
 
 #include "ArduinoJson/Document/DynamicJsonDocument.hpp"
 #include "ArduinoJson/Document/StaticJsonDocument.hpp"
@@ -57,7 +57,7 @@ using ARDUINOJSON_NAMESPACE::JsonPair;
 using ARDUINOJSON_NAMESPACE::JsonPairConst;
 using ARDUINOJSON_NAMESPACE::JsonString;
 using ARDUINOJSON_NAMESPACE::JsonUInt;
-typedef ARDUINOJSON_NAMESPACE::VariantConstRef JsonVariantConst;
+using ARDUINOJSON_NAMESPACE::JsonVariantConst;
 typedef ARDUINOJSON_NAMESPACE::VariantRef JsonVariant;
 using ARDUINOJSON_NAMESPACE::BasicJsonDocument;
 using ARDUINOJSON_NAMESPACE::copyArray;

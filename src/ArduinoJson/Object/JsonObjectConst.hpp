@@ -19,8 +19,8 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   JsonObjectConst() : _data(0) {}
   JsonObjectConst(const CollectionData* data) : _data(data) {}
 
-  operator VariantConstRef() const {
-    return VariantConstRef(collectionToVariant(_data));
+  operator JsonVariantConst() const {
+    return JsonVariantConst(collectionToVariant(_data));
   }
 
   FORCE_INLINE bool isNull() const {
@@ -72,9 +72,9 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   // operator[](const String&) const
   template <typename TString>
   FORCE_INLINE
-      typename enable_if<IsString<TString>::value, VariantConstRef>::type
+      typename enable_if<IsString<TString>::value, JsonVariantConst>::type
       operator[](const TString& key) const {
-    return VariantConstRef(getMember(adaptString(key)));
+    return JsonVariantConst(getMember(adaptString(key)));
   }
 
   // operator[](char*) const
@@ -82,9 +82,9 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   // operator[](const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE
-      typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
+      typename enable_if<IsString<TChar*>::value, JsonVariantConst>::type
       operator[](TChar* key) const {
-    return VariantConstRef(getMember(adaptString(key)));
+    return JsonVariantConst(getMember(adaptString(key)));
   }
 
   FORCE_INLINE bool operator==(JsonObjectConst rhs) const {
@@ -120,16 +120,16 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
 
 template <>
 struct Converter<JsonObjectConst> : private VariantAttorney {
-  static void toJson(VariantConstRef src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static JsonObjectConst fromJson(VariantConstRef src) {
+  static JsonObjectConst fromJson(JsonVariantConst src) {
     const VariantData* data = getData(src);
     return data != 0 ? data->asObject() : 0;
   }
 
-  static bool checkJson(VariantConstRef src) {
+  static bool checkJson(JsonVariantConst src) {
     const VariantData* data = getData(src);
     return data && data->isObject();
   }

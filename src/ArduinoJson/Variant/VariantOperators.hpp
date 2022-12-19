@@ -11,10 +11,10 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class VariantConstRef;
+class JsonVariantConst;
 
 template <typename T>
-CompareResult compare(VariantConstRef lhs,
+CompareResult compare(JsonVariantConst lhs,
                       const T& rhs);  // VariantCompare.cpp
 
 struct VariantOperatorTag {};
@@ -47,7 +47,7 @@ struct VariantOperators : VariantOperatorTag {
   //
   // JsonVariant operator|(JsonVariant, JsonVariant)
   template <typename T>
-  friend typename enable_if<IsVariant<T>::value, VariantConstRef>::type
+  friend typename enable_if<IsVariant<T>::value, JsonVariantConst>::type
   operator|(const TVariant& variant, T defaultValue) {
     if (variant)
       return variant;

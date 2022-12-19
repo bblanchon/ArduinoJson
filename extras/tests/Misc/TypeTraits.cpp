@@ -182,7 +182,7 @@ TEST_CASE("Polyfills/type_traits") {
            false));
     CHECK((is_convertible<JsonPair, JsonVariantConst>::value == false));
     CHECK((is_convertible<VariantRef, JsonVariantConst>::value == true));
-    CHECK((is_convertible<VariantConstRef, JsonVariantConst>::value == true));
+    CHECK((is_convertible<JsonVariantConst, JsonVariantConst>::value == true));
     CHECK((is_convertible<JsonArray, JsonVariantConst>::value == true));
     CHECK((is_convertible<ElementProxy<JsonArray>, JsonVariantConst>::value ==
            true));

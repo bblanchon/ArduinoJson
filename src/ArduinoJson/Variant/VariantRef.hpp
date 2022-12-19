@@ -44,30 +44,30 @@ struct Converter<VariantRef> : private VariantAttorney {
     return src;
   }
 
-  static InvalidConversion<VariantConstRef, VariantRef> fromJson(
-      VariantConstRef);
+  static InvalidConversion<JsonVariantConst, VariantRef> fromJson(
+      JsonVariantConst);
 
   static bool checkJson(VariantRef src) {
     VariantData* data = getData(src);
     return !!data;
   }
 
-  static bool checkJson(VariantConstRef) {
+  static bool checkJson(JsonVariantConst) {
     return false;
   }
 };
 
 template <>
-struct Converter<VariantConstRef> : private VariantAttorney {
-  static void toJson(VariantConstRef src, VariantRef dst) {
+struct Converter<JsonVariantConst> : private VariantAttorney {
+  static void toJson(JsonVariantConst src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static VariantConstRef fromJson(VariantConstRef src) {
-    return VariantConstRef(getData(src));
+  static JsonVariantConst fromJson(JsonVariantConst src) {
+    return JsonVariantConst(getData(src));
   }
 
-  static bool checkJson(VariantConstRef src) {
+  static bool checkJson(JsonVariantConst src) {
     const VariantData* data = getData(src);
     return !!data;
   }

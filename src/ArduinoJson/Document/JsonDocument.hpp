@@ -9,9 +9,8 @@
 #include <ArduinoJson/Object/JsonObject.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
-#include <ArduinoJson/Variant/VariantConstRef.hpp>
+#include <ArduinoJson/Variant/JsonVariantConst.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
-
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -69,7 +68,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   }
 
   bool set(const JsonDocument& src) {
-    return to<VariantRef>().set(src.as<VariantConstRef>());
+    return to<VariantRef>().set(src.as<JsonVariantConst>());
   }
 
   template <typename T>
@@ -160,9 +159,9 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   // operator[](const String&) const
   template <typename TString>
   FORCE_INLINE
-      typename enable_if<IsString<TString>::value, VariantConstRef>::type
+      typename enable_if<IsString<TString>::value, JsonVariantConst>::type
       operator[](const TString& key) const {
-    return VariantConstRef(_data.getMember(adaptString(key)));
+    return JsonVariantConst(_data.getMember(adaptString(key)));
   }
 
   // operator[](char*) const
@@ -170,17 +169,17 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   // operator[](const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE
-      typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
+      typename enable_if<IsString<TChar*>::value, JsonVariantConst>::type
       operator[](TChar* key) const {
-    return VariantConstRef(_data.getMember(adaptString(key)));
+    return JsonVariantConst(_data.getMember(adaptString(key)));
   }
 
   FORCE_INLINE ElementProxy<JsonDocument&> operator[](size_t index) {
     return ElementProxy<JsonDocument&>(*this, index);
   }
 
-  FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return VariantConstRef(_data.getElement(index));
+  FORCE_INLINE JsonVariantConst operator[](size_t index) const {
+    return JsonVariantConst(_data.getElement(index));
   }
 
   FORCE_INLINE VariantRef add() {
@@ -223,7 +222,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     return getVariant();
   }
 
-  FORCE_INLINE operator VariantConstRef() const {
+  FORCE_INLINE operator JsonVariantConst() const {
     return getVariant();
   }
 
@@ -250,8 +249,8 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     return VariantRef(&_pool, &_data);
   }
 
-  VariantConstRef getVariant() const {
-    return VariantConstRef(&_data);
+  JsonVariantConst getVariant() const {
+    return JsonVariantConst(&_data);
   }
 
   MemoryPool _pool;
@@ -280,7 +279,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
 };
 
 inline void convertToJson(const JsonDocument& src, VariantRef dst) {
-  dst.set(src.as<VariantConstRef>());
+  dst.set(src.as<JsonVariantConst>());
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

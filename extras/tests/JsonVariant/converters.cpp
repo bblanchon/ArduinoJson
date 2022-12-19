@@ -96,11 +96,11 @@ struct Converter<Complex> {
     dst["imag"] = src.imag();
   }
 
-  static Complex fromJson(VariantConstRef src) {
+  static Complex fromJson(JsonVariantConst src) {
     return Complex(src["real"], src["imag"]);
   }
 
-  static bool checkJson(VariantConstRef src) {
+  static bool checkJson(JsonVariantConst src) {
     return src["real"].is<double>() && src["imag"].is<double>();
   }
 };

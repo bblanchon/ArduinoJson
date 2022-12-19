@@ -24,7 +24,7 @@ class StaticJsonDocument : public JsonDocument {
   template <typename T>
   StaticJsonDocument(
       const T& src,
-      typename enable_if<is_convertible<T, VariantConstRef>::value>::type* = 0)
+      typename enable_if<is_convertible<T, JsonVariantConst>::value>::type* = 0)
       : JsonDocument(_buffer, _capacity) {
     set(src);
   }

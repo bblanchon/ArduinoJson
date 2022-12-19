@@ -67,16 +67,16 @@ class VariantConstPtr {
  public:
   VariantConstPtr(const VariantData* data) : _variant(data) {}
 
-  VariantConstRef* operator->() {
+  JsonVariantConst* operator->() {
     return &_variant;
   }
 
-  VariantConstRef& operator*() {
+  JsonVariantConst& operator*() {
     return _variant;
   }
 
  private:
-  VariantConstRef _variant;
+  JsonVariantConst _variant;
 };
 
 class JsonArrayConstIterator {
@@ -86,8 +86,8 @@ class JsonArrayConstIterator {
   JsonArrayConstIterator() : _slot(0) {}
   explicit JsonArrayConstIterator(const VariantSlot* slot) : _slot(slot) {}
 
-  VariantConstRef operator*() const {
-    return VariantConstRef(_slot->data());
+  JsonVariantConst operator*() const {
+    return JsonVariantConst(_slot->data());
   }
   VariantConstPtr operator->() {
     return VariantConstPtr(_slot->data());

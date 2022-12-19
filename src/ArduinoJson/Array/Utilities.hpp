@@ -57,7 +57,7 @@ inline bool copyArray(const T* src, size_t len, JsonDocument& dst) {
 // Trivial case form to stop the recursion
 template <typename T>
 inline typename enable_if<!is_array<T>::value, size_t>::type copyArray(
-    VariantConstRef src, T& dst) {
+    JsonVariantConst src, T& dst) {
   dst = src.as<T>();
   return 1;
 }
@@ -80,7 +80,7 @@ inline size_t copyArray(JsonArrayConst src, T* dst, size_t len) {
 
 // Special case for char[] which must be treated as a string
 template <size_t N>
-inline size_t copyArray(VariantConstRef src, char (&dst)[N]) {
+inline size_t copyArray(JsonVariantConst src, char (&dst)[N]) {
   JsonString s = src;
   size_t len = N - 1;
   if (len > s.size())

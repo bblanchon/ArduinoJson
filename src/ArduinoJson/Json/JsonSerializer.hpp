@@ -116,22 +116,22 @@ class JsonSerializer : public Visitor<size_t> {
 };
 
 template <typename TDestination>
-size_t serializeJson(VariantConstRef source, TDestination& destination) {
+size_t serializeJson(JsonVariantConst source, TDestination& destination) {
   return serialize<JsonSerializer>(source, destination);
 }
 
-inline size_t serializeJson(VariantConstRef source, void* buffer,
+inline size_t serializeJson(JsonVariantConst source, void* buffer,
                             size_t bufferSize) {
   return serialize<JsonSerializer>(source, buffer, bufferSize);
 }
 
-inline size_t measureJson(VariantConstRef source) {
+inline size_t measureJson(JsonVariantConst source) {
   return measure<JsonSerializer>(source);
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 template <typename T>
-inline typename enable_if<is_convertible<T, VariantConstRef>::value,
+inline typename enable_if<is_convertible<T, JsonVariantConst>::value,
                           std::ostream&>::type
 operator<<(std::ostream& os, const T& source) {
   serializeJson(source, os);

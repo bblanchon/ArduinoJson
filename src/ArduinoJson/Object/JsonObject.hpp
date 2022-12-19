@@ -30,8 +30,8 @@ class JsonObject : public VariantOperators<JsonObject> {
     return JsonObjectConst(_data);
   }
 
-  operator VariantConstRef() const {
-    return VariantConstRef(collectionToVariant(_data));
+  operator JsonVariantConst() const {
+    return JsonVariantConst(collectionToVariant(_data));
   }
 
   FORCE_INLINE bool isNull() const {
@@ -176,7 +176,7 @@ class JsonObject : public VariantOperators<JsonObject> {
 
 template <>
 struct Converter<JsonObject> : private VariantAttorney {
-  static void toJson(VariantConstRef src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
@@ -186,10 +186,10 @@ struct Converter<JsonObject> : private VariantAttorney {
     return JsonObject(pool, data != 0 ? data->asObject() : 0);
   }
 
-  static InvalidConversion<VariantConstRef, JsonObject> fromJson(
-      VariantConstRef);
+  static InvalidConversion<JsonVariantConst, JsonObject> fromJson(
+      JsonVariantConst);
 
-  static bool checkJson(VariantConstRef) {
+  static bool checkJson(JsonVariantConst) {
     return false;
   }
 

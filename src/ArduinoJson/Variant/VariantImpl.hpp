@@ -149,7 +149,7 @@ inline bool VariantRefBase<TDerived>::set(char value) const {
 
 template <typename TDerived>
 inline void convertToJson(const VariantRefBase<TDerived>& src, VariantRef dst) {
-  dst.set(src.template as<VariantConstRef>());
+  dst.set(src.template as<JsonVariantConst>());
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

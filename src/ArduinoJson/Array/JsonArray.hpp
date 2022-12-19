@@ -98,8 +98,8 @@ class JsonArray : public VariantOperators<JsonArray> {
     return add().to<JsonArray>();
   }
 
-  operator VariantConstRef() const {
-    return VariantConstRef(collectionToVariant(_data));
+  operator JsonVariantConst() const {
+    return JsonVariantConst(collectionToVariant(_data));
   }
 
   FORCE_INLINE bool isNull() const {
@@ -141,7 +141,7 @@ class JsonArray : public VariantOperators<JsonArray> {
 
 template <>
 struct Converter<JsonArray> : private VariantAttorney {
-  static void toJson(VariantConstRef src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
@@ -151,10 +151,10 @@ struct Converter<JsonArray> : private VariantAttorney {
     return JsonArray(pool, data != 0 ? data->asArray() : 0);
   }
 
-  static InvalidConversion<VariantConstRef, JsonArray> fromJson(
-      VariantConstRef);
+  static InvalidConversion<JsonVariantConst, JsonArray> fromJson(
+      JsonVariantConst);
 
-  static bool checkJson(VariantConstRef) {
+  static bool checkJson(JsonVariantConst) {
     return false;
   }
 

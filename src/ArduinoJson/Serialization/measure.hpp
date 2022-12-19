@@ -10,7 +10,7 @@
 namespace ARDUINOJSON_NAMESPACE {
 
 template <template <typename> class TSerializer>
-size_t measure(VariantConstRef source) {
+size_t measure(JsonVariantConst source) {
   DummyWriter dp;
   TSerializer<DummyWriter> serializer(dp);
   return variantAccept(VariantAttorney::getData(source), serializer);

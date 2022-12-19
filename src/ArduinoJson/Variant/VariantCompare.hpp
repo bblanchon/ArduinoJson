@@ -194,14 +194,14 @@ struct VariantComparer : ComparerBase {
 
 template <typename T>
 struct Comparer<
-    T, typename enable_if<is_convertible<T, VariantConstRef>::value>::type>
+    T, typename enable_if<is_convertible<T, JsonVariantConst>::value>::type>
     : VariantComparer {
   explicit Comparer(const T& value)
       : VariantComparer(VariantAttorney::getData(value)) {}
 };
 
 template <typename T>
-CompareResult compare(VariantConstRef lhs, const T& rhs) {
+CompareResult compare(JsonVariantConst lhs, const T& rhs) {
   Comparer<T> comparer(rhs);
   return variantAccept(VariantAttorney::getData(lhs), comparer);
 }

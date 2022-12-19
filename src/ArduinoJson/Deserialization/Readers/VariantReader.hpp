@@ -5,7 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Object/MemberProxy.hpp>
-#include <ArduinoJson/Variant/VariantConstRef.hpp>
+#include <ArduinoJson/Variant/JsonVariantConst.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 

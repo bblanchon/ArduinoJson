@@ -55,12 +55,12 @@ class JsonArrayConst : public VariantOperators<JsonArrayConst> {
     }
   }
 
-  FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return VariantConstRef(_data ? _data->getElement(index) : 0);
+  FORCE_INLINE JsonVariantConst operator[](size_t index) const {
+    return JsonVariantConst(_data ? _data->getElement(index) : 0);
   }
 
-  operator VariantConstRef() const {
-    return VariantConstRef(collectionToVariant(_data));
+  operator JsonVariantConst() const {
+    return JsonVariantConst(collectionToVariant(_data));
   }
 
   FORCE_INLINE bool isNull() const {
@@ -93,16 +93,16 @@ class JsonArrayConst : public VariantOperators<JsonArrayConst> {
 
 template <>
 struct Converter<JsonArrayConst> : private VariantAttorney {
-  static void toJson(VariantConstRef src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static JsonArrayConst fromJson(VariantConstRef src) {
+  static JsonArrayConst fromJson(JsonVariantConst src) {
     const VariantData* data = getData(src);
     return data ? data->asArray() : 0;
   }
 
-  static bool checkJson(VariantConstRef src) {
+  static bool checkJson(JsonVariantConst src) {
     const VariantData* data = getData(src);
     return data && data->isArray();
   }

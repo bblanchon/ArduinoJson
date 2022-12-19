@@ -198,16 +198,16 @@ class MsgPackSerializer : public Visitor<size_t> {
 };
 
 template <typename TDestination>
-inline size_t serializeMsgPack(VariantConstRef source, TDestination& output) {
+inline size_t serializeMsgPack(JsonVariantConst source, TDestination& output) {
   return serialize<MsgPackSerializer>(source, output);
 }
 
-inline size_t serializeMsgPack(VariantConstRef source, void* output,
+inline size_t serializeMsgPack(JsonVariantConst source, void* output,
                                size_t size) {
   return serialize<MsgPackSerializer>(source, output, size);
 }
 
-inline size_t measureMsgPack(VariantConstRef source) {
+inline size_t measureMsgPack(JsonVariantConst source) {
   return measure<MsgPackSerializer>(source);
 }
 
