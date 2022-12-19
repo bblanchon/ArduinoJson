@@ -5,12 +5,12 @@
 #pragma once
 
 #include <ArduinoJson/Array/JsonArray.hpp>
-#include <ArduinoJson/Object/ObjectRef.hpp>
+#include <ArduinoJson/Object/JsonObject.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline ObjectRef JsonArray::createNestedObject() const {
-  return add().to<ObjectRef>();
+inline JsonObject JsonArray::createNestedObject() const {
+  return add().to<JsonObject>();
 }
 
 template <typename TDerived>
@@ -19,8 +19,8 @@ inline JsonArray VariantRefBase<TDerived>::createNestedArray() const {
 }
 
 template <typename TDerived>
-inline ObjectRef VariantRefBase<TDerived>::createNestedObject() const {
-  return add().template to<ObjectRef>();
+inline JsonObject VariantRefBase<TDerived>::createNestedObject() const {
+  return add().template to<JsonObject>();
 }
 
 template <typename TDerived>

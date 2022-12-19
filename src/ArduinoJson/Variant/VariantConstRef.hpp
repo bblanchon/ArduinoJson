@@ -20,7 +20,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 // Forward declarations.
 class JsonArray;
-class ObjectRef;
+class JsonObject;
 
 class VariantConstRef : public VariantTag,
                         public VariantOperators<VariantConstRef> {

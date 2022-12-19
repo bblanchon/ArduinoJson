@@ -22,7 +22,7 @@
 #endif
 
 #include "ArduinoJson/Array/JsonArray.hpp"
-#include "ArduinoJson/Object/ObjectRef.hpp"
+#include "ArduinoJson/Object/JsonObject.hpp"
 #include "ArduinoJson/Variant/VariantConstRef.hpp"
 
 #include "ArduinoJson/Document/DynamicJsonDocument.hpp"
@@ -32,8 +32,8 @@
 #include "ArduinoJson/Array/JsonArrayImpl.hpp"
 #include "ArduinoJson/Array/Utilities.hpp"
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
+#include "ArduinoJson/Object/JsonObjectImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
-#include "ArduinoJson/Object/ObjectImpl.hpp"
 #include "ArduinoJson/Variant/ConverterImpl.hpp"
 #include "ArduinoJson/Variant/VariantCompare.hpp"
 #include "ArduinoJson/Variant/VariantImpl.hpp"
@@ -52,7 +52,7 @@ using ARDUINOJSON_NAMESPACE::JsonArrayConst;
 typedef ARDUINOJSON_NAMESPACE::Float JsonFloat;
 typedef ARDUINOJSON_NAMESPACE::Integer JsonInteger;
 typedef ARDUINOJSON_NAMESPACE::ObjectConstRef JsonObjectConst;
-typedef ARDUINOJSON_NAMESPACE::ObjectRef JsonObject;
+using ARDUINOJSON_NAMESPACE::JsonObject;
 typedef ARDUINOJSON_NAMESPACE::Pair JsonPair;
 typedef ARDUINOJSON_NAMESPACE::PairConst JsonPairConst;
 typedef ARDUINOJSON_NAMESPACE::String JsonString;

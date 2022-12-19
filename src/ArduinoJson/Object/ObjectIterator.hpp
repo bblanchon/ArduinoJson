@@ -26,7 +26,7 @@ class PairPtr {
 };
 
 class ObjectIterator {
-  friend class ObjectRef;
+  friend class JsonObject;
 
  public:
   ObjectIterator() : _slot(0) {}
@@ -81,7 +81,7 @@ class PairConstPtr {
 };
 
 class ObjectConstIterator {
-  friend class ObjectRef;
+  friend class JsonObject;
 
  public:
   ObjectConstIterator() : _slot(0) {}

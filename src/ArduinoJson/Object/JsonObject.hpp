@@ -11,14 +11,14 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class JsonArray;
 
-class ObjectRef : public VariantOperators<ObjectRef> {
+class JsonObject : public VariantOperators<JsonObject> {
   friend class VariantAttorney;
 
  public:
   typedef ObjectIterator iterator;
 
-  FORCE_INLINE ObjectRef() : _data(0), _pool(0) {}
-  FORCE_INLINE ObjectRef(MemoryPool* buf, CollectionData* data)
+  FORCE_INLINE JsonObject() : _data(0), _pool(0) {}
+  FORCE_INLINE JsonObject(MemoryPool* buf, CollectionData* data)
       : _data(data), _pool(buf) {}
 
   operator VariantRef() const {
@@ -76,22 +76,22 @@ class ObjectRef : public VariantOperators<ObjectRef> {
     return _data->copyFrom(*src._data, _pool);
   }
 
-  FORCE_INLINE bool operator==(ObjectRef rhs) const {
+  FORCE_INLINE bool operator==(JsonObject rhs) const {
     return ObjectConstRef(_data) == ObjectConstRef(rhs._data);
   }
 
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value,
-                                  MemberProxy<ObjectRef, TString> >::type
+                                  MemberProxy<JsonObject, TString> >::type
   operator[](const TString& key) const {
-    return MemberProxy<ObjectRef, TString>(*this, key);
+    return MemberProxy<JsonObject, TString>(*this, key);
   }
 
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value,
-                                  MemberProxy<ObjectRef, TChar*> >::type
+                                  MemberProxy<JsonObject, TChar*> >::type
   operator[](TChar* key) const {
-    return MemberProxy<ObjectRef, TChar*>(*this, key);
+    return MemberProxy<JsonObject, TChar*>(*this, key);
   }
 
   FORCE_INLINE void remove(iterator it) const {
@@ -134,13 +134,13 @@ class ObjectRef : public VariantOperators<ObjectRef> {
   FORCE_INLINE JsonArray createNestedArray(TChar* key) const;
 
   template <typename TString>
-  ObjectRef createNestedObject(const TString& key) const {
-    return operator[](key).template to<ObjectRef>();
+  JsonObject createNestedObject(const TString& key) const {
+    return operator[](key).template to<JsonObject>();
   }
 
   template <typename TChar>
-  ObjectRef createNestedObject(TChar* key) const {
-    return operator[](key).template to<ObjectRef>();
+  JsonObject createNestedObject(TChar* key) const {
+    return operator[](key).template to<JsonObject>();
   }
 
  private:
@@ -175,18 +175,18 @@ class ObjectRef : public VariantOperators<ObjectRef> {
 };
 
 template <>
-struct Converter<ObjectRef> : private VariantAttorney {
+struct Converter<JsonObject> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ObjectRef fromJson(VariantRef src) {
+  static JsonObject fromJson(VariantRef src) {
     VariantData* data = getData(src);
     MemoryPool* pool = getPool(src);
-    return ObjectRef(pool, data != 0 ? data->asObject() : 0);
+    return JsonObject(pool, data != 0 ? data->asObject() : 0);
   }
 
-  static InvalidConversion<VariantConstRef, ObjectRef> fromJson(
+  static InvalidConversion<VariantConstRef, JsonObject> fromJson(
       VariantConstRef);
 
   static bool checkJson(VariantConstRef) {

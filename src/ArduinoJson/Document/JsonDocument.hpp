@@ -6,11 +6,12 @@
 
 #include <ArduinoJson/Array/ElementProxy.hpp>
 #include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Object/JsonObject.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
-#include <ArduinoJson/Object/ObjectRef.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/VariantConstRef.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
+
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -102,23 +103,23 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     return operator[](key).template to<JsonArray>();
   }
 
-  ObjectRef createNestedObject() {
-    return add().to<ObjectRef>();
+  JsonObject createNestedObject() {
+    return add().to<JsonObject>();
   }
 
   // createNestedObject(char*)
   // createNestedObject(const char*)
   // createNestedObject(const __FlashStringHelper*)
   template <typename TChar>
-  ObjectRef createNestedObject(TChar* key) {
-    return operator[](key).template to<ObjectRef>();
+  JsonObject createNestedObject(TChar* key) {
+    return operator[](key).template to<JsonObject>();
   }
 
   // createNestedObject(const std::string&)
   // createNestedObject(const String&)
   template <typename TString>
-  ObjectRef createNestedObject(const TString& key) {
-    return operator[](key).template to<ObjectRef>();
+  JsonObject createNestedObject(const TString& key) {
+    return operator[](key).template to<JsonObject>();
   }
 
   // containsKey(char*) const

@@ -67,7 +67,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
       typename enable_if<
           is_same<T, VariantRef>::value || is_same<T, VariantConstRef>::value ||
           is_same<T, JsonArray>::value || is_same<T, JsonArrayConst>::value ||
-          is_same<T, ObjectRef>::value ||
+          is_same<T, JsonObject>::value ||
           is_same<T, ObjectConstRef>::value>::type* = 0)
       : JsonDocument(allocPool(src.memoryUsage())) {
     set(src);

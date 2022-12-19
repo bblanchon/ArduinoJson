@@ -8,7 +8,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 class JsonArray;
-class ObjectRef;
+class JsonObject;
 class VariantRef;
 
 // A metafunction that returns the type of the value returned by
@@ -21,8 +21,8 @@ struct VariantTo<JsonArray> {
   typedef JsonArray type;
 };
 template <>
-struct VariantTo<ObjectRef> {
-  typedef ObjectRef type;
+struct VariantTo<JsonObject> {
+  typedef JsonObject type;
 };
 template <>
 struct VariantTo<VariantRef> {

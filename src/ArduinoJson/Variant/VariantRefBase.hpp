@@ -78,9 +78,10 @@ class VariantRefBase : public VariantTag {
   template <typename T>
   typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type to() const;
   //
-  // ObjectRef to<ObjectRef>()
+  // JsonObject to<JsonObject>()
   template <typename T>
-  typename enable_if<is_same<T, ObjectRef>::value, ObjectRef>::type to() const;
+  typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type to()
+      const;
   //
   // VariantRef to<VariantRef>()
   template <typename T>
@@ -200,7 +201,7 @@ class VariantRefBase : public VariantTag {
   }
 
   FORCE_INLINE JsonArray createNestedArray() const;
-  FORCE_INLINE ObjectRef createNestedObject() const;
+  FORCE_INLINE JsonObject createNestedObject() const;
   FORCE_INLINE ElementProxy<TDerived> operator[](size_t index) const;
 
   template <typename TString>
@@ -228,10 +229,10 @@ class VariantRefBase : public VariantTag {
   FORCE_INLINE JsonArray createNestedArray(TChar* key) const;
 
   template <typename TString>
-  ObjectRef createNestedObject(const TString& key) const;
+  JsonObject createNestedObject(const TString& key) const;
 
   template <typename TChar>
-  ObjectRef createNestedObject(TChar* key) const;
+  JsonObject createNestedObject(TChar* key) const;
 
  private:
   TDerived& derived() {

@@ -8,7 +8,7 @@
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Numbers/parseNumber.hpp>
-#include <ArduinoJson/Object/ObjectRef.hpp>
+#include <ArduinoJson/Object/JsonObject.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 
 #include <string.h>  // for strcmp
@@ -128,9 +128,9 @@ VariantRefBase<TDerived>::to() const {
 
 template <typename TDerived>
 template <typename T>
-typename enable_if<is_same<T, ObjectRef>::value, ObjectRef>::type
+typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
 VariantRefBase<TDerived>::to() const {
-  return ObjectRef(getPool(), variantToObject(getOrCreateData()));
+  return JsonObject(getPool(), variantToObject(getOrCreateData()));
 }
 
 template <typename TDerived>

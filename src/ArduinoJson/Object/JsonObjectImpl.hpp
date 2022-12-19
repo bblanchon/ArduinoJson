@@ -5,17 +5,17 @@
 #pragma once
 
 #include <ArduinoJson/Array/JsonArray.hpp>
-#include <ArduinoJson/Object/ObjectRef.hpp>
+#include <ArduinoJson/Object/JsonObject.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
 template <typename TString>
-inline JsonArray ObjectRef::createNestedArray(const TString& key) const {
+inline JsonArray JsonObject::createNestedArray(const TString& key) const {
   return operator[](key).template to<JsonArray>();
 }
 
 template <typename TChar>
-inline JsonArray ObjectRef::createNestedArray(TChar* key) const {
+inline JsonArray JsonObject::createNestedArray(TChar* key) const {
   return operator[](key).template to<JsonArray>();
 }
 
@@ -34,16 +34,16 @@ inline JsonArray VariantRefBase<TDerived>::createNestedArray(TChar* key) const {
 
 template <typename TDerived>
 template <typename TString>
-inline ObjectRef VariantRefBase<TDerived>::createNestedObject(
+inline JsonObject VariantRefBase<TDerived>::createNestedObject(
     const TString& key) const {
-  return operator[](key).template to<ObjectRef>();
+  return operator[](key).template to<JsonObject>();
 }
 
 template <typename TDerived>
 template <typename TChar>
-inline ObjectRef VariantRefBase<TDerived>::createNestedObject(
+inline JsonObject VariantRefBase<TDerived>::createNestedObject(
     TChar* key) const {
-  return operator[](key).template to<ObjectRef>();
+  return operator[](key).template to<JsonObject>();
 }
 
 template <typename TDerived>

@@ -9,7 +9,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ObjectRef;
+class JsonObject;
 
 class JsonArray : public VariantOperators<JsonArray> {
   friend class VariantAttorney;
@@ -92,7 +92,7 @@ class JsonArray : public VariantOperators<JsonArray> {
     return ElementProxy<JsonArray>(*this, index);
   }
 
-  FORCE_INLINE ObjectRef createNestedObject() const;
+  FORCE_INLINE JsonObject createNestedObject() const;
 
   FORCE_INLINE JsonArray createNestedArray() const {
     return add().to<JsonArray>();

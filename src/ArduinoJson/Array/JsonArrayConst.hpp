@@ -10,7 +10,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ObjectRef;
+class JsonObject;
 
 class JsonArrayConst : public VariantOperators<JsonArrayConst> {
   friend class JsonArray;
