@@ -90,13 +90,14 @@ CompareResult arithmeticCompare(
 
 template <typename T2>
 CompareResult arithmeticCompareNegateLeft(
-    UInt, const T2&, typename enable_if<is_unsigned<T2>::value>::type* = 0) {
+    JsonUInt, const T2&,
+    typename enable_if<is_unsigned<T2>::value>::type* = 0) {
   return COMPARE_RESULT_LESS;
 }
 
 template <typename T2>
 CompareResult arithmeticCompareNegateLeft(
-    UInt lhs, const T2& rhs,
+    JsonUInt lhs, const T2& rhs,
     typename enable_if<is_signed<T2>::value>::type* = 0) {
   if (rhs > 0)
     return COMPARE_RESULT_LESS;
@@ -105,13 +106,14 @@ CompareResult arithmeticCompareNegateLeft(
 
 template <typename T1>
 CompareResult arithmeticCompareNegateRight(
-    const T1&, UInt, typename enable_if<is_unsigned<T1>::value>::type* = 0) {
+    const T1&, JsonUInt,
+    typename enable_if<is_unsigned<T1>::value>::type* = 0) {
   return COMPARE_RESULT_GREATER;
 }
 
 template <typename T1>
 CompareResult arithmeticCompareNegateRight(
-    const T1& lhs, UInt rhs,
+    const T1& lhs, JsonUInt rhs,
     typename enable_if<is_signed<T1>::value>::type* = 0) {
   if (lhs > 0)
     return COMPARE_RESULT_GREATER;

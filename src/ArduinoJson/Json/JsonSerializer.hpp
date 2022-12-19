@@ -83,7 +83,7 @@ class JsonSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitUnsignedInteger(UInt value) {
+  size_t visitUnsignedInteger(JsonUInt value) {
     _formatter.writeInteger(value);
     return bytesWritten();
   }

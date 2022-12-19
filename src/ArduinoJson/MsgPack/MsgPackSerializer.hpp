@@ -109,7 +109,7 @@ class MsgPackSerializer : public Visitor<size_t> {
 
   size_t visitSignedInteger(JsonInteger value) {
     if (value > 0) {
-      visitUnsignedInteger(static_cast<UInt>(value));
+      visitUnsignedInteger(static_cast<JsonUInt>(value));
     } else if (value >= -0x20) {
       writeInteger(int8_t(value));
     } else if (value >= -0x80) {
@@ -137,7 +137,7 @@ class MsgPackSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitUnsignedInteger(UInt value) {
+  size_t visitUnsignedInteger(JsonUInt value) {
     if (value <= 0x7F) {
       writeInteger(uint8_t(value));
     } else if (value <= 0xFF) {

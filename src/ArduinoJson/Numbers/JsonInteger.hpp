@@ -13,10 +13,10 @@ namespace ARDUINOJSON_NAMESPACE {
 
 #if ARDUINOJSON_USE_LONG_LONG
 typedef int64_t JsonInteger;
-typedef uint64_t UInt;
+typedef uint64_t JsonUInt;
 #else
 typedef long JsonInteger;
-typedef unsigned long UInt;
+typedef unsigned long JsonUInt;
 #endif
 
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -46,7 +46,7 @@ struct RawData {
 union VariantContent {
   JsonFloat asFloat;
   bool asBoolean;
-  UInt asUnsignedInteger;
+  JsonUInt asUnsignedInteger;
   JsonInteger asSignedInteger;
   CollectionData asCollection;
   struct {

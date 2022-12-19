@@ -38,7 +38,7 @@ struct Visitor {
     return TResult();
   }
 
-  TResult visitUnsignedInteger(UInt) {
+  TResult visitUnsignedInteger(JsonUInt) {
     return TResult();
   }
 

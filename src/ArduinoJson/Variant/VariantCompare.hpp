@@ -60,12 +60,12 @@ struct Comparer<T, typename enable_if<is_integral<T>::value ||
     return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visitUnsignedInteger(UInt lhs) {
+  CompareResult visitUnsignedInteger(JsonUInt lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
   CompareResult visitBoolean(bool lhs) {
-    return visitUnsignedInteger(static_cast<UInt>(lhs));
+    return visitUnsignedInteger(static_cast<JsonUInt>(lhs));
   }
 };
 
@@ -162,8 +162,8 @@ struct VariantComparer : ComparerBase {
     return accept(comparer);
   }
 
-  CompareResult visitUnsignedInteger(UInt lhs) {
-    Comparer<UInt> comparer(lhs);
+  CompareResult visitUnsignedInteger(JsonUInt lhs) {
+    Comparer<JsonUInt> comparer(lhs);
     return accept(comparer);
   }
 

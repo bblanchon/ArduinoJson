@@ -204,7 +204,7 @@ class VariantData {
   template <typename T>
   typename enable_if<is_unsigned<T>::value>::type setInteger(T value) {
     setType(VALUE_IS_UNSIGNED_INTEGER);
-    _content.asUnsignedInteger = static_cast<UInt>(value);
+    _content.asUnsignedInteger = static_cast<JsonUInt>(value);
   }
 
   template <typename T>

@@ -20,7 +20,7 @@ struct choose_largest : conditional<(sizeof(A) > sizeof(B)), A, B> {};
 
 inline bool parseNumber(const char* s, VariantData& result) {
   typedef FloatTraits<JsonFloat> traits;
-  typedef choose_largest<traits::mantissa_type, UInt>::type mantissa_t;
+  typedef choose_largest<traits::mantissa_type, JsonUInt>::type mantissa_t;
   typedef traits::exponent_type exponent_t;
 
   ARDUINOJSON_ASSERT(s != 0);
@@ -55,7 +55,7 @@ inline bool parseNumber(const char* s, VariantData& result) {
 
   mantissa_t mantissa = 0;
   exponent_t exponent_offset = 0;
-  const mantissa_t maxUint = UInt(-1);
+  const mantissa_t maxUint = JsonUInt(-1);
 
   while (isdigit(*s)) {
     uint8_t digit = uint8_t(*s - '0');
@@ -77,7 +77,7 @@ inline bool parseNumber(const char* s, VariantData& result) {
         return true;
       }
     } else {
-      result.setInteger(UInt(mantissa));
+      result.setInteger(JsonUInt(mantissa));
       return true;
     }
   }

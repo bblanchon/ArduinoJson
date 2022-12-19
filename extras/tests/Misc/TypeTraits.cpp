@@ -80,7 +80,7 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK(is_integral<const volatile unsigned long>::value == true);
     CHECK(is_integral<const volatile unsigned short>::value == true);
 
-    CHECK(is_integral<UInt>::value == true);
+    CHECK(is_integral<JsonUInt>::value == true);
   }
 
   SECTION("is_signed") {
