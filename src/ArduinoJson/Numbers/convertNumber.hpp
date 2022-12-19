@@ -14,8 +14,8 @@
 #  pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
-#include <ArduinoJson/Numbers/Float.hpp>
 #include <ArduinoJson/Numbers/FloatTraits.hpp>
+#include <ArduinoJson/Numbers/JsonFloat.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 

@@ -49,7 +49,7 @@
 namespace ArduinoJson {
 using ARDUINOJSON_NAMESPACE::JsonArray;
 using ARDUINOJSON_NAMESPACE::JsonArrayConst;
-typedef ARDUINOJSON_NAMESPACE::Float JsonFloat;
+using ARDUINOJSON_NAMESPACE::JsonFloat;
 typedef ARDUINOJSON_NAMESPACE::Integer JsonInteger;
 using ARDUINOJSON_NAMESPACE::JsonObject;
 using ARDUINOJSON_NAMESPACE::JsonObjectConst;

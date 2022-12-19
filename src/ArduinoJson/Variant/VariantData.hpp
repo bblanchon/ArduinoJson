@@ -172,7 +172,7 @@ class VariantData {
     _content.asBoolean = value;
   }
 
-  void setFloat(Float value) {
+  void setFloat(JsonFloat value) {
     setType(VALUE_IS_FLOAT);
     _content.asFloat = value;
   }

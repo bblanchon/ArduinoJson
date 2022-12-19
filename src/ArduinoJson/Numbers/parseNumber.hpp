@@ -19,7 +19,7 @@ template <typename A, typename B>
 struct choose_largest : conditional<(sizeof(A) > sizeof(B)), A, B> {};
 
 inline bool parseNumber(const char* s, VariantData& result) {
-  typedef FloatTraits<Float> traits;
+  typedef FloatTraits<JsonFloat> traits;
   typedef choose_largest<traits::mantissa_type, UInt>::type mantissa_t;
   typedef traits::exponent_type exponent_t;
 
@@ -136,8 +136,8 @@ inline bool parseNumber(const char* s, VariantData& result) {
   if (*s != '\0')
     return false;
 
-  Float final_result =
-      traits::make_float(static_cast<Float>(mantissa), exponent);
+  JsonFloat final_result =
+      traits::make_float(static_cast<JsonFloat>(mantissa), exponent);
 
   result.setFloat(is_negative ? -final_result : final_result);
   return true;

@@ -52,7 +52,7 @@ struct Comparer<T, typename enable_if<is_integral<T>::value ||
 
   explicit Comparer(T value) : rhs(value) {}
 
-  CompareResult visitFloat(Float lhs) {
+  CompareResult visitFloat(JsonFloat lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
@@ -142,8 +142,8 @@ struct VariantComparer : ComparerBase {
     return accept(comparer);
   }
 
-  CompareResult visitFloat(Float lhs) {
-    Comparer<Float> comparer(lhs);
+  CompareResult visitFloat(JsonFloat lhs) {
+    Comparer<JsonFloat> comparer(lhs);
     return accept(comparer);
   }
 

@@ -58,7 +58,7 @@ class JsonSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitFloat(Float value) {
+  size_t visitFloat(JsonFloat value) {
     _formatter.writeFloat(value);
     return bytesWritten();
   }

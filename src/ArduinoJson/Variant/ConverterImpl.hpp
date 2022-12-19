@@ -101,7 +101,7 @@ struct Converter<T, typename enable_if<is_floating_point<T>::value>::type>
   static void toJson(T src, VariantRef dst) {
     VariantData* data = getData(dst);
     if (data)
-      data->setFloat(static_cast<Float>(src));
+      data->setFloat(static_cast<JsonFloat>(src));
   }
 
   static T fromJson(VariantConstRef src) {

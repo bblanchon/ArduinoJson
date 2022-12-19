@@ -5,8 +5,8 @@
 #pragma once
 
 #include <ArduinoJson/Collection/CollectionData.hpp>
-#include <ArduinoJson/Numbers/Float.hpp>
 #include <ArduinoJson/Numbers/Integer.hpp>
+#include <ArduinoJson/Numbers/JsonFloat.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -22,7 +22,7 @@ struct Visitor {
     return TResult();
   }
 
-  TResult visitFloat(Float) {
+  TResult visitFloat(JsonFloat) {
     return TResult();
   }
 
