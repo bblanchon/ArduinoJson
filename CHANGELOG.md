@@ -13,6 +13,7 @@ HEAD
 * Remove `getElement()`, `getOrAddElement()`, `getMember()`, and `getOrAddMember()`
 * Remove undocumented `JsonDocument::data()` and `JsonDocument::memoryPool()`
 * Remove undocumented `JsonArrayIterator::internal()` and `JsonObjectIterator::internal()`
+* Rename things in `ARDUINOJSON_NAMESPACE` to match the public names
 
 > ### BREAKING CHANGES
 >
