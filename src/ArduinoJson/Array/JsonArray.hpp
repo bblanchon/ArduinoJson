@@ -15,7 +15,7 @@ class JsonArray : public VariantOperators<JsonArray> {
   friend class VariantAttorney;
 
  public:
-  typedef ArrayIterator iterator;
+  typedef JsonArrayIterator iterator;
 
   FORCE_INLINE JsonArray() : _data(0), _pool(0) {}
   FORCE_INLINE JsonArray(MemoryPool* pool, CollectionData* data)

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Array/ArrayIterator.hpp>
+#include <ArduinoJson/Array/JsonArrayIterator.hpp>
 #include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 

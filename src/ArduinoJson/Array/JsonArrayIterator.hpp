@@ -25,12 +25,12 @@ class VariantPtr {
   VariantRef _variant;
 };
 
-class ArrayIterator {
+class JsonArrayIterator {
   friend class JsonArray;
 
  public:
-  ArrayIterator() : _slot(0) {}
-  explicit ArrayIterator(MemoryPool* pool, VariantSlot* slot)
+  JsonArrayIterator() : _slot(0) {}
+  explicit JsonArrayIterator(MemoryPool* pool, VariantSlot* slot)
       : _pool(pool), _slot(slot) {}
 
   VariantRef operator*() const {
@@ -40,20 +40,20 @@ class ArrayIterator {
     return VariantPtr(_pool, _slot->data());
   }
 
-  bool operator==(const ArrayIterator& other) const {
+  bool operator==(const JsonArrayIterator& other) const {
     return _slot == other._slot;
   }
 
-  bool operator!=(const ArrayIterator& other) const {
+  bool operator!=(const JsonArrayIterator& other) const {
     return _slot != other._slot;
   }
 
-  ArrayIterator& operator++() {
+  JsonArrayIterator& operator++() {
     _slot = _slot->next();
     return *this;
   }
 
-  ArrayIterator& operator+=(size_t distance) {
+  JsonArrayIterator& operator+=(size_t distance) {
     _slot = _slot->next(distance);
     return *this;
   }
