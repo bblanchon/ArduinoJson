@@ -482,7 +482,7 @@ jobs:
           INPUT=src/ArduinoJson.h
           OUTPUT=ArduinoJson-$VERSION.h
           extras/scripts/build-single-header.sh "$INPUT" "$OUTPUT"
-          echo ::set-output name=filename::${OUTPUT}
+          echo "filename=${OUTPUT}" >> $GITHUB_OUTPUT
       - name: Smoke test
         run: |
           g++ -x c++ - <<END
@@ -516,7 +516,7 @@ jobs:
           INPUT=src/ArduinoJson.hpp
           OUTPUT=ArduinoJson-$VERSION.hpp
           extras/scripts/build-single-header.sh "$INPUT" "$OUTPUT"
-          echo ::set-output name=filename::${OUTPUT}
+          echo "filename=${OUTPUT}" >> $GITHUB_OUTPUT
       - name: Smoke test
         run: |
           g++ -x c++ - <<END
