@@ -4,8 +4,9 @@
 
 #pragma once
 
+#include <ArduinoJson/Object/JsonObjectConst.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
-#include <ArduinoJson/Object/ObjectConstRef.hpp>
+
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -26,8 +27,8 @@ class JsonObject : public VariantOperators<JsonObject> {
     return VariantRef(_pool, reinterpret_cast<VariantData*>(data));
   }
 
-  operator ObjectConstRef() const {
-    return ObjectConstRef(_data);
+  operator JsonObjectConst() const {
+    return JsonObjectConst(_data);
   }
 
   operator VariantConstRef() const {
@@ -70,14 +71,14 @@ class JsonObject : public VariantOperators<JsonObject> {
     _data->clear();
   }
 
-  FORCE_INLINE bool set(ObjectConstRef src) {
+  FORCE_INLINE bool set(JsonObjectConst src) {
     if (!_data || !src._data)
       return false;
     return _data->copyFrom(*src._data, _pool);
   }
 
   FORCE_INLINE bool operator==(JsonObject rhs) const {
-    return ObjectConstRef(_data) == ObjectConstRef(rhs._data);
+    return JsonObjectConst(_data) == JsonObjectConst(rhs._data);
   }
 
   template <typename TString>

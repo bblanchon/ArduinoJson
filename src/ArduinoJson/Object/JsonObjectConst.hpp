@@ -9,15 +9,15 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ObjectConstRef : public VariantOperators<ObjectConstRef> {
+class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   friend class JsonObject;
   friend class VariantAttorney;
 
  public:
   typedef ObjectConstIterator iterator;
 
-  ObjectConstRef() : _data(0) {}
-  ObjectConstRef(const CollectionData* data) : _data(data) {}
+  JsonObjectConst() : _data(0) {}
+  JsonObjectConst(const CollectionData* data) : _data(data) {}
 
   operator VariantConstRef() const {
     return VariantConstRef(collectionToVariant(_data));
@@ -87,7 +87,7 @@ class ObjectConstRef : public VariantOperators<ObjectConstRef> {
     return VariantConstRef(getMember(adaptString(key)));
   }
 
-  FORCE_INLINE bool operator==(ObjectConstRef rhs) const {
+  FORCE_INLINE bool operator==(JsonObjectConst rhs) const {
     if (_data == rhs._data)
       return true;
 
@@ -119,12 +119,12 @@ class ObjectConstRef : public VariantOperators<ObjectConstRef> {
 };
 
 template <>
-struct Converter<ObjectConstRef> : private VariantAttorney {
+struct Converter<JsonObjectConst> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ObjectConstRef fromJson(VariantConstRef src) {
+  static JsonObjectConst fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
     return data != 0 ? data->asObject() : 0;
   }

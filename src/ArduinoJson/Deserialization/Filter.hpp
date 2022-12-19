@@ -21,7 +21,7 @@ class Filter {
   }
 
   bool allowObject() const {
-    return _variant == true || _variant.is<ObjectConstRef>();
+    return _variant == true || _variant.is<JsonObjectConst>();
   }
 
   bool allowValue() const {

@@ -190,7 +190,7 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK((is_convertible<JsonObject, JsonVariantConst>::value == true));
     CHECK((is_convertible<MemberProxy<JsonObject, const char*>,
                           JsonVariantConst>::value == true));
-    CHECK((is_convertible<ObjectConstRef, JsonVariantConst>::value == true));
+    CHECK((is_convertible<JsonObjectConst, JsonVariantConst>::value == true));
     CHECK(
         (is_convertible<DynamicJsonDocument, JsonVariantConst>::value == true));
     CHECK((is_convertible<StaticJsonDocument<10>, JsonVariantConst>::value ==
