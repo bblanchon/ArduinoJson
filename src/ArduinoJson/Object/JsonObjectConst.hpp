@@ -9,6 +9,8 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+// A read-only reference to an object in a JsonDocument.
+// https://arduinojson.org/v6/api/jsonobjectconst/
 class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   friend class JsonObject;
   friend class VariantAttorney;
@@ -16,60 +18,76 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
  public:
   typedef JsonObjectConstIterator iterator;
 
+  // Creates an unbound reference.
   JsonObjectConst() : _data(0) {}
+
+  // INTERNAL USE ONLY
   JsonObjectConst(const CollectionData* data) : _data(data) {}
 
   operator JsonVariantConst() const {
     return JsonVariantConst(collectionToVariant(_data));
   }
 
+  // Returns true if the reference is unbound.
+  // https://arduinojson.org/v6/api/jsonobjectconst/isnull/
   FORCE_INLINE bool isNull() const {
     return _data == 0;
   }
 
+  // Returns true if the reference is bound.
+  // https://arduinojson.org/v6/api/jsonobjectconst/isnull/
   FORCE_INLINE operator bool() const {
     return _data != 0;
   }
 
+  // Returns the number of bytes occupied by the object.
+  // https://arduinojson.org/v6/api/jsonobjectconst/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
     return _data ? _data->memoryUsage() : 0;
   }
 
+  // Returns the depth (nesting level) of the object.
+  // https://arduinojson.org/v6/api/jsonobjectconst/nesting/
   FORCE_INLINE size_t nesting() const {
     return variantNesting(collectionToVariant(_data));
   }
 
+  // Returns the number of members in the object.
+  // https://arduinojson.org/v6/api/jsonobjectconst/size/
   FORCE_INLINE size_t size() const {
     return _data ? _data->size() : 0;
   }
 
+  // Returns an iterator to the first key-value pair of the object.
+  // https://arduinojson.org/v6/api/jsonobjectconst/begin/
   FORCE_INLINE iterator begin() const {
     if (!_data)
       return iterator();
     return iterator(_data->head());
   }
 
+  // Returns an iterator following the last key-value pair of the object.
+  // https://arduinojson.org/v6/api/jsonobjectconst/end/
   FORCE_INLINE iterator end() const {
     return iterator();
   }
 
-  // containsKey(const std::string&) const
-  // containsKey(const String&) const
+  // Returns true if the object contains the specified key.
+  // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
     return getMember(adaptString(key)) != 0;
   }
 
-  // containsKey(char*) const
-  // containsKey(const char*) const
-  // containsKey(const __FlashStringHelper*) const
+  // Returns true if the object contains the specified key.
+  // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
     return getMember(adaptString(key)) != 0;
   }
 
-  // operator[](const std::string&) const
-  // operator[](const String&) const
+  // Gets the member with specified key.
+  // https://arduinojson.org/v6/api/jsonobjectconst/subscript/
   template <typename TString>
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, JsonVariantConst>::type
@@ -77,9 +95,8 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
     return JsonVariantConst(getMember(adaptString(key)));
   }
 
-  // operator[](char*) const
-  // operator[](const char*) const
-  // operator[](const __FlashStringHelper*) const
+  // Gets the member with specified key.
+  // https://arduinojson.org/v6/api/jsonobjectconst/subscript/
   template <typename TChar>
   FORCE_INLINE
       typename enable_if<IsString<TChar*>::value, JsonVariantConst>::type
@@ -87,6 +104,7 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
     return JsonVariantConst(getMember(adaptString(key)));
   }
 
+  // Compares objects.
   FORCE_INLINE bool operator==(JsonObjectConst rhs) const {
     if (_data == rhs._data)
       return true;

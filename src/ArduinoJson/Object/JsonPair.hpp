@@ -9,9 +9,12 @@
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
-// A key value pair for CollectionData.
+
+// A key-value pair.
+// https://arduinojson.org/v6/api/jsonobject/begin_end/
 class JsonPair {
  public:
+  // INTERNAL USE ONLY
   JsonPair(MemoryPool* pool, VariantSlot* slot) {
     if (slot) {
       _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
@@ -20,10 +23,12 @@ class JsonPair {
     }
   }
 
+  // Returns the key.
   JsonString key() const {
     return _key;
   }
 
+  // Returns the value.
   JsonVariant value() const {
     return _value;
   }
@@ -33,6 +38,8 @@ class JsonPair {
   JsonVariant _value;
 };
 
+// A read-only key-value pair.
+// https://arduinojson.org/v6/api/jsonobjectconst/begin_end/
 class JsonPairConst {
  public:
   JsonPairConst(const VariantSlot* slot) {
@@ -43,10 +50,12 @@ class JsonPairConst {
     }
   }
 
+  // Returns the key.
   JsonString key() const {
     return _key;
   }
 
+  // Returns the value.
   JsonVariantConst value() const {
     return _value;
   }

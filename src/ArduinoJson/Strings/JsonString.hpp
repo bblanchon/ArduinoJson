@@ -12,6 +12,8 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+// A string.
+// https://arduinojson.org/v6/api/jsonstring/
 class JsonString : public SafeBoolIdom<JsonString> {
  public:
   enum Ownership { Copied, Linked };
@@ -24,18 +26,23 @@ class JsonString : public SafeBoolIdom<JsonString> {
   JsonString(const char* data, size_t sz, Ownership ownership = Linked)
       : _data(data), _size(sz), _ownership(ownership) {}
 
+  // Returns a pointer to the characters.
   const char* c_str() const {
     return _data;
   }
 
+  // Returns true if the string is null.
   bool isNull() const {
     return !_data;
   }
 
+  // Returns true if the string is stored by address.
+  // Returns false if the string is stored by copy.
   bool isLinked() const {
     return _ownership == Linked;
   }
 
+  // Returns length of the string.
   size_t size() const {
     return _size;
   }
@@ -45,6 +52,7 @@ class JsonString : public SafeBoolIdom<JsonString> {
     return _data ? safe_true() : safe_false();
   }
 
+  // Returns true if strings are equal.
   friend bool operator==(JsonString lhs, JsonString rhs) {
     if (lhs._size != rhs._size)
       return false;
@@ -57,6 +65,7 @@ class JsonString : public SafeBoolIdom<JsonString> {
     return memcmp(lhs._data, rhs._data, lhs._size) == 0;
   }
 
+  // Returns true if strings differs.
   friend bool operator!=(JsonString lhs, JsonString rhs) {
     return !(lhs == rhs);
   }

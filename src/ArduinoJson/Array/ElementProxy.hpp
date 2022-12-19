@@ -8,6 +8,8 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+// A proxy class to get or set an element of an array.
+// https://arduinojson.org/v6/api/jsonarray/subscript/
 template <typename TUpstream>
 class ElementProxy : public VariantRefBase<ElementProxy<TUpstream> >,
                      public VariantOperators<ElementProxy<TUpstream> > {

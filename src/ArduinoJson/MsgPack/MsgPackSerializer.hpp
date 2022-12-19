@@ -197,16 +197,22 @@ class MsgPackSerializer : public Visitor<size_t> {
   CountingDecorator<TWriter> _writer;
 };
 
+// Produces a MessagePack document.
+// https://arduinojson.org/v6/api/msgpack/serializemsgpack/
 template <typename TDestination>
 inline size_t serializeMsgPack(JsonVariantConst source, TDestination& output) {
   return serialize<MsgPackSerializer>(source, output);
 }
 
+// Produces a MessagePack document.
+// https://arduinojson.org/v6/api/msgpack/serializemsgpack/
 inline size_t serializeMsgPack(JsonVariantConst source, void* output,
                                size_t size) {
   return serialize<MsgPackSerializer>(source, output, size);
 }
 
+// Computes the length of the document that serializeMsgPack() produces.
+// https://arduinojson.org/v6/api/msgpack/measuremsgpack/
 inline size_t measureMsgPack(JsonVariantConst source) {
   return measure<MsgPackSerializer>(source);
 }

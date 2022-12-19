@@ -8,6 +8,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+// A JsonDocument with a memory pool on the stack.
 template <size_t desiredCapacity>
 class StaticJsonDocument : public JsonDocument {
   static const size_t _capacity =
@@ -45,6 +46,8 @@ class StaticJsonDocument : public JsonDocument {
     return *this;
   }
 
+  // Reclaims the memory leaked when removing and replacing values.
+  // https://arduinojson.org/v6/api/jsondocument/garbagecollect/
   void garbageCollect() {
     StaticJsonDocument tmp(*this);
     set(tmp);

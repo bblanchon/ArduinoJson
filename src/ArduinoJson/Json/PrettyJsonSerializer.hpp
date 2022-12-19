@@ -70,16 +70,22 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
   uint8_t _nesting;
 };
 
+// Produces JsonDocument to create a prettified JSON document.
+// https://arduinojson.org/v6/api/json/serializejsonpretty/
 template <typename TDestination>
 size_t serializeJsonPretty(JsonVariantConst source, TDestination& destination) {
   return serialize<PrettyJsonSerializer>(source, destination);
 }
 
+// Produces JsonDocument to create a prettified JSON document.
+// https://arduinojson.org/v6/api/json/serializejsonpretty/
 inline size_t serializeJsonPretty(JsonVariantConst source, void* buffer,
                                   size_t bufferSize) {
   return serialize<PrettyJsonSerializer>(source, buffer, bufferSize);
 }
 
+// Computes the length of the document that serializeJsonPretty() produces.
+// https://arduinojson.org/v6/api/json/measurejsonpretty/
 inline size_t measureJsonPretty(JsonVariantConst source) {
   return measure<PrettyJsonSerializer>(source);
 }

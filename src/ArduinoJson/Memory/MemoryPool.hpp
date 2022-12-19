@@ -14,8 +14,8 @@
 
 #define JSON_STRING_SIZE(SIZE) (SIZE + 1)
 
-// Returns the size (in bytes) of an array with n elements.
-// Can be very handy to determine the size of a StaticMemoryPool.
+// Computes the size required to store an array in a JsonDocument.
+// https://arduinojson.org/v6/how-to/determine-the-capacity-of-the-jsondocument/
 #define JSON_ARRAY_SIZE(NUMBER_OF_ELEMENTS) \
   ((NUMBER_OF_ELEMENTS) * sizeof(ARDUINOJSON_NAMESPACE::VariantSlot))
 

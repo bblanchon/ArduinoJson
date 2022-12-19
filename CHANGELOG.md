@@ -14,6 +14,7 @@ HEAD
 * Remove undocumented `JsonDocument::data()` and `JsonDocument::memoryPool()`
 * Remove undocumented `JsonArrayIterator::internal()` and `JsonObjectIterator::internal()`
 * Rename things in `ARDUINOJSON_NAMESPACE` to match the public names
+* Add documentation to most public symbols
 
 > ### BREAKING CHANGES
 >

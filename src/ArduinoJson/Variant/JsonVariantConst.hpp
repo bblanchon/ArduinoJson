@@ -22,34 +22,50 @@ namespace ARDUINOJSON_NAMESPACE {
 class JsonArray;
 class JsonObject;
 
+// A read-only reference to a value in a JsonDocument
+// https://arduinojson.org/v6/api/jsonarrayconst/
 class JsonVariantConst : public VariantTag,
                          public VariantOperators<JsonVariantConst> {
   friend class VariantAttorney;
 
  public:
+  // Creates an unbound reference.
   JsonVariantConst() : _data(0) {}
+
+  // INTERNAL USE ONLY
   explicit JsonVariantConst(const VariantData* data) : _data(data) {}
 
+  // Returns true if the value is null or the reference is unbound.
+  // https://arduinojson.org/v6/api/jsonvariantconst/isnull/
   FORCE_INLINE bool isNull() const {
     return variantIsNull(_data);
   }
 
+  // Returns true if the reference is unbound.
   FORCE_INLINE bool isUnbound() const {
     return !_data;
   }
 
+  // Returns the number of bytes occupied by the value.
+  // https://arduinojson.org/v6/api/jsonvariantconst/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
     return _data ? _data->memoryUsage() : 0;
   }
 
+  // Returns the depth (nesting level) of the value.
+  // https://arduinojson.org/v6/api/jsonvariantconst/nesting/
   FORCE_INLINE size_t nesting() const {
     return variantNesting(_data);
   }
 
+  // Returns the size of the array or object.
+  // https://arduinojson.org/v6/api/jsonvariantconst/size/
   size_t size() const {
     return variantSize(_data);
   }
 
+  // Casts the value to the specified type.
+  // https://arduinojson.org/v6/api/jsonvariantconst/as/
   template <typename T>
   FORCE_INLINE
       typename enable_if<!is_same<T, char*>::value && !is_same<T, char>::value,
@@ -58,6 +74,8 @@ class JsonVariantConst : public VariantTag,
     return Converter<T>::fromJson(*this);
   }
 
+  // Deprecated: use as<const char*>() instead.
+  // https://arduinojson.org/v6/api/jsonvariantconst/as/
   template <typename T>
   FORCE_INLINE typename enable_if<is_same<T, char*>::value, const char*>::type
   ARDUINOJSON_DEPRECATED("Replace as<char*>() with as<const char*>()")
@@ -65,6 +83,8 @@ class JsonVariantConst : public VariantTag,
     return as<const char*>();
   }
 
+  // Deprecated: use as<int8_t>() or as<uint8_t>() instead.
+  // https://arduinojson.org/v6/api/jsonvariantconst/as/
   template <typename T>
   FORCE_INLINE typename enable_if<is_same<T, char>::value, char>::type
   ARDUINOJSON_DEPRECATED(
@@ -73,6 +93,8 @@ class JsonVariantConst : public VariantTag,
     return static_cast<char>(as<signed char>());
   }
 
+  // Returns true if the value is of the specified type.
+  // https://arduinojson.org/v6/api/jsonvariantconst/is/
   template <typename T>
   FORCE_INLINE
       typename enable_if<!is_same<T, char*>::value && !is_same<T, char>::value,
@@ -81,6 +103,8 @@ class JsonVariantConst : public VariantTag,
     return Converter<T>::checkJson(*this);
   }
 
+  // Deprecated: use is<const char*>() instead.
+  // https://arduinojson.org/v6/api/jsonvariantconst/is/
   template <typename T>
   FORCE_INLINE typename enable_if<is_same<T, char*>::value, bool>::type
   ARDUINOJSON_DEPRECATED("Replace is<char*>() with is<const char*>()")
@@ -88,6 +112,8 @@ class JsonVariantConst : public VariantTag,
     return is<const char*>();
   }
 
+  // Deprecated: use is<int8_t>() or is<uint8_t>() instead.
+  // https://arduinojson.org/v6/api/jsonvariantconst/is/
   template <typename T>
   FORCE_INLINE typename enable_if<is_same<T, char>::value, bool>::type
   ARDUINOJSON_DEPRECATED(
@@ -101,12 +127,14 @@ class JsonVariantConst : public VariantTag,
     return as<T>();
   }
 
+  // Gets array's element at specified index.
+  // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
     return JsonVariantConst(variantGetElement(_data, index));
   }
 
-  // operator[](const std::string&) const
-  // operator[](const String&) const
+  // Gets object's member with specified key.
+  // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
   template <typename TString>
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, JsonVariantConst>::type
@@ -114,9 +142,8 @@ class JsonVariantConst : public VariantTag,
     return JsonVariantConst(variantGetMember(_data, adaptString(key)));
   }
 
-  // operator[](char*) const
-  // operator[](const char*) const
-  // operator[](const __FlashStringHelper*) const
+  // Gets object's member with specified key.
+  // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
   template <typename TChar>
   FORCE_INLINE
       typename enable_if<IsString<TChar*>::value, JsonVariantConst>::type
@@ -124,17 +151,16 @@ class JsonVariantConst : public VariantTag,
     return JsonVariantConst(variantGetMember(_data, adaptString(key)));
   }
 
-  // containsKey(const std::string&) const
-  // containsKey(const String&) const
+  // Returns true if tge object contains the specified key.
+  // https://arduinojson.org/v6/api/jsonvariantconst/containskey/
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
   containsKey(const TString& key) const {
     return variantGetMember(getData(), adaptString(key)) != 0;
   }
 
-  // containsKey(char*) const
-  // containsKey(const char*) const
-  // containsKey(const __FlashStringHelper*) const
+  // Returns true if tge object contains the specified key.
+  // https://arduinojson.org/v6/api/jsonvariantconst/containskey/
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value, bool>::type
   containsKey(TChar* key) const {

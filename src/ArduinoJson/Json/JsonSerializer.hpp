@@ -115,16 +115,22 @@ class JsonSerializer : public Visitor<size_t> {
   TextFormatter<TWriter> _formatter;
 };
 
+// Produces a minified JSON document.
+// https://arduinojson.org/v6/api/json/serializejson/
 template <typename TDestination>
 size_t serializeJson(JsonVariantConst source, TDestination& destination) {
   return serialize<JsonSerializer>(source, destination);
 }
 
+// Produces a minified JSON document.
+// https://arduinojson.org/v6/api/json/serializejson/
 inline size_t serializeJson(JsonVariantConst source, void* buffer,
                             size_t bufferSize) {
   return serialize<JsonSerializer>(source, buffer, bufferSize);
 }
 
+// Computes the length of the document that serializeJson() produces.
+// https://arduinojson.org/v6/api/json/measurejson/
 inline size_t measureJson(JsonVariantConst source) {
   return measure<JsonSerializer>(source);
 }

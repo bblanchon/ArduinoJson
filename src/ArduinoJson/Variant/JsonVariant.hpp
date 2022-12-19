@@ -8,13 +8,17 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
+// A reference to a value in a JsonDocument.
+// https://arduinojson.org/v6/api/jsonvariant/
 class JsonVariant : public VariantRefBase<JsonVariant>,
                     public VariantOperators<JsonVariant> {
   friend class VariantAttorney;
 
  public:
+  // Creates an unbound reference.
   JsonVariant() : _data(0), _pool(0) {}
 
+  // INTERNAL USE ONLY
   JsonVariant(MemoryPool* pool, VariantData* data) : _data(data), _pool(pool) {}
 
  private:
