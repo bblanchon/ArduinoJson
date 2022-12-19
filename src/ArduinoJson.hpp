@@ -21,15 +21,15 @@
 #  endif
 #endif
 
-#include "ArduinoJson/Array/ArrayRef.hpp"
+#include "ArduinoJson/Array/JsonArray.hpp"
 #include "ArduinoJson/Object/ObjectRef.hpp"
 #include "ArduinoJson/Variant/VariantConstRef.hpp"
 
 #include "ArduinoJson/Document/DynamicJsonDocument.hpp"
 #include "ArduinoJson/Document/StaticJsonDocument.hpp"
 
-#include "ArduinoJson/Array/ArrayImpl.hpp"
 #include "ArduinoJson/Array/ElementProxy.hpp"
+#include "ArduinoJson/Array/JsonArrayImpl.hpp"
 #include "ArduinoJson/Array/Utilities.hpp"
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
@@ -48,7 +48,7 @@
 
 namespace ArduinoJson {
 typedef ARDUINOJSON_NAMESPACE::ArrayConstRef JsonArrayConst;
-typedef ARDUINOJSON_NAMESPACE::ArrayRef JsonArray;
+using ARDUINOJSON_NAMESPACE::JsonArray;
 typedef ARDUINOJSON_NAMESPACE::Float JsonFloat;
 typedef ARDUINOJSON_NAMESPACE::Integer JsonInteger;
 typedef ARDUINOJSON_NAMESPACE::ObjectConstRef JsonObjectConst;

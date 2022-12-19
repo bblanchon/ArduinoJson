@@ -13,7 +13,7 @@ namespace ARDUINOJSON_NAMESPACE {
 class ObjectRef;
 
 class ArrayConstRef : public VariantOperators<ArrayConstRef> {
-  friend class ArrayRef;
+  friend class JsonArray;
   friend class VariantAttorney;
 
  public:

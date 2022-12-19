@@ -11,14 +11,14 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class ObjectRef;
 
-class ArrayRef : public VariantOperators<ArrayRef> {
+class JsonArray : public VariantOperators<JsonArray> {
   friend class VariantAttorney;
 
  public:
   typedef ArrayIterator iterator;
 
-  FORCE_INLINE ArrayRef() : _data(0), _pool(0) {}
-  FORCE_INLINE ArrayRef(MemoryPool* pool, CollectionData* data)
+  FORCE_INLINE JsonArray() : _data(0), _pool(0) {}
+  FORCE_INLINE JsonArray(MemoryPool* pool, CollectionData* data)
       : _data(data), _pool(pool) {}
 
   operator VariantRef() {
@@ -56,14 +56,14 @@ class ArrayRef : public VariantOperators<ArrayRef> {
     return iterator();
   }
 
-  // Copy a ArrayRef
+  // Copy a JsonArray
   FORCE_INLINE bool set(ArrayConstRef src) const {
     if (!_data || !src._data)
       return false;
     return _data->copyFrom(*src._data, _pool);
   }
 
-  FORCE_INLINE bool operator==(ArrayRef rhs) const {
+  FORCE_INLINE bool operator==(JsonArray rhs) const {
     return ArrayConstRef(_data) == ArrayConstRef(rhs._data);
   }
 
@@ -88,14 +88,14 @@ class ArrayRef : public VariantOperators<ArrayRef> {
   }
 
   // Returns the element at specified index if the variant is an array.
-  FORCE_INLINE ElementProxy<ArrayRef> operator[](size_t index) const {
-    return ElementProxy<ArrayRef>(*this, index);
+  FORCE_INLINE ElementProxy<JsonArray> operator[](size_t index) const {
+    return ElementProxy<JsonArray>(*this, index);
   }
 
   FORCE_INLINE ObjectRef createNestedObject() const;
 
-  FORCE_INLINE ArrayRef createNestedArray() const {
-    return add().to<ArrayRef>();
+  FORCE_INLINE JsonArray createNestedArray() const {
+    return add().to<JsonArray>();
   }
 
   operator VariantConstRef() const {
@@ -140,18 +140,19 @@ class ArrayRef : public VariantOperators<ArrayRef> {
 };
 
 template <>
-struct Converter<ArrayRef> : private VariantAttorney {
+struct Converter<JsonArray> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ArrayRef fromJson(VariantRef src) {
+  static JsonArray fromJson(VariantRef src) {
     VariantData* data = getData(src);
     MemoryPool* pool = getPool(src);
-    return ArrayRef(pool, data != 0 ? data->asArray() : 0);
+    return JsonArray(pool, data != 0 ? data->asArray() : 0);
   }
 
-  static InvalidConversion<VariantConstRef, ArrayRef> fromJson(VariantConstRef);
+  static InvalidConversion<VariantConstRef, JsonArray> fromJson(
+      VariantConstRef);
 
   static bool checkJson(VariantConstRef) {
     return false;

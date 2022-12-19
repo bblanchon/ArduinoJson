@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Array/ArrayRef.hpp>
+#include <ArduinoJson/Array/JsonArray.hpp>
 #include <ArduinoJson/Document/JsonDocument.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -45,13 +45,13 @@ inline bool copyArray(const char* src, size_t, const TDestination& dst) {
 // Copy array to a JsonDocument
 template <typename T>
 inline bool copyArray(const T& src, JsonDocument& dst) {
-  return copyArray(src, dst.to<ArrayRef>());
+  return copyArray(src, dst.to<JsonArray>());
 }
 
 // Copy a ptr+size array to a JsonDocument
 template <typename T>
 inline bool copyArray(const T* src, size_t len, JsonDocument& dst) {
-  return copyArray(src, len, dst.to<ArrayRef>());
+  return copyArray(src, len, dst.to<JsonArray>());
 }
 
 // Trivial case form to stop the recursion

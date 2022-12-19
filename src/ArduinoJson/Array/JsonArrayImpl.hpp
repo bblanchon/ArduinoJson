@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include <ArduinoJson/Array/ArrayRef.hpp>
+#include <ArduinoJson/Array/JsonArray.hpp>
 #include <ArduinoJson/Object/ObjectRef.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
-inline ObjectRef ArrayRef::createNestedObject() const {
+inline ObjectRef JsonArray::createNestedObject() const {
   return add().to<ObjectRef>();
 }
 
 template <typename TDerived>
-inline ArrayRef VariantRefBase<TDerived>::createNestedArray() const {
-  return add().template to<ArrayRef>();
+inline JsonArray VariantRefBase<TDerived>::createNestedArray() const {
+  return add().template to<JsonArray>();
 }
 
 template <typename TDerived>

@@ -7,7 +7,7 @@
 #include <ArduinoJson/Namespace.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
-class ArrayRef;
+class JsonArray;
 class ObjectRef;
 class VariantRef;
 
@@ -17,8 +17,8 @@ template <typename T>
 struct VariantTo {};
 
 template <>
-struct VariantTo<ArrayRef> {
-  typedef ArrayRef type;
+struct VariantTo<JsonArray> {
+  typedef JsonArray type;
 };
 template <>
 struct VariantTo<ObjectRef> {

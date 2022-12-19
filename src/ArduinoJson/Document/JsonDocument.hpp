@@ -83,23 +83,23 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     return getVariant().template to<T>();
   }
 
-  ArrayRef createNestedArray() {
-    return add().to<ArrayRef>();
+  JsonArray createNestedArray() {
+    return add().to<JsonArray>();
   }
 
   // createNestedArray(char*)
   // createNestedArray(const char*)
   // createNestedArray(const __FlashStringHelper*)
   template <typename TChar>
-  ArrayRef createNestedArray(TChar* key) {
-    return operator[](key).template to<ArrayRef>();
+  JsonArray createNestedArray(TChar* key) {
+    return operator[](key).template to<JsonArray>();
   }
 
   // createNestedArray(const std::string&)
   // createNestedArray(const String&)
   template <typename TString>
-  ArrayRef createNestedArray(const TString& key) {
-    return operator[](key).template to<ArrayRef>();
+  JsonArray createNestedArray(const TString& key) {
+    return operator[](key).template to<JsonArray>();
   }
 
   ObjectRef createNestedObject() {

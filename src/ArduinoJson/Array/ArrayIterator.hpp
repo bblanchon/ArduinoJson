@@ -26,7 +26,7 @@ class VariantPtr {
 };
 
 class ArrayIterator {
-  friend class ArrayRef;
+  friend class JsonArray;
 
  public:
   ArrayIterator() : _slot(0) {}
@@ -80,7 +80,7 @@ class VariantConstPtr {
 };
 
 class ArrayConstRefIterator {
-  friend class ArrayRef;
+  friend class JsonArray;
 
  public:
   ArrayConstRefIterator() : _slot(0) {}

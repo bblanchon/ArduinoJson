@@ -9,7 +9,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class ArrayRef;
+class JsonArray;
 
 class ObjectRef : public VariantOperators<ObjectRef> {
   friend class VariantAttorney;
@@ -128,10 +128,10 @@ class ObjectRef : public VariantOperators<ObjectRef> {
   }
 
   template <typename TString>
-  FORCE_INLINE ArrayRef createNestedArray(const TString& key) const;
+  FORCE_INLINE JsonArray createNestedArray(const TString& key) const;
 
   template <typename TChar>
-  FORCE_INLINE ArrayRef createNestedArray(TChar* key) const;
+  FORCE_INLINE JsonArray createNestedArray(TChar* key) const;
 
   template <typename TString>
   ObjectRef createNestedObject(const TString& key) const {

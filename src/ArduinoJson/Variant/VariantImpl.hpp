@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Array/ArrayRef.hpp>
+#include <ArduinoJson/Array/JsonArray.hpp>
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Numbers/parseNumber.hpp>
@@ -121,9 +121,9 @@ inline VariantRef VariantRefBase<TDerived>::getOrCreateVariant() const {
 
 template <typename TDerived>
 template <typename T>
-inline typename enable_if<is_same<T, ArrayRef>::value, ArrayRef>::type
+inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
 VariantRefBase<TDerived>::to() const {
-  return ArrayRef(getPool(), variantToArray(getOrCreateData()));
+  return JsonArray(getPool(), variantToArray(getOrCreateData()));
 }
 
 template <typename TDerived>
