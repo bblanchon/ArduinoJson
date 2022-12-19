@@ -9,7 +9,7 @@
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Numbers/parseNumber.hpp>
 #include <ArduinoJson/Object/JsonObject.hpp>
-#include <ArduinoJson/Variant/VariantRef.hpp>
+#include <ArduinoJson/Variant/JsonVariant.hpp>
 
 #include <string.h>  // for strcmp
 
@@ -105,18 +105,19 @@ inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
 }
 
 template <typename TDerived>
-inline VariantRef VariantRefBase<TDerived>::add() const {
-  return VariantRef(getPool(), variantAddElement(getOrCreateData(), getPool()));
+inline JsonVariant VariantRefBase<TDerived>::add() const {
+  return JsonVariant(getPool(),
+                     variantAddElement(getOrCreateData(), getPool()));
 }
 
 template <typename TDerived>
-inline VariantRef VariantRefBase<TDerived>::getVariant() const {
-  return VariantRef(getPool(), getData());
+inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
+  return JsonVariant(getPool(), getData());
 }
 
 template <typename TDerived>
-inline VariantRef VariantRefBase<TDerived>::getOrCreateVariant() const {
-  return VariantRef(getPool(), getOrCreateData());
+inline JsonVariant VariantRefBase<TDerived>::getOrCreateVariant() const {
+  return JsonVariant(getPool(), getOrCreateData());
 }
 
 template <typename TDerived>
@@ -135,7 +136,7 @@ VariantRefBase<TDerived>::to() const {
 
 template <typename TDerived>
 template <typename T>
-typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type
+typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
 VariantRefBase<TDerived>::to() const {
   variantSetNull(getOrCreateData());
   return *this;
@@ -148,7 +149,8 @@ inline bool VariantRefBase<TDerived>::set(char value) const {
 }
 
 template <typename TDerived>
-inline void convertToJson(const VariantRefBase<TDerived>& src, VariantRef dst) {
+inline void convertToJson(const VariantRefBase<TDerived>& src,
+                          JsonVariant dst) {
   dst.set(src.template as<JsonVariantConst>());
 }
 

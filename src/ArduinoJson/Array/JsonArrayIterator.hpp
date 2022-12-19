@@ -4,8 +4,8 @@
 
 #pragma once
 
+#include <ArduinoJson/Variant/JsonVariant.hpp>
 #include <ArduinoJson/Variant/SlotFunctions.hpp>
-#include <ArduinoJson/Variant/VariantRef.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -13,16 +13,16 @@ class VariantPtr {
  public:
   VariantPtr(MemoryPool* pool, VariantData* data) : _variant(pool, data) {}
 
-  VariantRef* operator->() {
+  JsonVariant* operator->() {
     return &_variant;
   }
 
-  VariantRef& operator*() {
+  JsonVariant& operator*() {
     return _variant;
   }
 
  private:
-  VariantRef _variant;
+  JsonVariant _variant;
 };
 
 class JsonArrayIterator {
@@ -33,8 +33,8 @@ class JsonArrayIterator {
   explicit JsonArrayIterator(MemoryPool* pool, VariantSlot* slot)
       : _pool(pool), _slot(slot) {}
 
-  VariantRef operator*() const {
-    return VariantRef(_pool, _slot->data());
+  JsonVariant operator*() const {
+    return JsonVariant(_pool, _slot->data());
   }
   VariantPtr operator->() {
     return VariantPtr(_pool, _slot->data());

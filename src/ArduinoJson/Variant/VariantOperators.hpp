@@ -21,7 +21,7 @@ struct VariantOperatorTag {};
 
 template <typename TVariant>
 struct VariantOperators : VariantOperatorTag {
-  // Returns the default value if the VariantRef is unbound or incompatible
+  // Returns the default value if the JsonVariant is unbound or incompatible
   //
   // int operator|(JsonVariant, int)
   // float operator|(JsonVariant, float)

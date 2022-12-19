@@ -47,8 +47,15 @@
 #include "ArduinoJson/compatibility.hpp"
 
 namespace ArduinoJson {
+using ARDUINOJSON_NAMESPACE::BasicJsonDocument;
+using ARDUINOJSON_NAMESPACE::copyArray;
+using ARDUINOJSON_NAMESPACE::DeserializationError;
+using ARDUINOJSON_NAMESPACE::deserializeJson;
+using ARDUINOJSON_NAMESPACE::deserializeMsgPack;
+using ARDUINOJSON_NAMESPACE::DynamicJsonDocument;
 using ARDUINOJSON_NAMESPACE::JsonArray;
 using ARDUINOJSON_NAMESPACE::JsonArrayConst;
+using ARDUINOJSON_NAMESPACE::JsonDocument;
 using ARDUINOJSON_NAMESPACE::JsonFloat;
 using ARDUINOJSON_NAMESPACE::JsonInteger;
 using ARDUINOJSON_NAMESPACE::JsonObject;
@@ -57,15 +64,8 @@ using ARDUINOJSON_NAMESPACE::JsonPair;
 using ARDUINOJSON_NAMESPACE::JsonPairConst;
 using ARDUINOJSON_NAMESPACE::JsonString;
 using ARDUINOJSON_NAMESPACE::JsonUInt;
+using ARDUINOJSON_NAMESPACE::JsonVariant;
 using ARDUINOJSON_NAMESPACE::JsonVariantConst;
-typedef ARDUINOJSON_NAMESPACE::VariantRef JsonVariant;
-using ARDUINOJSON_NAMESPACE::BasicJsonDocument;
-using ARDUINOJSON_NAMESPACE::copyArray;
-using ARDUINOJSON_NAMESPACE::DeserializationError;
-using ARDUINOJSON_NAMESPACE::deserializeJson;
-using ARDUINOJSON_NAMESPACE::deserializeMsgPack;
-using ARDUINOJSON_NAMESPACE::DynamicJsonDocument;
-using ARDUINOJSON_NAMESPACE::JsonDocument;
 using ARDUINOJSON_NAMESPACE::measureJson;
 using ARDUINOJSON_NAMESPACE::serialized;
 using ARDUINOJSON_NAMESPACE::serializeJson;

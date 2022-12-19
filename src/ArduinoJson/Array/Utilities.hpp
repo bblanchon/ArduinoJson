@@ -12,7 +12,7 @@ namespace ARDUINOJSON_NAMESPACE {
 // Trivial form to stop the recursion
 template <typename T>
 inline typename enable_if<!is_array<T>::value, bool>::type copyArray(
-    const T& src, VariantRef dst) {
+    const T& src, JsonVariant dst) {
   return dst.set(src);
 }
 

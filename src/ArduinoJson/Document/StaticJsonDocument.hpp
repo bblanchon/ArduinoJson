@@ -30,7 +30,7 @@ class StaticJsonDocument : public JsonDocument {
   }
 
   // disambiguate
-  StaticJsonDocument(VariantRef src) : JsonDocument(_buffer, _capacity) {
+  StaticJsonDocument(JsonVariant src) : JsonDocument(_buffer, _capacity) {
     set(src);
   }
 

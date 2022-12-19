@@ -93,7 +93,7 @@ class JsonArrayConst : public VariantOperators<JsonArrayConst> {
 
 template <>
 struct Converter<JsonArrayConst> : private VariantAttorney {
-  static void toJson(JsonVariantConst src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 

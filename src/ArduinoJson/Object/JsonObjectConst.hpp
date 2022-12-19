@@ -120,7 +120,7 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
 
 template <>
 struct Converter<JsonObjectConst> : private VariantAttorney {
-  static void toJson(JsonVariantConst src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 

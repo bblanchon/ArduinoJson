@@ -91,7 +91,7 @@ class Complex {
 namespace ARDUINOJSON_NAMESPACE {
 template <>
 struct Converter<Complex> {
-  static void toJson(const Complex& src, VariantRef dst) {
+  static void toJson(const Complex& src, JsonVariant dst) {
     dst["real"] = src.real();
     dst["imag"] = src.imag();
   }

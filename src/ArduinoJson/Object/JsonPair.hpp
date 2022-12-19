@@ -5,8 +5,8 @@
 #pragma once
 
 #include <ArduinoJson/Strings/JsonString.hpp>
+#include <ArduinoJson/Variant/JsonVariant.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
-#include <ArduinoJson/Variant/VariantRef.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 // A key value pair for CollectionData.
@@ -16,7 +16,7 @@ class JsonPair {
     if (slot) {
       _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
                                                      : JsonString::Linked);
-      _value = VariantRef(pool, slot->data());
+      _value = JsonVariant(pool, slot->data());
     }
   }
 
@@ -24,13 +24,13 @@ class JsonPair {
     return _key;
   }
 
-  VariantRef value() const {
+  JsonVariant value() const {
     return _value;
   }
 
  private:
   JsonString _key;
-  VariantRef _value;
+  JsonVariant _value;
 };
 
 class JsonPairConst {

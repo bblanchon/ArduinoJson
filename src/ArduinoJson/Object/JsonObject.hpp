@@ -21,9 +21,9 @@ class JsonObject : public VariantOperators<JsonObject> {
   FORCE_INLINE JsonObject(MemoryPool* buf, CollectionData* data)
       : _data(data), _pool(buf) {}
 
-  operator VariantRef() const {
+  operator JsonVariant() const {
     void* data = _data;  // prevent warning cast-align
-    return VariantRef(_pool, reinterpret_cast<VariantData*>(data));
+    return JsonVariant(_pool, reinterpret_cast<VariantData*>(data));
   }
 
   operator JsonObjectConst() const {
@@ -176,11 +176,11 @@ class JsonObject : public VariantOperators<JsonObject> {
 
 template <>
 struct Converter<JsonObject> : private VariantAttorney {
-  static void toJson(JsonVariantConst src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static JsonObject fromJson(VariantRef src) {
+  static JsonObject fromJson(JsonVariant src) {
     VariantData* data = getData(src);
     MemoryPool* pool = getPool(src);
     return JsonObject(pool, data != 0 ? data->asObject() : 0);
@@ -193,7 +193,7 @@ struct Converter<JsonObject> : private VariantAttorney {
     return false;
   }
 
-  static bool checkJson(VariantRef src) {
+  static bool checkJson(JsonVariant src) {
     VariantData* data = getData(src);
     return data && data->isObject();
   }

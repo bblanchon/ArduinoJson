@@ -21,19 +21,19 @@ class JsonArray : public VariantOperators<JsonArray> {
   FORCE_INLINE JsonArray(MemoryPool* pool, CollectionData* data)
       : _data(data), _pool(pool) {}
 
-  operator VariantRef() {
+  operator JsonVariant() {
     void* data = _data;  // prevent warning cast-align
-    return VariantRef(_pool, reinterpret_cast<VariantData*>(data));
+    return JsonVariant(_pool, reinterpret_cast<VariantData*>(data));
   }
 
   operator JsonArrayConst() const {
     return JsonArrayConst(_data);
   }
 
-  VariantRef add() const {
+  JsonVariant add() const {
     if (!_data)
-      return VariantRef();
-    return VariantRef(_pool, _data->addElement(_pool));
+      return JsonVariant();
+    return JsonVariant(_pool, _data->addElement(_pool));
   }
 
   template <typename T>
@@ -141,11 +141,11 @@ class JsonArray : public VariantOperators<JsonArray> {
 
 template <>
 struct Converter<JsonArray> : private VariantAttorney {
-  static void toJson(JsonVariantConst src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static JsonArray fromJson(VariantRef src) {
+  static JsonArray fromJson(JsonVariant src) {
     VariantData* data = getData(src);
     MemoryPool* pool = getPool(src);
     return JsonArray(pool, data != 0 ? data->asArray() : 0);
@@ -158,7 +158,7 @@ struct Converter<JsonArray> : private VariantAttorney {
     return false;
   }
 
-  static bool checkJson(VariantRef src) {
+  static bool checkJson(JsonVariant src) {
     VariantData* data = getData(src);
     return data && data->isArray();
   }

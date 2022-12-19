@@ -68,13 +68,13 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   }
 
   bool set(const JsonDocument& src) {
-    return to<VariantRef>().set(src.as<JsonVariantConst>());
+    return to<JsonVariant>().set(src.as<JsonVariantConst>());
   }
 
   template <typename T>
   typename enable_if<!is_base_of<JsonDocument, T>::value, bool>::type set(
       const T& src) {
-    return to<VariantRef>().set(src);
+    return to<JsonVariant>().set(src);
   }
 
   template <typename T>
@@ -182,8 +182,8 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     return JsonVariantConst(_data.getElement(index));
   }
 
-  FORCE_INLINE VariantRef add() {
-    return VariantRef(&_pool, _data.addElement(&_pool));
+  FORCE_INLINE JsonVariant add() {
+    return JsonVariant(&_pool, _data.addElement(&_pool));
   }
 
   template <typename TValue>
@@ -218,7 +218,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     _data.remove(adaptString(key));
   }
 
-  FORCE_INLINE operator VariantRef() {
+  FORCE_INLINE operator JsonVariant() {
     return getVariant();
   }
 
@@ -245,8 +245,8 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
     _pool = pool;
   }
 
-  VariantRef getVariant() {
-    return VariantRef(&_pool, &_data);
+  JsonVariant getVariant() {
+    return JsonVariant(&_pool, &_data);
   }
 
   JsonVariantConst getVariant() const {
@@ -278,7 +278,7 @@ class JsonDocument : public VariantOperators<const JsonDocument&> {
   }
 };
 
-inline void convertToJson(const JsonDocument& src, VariantRef dst) {
+inline void convertToJson(const JsonDocument& src, JsonVariant dst) {
   dst.set(src.as<JsonVariantConst>());
 }
 

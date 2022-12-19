@@ -65,7 +65,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   BasicJsonDocument(
       const T& src,
       typename enable_if<
-          is_same<T, VariantRef>::value ||
+          is_same<T, JsonVariant>::value ||
           is_same<T, JsonVariantConst>::value || is_same<T, JsonArray>::value ||
           is_same<T, JsonArrayConst>::value || is_same<T, JsonObject>::value ||
           is_same<T, JsonObjectConst>::value>::type* = 0)
@@ -74,7 +74,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   }
 
   // disambiguate
-  BasicJsonDocument(VariantRef src)
+  BasicJsonDocument(JsonVariant src)
       : JsonDocument(allocPool(src.memoryUsage())) {
     set(src);
   }

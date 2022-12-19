@@ -8,14 +8,14 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class VariantRef : public VariantRefBase<VariantRef>,
-                   public VariantOperators<VariantRef> {
+class JsonVariant : public VariantRefBase<JsonVariant>,
+                    public VariantOperators<JsonVariant> {
   friend class VariantAttorney;
 
  public:
-  VariantRef() : _data(0), _pool(0) {}
+  JsonVariant() : _data(0), _pool(0) {}
 
-  VariantRef(MemoryPool* pool, VariantData* data) : _data(data), _pool(pool) {}
+  JsonVariant(MemoryPool* pool, VariantData* data) : _data(data), _pool(pool) {}
 
  private:
   FORCE_INLINE MemoryPool* getPool() const {
@@ -35,19 +35,19 @@ class VariantRef : public VariantRefBase<VariantRef>,
 };
 
 template <>
-struct Converter<VariantRef> : private VariantAttorney {
-  static void toJson(VariantRef src, VariantRef dst) {
+struct Converter<JsonVariant> : private VariantAttorney {
+  static void toJson(JsonVariant src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static VariantRef fromJson(VariantRef src) {
+  static JsonVariant fromJson(JsonVariant src) {
     return src;
   }
 
-  static InvalidConversion<JsonVariantConst, VariantRef> fromJson(
+  static InvalidConversion<JsonVariantConst, JsonVariant> fromJson(
       JsonVariantConst);
 
-  static bool checkJson(VariantRef src) {
+  static bool checkJson(JsonVariant src) {
     VariantData* data = getData(src);
     return !!data;
   }
@@ -59,7 +59,7 @@ struct Converter<VariantRef> : private VariantAttorney {
 
 template <>
 struct Converter<JsonVariantConst> : private VariantAttorney {
-  static void toJson(JsonVariantConst src, VariantRef dst) {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 

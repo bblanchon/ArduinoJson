@@ -12,7 +12,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class VariantRef;
+class JsonVariant;
 
 template <typename>
 class ElementProxy;
@@ -83,9 +83,9 @@ class VariantRefBase : public VariantTag {
   typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type to()
       const;
   //
-  // VariantRef to<VariantRef>()
+  // JsonVariant to<JsonVariant>()
   template <typename T>
-  typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type to()
+  typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type to()
       const;
 
   template <typename T>
@@ -161,7 +161,7 @@ class VariantRefBase : public VariantTag {
     return variantNesting(getData());
   }
 
-  FORCE_INLINE VariantRef add() const;
+  FORCE_INLINE JsonVariant add() const;
 
   template <typename T>
   FORCE_INLINE bool add(const T& value) const {
@@ -256,13 +256,13 @@ class VariantRefBase : public VariantTag {
   }
 
  private:
-  FORCE_INLINE VariantRef getVariant() const;
+  FORCE_INLINE JsonVariant getVariant() const;
 
   FORCE_INLINE JsonVariantConst getVariantConst() const {
     return JsonVariantConst(getData());
   }
 
-  FORCE_INLINE VariantRef getOrCreateVariant() const;
+  FORCE_INLINE JsonVariant getOrCreateVariant() const;
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE
