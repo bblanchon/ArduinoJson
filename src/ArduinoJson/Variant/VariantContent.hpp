@@ -7,8 +7,8 @@
 #include <stddef.h>  // size_t
 
 #include <ArduinoJson/Collection/CollectionData.hpp>
-#include <ArduinoJson/Numbers/Integer.hpp>
 #include <ArduinoJson/Numbers/JsonFloat.hpp>
+#include <ArduinoJson/Numbers/JsonInteger.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -47,7 +47,7 @@ union VariantContent {
   JsonFloat asFloat;
   bool asBoolean;
   UInt asUnsignedInteger;
-  Integer asSignedInteger;
+  JsonInteger asSignedInteger;
   CollectionData asCollection;
   struct {
     const char* data;

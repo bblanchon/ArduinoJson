@@ -62,7 +62,7 @@ template <typename T>
 struct Converter<T, typename enable_if<is_enum<T>::value>::type>
     : private VariantAttorney {
   static void toJson(T src, VariantRef dst) {
-    dst.set(static_cast<Integer>(src));
+    dst.set(static_cast<JsonInteger>(src));
   }
 
   static T fromJson(VariantConstRef src) {

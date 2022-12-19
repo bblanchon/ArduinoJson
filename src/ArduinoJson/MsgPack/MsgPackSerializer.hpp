@@ -23,8 +23,8 @@ class MsgPackSerializer : public Visitor<size_t> {
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, size_t>::type visitFloat(T value32) {
-    if (canConvertNumber<Integer>(value32)) {
-      Integer truncatedValue = Integer(value32);
+    if (canConvertNumber<JsonInteger>(value32)) {
+      JsonInteger truncatedValue = JsonInteger(value32);
       if (value32 == T(truncatedValue))
         return visitSignedInteger(truncatedValue);
     }
@@ -107,7 +107,7 @@ class MsgPackSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitSignedInteger(Integer value) {
+  size_t visitSignedInteger(JsonInteger value) {
     if (value > 0) {
       visitUnsignedInteger(static_cast<UInt>(value));
     } else if (value >= -0x20) {

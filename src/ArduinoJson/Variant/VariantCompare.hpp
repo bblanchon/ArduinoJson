@@ -56,7 +56,7 @@ struct Comparer<T, typename enable_if<is_integral<T>::value ||
     return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visitSignedInteger(Integer lhs) {
+  CompareResult visitSignedInteger(JsonInteger lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
@@ -157,8 +157,8 @@ struct VariantComparer : ComparerBase {
     return accept(comparer);
   }
 
-  CompareResult visitSignedInteger(Integer lhs) {
-    Comparer<Integer> comparer(lhs);
+  CompareResult visitSignedInteger(JsonInteger lhs) {
+    Comparer<JsonInteger> comparer(lhs);
     return accept(comparer);
   }
 

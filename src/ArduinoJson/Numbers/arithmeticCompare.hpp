@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Numbers/Integer.hpp>
+#include <ArduinoJson/Numbers/JsonInteger.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {

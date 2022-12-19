@@ -13,7 +13,7 @@ TEST_CASE("Test unsigned integer overflow") {
   second.init();
 
   // Avoids MSVC warning C4127 (conditional expression is constant)
-  size_t integerSize = sizeof(Integer);
+  size_t integerSize = sizeof(JsonInteger);
 
   if (integerSize == 8) {
     parseNumber("18446744073709551615", first);
@@ -33,7 +33,7 @@ TEST_CASE("Test signed integer overflow") {
   second.init();
 
   // Avoids MSVC warning C4127 (conditional expression is constant)
-  size_t integerSize = sizeof(Integer);
+  size_t integerSize = sizeof(JsonInteger);
 
   if (integerSize == 8) {
     parseNumber("-9223372036854775808", first);

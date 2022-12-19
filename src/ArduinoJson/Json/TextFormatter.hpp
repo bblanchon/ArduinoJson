@@ -9,7 +9,7 @@
 
 #include <ArduinoJson/Json/EscapeSequence.hpp>
 #include <ArduinoJson/Numbers/FloatParts.hpp>
-#include <ArduinoJson/Numbers/Integer.hpp>
+#include <ArduinoJson/Numbers/JsonInteger.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
