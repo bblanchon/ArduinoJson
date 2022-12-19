@@ -263,7 +263,7 @@ class JsonDeserializer {
       if (!eat(':'))
         return DeserializationError::InvalidInput;
 
-      String key = _stringStorage.str();
+      JsonString key = _stringStorage.str();
 
       TFilter memberFilter = filter[key.c_str()];
 

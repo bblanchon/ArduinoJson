@@ -12,16 +12,16 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class String : public SafeBoolIdom<String> {
+class JsonString : public SafeBoolIdom<JsonString> {
  public:
   enum Ownership { Copied, Linked };
 
-  String() : _data(0), _size(0), _ownership(Linked) {}
+  JsonString() : _data(0), _size(0), _ownership(Linked) {}
 
-  String(const char* data, Ownership ownership = Linked)
+  JsonString(const char* data, Ownership ownership = Linked)
       : _data(data), _size(data ? ::strlen(data) : 0), _ownership(ownership) {}
 
-  String(const char* data, size_t sz, Ownership ownership = Linked)
+  JsonString(const char* data, size_t sz, Ownership ownership = Linked)
       : _data(data), _size(sz), _ownership(ownership) {}
 
   const char* c_str() const {
@@ -45,7 +45,7 @@ class String : public SafeBoolIdom<String> {
     return _data ? safe_true() : safe_false();
   }
 
-  friend bool operator==(String lhs, String rhs) {
+  friend bool operator==(JsonString lhs, JsonString rhs) {
     if (lhs._size != rhs._size)
       return false;
     if (lhs._data == rhs._data)
@@ -57,12 +57,12 @@ class String : public SafeBoolIdom<String> {
     return memcmp(lhs._data, rhs._data, lhs._size) == 0;
   }
 
-  friend bool operator!=(String lhs, String rhs) {
+  friend bool operator!=(JsonString lhs, JsonString rhs) {
     return !(lhs == rhs);
   }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
-  friend std::ostream& operator<<(std::ostream& lhs, const String& rhs) {
+  friend std::ostream& operator<<(std::ostream& lhs, const JsonString& rhs) {
     lhs.write(rhs.c_str(), static_cast<std::streamsize>(rhs.size()));
     return lhs;
   }

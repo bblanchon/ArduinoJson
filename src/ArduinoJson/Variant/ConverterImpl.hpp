@@ -133,12 +133,12 @@ struct Converter<const char*> : private VariantAttorney {
 };
 
 template <>
-struct Converter<String> : private VariantAttorney {
-  static void toJson(String src, VariantRef dst) {
+struct Converter<JsonString> : private VariantAttorney {
+  static void toJson(JsonString src, VariantRef dst) {
     variantSetString(getData(dst), adaptString(src), getPool(dst));
   }
 
-  static String fromJson(VariantConstRef src) {
+  static JsonString fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
     return data ? data->asString() : 0;
   }
@@ -207,9 +207,10 @@ class MemoryPoolPrint : public Print {
     pool->getFreeZone(&_string, &_capacity);
   }
 
-  String str() {
+  JsonString str() {
     ARDUINOJSON_ASSERT(_size < _capacity);
-    return String(_pool->saveStringFromFreeZone(_size), _size, String::Copied);
+    return JsonString(_pool->saveStringFromFreeZone(_size), _size,
+                      JsonString::Copied);
   }
 
   size_t write(uint8_t c) {
@@ -261,7 +262,7 @@ inline void convertToJson(const ::Printable& src, VariantRef dst) {
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING
 
 inline void convertFromJson(VariantConstRef src, ::String& dst) {
-  String str = src.as<String>();
+  JsonString str = src.as<JsonString>();
   if (str)
     dst = str.c_str();
   else
@@ -269,7 +270,7 @@ inline void convertFromJson(VariantConstRef src, ::String& dst) {
 }
 
 inline bool canConvertFromJson(VariantConstRef src, const ::String&) {
-  return src.is<String>();
+  return src.is<JsonString>();
 }
 
 #endif
@@ -277,7 +278,7 @@ inline bool canConvertFromJson(VariantConstRef src, const ::String&) {
 #if ARDUINOJSON_ENABLE_STD_STRING
 
 inline void convertFromJson(VariantConstRef src, std::string& dst) {
-  String str = src.as<String>();
+  JsonString str = src.as<JsonString>();
   if (str)
     dst.assign(str.c_str(), str.size());
   else
@@ -285,7 +286,7 @@ inline void convertFromJson(VariantConstRef src, std::string& dst) {
 }
 
 inline bool canConvertFromJson(VariantConstRef src, const std::string&) {
-  return src.is<String>();
+  return src.is<JsonString>();
 }
 
 #endif
@@ -293,13 +294,13 @@ inline bool canConvertFromJson(VariantConstRef src, const std::string&) {
 #if ARDUINOJSON_ENABLE_STRING_VIEW
 
 inline void convertFromJson(VariantConstRef src, std::string_view& dst) {
-  String str = src.as<String>();
+  JsonString str = src.as<JsonString>();
   if (str)  // the standard doesn't allow passing null to the constructor
     dst = std::string_view(str.c_str(), str.size());
 }
 
 inline bool canConvertFromJson(VariantConstRef src, const std::string_view&) {
-  return src.is<String>();
+  return src.is<JsonString>();
 }
 
 #endif

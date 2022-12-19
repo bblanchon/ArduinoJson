@@ -81,7 +81,7 @@ inline size_t copyArray(JsonArrayConst src, T* dst, size_t len) {
 // Special case for char[] which must be treated as a string
 template <size_t N>
 inline size_t copyArray(VariantConstRef src, char (&dst)[N]) {
-  String s = src;
+  JsonString s = src;
   size_t len = N - 1;
   if (len > s.size())
     len = s.size();

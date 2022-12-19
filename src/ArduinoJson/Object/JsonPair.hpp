@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Strings/String.hpp>
+#include <ArduinoJson/Strings/JsonString.hpp>
 #include <ArduinoJson/Variant/VariantConstRef.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 
@@ -14,13 +14,13 @@ class JsonPair {
  public:
   JsonPair(MemoryPool* pool, VariantSlot* slot) {
     if (slot) {
-      _key = String(slot->key(),
-                    slot->ownsKey() ? String::Copied : String::Linked);
+      _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
+                                                     : JsonString::Linked);
       _value = VariantRef(pool, slot->data());
     }
   }
 
-  String key() const {
+  JsonString key() const {
     return _key;
   }
 
@@ -29,7 +29,7 @@ class JsonPair {
   }
 
  private:
-  String _key;
+  JsonString _key;
   VariantRef _value;
 };
 
@@ -37,13 +37,13 @@ class JsonPairConst {
  public:
   JsonPairConst(const VariantSlot* slot) {
     if (slot) {
-      _key = String(slot->key(),
-                    slot->ownsKey() ? String::Copied : String::Linked);
+      _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
+                                                     : JsonString::Linked);
       _value = VariantConstRef(slot->data());
     }
   }
 
-  String key() const {
+  JsonString key() const {
     return _key;
   }
 
@@ -52,7 +52,7 @@ class JsonPairConst {
   }
 
  private:
-  String _key;
+  JsonString _key;
   VariantConstRef _value;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

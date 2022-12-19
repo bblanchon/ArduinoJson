@@ -222,7 +222,7 @@ template <typename TAdaptedString, typename TCallback>
 bool storeString(MemoryPool* pool, TAdaptedString str,
                  StringStoragePolicy::Copy, TCallback callback) {
   const char* copy = pool->saveString(str);
-  String storedString(copy, str.size(), String::Copied);
+  JsonString storedString(copy, str.size(), JsonString::Copied);
   callback(storedString);
   return copy != 0;
 }
@@ -230,7 +230,7 @@ bool storeString(MemoryPool* pool, TAdaptedString str,
 template <typename TAdaptedString, typename TCallback>
 bool storeString(MemoryPool*, TAdaptedString str, StringStoragePolicy::Link,
                  TCallback callback) {
-  String storedString(str.data(), str.size(), String::Linked);
+  JsonString storedString(str.data(), str.size(), JsonString::Linked);
   callback(storedString);
   return !str.isNull();
 }

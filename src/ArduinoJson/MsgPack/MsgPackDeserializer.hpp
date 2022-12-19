@@ -470,7 +470,7 @@ class MsgPackDeserializer {
       if (err)
         return err;
 
-      String key = _stringStorage.str();
+      JsonString key = _stringStorage.str();
       TFilter memberFilter = filter[key.c_str()];
       VariantData* member;
 

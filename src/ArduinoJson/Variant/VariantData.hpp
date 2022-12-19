@@ -7,7 +7,7 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
-#include <ArduinoJson/Strings/String.hpp>
+#include <ArduinoJson/Strings/JsonString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
 
@@ -84,7 +84,7 @@ class VariantData {
   template <typename T>
   T asFloat() const;
 
-  String asString() const;
+  JsonString asString() const;
 
   bool asBoolean() const;
 
@@ -217,7 +217,7 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setString(String s) {
+  void setString(JsonString s) {
     ARDUINOJSON_ASSERT(s);
     if (s.isLinked())
       setType(VALUE_IS_LINKED_STRING);

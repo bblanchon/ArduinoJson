@@ -70,16 +70,16 @@ inline T VariantData::asFloat() const {
   }
 }
 
-inline String VariantData::asString() const {
+inline JsonString VariantData::asString() const {
   switch (type()) {
     case VALUE_IS_LINKED_STRING:
-      return String(_content.asString.data, _content.asString.size,
-                    String::Linked);
+      return JsonString(_content.asString.data, _content.asString.size,
+                        JsonString::Linked);
     case VALUE_IS_OWNED_STRING:
-      return String(_content.asString.data, _content.asString.size,
-                    String::Copied);
+      return JsonString(_content.asString.data, _content.asString.size,
+                        JsonString::Copied);
     default:
-      return String();
+      return JsonString();
   }
 }
 
@@ -90,7 +90,7 @@ inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
     case VALUE_IS_OBJECT:
       return toObject().copyFrom(src._content.asCollection, pool);
     case VALUE_IS_OWNED_STRING: {
-      String value = src.asString();
+      JsonString value = src.asString();
       return setString(adaptString(value), pool);
     }
     case VALUE_IS_OWNED_RAW:

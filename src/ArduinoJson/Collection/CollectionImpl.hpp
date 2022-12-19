@@ -60,7 +60,8 @@ inline bool CollectionData::copyFrom(const CollectionData& src,
   for (VariantSlot* s = src._head; s; s = s->next()) {
     VariantData* var;
     if (s->key() != 0) {
-      String key(s->key(), s->ownsKey() ? String::Copied : String::Linked);
+      JsonString key(s->key(),
+                     s->ownsKey() ? JsonString::Copied : JsonString::Linked);
       var = addMember(adaptString(key), pool);
     } else {
       var = addElement(pool);

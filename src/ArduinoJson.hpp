@@ -55,7 +55,7 @@ using ARDUINOJSON_NAMESPACE::JsonObject;
 using ARDUINOJSON_NAMESPACE::JsonObjectConst;
 using ARDUINOJSON_NAMESPACE::JsonPair;
 using ARDUINOJSON_NAMESPACE::JsonPairConst;
-typedef ARDUINOJSON_NAMESPACE::String JsonString;
+using ARDUINOJSON_NAMESPACE::JsonString;
 using ARDUINOJSON_NAMESPACE::JsonUInt;
 typedef ARDUINOJSON_NAMESPACE::VariantConstRef JsonVariantConst;
 typedef ARDUINOJSON_NAMESPACE::VariantRef JsonVariant;

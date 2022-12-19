@@ -19,10 +19,11 @@ class StringCopier {
       _pool->markAsOverflowed();
   }
 
-  String save() {
+  JsonString save() {
     ARDUINOJSON_ASSERT(_ptr);
     ARDUINOJSON_ASSERT(_size < _capacity);  // needs room for the terminator
-    return String(_pool->saveStringFromFreeZone(_size), _size, String::Copied);
+    return JsonString(_pool->saveStringFromFreeZone(_size), _size,
+                      JsonString::Copied);
   }
 
   void append(const char* s) {
@@ -48,11 +49,11 @@ class StringCopier {
     return _size;
   }
 
-  String str() const {
+  JsonString str() const {
     ARDUINOJSON_ASSERT(_ptr);
     ARDUINOJSON_ASSERT(_size < _capacity);
     _ptr[_size] = 0;
-    return String(_ptr, _size, String::Copied);
+    return JsonString(_ptr, _size, JsonString::Copied);
   }
 
  private:
