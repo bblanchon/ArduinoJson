@@ -7,7 +7,6 @@
 #include <ArduinoJson/Object/JsonObjectConst.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
 
-
 namespace ARDUINOJSON_NAMESPACE {
 
 class JsonArray;
@@ -16,7 +15,7 @@ class JsonObject : public VariantOperators<JsonObject> {
   friend class VariantAttorney;
 
  public:
-  typedef ObjectIterator iterator;
+  typedef JsonObjectIterator iterator;
 
   FORCE_INLINE JsonObject() : _data(0), _pool(0) {}
   FORCE_INLINE JsonObject(MemoryPool* buf, CollectionData* data)

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Object/ObjectIterator.hpp>
+#include <ArduinoJson/Object/JsonObjectIterator.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -14,7 +14,7 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   friend class VariantAttorney;
 
  public:
-  typedef ObjectConstIterator iterator;
+  typedef JsonObjectConstIterator iterator;
 
   JsonObjectConst() : _data(0) {}
   JsonObjectConst(const CollectionData* data) : _data(data) {}
