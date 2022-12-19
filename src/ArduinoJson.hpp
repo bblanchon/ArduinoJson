@@ -47,8 +47,8 @@
 #include "ArduinoJson/compatibility.hpp"
 
 namespace ArduinoJson {
-typedef ARDUINOJSON_NAMESPACE::ArrayConstRef JsonArrayConst;
 using ARDUINOJSON_NAMESPACE::JsonArray;
+using ARDUINOJSON_NAMESPACE::JsonArrayConst;
 typedef ARDUINOJSON_NAMESPACE::Float JsonFloat;
 typedef ARDUINOJSON_NAMESPACE::Integer JsonInteger;
 typedef ARDUINOJSON_NAMESPACE::ObjectConstRef JsonObjectConst;

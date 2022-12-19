@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <ArduinoJson/Array/ArrayConstRef.hpp>
 #include <ArduinoJson/Array/ElementProxy.hpp>
+#include <ArduinoJson/Array/JsonArrayConst.hpp>
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -26,8 +26,8 @@ class JsonArray : public VariantOperators<JsonArray> {
     return VariantRef(_pool, reinterpret_cast<VariantData*>(data));
   }
 
-  operator ArrayConstRef() const {
-    return ArrayConstRef(_data);
+  operator JsonArrayConst() const {
+    return JsonArrayConst(_data);
   }
 
   VariantRef add() const {
@@ -57,14 +57,14 @@ class JsonArray : public VariantOperators<JsonArray> {
   }
 
   // Copy a JsonArray
-  FORCE_INLINE bool set(ArrayConstRef src) const {
+  FORCE_INLINE bool set(JsonArrayConst src) const {
     if (!_data || !src._data)
       return false;
     return _data->copyFrom(*src._data, _pool);
   }
 
   FORCE_INLINE bool operator==(JsonArray rhs) const {
-    return ArrayConstRef(_data) == ArrayConstRef(rhs._data);
+    return JsonArrayConst(_data) == JsonArrayConst(rhs._data);
   }
 
   // Removes element at specified position.

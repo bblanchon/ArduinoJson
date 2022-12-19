@@ -64,15 +64,15 @@ inline typename enable_if<!is_array<T>::value, size_t>::type copyArray(
 
 // Copy a JsonArray to array
 template <typename T, size_t N>
-inline size_t copyArray(ArrayConstRef src, T (&dst)[N]) {
+inline size_t copyArray(JsonArrayConst src, T (&dst)[N]) {
   return copyArray(src, dst, N);
 }
 
 // Copy a JsonArray to ptr+size
 template <typename T>
-inline size_t copyArray(ArrayConstRef src, T* dst, size_t len) {
+inline size_t copyArray(JsonArrayConst src, T* dst, size_t len) {
   size_t i = 0;
-  for (ArrayConstRef::iterator it = src.begin(); it != src.end() && i < len;
+  for (JsonArrayConst::iterator it = src.begin(); it != src.end() && i < len;
        ++it)
     copyArray(*it, dst[i++]);
   return i;
@@ -97,7 +97,7 @@ inline typename enable_if<is_array<T>::value &&
                               is_base_of<JsonDocument, TSource>::value,
                           size_t>::type
 copyArray(const TSource& src, T& dst) {
-  return copyArray(src.template as<ArrayConstRef>(), dst);
+  return copyArray(src.template as<JsonArrayConst>(), dst);
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -79,12 +79,12 @@ class VariantConstPtr {
   VariantConstRef _variant;
 };
 
-class ArrayConstRefIterator {
+class JsonArrayConstIterator {
   friend class JsonArray;
 
  public:
-  ArrayConstRefIterator() : _slot(0) {}
-  explicit ArrayConstRefIterator(const VariantSlot* slot) : _slot(slot) {}
+  JsonArrayConstIterator() : _slot(0) {}
+  explicit JsonArrayConstIterator(const VariantSlot* slot) : _slot(slot) {}
 
   VariantConstRef operator*() const {
     return VariantConstRef(_slot->data());
@@ -93,20 +93,20 @@ class ArrayConstRefIterator {
     return VariantConstPtr(_slot->data());
   }
 
-  bool operator==(const ArrayConstRefIterator& other) const {
+  bool operator==(const JsonArrayConstIterator& other) const {
     return _slot == other._slot;
   }
 
-  bool operator!=(const ArrayConstRefIterator& other) const {
+  bool operator!=(const JsonArrayConstIterator& other) const {
     return _slot != other._slot;
   }
 
-  ArrayConstRefIterator& operator++() {
+  JsonArrayConstIterator& operator++() {
     _slot = _slot->next();
     return *this;
   }
 
-  ArrayConstRefIterator& operator+=(size_t distance) {
+  JsonArrayConstIterator& operator+=(size_t distance) {
     _slot = _slot->next(distance);
     return *this;
   }

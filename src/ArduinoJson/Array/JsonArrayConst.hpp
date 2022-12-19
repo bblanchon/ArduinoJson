@@ -12,12 +12,12 @@ namespace ARDUINOJSON_NAMESPACE {
 
 class ObjectRef;
 
-class ArrayConstRef : public VariantOperators<ArrayConstRef> {
+class JsonArrayConst : public VariantOperators<JsonArrayConst> {
   friend class JsonArray;
   friend class VariantAttorney;
 
  public:
-  typedef ArrayConstRefIterator iterator;
+  typedef JsonArrayConstIterator iterator;
 
   FORCE_INLINE iterator begin() const {
     if (!_data)
@@ -29,10 +29,10 @@ class ArrayConstRef : public VariantOperators<ArrayConstRef> {
     return iterator();
   }
 
-  FORCE_INLINE ArrayConstRef() : _data(0) {}
-  FORCE_INLINE ArrayConstRef(const CollectionData* data) : _data(data) {}
+  FORCE_INLINE JsonArrayConst() : _data(0) {}
+  FORCE_INLINE JsonArrayConst(const CollectionData* data) : _data(data) {}
 
-  FORCE_INLINE bool operator==(ArrayConstRef rhs) const {
+  FORCE_INLINE bool operator==(JsonArrayConst rhs) const {
     if (_data == rhs._data)
       return true;
     if (!_data || !rhs._data)
@@ -92,12 +92,12 @@ class ArrayConstRef : public VariantOperators<ArrayConstRef> {
 };
 
 template <>
-struct Converter<ArrayConstRef> : private VariantAttorney {
+struct Converter<JsonArrayConst> : private VariantAttorney {
   static void toJson(VariantConstRef src, VariantRef dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
-  static ArrayConstRef fromJson(VariantConstRef src) {
+  static JsonArrayConst fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
     return data ? data->asArray() : 0;
   }

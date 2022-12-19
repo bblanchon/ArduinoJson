@@ -88,7 +88,7 @@ struct ArrayComparer : ComparerBase {
   explicit ArrayComparer(const CollectionData& rhs) : _rhs(&rhs) {}
 
   CompareResult visitArray(const CollectionData& lhs) {
-    if (ArrayConstRef(&lhs) == ArrayConstRef(_rhs))
+    if (JsonArrayConst(&lhs) == JsonArrayConst(_rhs))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;

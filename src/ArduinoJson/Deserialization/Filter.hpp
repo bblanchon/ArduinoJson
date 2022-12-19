@@ -17,7 +17,7 @@ class Filter {
   }
 
   bool allowArray() const {
-    return _variant == true || _variant.is<ArrayConstRef>();
+    return _variant == true || _variant.is<JsonArrayConst>();
   }
 
   bool allowObject() const {
