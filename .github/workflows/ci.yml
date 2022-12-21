@@ -17,6 +17,13 @@ jobs:
         run: |
           find src/ extras/ -name '*.[ch]pp' | xargs clang-format -i --verbose --style=file
           git diff --exit-code
+      - name: Check URLs
+        run: |
+          grep -hREo "(http|https)://[a-zA-Z0-9./?=_%:-]*" src/ | sort -u | while read -r URL
+          do
+            STATUS=$(curl -s -o /dev/null -I -w "%{http_code}" "$URL")
+            [ "$STATUS" -ge 400 ] && echo "::warning title=HTTP $STATUS::$URL returned $STATUS"
+          done || true
 
   gcc:
     name: GCC
