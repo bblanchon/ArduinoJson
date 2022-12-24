@@ -41,7 +41,8 @@ TEST_CASE("serialize MsgPack array") {
   }
 
   SECTION("array 16") {
-    for (int i = 0; i < 16; i++) array.add(i);
+    for (int i = 0; i < 16; i++)
+      array.add(i);
 
     check(array,
           "\xDC\x00\x10\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D"
@@ -50,7 +51,8 @@ TEST_CASE("serialize MsgPack array") {
 
   SECTION("array 32") {
     const char* nil = 0;
-    for (int i = 0; i < 65536; i++) array.add(nil);
+    for (int i = 0; i < 65536; i++)
+      array.add(nil);
 
     check(array,
           std::string("\xDD\x00\x01\x00\x00", 5) + std::string(65536, '\xc0'));

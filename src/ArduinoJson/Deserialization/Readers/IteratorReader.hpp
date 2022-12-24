@@ -23,7 +23,8 @@ class IteratorReader {
 
   size_t readBytes(char* buffer, size_t length) {
     size_t i = 0;
-    while (i < length && _ptr < _end) buffer[i++] = *_ptr++;
+    while (i < length && _ptr < _end)
+      buffer[i++] = *_ptr++;
     return i;
   }
 };

@@ -9,3 +9,4 @@ DerivePointerAlignment: false
 
 # Always break after if to get accurate coverage
 AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false

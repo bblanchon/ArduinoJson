@@ -37,14 +37,16 @@ class TextFormatter {
   void writeString(const char* value) {
     ARDUINOJSON_ASSERT(value != NULL);
     writeRaw('\"');
-    while (*value) writeChar(*value++);
+    while (*value)
+      writeChar(*value++);
     writeRaw('\"');
   }
 
   void writeString(const char* value, size_t n) {
     ARDUINOJSON_ASSERT(value != NULL);
     writeRaw('\"');
-    while (n--) writeChar(*value++);
+    while (n--)
+      writeChar(*value++);
     writeRaw('\"');
   }
 

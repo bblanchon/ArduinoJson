@@ -183,7 +183,8 @@ class MemoryPool {
         return next;
 
       // jump to next terminator
-      while (*next) ++next;
+      while (*next)
+        ++next;
     }
     return 0;
   }

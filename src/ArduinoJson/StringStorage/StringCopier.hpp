@@ -27,11 +27,13 @@ class StringCopier {
   }
 
   void append(const char* s) {
-    while (*s) append(*s++);
+    while (*s)
+      append(*s++);
   }
 
   void append(const char* s, size_t n) {
-    while (n-- > 0) append(*s++);
+    while (n-- > 0)
+      append(*s++);
   }
 
   void append(char c) {

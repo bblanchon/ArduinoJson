@@ -64,7 +64,8 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
 
  private:
   void indent() {
-    for (uint8_t i = 0; i < _nesting; i++) base::write(ARDUINOJSON_TAB);
+    for (uint8_t i = 0; i < _nesting; i++)
+      base::write(ARDUINOJSON_TAB);
   }
 
   uint8_t _nesting;
