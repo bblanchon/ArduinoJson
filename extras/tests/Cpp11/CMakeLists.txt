@@ -15,6 +15,10 @@ if("cxx_long_long_type" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
 	list(APPEND SOURCES use_long_long_0.cpp use_long_long_1.cpp)
 endif()
 
+if("cxx_range_for" IN_LIST CMAKE_CXX_COMPILE_FEATURES AND "cxx_generalized_initializers" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+	list(APPEND SOURCES stl_containers.cpp)
+endif()
+
 if(NOT SOURCES)
 	return()
 endif()
@@ -28,5 +32,5 @@ add_test(Cpp11 Cpp11Tests)
 
 set_tests_properties(Cpp11
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )
