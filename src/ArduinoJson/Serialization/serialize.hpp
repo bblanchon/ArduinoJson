@@ -40,12 +40,8 @@ serialize(JsonVariantConst source, void* buffer, size_t bufferSize) {
 }
 
 template <template <typename> class TSerializer, typename TChar, size_t N>
-#if defined _MSC_VER && _MSC_VER < 1900
-typename enable_if<sizeof(remove_reference<TChar>::type) == 1, size_t>::type
-#else
-typename enable_if<sizeof(TChar) == 1, size_t>::type
-#endif
-serialize(JsonVariantConst source, TChar (&buffer)[N]) {
+typename enable_if<IsChar<TChar>::value, size_t>::type serialize(
+    JsonVariantConst source, TChar (&buffer)[N]) {
   return serialize<TSerializer>(source, buffer, N);
 }
 
