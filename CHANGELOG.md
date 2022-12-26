@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.20.0 (2022-12-26)
+-------
 
 * Add `JsonVariant::shallowCopy()` (issue #1343)
 * Fix `9.22337e+18 is outside the range of representable values of type 'long'`

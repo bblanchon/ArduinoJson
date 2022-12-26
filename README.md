@@ -8,8 +8,8 @@
 [![Continuous Integration](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/6.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
 [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/arduinojson.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
 [![Coveralls branch](https://img.shields.io/coveralls/github/bblanchon/ArduinoJson/6.x?logo=coveralls)](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)  
-[![Arduino Library Manager](https://img.shields.io/static/v1?label=Arduino&message=v6.19.4&logo=arduino&logoColor=white&color=blue)](https://www.ardu-badge.com/ArduinoJson/6.19.4)
-[![PlatformIO Registry](https://badges.registry.platformio.org/packages/bblanchon/library/ArduinoJson.svg?version=6.19.4)](https://registry.platformio.org/packages/libraries/bblanchon/ArduinoJson?version=6.19.4) 
+[![Arduino Library Manager](https://img.shields.io/static/v1?label=Arduino&message=v6.20.0&logo=arduino&logoColor=white&color=blue)](https://www.ardu-badge.com/ArduinoJson/6.20.0)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/bblanchon/library/ArduinoJson.svg?version=6.20.0)](https://registry.platformio.org/packages/libraries/bblanchon/ArduinoJson?version=6.20.0) 
 [![GitHub stars](https://img.shields.io/github/stars/bblanchon/ArduinoJson?style=flat&logo=github)](https://github.com/bblanchon/ArduinoJson/stargazers)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/bblanchon?logo=github)](https://github.com/sponsors/bblanchon)
 
