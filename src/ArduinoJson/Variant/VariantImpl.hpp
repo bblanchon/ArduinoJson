@@ -142,12 +142,6 @@ VariantRefBase<TDerived>::to() const {
   return *this;
 }
 
-// Out of class definition to avoid #1560
-template <typename TDerived>
-inline bool VariantRefBase<TDerived>::set(char value) const {
-  return set(static_cast<signed char>(value));
-}
-
 template <typename TDerived>
 inline void convertToJson(const VariantRefBase<TDerived>& src,
                           JsonVariant dst) {

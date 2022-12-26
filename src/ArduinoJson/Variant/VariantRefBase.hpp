@@ -62,25 +62,6 @@ class VariantRefBase : public VariantTag {
     return Converter<T>::fromJson(getVariant());
   }
 
-  // Deprecated: use as<const char*>() instead.
-  // https://arduinojson.org/v6/api/jsonvariant/as/
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char*>::value, const char*>::type
-  ARDUINOJSON_DEPRECATED("Replace as<char*>() with as<const char*>()")
-      as() const {
-    return as<const char*>();
-  }
-
-  // Deprecated: use as<int8_t>() or as<uint8_t>() instead.
-  // https://arduinojson.org/v6/api/jsonvariant/as/
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char>::value, char>::type
-  ARDUINOJSON_DEPRECATED(
-      "Support for char is deprecated, use int8_t or uint8_t instead")
-      as() const {
-    return static_cast<char>(as<signed char>());
-  }
-
   template <typename T>
   FORCE_INLINE operator T() const {
     return as<T>();
@@ -126,25 +107,6 @@ class VariantRefBase : public VariantTag {
     return Converter<T>::checkJson(getVariantConst());
   }
 
-  // Deprecated: use is<const char*>() instead.
-  // https://arduinojson.org/v6/api/jsonvariant/is/
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char*>::value, bool>::type
-  ARDUINOJSON_DEPRECATED("Replace is<char*>() with is<const char*>()")
-      is() const {
-    return is<const char*>();
-  }
-
-  // Deprecated: use is<int8_t>() or is<uint8_t>() instead.
-  // https://arduinojson.org/v6/api/jsonvariant/is/
-  template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, char>::value, bool>::type
-  ARDUINOJSON_DEPRECATED(
-      "Support for char is deprecated, use int8_t or uint8_t instead")
-      is() const {
-    return is<signed char>();
-  }
-
   // Shallow copies the specified value.
   // https://arduinojson.org/v6/api/jsonvariant/shallowcopy/
   FORCE_INLINE void shallowCopy(JsonVariantConst target) {
@@ -175,12 +137,6 @@ class VariantRefBase : public VariantTag {
     MemoryPool* pool = getPool();
     return pool && !pool->overflowed();
   }
-
-  // Deprecated: use int8_t or uint8_t instead
-  // https://arduinojson.org/v6/api/jsonvariant/set/
-  bool ARDUINOJSON_DEPRECATED(
-      "Support for char is deprecated, use int8_t or uint8_t instead")
-      set(char value) const;
 
   // Returns the size of the array or object.
   // https://arduinojson.org/v6/api/jsonvariant/size/

@@ -15,6 +15,7 @@ HEAD
 * Remove undocumented `JsonArrayIterator::internal()` and `JsonObjectIterator::internal()`
 * Rename things in `ARDUINOJSON_NAMESPACE` to match the public names
 * Add documentation to most public symbols
+* Remove support for naked `char` (was deprecated since 6.18.0)
 
 > ### BREAKING CHANGES
 >
