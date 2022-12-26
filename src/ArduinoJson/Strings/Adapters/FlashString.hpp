@@ -61,7 +61,7 @@ class FlashString {
     ::memcpy_P(p, s._str, n);
   }
 
-  StringStoragePolicy::Copy storagePolicy() {
+  StringStoragePolicy::Copy storagePolicy() const {
     return StringStoragePolicy::Copy();
   }
 
