@@ -16,7 +16,7 @@ jobs:
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Write release body
         id: body
         run: |
@@ -49,3 +49,15 @@ jobs:
           name: ArduinoJson ${{ steps.init.outputs.version }}
           artifacts: ${{ steps.amalgamate_h.outputs.filename }},${{ steps.amalgamate_hpp.outputs.filename }},${{ steps.arduino.outputs.filename }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  idf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Upload component to the component registry
+        uses: espressif/upload-components-ci-action@v1
+        with:
+          name: ArduinoJson
+          namespace: bblanchon
+          api_token: ${{ secrets.IDF_COMPONENT_API_TOKEN }}
