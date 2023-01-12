@@ -100,7 +100,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("Before the colon") {
+    SECTION("Before the comma") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -112,9 +112,9 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key2"] == "value2");
     }
 
-    SECTION("After the colon") {
+    SECTION("After the comma") {
       DeserializationError err =
-          deserializeJson(doc, "{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
+          deserializeJson(doc, "{\"key1\":\"value1\", \"key2\":\"value2\"}");
       JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(err == DeserializationError::Ok);
