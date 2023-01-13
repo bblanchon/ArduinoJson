@@ -99,7 +99,6 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * Most popular of all Arduino libraries on [GitHub](https://github.com/search?o=desc&q=arduino+library&s=stars&type=Repositories)
     * [Used in hundreds of projects](https://www.hackster.io/search?i=projects&q=arduinojson)
     * [Responsive support](https://github.com/bblanchon/ArduinoJson/issues?q=is%3Aissue+is%3Aclosed)
-    * [Discord server](https://discord.gg/DzN6hHHD4h)
 
 ## Quickstart
 
