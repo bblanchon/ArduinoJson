@@ -28,7 +28,7 @@ jobs:
   gcc:
     name: GCC
     needs: lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -52,9 +52,11 @@ jobs:
     steps:
       - name: Install
         run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5 3B4FE6ACC0B21F32
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty main universe'
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial main universe'
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic main universe'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ focal main universe'
           sudo apt-get update
           sudo apt-get install -y gcc-${{ matrix.gcc }} g++-${{ matrix.gcc }}
       - name: Checkout
