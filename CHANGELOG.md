@@ -1,6 +1,13 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Remove explicit exclusion of `as<char*>()` and `as<char>()` (issue #1860)
+  If you try to call them, you'll now get the same error message as any unsupported type.
+  You could also add a custom converter for `char*` and `char`.
+
 v6.20.0 (2022-12-26)
 -------
 

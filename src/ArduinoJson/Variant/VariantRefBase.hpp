@@ -46,11 +46,9 @@ class VariantRefBase : public VariantTag {
   // Casts the value to the specified type.
   // https://arduinojson.org/v6/api/jsonvariant/as/
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, char*>::value &&
-                                      !is_same<T, char>::value &&
-                                      !ConverterNeedsWriteableRef<T>::value,
-                                  T>::type
-  as() const {
+  FORCE_INLINE
+      typename enable_if<!ConverterNeedsWriteableRef<T>::value, T>::type
+      as() const {
     return Converter<T>::fromJson(getVariantConst());
   }
 
