@@ -5,6 +5,8 @@
 #define ARDUINO
 #define memcpy_P(dest, src, n) memcpy((dest), (src), (n))
 
+#include "progmem_emulation.hpp"
+
 #include <ArduinoJson.h>
 
 #include <catch.hpp>

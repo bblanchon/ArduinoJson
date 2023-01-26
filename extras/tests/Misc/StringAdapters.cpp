@@ -6,6 +6,7 @@
 #define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
 
 #include "custom_string.hpp"
+#include "progmem_emulation.hpp"
 #include "weird_strcmp.hpp"
 
 #include <ArduinoJson/Strings/IsString.hpp>

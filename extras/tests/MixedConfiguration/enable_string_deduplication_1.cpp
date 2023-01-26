@@ -2,6 +2,8 @@
 // Copyright © 2014-2022, Benoit BLANCHON
 // MIT License
 
+#include "progmem_emulation.hpp"
+
 #define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
 #define ARDUINOJSON_ENABLE_PROGMEM 1
 #define ARDUINOJSON_ENABLE_STRING_DEDUPLICATION 1
