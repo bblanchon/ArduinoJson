@@ -62,8 +62,8 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x5A827748, 0xF9301D32,  // 1e128
             0x75154FDD, 0x7F73BF3C   // 1e256
         }));
-    return forge(pgm_read<uint32_t>(factors + 2 * index),
-                 pgm_read<uint32_t>(factors + 2 * index + 1));
+    return forge(pgm_read(factors + 2 * index),
+                 pgm_read(factors + 2 * index + 1));
   }
 
   static T negativeBinaryPowerOfTen(int index) {
@@ -80,8 +80,8 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x255BBA08, 0xCF8C979D,  // 1e-128
             0x0AC80628, 0x64AC6F43   // 1e-256
         }));
-    return forge(pgm_read<uint32_t>(factors + 2 * index),
-                 pgm_read<uint32_t>(factors + 2 * index + 1));
+    return forge(pgm_read(factors + 2 * index),
+                 pgm_read(factors + 2 * index + 1));
   }
 
   static T negativeBinaryPowerOfTenPlusOne(int index) {
@@ -98,8 +98,8 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x25915445, 0x81B7DEC2,  // 1e-127
             0x0AFE07B2, 0x7DD78B14   // 1e-255
         }));
-    return forge(pgm_read<uint32_t>(factors + 2 * index),
-                 pgm_read<uint32_t>(factors + 2 * index + 1));
+    return forge(pgm_read(factors + 2 * index),
+                 pgm_read(factors + 2 * index + 1));
   }
 
   static T nan() {
@@ -181,7 +181,7 @@ struct FloatTraits<T, 4 /*32bits*/> {
                                          0x5a0e1bca,  // 1e16f
                                          0x749dc5ae   // 1e32f
                                      }));
-    return forge(pgm_read<uint32_t>(factors + index));
+    return forge(pgm_read(factors + index));
   }
 
   static T negativeBinaryPowerOfTen(int index) {
@@ -194,7 +194,7 @@ struct FloatTraits<T, 4 /*32bits*/> {
                                          0x24e69595,  // 1e-16f
                                          0x0a4fb11f   // 1e-32f
                                      }));
-    return forge(pgm_read<uint32_t>(factors + index));
+    return forge(pgm_read(factors + index));
   }
 
   static T negativeBinaryPowerOfTenPlusOne(int index) {
@@ -207,7 +207,7 @@ struct FloatTraits<T, 4 /*32bits*/> {
                                          0x26901d7d,  // 1e-15f
                                          0x0c01ceb3   // 1e-31f
                                      }));
-    return forge(pgm_read<uint32_t>(factors + index));
+    return forge(pgm_read(factors + index));
   }
 
   static T forge(uint32_t bits) {

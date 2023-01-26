@@ -82,7 +82,8 @@ class DeserializationError : public SafeBoolIdom<DeserializationError> {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(char, s5, "TooDeep");
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(
         const char*, messages, ARDUINOJSON_EXPAND6({s0, s1, s2, s3, s4, s5}));
-    return pgm_read<const __FlashStringHelper*>(messages + _code);
+    return reinterpret_cast<const __FlashStringHelper*>(
+        pgm_read(messages + _code));
   }
 #endif
 

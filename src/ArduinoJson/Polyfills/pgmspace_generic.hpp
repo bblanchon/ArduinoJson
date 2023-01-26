@@ -21,13 +21,11 @@ namespace ARDUINOJSON_NAMESPACE {
 #  endif
 
 template <typename T>
-typename enable_if<is_pointer<T>::value, T>::type pgm_read(const void* p) {
-  return reinterpret_cast<T>(pgm_read_ptr(p));
+inline const T* pgm_read(const T* const* p) {
+  return reinterpret_cast<const T*>(pgm_read_ptr(p));
 }
 
-template <typename T>
-typename enable_if<is_same<T, uint32_t>::value, T>::type pgm_read(
-    const void* p) {
+inline uint32_t pgm_read(const uint32_t* p) {
   return pgm_read_dword(p);
 }
 #else
@@ -38,8 +36,8 @@ typename enable_if<is_same<T, uint32_t>::value, T>::type pgm_read(
 #  endif
 
 template <typename T>
-inline T pgm_read(const void* p) {
-  return *reinterpret_cast<const T*>(p);
+inline T pgm_read(const T* p) {
+  return *p;
 }
 
 #endif
