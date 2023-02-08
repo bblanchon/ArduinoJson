@@ -50,6 +50,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   idf:
+    name: IDF Component Registry
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -62,6 +63,7 @@ jobs:
           api_token: ${{ secrets.IDF_COMPONENT_API_TOKEN }}
 
   particle:
+    name: Particle
     runs-on: ubuntu-latest
     steps:
       - name: Install
@@ -71,4 +73,4 @@ jobs:
       - name: Login
         run: particle login --token ${{ secrets.PARTICLE_TOKEN }}
       - name: Publish
-        run: extras/scripts/publish-particle-library.sh
+        run: bash -eux extras/scripts/publish-particle-library.sh
