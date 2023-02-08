@@ -60,3 +60,15 @@ jobs:
           name: ArduinoJson
           namespace: bblanchon
           api_token: ${{ secrets.IDF_COMPONENT_API_TOKEN }}
+
+  particle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install
+        run: npm install -g particle-cli
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Login
+        run: particle login --token ${{ secrets.PARTICLE_TOKEN }}
+      - name: Publish
+        run: extras/scripts/publish-particle-library.sh
