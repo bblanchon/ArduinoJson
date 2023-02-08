@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.20.1 (2023-02-08)
+-------
 
 * Remove explicit exclusion of `as<char*>()` and `as<char>()` (issue #1860)
   If you try to call them, you'll now get the same error message as any unsupported type.
