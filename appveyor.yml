@@ -7,11 +7,6 @@ environment:
       CMAKE_GENERATOR: Visual Studio 16 2019
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       CMAKE_GENERATOR: Visual Studio 15 2017
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      CMAKE_GENERATOR: Visual Studio 14 2015
-    - CMAKE_GENERATOR: Visual Studio 12 2013
-    - CMAKE_GENERATOR: Visual Studio 11 2012
-    - CMAKE_GENERATOR: Visual Studio 10 2010
     - CMAKE_GENERATOR: Ninja
       MINGW: MinGW # MinGW 32-bit 5.3.0
     - CMAKE_GENERATOR: Ninja

@@ -33,10 +33,7 @@ template <typename T1, typename T2>
 CompareResult arithmeticCompare(
     const T1& lhs, const T2& rhs,
     typename enable_if<is_integral<T1>::value && is_integral<T2>::value &&
-                           sizeof(T1) < sizeof(T2),
-                       int  // Using int instead of void to avoid C2572 on
-                            // Visual Studio 2012, 2013, and 2015
-                       >::type* = 0) {
+                       sizeof(T1) < sizeof(T2)>::type* = 0) {
   return arithmeticCompare<T2>(static_cast<T2>(lhs), rhs);
 }
 

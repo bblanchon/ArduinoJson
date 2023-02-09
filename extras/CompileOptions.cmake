@@ -85,13 +85,8 @@ if(MSVC)
 	add_compile_options(
 		/W4 # Set warning level
 		/WX # Treats all compiler warnings as errors.
+		/Zc:__cplusplus # Enable updated __cplusplus macro
 	)
-
-	if (NOT MSVC_VERSION LESS  1910) #  >= Visual Studio 2017
-		add_compile_options(
-			/Zc:__cplusplus  # Enable updated __cplusplus macro
-		)
-	endif()
 endif()
 
 if(MINGW)
