@@ -21,12 +21,6 @@
 
 #endif
 
-#if __cplusplus >= 201103L
-#  define NOEXCEPT noexcept
-#else
-#  define NOEXCEPT throw()
-#endif
-
 #if defined(__has_attribute)
 #  if __has_attribute(no_sanitize)
 #    define ARDUINOJSON_NO_SANITIZE(check) __attribute__((no_sanitize(check)))
