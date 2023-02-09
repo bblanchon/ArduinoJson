@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include <sstream>
+
 using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("deserializeMsgPack() filter") {

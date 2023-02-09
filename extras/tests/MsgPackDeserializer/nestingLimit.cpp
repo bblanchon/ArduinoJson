@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include <sstream>
+
 #define SHOULD_WORK(expression) REQUIRE(DeserializationError::Ok == expression);
 #define SHOULD_FAIL(expression) \
   REQUIRE(DeserializationError::TooDeep == expression);

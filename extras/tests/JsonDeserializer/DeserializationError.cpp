@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include <sstream>
+
 void testStringification(DeserializationError error, std::string expected) {
   REQUIRE(error.c_str() == expected);
 }

@@ -6,6 +6,8 @@
 #include <ArduinoJson.hpp>
 #include <catch.hpp>
 
+#include <sstream>
+
 using namespace ARDUINOJSON_NAMESPACE;
 
 TEST_CASE("Reader<std::istringstream>") {

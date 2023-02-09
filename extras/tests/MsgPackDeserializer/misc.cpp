@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include <sstream>
+
 TEST_CASE("deserializeMsgPack() returns EmptyInput") {
   StaticJsonDocument<100> doc;
 

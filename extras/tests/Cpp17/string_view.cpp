@@ -1,6 +1,6 @@
 #include <ArduinoJson.h>
-
 #include <catch.hpp>
+
 #include <string_view>
 
 #if !ARDUINOJSON_ENABLE_STRING_VIEW

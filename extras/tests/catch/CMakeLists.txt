@@ -2,7 +2,7 @@
 # Copyright Benoit Blanchon 2014-2021
 # MIT License
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 
 add_library(catch
@@ -15,7 +15,7 @@ target_include_directories(catch
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	# prevent "xxx will change in GCC x.x" with arm-linux-gnueabihf-gcc
-	target_compile_options(catch PRIVATE -Wno-psabi)
+if(MINGW)
+	# prevent "too many sections (32837)" with MinGW
+	target_compile_options(catch PRIVATE -Wa,-mbig-obj)
 endif()
