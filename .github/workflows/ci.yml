@@ -78,12 +78,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - clang: "3.5"
-            cxxflags: "-stdlib=libc++"
-          - clang: "3.6"
-            cxxflags: "-stdlib=libc++"
-          - clang: "3.7"
-            cxxflags: "-stdlib=libc++"
           - clang: "3.8"
             cxxflags: "-stdlib=libc++"
           - clang: "3.9"
@@ -102,8 +96,6 @@ jobs:
     steps:
       - name: Install
         run: |
-          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty main'
-          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ trusty universe'
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial main'
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ xenial universe'
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic main'
