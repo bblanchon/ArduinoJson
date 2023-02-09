@@ -46,7 +46,8 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * Supports [custom converters](https://arduinojson.org/news/2021/05/04/version-6-18-0/)
 * Portable
     * Usable on any C++ project (not limited to Arduino)
-    * Compatible with C++98, C++11, C++14 and C++17
+    * Compatible with C++11, C++14 and C++17
+    * Support for C++98/C++03 available on [ArduinoJson 6.20.x](https://github.com/bblanchon/ArduinoJson/tree/6.20.x)
     * Zero warnings with `-Wall -Wextra -pedantic` and `/W4`
     * [Header-only library](https://en.wikipedia.org/wiki/Header-only)
     * Works with virtually any board

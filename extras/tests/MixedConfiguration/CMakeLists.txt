@@ -19,6 +19,8 @@ add_executable(MixedConfigurationTests
 	issue1707.cpp
 	use_double_0.cpp
 	use_double_1.cpp
+	use_long_long_0.cpp
+	use_long_long_1.cpp
 )
 
 set_target_properties(MixedConfigurationTests PROPERTIES UNITY_BUILD OFF)

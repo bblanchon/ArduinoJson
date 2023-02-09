@@ -9,10 +9,6 @@
 #  error This test requires sizeof(long) < 8
 #endif
 
-#if !ARDUINOJSON_HAS_LONG_LONG
-#  error This test requires C++11
-#endif
-
 ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(long long)
 int main() {
   DynamicJsonDocument doc(1024);

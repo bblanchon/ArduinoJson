@@ -12,6 +12,7 @@ add_executable(JsonDocumentTests
 	DynamicJsonDocument.cpp
 	ElementProxy.cpp
 	isNull.cpp
+	issue1120.cpp
 	MemberProxy.cpp
 	nesting.cpp
 	overflowed.cpp
