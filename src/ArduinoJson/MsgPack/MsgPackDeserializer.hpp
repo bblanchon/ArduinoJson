@@ -418,7 +418,13 @@ class MsgPackDeserializer {
 
     bool allowArray = filter.allowArray();
 
-    CollectionData* array = allowArray ? &variant->toArray() : 0;
+    CollectionData* array;
+    if (allowArray) {
+      ARDUINOJSON_ASSERT(variant != 0);
+      array = &variant->toArray();
+    } else {
+      array = 0;
+    }
 
     TFilter memberFilter = filter[0U];
 
@@ -426,6 +432,7 @@ class MsgPackDeserializer {
       VariantData* value;
 
       if (memberFilter.allow()) {
+        ARDUINOJSON_ASSERT(array != 0);
         value = array->addElement(_pool);
         if (!value)
           return DeserializationError::NoMemory;
@@ -463,7 +470,13 @@ class MsgPackDeserializer {
     if (nestingLimit.reached())
       return DeserializationError::TooDeep;
 
-    CollectionData* object = filter.allowObject() ? &variant->toObject() : 0;
+    CollectionData* object;
+    if (filter.allowObject()) {
+      ARDUINOJSON_ASSERT(variant != 0);
+      object = &variant->toObject();
+    } else {
+      object = 0;
+    }
 
     for (; n; --n) {
       err = readKey();
@@ -475,7 +488,7 @@ class MsgPackDeserializer {
       VariantData* member;
 
       if (memberFilter.allow()) {
-        ARDUINOJSON_ASSERT(object);
+        ARDUINOJSON_ASSERT(object != 0);
 
         // Save key in memory pool.
         // This MUST be done before adding the slot.
