@@ -25,5 +25,5 @@ add_test(JsonObject JsonObjectTests)
 
 set_tests_properties(JsonObject
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )

@@ -25,5 +25,5 @@ add_test(Cpp17 Cpp17Tests)
 
 set_tests_properties(Cpp17
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )

@@ -12,7 +12,7 @@ add_executable(IntegrationTests
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	target_compile_options(IntegrationTests
 		PUBLIC
-		-fsingle-precision-constant # issue 544
+			-fsingle-precision-constant # issue 544
 	)
 endif()
 
@@ -20,5 +20,5 @@ add_test(IntegrationTests IntegrationTests)
 
 set_tests_properties(IntegrationTests
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )

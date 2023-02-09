@@ -24,5 +24,5 @@ add_test(JsonArray JsonArrayTests)
 
 set_tests_properties(JsonArray
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )

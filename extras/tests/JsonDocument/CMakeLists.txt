@@ -28,5 +28,5 @@ add_test(JsonDocument JsonDocumentTests)
 
 set_tests_properties(JsonDocument
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )

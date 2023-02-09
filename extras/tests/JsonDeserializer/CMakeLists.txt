@@ -24,5 +24,5 @@ add_test(JsonDeserializer JsonDeserializerTests)
 
 set_tests_properties(JsonDeserializer
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )

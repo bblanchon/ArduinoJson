@@ -12,7 +12,7 @@ add_library(catch
 
 target_include_directories(catch
 	PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
+		${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 if(MINGW)

@@ -25,5 +25,5 @@ add_test(Misc MiscTests)
 
 set_tests_properties(Misc
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )

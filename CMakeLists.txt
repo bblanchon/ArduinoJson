@@ -5,15 +5,15 @@
 cmake_minimum_required(VERSION 3.15)
 
 if(ESP_PLATFORM)
-   # Build ArduinoJson as an ESP-IDF component
-   idf_component_register(INCLUDE_DIRS src)
-   return()
+	# Build ArduinoJson as an ESP-IDF component
+	idf_component_register(INCLUDE_DIRS src)
+	return()
 endif()
 
 project(ArduinoJson VERSION 6.20.1)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    include(CTest)
+	include(CTest)
 endif()
 
 add_subdirectory(src)

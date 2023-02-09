@@ -5,24 +5,20 @@
 macro(build_should_fail target)
 	set_target_properties(${target}
 		PROPERTIES
-	    	EXCLUDE_FROM_ALL TRUE
-	        EXCLUDE_FROM_DEFAULT_BUILD TRUE
+			EXCLUDE_FROM_ALL TRUE
+			EXCLUDE_FROM_DEFAULT_BUILD TRUE
 	)
 	add_test(
-		NAME
-			${target}
-	    COMMAND
-	    	${CMAKE_COMMAND} --build . --target ${target} --config $<CONFIGURATION>
-	    WORKING_DIRECTORY
-	    	${CMAKE_BINARY_DIR}
+		NAME ${target}
+			COMMAND ${CMAKE_COMMAND} --build . --target ${target} --config $<CONFIGURATION>
+			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 	)
-	set_tests_properties(${target} 
+	set_tests_properties(${target}
 		PROPERTIES
-			WILL_FAIL	TRUE
-			LABELS 		"WillFail;Catch"
+			WILL_FAIL TRUE
+			LABELS "WillFail;Catch"
 	)
 endmacro()
-
 
 add_executable(Issue978 Issue978.cpp)
 build_should_fail(Issue978)

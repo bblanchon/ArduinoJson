@@ -25,5 +25,5 @@ add_test(Cpp20 Cpp20Tests)
 
 set_tests_properties(Cpp20
 	PROPERTIES
-		LABELS 		"Catch"
+		LABELS "Catch"
 )
