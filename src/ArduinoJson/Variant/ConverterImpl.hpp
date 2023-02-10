@@ -181,8 +181,6 @@ struct Converter<SerializedValue<T>,
   }
 };
 
-#if ARDUINOJSON_HAS_NULLPTR
-
 template <>
 struct Converter<decltype(nullptr)> : private VariantAttorney {
   static void toJson(decltype(nullptr), JsonVariant dst) {
@@ -196,8 +194,6 @@ struct Converter<decltype(nullptr)> : private VariantAttorney {
     return data == 0 || data->isNull();
   }
 };
-
-#endif
 
 #if ARDUINOJSON_ENABLE_ARDUINO_STREAM
 

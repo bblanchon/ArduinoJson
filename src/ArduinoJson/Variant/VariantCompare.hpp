@@ -75,12 +75,10 @@ struct NullComparer : ComparerBase {
   }
 };
 
-#if ARDUINOJSON_HAS_NULLPTR
 template <>
 struct Comparer<decltype(nullptr), void> : NullComparer {
   explicit Comparer(decltype(nullptr)) : NullComparer() {}
 };
-#endif
 
 struct ArrayComparer : ComparerBase {
   const CollectionData* _rhs;

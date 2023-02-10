@@ -4,14 +4,6 @@
 
 #pragma once
 
-#ifndef ARDUINOJSON_HAS_NULLPTR
-#  if __cplusplus >= 201103L
-#    define ARDUINOJSON_HAS_NULLPTR 1
-#  else
-#    define ARDUINOJSON_HAS_NULLPTR 0
-#  endif
-#endif
-
 // Support std::istream and std::ostream
 #ifndef ARDUINOJSON_ENABLE_STD_STREAM
 #  ifdef __has_include
@@ -215,7 +207,7 @@
 #  endif
 #endif
 
-#if ARDUINOJSON_HAS_NULLPTR && defined(nullptr)
+#if defined(nullptr)
 #  error nullptr is defined as a macro. Remove the faulty #define or #undef nullptr
 // See https://github.com/bblanchon/ArduinoJson/issues/1355
 #endif
