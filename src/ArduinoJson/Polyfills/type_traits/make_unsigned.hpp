@@ -39,11 +39,4 @@ struct make_unsigned<signed long long> : type_identity<unsigned long long> {};
 template <>
 struct make_unsigned<unsigned long long> : type_identity<unsigned long long> {};
 #endif
-
-#if ARDUINOJSON_HAS_INT64
-template <>
-struct make_unsigned<signed __int64> : type_identity<unsigned __int64> {};
-template <>
-struct make_unsigned<unsigned __int64> : type_identity<unsigned __int64> {};
-#endif
 }  // namespace ARDUINOJSON_NAMESPACE

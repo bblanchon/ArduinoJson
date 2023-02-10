@@ -20,12 +20,6 @@
 #  endif
 #endif
 
-#if defined(_MSC_VER) && !ARDUINOJSON_HAS_LONG_LONG
-#  define ARDUINOJSON_HAS_INT64 1
-#else
-#  define ARDUINOJSON_HAS_INT64 0
-#endif
-
 // Support std::istream and std::ostream
 #ifndef ARDUINOJSON_ENABLE_STD_STREAM
 #  ifdef __has_include
