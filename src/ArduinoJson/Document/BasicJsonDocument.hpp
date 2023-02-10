@@ -52,11 +52,9 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   }
 
   // Move-constructor
-#if ARDUINOJSON_HAS_RVALUE_REFERENCES
   BasicJsonDocument(BasicJsonDocument&& src) : AllocatorOwner<TAllocator>(src) {
     moveAssignFrom(src);
   }
-#endif
 
   BasicJsonDocument(const JsonDocument& src) {
     copyAssignFrom(src);
@@ -90,12 +88,10 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     return *this;
   }
 
-#if ARDUINOJSON_HAS_RVALUE_REFERENCES
   BasicJsonDocument& operator=(BasicJsonDocument&& src) {
     moveAssignFrom(src);
     return *this;
   }
-#endif
 
   template <typename T>
   BasicJsonDocument& operator=(const T& src) {

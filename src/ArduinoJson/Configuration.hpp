@@ -4,12 +4,6 @@
 
 #pragma once
 
-#if __cplusplus >= 201103L
-#  define ARDUINOJSON_HAS_RVALUE_REFERENCES 1
-#else
-#  define ARDUINOJSON_HAS_RVALUE_REFERENCES 0
-#endif
-
 #ifndef ARDUINOJSON_HAS_NULLPTR
 #  if __cplusplus >= 201103L
 #    define ARDUINOJSON_HAS_NULLPTR 1
