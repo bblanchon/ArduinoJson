@@ -8,10 +8,6 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       CMAKE_GENERATOR: Visual Studio 15 2017
     - CMAKE_GENERATOR: Ninja
-      MINGW: MinGW # MinGW 32-bit 5.3.0
-    - CMAKE_GENERATOR: Ninja
-      MINGW32: i686-5.3.0-posix-dwarf-rt_v4-rev0 # MinGW-w64 5.3.0
-    - CMAKE_GENERATOR: Ninja
       MINGW32: i686-6.3.0-posix-dwarf-rt_v5-rev1 # MinGW-w64 6.3.0 i686
     - CMAKE_GENERATOR: Ninja
       MINGW64: x86_64-6.3.0-posix-seh-rt_v5-rev1 # MinGW-w64 6.3.0 x86_64

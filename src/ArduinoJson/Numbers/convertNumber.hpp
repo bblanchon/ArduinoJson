@@ -8,9 +8,7 @@
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wconversion"
 #elif defined(__GNUC__)
-#  if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-#    pragma GCC diagnostic push
-#  endif
+#  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
@@ -133,7 +131,5 @@ TOut convertNumber(TIn value) {
 #if defined(__clang__)
 #  pragma clang diagnostic pop
 #elif defined(__GNUC__)
-#  if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-#    pragma GCC diagnostic pop
-#  endif
+#  pragma GCC diagnostic pop
 #endif
