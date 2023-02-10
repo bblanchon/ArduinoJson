@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Drop support for C++98/C++03. Minimum required is C++11.
+
 v6.20.1 (2023-02-08)
 -------
 

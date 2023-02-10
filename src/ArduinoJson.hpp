@@ -4,6 +4,10 @@
 
 #pragma once
 
+#if __cplusplus < 201103L && (!defined(_MSC_VER) || _MSC_VER < 1910)
+#  error ArduinoJson requires C++11 or newer. Configure your compiler for C++11 or downgrade ArduinoJson to 6.20.
+#endif
+
 #include "ArduinoJson/Configuration.hpp"
 
 // Include Arduino.h before stdlib.h to avoid conflict with atexit()

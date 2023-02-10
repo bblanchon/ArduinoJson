@@ -1,6 +1,6 @@
 # CAUTION: this file is invoked by https://github.com/google/oss-fuzz
 
-CXXFLAGS += -I../../src -DARDUINOJSON_DEBUG=1
+CXXFLAGS += -I../../src -DARDUINOJSON_DEBUG=1 -std=c++11
 
 all: \
 	$(OUT)/json_fuzzer \
