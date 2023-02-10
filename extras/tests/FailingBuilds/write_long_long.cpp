@@ -9,10 +9,6 @@
 #  error This test requires sizeof(long) < 8
 #endif
 
-#if !ARDUINOJSON_HAS_LONG_LONG
-#  error This test requires C++11
-#endif
-
 int main() {
   DynamicJsonDocument doc(1024);
   doc["dummy"] = static_cast<long long>(42);

@@ -5,10 +5,8 @@
 #pragma once
 
 #if __cplusplus >= 201103L
-#  define ARDUINOJSON_HAS_LONG_LONG 1
 #  define ARDUINOJSON_HAS_RVALUE_REFERENCES 1
 #else
-#  define ARDUINOJSON_HAS_LONG_LONG 0
 #  define ARDUINOJSON_HAS_RVALUE_REFERENCES 0
 #endif
 
@@ -77,8 +75,7 @@
 
 // Store integral values with long (0) or long long (1)
 #ifndef ARDUINOJSON_USE_LONG_LONG
-#  if ARDUINOJSON_HAS_LONG_LONG && defined(__SIZEOF_POINTER__) && \
-          __SIZEOF_POINTER__ >= 4 ||                              \
+#  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ >= 4 || \
       defined(_MSC_VER)
 #    define ARDUINOJSON_USE_LONG_LONG 1
 #  endif

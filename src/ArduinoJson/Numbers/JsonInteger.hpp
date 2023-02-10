@@ -21,12 +21,8 @@ typedef unsigned long JsonUInt;
 
 }  // namespace ARDUINOJSON_NAMESPACE
 
-#if ARDUINOJSON_HAS_LONG_LONG && !ARDUINOJSON_USE_LONG_LONG
-#  define ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T)                  \
-    static_assert(sizeof(T) <= sizeof(ARDUINOJSON_NAMESPACE::JsonInteger), \
-                  "To use 64-bit integers with ArduinoJson, you must set " \
-                  "ARDUINOJSON_USE_LONG_LONG to 1. See "                   \
-                  "https://arduinojson.org/v6/api/config/use_long_long/");
-#else
-#  define ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T)
-#endif
+#define ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T)                  \
+  static_assert(sizeof(T) <= sizeof(ARDUINOJSON_NAMESPACE::JsonInteger), \
+                "To use 64-bit integers with ArduinoJson, you must set " \
+                "ARDUINOJSON_USE_LONG_LONG to 1. See "                   \
+                "https://arduinojson.org/v6/api/config/use_long_long/");

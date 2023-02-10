@@ -99,7 +99,6 @@ TEST_CASE("canConvertNumber<TOut, TIn>()") {
     CHECK(canConvertNumber<uint32_t, float>(4.294967296e+9f) == false);
   }
 
-#if ARDUINOJSON_HAS_LONG_LONG
   SECTION("float -> int64_t") {
     CHECK(canConvertNumber<int64_t, float>(0) == true);
     CHECK(canConvertNumber<int64_t, float>(-9.22337204e+18f) == true);
@@ -129,5 +128,4 @@ TEST_CASE("canConvertNumber<TOut, TIn>()") {
     CHECK(canConvertNumber<uint64_t, double>(1.844674407370955166e+19) ==
           false);
   }
-#endif
 }

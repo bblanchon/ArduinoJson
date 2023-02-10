@@ -18,9 +18,7 @@ struct is_signed : integral_constant<bool,
     is_same<typename remove_cv<T>::type, signed short>::value ||
     is_same<typename remove_cv<T>::type, signed int>::value ||
     is_same<typename remove_cv<T>::type, signed long>::value ||
-#if ARDUINOJSON_HAS_LONG_LONG
     is_same<typename remove_cv<T>::type, signed long long>::value ||
-#endif
     is_same<typename remove_cv<T>::type, float>::value ||
     is_same<typename remove_cv<T>::type, double>::value> {};
 // clang-format on
