@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Misc/SafeBoolIdiom.hpp>
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/pgmspace_generic.hpp>
 #include <ArduinoJson/Polyfills/preprocessor.hpp>
@@ -15,7 +14,7 @@
 
 namespace ARDUINOJSON_NAMESPACE {
 
-class DeserializationError : public SafeBoolIdom<DeserializationError> {
+class DeserializationError {
  public:
   enum Code {
     Ok,
@@ -53,9 +52,9 @@ class DeserializationError : public SafeBoolIdom<DeserializationError> {
     return lhs != rhs._code;
   }
 
-  // Behaves like a bool
-  operator bool_type() const {
-    return _code != Ok ? safe_true() : safe_false();
+  // Returns true if there is an error
+  explicit operator bool() const {
+    return _code != Ok;
   }
 
   // Returns internal enum, useful for switch statement

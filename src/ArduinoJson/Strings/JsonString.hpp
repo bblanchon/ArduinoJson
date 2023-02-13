@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Misc/SafeBoolIdiom.hpp>
-
 #if ARDUINOJSON_ENABLE_STD_STREAM
 #  include <ostream>
 #endif
@@ -14,7 +12,7 @@ namespace ARDUINOJSON_NAMESPACE {
 
 // A string.
 // https://arduinojson.org/v6/api/jsonstring/
-class JsonString : public SafeBoolIdom<JsonString> {
+class JsonString {
  public:
   enum Ownership { Copied, Linked };
 
@@ -47,9 +45,9 @@ class JsonString : public SafeBoolIdom<JsonString> {
     return _size;
   }
 
-  // safe bool idiom
-  operator bool_type() const {
-    return _data ? safe_true() : safe_false();
+  // Returns true if the string is non-null
+  explicit operator bool() const {
+    return _data != 0;
   }
 
   // Returns true if strings are equal.
