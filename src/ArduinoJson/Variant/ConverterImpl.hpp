@@ -50,12 +50,12 @@ struct Converter<
   static T fromJson(JsonVariantConst src) {
     ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
     auto data = getData(src);
-    return data ? data->asIntegral<T>() : T();
+    return data ? data->template asIntegral<T>() : T();
   }
 
   static bool checkJson(JsonVariantConst src) {
     auto data = getData(src);
-    return data && data->isInteger<T>();
+    return data && data->template isInteger<T>();
   }
 };
 
@@ -68,12 +68,12 @@ struct Converter<T, typename detail::enable_if<detail::is_enum<T>::value>::type>
 
   static T fromJson(JsonVariantConst src) {
     auto data = getData(src);
-    return data ? static_cast<T>(data->asIntegral<int>()) : T();
+    return data ? static_cast<T>(data->template asIntegral<int>()) : T();
   }
 
   static bool checkJson(JsonVariantConst src) {
     auto data = getData(src);
-    return data && data->isInteger<int>();
+    return data && data->template isInteger<int>();
   }
 };
 
@@ -108,7 +108,7 @@ struct Converter<
 
   static T fromJson(JsonVariantConst src) {
     auto data = getData(src);
-    return data ? data->asFloat<T>() : 0;
+    return data ? data->template asFloat<T>() : 0;
   }
 
   static bool checkJson(JsonVariantConst src) {
