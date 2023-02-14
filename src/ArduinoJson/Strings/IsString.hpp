@@ -7,7 +7,7 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T, typename Enable = void>
 struct IsString : false_type {};
@@ -17,4 +17,4 @@ struct IsString<
     T, typename make_void<typename StringAdapter<T>::AdaptedString>::type>
     : true_type {};
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

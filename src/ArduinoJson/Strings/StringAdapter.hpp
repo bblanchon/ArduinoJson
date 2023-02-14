@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TString, typename Enable = void>
 struct StringAdapter;
@@ -28,4 +28,4 @@ typename SizedStringAdapter<TChar*>::AdaptedString adaptString(TChar* p,
   return SizedStringAdapter<TChar*>::adapt(p, n);
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

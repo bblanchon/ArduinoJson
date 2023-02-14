@@ -7,30 +7,33 @@
 #include <ArduinoJson/Serialization/Writer.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <template <typename> class TSerializer, typename TWriter>
-size_t doSerialize(JsonVariantConst source, TWriter writer) {
+size_t doSerialize(ArduinoJson::JsonVariantConst source, TWriter writer) {
   TSerializer<TWriter> serializer(writer);
   return variantAccept(VariantAttorney::getData(source), serializer);
 }
 
 template <template <typename> class TSerializer, typename TDestination>
-size_t serialize(JsonVariantConst source, TDestination& destination) {
+size_t serialize(ArduinoJson::JsonVariantConst source,
+                 TDestination& destination) {
   Writer<TDestination> writer(destination);
   return doSerialize<TSerializer>(source, writer);
 }
 
 template <template <typename> class TSerializer>
 typename enable_if<!TSerializer<StaticStringWriter>::producesText, size_t>::type
-serialize(JsonVariantConst source, void* buffer, size_t bufferSize) {
+serialize(ArduinoJson::JsonVariantConst source, void* buffer,
+          size_t bufferSize) {
   StaticStringWriter writer(reinterpret_cast<char*>(buffer), bufferSize);
   return doSerialize<TSerializer>(source, writer);
 }
 
 template <template <typename> class TSerializer>
 typename enable_if<TSerializer<StaticStringWriter>::producesText, size_t>::type
-serialize(JsonVariantConst source, void* buffer, size_t bufferSize) {
+serialize(ArduinoJson::JsonVariantConst source, void* buffer,
+          size_t bufferSize) {
   StaticStringWriter writer(reinterpret_cast<char*>(buffer), bufferSize);
   size_t n = doSerialize<TSerializer>(source, writer);
   // add null-terminator for text output (not counted in the size)
@@ -41,8 +44,8 @@ serialize(JsonVariantConst source, void* buffer, size_t bufferSize) {
 
 template <template <typename> class TSerializer, typename TChar, size_t N>
 typename enable_if<IsChar<TChar>::value, size_t>::type serialize(
-    JsonVariantConst source, TChar (&buffer)[N]) {
+    ArduinoJson::JsonVariantConst source, TChar (&buffer)[N]) {
   return serialize<TSerializer>(source, buffer, N);
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

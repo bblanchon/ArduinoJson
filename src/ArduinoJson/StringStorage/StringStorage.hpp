@@ -7,7 +7,7 @@
 #include <ArduinoJson/StringStorage/StringCopier.hpp>
 #include <ArduinoJson/StringStorage/StringMover.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TInput>
 StringCopier makeStringStorage(TInput&, MemoryPool* pool) {
@@ -21,4 +21,4 @@ StringMover makeStringStorage(
     typename enable_if<!is_const<TChar>::value>::type* = 0) {
   return StringMover(reinterpret_cast<char*>(input));
 }
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <class T>
 struct is_std_string : false_type {};
@@ -37,4 +37,5 @@ class Writer<TDestination,
  private:
   TDestination* _str;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

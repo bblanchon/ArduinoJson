@@ -8,11 +8,11 @@
 #include <ArduinoJson/Polyfills/preprocessor.hpp>
 #include <ArduinoJson/version.hpp>
 
-#ifndef ARDUINOJSON_NAMESPACE
+#ifndef ARDUINOJSON_VERSION_NAMESPACE
 
-#  define ARDUINOJSON_NAMESPACE                                               \
+#  define ARDUINOJSON_VERSION_NAMESPACE                                       \
     ARDUINOJSON_CONCAT4(                                                      \
-        ARDUINOJSON_CONCAT4(ArduinoJson, ARDUINOJSON_VERSION_MAJOR,           \
+        ARDUINOJSON_CONCAT4(V, ARDUINOJSON_VERSION_MAJOR,                     \
                             ARDUINOJSON_VERSION_MINOR,                        \
                             ARDUINOJSON_VERSION_REVISION),                    \
         _,                                                                    \
@@ -24,3 +24,21 @@
             ARDUINOJSON_ENABLE_COMMENTS, ARDUINOJSON_DECODE_UNICODE))
 
 #endif
+
+#define ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE \
+  namespace ArduinoJson {                  \
+  inline namespace ARDUINOJSON_VERSION_NAMESPACE {
+
+#define ARDUINOJSON_END_PUBLIC_NAMESPACE \
+  }                                      \
+  }
+
+#define ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE        \
+  namespace ArduinoJson {                          \
+  inline namespace ARDUINOJSON_VERSION_NAMESPACE { \
+  namespace detail {
+
+#define ARDUINOJSON_END_PRIVATE_NAMESPACE \
+  }                                       \
+  }                                       \
+  }

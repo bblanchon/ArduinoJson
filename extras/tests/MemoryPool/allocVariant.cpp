@@ -5,7 +5,7 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 TEST_CASE("MemoryPool::allocVariant()") {
   char buffer[4096];

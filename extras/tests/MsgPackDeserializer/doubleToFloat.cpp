@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 template <typename T>
 static void check(const char* input, T expected) {

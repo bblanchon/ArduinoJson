@@ -24,7 +24,7 @@
 #  include <ArduinoJson/Strings/Adapters/FlashString.hpp>
 #endif
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TAdaptedString1, typename TAdaptedString2>
 typename enable_if<TAdaptedString1::typeSortKey <= TAdaptedString2::typeSortKey,
@@ -85,4 +85,4 @@ static void stringGetChars(TAdaptedString s, char* p, size_t n) {
   }
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

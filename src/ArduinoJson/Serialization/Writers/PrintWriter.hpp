@@ -6,7 +6,7 @@
 
 #include <Arduino.h>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDestination>
 class Writer<
@@ -27,4 +27,4 @@ class Writer<
   ::Print* _print;
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

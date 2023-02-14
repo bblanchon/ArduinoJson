@@ -11,8 +11,8 @@
 #include <catch.hpp>
 
 namespace my {
-using ARDUINOJSON_NAMESPACE::isinf;
-using ARDUINOJSON_NAMESPACE::isnan;
+using ArduinoJson::detail::isinf;
+using ArduinoJson::detail::isnan;
 }  // namespace my
 
 TEST_CASE("deserialize an integer") {

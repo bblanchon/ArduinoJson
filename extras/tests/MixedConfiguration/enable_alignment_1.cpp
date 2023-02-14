@@ -4,7 +4,7 @@
 #include <catch.hpp>
 
 TEST_CASE("ARDUINOJSON_ENABLE_ALIGNMENT == 1") {
-  using namespace ARDUINOJSON_NAMESPACE;
+  using namespace ArduinoJson::detail;
 
   const size_t N = sizeof(void*);
 

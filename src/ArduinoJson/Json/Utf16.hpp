@@ -18,7 +18,7 @@
 #  endif
 #endif
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 namespace Utf16 {
 inline bool isHighSurrogate(uint16_t codeunit) {
@@ -58,7 +58,7 @@ class Codepoint {
   uint32_t _codepoint;
 };
 }  // namespace Utf16
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE
 
 #if defined(__GNUC__)
 #  if __GNUC__ >= 8

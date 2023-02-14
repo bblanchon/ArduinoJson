@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 #if ARDUINOJSON_LITTLE_ENDIAN
 inline void swapBytes(uint8_t& a, uint8_t& b) {
@@ -43,4 +43,4 @@ template <typename T>
 inline void fixEndianess(T&) {}
 #endif
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

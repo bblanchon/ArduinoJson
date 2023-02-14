@@ -8,8 +8,6 @@
 #include <stdlib.h>  // malloc, free
 #include <string>
 
-using ARDUINOJSON_NAMESPACE::addPadding;
-
 class ArmoredAllocator {
  public:
   ArmoredAllocator() : _ptr(0), _size(0) {}

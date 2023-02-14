@@ -11,7 +11,7 @@
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct IsChar
@@ -140,4 +140,4 @@ struct SizedStringAdapter<TChar*,
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

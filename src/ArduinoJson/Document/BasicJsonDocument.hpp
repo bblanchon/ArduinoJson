@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Document/JsonDocument.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Helper to implement the "base-from-member" idiom
 // (we need to store the allocator before constructing JsonDocument)
@@ -62,13 +62,14 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   // Construct from variant, array, or object
   template <typename T>
-  BasicJsonDocument(
-      const T& src,
-      typename enable_if<
-          is_same<T, JsonVariant>::value ||
-          is_same<T, JsonVariantConst>::value || is_same<T, JsonArray>::value ||
-          is_same<T, JsonArrayConst>::value || is_same<T, JsonObject>::value ||
-          is_same<T, JsonObjectConst>::value>::type* = 0)
+  BasicJsonDocument(const T& src,
+                    typename detail::enable_if<
+                        detail::is_same<T, JsonVariant>::value ||
+                        detail::is_same<T, JsonVariantConst>::value ||
+                        detail::is_same<T, JsonArray>::value ||
+                        detail::is_same<T, JsonArrayConst>::value ||
+                        detail::is_same<T, JsonObject>::value ||
+                        detail::is_same<T, JsonObjectConst>::value>::type* = 0)
       : JsonDocument(allocPool(src.memoryUsage())) {
     set(src);
   }
@@ -134,17 +135,17 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   using AllocatorOwner<TAllocator>::allocator;
 
  private:
-  MemoryPool allocPool(size_t requiredSize) {
-    size_t capa = addPadding(requiredSize);
-    return MemoryPool(reinterpret_cast<char*>(this->allocate(capa)), capa);
+  detail::MemoryPool allocPool(size_t requiredSize) {
+    size_t capa = detail::addPadding(requiredSize);
+    return {reinterpret_cast<char*>(this->allocate(capa)), capa};
   }
 
   void reallocPool(size_t requiredSize) {
-    size_t capa = addPadding(requiredSize);
+    size_t capa = detail::addPadding(requiredSize);
     if (capa == _pool.capacity())
       return;
     freePool();
-    replacePool(allocPool(addPadding(requiredSize)));
+    replacePool(allocPool(detail::addPadding(requiredSize)));
   }
 
   void freePool() {
@@ -161,8 +162,8 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     _data = src._data;
     _pool = src._pool;
     src._data.setNull();
-    src._pool = MemoryPool(0, 0);
+    src._pool = {0, 0};
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

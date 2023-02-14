@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Drop support for C++98/C++03. Minimum required is C++11.
+* Remove `ARDUINOJSON_NAMESPACE`; use `ArduinoJson` instead.
 
 v6.20.1 (2023-02-08)
 -------

@@ -8,7 +8,7 @@
 #include <ArduinoJson/Numbers/JsonFloat.hpp>
 #include <ArduinoJson/Numbers/JsonInteger.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TResult>
 struct Visitor {
@@ -51,4 +51,4 @@ struct Visitor {
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

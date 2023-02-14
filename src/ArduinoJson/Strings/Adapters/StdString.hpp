@@ -8,7 +8,7 @@
 
 #include <string>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TCharTraits, typename TAllocator>
 struct StringAdapter<std::basic_string<char, TCharTraits, TAllocator>, void> {
@@ -20,4 +20,4 @@ struct StringAdapter<std::basic_string<char, TCharTraits, TAllocator>, void> {
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

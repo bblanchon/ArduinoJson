@@ -8,15 +8,15 @@
 #include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class JsonObject;
 
 // A read-only reference to an array in a JsonDocument
 // https://arduinojson.org/v6/api/jsonarrayconst/
-class JsonArrayConst : public VariantOperators<JsonArrayConst> {
+class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   friend class JsonArray;
-  friend class VariantAttorney;
+  friend class detail::VariantAttorney;
 
  public:
   typedef JsonArrayConstIterator iterator;
@@ -39,7 +39,8 @@ class JsonArrayConst : public VariantOperators<JsonArrayConst> {
   FORCE_INLINE JsonArrayConst() : _data(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonArrayConst(const CollectionData* data) : _data(data) {}
+  FORCE_INLINE JsonArrayConst(const detail::CollectionData* data)
+      : _data(data) {}
 
   // Compares the content of two arrays.
   // Returns true if the two arrays are equal.
@@ -107,28 +108,28 @@ class JsonArrayConst : public VariantOperators<JsonArrayConst> {
   }
 
  private:
-  const VariantData* getData() const {
+  const detail::VariantData* getData() const {
     return collectionToVariant(_data);
   }
 
-  const CollectionData* _data;
+  const detail::CollectionData* _data;
 };
 
 template <>
-struct Converter<JsonArrayConst> : private VariantAttorney {
+struct Converter<JsonArrayConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
   static JsonArrayConst fromJson(JsonVariantConst src) {
-    const VariantData* data = getData(src);
+    auto data = getData(src);
     return data ? data->asArray() : 0;
   }
 
   static bool checkJson(JsonVariantConst src) {
-    const VariantData* data = getData(src);
+    auto data = getData(src);
     return data && data->isArray();
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

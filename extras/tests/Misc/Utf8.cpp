@@ -7,7 +7,7 @@
 
 #include <string>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 static void testCodepoint(uint32_t codepoint, std::string expected) {
   char buffer[4096];

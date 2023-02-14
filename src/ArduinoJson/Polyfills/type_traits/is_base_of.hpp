@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // A meta-function that returns true if Derived inherits from TBase is an
 // integral type.
@@ -20,4 +20,5 @@ class is_base_of {
   static const bool value =
       sizeof(probe(reinterpret_cast<TDerived*>(0))) == sizeof(int);
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

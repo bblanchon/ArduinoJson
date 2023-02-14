@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class StringCopier {
  public:
@@ -68,4 +68,5 @@ class StringCopier {
   // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.UninitializedObject)
   size_t _size, _capacity;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

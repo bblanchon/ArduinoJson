@@ -10,7 +10,7 @@
 #include "is_integral.hpp"
 #include "is_same.hpp"
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct is_enum {
@@ -19,4 +19,4 @@ struct is_enum {
                             !is_floating_point<T>::value;
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

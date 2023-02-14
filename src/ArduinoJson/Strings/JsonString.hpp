@@ -8,7 +8,7 @@
 #  include <ostream>
 #endif
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A string.
 // https://arduinojson.org/v6/api/jsonstring/
@@ -81,4 +81,4 @@ class JsonString {
   Ownership _ownership;
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

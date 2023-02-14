@@ -9,7 +9,7 @@
 #include <ArduinoJson/Serialization/serialize.hpp>
 #include <ArduinoJson/Variant/Visitor.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TWriter>
 class JsonSerializer : public Visitor<size_t> {
@@ -115,10 +115,15 @@ class JsonSerializer : public Visitor<size_t> {
   TextFormatter<TWriter> _formatter;
 };
 
+ARDUINOJSON_END_PRIVATE_NAMESPACE
+
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
+
 // Produces a minified JSON document.
 // https://arduinojson.org/v6/api/json/serializejson/
 template <typename TDestination>
 size_t serializeJson(JsonVariantConst source, TDestination& destination) {
+  using namespace detail;
   return serialize<JsonSerializer>(source, destination);
 }
 
@@ -126,23 +131,25 @@ size_t serializeJson(JsonVariantConst source, TDestination& destination) {
 // https://arduinojson.org/v6/api/json/serializejson/
 inline size_t serializeJson(JsonVariantConst source, void* buffer,
                             size_t bufferSize) {
+  using namespace detail;
   return serialize<JsonSerializer>(source, buffer, bufferSize);
 }
 
 // Computes the length of the document that serializeJson() produces.
 // https://arduinojson.org/v6/api/json/measurejson/
 inline size_t measureJson(JsonVariantConst source) {
+  using namespace detail;
   return measure<JsonSerializer>(source);
 }
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 template <typename T>
-inline typename enable_if<is_convertible<T, JsonVariantConst>::value,
-                          std::ostream&>::type
+inline typename detail::enable_if<
+    detail::is_convertible<T, JsonVariantConst>::value, std::ostream&>::type
 operator<<(std::ostream& os, const T& source) {
   serializeJson(source, os);
   return os;
 }
 #endif
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

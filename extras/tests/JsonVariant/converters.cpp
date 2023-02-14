@@ -88,7 +88,7 @@ class Complex {
   double _real, _imag;
 };
 
-namespace ARDUINOJSON_NAMESPACE {
+namespace ArduinoJson {
 template <>
 struct Converter<Complex> {
   static void toJson(const Complex& src, JsonVariant dst) {
@@ -104,7 +104,7 @@ struct Converter<Complex> {
     return src["real"].is<double>() && src["imag"].is<double>();
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+}  // namespace ArduinoJson
 
 TEST_CASE("Custom converter with specialization") {
   DynamicJsonDocument doc(4096);
@@ -142,7 +142,7 @@ TEST_CASE("Custom converter with specialization") {
 }
 
 TEST_CASE("ConverterNeedsWriteableRef") {
-  using namespace ARDUINOJSON_NAMESPACE;
+  using namespace ArduinoJson::detail;
   CHECK(ConverterNeedsWriteableRef<int>::value == false);
   CHECK(ConverterNeedsWriteableRef<float>::value == false);
   CHECK(ConverterNeedsWriteableRef<JsonVariant>::value == true);

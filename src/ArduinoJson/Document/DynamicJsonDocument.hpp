@@ -8,7 +8,7 @@
 
 #include <stdlib.h>  // malloc, free
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // The allocator of DynamicJsonDocument.
 struct DefaultAllocator {
@@ -29,4 +29,4 @@ struct DefaultAllocator {
 // https://arduinojson.org/v6/api/dynamicjsondocument/
 typedef BasicJsonDocument<DefaultAllocator> DynamicJsonDocument;
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

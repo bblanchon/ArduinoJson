@@ -6,8 +6,9 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
+namespace DeserializationOption {
 class Filter {
  public:
   explicit Filter(JsonVariantConst v) : _variant(v) {}
@@ -39,7 +40,9 @@ class Filter {
  private:
   JsonVariantConst _variant;
 };
+}  // namespace DeserializationOption
 
+namespace detail {
 struct AllowAllFilter {
   bool allow() const {
     return true;
@@ -62,5 +65,6 @@ struct AllowAllFilter {
     return AllowAllFilter();
   }
 };
+}  // namespace detail
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

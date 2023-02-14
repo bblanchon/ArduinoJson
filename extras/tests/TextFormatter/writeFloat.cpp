@@ -11,7 +11,7 @@
 #include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/Writer.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 template <typename TFloat>
 void check(TFloat input, const std::string& expected) {

@@ -53,7 +53,8 @@ process()
 }
 
 simplify_namespaces() {
-	perl -p0i -e 's|\}  // namespace ARDUINOJSON_NAMESPACE\r?\nnamespace ARDUINOJSON_NAMESPACE \{\r?\n||igs' "$1"
+	perl -p0i -e 's|ARDUINOJSON_END_PUBLIC_NAMESPACE\r?\nARDUINOJSON_BEGIN_PUBLIC_NAMESPACE\r?\n||igs' "$1"
+	perl -p0i -e 's|ARDUINOJSON_END_PRIVATE_NAMESPACE\r?\nARDUINOJSON_BEGIN_PRIVATE_NAMESPACE\r?\n||igs' "$1"
 	rm -f "$1.bak"
 }
 

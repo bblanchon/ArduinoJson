@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TWriter>
 class CountingDecorator {
@@ -30,4 +30,4 @@ class CountingDecorator {
   size_t _count;
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

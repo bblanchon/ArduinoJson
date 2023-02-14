@@ -7,14 +7,14 @@
 #include <ArduinoJson/Object/JsonObjectConst.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class JsonArray;
 
 // A reference to an object in a JsonDocument.
 // https://arduinojson.org/v6/api/jsonobject/
-class JsonObject : public VariantOperators<JsonObject> {
-  friend class VariantAttorney;
+class JsonObject : public detail::VariantOperators<JsonObject> {
+  friend class detail::VariantAttorney;
 
  public:
   typedef JsonObjectIterator iterator;
@@ -23,12 +23,12 @@ class JsonObject : public VariantOperators<JsonObject> {
   FORCE_INLINE JsonObject() : _data(0), _pool(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonObject(MemoryPool* buf, CollectionData* data)
+  FORCE_INLINE JsonObject(detail::MemoryPool* buf, detail::CollectionData* data)
       : _data(data), _pool(buf) {}
 
   operator JsonVariant() const {
     void* data = _data;  // prevent warning cast-align
-    return JsonVariant(_pool, reinterpret_cast<VariantData*>(data));
+    return JsonVariant(_pool, reinterpret_cast<detail::VariantData*>(data));
   }
 
   operator JsonObjectConst() const {
@@ -108,19 +108,21 @@ class JsonObject : public VariantOperators<JsonObject> {
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v6/api/jsonobject/subscript/
   template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value,
-                                  MemberProxy<JsonObject, TString> >::type
+  FORCE_INLINE typename detail::enable_if<
+      detail::IsString<TString>::value,
+      detail::MemberProxy<JsonObject, TString> >::type
   operator[](const TString& key) const {
-    return MemberProxy<JsonObject, TString>(*this, key);
+    return {*this, key};
   }
 
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v6/api/jsonobject/subscript/
   template <typename TChar>
-  FORCE_INLINE typename enable_if<IsString<TChar*>::value,
-                                  MemberProxy<JsonObject, TChar*> >::type
-  operator[](TChar* key) const {
-    return MemberProxy<JsonObject, TChar*>(*this, key);
+  FORCE_INLINE
+      typename detail::enable_if<detail::IsString<TChar*>::value,
+                                 detail::MemberProxy<JsonObject, TChar*> >::type
+      operator[](TChar* key) const {
+    return {*this, key};
   }
 
   // Removes the member at the specified iterator.
@@ -137,7 +139,7 @@ class JsonObject : public VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TString>
   FORCE_INLINE void remove(const TString& key) const {
-    removeMember(adaptString(key));
+    removeMember(detail::adaptString(key));
   }
 
   // Removes the member with the specified key.
@@ -145,23 +147,25 @@ class JsonObject : public VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TChar>
   FORCE_INLINE void remove(TChar* key) const {
-    removeMember(adaptString(key));
+    removeMember(detail::adaptString(key));
   }
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v6/api/jsonobject/containskey/
   template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value, bool>::type
-  containsKey(const TString& key) const {
-    return getMember(adaptString(key)) != 0;
+  FORCE_INLINE
+      typename detail::enable_if<detail::IsString<TString>::value, bool>::type
+      containsKey(const TString& key) const {
+    return getMember(detail::adaptString(key)) != 0;
   }
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v6/api/jsonobject/containskey/
   template <typename TChar>
-  FORCE_INLINE typename enable_if<IsString<TChar*>::value, bool>::type
-  containsKey(TChar* key) const {
-    return getMember(adaptString(key)) != 0;
+  FORCE_INLINE
+      typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
+      containsKey(TChar* key) const {
+    return getMember(detail::adaptString(key)) != 0;
   }
 
   // Creates an array and adds it to the object.
@@ -189,20 +193,20 @@ class JsonObject : public VariantOperators<JsonObject> {
   }
 
  private:
-  MemoryPool* getPool() const {
+  detail::MemoryPool* getPool() const {
     return _pool;
   }
 
-  VariantData* getData() const {
-    return collectionToVariant(_data);
+  detail::VariantData* getData() const {
+    return detail::collectionToVariant(_data);
   }
 
-  VariantData* getOrCreateData() const {
-    return collectionToVariant(_data);
+  detail::VariantData* getOrCreateData() const {
+    return detail::collectionToVariant(_data);
   }
 
   template <typename TAdaptedString>
-  inline VariantData* getMember(TAdaptedString key) const {
+  inline detail::VariantData* getMember(TAdaptedString key) const {
     if (!_data)
       return 0;
     return _data->getMember(key);
@@ -215,23 +219,23 @@ class JsonObject : public VariantOperators<JsonObject> {
     _data->removeMember(key);
   }
 
-  CollectionData* _data;
-  MemoryPool* _pool;
+  detail::CollectionData* _data;
+  detail::MemoryPool* _pool;
 };
 
 template <>
-struct Converter<JsonObject> : private VariantAttorney {
+struct Converter<JsonObject> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
   static JsonObject fromJson(JsonVariant src) {
-    VariantData* data = getData(src);
-    MemoryPool* pool = getPool(src);
+    auto data = getData(src);
+    auto pool = getPool(src);
     return JsonObject(pool, data != 0 ? data->asObject() : 0);
   }
 
-  static InvalidConversion<JsonVariantConst, JsonObject> fromJson(
+  static detail::InvalidConversion<JsonVariantConst, JsonObject> fromJson(
       JsonVariantConst);
 
   static bool checkJson(JsonVariantConst) {
@@ -239,8 +243,9 @@ struct Converter<JsonObject> : private VariantAttorney {
   }
 
   static bool checkJson(JsonVariant src) {
-    VariantData* data = getData(src);
+    auto data = getData(src);
     return data && data->isObject();
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE

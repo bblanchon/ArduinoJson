@@ -9,7 +9,7 @@
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 inline VariantSlot* CollectionData::addSlot(MemoryPool* pool) {
   VariantSlot* slot = pool->allocVariant();
@@ -194,4 +194,4 @@ inline void CollectionData::movePointers(ptrdiff_t stringDistance,
     slot->movePointers(stringDistance, variantDistance);
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -5,7 +5,7 @@
 #include <ArduinoJson/Json/Utf16.hpp>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 static void testUtf16Codepoint(uint16_t codeunit, uint32_t expectedCodepoint) {
   Utf16::Codepoint cp;

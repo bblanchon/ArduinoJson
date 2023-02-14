@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Variant/VariantRefBase.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // A proxy class to get or set a member of an object.
 // https://arduinojson.org/v6/api/jsonobject/subscript/
@@ -61,4 +61,4 @@ class MemberProxy
   TStringRef _key;
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

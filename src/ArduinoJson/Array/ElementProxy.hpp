@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Variant/VariantRefBase.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // A proxy class to get or set an element of an array.
 // https://arduinojson.org/v6/api/jsonarray/subscript/
@@ -57,4 +57,4 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream> >,
   size_t _index;
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

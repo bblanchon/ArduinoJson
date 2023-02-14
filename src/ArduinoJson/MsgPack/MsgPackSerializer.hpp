@@ -12,7 +12,7 @@
 #include <ArduinoJson/Serialization/serialize.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TWriter>
 class MsgPackSerializer : public Visitor<size_t> {
@@ -197,10 +197,15 @@ class MsgPackSerializer : public Visitor<size_t> {
   CountingDecorator<TWriter> _writer;
 };
 
+ARDUINOJSON_END_PRIVATE_NAMESPACE
+
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
+
 // Produces a MessagePack document.
 // https://arduinojson.org/v6/api/msgpack/serializemsgpack/
 template <typename TDestination>
 inline size_t serializeMsgPack(JsonVariantConst source, TDestination& output) {
+  using namespace ArduinoJson::detail;
   return serialize<MsgPackSerializer>(source, output);
 }
 
@@ -208,13 +213,15 @@ inline size_t serializeMsgPack(JsonVariantConst source, TDestination& output) {
 // https://arduinojson.org/v6/api/msgpack/serializemsgpack/
 inline size_t serializeMsgPack(JsonVariantConst source, void* output,
                                size_t size) {
+  using namespace ArduinoJson::detail;
   return serialize<MsgPackSerializer>(source, output, size);
 }
 
 // Computes the length of the document that serializeMsgPack() produces.
 // https://arduinojson.org/v6/api/msgpack/measuremsgpack/
 inline size_t measureMsgPack(JsonVariantConst source) {
+  using namespace ArduinoJson::detail;
   return measure<MsgPackSerializer>(source);
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

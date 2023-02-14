@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // A meta-function that return the type T without the reference modifier.
 template <typename T>
@@ -17,4 +17,5 @@ template <typename T>
 struct remove_reference<T&> {
   typedef T type;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

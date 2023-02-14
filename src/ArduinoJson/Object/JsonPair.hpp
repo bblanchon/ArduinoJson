@@ -8,14 +8,14 @@
 #include <ArduinoJson/Variant/JsonVariant.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A key-value pair.
 // https://arduinojson.org/v6/api/jsonobject/begin_end/
 class JsonPair {
  public:
   // INTERNAL USE ONLY
-  JsonPair(MemoryPool* pool, VariantSlot* slot) {
+  JsonPair(detail::MemoryPool* pool, detail::VariantSlot* slot) {
     if (slot) {
       _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
                                                      : JsonString::Linked);
@@ -42,7 +42,7 @@ class JsonPair {
 // https://arduinojson.org/v6/api/jsonobjectconst/begin_end/
 class JsonPairConst {
  public:
-  JsonPairConst(const VariantSlot* slot) {
+  JsonPairConst(const detail::VariantSlot* slot) {
     if (slot) {
       _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
                                                      : JsonString::Linked);
@@ -64,4 +64,5 @@ class JsonPairConst {
   JsonString _key;
   JsonVariantConst _value;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE

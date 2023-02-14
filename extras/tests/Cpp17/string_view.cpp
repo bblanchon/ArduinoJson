@@ -86,7 +86,7 @@ TEST_CASE("string_view") {
   }
 }
 
-using ARDUINOJSON_NAMESPACE::adaptString;
+using ArduinoJson::detail::adaptString;
 
 TEST_CASE("StringViewAdapter") {
   std::string_view str("bravoXXX", 5);

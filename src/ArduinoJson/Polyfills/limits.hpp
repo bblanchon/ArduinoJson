@@ -11,7 +11,7 @@
 #  pragma warning(disable : 4310)
 #endif
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // Differs from standard because we can't use the symbols "min" and "max"
 template <typename T, typename Enable = void>
@@ -38,7 +38,7 @@ struct numeric_limits<
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE
 
 #ifdef _MSC_VER
 #  pragma warning(pop)

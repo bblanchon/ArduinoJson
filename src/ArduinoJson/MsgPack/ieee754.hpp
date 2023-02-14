@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 inline void doubleToFloat(const uint8_t d[8], uint8_t f[4]) {
   f[0] = uint8_t((d[0] & 0xC0) | (d[0] << 3 & 0x3f) | (d[1] >> 5));
@@ -15,4 +15,4 @@ inline void doubleToFloat(const uint8_t d[8], uint8_t f[4]) {
   f[3] = uint8_t((d[3] << 3) | (d[4] >> 5));
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

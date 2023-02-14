@@ -5,7 +5,7 @@
 #pragma once
 
 #include "type_identity.hpp"
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct make_unsigned;
@@ -37,4 +37,5 @@ template <>
 struct make_unsigned<signed long long> : type_identity<unsigned long long> {};
 template <>
 struct make_unsigned<unsigned long long> : type_identity<unsigned long long> {};
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

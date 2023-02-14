@@ -9,7 +9,7 @@
 #include <ArduinoJson/Polyfills/pgmspace.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class FlashString {
  public:
@@ -88,4 +88,4 @@ struct SizedStringAdapter<const __FlashStringHelper*, void> {
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

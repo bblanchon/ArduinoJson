@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-typedef ARDUINOJSON_NAMESPACE::MemberProxy<JsonDocument&, const char*>
+typedef ArduinoJson::detail::MemberProxy<JsonDocument&, const char*>
     MemberProxy;
 
 TEST_CASE("MemberProxy::add()") {

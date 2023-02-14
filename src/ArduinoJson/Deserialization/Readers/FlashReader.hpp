@@ -6,7 +6,7 @@
 
 #include <Arduino.h>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <>
 struct Reader<const __FlashStringHelper*, void> {
@@ -52,4 +52,5 @@ struct BoundedReader<const __FlashStringHelper*, void> {
     return length;
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

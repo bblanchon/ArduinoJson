@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A special type of data that can be used to insert pregenerated JSON portions.
 template <typename T>
@@ -58,11 +58,12 @@ inline SerializedValue<T> serialized(T str) {
 
 template <typename TChar>
 inline SerializedValue<TChar*> serialized(TChar* p) {
-  return SerializedValue<TChar*>(p, adaptString(p).size());
+  return SerializedValue<TChar*>(p, detail::adaptString(p).size());
 }
 
 template <typename TChar>
 inline SerializedValue<TChar*> serialized(TChar* p, size_t n) {
   return SerializedValue<TChar*>(p, n);
 }
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE

@@ -17,7 +17,7 @@
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // uint32 -> int32
 // uint64 -> int32
@@ -126,7 +126,7 @@ template <typename TOut, typename TIn>
 TOut convertNumber(TIn value) {
   return canConvertNumber<TOut>(value) ? TOut(value) : 0;
 }
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop

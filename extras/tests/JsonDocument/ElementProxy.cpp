@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-typedef ARDUINOJSON_NAMESPACE::ElementProxy<JsonDocument&> ElementProxy;
+typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
 
 TEST_CASE("ElementProxy::add()") {
   DynamicJsonDocument doc(4096);

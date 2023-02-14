@@ -9,7 +9,7 @@
 #include <ArduinoJson/Variant/VariantTo.hpp>
 #include "JsonVariantConst.hpp"
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // Grants access to the internal variant API
 class VariantAttorney {
@@ -45,4 +45,4 @@ class VariantAttorney {
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

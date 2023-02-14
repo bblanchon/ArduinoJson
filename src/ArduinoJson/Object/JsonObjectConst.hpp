@@ -7,13 +7,13 @@
 #include <ArduinoJson/Object/JsonObjectIterator.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A read-only reference to an object in a JsonDocument.
 // https://arduinojson.org/v6/api/jsonobjectconst/
-class JsonObjectConst : public VariantOperators<JsonObjectConst> {
+class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   friend class JsonObject;
-  friend class VariantAttorney;
+  friend class detail::VariantAttorney;
 
  public:
   typedef JsonObjectConstIterator iterator;
@@ -22,7 +22,7 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   JsonObjectConst() : _data(0) {}
 
   // INTERNAL USE ONLY
-  JsonObjectConst(const CollectionData* data) : _data(data) {}
+  JsonObjectConst(const detail::CollectionData* data) : _data(data) {}
 
   operator JsonVariantConst() const {
     return JsonVariantConst(collectionToVariant(_data));
@@ -76,32 +76,32 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return getMember(adaptString(key)) != 0;
+    return getMember(detail::adaptString(key)) != 0;
   }
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
-    return getMember(adaptString(key)) != 0;
+    return getMember(detail::adaptString(key)) != 0;
   }
 
   // Gets the member with specified key.
   // https://arduinojson.org/v6/api/jsonobjectconst/subscript/
   template <typename TString>
-  FORCE_INLINE
-      typename enable_if<IsString<TString>::value, JsonVariantConst>::type
-      operator[](const TString& key) const {
-    return JsonVariantConst(getMember(adaptString(key)));
+  FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
+                                          JsonVariantConst>::type
+  operator[](const TString& key) const {
+    return JsonVariantConst(getMember(detail::adaptString(key)));
   }
 
   // Gets the member with specified key.
   // https://arduinojson.org/v6/api/jsonobjectconst/subscript/
   template <typename TChar>
-  FORCE_INLINE
-      typename enable_if<IsString<TChar*>::value, JsonVariantConst>::type
-      operator[](TChar* key) const {
-    return JsonVariantConst(getMember(adaptString(key)));
+  FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
+                                          JsonVariantConst>::type
+  operator[](TChar* key) const {
+    return JsonVariantConst(getMember(detail::adaptString(key)));
   }
 
   // Compares objects.
@@ -122,35 +122,35 @@ class JsonObjectConst : public VariantOperators<JsonObjectConst> {
   }
 
  private:
-  const VariantData* getData() const {
+  const detail::VariantData* getData() const {
     return collectionToVariant(_data);
   }
 
   template <typename TAdaptedString>
-  const VariantData* getMember(TAdaptedString key) const {
+  const detail::VariantData* getMember(TAdaptedString key) const {
     if (!_data)
       return 0;
     return _data->getMember(key);
   }
 
-  const CollectionData* _data;
+  const detail::CollectionData* _data;
 };
 
 template <>
-struct Converter<JsonObjectConst> : private VariantAttorney {
+struct Converter<JsonObjectConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
   static JsonObjectConst fromJson(JsonVariantConst src) {
-    const VariantData* data = getData(src);
+    auto data = getData(src);
     return data != 0 ? data->asObject() : 0;
   }
 
   static bool checkJson(JsonVariantConst src) {
-    const VariantData* data = getData(src);
+    auto data = getData(src);
     return data && data->isObject();
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

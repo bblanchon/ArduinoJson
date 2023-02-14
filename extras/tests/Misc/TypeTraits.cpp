@@ -7,7 +7,7 @@
 
 #include <sstream>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 class EmptyClass {};
 enum EmptyEnum {};

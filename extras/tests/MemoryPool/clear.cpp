@@ -6,7 +6,7 @@
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 static const size_t poolCapacity = 512;
 

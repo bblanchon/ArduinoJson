@@ -8,8 +8,6 @@
 #include <sstream>
 #include <utility>
 
-using ARDUINOJSON_NAMESPACE::addPadding;
-
 class SpyingAllocator {
  public:
   SpyingAllocator(const SpyingAllocator& src) : _log(src._log) {}

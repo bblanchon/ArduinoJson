@@ -8,7 +8,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <int Bits>
 struct int_t;
@@ -27,4 +27,5 @@ template <>
 struct int_t<32> {
   typedef int32_t type;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

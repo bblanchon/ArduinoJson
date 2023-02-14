@@ -7,8 +7,9 @@
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
+namespace DeserializationOption {
 class NestingLimit {
  public:
   NestingLimit() : _value(ARDUINOJSON_DEFAULT_NESTING_LIMIT) {}
@@ -26,4 +27,6 @@ class NestingLimit {
  private:
   uint8_t _value;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+}  // namespace DeserializationOption
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE

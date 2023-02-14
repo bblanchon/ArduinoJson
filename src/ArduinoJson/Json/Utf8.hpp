@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 namespace Utf8 {
 template <typename TStringBuilder>
@@ -43,4 +43,4 @@ inline void encodeCodepoint(uint32_t codepoint32, TStringBuilder& str) {
   }
 }
 }  // namespace Utf8
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

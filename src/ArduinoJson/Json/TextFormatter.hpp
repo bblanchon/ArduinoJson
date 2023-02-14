@@ -15,7 +15,7 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Serialization/CountingDecorator.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TWriter>
 class TextFormatter {
@@ -170,4 +170,5 @@ class TextFormatter {
  private:
   TextFormatter& operator=(const TextFormatter&);  // cannot be assigned
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

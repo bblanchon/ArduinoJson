@@ -7,7 +7,7 @@
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 struct SlotKeySetter {
   SlotKeySetter(VariantSlot* instance) : _instance(instance) {}
@@ -42,4 +42,4 @@ inline size_t slotSize(const VariantSlot* var) {
 inline VariantData* slotData(VariantSlot* slot) {
   return reinterpret_cast<VariantData*>(slot);
 }
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

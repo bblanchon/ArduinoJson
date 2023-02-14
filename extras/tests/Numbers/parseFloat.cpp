@@ -9,7 +9,7 @@
 #include <ArduinoJson.hpp>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 void checkFloat(const char* input, float expected) {
   CAPTURE(input);

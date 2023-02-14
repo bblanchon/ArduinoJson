@@ -6,7 +6,7 @@
 
 #include <ostream>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDestination>
 class Writer<
@@ -29,4 +29,5 @@ class Writer<
  private:
   std::ostream* _os;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

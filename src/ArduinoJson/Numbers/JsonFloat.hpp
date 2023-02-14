@@ -7,11 +7,12 @@
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 #if ARDUINOJSON_USE_DOUBLE
 typedef double JsonFloat;
 #else
 typedef float JsonFloat;
 #endif
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE

@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using ARDUINOJSON_NAMESPACE::addPadding;
+using ArduinoJson::detail::addPadding;
 
 static void REQUIRE_JSON(JsonDocument& doc, const std::string& expected) {
   std::string json;

@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 #ifndef isdigit
 inline bool isdigit(char c) {
@@ -17,4 +17,5 @@ inline bool isdigit(char c) {
 inline bool issign(char c) {
   return '-' == c || c == '+';
 }
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -15,7 +15,7 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TReader, typename TStringStorage>
 class JsonDeserializer {
@@ -29,7 +29,7 @@ class JsonDeserializer {
 
   template <typename TFilter>
   DeserializationError parse(VariantData& variant, TFilter filter,
-                             NestingLimit nestingLimit) {
+                             DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
     err = parseVariant(variant, filter, nestingLimit);
@@ -59,8 +59,9 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError::Code parseVariant(VariantData& variant, TFilter filter,
-                                          NestingLimit nestingLimit) {
+  DeserializationError::Code parseVariant(
+      VariantData& variant, TFilter filter,
+      DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
     err = skipSpacesAndComments();
@@ -110,7 +111,8 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError::Code skipVariant(NestingLimit nestingLimit) {
+  DeserializationError::Code skipVariant(
+      DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
     err = skipSpacesAndComments();
@@ -143,8 +145,9 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError::Code parseArray(CollectionData& array, TFilter filter,
-                                        NestingLimit nestingLimit) {
+  DeserializationError::Code parseArray(
+      CollectionData& array, TFilter filter,
+      DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
     if (nestingLimit.reached())
@@ -196,7 +199,8 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError::Code skipArray(NestingLimit nestingLimit) {
+  DeserializationError::Code skipArray(
+      DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
     if (nestingLimit.reached())
@@ -227,8 +231,9 @@ class JsonDeserializer {
   }
 
   template <typename TFilter>
-  DeserializationError::Code parseObject(CollectionData& object, TFilter filter,
-                                         NestingLimit nestingLimit) {
+  DeserializationError::Code parseObject(
+      CollectionData& object, TFilter filter,
+      DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
     if (nestingLimit.reached())
@@ -312,7 +317,8 @@ class JsonDeserializer {
     }
   }
 
-  DeserializationError::Code skipObject(NestingLimit nestingLimit) {
+  DeserializationError::Code skipObject(
+      DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
     if (nestingLimit.reached())
@@ -661,12 +667,17 @@ class JsonDeserializer {
                      // code
 };
 
+ARDUINOJSON_END_PRIVATE_NAMESPACE
+
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
+
 // Parses a JSON input and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TString>
 DeserializationError deserializeJson(
     JsonDocument& doc, const TString& input,
-    NestingLimit nestingLimit = NestingLimit()) {
+    DeserializationOption::NestingLimit nestingLimit = {}) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
 }
@@ -675,16 +686,21 @@ DeserializationError deserializeJson(
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TString>
 DeserializationError deserializeJson(
-    JsonDocument& doc, const TString& input, Filter filter,
-    NestingLimit nestingLimit = NestingLimit()) {
+    JsonDocument& doc, const TString& input,
+    DeserializationOption::Filter filter,
+    DeserializationOption::NestingLimit nestingLimit = {}) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TString>
-DeserializationError deserializeJson(JsonDocument& doc, const TString& input,
-                                     NestingLimit nestingLimit, Filter filter) {
+DeserializationError deserializeJson(
+    JsonDocument& doc, const TString& input,
+    DeserializationOption::NestingLimit nestingLimit,
+    DeserializationOption::Filter filter) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
@@ -693,7 +709,8 @@ DeserializationError deserializeJson(JsonDocument& doc, const TString& input,
 template <typename TStream>
 DeserializationError deserializeJson(
     JsonDocument& doc, TStream& input,
-    NestingLimit nestingLimit = NestingLimit()) {
+    DeserializationOption::NestingLimit nestingLimit = {}) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
 }
@@ -702,16 +719,20 @@ DeserializationError deserializeJson(
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TStream>
 DeserializationError deserializeJson(
-    JsonDocument& doc, TStream& input, Filter filter,
-    NestingLimit nestingLimit = NestingLimit()) {
+    JsonDocument& doc, TStream& input, DeserializationOption::Filter filter,
+    DeserializationOption::NestingLimit nestingLimit = {}) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TStream>
-DeserializationError deserializeJson(JsonDocument& doc, TStream& input,
-                                     NestingLimit nestingLimit, Filter filter) {
+DeserializationError deserializeJson(
+    JsonDocument& doc, TStream& input,
+    DeserializationOption::NestingLimit nestingLimit,
+    DeserializationOption::Filter filter) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
@@ -720,7 +741,8 @@ DeserializationError deserializeJson(JsonDocument& doc, TStream& input,
 template <typename TChar>
 DeserializationError deserializeJson(
     JsonDocument& doc, TChar* input,
-    NestingLimit nestingLimit = NestingLimit()) {
+    DeserializationOption::NestingLimit nestingLimit = {}) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit,
                                        AllowAllFilter());
 }
@@ -729,16 +751,20 @@ DeserializationError deserializeJson(
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TChar>
 DeserializationError deserializeJson(
-    JsonDocument& doc, TChar* input, Filter filter,
-    NestingLimit nestingLimit = NestingLimit()) {
+    JsonDocument& doc, TChar* input, DeserializationOption::Filter filter,
+    DeserializationOption::NestingLimit nestingLimit = {}) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TChar>
-DeserializationError deserializeJson(JsonDocument& doc, TChar* input,
-                                     NestingLimit nestingLimit, Filter filter) {
+DeserializationError deserializeJson(
+    JsonDocument& doc, TChar* input,
+    DeserializationOption::NestingLimit nestingLimit,
+    DeserializationOption::Filter filter) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, nestingLimit, filter);
 }
 
@@ -747,7 +773,8 @@ DeserializationError deserializeJson(JsonDocument& doc, TChar* input,
 template <typename TChar>
 DeserializationError deserializeJson(
     JsonDocument& doc, TChar* input, size_t inputSize,
-    NestingLimit nestingLimit = NestingLimit()) {
+    DeserializationOption::NestingLimit nestingLimit = {}) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,
                                        AllowAllFilter());
 }
@@ -756,8 +783,11 @@ DeserializationError deserializeJson(
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TChar>
 DeserializationError deserializeJson(
-    JsonDocument& doc, TChar* input, size_t inputSize, Filter filter,
-    NestingLimit nestingLimit = NestingLimit()) {
+    JsonDocument& doc, TChar* input, size_t inputSize,
+    DeserializationOption::Filter filter,
+    DeserializationOption::NestingLimit nestingLimit =
+        DeserializationOption::NestingLimit()) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,
                                        filter);
 }
@@ -765,11 +795,13 @@ DeserializationError deserializeJson(
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TChar>
-DeserializationError deserializeJson(JsonDocument& doc, TChar* input,
-                                     size_t inputSize,
-                                     NestingLimit nestingLimit, Filter filter) {
+DeserializationError deserializeJson(
+    JsonDocument& doc, TChar* input, size_t inputSize,
+    DeserializationOption::NestingLimit nestingLimit,
+    DeserializationOption::Filter filter) {
+  using namespace detail;
   return deserialize<JsonDeserializer>(doc, input, inputSize, nestingLimit,
                                        filter);
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

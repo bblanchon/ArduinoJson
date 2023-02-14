@@ -8,7 +8,7 @@
 #include "is_same.hpp"
 #include "remove_cv.hpp"
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // clang-format off
 template <typename T>
@@ -22,4 +22,5 @@ struct is_signed : integral_constant<bool,
     is_same<typename remove_cv<T>::type, float>::value ||
     is_same<typename remove_cv<T>::type, double>::value> {};
 // clang-format on
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

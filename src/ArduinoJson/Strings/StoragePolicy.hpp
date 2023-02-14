@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 namespace StringStoragePolicy {
 
@@ -15,4 +15,4 @@ struct LinkOrCopy {
 };
 }  // namespace StringStoragePolicy
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

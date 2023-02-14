@@ -13,7 +13,7 @@
 #include <ArduinoJson/Variant/Converter.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename A, typename B>
 struct choose_largest : conditional<(sizeof(A) > sizeof(B)), A, B> {};
@@ -150,4 +150,4 @@ inline T parseNumber(const char* s) {
   parseNumber(s, value);
   return Converter<T>::fromJson(JsonVariantConst(&value));
 }
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

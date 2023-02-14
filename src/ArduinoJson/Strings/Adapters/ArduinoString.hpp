@@ -9,7 +9,7 @@
 #include <ArduinoJson/Strings/Adapters/RamString.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct StringAdapter<
@@ -22,4 +22,4 @@ struct StringAdapter<
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

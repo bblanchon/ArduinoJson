@@ -12,7 +12,7 @@
 #  include <ostream>
 #endif
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class DeserializationError {
  public:
@@ -82,7 +82,7 @@ class DeserializationError {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(
         const char*, messages, ARDUINOJSON_EXPAND6({s0, s1, s2, s3, s4, s5}));
     return reinterpret_cast<const __FlashStringHelper*>(
-        pgm_read(messages + _code));
+        detail::pgm_read(messages + _code));
   }
 #endif
 
@@ -103,4 +103,4 @@ inline std::ostream& operator<<(std::ostream& s, DeserializationError::Code c) {
 }
 #endif
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PUBLIC_NAMESPACE

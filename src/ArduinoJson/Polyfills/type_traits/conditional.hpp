@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <bool Condition, class TrueType, class FalseType>
 struct conditional {
@@ -17,4 +17,5 @@ template <class TrueType, class FalseType>
 struct conditional<false, TrueType, FalseType> {
   typedef FalseType type;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -5,7 +5,7 @@
 #include <limits>
 
 namespace my {
-using ARDUINOJSON_NAMESPACE::isnan;
+using ArduinoJson::detail::isnan;
 }  // namespace my
 
 TEST_CASE("ARDUINOJSON_ENABLE_NAN == 1") {

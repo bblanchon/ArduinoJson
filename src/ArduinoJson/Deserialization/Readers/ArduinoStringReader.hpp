@@ -6,7 +6,7 @@
 
 #include <Arduino.h>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TSource>
 struct Reader<TSource,
@@ -16,4 +16,4 @@ struct Reader<TSource,
       : BoundedReader<const char*>(s.c_str(), s.length()) {}
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

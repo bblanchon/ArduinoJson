@@ -7,14 +7,14 @@
 #include <ArduinoJson/Array/ElementProxy.hpp>
 #include <ArduinoJson/Array/JsonArrayConst.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class JsonObject;
 
 // A reference to an array in a JsonDocument
 // https://arduinojson.org/v6/api/jsonarray/
-class JsonArray : public VariantOperators<JsonArray> {
-  friend class VariantAttorney;
+class JsonArray : public detail::VariantOperators<JsonArray> {
+  friend class detail::VariantAttorney;
 
  public:
   typedef JsonArrayIterator iterator;
@@ -23,14 +23,14 @@ class JsonArray : public VariantOperators<JsonArray> {
   FORCE_INLINE JsonArray() : _data(0), _pool(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonArray(MemoryPool* pool, CollectionData* data)
+  FORCE_INLINE JsonArray(detail::MemoryPool* pool, detail::CollectionData* data)
       : _data(data), _pool(pool) {}
 
   // Returns a JsonVariant pointing to the array.
   // https://arduinojson.org/v6/api/jsonvariant/
   operator JsonVariant() {
     void* data = _data;  // prevent warning cast-align
-    return JsonVariant(_pool, reinterpret_cast<VariantData*>(data));
+    return JsonVariant(_pool, reinterpret_cast<detail::VariantData*>(data));
   }
 
   // Returns a read-only reference to the array.
@@ -118,8 +118,8 @@ class JsonArray : public VariantOperators<JsonArray> {
 
   // Gets or sets the element at the specified index.
   // https://arduinojson.org/v6/api/jsonarray/subscript/
-  FORCE_INLINE ElementProxy<JsonArray> operator[](size_t index) const {
-    return ElementProxy<JsonArray>(*this, index);
+  FORCE_INLINE detail::ElementProxy<JsonArray> operator[](size_t index) const {
+    return {*this, index};
   }
 
   // Creates an object and appends it to the array.
@@ -167,35 +167,35 @@ class JsonArray : public VariantOperators<JsonArray> {
   }
 
  private:
-  MemoryPool* getPool() const {
+  detail::MemoryPool* getPool() const {
     return _pool;
   }
 
-  VariantData* getData() const {
+  detail::VariantData* getData() const {
     return collectionToVariant(_data);
   }
 
-  VariantData* getOrCreateData() const {
+  detail::VariantData* getOrCreateData() const {
     return collectionToVariant(_data);
   }
 
-  CollectionData* _data;
-  MemoryPool* _pool;
+  detail::CollectionData* _data;
+  detail::MemoryPool* _pool;
 };
 
 template <>
-struct Converter<JsonArray> : private VariantAttorney {
+struct Converter<JsonArray> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
     variantCopyFrom(getData(dst), getData(src), getPool(dst));
   }
 
   static JsonArray fromJson(JsonVariant src) {
-    VariantData* data = getData(src);
-    MemoryPool* pool = getPool(src);
+    auto data = getData(src);
+    auto pool = getPool(src);
     return JsonArray(pool, data != 0 ? data->asArray() : 0);
   }
 
-  static InvalidConversion<JsonVariantConst, JsonArray> fromJson(
+  static detail::InvalidConversion<JsonVariantConst, JsonArray> fromJson(
       JsonVariantConst);
 
   static bool checkJson(JsonVariantConst) {
@@ -203,8 +203,9 @@ struct Converter<JsonArray> : private VariantAttorney {
   }
 
   static bool checkJson(JsonVariant src) {
-    VariantData* data = getData(src);
+    auto data = getData(src);
     return data && data->isArray();
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE

@@ -8,7 +8,7 @@
 
 #include <string_view>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <>
 struct StringAdapter<std::string_view, void> {
@@ -19,4 +19,4 @@ struct StringAdapter<std::string_view, void> {
   }
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

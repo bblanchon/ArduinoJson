@@ -5,7 +5,8 @@
 #include <ArduinoJson.hpp>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson;
+using namespace ArduinoJson::detail;
 
 TEST_CASE("Test unsigned integer overflow") {
   VariantData first, second;

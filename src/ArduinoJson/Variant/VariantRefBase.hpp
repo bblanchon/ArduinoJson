@@ -10,10 +10,11 @@
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
-
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 class JsonVariant;
+ARDUINOJSON_END_PUBLIC_NAMESPACE
 
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename>
 class ElementProxy;
 
@@ -107,7 +108,7 @@ class VariantRefBase : public VariantTag {
 
   // Shallow copies the specified value.
   // https://arduinojson.org/v6/api/jsonvariant/shallowcopy/
-  FORCE_INLINE void shallowCopy(JsonVariantConst target) {
+  FORCE_INLINE void shallowCopy(ArduinoJson::JsonVariantConst target) {
     VariantData* data = getOrCreateData();
     if (!data)
       return;
@@ -285,13 +286,13 @@ class VariantRefBase : public VariantTag {
   }
 
  private:
-  FORCE_INLINE JsonVariant getVariant() const;
+  FORCE_INLINE ArduinoJson::JsonVariant getVariant() const;
 
-  FORCE_INLINE JsonVariantConst getVariantConst() const {
-    return JsonVariantConst(getData());
+  FORCE_INLINE ArduinoJson::JsonVariantConst getVariantConst() const {
+    return ArduinoJson::JsonVariantConst(getData());
   }
 
-  FORCE_INLINE JsonVariant getOrCreateVariant() const;
+  FORCE_INLINE ArduinoJson::JsonVariant getOrCreateVariant() const;
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

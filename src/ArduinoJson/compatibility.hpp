@@ -20,4 +20,6 @@
 #define JsonBuffer ARDUINOJSON_DEPRECATION_ERROR(JsonBuffer, class)
 #define RawJson ARDUINOJSON_DEPRECATION_ERROR(RawJson, function)
 
+#define ARDUINOJSON_NAMESPACE _Pragma ("GCC warning \"ARDUINOJSON_NAMESPACE is deprecated, use ArduinoJson instead\"") ArduinoJson
+
 #endif

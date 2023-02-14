@@ -8,7 +8,7 @@
 
 #include <stddef.h>  // size_t
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct is_array : false_type {};
@@ -18,4 +18,5 @@ struct is_array<T[]> : true_type {};
 
 template <typename T, size_t N>
 struct is_array<T[N]> : true_type {};
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

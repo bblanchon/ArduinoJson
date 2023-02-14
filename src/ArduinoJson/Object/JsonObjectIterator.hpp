@@ -7,11 +7,12 @@
 #include <ArduinoJson/Object/JsonPair.hpp>
 #include <ArduinoJson/Variant/SlotFunctions.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class JsonPairPtr {
  public:
-  JsonPairPtr(MemoryPool* pool, VariantSlot* slot) : _pair(pool, slot) {}
+  JsonPairPtr(detail::MemoryPool* pool, detail::VariantSlot* slot)
+      : _pair(pool, slot) {}
 
   const JsonPair* operator->() const {
     return &_pair;
@@ -31,7 +32,8 @@ class JsonObjectIterator {
  public:
   JsonObjectIterator() : _slot(0) {}
 
-  explicit JsonObjectIterator(MemoryPool* pool, VariantSlot* slot)
+  explicit JsonObjectIterator(detail::MemoryPool* pool,
+                              detail::VariantSlot* slot)
       : _pool(pool), _slot(slot) {}
 
   JsonPair operator*() const {
@@ -60,13 +62,13 @@ class JsonObjectIterator {
   }
 
  private:
-  MemoryPool* _pool;
-  VariantSlot* _slot;
+  detail::MemoryPool* _pool;
+  detail::VariantSlot* _slot;
 };
 
 class JsonPairConstPtr {
  public:
-  JsonPairConstPtr(const VariantSlot* slot) : _pair(slot) {}
+  JsonPairConstPtr(const detail::VariantSlot* slot) : _pair(slot) {}
 
   const JsonPairConst* operator->() const {
     return &_pair;
@@ -86,7 +88,8 @@ class JsonObjectConstIterator {
  public:
   JsonObjectConstIterator() : _slot(0) {}
 
-  explicit JsonObjectConstIterator(const VariantSlot* slot) : _slot(slot) {}
+  explicit JsonObjectConstIterator(const detail::VariantSlot* slot)
+      : _slot(slot) {}
 
   JsonPairConst operator*() const {
     return JsonPairConst(_slot);
@@ -114,6 +117,7 @@ class JsonObjectConstIterator {
   }
 
  private:
-  const VariantSlot* _slot;
+  const detail::VariantSlot* _slot;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE

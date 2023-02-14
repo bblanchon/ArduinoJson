@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct IsCharOrVoid {
@@ -48,4 +48,4 @@ struct BoundedReader<TSource*,
                                     reinterpret_cast<const char*>(ptr) + len) {}
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -7,7 +7,7 @@
 
 #include <sstream>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 TEST_CASE("deserializeMsgPack() filter") {
   StaticJsonDocument<4096> doc;

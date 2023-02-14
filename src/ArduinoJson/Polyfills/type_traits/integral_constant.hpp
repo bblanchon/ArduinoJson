@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T, T v>
 struct integral_constant {
@@ -16,4 +16,4 @@ struct integral_constant {
 typedef integral_constant<bool, true> true_type;
 typedef integral_constant<bool, false> false_type;
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

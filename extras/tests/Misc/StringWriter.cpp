@@ -8,7 +8,7 @@
 #include <catch.hpp>
 #include "custom_string.hpp"
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 template <typename StringWriter>
 static size_t print(StringWriter& writer, const char* s) {

@@ -14,7 +14,7 @@
 #include <ArduinoJson/Polyfills/preprocessor.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T, size_t = sizeof(T)>
 struct FloatTraits {};
@@ -262,4 +262,5 @@ struct FloatTraits<T, 4 /*32bits*/> {
     return forge(0xFf7fffff);
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

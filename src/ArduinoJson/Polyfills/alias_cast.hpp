@@ -10,7 +10,7 @@
 #include <ArduinoJson/Configuration.hpp>
 #include "math.hpp"
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T, typename F>
 struct alias_cast_t {
@@ -26,4 +26,5 @@ T alias_cast(F raw_data) {
   ac.raw = raw_data;
   return ac.data;
 }
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

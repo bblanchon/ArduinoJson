@@ -9,9 +9,13 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Variant/VariantTag.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class JsonVariantConst;
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE
+
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 CompareResult compare(JsonVariantConst lhs,
@@ -187,4 +191,5 @@ struct VariantOperators : VariantOperatorTag {
     return (compare(lhs, rhs) & COMPARE_RESULT_GREATER_OR_EQUAL) != 0;
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

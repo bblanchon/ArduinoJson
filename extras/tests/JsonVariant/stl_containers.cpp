@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace ARDUINOJSON_NAMESPACE {
+namespace ArduinoJson {
 template <typename T>
 struct Converter<std::vector<T> > {
   static void toJson(const std::vector<T>& src, JsonVariant dst) {
@@ -63,7 +63,7 @@ struct Converter<std::array<T, N> > {
     return result && size == N;
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+}  // namespace ArduinoJson
 
 TEST_CASE("vector<int>") {
   SECTION("toJson") {

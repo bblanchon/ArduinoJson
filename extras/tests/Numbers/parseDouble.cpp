@@ -9,7 +9,7 @@
 #include <ArduinoJson.hpp>
 #include <catch.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 void checkDouble(const char* input, double expected) {
   CAPTURE(input);

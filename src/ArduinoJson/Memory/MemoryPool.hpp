@@ -17,14 +17,14 @@
 // Computes the size required to store an array in a JsonDocument.
 // https://arduinojson.org/v6/how-to/determine-the-capacity-of-the-jsondocument/
 #define JSON_ARRAY_SIZE(NUMBER_OF_ELEMENTS) \
-  ((NUMBER_OF_ELEMENTS) * sizeof(ARDUINOJSON_NAMESPACE::VariantSlot))
+  ((NUMBER_OF_ELEMENTS) * sizeof(ArduinoJson::detail::VariantSlot))
 
 // Returns the size (in bytes) of an object with n elements.
 // Can be very handy to determine the size of a StaticMemoryPool.
 #define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
-  ((NUMBER_OF_ELEMENTS) * sizeof(ARDUINOJSON_NAMESPACE::VariantSlot))
+  ((NUMBER_OF_ELEMENTS) * sizeof(ArduinoJson::detail::VariantSlot))
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // _begin                                   _end
 // v                                           v
@@ -250,4 +250,4 @@ bool storeString(MemoryPool* pool, TAdaptedString str, TCallback callback) {
   return storeString(pool, str, str.storagePolicy(), callback);
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

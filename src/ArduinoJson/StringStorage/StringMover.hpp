@@ -7,7 +7,7 @@
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Strings/JsonString.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class StringMover {
  public:
@@ -44,4 +44,5 @@ class StringMover {
   char* _writePtr;
   char* _startPtr;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

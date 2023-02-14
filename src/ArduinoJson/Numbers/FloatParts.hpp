@@ -8,7 +8,7 @@
 #include <ArduinoJson/Numbers/FloatTraits.hpp>
 #include <ArduinoJson/Polyfills/math.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TFloat>
 struct FloatParts {
@@ -84,4 +84,5 @@ struct FloatParts {
     return powersOf10;
   }
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

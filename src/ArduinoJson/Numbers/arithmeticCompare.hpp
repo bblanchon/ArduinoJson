@@ -7,7 +7,7 @@
 #include <ArduinoJson/Numbers/JsonInteger.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 enum CompareResult {
   COMPARE_RESULT_DIFFER = 0,
@@ -117,4 +117,4 @@ CompareResult arithmeticCompareNegateRight(
   return arithmeticCompare(static_cast<T1>(rhs), -lhs);
 }
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE

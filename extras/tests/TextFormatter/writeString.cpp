@@ -7,7 +7,7 @@
 #include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/Writers/StaticStringWriter.hpp>
 
-using namespace ARDUINOJSON_NAMESPACE;
+using namespace ArduinoJson::detail;
 
 void check(const char* input, std::string expected) {
   char output[64] = {0};

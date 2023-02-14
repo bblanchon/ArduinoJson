@@ -8,7 +8,7 @@
 
 #include <stdlib.h>  // for size_t
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // The default reader is a simple wrapper for Readers that are not copiable
 template <typename TSource, typename Enable = void>
@@ -33,7 +33,8 @@ struct BoundedReader {
   // no default implementation because we need to pass the size to the
   // constructor
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE
 
 #include <ArduinoJson/Deserialization/Readers/IteratorReader.hpp>
 #include <ArduinoJson/Deserialization/Readers/RamReader.hpp>

@@ -19,7 +19,7 @@
 #endif
 // clang-format on
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename From, typename To>
 struct is_convertible {
@@ -33,7 +33,7 @@ struct is_convertible {
   static const bool value = sizeof(probe(_from)) == sizeof(int);
 };
 
-}  // namespace ARDUINOJSON_NAMESPACE
+ARDUINOJSON_END_PRIVATE_NAMESPACE
 
 #ifdef _MSC_VER
 #  pragma warning(pop)

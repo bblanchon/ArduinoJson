@@ -53,7 +53,7 @@ TEST_CASE("Flash strings") {
 }
 
 TEST_CASE("parseNumber()") {  // tables are in Flash
-  using ARDUINOJSON_NAMESPACE::parseNumber;
+  using ArduinoJson::detail::parseNumber;
 
   CHECK(parseNumber<float>("1") == 1.f);
   CHECK(parseNumber<float>("1.23") == 1.23f);
@@ -95,7 +95,7 @@ TEST_CASE("memcpy_P") {
 }
 
 TEST_CASE("BoundedReader<const __FlashStringHelper*>") {
-  using namespace ARDUINOJSON_NAMESPACE;
+  using namespace ArduinoJson::detail;
 
   SECTION("read") {
     BoundedReader<const __FlashStringHelper*> reader(F("\x01\xFF"), 2);
@@ -135,7 +135,7 @@ TEST_CASE("BoundedReader<const __FlashStringHelper*>") {
 }
 
 TEST_CASE("Reader<const __FlashStringHelper*>") {
-  using namespace ARDUINOJSON_NAMESPACE;
+  using namespace ArduinoJson::detail;
 
   SECTION("read()") {
     Reader<const __FlashStringHelper*> reader(F("\x01\xFF\x00\x12"));

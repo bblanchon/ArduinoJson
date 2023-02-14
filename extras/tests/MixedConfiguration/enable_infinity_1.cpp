@@ -5,7 +5,7 @@
 #include <limits>
 
 namespace my {
-using ARDUINOJSON_NAMESPACE::isinf;
+using ArduinoJson::detail::isinf;
 }  // namespace my
 
 TEST_CASE("ARDUINOJSON_ENABLE_INFINITY == 1") {

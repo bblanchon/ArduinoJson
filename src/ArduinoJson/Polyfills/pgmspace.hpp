@@ -10,17 +10,18 @@
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 
-namespace ARDUINOJSON_NAMESPACE {
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 // Wraps a const char* so that the our functions are picked only if the
 // originals are missing
 struct pgm_p {
   pgm_p(const void* p) : address(reinterpret_cast<const char*>(p)) {}
   const char* address;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE
 
 #ifndef strlen_P
-inline size_t strlen_P(ARDUINOJSON_NAMESPACE::pgm_p s) {
+inline size_t strlen_P(ArduinoJson::detail::pgm_p s) {
   const char* p = s.address;
   ARDUINOJSON_ASSERT(p != NULL);
   while (pgm_read_byte(p))
@@ -30,7 +31,7 @@ inline size_t strlen_P(ARDUINOJSON_NAMESPACE::pgm_p s) {
 #endif
 
 #ifndef strncmp_P
-inline int strncmp_P(const char* a, ARDUINOJSON_NAMESPACE::pgm_p b, size_t n) {
+inline int strncmp_P(const char* a, ArduinoJson::detail::pgm_p b, size_t n) {
   const char* s1 = a;
   const char* s2 = b.address;
   ARDUINOJSON_ASSERT(s1 != NULL);
@@ -50,7 +51,7 @@ inline int strncmp_P(const char* a, ARDUINOJSON_NAMESPACE::pgm_p b, size_t n) {
 #endif
 
 #ifndef strcmp_P
-inline int strcmp_P(const char* a, ARDUINOJSON_NAMESPACE::pgm_p b) {
+inline int strcmp_P(const char* a, ArduinoJson::detail::pgm_p b) {
   const char* s1 = a;
   const char* s2 = b.address;
   ARDUINOJSON_ASSERT(s1 != NULL);
@@ -69,7 +70,7 @@ inline int strcmp_P(const char* a, ARDUINOJSON_NAMESPACE::pgm_p b) {
 #endif
 
 #ifndef memcmp_P
-inline int memcmp_P(const void* a, ARDUINOJSON_NAMESPACE::pgm_p b, size_t n) {
+inline int memcmp_P(const void* a, ArduinoJson::detail::pgm_p b, size_t n) {
   const uint8_t* p1 = reinterpret_cast<const uint8_t*>(a);
   const char* p2 = b.address;
   ARDUINOJSON_ASSERT(p1 != NULL);
@@ -85,7 +86,7 @@ inline int memcmp_P(const void* a, ARDUINOJSON_NAMESPACE::pgm_p b, size_t n) {
 #endif
 
 #ifndef memcpy_P
-inline void* memcpy_P(void* dst, ARDUINOJSON_NAMESPACE::pgm_p src, size_t n) {
+inline void* memcpy_P(void* dst, ArduinoJson::detail::pgm_p src, size_t n) {
   uint8_t* d = reinterpret_cast<uint8_t*>(dst);
   const char* s = src.address;
   ARDUINOJSON_ASSERT(d != NULL);
@@ -98,7 +99,7 @@ inline void* memcpy_P(void* dst, ARDUINOJSON_NAMESPACE::pgm_p src, size_t n) {
 #endif
 
 #ifndef pgm_read_dword
-inline uint32_t pgm_read_dword(ARDUINOJSON_NAMESPACE::pgm_p p) {
+inline uint32_t pgm_read_dword(ArduinoJson::detail::pgm_p p) {
   uint32_t result;
   memcpy_P(&result, p.address, 4);
   return result;
@@ -106,7 +107,7 @@ inline uint32_t pgm_read_dword(ARDUINOJSON_NAMESPACE::pgm_p p) {
 #endif
 
 #ifndef pgm_read_ptr
-inline void* pgm_read_ptr(ARDUINOJSON_NAMESPACE::pgm_p p) {
+inline void* pgm_read_ptr(ArduinoJson::detail::pgm_p p) {
   void* result;
   memcpy_P(&result, p.address, sizeof(result));
   return result;
