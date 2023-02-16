@@ -69,7 +69,7 @@ VariantRefBase<TDerived>::containsKey(TChar* key) const {
 template <typename TDerived>
 template <typename TString>
 inline typename enable_if<IsString<TString*>::value,
-                          MemberProxy<TDerived, TString*> >::type
+                          MemberProxy<TDerived, TString*>>::type
 VariantRefBase<TDerived>::operator[](TString* key) const {
   return MemberProxy<TDerived, TString*>(derived(), key);
 }
@@ -77,7 +77,7 @@ VariantRefBase<TDerived>::operator[](TString* key) const {
 template <typename TDerived>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value,
-                          MemberProxy<TDerived, TString> >::type
+                          MemberProxy<TDerived, TString>>::type
 VariantRefBase<TDerived>::operator[](const TString& key) const {
   return MemberProxy<TDerived, TString>(derived(), key);
 }

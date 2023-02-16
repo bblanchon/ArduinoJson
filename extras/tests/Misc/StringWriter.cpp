@@ -65,7 +65,7 @@ TEST_CASE("Writer<std::string>") {
 
 TEST_CASE("Writer<String>") {
   ::String output;
-  Writer< ::String> writer(output);
+  Writer<::String> writer(output);
 
   SECTION("write(char)") {
     SECTION("writes to temporary buffer") {

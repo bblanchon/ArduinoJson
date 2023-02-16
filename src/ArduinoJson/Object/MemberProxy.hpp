@@ -12,8 +12,8 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 // https://arduinojson.org/v6/api/jsonobject/subscript/
 template <typename TUpstream, typename TStringRef>
 class MemberProxy
-    : public VariantRefBase<MemberProxy<TUpstream, TStringRef> >,
-      public VariantOperators<MemberProxy<TUpstream, TStringRef> > {
+    : public VariantRefBase<MemberProxy<TUpstream, TStringRef>>,
+      public VariantOperators<MemberProxy<TUpstream, TStringRef>> {
   friend class VariantAttorney;
 
  public:

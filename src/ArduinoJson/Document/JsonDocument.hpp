@@ -173,7 +173,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename TString>
   FORCE_INLINE typename detail::enable_if<
       detail::IsString<TString>::value,
-      detail::MemberProxy<JsonDocument&, TString> >::type
+      detail::MemberProxy<JsonDocument&, TString>>::type
   operator[](const TString& key) {
     return {*this, key};
   }
@@ -183,7 +183,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename TChar>
   FORCE_INLINE typename detail::enable_if<
       detail::IsString<TChar*>::value,
-      detail::MemberProxy<JsonDocument&, TChar*> >::type
+      detail::MemberProxy<JsonDocument&, TChar*>>::type
   operator[](TChar* key) {
     return {*this, key};
   }

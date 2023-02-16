@@ -108,10 +108,10 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v6/api/jsonobject/subscript/
   template <typename TString>
-  FORCE_INLINE typename detail::enable_if<
-      detail::IsString<TString>::value,
-      detail::MemberProxy<JsonObject, TString> >::type
-  operator[](const TString& key) const {
+  FORCE_INLINE
+      typename detail::enable_if<detail::IsString<TString>::value,
+                                 detail::MemberProxy<JsonObject, TString>>::type
+      operator[](const TString& key) const {
     return {*this, key};
   }
 
@@ -120,7 +120,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   template <typename TChar>
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TChar*>::value,
-                                 detail::MemberProxy<JsonObject, TChar*> >::type
+                                 detail::MemberProxy<JsonObject, TChar*>>::type
       operator[](TChar* key) const {
     return {*this, key};
   }

@@ -12,7 +12,7 @@
 
 namespace ArduinoJson {
 template <typename T>
-struct Converter<std::vector<T> > {
+struct Converter<std::vector<T>> {
   static void toJson(const std::vector<T>& src, JsonVariant dst) {
     JsonArray array = dst.to<JsonArray>();
     for (T item : src)
@@ -36,7 +36,7 @@ struct Converter<std::vector<T> > {
 };
 
 template <typename T, size_t N>
-struct Converter<std::array<T, N> > {
+struct Converter<std::array<T, N>> {
   static void toJson(const std::array<T, N>& src, JsonVariant dst) {
     JsonArray array = dst.to<JsonArray>();
     for (T item : src)
@@ -79,7 +79,7 @@ TEST_CASE("vector<int>") {
     doc.add(1);
     doc.add(2);
 
-    auto v = doc.as<std::vector<int> >();
+    auto v = doc.as<std::vector<int>>();
     REQUIRE(v.size() == 2);
     CHECK(v[0] == 1);
     CHECK(v[1] == 2);
@@ -87,14 +87,14 @@ TEST_CASE("vector<int>") {
 
   SECTION("checkJson") {
     StaticJsonDocument<128> doc;
-    CHECK(doc.is<std::vector<int> >() == false);
+    CHECK(doc.is<std::vector<int>>() == false);
 
     doc.add(1);
     doc.add(2);
-    CHECK(doc.is<std::vector<int> >() == true);
+    CHECK(doc.is<std::vector<int>>() == true);
 
     doc.add("foo");
-    CHECK(doc.is<std::vector<int> >() == false);
+    CHECK(doc.is<std::vector<int>>() == false);
   }
 }
 

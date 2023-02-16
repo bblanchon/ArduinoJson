@@ -161,7 +161,7 @@ convertToJson(const T& src, JsonVariant dst) {
 }
 
 template <>
-struct Converter<SerializedValue<const char*> >
+struct Converter<SerializedValue<const char*>>
     : private detail::VariantAttorney {
   static void toJson(SerializedValue<const char*> src, JsonVariant dst) {
     auto data = getData(dst);

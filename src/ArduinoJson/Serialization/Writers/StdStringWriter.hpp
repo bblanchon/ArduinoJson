@@ -15,7 +15,7 @@ template <class T>
 struct is_std_string : false_type {};
 
 template <class TCharTraits, class TAllocator>
-struct is_std_string<std::basic_string<char, TCharTraits, TAllocator> >
+struct is_std_string<std::basic_string<char, TCharTraits, TAllocator>>
     : true_type {};
 
 template <typename TDestination>

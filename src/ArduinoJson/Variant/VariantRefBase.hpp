@@ -234,14 +234,14 @@ class VariantRefBase : public VariantTag {
   // https://arduinojson.org/v6/api/jsonvariant/subscript/
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value,
-                                  MemberProxy<TDerived, TString> >::type
+                                  MemberProxy<TDerived, TString>>::type
   operator[](const TString& key) const;
 
   // Gets or sets an object member.
   // https://arduinojson.org/v6/api/jsonvariant/subscript/
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value,
-                                  MemberProxy<TDerived, TChar*> >::type
+                                  MemberProxy<TDerived, TChar*>>::type
   operator[](TChar* key) const;
 
   // Creates an array and adds it to the object.

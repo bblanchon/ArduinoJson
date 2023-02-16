@@ -9,7 +9,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <>
-class Writer< ::String, void> {
+class Writer<::String, void> {
   static const size_t bufferCapacity = ARDUINOJSON_STRING_BUFFER_SIZE;
 
  public:
