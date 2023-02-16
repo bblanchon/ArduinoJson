@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Namespace.hpp>
+#include <ArduinoJson/Polyfills/utility.hpp>
 
 #include <stdlib.h>  // for size_t
 
@@ -55,3 +56,18 @@ ARDUINOJSON_END_PRIVATE_NAMESPACE
 #if ARDUINOJSON_ENABLE_STD_STREAM
 #  include <ArduinoJson/Deserialization/Readers/StdStreamReader.hpp>
 #endif
+
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
+
+template <typename TInput>
+Reader<typename remove_reference<TInput>::type> makeReader(TInput&& input) {
+  return Reader<typename remove_reference<TInput>::type>{
+      detail::forward<TInput>(input)};
+}
+
+template <typename TChar>
+BoundedReader<TChar*> makeReader(TChar* input, size_t inputSize) {
+  return BoundedReader<TChar*>{input, inputSize};
+}
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -566,134 +566,20 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Parses a MessagePack input and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TString>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, const TString& input,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
+template <typename... Args>
+DeserializationError deserializeMsgPack(JsonDocument& doc, Args&&... args) {
   using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit,
-                                          AllowAllFilter());
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TString>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, const TString& input,
-    DeserializationOption::Filter filter,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TString>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, const TString& input,
-    DeserializationOption::NestingLimit nestingLimit,
-    DeserializationOption::Filter filter) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
+  return deserialize<MsgPackDeserializer>(doc, detail::forward<Args>(args)...);
 }
 
 // Parses a MessagePack input and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TStream>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TStream& input,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
+template <typename TChar, typename... Args>
+DeserializationError deserializeMsgPack(JsonDocument& doc, TChar* input,
+                                        Args&&... args) {
   using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit,
-                                          AllowAllFilter());
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TStream>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TStream& input, DeserializationOption::Filter filter,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TStream>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TStream& input,
-    DeserializationOption::NestingLimit nestingLimit,
-    DeserializationOption::Filter filter) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
-}
-
-// Parses a MessagePack input and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TChar>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TChar* input,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit,
-                                          AllowAllFilter());
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TChar>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TChar* input, DeserializationOption::Filter filter,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TChar>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TChar* input,
-    DeserializationOption::NestingLimit nestingLimit,
-    DeserializationOption::Filter filter) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, nestingLimit, filter);
-}
-
-// Parses a MessagePack input and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TChar>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TChar* input, size_t inputSize,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit,
-                                          AllowAllFilter());
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TChar>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TChar* input, size_t inputSize,
-    DeserializationOption::Filter filter,
-    DeserializationOption::NestingLimit nestingLimit = {}) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit,
-                                          filter);
-}
-
-// Parses a MessagePack input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TChar>
-DeserializationError deserializeMsgPack(
-    JsonDocument& doc, TChar* input, size_t inputSize,
-    DeserializationOption::NestingLimit nestingLimit,
-    DeserializationOption::Filter filter) {
-  using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input, inputSize, nestingLimit,
-                                          filter);
+  return deserialize<MsgPackDeserializer>(doc, input,
+                                          detail::forward<Args>(args)...);
 }
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE
