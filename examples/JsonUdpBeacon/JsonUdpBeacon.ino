@@ -1,5 +1,5 @@
 // ArduinoJson - https://arduinojson.org
-// Copyright © 2014-2022, Benoit BLANCHON
+// Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 //
 // This example shows how to send a JSON document to a UDP socket.

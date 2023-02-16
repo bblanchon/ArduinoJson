@@ -1,5 +1,5 @@
 # ArduinoJson - https://arduinojson.org
-# Copyright © 2014-2022, Benoit BLANCHON
+# Copyright © 2014-2023, Benoit BLANCHON
 # MIT License
 
 if(MSVC_VERSION LESS 1910)

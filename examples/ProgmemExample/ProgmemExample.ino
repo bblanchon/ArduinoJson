@@ -1,5 +1,5 @@
 // ArduinoJson - https://arduinojson.org
-// Copyright © 2014-2022, Benoit BLANCHON
+// Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 //
 // This example shows the different ways you can use Flash strings with
