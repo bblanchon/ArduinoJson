@@ -22,6 +22,8 @@ class TextFormatter {
  public:
   explicit TextFormatter(TWriter writer) : _writer(writer) {}
 
+  TextFormatter& operator=(const TextFormatter&) = delete;
+
   // Returns the number of bytes sent to the TWriter implementation.
   size_t bytesWritten() const {
     return _writer.count();
@@ -166,9 +168,6 @@ class TextFormatter {
 
  protected:
   CountingDecorator<TWriter> _writer;
-
- private:
-  TextFormatter& operator=(const TextFormatter&);  // cannot be assigned
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

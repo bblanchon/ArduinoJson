@@ -20,6 +20,9 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   friend class detail::VariantAttorney;
 
  public:
+  JsonDocument(const JsonDocument&) = delete;
+  JsonDocument& operator=(const JsonDocument&) = delete;
+
   // Casts the root to the specified type.
   // https://arduinojson.org/v6/api/jsondocument/as/
   template <typename T>
@@ -302,10 +305,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
   detail::MemoryPool _pool;
   detail::VariantData _data;
-
- private:
-  JsonDocument(const JsonDocument&);
-  JsonDocument& operator=(const JsonDocument&);
 
  protected:
   detail::MemoryPool* getPool() {

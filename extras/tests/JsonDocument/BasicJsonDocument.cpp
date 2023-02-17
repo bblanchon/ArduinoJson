@@ -12,6 +12,7 @@ class SpyingAllocator {
  public:
   SpyingAllocator(const SpyingAllocator& src) : _log(src._log) {}
   SpyingAllocator(std::ostream& log) : _log(log) {}
+  SpyingAllocator& operator=(const SpyingAllocator& src) = delete;
 
   void* allocate(size_t n) {
     _log << "A" << n;
@@ -23,8 +24,6 @@ class SpyingAllocator {
   }
 
  private:
-  SpyingAllocator& operator=(const SpyingAllocator& src);
-
   std::ostream& _log;
 };
 

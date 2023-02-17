@@ -11,6 +11,7 @@ class CustomReader {
 
  public:
   CustomReader(const char* input) : _stream(input) {}
+  CustomReader(const CustomReader&) = delete;
 
   int read() {
     return _stream.get();
@@ -20,7 +21,4 @@ class CustomReader {
     _stream.read(buffer, static_cast<std::streamsize>(length));
     return static_cast<size_t>(_stream.gcount());
   }
-
- private:
-  CustomReader(const CustomReader&);
 };
