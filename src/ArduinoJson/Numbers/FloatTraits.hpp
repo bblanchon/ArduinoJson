@@ -63,23 +63,6 @@ struct FloatTraits<T, 8 /*64bits*/> {
     return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
 
-  static pgm_ptr<T> negativeBinaryPowersOfTenPlusOne() {
-    ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
-        uint64_t, factors,
-        {
-            0x3FF0000000000000,  // 1e0
-            0x3FB999999999999A,  // 1e-1
-            0x3F50624DD2F1A9FC,  // 1e-3
-            0x3E7AD7F29ABCAF48,  // 1e-7
-            0x3CD203AF9EE75616,  // 1e-15
-            0x398039D665896880,  // 1e-31
-            0x32DA53FC9631D10D,  // 1e-63
-            0x2591544581B7DEC2,  // 1e-127
-            0x0AFE07B27DD78B14   // 1e-255
-        });
-    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
-  }
-
   static T nan() {
     return forge(0x7ff8000000000000);
   }
@@ -152,19 +135,6 @@ struct FloatTraits<T, 4 /*32bits*/> {
                                          0x322bcc77,  // 1e-8f
                                          0x24e69595,  // 1e-16f
                                          0x0a4fb11f   // 1e-32f
-                                     });
-    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
-  }
-
-  static pgm_ptr<T> negativeBinaryPowersOfTenPlusOne() {
-    ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
-                                     {
-                                         0x3f800000,  // 1e0f
-                                         0x3dcccccd,  // 1e-1f
-                                         0x3a83126f,  // 1e-3f
-                                         0x33d6bf95,  // 1e-7f
-                                         0x26901d7d,  // 1e-15f
-                                         0x0c01ceb3   // 1e-31f
                                      });
     return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
