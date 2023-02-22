@@ -31,19 +31,15 @@ struct FloatTraits<T, 8 /*64bits*/> {
 
   template <typename TExponent>
   static T make_float(T m, TExponent e) {
-    if (e > 0) {
-      for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1)
-          m *= positiveBinaryPowersOfTen()[index];
-        e >>= 1;
-      }
-    } else {
+    auto powersOfTen =
+        e > 0 ? positiveBinaryPowersOfTen() : negativeBinaryPowersOfTen();
+    if (e <= 0)
       e = TExponent(-e);
-      for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1)
-          m *= negativeBinaryPowersOfTen()[index];
-        e >>= 1;
-      }
+
+    for (uint8_t index = 0; e != 0; index++) {
+      if (e & 1)
+        m *= powersOfTen[index];
+      e >>= 1;
     }
     return m;
   }
@@ -151,19 +147,15 @@ struct FloatTraits<T, 4 /*32bits*/> {
 
   template <typename TExponent>
   static T make_float(T m, TExponent e) {
-    if (e > 0) {
-      for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1)
-          m *= positiveBinaryPowersOfTen()[index];
-        e >>= 1;
-      }
-    } else {
-      e = -e;
-      for (uint8_t index = 0; e != 0; index++) {
-        if (e & 1)
-          m *= negativeBinaryPowersOfTen()[index];
-        e >>= 1;
-      }
+    auto powersOfTen =
+        e > 0 ? positiveBinaryPowersOfTen() : negativeBinaryPowersOfTen();
+    if (e <= 0)
+      e = TExponent(-e);
+
+    for (uint8_t index = 0; e != 0; index++) {
+      if (e & 1)
+        m *= powersOfTen[index];
+      e >>= 1;
     }
     return m;
   }
