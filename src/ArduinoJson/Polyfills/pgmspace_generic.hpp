@@ -28,6 +28,14 @@ inline const T* pgm_read(const T* const* p) {
 inline uint32_t pgm_read(const uint32_t* p) {
   return pgm_read_dword(p);
 }
+
+template <typename T>
+inline T pgm_read(const T* p) {
+  T result;
+  memcpy_P(&result, p, sizeof(T));
+  return result;
+}
+
 #else
 
 #  ifndef ARDUINOJSON_DEFINE_PROGMEM_ARRAY

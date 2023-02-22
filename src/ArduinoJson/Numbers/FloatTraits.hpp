@@ -50,68 +50,65 @@ struct FloatTraits<T, 8 /*64bits*/> {
 
   static T positiveBinaryPowerOfTen(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
-        uint32_t, factors,
+        uint64_t, factors,
         {
-            0x40240000, 0x00000000,  // 1e1
-            0x40590000, 0x00000000,  // 1e2
-            0x40C38800, 0x00000000,  // 1e4
-            0x4197D784, 0x00000000,  // 1e8
-            0x4341C379, 0x37E08000,  // 1e16
-            0x4693B8B5, 0xB5056E17,  // 1e32
-            0x4D384F03, 0xE93FF9F5,  // 1e64
-            0x5A827748, 0xF9301D32,  // 1e128
-            0x75154FDD, 0x7F73BF3C   // 1e256
+            0x4024000000000000,  // 1e1
+            0x4059000000000000,  // 1e2
+            0x40C3880000000000,  // 1e4
+            0x4197D78400000000,  // 1e8
+            0x4341C37937E08000,  // 1e16
+            0x4693B8B5B5056E17,  // 1e32
+            0x4D384F03E93FF9F5,  // 1e64
+            0x5A827748F9301D32,  // 1e128
+            0x75154FDD7F73BF3C,  // 1e256
         });
-    return forge(pgm_read(factors + 2 * index),
-                 pgm_read(factors + 2 * index + 1));
+    return forge(pgm_read(factors + index));
   }
 
   static T negativeBinaryPowerOfTen(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
-        uint32_t, factors,
+        uint64_t, factors,
         {
-            0x3FB99999, 0x9999999A,  // 1e-1
-            0x3F847AE1, 0x47AE147B,  // 1e-2
-            0x3F1A36E2, 0xEB1C432D,  // 1e-4
-            0x3E45798E, 0xE2308C3A,  // 1e-8
-            0x3C9CD2B2, 0x97D889BC,  // 1e-16
-            0x3949F623, 0xD5A8A733,  // 1e-32
-            0x32A50FFD, 0x44F4A73D,  // 1e-64
-            0x255BBA08, 0xCF8C979D,  // 1e-128
-            0x0AC80628, 0x64AC6F43   // 1e-256
+            0x3FB999999999999A,  // 1e-1
+            0x3F847AE147AE147B,  // 1e-2
+            0x3F1A36E2EB1C432D,  // 1e-4
+            0x3E45798EE2308C3A,  // 1e-8
+            0x3C9CD2B297D889BC,  // 1e-16
+            0x3949F623D5A8A733,  // 1e-32
+            0x32A50FFD44F4A73D,  // 1e-64
+            0x255BBA08CF8C979D,  // 1e-128
+            0x0AC8062864AC6F43   // 1e-256
         });
-    return forge(pgm_read(factors + 2 * index),
-                 pgm_read(factors + 2 * index + 1));
+    return forge(pgm_read(factors + index));
   }
 
   static T negativeBinaryPowerOfTenPlusOne(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
-        uint32_t, factors,
+        uint64_t, factors,
         {
-            0x3FF00000, 0x00000000,  // 1e0
-            0x3FB99999, 0x9999999A,  // 1e-1
-            0x3F50624D, 0xD2F1A9FC,  // 1e-3
-            0x3E7AD7F2, 0x9ABCAF48,  // 1e-7
-            0x3CD203AF, 0x9EE75616,  // 1e-15
-            0x398039D6, 0x65896880,  // 1e-31
-            0x32DA53FC, 0x9631D10D,  // 1e-63
-            0x25915445, 0x81B7DEC2,  // 1e-127
-            0x0AFE07B2, 0x7DD78B14   // 1e-255
+            0x3FF0000000000000,  // 1e0
+            0x3FB999999999999A,  // 1e-1
+            0x3F50624DD2F1A9FC,  // 1e-3
+            0x3E7AD7F29ABCAF48,  // 1e-7
+            0x3CD203AF9EE75616,  // 1e-15
+            0x398039D665896880,  // 1e-31
+            0x32DA53FC9631D10D,  // 1e-63
+            0x2591544581B7DEC2,  // 1e-127
+            0x0AFE07B27DD78B14   // 1e-255
         });
-    return forge(pgm_read(factors + 2 * index),
-                 pgm_read(factors + 2 * index + 1));
+    return forge(pgm_read(factors + index));
   }
 
   static T nan() {
-    return forge(0x7ff80000, 0x00000000);
+    return forge(0x7ff8000000000000);
   }
 
   static T inf() {
-    return forge(0x7ff00000, 0x00000000);
+    return forge(0x7ff0000000000000);
   }
 
   static T highest() {
-    return forge(0x7FEFFFFF, 0xFFFFFFFF);
+    return forge(0x7FEFFFFFFFFFFFFF);
   }
 
   template <typename TOut>  // int64_t
@@ -119,7 +116,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
       typename enable_if<is_integral<TOut>::value && is_signed<TOut>::value &&
                              sizeof(TOut) == 8,
                          signed>::type* = 0) {
-    return forge(0x43DFFFFF, 0xFFFFFFFF);  //  9.2233720368547748e+18
+    return forge(0x43DFFFFFFFFFFFFF);  //  9.2233720368547748e+18
   }
 
   template <typename TOut>  // uint64_t
@@ -127,18 +124,18 @@ struct FloatTraits<T, 8 /*64bits*/> {
       typename enable_if<is_integral<TOut>::value && is_unsigned<TOut>::value &&
                              sizeof(TOut) == 8,
                          unsigned>::type* = 0) {
-    return forge(0x43EFFFFF, 0xFFFFFFFF);  //  1.8446744073709549568e+19
+    return forge(0x43EFFFFFFFFFFFFF);  //  1.8446744073709549568e+19
   }
 
   static T lowest() {
-    return forge(0xFFEFFFFF, 0xFFFFFFFF);
+    return forge(0xFFEFFFFFFFFFFFFF);
   }
 
   // constructs a double floating point values from its binary representation
   // we use this function to workaround platforms with single precision literals
   // (for example, when -fsingle-precision-constant is passed to GCC)
-  static T forge(uint32_t msb, uint32_t lsb) {
-    return alias_cast<T>((uint64_t(msb) << 32) | lsb);
+  static T forge(uint64_t bits) {
+    return alias_cast<T>(bits);
   }
 };
 
