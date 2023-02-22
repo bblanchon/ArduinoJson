@@ -79,8 +79,8 @@ class DeserializationError {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(char, s3, "InvalidInput");
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(char, s4, "NoMemory");
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(char, s5, "TooDeep");
-    ARDUINOJSON_DEFINE_PROGMEM_ARRAY(
-        const char*, messages, ARDUINOJSON_EXPAND6({s0, s1, s2, s3, s4, s5}));
+    ARDUINOJSON_DEFINE_PROGMEM_ARRAY(const char*, messages,
+                                     {s0, s1, s2, s3, s4, s5});
     return reinterpret_cast<const __FlashStringHelper*>(
         detail::pgm_read(messages + _code));
   }

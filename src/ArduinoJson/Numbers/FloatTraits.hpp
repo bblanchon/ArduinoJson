@@ -51,7 +51,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
   static T positiveBinaryPowerOfTen(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
         uint32_t, factors,
-        ARDUINOJSON_EXPAND18({
+        {
             0x40240000, 0x00000000,  // 1e1
             0x40590000, 0x00000000,  // 1e2
             0x40C38800, 0x00000000,  // 1e4
@@ -61,7 +61,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x4D384F03, 0xE93FF9F5,  // 1e64
             0x5A827748, 0xF9301D32,  // 1e128
             0x75154FDD, 0x7F73BF3C   // 1e256
-        }));
+        });
     return forge(pgm_read(factors + 2 * index),
                  pgm_read(factors + 2 * index + 1));
   }
@@ -69,7 +69,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
   static T negativeBinaryPowerOfTen(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
         uint32_t, factors,
-        ARDUINOJSON_EXPAND18({
+        {
             0x3FB99999, 0x9999999A,  // 1e-1
             0x3F847AE1, 0x47AE147B,  // 1e-2
             0x3F1A36E2, 0xEB1C432D,  // 1e-4
@@ -79,7 +79,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x32A50FFD, 0x44F4A73D,  // 1e-64
             0x255BBA08, 0xCF8C979D,  // 1e-128
             0x0AC80628, 0x64AC6F43   // 1e-256
-        }));
+        });
     return forge(pgm_read(factors + 2 * index),
                  pgm_read(factors + 2 * index + 1));
   }
@@ -87,7 +87,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
   static T negativeBinaryPowerOfTenPlusOne(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
         uint32_t, factors,
-        ARDUINOJSON_EXPAND18({
+        {
             0x3FF00000, 0x00000000,  // 1e0
             0x3FB99999, 0x9999999A,  // 1e-1
             0x3F50624D, 0xD2F1A9FC,  // 1e-3
@@ -97,7 +97,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x32DA53FC, 0x9631D10D,  // 1e-63
             0x25915445, 0x81B7DEC2,  // 1e-127
             0x0AFE07B2, 0x7DD78B14   // 1e-255
-        }));
+        });
     return forge(pgm_read(factors + 2 * index),
                  pgm_read(factors + 2 * index + 1));
   }
@@ -173,40 +173,40 @@ struct FloatTraits<T, 4 /*32bits*/> {
 
   static T positiveBinaryPowerOfTen(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
-                                     ARDUINOJSON_EXPAND6({
+                                     {
                                          0x41200000,  // 1e1f
                                          0x42c80000,  // 1e2f
                                          0x461c4000,  // 1e4f
                                          0x4cbebc20,  // 1e8f
                                          0x5a0e1bca,  // 1e16f
                                          0x749dc5ae   // 1e32f
-                                     }));
+                                     });
     return forge(pgm_read(factors + index));
   }
 
   static T negativeBinaryPowerOfTen(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
-                                     ARDUINOJSON_EXPAND6({
+                                     {
                                          0x3dcccccd,  // 1e-1f
                                          0x3c23d70a,  // 1e-2f
                                          0x38d1b717,  // 1e-4f
                                          0x322bcc77,  // 1e-8f
                                          0x24e69595,  // 1e-16f
                                          0x0a4fb11f   // 1e-32f
-                                     }));
+                                     });
     return forge(pgm_read(factors + index));
   }
 
   static T negativeBinaryPowerOfTenPlusOne(int index) {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
-                                     ARDUINOJSON_EXPAND6({
+                                     {
                                          0x3f800000,  // 1e0f
                                          0x3dcccccd,  // 1e-1f
                                          0x3a83126f,  // 1e-3f
                                          0x33d6bf95,  // 1e-7f
                                          0x26901d7d,  // 1e-15f
                                          0x0c01ceb3   // 1e-31f
-                                     }));
+                                     });
     return forge(pgm_read(factors + index));
   }
 

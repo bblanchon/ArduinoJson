@@ -23,7 +23,7 @@ inline uint8_t pgm_read_byte(const void* p) {
   return *reinterpret_cast<const uint8_t*>(convertFlashToPtr(p));
 }
 
-#define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, value)        \
-  static type const ARDUINOJSON_CONCAT2(name, _progmem)[] = value; \
-  static type const* name = reinterpret_cast<type const*>(         \
+#define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, ...)                \
+  static type const ARDUINOJSON_CONCAT2(name, _progmem)[] = __VA_ARGS__; \
+  static type const* name = reinterpret_cast<type const*>(               \
       convertPtrToFlash(ARDUINOJSON_CONCAT2(name, _progmem)));

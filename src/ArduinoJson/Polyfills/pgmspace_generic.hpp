@@ -16,8 +16,8 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 #if ARDUINOJSON_ENABLE_PROGMEM
 
 #  ifndef ARDUINOJSON_DEFINE_PROGMEM_ARRAY
-#    define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, value) \
-      static type const name[] PROGMEM = value;
+#    define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, ...) \
+      static type const name[] PROGMEM = __VA_ARGS__;
 #  endif
 
 template <typename T>
@@ -31,8 +31,8 @@ inline uint32_t pgm_read(const uint32_t* p) {
 #else
 
 #  ifndef ARDUINOJSON_DEFINE_PROGMEM_ARRAY
-#    define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, value) \
-      static type const name[] = value;
+#    define ARDUINOJSON_DEFINE_PROGMEM_ARRAY(type, name, ...) \
+      static type const name[] = __VA_ARGS__;
 #  endif
 
 template <typename T>
