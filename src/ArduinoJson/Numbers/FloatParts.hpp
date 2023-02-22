@@ -63,8 +63,8 @@ struct FloatParts {
 
     if (value >= ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD) {
       for (; index >= 0; index--) {
-        if (value >= traits::positiveBinaryPowerOfTen(index)) {
-          value *= traits::negativeBinaryPowerOfTen(index);
+        if (value >= traits::positiveBinaryPowersOfTen()[index]) {
+          value *= traits::negativeBinaryPowersOfTen()[index];
           powersOf10 = int16_t(powersOf10 + bit);
         }
         bit >>= 1;
@@ -73,8 +73,8 @@ struct FloatParts {
 
     if (value > 0 && value <= ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD) {
       for (; index >= 0; index--) {
-        if (value < traits::negativeBinaryPowerOfTenPlusOne(index)) {
-          value *= traits::positiveBinaryPowerOfTen(index);
+        if (value < traits::negativeBinaryPowersOfTenPlusOne()[index]) {
+          value *= traits::positiveBinaryPowersOfTen()[index];
           powersOf10 = int16_t(powersOf10 - bit);
         }
         bit >>= 1;

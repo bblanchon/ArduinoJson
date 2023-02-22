@@ -106,6 +106,29 @@ inline uint32_t pgm_read_dword(ArduinoJson::detail::pgm_p p) {
 }
 #endif
 
+#ifndef pgm_read_float
+inline float pgm_read_float(ArduinoJson::detail::pgm_p p) {
+  float result;
+  memcpy_P(&result, p.address, sizeof(float));
+  return result;
+}
+#endif
+
+#ifndef pgm_read_double
+#  if defined(__SIZEOF_DOUBLE__) && defined(__SIZEOF_FLOAT__) && \
+      __SIZEOF_DOUBLE__ == __SIZEOF_FLOAT__
+inline double pgm_read_double(ArduinoJson::detail::pgm_p p) {
+  return pgm_read_float(p.address);
+}
+#  else
+inline double pgm_read_double(ArduinoJson::detail::pgm_p p) {
+  double result;
+  memcpy_P(&result, p.address, sizeof(double));
+  return result;
+}
+#  endif
+#endif
+
 #ifndef pgm_read_ptr
 inline void* pgm_read_ptr(ArduinoJson::detail::pgm_p p) {
   void* result;

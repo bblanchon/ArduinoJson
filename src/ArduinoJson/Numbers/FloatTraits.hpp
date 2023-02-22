@@ -34,21 +34,21 @@ struct FloatTraits<T, 8 /*64bits*/> {
     if (e > 0) {
       for (uint8_t index = 0; e != 0; index++) {
         if (e & 1)
-          m *= positiveBinaryPowerOfTen(index);
+          m *= positiveBinaryPowersOfTen()[index];
         e >>= 1;
       }
     } else {
       e = TExponent(-e);
       for (uint8_t index = 0; e != 0; index++) {
         if (e & 1)
-          m *= negativeBinaryPowerOfTen(index);
+          m *= negativeBinaryPowersOfTen()[index];
         e >>= 1;
       }
     }
     return m;
   }
 
-  static T positiveBinaryPowerOfTen(int index) {
+  static pgm_ptr<T> positiveBinaryPowersOfTen() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
         uint64_t, factors,
         {
@@ -62,10 +62,10 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x5A827748F9301D32,  // 1e128
             0x75154FDD7F73BF3C,  // 1e256
         });
-    return forge(pgm_read(factors + index));
+    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
 
-  static T negativeBinaryPowerOfTen(int index) {
+  static pgm_ptr<T> negativeBinaryPowersOfTen() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
         uint64_t, factors,
         {
@@ -79,10 +79,10 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x255BBA08CF8C979D,  // 1e-128
             0x0AC8062864AC6F43   // 1e-256
         });
-    return forge(pgm_read(factors + index));
+    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
 
-  static T negativeBinaryPowerOfTenPlusOne(int index) {
+  static pgm_ptr<T> negativeBinaryPowersOfTenPlusOne() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
         uint64_t, factors,
         {
@@ -96,7 +96,7 @@ struct FloatTraits<T, 8 /*64bits*/> {
             0x2591544581B7DEC2,  // 1e-127
             0x0AFE07B27DD78B14   // 1e-255
         });
-    return forge(pgm_read(factors + index));
+    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
 
   static T nan() {
@@ -154,21 +154,21 @@ struct FloatTraits<T, 4 /*32bits*/> {
     if (e > 0) {
       for (uint8_t index = 0; e != 0; index++) {
         if (e & 1)
-          m *= positiveBinaryPowerOfTen(index);
+          m *= positiveBinaryPowersOfTen()[index];
         e >>= 1;
       }
     } else {
       e = -e;
       for (uint8_t index = 0; e != 0; index++) {
         if (e & 1)
-          m *= negativeBinaryPowerOfTen(index);
+          m *= negativeBinaryPowersOfTen()[index];
         e >>= 1;
       }
     }
     return m;
   }
 
-  static T positiveBinaryPowerOfTen(int index) {
+  static pgm_ptr<T> positiveBinaryPowersOfTen() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
                                      {
                                          0x41200000,  // 1e1f
@@ -178,10 +178,10 @@ struct FloatTraits<T, 4 /*32bits*/> {
                                          0x5a0e1bca,  // 1e16f
                                          0x749dc5ae   // 1e32f
                                      });
-    return forge(pgm_read(factors + index));
+    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
 
-  static T negativeBinaryPowerOfTen(int index) {
+  static pgm_ptr<T> negativeBinaryPowersOfTen() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
                                      {
                                          0x3dcccccd,  // 1e-1f
@@ -191,10 +191,10 @@ struct FloatTraits<T, 4 /*32bits*/> {
                                          0x24e69595,  // 1e-16f
                                          0x0a4fb11f   // 1e-32f
                                      });
-    return forge(pgm_read(factors + index));
+    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
 
-  static T negativeBinaryPowerOfTenPlusOne(int index) {
+  static pgm_ptr<T> negativeBinaryPowersOfTenPlusOne() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
                                      {
                                          0x3f800000,  // 1e0f
@@ -204,7 +204,7 @@ struct FloatTraits<T, 4 /*32bits*/> {
                                          0x26901d7d,  // 1e-15f
                                          0x0c01ceb3   // 1e-31f
                                      });
-    return forge(pgm_read(factors + index));
+    return pgm_ptr<T>(reinterpret_cast<const T*>(factors));
   }
 
   static T forge(uint32_t bits) {

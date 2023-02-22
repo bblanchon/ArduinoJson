@@ -29,11 +29,12 @@ inline uint32_t pgm_read(const uint32_t* p) {
   return pgm_read_dword(p);
 }
 
-template <typename T>
-inline T pgm_read(const T* p) {
-  T result;
-  memcpy_P(&result, p, sizeof(T));
-  return result;
+inline double pgm_read(const double* p) {
+  return pgm_read_double(p);
+}
+
+inline float pgm_read(const float* p) {
+  return pgm_read_float(p);
 }
 
 #else
@@ -49,5 +50,18 @@ inline T pgm_read(const T* p) {
 }
 
 #endif
+
+template <typename T>
+class pgm_ptr {
+ public:
+  explicit pgm_ptr(const T* ptr) : _ptr(ptr) {}
+
+  T operator[](intptr_t index) const {
+    return pgm_read(_ptr + index);
+  }
+
+ private:
+  const T* _ptr;
+};
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
