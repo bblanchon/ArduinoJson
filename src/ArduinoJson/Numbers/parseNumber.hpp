@@ -137,7 +137,7 @@ inline bool parseNumber(const char* s, VariantData& result) {
     return false;
 
   JsonFloat final_result =
-      traits::make_float(static_cast<JsonFloat>(mantissa), exponent);
+      make_float(static_cast<JsonFloat>(mantissa), exponent);
 
   result.setFloat(is_negative ? -final_result : final_result);
   return true;

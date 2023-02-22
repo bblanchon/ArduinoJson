@@ -29,21 +29,6 @@ struct FloatTraits<T, 8 /*64bits*/> {
   typedef int16_t exponent_type;
   static const exponent_type exponent_max = 308;
 
-  template <typename TExponent>
-  static T make_float(T m, TExponent e) {
-    auto powersOfTen =
-        e > 0 ? positiveBinaryPowersOfTen() : negativeBinaryPowersOfTen();
-    if (e <= 0)
-      e = TExponent(-e);
-
-    for (uint8_t index = 0; e != 0; index++) {
-      if (e & 1)
-        m *= powersOfTen[index];
-      e >>= 1;
-    }
-    return m;
-  }
-
   static pgm_ptr<T> positiveBinaryPowersOfTen() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(  //
         uint64_t, factors,
@@ -145,21 +130,6 @@ struct FloatTraits<T, 4 /*32bits*/> {
   typedef int8_t exponent_type;
   static const exponent_type exponent_max = 38;
 
-  template <typename TExponent>
-  static T make_float(T m, TExponent e) {
-    auto powersOfTen =
-        e > 0 ? positiveBinaryPowersOfTen() : negativeBinaryPowersOfTen();
-    if (e <= 0)
-      e = TExponent(-e);
-
-    for (uint8_t index = 0; e != 0; index++) {
-      if (e & 1)
-        m *= powersOfTen[index];
-      e >>= 1;
-    }
-    return m;
-  }
-
   static pgm_ptr<T> positiveBinaryPowersOfTen() {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(uint32_t, factors,
                                      {
@@ -251,5 +221,22 @@ struct FloatTraits<T, 4 /*32bits*/> {
     return forge(0xFf7fffff);
   }
 };
+
+template <typename TFloat, typename TExponent>
+inline TFloat make_float(TFloat m, TExponent e) {
+  using traits = FloatTraits<TFloat>;
+
+  auto powersOfTen = e > 0 ? traits::positiveBinaryPowersOfTen()
+                           : traits::negativeBinaryPowersOfTen();
+  if (e <= 0)
+    e = TExponent(-e);
+
+  for (uint8_t index = 0; e != 0; index++) {
+    if (e & 1)
+      m *= powersOfTen[index];
+    e >>= 1;
+  }
+  return m;
+}
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
