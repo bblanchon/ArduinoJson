@@ -9,6 +9,6 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
-T declval();
+T&& declval();
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

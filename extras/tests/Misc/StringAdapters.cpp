@@ -3,7 +3,6 @@
 // MIT License
 
 #define ARDUINOJSON_ENABLE_PROGMEM 1
-#define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
 
 #include "custom_string.hpp"
 #include "progmem_emulation.hpp"

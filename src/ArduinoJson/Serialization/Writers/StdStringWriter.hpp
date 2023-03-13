@@ -7,15 +7,17 @@
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
-#include <string>
-
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-template <class T>
+template <class...>
+using void_t = void;
+
+template <class T, typename = void>
 struct is_std_string : false_type {};
 
-template <class TCharTraits, class TAllocator>
-struct is_std_string<std::basic_string<char, TCharTraits, TAllocator>>
+template <class T>
+struct is_std_string<
+    T, void_t<decltype(T().push_back('a')), decltype(T().append(""))>>
     : true_type {};
 
 template <typename TDestination>
@@ -25,7 +27,7 @@ class Writer<TDestination,
   Writer(TDestination& str) : _str(&str) {}
 
   size_t write(uint8_t c) {
-    _str->operator+=(static_cast<char>(c));
+    _str->push_back(static_cast<char>(c));
     return 1;
   }
 

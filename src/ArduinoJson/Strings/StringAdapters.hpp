@@ -7,18 +7,7 @@
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/Adapters/JsonString.hpp>
 #include <ArduinoJson/Strings/Adapters/RamString.hpp>
-
-#if ARDUINOJSON_ENABLE_STD_STRING
-#  include <ArduinoJson/Strings/Adapters/StdString.hpp>
-#endif
-
-#if ARDUINOJSON_ENABLE_STRING_VIEW
-#  include <ArduinoJson/Strings/Adapters/StringView.hpp>
-#endif
-
-#if ARDUINOJSON_ENABLE_ARDUINO_STRING
-#  include <ArduinoJson/Strings/Adapters/ArduinoString.hpp>
-#endif
+#include <ArduinoJson/Strings/Adapters/StringObject.hpp>
 
 #if ARDUINOJSON_ENABLE_PROGMEM
 #  include <ArduinoJson/Strings/Adapters/FlashString.hpp>
