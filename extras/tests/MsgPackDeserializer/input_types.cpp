@@ -76,7 +76,7 @@ TEST_CASE("deserializeMsgPack(VLA)") {
   char vla[i];
   memcpy(vla, "\xDE\x00\x01\xA5Hello\xA5world", 15);
 
-  StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
+  DynamicJsonDocument doc(JSON_OBJECT_SIZE(1));
   DeserializationError err = deserializeMsgPack(doc, vla);
 
   REQUIRE(err == DeserializationError::Ok);

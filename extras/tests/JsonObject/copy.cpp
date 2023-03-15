@@ -72,7 +72,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("destination too small to store the key") {
-    StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc3;
+    DynamicJsonDocument doc3(JSON_OBJECT_SIZE(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1[std::string("hello")] = "world";
@@ -84,7 +84,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("destination too small to store the value") {
-    StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc3;
+    DynamicJsonDocument doc3(JSON_OBJECT_SIZE(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1["hello"] = std::string("world");

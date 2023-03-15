@@ -706,10 +706,10 @@ TEST_CASE("Filtering") {
 TEST_CASE("Zero-copy mode") {  // issue #1697
   char input[] = "{\"include\":42,\"exclude\":666}";
 
-  StaticJsonDocument<256> filter;
+  DynamicJsonDocument filter(256);
   filter["include"] = true;
 
-  StaticJsonDocument<256> doc;
+  DynamicJsonDocument doc(256);
   DeserializationError err =
       deserializeJson(doc, input, DeserializationOption::Filter(filter));
 
@@ -718,8 +718,8 @@ TEST_CASE("Zero-copy mode") {  // issue #1697
 }
 
 TEST_CASE("Overloads") {
-  StaticJsonDocument<256> doc;
-  StaticJsonDocument<256> filter;
+  DynamicJsonDocument doc(256);
+  DynamicJsonDocument filter(256);
 
   using namespace DeserializationOption;
 

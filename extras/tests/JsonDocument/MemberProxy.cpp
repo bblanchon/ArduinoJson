@@ -127,7 +127,7 @@ TEST_CASE("MemberProxy::operator|()") {
     JsonObject object = doc.to<JsonObject>();
     object["hello"] = "world";
 
-    StaticJsonDocument<0> emptyDoc;
+    DynamicJsonDocument emptyDoc(0);
     JsonObject anotherObject = object["hello"] | emptyDoc.to<JsonObject>();
 
     REQUIRE(anotherObject.isNull() == false);
@@ -288,7 +288,7 @@ TEST_CASE("MemberProxy cast to JsonVariant") {
 }
 
 TEST_CASE("MemberProxy::createNestedArray()") {
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
   JsonArray arr = doc["items"].createNestedArray();
   arr.add(42);
 
@@ -296,7 +296,7 @@ TEST_CASE("MemberProxy::createNestedArray()") {
 }
 
 TEST_CASE("MemberProxy::createNestedArray(key)") {
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
   JsonArray arr = doc["weather"].createNestedArray("temp");
   arr.add(42);
 
@@ -304,7 +304,7 @@ TEST_CASE("MemberProxy::createNestedArray(key)") {
 }
 
 TEST_CASE("MemberProxy::createNestedObject()") {
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
   JsonObject obj = doc["items"].createNestedObject();
   obj["value"] = 42;
 
@@ -312,7 +312,7 @@ TEST_CASE("MemberProxy::createNestedObject()") {
 }
 
 TEST_CASE("MemberProxy::createNestedObject(key)") {
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
   JsonObject obj = doc["status"].createNestedObject("weather");
   obj["temp"] = 42;
 
@@ -320,7 +320,7 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
 }
 
 TEST_CASE("MemberProxy::shallowCopy()") {
-  StaticJsonDocument<1024> doc1, doc2;
+  DynamicJsonDocument doc1(1024), doc2(1024);
   doc2["hello"] = "world";
   doc1["obj"].shallowCopy(doc2);
 

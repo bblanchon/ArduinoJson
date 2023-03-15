@@ -12,7 +12,7 @@
 #include <catch.hpp>
 
 TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 1") {
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
 
   SECTION("deserializeJson()") {
     SECTION("Deduplicate values") {

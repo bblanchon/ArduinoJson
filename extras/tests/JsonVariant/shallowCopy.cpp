@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::shallowCopy()") {
-  StaticJsonDocument<1024> doc1, doc2;
+  DynamicJsonDocument doc1(1024), doc2(1024);
   JsonVariant variant = doc1.to<JsonVariant>();
 
   SECTION("JsonVariant::shallowCopy(JsonDocument&)") {

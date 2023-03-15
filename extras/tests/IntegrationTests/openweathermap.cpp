@@ -53,7 +53,7 @@ TEST_CASE("OpenWeatherMap") {
       "]}";
   // clang-format on
 
-  StaticJsonDocument<512> filter;
+  DynamicJsonDocument filter(512);
   filter["list"][0]["dt"] = true;
   filter["list"][0]["main"]["temp"] = true;
   filter["list"][0]["weather"][0]["description"] = true;

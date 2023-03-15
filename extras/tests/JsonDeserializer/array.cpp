@@ -251,3 +251,86 @@ TEST_CASE("deserialize JSON array") {
     REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
   }
 }
+
+TEST_CASE("deserialize JSON array under memory constraints") {
+  SECTION("buffer of the right size for an empty array") {
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(0));
+    char input[] = "[]";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("buffer too small for an array with one element") {
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(0));
+    char input[] = "[1]";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("buffer of the right size for an array with one element") {
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1));
+    char input[] = "[1]";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("buffer too small for an array with a nested object") {
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(0));
+    char input[] = "[{}]";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("buffer of the right size for an array with a nested object") {
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0));
+    char input[] = "[{}]";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("don't store space characters") {
+    DynamicJsonDocument doc(100);
+
+    deserializeJson(doc, "  [ \"1234567\" ] ");
+
+    REQUIRE(JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(7) == doc.memoryUsage());
+    // note: we use a string of 8 bytes to be sure that the MemoryPool
+    // will not insert bytes to enforce alignement
+  }
+
+  SECTION("Should clear the JsonArray") {
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(4));
+    char input[] = "[1,2,3,4]";
+
+    deserializeJson(doc, input);
+    deserializeJson(doc, "[]");
+
+    JsonArray arr = doc.as<JsonArray>();
+    REQUIRE(arr.size() == 0);
+    REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
+  }
+
+  SECTION("buffer of the right size for an array with two element") {
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(2));
+    char input[] = "[1,2]";
+
+    DeserializationError err = deserializeJson(doc, input);
+    JsonArray arr = doc.as<JsonArray>();
+
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.is<JsonArray>());
+    REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(2));
+    REQUIRE(arr[0] == 1);
+    REQUIRE(arr[1] == 2);
+  }
+}

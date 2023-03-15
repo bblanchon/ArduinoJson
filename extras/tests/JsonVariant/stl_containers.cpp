@@ -69,13 +69,13 @@ TEST_CASE("vector<int>") {
   SECTION("toJson") {
     std::vector<int> v = {1, 2};
 
-    StaticJsonDocument<128> doc;
+    DynamicJsonDocument doc(128);
     doc.set(v);
     REQUIRE(doc.as<std::string>() == "[1,2]");
   }
 
   SECTION("fromJson") {
-    StaticJsonDocument<128> doc;
+    DynamicJsonDocument doc(128);
     doc.add(1);
     doc.add(2);
 
@@ -86,7 +86,7 @@ TEST_CASE("vector<int>") {
   }
 
   SECTION("checkJson") {
-    StaticJsonDocument<128> doc;
+    DynamicJsonDocument doc(128);
     CHECK(doc.is<std::vector<int>>() == false);
 
     doc.add(1);
@@ -106,13 +106,13 @@ TEST_CASE("array<int, 2>") {
     v[0] = 1;
     v[1] = 2;
 
-    StaticJsonDocument<128> doc;
+    DynamicJsonDocument doc(128);
     doc.set(v);
     REQUIRE(doc.as<std::string>() == "[1,2]");
   }
 
   SECTION("fromJson") {
-    StaticJsonDocument<128> doc;
+    DynamicJsonDocument doc(128);
     doc.add(1);
     doc.add(2);
 
@@ -123,7 +123,7 @@ TEST_CASE("array<int, 2>") {
   }
 
   SECTION("checkJson") {
-    StaticJsonDocument<128> doc;
+    DynamicJsonDocument doc(128);
     CHECK(doc.is<array_type>() == false);
 
     doc.add(1);

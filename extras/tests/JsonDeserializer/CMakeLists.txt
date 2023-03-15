@@ -4,7 +4,6 @@
 
 add_executable(JsonDeserializerTests
 	array.cpp
-	array_static.cpp
 	DeserializationError.cpp
 	filter.cpp
 	incomplete_input.cpp
@@ -14,7 +13,6 @@ add_executable(JsonDeserializerTests
 	nestingLimit.cpp
 	number.cpp
 	object.cpp
-	object_static.cpp
 	string.cpp
 )
 

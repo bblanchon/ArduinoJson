@@ -19,7 +19,6 @@ add_executable(JsonDocumentTests
 	remove.cpp
 	shrinkToFit.cpp
 	size.cpp
-	StaticJsonDocument.cpp
 	subscript.cpp
 	swap.cpp
 )

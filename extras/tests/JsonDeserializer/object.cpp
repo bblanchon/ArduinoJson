@@ -313,3 +313,61 @@ TEST_CASE("deserialize JSON object") {
     CHECK(doc.as<std::string>() == json);
   }
 }
+
+TEST_CASE("deserialize JSON object under memory constraints") {
+  SECTION("buffer for the right size for an empty object") {
+    DynamicJsonDocument doc(JSON_OBJECT_SIZE(0));
+    char input[] = "{}";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("buffer too small for an empty object") {
+    DynamicJsonDocument doc(JSON_OBJECT_SIZE(0));
+    char input[] = "{\"a\":1}";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("buffer of the right size for an object with one member") {
+    DynamicJsonDocument doc(JSON_OBJECT_SIZE(1));
+    char input[] = "{\"a\":1}";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("buffer too small for an object with a nested array") {
+    DynamicJsonDocument doc(JSON_OBJECT_SIZE(0) + JSON_ARRAY_SIZE(0));
+    char input[] = "{\"a\":[]}";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("buffer of the right size for an object with a nested array") {
+    DynamicJsonDocument doc(JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0));
+    char input[] = "{\"a\":[]}";
+
+    DeserializationError err = deserializeJson(doc, input);
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("Should clear the JsonObject") {
+    DynamicJsonDocument doc(JSON_OBJECT_SIZE(1));
+    char input[] = "{\"hello\":\"world\"}";
+
+    deserializeJson(doc, input);
+    deserializeJson(doc, "{}");
+
+    REQUIRE(doc.as<JsonObject>().size() == 0);
+    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
+  }
+}

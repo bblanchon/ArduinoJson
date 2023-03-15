@@ -34,18 +34,18 @@ struct Config {
   int port;
 };
 
-const char *filename = "/config.txt";  // <- SD library uses 8.3 filenames
+const char* filename = "/config.txt";  // <- SD library uses 8.3 filenames
 Config config;                         // <- global configuration object
 
 // Loads the configuration from a file
-void loadConfiguration(const char *filename, Config &config) {
+void loadConfiguration(const char* filename, Config& config) {
   // Open file for reading
   File file = SD.open(filename);
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, file);
@@ -63,7 +63,7 @@ void loadConfiguration(const char *filename, Config &config) {
 }
 
 // Saves the configuration to a file
-void saveConfiguration(const char *filename, const Config &config) {
+void saveConfiguration(const char* filename, const Config& config) {
   // Delete existing file, otherwise the configuration is appended to the file
   SD.remove(filename);
 
@@ -77,7 +77,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use https://arduinojson.org/assistant to compute the capacity.
-  StaticJsonDocument<256> doc;
+  DynamicJsonDocument doc(256);
 
   // Set the values in the document
   doc["hostname"] = config.hostname;
@@ -93,7 +93,7 @@ void saveConfiguration(const char *filename, const Config &config) {
 }
 
 // Prints the content of a file to the Serial
-void printFile(const char *filename) {
+void printFile(const char* filename) {
   // Open file for reading
   File file = SD.open(filename);
   if (!file) {
@@ -114,7 +114,8 @@ void printFile(const char *filename) {
 void setup() {
   // Initialize serial port
   Serial.begin(9600);
-  while (!Serial) continue;
+  while (!Serial)
+    continue;
 
   // Initialize SD library
   const int chipSelect = 4;

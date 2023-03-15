@@ -94,18 +94,8 @@ TEST_CASE("DynamicJsonDocument constructor") {
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
-  SECTION("Construct from StaticJsonDocument") {
-    StaticJsonDocument<200> doc1;
-    deserializeJson(doc1, "{\"hello\":\"world\"}");
-
-    DynamicJsonDocument doc2 = doc1;
-
-    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
-    REQUIRE(doc2.capacity() == doc1.capacity());
-  }
-
   SECTION("Construct from JsonObject") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
 
@@ -116,7 +106,7 @@ TEST_CASE("DynamicJsonDocument constructor") {
   }
 
   SECTION("Construct from JsonArray") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
 
@@ -127,7 +117,7 @@ TEST_CASE("DynamicJsonDocument constructor") {
   }
 
   SECTION("Construct from JsonVariant") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     deserializeJson(doc1, "42");
 
     DynamicJsonDocument doc2 = doc1.as<JsonVariant>();
@@ -160,19 +150,8 @@ TEST_CASE("DynamicJsonDocument assignment") {
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
-  SECTION("Assign from StaticJsonDocument") {
-    StaticJsonDocument<200> doc1;
-    deserializeJson(doc1, "{\"hello\":\"world\"}");
-    DynamicJsonDocument doc2(4096);
-    doc2.to<JsonVariant>().set(666);
-
-    doc2 = doc1;
-
-    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
-  }
-
   SECTION("Assign from JsonObject") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
 
@@ -184,7 +163,7 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from JsonArray") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
 
@@ -196,7 +175,7 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from JsonVariant") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     deserializeJson(doc1, "42");
 
     DynamicJsonDocument doc2(4096);
@@ -207,7 +186,7 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from MemberProxy") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     doc1["value"] = 42;
 
     DynamicJsonDocument doc2(4096);
@@ -218,7 +197,7 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from ElementProxy") {
-    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc1(200);
     doc1[0] = 42;
 
     DynamicJsonDocument doc2(4096);

@@ -128,7 +128,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 }
 
 TEST_CASE("JsonVariant::set() with not enough memory") {
-  StaticJsonDocument<1> doc;
+  DynamicJsonDocument doc(1);
 
   JsonVariant v = doc.to<JsonVariant>();
 

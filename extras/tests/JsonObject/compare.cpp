@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Compare JsonObject with JsonObject") {
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   SECTION("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
@@ -82,7 +82,7 @@ TEST_CASE("Compare JsonObject with JsonObject") {
 }
 
 TEST_CASE("Compare JsonObject with JsonVariant") {
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   SECTION("Compare with self") {
     JsonObject object = doc.to<JsonObject>();
@@ -153,7 +153,7 @@ TEST_CASE("Compare JsonObject with JsonVariant") {
 }
 
 TEST_CASE("Compare JsonObject with JsonVariantConst") {
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   SECTION("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
@@ -247,7 +247,7 @@ TEST_CASE("Compare JsonObject with JsonVariantConst") {
 }
 
 TEST_CASE("Compare JsonObject with JsonObjectConst") {
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   SECTION("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
@@ -347,7 +347,7 @@ TEST_CASE("Compare JsonObject with JsonObjectConst") {
 }
 
 TEST_CASE("Compare JsonObjectConst with JsonObjectConst") {
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   SECTION("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
@@ -430,7 +430,7 @@ TEST_CASE("Compare JsonObjectConst with JsonObjectConst") {
 }
 
 TEST_CASE("Compare JsonObjectConst with JsonVariant") {
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   SECTION("Compare with self") {
     JsonObject object = doc.to<JsonObject>();

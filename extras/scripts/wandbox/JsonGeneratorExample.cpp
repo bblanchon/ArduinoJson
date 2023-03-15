@@ -10,20 +10,10 @@
 int main() {
   // Allocate the JSON document
   //
-  // Inside the brackets, 200 is the RAM allocated to this document.
+  // Inside the parentheses, 200 is the RAM allocated to this document.
   // Don't forget to change this value to match your requirement.
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<200> doc;
-
-  // StaticJsonObject allocates memory on the stack, it can be
-  // replaced by DynamicJsonDocument which allocates in the heap.
-  //
-  // DynamicJsonDocument  doc(200);
-
-  // StaticJsonObject allocates memory on the stack, it can be
-  // replaced by DynamicJsonDocument which allocates in the heap.
-  //
-  // DynamicJsonDocument  doc(200);
+  DynamicJsonDocument doc(200);
 
   // Add values in the document
   //

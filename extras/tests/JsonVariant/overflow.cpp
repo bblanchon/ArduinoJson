@@ -7,7 +7,7 @@
 
 template <typename TOut, typename TIn>
 void shouldBeOk(TIn value) {
-  StaticJsonDocument<1> doc;
+  DynamicJsonDocument doc(1);
   JsonVariant var = doc.to<JsonVariant>();
   var.set(value);
   REQUIRE(var.as<TOut>() == TOut(value));
@@ -15,7 +15,7 @@ void shouldBeOk(TIn value) {
 
 template <typename TOut, typename TIn>
 void shouldOverflow(TIn value) {
-  StaticJsonDocument<1> doc;
+  DynamicJsonDocument doc(1);
   JsonVariant var = doc.to<JsonVariant>();
   var.set(value);
   REQUIRE(var.as<TOut>() == 0);

@@ -6,7 +6,7 @@
 
 extern "C" void app_main() {
   char buffer[256];
-  StaticJsonDocument<200> doc;
+  DynamicJsonDocument doc(200);
 
   doc["hello"] = "world";
   serializeJson(doc, buffer);

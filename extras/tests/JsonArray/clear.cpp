@@ -14,7 +14,7 @@ TEST_CASE("JsonArray::clear()") {
   }
 
   SECTION("Removes all elements") {
-    StaticJsonDocument<64> doc;
+    DynamicJsonDocument doc(64);
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add(2);

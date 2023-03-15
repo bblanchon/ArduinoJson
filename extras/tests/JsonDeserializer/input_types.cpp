@@ -10,7 +10,7 @@
 #include "CustomReader.hpp"
 
 TEST_CASE("deserializeJson(char*)") {
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
 
   SECTION("should not duplicate strings") {
     char input[] = "{\"hello\":\"world\"}";
@@ -125,7 +125,7 @@ TEST_CASE("deserializeJson(VLA)") {
   char vla[i];
   strcpy(vla, "{\"a\":42}");
 
-  StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
+  DynamicJsonDocument doc(JSON_OBJECT_SIZE(1));
   DeserializationError err = deserializeJson(doc, vla);
 
   REQUIRE(err == DeserializationError::Ok);

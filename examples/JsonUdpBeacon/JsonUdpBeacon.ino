@@ -32,7 +32,8 @@ EthernetUDP udp;
 void setup() {
   // Initialize serial port
   Serial.begin(9600);
-  while (!Serial) continue;
+  while (!Serial)
+    continue;
 
   // Initialize Ethernet libary
   if (!Ethernet.begin(mac)) {
@@ -47,7 +48,7 @@ void setup() {
 void loop() {
   // Allocate a temporary JsonDocument
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<500> doc;
+  DynamicJsonDocument doc(500);
 
   // Create the "analog" array
   JsonArray analogValues = doc.createNestedArray("analog");

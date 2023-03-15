@@ -7,54 +7,54 @@
 
 TEST_CASE("JsonDocument::overflowed()") {
   SECTION("returns false on a fresh object") {
-    StaticJsonDocument<0> doc;
+    DynamicJsonDocument doc(0);
     CHECK(doc.overflowed() == false);
   }
 
   SECTION("returns true after a failed insertion") {
-    StaticJsonDocument<0> doc;
+    DynamicJsonDocument doc(0);
     doc.add(0);
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns false after successful insertion") {
-    StaticJsonDocument<JSON_ARRAY_SIZE(1)> doc;
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1));
     doc.add(0);
     CHECK(doc.overflowed() == false);
   }
 
   SECTION("returns true after a failed string copy") {
-    StaticJsonDocument<JSON_ARRAY_SIZE(1)> doc;
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1));
     doc.add(std::string("example"));
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns false after a successful string copy") {
-    StaticJsonDocument<JSON_ARRAY_SIZE(1) + 8> doc;
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1) + 8);
     doc.add(std::string("example"));
     CHECK(doc.overflowed() == false);
   }
 
   SECTION("returns true after a failed member add") {
-    StaticJsonDocument<1> doc;
+    DynamicJsonDocument doc(1);
     doc["example"] = true;
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns true after a failed deserialization") {
-    StaticJsonDocument<JSON_ARRAY_SIZE(1)> doc;
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1));
     deserializeJson(doc, "[\"example\"]");
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns false after a successful deserialization") {
-    StaticJsonDocument<JSON_ARRAY_SIZE(1) + 8> doc;
+    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1) + 8);
     deserializeJson(doc, "[\"example\"]");
     CHECK(doc.overflowed() == false);
   }
 
   SECTION("returns false after clear()") {
-    StaticJsonDocument<0> doc;
+    DynamicJsonDocument doc(0);
     doc.add(0);
     doc.clear();
     CHECK(doc.overflowed() == false);

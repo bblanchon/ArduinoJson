@@ -71,13 +71,13 @@ TEST_CASE("JsonVariant::isNull()") {
   }
 
   SECTION("returns true for a shallow null copy") {
-    StaticJsonDocument<128> doc2;
+    DynamicJsonDocument doc2(128);
     variant.shallowCopy(doc2);
     CHECK(variant.isNull() == true);
   }
 
   SECTION("returns false for a shallow array copy") {
-    StaticJsonDocument<128> doc2;
+    DynamicJsonDocument doc2(128);
     doc2[0] = 42;
     variant.shallowCopy(doc2);
     CHECK(variant.isNull() == false);

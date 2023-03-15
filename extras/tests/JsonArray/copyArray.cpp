@@ -108,7 +108,7 @@ TEST_CASE("copyArray()") {
 
   SECTION("int[] -> JsonArray, but not enough memory") {
     const size_t SIZE = JSON_ARRAY_SIZE(2);
-    StaticJsonDocument<SIZE> doc;
+    DynamicJsonDocument doc(SIZE);
     JsonArray array = doc.to<JsonArray>();
     char json[32];
     int source[] = {1, 2, 3};
@@ -160,7 +160,7 @@ TEST_CASE("copyArray()") {
   SECTION("int[][] -> JsonArray, but not enough memory") {
     const size_t SIZE =
         JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(2);
-    StaticJsonDocument<SIZE> doc;
+    DynamicJsonDocument doc(SIZE);
     JsonArray array = doc.to<JsonArray>();
     char json[32] = "";
     int source[][3] = {{1, 2, 3}, {4, 5, 6}};

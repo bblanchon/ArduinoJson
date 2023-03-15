@@ -48,7 +48,7 @@ struct PrintableString : public Printable {
 
 TEST_CASE("Printable") {
   SECTION("Doesn't overflow") {
-    StaticJsonDocument<8> doc;
+    DynamicJsonDocument doc(8);
     const char* value = "example";  // == 7 chars
 
     doc.set(666);  // to make sure we override the value
@@ -75,7 +75,7 @@ TEST_CASE("Printable") {
   }
 
   SECTION("Overflows early") {
-    StaticJsonDocument<8> doc;
+    DynamicJsonDocument doc(8);
     const char* value = "hello world";  // > 8 chars
 
     doc.set(666);  // to make sure we override the value
@@ -100,7 +100,7 @@ TEST_CASE("Printable") {
   }
 
   SECTION("Overflows adding terminator") {
-    StaticJsonDocument<8> doc;
+    DynamicJsonDocument doc(8);
     const char* value = "overflow";  // == 8 chars
 
     doc.set(666);  // to make sure we override the value
@@ -133,7 +133,7 @@ TEST_CASE("Printable") {
   }
 
   SECTION("String deduplication") {
-    StaticJsonDocument<128> doc;
+    DynamicJsonDocument doc(128);
     doc.add(PrintableString<PrintOneCharacterAtATime>("Hello World!"));
     doc.add(PrintableString<PrintAllAtOnce>("Hello World!"));
     REQUIRE(doc.size() == 2);

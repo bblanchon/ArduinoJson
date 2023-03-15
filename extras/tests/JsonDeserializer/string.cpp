@@ -47,7 +47,7 @@ TEST_CASE("Valid JSON strings value") {
 }
 
 TEST_CASE("\\u0000") {
-  StaticJsonDocument<200> doc;
+  DynamicJsonDocument doc(200);
 
   DeserializationError err = deserializeJson(doc, "\"wx\\u0000yz\"");
   REQUIRE(err == DeserializationError::Ok);

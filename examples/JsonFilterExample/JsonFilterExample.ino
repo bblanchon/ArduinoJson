@@ -11,7 +11,8 @@
 void setup() {
   // Initialize serial port
   Serial.begin(9600);
-  while (!Serial) continue;
+  while (!Serial)
+    continue;
 
   // The huge input: an extract from OpenWeatherMap response
   const __FlashStringHelper* input_json = F(
@@ -33,12 +34,12 @@ void setup() {
       "1000000,\"timezone\":0,\"sunrise\":1581492085,\"sunset\":1581527294}}");
 
   // The filter: it contains "true" for each value we want to keep
-  StaticJsonDocument<200> filter;
+  DynamicJsonDocument filter(200);
   filter["list"][0]["dt"] = true;
   filter["list"][0]["main"]["temp"] = true;
 
   // Deserialize the document
-  StaticJsonDocument<400> doc;
+  DynamicJsonDocument doc(400);
   deserializeJson(doc, input_json, DeserializationOption::Filter(filter));
 
   // Print the result

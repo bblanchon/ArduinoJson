@@ -25,7 +25,8 @@ EthernetServer server(80);
 void setup() {
   // Initialize serial port
   Serial.begin(9600);
-  while (!Serial) continue;
+  while (!Serial)
+    continue;
 
   // Initialize Ethernet libary
   if (!Ethernet.begin(mac)) {
@@ -52,11 +53,12 @@ void loop() {
   Serial.println(F("New client"));
 
   // Read the request (we ignore the content in this example)
-  while (client.available()) client.read();
+  while (client.available())
+    client.read();
 
   // Allocate a temporary JsonDocument
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<500> doc;
+  DynamicJsonDocument doc(500);
 
   // Create the "analog" array
   JsonArray analogValues = doc.createNestedArray("analog");

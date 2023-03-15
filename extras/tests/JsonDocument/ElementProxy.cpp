@@ -247,7 +247,7 @@ TEST_CASE("ElementProxy cast to JsonVariant") {
 }
 
 TEST_CASE("ElementProxy::shallowCopy()") {
-  StaticJsonDocument<1024> doc1, doc2;
+  DynamicJsonDocument doc1(1024), doc2(1024);
   doc2["hello"] = "world";
   doc1[0].shallowCopy(doc2);
 

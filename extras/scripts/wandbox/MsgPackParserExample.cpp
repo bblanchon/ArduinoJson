@@ -10,15 +10,10 @@
 int main() {
   // Allocate the JSON document
   //
-  // Inside the brackets, 300 is the size of the memory pool in bytes.
+  // Inside the parentheses, 300 is the size of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
   // Use https://arduinojson.org/assistant to compute the capacity.
-  StaticJsonDocument<300> doc;
-
-  // StaticJsonObject allocates memory on the stack, it can be
-  // replaced by DynamicJsonObject which allocates in the heap.
-  //
-  // DynamicJsonObject doc(200);
+  DynamicJsonDocument doc(300);
 
   // MessagePack input string.
   //

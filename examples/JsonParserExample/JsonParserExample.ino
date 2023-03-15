@@ -11,19 +11,15 @@
 void setup() {
   // Initialize serial port
   Serial.begin(9600);
-  while (!Serial) continue;
+  while (!Serial)
+    continue;
 
   // Allocate the JSON document
   //
-  // Inside the brackets, 200 is the capacity of the memory pool in bytes.
+  // Inside the parentheses, 200 is the capacity of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<200> doc;
-
-  // StaticJsonDocument<N> allocates memory on the stack, it can be
-  // replaced by DynamicJsonDocument which allocates in the heap.
-  //
-  // DynamicJsonDocument doc(200);
+  DynamicJsonDocument doc(200);
 
   // JSON input string.
   //

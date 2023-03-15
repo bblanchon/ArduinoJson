@@ -136,7 +136,7 @@ TEST_CASE("Writer<custom_string>") {
 }
 
 TEST_CASE("serializeJson(doc, String)") {
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
   doc["hello"] = "world";
   ::String output;
 
