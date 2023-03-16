@@ -5,6 +5,7 @@
 add_executable(JsonObjectTests
 	basics.cpp
 	containsKey.cpp
+	createNestedArray.cpp
 	createNestedObject.cpp
 	get.cpp
 	invalid.cpp

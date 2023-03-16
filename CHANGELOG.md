@@ -5,6 +5,7 @@ HEAD
 ----
 
 * `JsonObject::createNestedObject()` returns `JsonObject::invalid()` if key is null (issue #1891)
+* `JsonObject::createNestedArray()` returns `JsonArray::invalid()` if key is null
 
 v5.13.5
 -------
@@ -492,4 +493,3 @@ v4.0
 > ### BREAKING CHANGES :warning:
 >
 > API changed significantly since v3, see [Migrating code to the new API](https://arduinojson.org/doc/migration/).
-
