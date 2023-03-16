@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// Copyright Benoit Blanchon 2014-2023
 // MIT License
 
 #include <ArduinoJson/Polyfills/isInteger.hpp>

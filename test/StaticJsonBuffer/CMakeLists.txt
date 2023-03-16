@@ -1,8 +1,8 @@
 # ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2019
+# Copyright Benoit Blanchon 2014-2023
 # MIT License
 
-add_executable(StaticJsonBufferTests 
+add_executable(StaticJsonBufferTests
 	alloc.cpp
 	createArray.cpp
 	createObject.cpp

@@ -1,5 +1,5 @@
 # ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2019
+# Copyright Benoit Blanchon 2014-2023
 # MIT License
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
@@ -47,7 +47,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 		add_compile_options(-Wnoexcept)
 	endif()
 
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.7 AND 
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.7 AND
 	   CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
 		# avoid false positive with GCC 4.7
 		add_compile_options(-Wno-maybe-uninitialized)

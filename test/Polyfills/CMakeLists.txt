@@ -1,8 +1,8 @@
 # ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2019
+# Copyright Benoit Blanchon 2014-2023
 # MIT License
 
-add_executable(PolyfillsTests 
+add_executable(PolyfillsTests
 	isFloat.cpp
 	isInteger.cpp
 	parseFloat.cpp
