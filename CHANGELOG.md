@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* `JsonObject::createNestedObject()` returns `JsonObject::invalid()` if key is null (issue #1891)
+
 v5.13.5
 -------
 

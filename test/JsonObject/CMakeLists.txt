@@ -2,9 +2,10 @@
 # Copyright Benoit Blanchon 2014-2023
 # MIT License
 
-add_executable(JsonObjectTests 
+add_executable(JsonObjectTests
 	basics.cpp
 	containsKey.cpp
+	createNestedObject.cpp
 	get.cpp
 	invalid.cpp
 	iterator.cpp
