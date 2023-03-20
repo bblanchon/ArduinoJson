@@ -58,7 +58,7 @@ void testShrinkToFit(DynamicJsonDocument& doc, std::string expected_json,
   }
 }
 
-TEST_CASE("BasicJsonDocument::shrinkToFit()") {
+TEST_CASE("DynamicJsonDocument::shrinkToFit()") {
   ArmoredAllocator armoredAllocator;
   DynamicJsonDocument doc(4096, &armoredAllocator);
 
@@ -137,16 +137,4 @@ TEST_CASE("BasicJsonDocument::shrinkToFit()") {
     REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + 2);
     REQUIRE(doc[0] == "?");
   }
-}
-
-TEST_CASE("DynamicJsonDocument::shrinkToFit()") {
-  DynamicJsonDocument doc(4096);
-
-  deserializeJson(doc, "{\"hello\":[\"world\"]");
-
-  doc.shrinkToFit();
-
-  std::string json;
-  serializeJson(doc, json);
-  REQUIRE(json == "{\"hello\":[\"world\"]}");
 }

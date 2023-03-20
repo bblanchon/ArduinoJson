@@ -4,7 +4,7 @@
 
 add_executable(JsonDocumentTests
 	add.cpp
-	BasicJsonDocument.cpp
+	allocator.cpp
 	cast.cpp
 	compare.cpp
 	containsKey.cpp
