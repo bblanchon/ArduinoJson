@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Memory/Alignment.hpp>
+#include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/mpl/max.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
@@ -36,15 +37,42 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class MemoryPool {
  public:
-  MemoryPool(char* buf, size_t capa)
-      : _begin(buf),
-        _left(buf),
-        _right(buf ? buf + capa : 0),
-        _end(buf ? buf + capa : 0),
-        _overflowed(false) {
-    ARDUINOJSON_ASSERT(isAligned(_begin));
-    ARDUINOJSON_ASSERT(isAligned(_right));
-    ARDUINOJSON_ASSERT(isAligned(_end));
+  MemoryPool(size_t capa, Allocator* allocator = DefaultAllocator::instance())
+      : _allocator(allocator), _overflowed(false) {
+    allocPool(addPadding(capa));
+  }
+
+  ~MemoryPool() {
+    if (_begin)
+      _allocator->deallocate(_begin);
+  }
+
+  MemoryPool(const MemoryPool&) = delete;
+  MemoryPool& operator=(const MemoryPool& src) = delete;
+
+  MemoryPool& operator=(MemoryPool&& src) {
+    if (_begin)
+      _allocator->deallocate(_begin);
+    _allocator = src._allocator;
+    _begin = src._begin;
+    _end = src._end;
+    _left = src._left;
+    _right = src._right;
+    _overflowed = src._overflowed;
+    src._begin = src._end = src._left = src._right = nullptr;
+    return *this;
+  }
+
+  Allocator* allocator() const {
+    return _allocator;
+  }
+
+  void reallocPool(size_t requiredSize) {
+    size_t capa = addPadding(requiredSize);
+    if (capa == capacity())
+      return;
+    _allocator->deallocate(_begin);
+    allocPool(requiredSize);
   }
 
   void* buffer() {
@@ -132,6 +160,23 @@ class MemoryPool {
     return p;
   }
 
+  void shrinkToFit(VariantData& variant) {
+    ptrdiff_t bytes_reclaimed = squash();
+    if (bytes_reclaimed == 0)
+      return;
+
+    void* old_ptr = _begin;
+    void* new_ptr = _allocator->reallocate(old_ptr, capacity());
+
+    ptrdiff_t ptr_offset =
+        static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
+
+    movePointers(ptr_offset);
+    reinterpret_cast<VariantSlot&>(variant).movePointers(
+        ptr_offset, ptr_offset - bytes_reclaimed);
+  }
+
+ private:
   // Squash the free space between strings and variants
   //
   // _begin                    _end
@@ -166,7 +211,6 @@ class MemoryPool {
     _end += offset;
   }
 
- private:
   void checkInvariants() {
     ARDUINOJSON_ASSERT(_begin <= _left);
     ARDUINOJSON_ASSERT(_left <= _right);
@@ -215,6 +259,16 @@ class MemoryPool {
     return _right;
   }
 
+  void allocPool(size_t capa) {
+    auto buf = capa ? reinterpret_cast<char*>(_allocator->allocate(capa)) : 0;
+    _begin = _left = buf;
+    _end = _right = buf ? buf + capa : 0;
+    ARDUINOJSON_ASSERT(isAligned(_begin));
+    ARDUINOJSON_ASSERT(isAligned(_right));
+    ARDUINOJSON_ASSERT(isAligned(_end));
+  }
+
+  Allocator* _allocator;
   char *_begin, *_left, *_right, *_end;
   bool _overflowed;
 };

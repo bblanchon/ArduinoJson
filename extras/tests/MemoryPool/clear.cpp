@@ -11,8 +11,7 @@ using namespace ArduinoJson::detail;
 static const size_t poolCapacity = 512;
 
 TEST_CASE("MemoryPool::clear()") {
-  char buffer[poolCapacity];
-  MemoryPool pool(buffer, sizeof(buffer));
+  MemoryPool pool(poolCapacity);
 
   SECTION("Discards allocated variants") {
     pool.allocVariant();

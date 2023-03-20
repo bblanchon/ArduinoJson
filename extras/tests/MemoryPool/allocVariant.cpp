@@ -5,13 +5,13 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using namespace ArduinoJson::detail;
 
 TEST_CASE("MemoryPool::allocVariant()") {
-  char buffer[4096];
-
   SECTION("Returns different pointer") {
-    MemoryPool pool(buffer, sizeof(buffer));
+    MemoryPool pool(4096);
 
     VariantSlot* s1 = pool.allocVariant();
     REQUIRE(s1 != 0);
@@ -22,26 +22,26 @@ TEST_CASE("MemoryPool::allocVariant()") {
   }
 
   SECTION("Returns aligned pointers") {
-    MemoryPool pool(buffer, sizeof(buffer));
+    MemoryPool pool(4096);
 
     REQUIRE(isAligned(pool.allocVariant()));
     REQUIRE(isAligned(pool.allocVariant()));
   }
 
   SECTION("Returns zero if capacity is 0") {
-    MemoryPool pool(buffer, 0);
+    MemoryPool pool(0);
 
     REQUIRE(pool.allocVariant() == 0);
   }
 
   SECTION("Returns zero if buffer is null") {
-    MemoryPool pool(0, sizeof(buffer));
+    MemoryPool pool(4096, FailingAllocator::instance());
 
     REQUIRE(pool.allocVariant() == 0);
   }
 
   SECTION("Returns zero if capacity is insufficient") {
-    MemoryPool pool(buffer, sizeof(VariantSlot));
+    MemoryPool pool(sizeof(VariantSlot));
 
     pool.allocVariant();
 

@@ -9,6 +9,7 @@
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Object/JsonObject.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
+#include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
@@ -23,16 +24,16 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
  public:
   explicit JsonDocument(size_t capa,
                         Allocator* alloc = detail::DefaultAllocator::instance())
-      : _allocator(alloc), _pool(allocPool(capa)) {}
+      : _pool(capa, alloc) {}
 
   // Copy-constructor
   JsonDocument(const JsonDocument& src)
-      : JsonDocument(src.capacity(), src._allocator) {
+      : JsonDocument(src.capacity(), src.allocator()) {
     set(src);
   }
 
   // Move-constructor
-  JsonDocument(JsonDocument&& src) : _allocator(src._allocator), _pool(0, 0) {
+  JsonDocument(JsonDocument&& src) : _pool(0, src.allocator()) {
     // TODO: use the copy and swap idiom
     moveAssignFrom(src);
   }
@@ -57,10 +58,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     set(src);
   }
 
-  ~JsonDocument() {
-    freePool();
-  }
-
   JsonDocument& operator=(const JsonDocument& src) {
     // TODO: use the copy and swap idiom
     copyAssignFrom(src);
@@ -77,26 +74,19 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   JsonDocument& operator=(const T& src) {
     size_t requiredSize = src.memoryUsage();
     if (requiredSize > capacity())
-      reallocPool(requiredSize);
+      _pool.reallocPool(requiredSize);
     set(src);
     return *this;
+  }
+
+  Allocator* allocator() const {
+    return _pool.allocator();
   }
 
   // Reduces the capacity of the memory pool to match the current usage.
   // https://arduinojson.org/v6/api/JsonDocument/shrinktofit/
   void shrinkToFit() {
-    ptrdiff_t bytes_reclaimed = _pool.squash();
-    if (bytes_reclaimed == 0)
-      return;
-
-    void* old_ptr = _pool.buffer();
-    void* new_ptr = _allocator->reallocate(old_ptr, _pool.capacity());
-
-    ptrdiff_t ptr_offset =
-        static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
-
-    _pool.movePointers(ptr_offset);
-    _data.movePointers(ptr_offset, ptr_offset - bytes_reclaimed);
+    _pool.shrinkToFit(_data);
   }
 
   // Reclaims the memory leaked when removing and replacing values.
@@ -365,10 +355,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
  private:
-  void replacePool(detail::MemoryPool pool) {
-    _pool = pool;
-  }
-
   JsonVariant getVariant() {
     return JsonVariant(&_pool, &_data);
   }
@@ -377,36 +363,15 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return JsonVariantConst(&_data);
   }
 
-  detail::MemoryPool allocPool(size_t requiredSize) {
-    size_t capa = detail::addPadding(requiredSize);
-    return {reinterpret_cast<char*>(_allocator->allocate(capa)), capa};
-  }
-
-  void reallocPool(size_t requiredSize) {
-    size_t capa = detail::addPadding(requiredSize);
-    if (capa == _pool.capacity())
-      return;
-    freePool();
-    replacePool(allocPool(detail::addPadding(requiredSize)));
-  }
-
-  void freePool() {
-    auto p = getPool()->buffer();
-    if (p)
-      _allocator->deallocate(p);
-  }
-
   void copyAssignFrom(const JsonDocument& src) {
-    reallocPool(src.capacity());
+    _pool.reallocPool(src.capacity());
     set(src);
   }
 
   void moveAssignFrom(JsonDocument& src) {
-    freePool();
     _data = src._data;
-    _pool = src._pool;
     src._data.setNull();
-    src._pool = {0, 0};
+    _pool = move(src._pool);
   }
 
   detail::MemoryPool* getPool() {
@@ -425,7 +390,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return &_data;
   }
 
-  Allocator* _allocator;
   detail::MemoryPool _pool;
   detail::VariantData _data;
 };

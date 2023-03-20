@@ -6,6 +6,8 @@
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using namespace ArduinoJson::detail;
 
 static const char* saveString(MemoryPool& pool, const char* s) {
@@ -17,8 +19,7 @@ static const char* saveString(MemoryPool& pool, const char* s, size_t n) {
 }
 
 TEST_CASE("MemoryPool::saveString()") {
-  char buffer[32];
-  MemoryPool pool(buffer, 32);
+  MemoryPool pool(32);
 
   SECTION("Duplicates different strings") {
     const char* a = saveString(pool, "hello");
@@ -72,12 +73,12 @@ TEST_CASE("MemoryPool::saveString()") {
   }
 
   SECTION("Returns NULL when buffer is NULL") {
-    MemoryPool pool2(0, 32);
+    MemoryPool pool2(32, FailingAllocator::instance());
     REQUIRE(0 == saveString(pool2, "a"));
   }
 
   SECTION("Returns NULL when capacity is 0") {
-    MemoryPool pool2(buffer, 0);
+    MemoryPool pool2(0);
     REQUIRE(0 == saveString(pool2, "a"));
   }
 

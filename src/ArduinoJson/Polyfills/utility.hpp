@@ -13,4 +13,9 @@ T&& forward(typename remove_reference<T>::type& t) noexcept {
   return static_cast<T&&>(t);
 }
 
+template <class T>
+typename remove_reference<T>::type&& move(T&& t) {
+  return static_cast<typename remove_reference<T>::type&&>(t);
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

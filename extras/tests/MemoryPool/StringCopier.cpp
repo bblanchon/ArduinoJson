@@ -8,10 +8,8 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("StringCopier") {
-  char buffer[4096];
-
   SECTION("Works when buffer is big enough") {
-    MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(5)));
+    MemoryPool pool(addPadding(JSON_STRING_SIZE(5)));
     StringCopier str(&pool);
 
     str.startString();
@@ -23,7 +21,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Returns null when too small") {
-    MemoryPool pool(buffer, sizeof(void*));
+    MemoryPool pool(sizeof(void*));
     StringCopier str(&pool);
 
     str.startString();
@@ -34,7 +32,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Increases size of memory pool") {
-    MemoryPool pool(buffer, addPadding(JSON_STRING_SIZE(6)));
+    MemoryPool pool(addPadding(JSON_STRING_SIZE(6)));
     StringCopier str(&pool);
 
     str.startString();
@@ -45,7 +43,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Works when memory pool is 0 bytes") {
-    MemoryPool pool(buffer, 0);
+    MemoryPool pool(0);
     StringCopier str(&pool);
 
     str.startString();
@@ -62,8 +60,7 @@ static const char* addStringToPool(MemoryPool& pool, const char* s) {
 }
 
 TEST_CASE("StringCopier::save() deduplicates strings") {
-  char buffer[4096];
-  MemoryPool pool(buffer, 4096);
+  MemoryPool pool(4096);
 
   SECTION("Basic") {
     const char* s1 = addStringToPool(pool, "hello");
