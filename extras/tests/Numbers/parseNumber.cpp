@@ -10,8 +10,6 @@ using namespace ArduinoJson::detail;
 
 TEST_CASE("Test unsigned integer overflow") {
   VariantData first, second;
-  first.init();
-  second.init();
 
   // Avoids MSVC warning C4127 (conditional expression is constant)
   size_t integerSize = sizeof(JsonInteger);
@@ -30,8 +28,6 @@ TEST_CASE("Test unsigned integer overflow") {
 
 TEST_CASE("Test signed integer overflow") {
   VariantData first, second;
-  first.init();
-  second.init();
 
   // Avoids MSVC warning C4127 (conditional expression is constant)
   size_t integerSize = sizeof(JsonInteger);
@@ -50,7 +46,6 @@ TEST_CASE("Test signed integer overflow") {
 
 TEST_CASE("Invalid value") {
   VariantData result;
-  result.init();
 
   parseNumber("6a3", result);
 

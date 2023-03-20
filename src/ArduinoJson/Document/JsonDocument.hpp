@@ -41,7 +41,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/clear/
   void clear() {
     _pool.clear();
-    _data.init();
+    _data.setNull();
   }
 
   // Returns true if the root is of the specified type.
@@ -277,17 +277,11 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
  protected:
-  JsonDocument() : _pool(0, 0) {
-    _data.init();
-  }
+  JsonDocument() : _pool(0, 0) {}
 
-  JsonDocument(detail::MemoryPool pool) : _pool(pool) {
-    _data.init();
-  }
+  JsonDocument(detail::MemoryPool pool) : _pool(pool) {}
 
-  JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {
-    _data.init();
-  }
+  JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {}
 
   ~JsonDocument() {}
 

@@ -146,7 +146,6 @@ inline bool parseNumber(const char* s, VariantData& result) {
 template <typename T>
 inline T parseNumber(const char* s) {
   VariantData value;
-  value.init();  // VariantData is a POD, so it has no constructor
   parseNumber(s, value);
   return Converter<T>::fromJson(JsonVariantConst(&value));
 }

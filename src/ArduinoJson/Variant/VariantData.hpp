@@ -11,16 +11,6 @@
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
 
-// VariantData can't have a constructor (to be a POD), so we have no way to fix
-// this warning
-#if defined(__GNUC__)
-#  if __GNUC__ >= 7
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#    pragma GCC diagnostic ignored "-Wuninitialized"
-#  endif
-#endif
-
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class VariantData {
@@ -28,14 +18,7 @@ class VariantData {
   uint8_t _flags;
 
  public:
-  // Must be a POD!
-  // - no constructor
-  // - no destructor
-  // - no virtual
-  // - no inheritance
-  void init() {
-    _flags = VALUE_IS_NULL;
-  }
+  VariantData() : _flags(VALUE_IS_NULL) {}
 
   void operator=(const VariantData& src) {
     _content = src._content;
@@ -337,9 +320,3 @@ class VariantData {
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
-
-#if defined(__GNUC__)
-#  if __GNUC__ >= 8
-#    pragma GCC diagnostic pop
-#  endif
-#endif

@@ -5,6 +5,11 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+TEST_CASE("VariantData") {
+  REQUIRE(std::is_standard_layout<ArduinoJson::detail::VariantData>::value ==
+          true);
+}
+
 TEST_CASE("JsonVariant from JsonArray") {
   SECTION("JsonArray is null") {
     JsonArray arr;
