@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Double speed of `DynamicJsonDocument::garbageCollect()`
+
 v6.21.0 (2023-03-14)
 -------
 

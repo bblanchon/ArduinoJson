@@ -127,7 +127,6 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     BasicJsonDocument tmp(*this);
     if (!tmp.capacity())
       return false;
-    tmp.set(*this);
     moveAssignFrom(tmp);
     return true;
   }
