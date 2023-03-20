@@ -8,7 +8,7 @@
 template <typename T>
 static void checkVariant(T value, const char* expected_data,
                          size_t expected_len) {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
   variant.set(value);
   std::string expected(expected_data, expected_data + expected_len);

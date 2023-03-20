@@ -14,7 +14,7 @@ TEST_CASE("JsonObject::clear()") {
   }
 
   SECTION("Removes all elements") {
-    DynamicJsonDocument doc(64);
+    JsonDocument doc(64);
     JsonObject obj = doc.to<JsonObject>();
     obj["hello"] = 1;
     obj["world"] = 2;

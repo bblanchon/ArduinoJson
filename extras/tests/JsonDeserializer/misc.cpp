@@ -7,8 +7,8 @@
 
 using namespace Catch::Matchers;
 
-TEST_CASE("deserializeJson(DynamicJsonDocument&)") {
-  DynamicJsonDocument doc(4096);
+TEST_CASE("deserializeJson(JsonDocument&)") {
+  JsonDocument doc(4096);
 
   SECTION("Edge cases") {
     SECTION("null char*") {

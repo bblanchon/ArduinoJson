@@ -9,7 +9,7 @@ typedef ArduinoJson::detail::MemberProxy<JsonDocument&, const char*>
     MemberProxy;
 
 TEST_CASE("MemberProxy::add()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("add(int)") {
@@ -26,7 +26,7 @@ TEST_CASE("MemberProxy::add()") {
 }
 
 TEST_CASE("MemberProxy::clear()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("size goes back to zero") {
@@ -45,7 +45,7 @@ TEST_CASE("MemberProxy::clear()") {
 }
 
 TEST_CASE("MemberProxy::operator==()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("1 vs 1") {
     doc["a"] = 1;
@@ -85,7 +85,7 @@ TEST_CASE("MemberProxy::operator==()") {
 }
 
 TEST_CASE("MemberProxy::containsKey()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("containsKey(const char*)") {
@@ -104,7 +104,7 @@ TEST_CASE("MemberProxy::containsKey()") {
 }
 
 TEST_CASE("MemberProxy::operator|()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("const char*") {
     doc["a"] = "hello";
@@ -127,7 +127,7 @@ TEST_CASE("MemberProxy::operator|()") {
     JsonObject object = doc.to<JsonObject>();
     object["hello"] = "world";
 
-    DynamicJsonDocument emptyDoc(0);
+    JsonDocument emptyDoc(0);
     JsonObject anotherObject = object["hello"] | emptyDoc.to<JsonObject>();
 
     REQUIRE(anotherObject.isNull() == false);
@@ -136,7 +136,7 @@ TEST_CASE("MemberProxy::operator|()") {
 }
 
 TEST_CASE("MemberProxy::remove()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("remove(int)") {
@@ -183,7 +183,7 @@ TEST_CASE("MemberProxy::remove()") {
 }
 
 TEST_CASE("MemberProxy::set()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("set(int)") {
@@ -208,7 +208,7 @@ TEST_CASE("MemberProxy::set()") {
 }
 
 TEST_CASE("MemberProxy::size()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("returns 0") {
@@ -231,7 +231,7 @@ TEST_CASE("MemberProxy::size()") {
 }
 
 TEST_CASE("MemberProxy::memoryUsage()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("returns 0 when null") {
@@ -245,7 +245,7 @@ TEST_CASE("MemberProxy::memoryUsage()") {
 }
 
 TEST_CASE("MemberProxy::operator[]") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   MemberProxy mp = doc["hello"];
 
   SECTION("set member") {
@@ -262,7 +262,7 @@ TEST_CASE("MemberProxy::operator[]") {
 }
 
 TEST_CASE("MemberProxy cast to JsonVariantConst") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc["hello"] = "world";
 
   const MemberProxy mp = doc["hello"];
@@ -273,7 +273,7 @@ TEST_CASE("MemberProxy cast to JsonVariantConst") {
 }
 
 TEST_CASE("MemberProxy cast to JsonVariant") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc["hello"] = "world";
 
   MemberProxy mp = doc["hello"];
@@ -288,7 +288,7 @@ TEST_CASE("MemberProxy cast to JsonVariant") {
 }
 
 TEST_CASE("MemberProxy::createNestedArray()") {
-  DynamicJsonDocument doc(1024);
+  JsonDocument doc(1024);
   JsonArray arr = doc["items"].createNestedArray();
   arr.add(42);
 
@@ -296,7 +296,7 @@ TEST_CASE("MemberProxy::createNestedArray()") {
 }
 
 TEST_CASE("MemberProxy::createNestedArray(key)") {
-  DynamicJsonDocument doc(1024);
+  JsonDocument doc(1024);
   JsonArray arr = doc["weather"].createNestedArray("temp");
   arr.add(42);
 
@@ -304,7 +304,7 @@ TEST_CASE("MemberProxy::createNestedArray(key)") {
 }
 
 TEST_CASE("MemberProxy::createNestedObject()") {
-  DynamicJsonDocument doc(1024);
+  JsonDocument doc(1024);
   JsonObject obj = doc["items"].createNestedObject();
   obj["value"] = 42;
 
@@ -312,7 +312,7 @@ TEST_CASE("MemberProxy::createNestedObject()") {
 }
 
 TEST_CASE("MemberProxy::createNestedObject(key)") {
-  DynamicJsonDocument doc(1024);
+  JsonDocument doc(1024);
   JsonObject obj = doc["status"].createNestedObject("weather");
   obj["temp"] = 42;
 
@@ -320,7 +320,7 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
 }
 
 TEST_CASE("MemberProxy::shallowCopy()") {
-  DynamicJsonDocument doc1(1024), doc2(1024);
+  JsonDocument doc1(1024), doc2(1024);
   doc2["hello"] = "world";
   doc1["obj"].shallowCopy(doc2);
 

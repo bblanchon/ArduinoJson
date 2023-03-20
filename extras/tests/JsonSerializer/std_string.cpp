@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("serialize JsonArray to std::string") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
   array.add(4);
   array.add(2);
@@ -27,7 +27,7 @@ TEST_CASE("serialize JsonArray to std::string") {
 }
 
 TEST_CASE("serialize JsonObject to std::string") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
   obj["key"] = "value";
 
@@ -47,7 +47,7 @@ TEST_CASE("serialize JsonObject to std::string") {
 }
 
 TEST_CASE("serialize an std::string containing a NUL") {
-  DynamicJsonDocument doc(256);
+  JsonDocument doc(256);
   doc.set(std::string("hello\0world", 11));
   CHECK(doc.memoryUsage() == 12);
 

@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray basics") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("CreateNestedArray") {

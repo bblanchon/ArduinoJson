@@ -18,7 +18,7 @@ TEST_CASE("Truncated JSON input") {
                              "{", "{a", "{a:", "{a:1", "{a:1,", "{a:1,"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   for (size_t i = 0; i < testCount; i++) {
     const char* input = testCases[i];

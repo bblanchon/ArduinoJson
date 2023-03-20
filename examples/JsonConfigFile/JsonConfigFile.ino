@@ -45,7 +45,7 @@ void loadConfiguration(const char* filename, Config& config) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(512);
+  JsonDocument doc(512);
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, file);
@@ -77,7 +77,7 @@ void saveConfiguration(const char* filename, const Config& config) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use https://arduinojson.org/assistant to compute the capacity.
-  DynamicJsonDocument doc(256);
+  JsonDocument doc(256);
 
   // Set the values in the document
   doc["hostname"] = config.hostname;

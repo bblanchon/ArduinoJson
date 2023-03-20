@@ -7,7 +7,7 @@
 #include <string>
 
 TEST_CASE("JsonVariant::memoryUsage()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("returns 0 if uninitialized") {

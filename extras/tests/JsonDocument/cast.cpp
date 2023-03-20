@@ -8,7 +8,7 @@
 #include <string>
 
 TEST_CASE("Implicit cast to JsonVariant") {
-  DynamicJsonDocument doc(128);
+  JsonDocument doc(128);
 
   doc["hello"] = "world";
 

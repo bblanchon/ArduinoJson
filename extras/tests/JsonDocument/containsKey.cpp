@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::containsKey()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("returns true on object") {
     doc["hello"] = "world";

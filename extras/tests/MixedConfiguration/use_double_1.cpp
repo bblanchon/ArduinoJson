@@ -4,7 +4,7 @@
 #include <catch.hpp>
 
 TEST_CASE("ARDUINOJSON_USE_DOUBLE == 1") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonObject root = doc.to<JsonObject>();
 
   root["pi"] = 3.14;

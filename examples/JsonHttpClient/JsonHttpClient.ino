@@ -79,7 +79,7 @@ void setup() {
   // Allocate the JSON document
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
   const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
-  DynamicJsonDocument doc(capacity);
+  JsonDocument doc(capacity);
 
   // Parse JSON object
   DeserializationError error = deserializeJson(doc, client);

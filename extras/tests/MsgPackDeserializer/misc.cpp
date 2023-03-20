@@ -8,7 +8,7 @@
 #include <sstream>
 
 TEST_CASE("deserializeMsgPack() returns EmptyInput") {
-  DynamicJsonDocument doc(100);
+  JsonDocument doc(100);
 
   SECTION("from sized buffer") {
     DeserializationError err = deserializeMsgPack(doc, "", 0);

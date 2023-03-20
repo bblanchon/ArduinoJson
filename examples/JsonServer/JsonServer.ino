@@ -58,7 +58,7 @@ void loop() {
 
   // Allocate a temporary JsonDocument
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(500);
+  JsonDocument doc(500);
 
   // Create the "analog" array
   JsonArray analogValues = doc.createNestedArray("analog");

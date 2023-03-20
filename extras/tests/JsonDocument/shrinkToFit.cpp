@@ -43,7 +43,7 @@ class ArmoredAllocator : public Allocator {
   size_t _size;
 };
 
-void testShrinkToFit(DynamicJsonDocument& doc, std::string expected_json,
+void testShrinkToFit(JsonDocument& doc, std::string expected_json,
                      size_t expected_size) {
   // test twice: shrinkToFit() should be idempotent
   for (int i = 0; i < 2; i++) {
@@ -58,9 +58,9 @@ void testShrinkToFit(DynamicJsonDocument& doc, std::string expected_json,
   }
 }
 
-TEST_CASE("DynamicJsonDocument::shrinkToFit()") {
+TEST_CASE("JsonDocument::shrinkToFit()") {
   ArmoredAllocator armoredAllocator;
-  DynamicJsonDocument doc(4096, &armoredAllocator);
+  JsonDocument doc(4096, &armoredAllocator);
 
   SECTION("null") {
     testShrinkToFit(doc, "null", 0);

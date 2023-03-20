@@ -12,7 +12,7 @@ TEST_CASE("JsonArray::isNull()") {
   }
 
   SECTION("returns false") {
-    DynamicJsonDocument doc(4096);
+    JsonDocument doc(4096);
     JsonArray arr = doc.to<JsonArray>();
     REQUIRE(arr.isNull() == false);
   }
@@ -25,7 +25,7 @@ TEST_CASE("JsonArrayConst::isNull()") {
   }
 
   SECTION("returns false") {
-    DynamicJsonDocument doc(4096);
+    JsonDocument doc(4096);
     JsonArrayConst arr = doc.to<JsonArray>();
     REQUIRE(arr.isNull() == false);
   }
@@ -38,7 +38,7 @@ TEST_CASE("JsonArray::operator bool()") {
   }
 
   SECTION("returns true") {
-    DynamicJsonDocument doc(4096);
+    JsonDocument doc(4096);
     JsonArray arr = doc.to<JsonArray>();
     REQUIRE(static_cast<bool>(arr) == true);
   }
@@ -51,7 +51,7 @@ TEST_CASE("JsonArrayConst::operator bool()") {
   }
 
   SECTION("returns true") {
-    DynamicJsonDocument doc(4096);
+    JsonDocument doc(4096);
     JsonArrayConst arr = doc.to<JsonArray>();
     REQUIRE(static_cast<bool>(arr) == true);
   }

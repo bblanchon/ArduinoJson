@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("deserialize MsgPack object") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("fixmap") {
     SECTION("empty") {

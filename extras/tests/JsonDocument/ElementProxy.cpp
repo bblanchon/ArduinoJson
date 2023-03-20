@@ -8,7 +8,7 @@
 typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
 
 TEST_CASE("ElementProxy::add()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -34,7 +34,7 @@ TEST_CASE("ElementProxy::add()") {
 }
 
 TEST_CASE("ElementProxy::clear()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -54,7 +54,7 @@ TEST_CASE("ElementProxy::clear()") {
 }
 
 TEST_CASE("ElementProxy::operator==()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("1 vs 1") {
     doc.add(1);
@@ -94,7 +94,7 @@ TEST_CASE("ElementProxy::operator==()") {
 }
 
 TEST_CASE("ElementProxy::remove()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -142,7 +142,7 @@ TEST_CASE("ElementProxy::remove()") {
 }
 
 TEST_CASE("ElementProxy::set()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   ElementProxy ep = doc[0];
 
   SECTION("set(int)") {
@@ -167,7 +167,7 @@ TEST_CASE("ElementProxy::set()") {
 }
 
 TEST_CASE("ElementProxy::size()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -189,7 +189,7 @@ TEST_CASE("ElementProxy::size()") {
 }
 
 TEST_CASE("ElementProxy::memoryUsage()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -204,7 +204,7 @@ TEST_CASE("ElementProxy::memoryUsage()") {
 }
 
 TEST_CASE("ElementProxy::operator[]") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   ElementProxy ep = doc[1];
 
   SECTION("set member") {
@@ -221,7 +221,7 @@ TEST_CASE("ElementProxy::operator[]") {
 }
 
 TEST_CASE("ElementProxy cast to JsonVariantConst") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc[0] = "world";
 
   const ElementProxy ep = doc[0];
@@ -232,7 +232,7 @@ TEST_CASE("ElementProxy cast to JsonVariantConst") {
 }
 
 TEST_CASE("ElementProxy cast to JsonVariant") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc[0] = "world";
 
   ElementProxy ep = doc[0];
@@ -247,7 +247,7 @@ TEST_CASE("ElementProxy cast to JsonVariant") {
 }
 
 TEST_CASE("ElementProxy::shallowCopy()") {
-  DynamicJsonDocument doc1(1024), doc2(1024);
+  JsonDocument doc1(1024), doc2(1024);
   doc2["hello"] = "world";
   doc1[0].shallowCopy(doc2);
 

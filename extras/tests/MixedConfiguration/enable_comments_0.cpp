@@ -8,7 +8,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Comments should produce InvalidInput") {
-  DynamicJsonDocument doc(2048);
+  JsonDocument doc(2048);
 
   const char* testCases[] = {
       "/*COMMENT*/  [\"hello\"]",

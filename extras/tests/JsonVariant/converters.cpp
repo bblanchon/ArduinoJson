@@ -32,7 +32,7 @@ bool canConvertFromJson(JsonVariantConst src, const Date&) {
 }  // namespace
 
 TEST_CASE("Custom converter with overloading") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("convert JSON to Date") {
     doc["date"]["day"] = 2;
@@ -107,7 +107,7 @@ struct Converter<Complex> {
 }  // namespace ArduinoJson
 
 TEST_CASE("Custom converter with specialization") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("convert JSON to Complex") {
     doc["value"]["real"] = 2;

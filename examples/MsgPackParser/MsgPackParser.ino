@@ -20,7 +20,7 @@ void setup() {
   // Inside the parentheses, 200 is the capacity of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(200);
+  JsonDocument doc(200);
 
   // MessagePack input string.
   //

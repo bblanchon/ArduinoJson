@@ -20,7 +20,7 @@ static void checkObject(const JsonObject obj, const std::string& expected) {
 }
 
 TEST_CASE("serializeJson(JsonObject)") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("EmptyObject") {
@@ -96,8 +96,8 @@ TEST_CASE("serializeJson(JsonObject)") {
   }
 
   SECTION("ThreeNestedArrays") {
-    DynamicJsonDocument b(4096);
-    DynamicJsonDocument c(4096);
+    JsonDocument b(4096);
+    JsonDocument c(4096);
 
     obj.createNestedArray("a");
     obj["b"] = b.to<JsonArray>();
@@ -107,8 +107,8 @@ TEST_CASE("serializeJson(JsonObject)") {
   }
 
   SECTION("ThreeNestedObjects") {
-    DynamicJsonDocument b(4096);
-    DynamicJsonDocument c(4096);
+    JsonDocument b(4096);
+    JsonDocument c(4096);
 
     obj.createNestedObject("a");
     obj["b"] = b.to<JsonObject>();

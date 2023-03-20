@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::nesting()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("return 0 if uninitialized") {

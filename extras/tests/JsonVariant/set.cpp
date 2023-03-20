@@ -8,7 +8,7 @@
 enum ErrorCode { ERROR_01 = 1, ERROR_10 = 10 };
 
 TEST_CASE("JsonVariant::set() when there is enough memory") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("const char*") {
@@ -128,7 +128,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 }
 
 TEST_CASE("JsonVariant::set() with not enough memory") {
-  DynamicJsonDocument doc(1);
+  JsonDocument doc(1);
 
   JsonVariant v = doc.to<JsonVariant>();
 
@@ -155,11 +155,11 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
   }
 }
 
-TEST_CASE("JsonVariant::set(DynamicJsonDocument)") {
-  DynamicJsonDocument doc1(1024);
+TEST_CASE("JsonVariant::set(JsonDocument)") {
+  JsonDocument doc1(1024);
   doc1["hello"] = "world";
 
-  DynamicJsonDocument doc2(1024);
+  JsonDocument doc2(1024);
   JsonVariant v = doc2.to<JsonVariant>();
 
   // Should copy the doc

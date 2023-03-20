@@ -8,7 +8,7 @@
 #endif
 
 TEST_CASE("string_view") {
-  DynamicJsonDocument doc(256);
+  JsonDocument doc(256);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("deserializeJson()") {

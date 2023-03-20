@@ -26,7 +26,7 @@ static void check(const JsonArray array, const std::string& expected) {
 }
 
 TEST_CASE("serialize MsgPack array") {
-  DynamicJsonDocument doc(JSON_ARRAY_SIZE(65536));
+  JsonDocument doc(JSON_ARRAY_SIZE(65536));
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("empty") {

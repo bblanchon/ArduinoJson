@@ -7,7 +7,7 @@
 
 template <typename T>
 static void checkValue(const char* input, T expected) {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   DeserializationError error = deserializeMsgPack(doc, input);
 
@@ -18,7 +18,7 @@ static void checkValue(const char* input, T expected) {
 
 static void checkError(size_t capacity, const char* input,
                        DeserializationError expected) {
-  DynamicJsonDocument doc(capacity);
+  JsonDocument doc(capacity);
 
   DeserializationError error = deserializeMsgPack(doc, input);
 

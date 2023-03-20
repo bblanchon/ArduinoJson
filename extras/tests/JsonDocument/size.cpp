@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::size()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("returns 0") {
     REQUIRE(doc.size() == 0);

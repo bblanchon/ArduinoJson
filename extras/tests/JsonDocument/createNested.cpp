@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::createNestedArray()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("promotes to array") {
     doc.createNestedArray();
@@ -16,7 +16,7 @@ TEST_CASE("JsonDocument::createNestedArray()") {
 }
 
 TEST_CASE("JsonDocument::createNestedArray(key)") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("key is const char*") {
     SECTION("promotes to object") {
@@ -36,7 +36,7 @@ TEST_CASE("JsonDocument::createNestedArray(key)") {
 }
 
 TEST_CASE("JsonDocument::createNestedObject()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("promotes to array") {
     doc.createNestedObject();
@@ -46,7 +46,7 @@ TEST_CASE("JsonDocument::createNestedObject()") {
 }
 
 TEST_CASE("JsonDocument::createNestedObject(key)") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("key is const char*") {
     SECTION("promotes to object") {

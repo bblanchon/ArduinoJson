@@ -13,8 +13,8 @@ static void REQUIRE_JSON(JsonDocument& doc, const std::string& expected) {
   REQUIRE(json == expected);
 }
 
-TEST_CASE("DynamicJsonDocument") {
-  DynamicJsonDocument doc(4096);
+TEST_CASE("JsonDocument") {
+  JsonDocument doc(4096);
 
   SECTION("serializeJson()") {
     JsonObject obj = doc.to<JsonObject>();
@@ -49,12 +49,12 @@ TEST_CASE("DynamicJsonDocument") {
 
   SECTION("capacity()") {
     SECTION("matches constructor argument") {
-      DynamicJsonDocument doc2(256);
+      JsonDocument doc2(256);
       REQUIRE(doc2.capacity() == 256);
     }
 
     SECTION("rounds up constructor argument") {
-      DynamicJsonDocument doc2(253);
+      JsonDocument doc2(253);
       REQUIRE(doc2.capacity() == 256);
     }
   }
@@ -82,12 +82,12 @@ TEST_CASE("DynamicJsonDocument") {
   }
 }
 
-TEST_CASE("DynamicJsonDocument constructor") {
+TEST_CASE("JsonDocument constructor") {
   SECTION("Copy constructor") {
-    DynamicJsonDocument doc1(1234);
+    JsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
 
-    DynamicJsonDocument doc2 = doc1;
+    JsonDocument doc2 = doc1;
 
     REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
 
@@ -95,43 +95,43 @@ TEST_CASE("DynamicJsonDocument constructor") {
   }
 
   SECTION("Construct from JsonObject") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
 
-    DynamicJsonDocument doc2 = obj;
+    JsonDocument doc2 = obj;
 
     REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
     REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
   }
 
   SECTION("Construct from JsonArray") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
 
-    DynamicJsonDocument doc2 = arr;
+    JsonDocument doc2 = arr;
 
     REQUIRE_JSON(doc2, "[\"hello\"]");
     REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
   }
 
   SECTION("Construct from JsonVariant") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     deserializeJson(doc1, "42");
 
-    DynamicJsonDocument doc2 = doc1.as<JsonVariant>();
+    JsonDocument doc2 = doc1.as<JsonVariant>();
 
     REQUIRE_JSON(doc2, "42");
     REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
   }
 }
 
-TEST_CASE("DynamicJsonDocument assignment") {
+TEST_CASE("JsonDocument assignment") {
   SECTION("Copy assignment reallocates when capacity is smaller") {
-    DynamicJsonDocument doc1(1234);
+    JsonDocument doc1(1234);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
-    DynamicJsonDocument doc2(8);
+    JsonDocument doc2(8);
 
     doc2 = doc1;
 
@@ -140,9 +140,9 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Copy assignment reallocates when capacity is larger") {
-    DynamicJsonDocument doc1(100);
+    JsonDocument doc1(100);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
-    DynamicJsonDocument doc2(1234);
+    JsonDocument doc2(1234);
 
     doc2 = doc1;
 
@@ -151,11 +151,11 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from JsonObject") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
 
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     doc2 = obj;
 
     REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
@@ -163,11 +163,11 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from JsonArray") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
 
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     doc2 = arr;
 
     REQUIRE_JSON(doc2, "[\"hello\"]");
@@ -175,10 +175,10 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from JsonVariant") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     deserializeJson(doc1, "42");
 
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     doc2 = doc1.as<JsonVariant>();
 
     REQUIRE_JSON(doc2, "42");
@@ -186,10 +186,10 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from MemberProxy") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     doc1["value"] = 42;
 
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     doc2 = doc1["value"];
 
     REQUIRE_JSON(doc2, "42");
@@ -197,10 +197,10 @@ TEST_CASE("DynamicJsonDocument assignment") {
   }
 
   SECTION("Assign from ElementProxy") {
-    DynamicJsonDocument doc1(200);
+    JsonDocument doc1(200);
     doc1[0] = 42;
 
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     doc2 = doc1[0];
 
     REQUIRE_JSON(doc2, "42");

@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::size()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("unbound reference") {

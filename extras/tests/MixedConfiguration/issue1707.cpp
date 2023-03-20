@@ -12,7 +12,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Issue1707") {
-  DynamicJsonDocument doc(128);
+  JsonDocument doc(128);
 
   DeserializationError err = deserializeJson(doc, F("{\"hello\":12}"));
   REQUIRE(err == DeserializationError::Ok);

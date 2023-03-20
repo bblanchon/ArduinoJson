@@ -481,7 +481,7 @@ jobs:
           g++ -x c++ - <<END
           #include "${{ steps.amalgamate.outputs.filename }}"
           int main() {
-            DynamicJsonDocument doc(300);
+            JsonDocument doc(300);
             deserializeJson(doc, "{}");
           }
           END
@@ -515,7 +515,7 @@ jobs:
           g++ -x c++ - <<END
           #include "${{ steps.amalgamate.outputs.filename }}"
           int main() {
-            ArduinoJson::DynamicJsonDocument doc(300);
+            ArduinoJson::JsonDocument doc(300);
             deserializeJson(doc, "{}");
           }
           END

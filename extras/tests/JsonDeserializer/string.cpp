@@ -35,7 +35,7 @@ TEST_CASE("Valid JSON strings value") {
   };
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   for (size_t i = 0; i < testCount; i++) {
     const TestCase& testCase = testCases[i];
@@ -47,7 +47,7 @@ TEST_CASE("Valid JSON strings value") {
 }
 
 TEST_CASE("\\u0000") {
-  DynamicJsonDocument doc(200);
+  JsonDocument doc(200);
 
   DeserializationError err = deserializeJson(doc, "\"wx\\u0000yz\"");
   REQUIRE(err == DeserializationError::Ok);
@@ -68,7 +68,7 @@ TEST_CASE("Truncated JSON string") {
   const char* testCases[] = {"\"hello", "\'hello", "'\\u", "'\\u00", "'\\u000"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   for (size_t i = 0; i < testCount; i++) {
     const char* input = testCases[i];
@@ -83,7 +83,7 @@ TEST_CASE("Invalid JSON string") {
                              "'\\u000G'", "'\\u000/'", "'\\x1234'"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   for (size_t i = 0; i < testCount; i++) {
     const char* input = testCases[i];
@@ -93,7 +93,7 @@ TEST_CASE("Invalid JSON string") {
 }
 
 TEST_CASE("Not enough room to save the key") {
-  DynamicJsonDocument doc(JSON_OBJECT_SIZE(1) + 8);
+  JsonDocument doc(JSON_OBJECT_SIZE(1) + 8);
 
   SECTION("Quoted string") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
@@ -115,7 +115,7 @@ TEST_CASE("Not enough room to save the key") {
 
 TEST_CASE("Empty memory pool") {
   // NOLINTNEXTLINE(clang-analyzer-optin.portability.UnixAPI)
-  DynamicJsonDocument doc(0);
+  JsonDocument doc(0);
 
   SECTION("Input is const char*") {
     REQUIRE(deserializeJson(doc, "\"hello\"") ==

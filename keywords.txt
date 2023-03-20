@@ -25,7 +25,7 @@ to	KEYWORD2
 
 # Type names
 DeserializationError	KEYWORD1	DATA_TYPE
-DynamicJsonDocument	KEYWORD1	DATA_TYPE
+JsonDocument	KEYWORD1	DATA_TYPE
 JsonArray	KEYWORD1	DATA_TYPE
 JsonArrayConst	KEYWORD1	DATA_TYPE
 JsonDocument	KEYWORD1	DATA_TYPE

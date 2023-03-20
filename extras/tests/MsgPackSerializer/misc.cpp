@@ -4,7 +4,7 @@
 
 template <typename T>
 void check(T value, const std::string& expected) {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   doc.to<JsonVariant>().set(value);
   char buffer[256] = "";
   size_t returnValue = serializeMsgPack(doc, buffer, sizeof(buffer));
@@ -13,7 +13,7 @@ void check(T value, const std::string& expected) {
 }
 
 TEST_CASE("serializeMsgPack(MemberProxy)") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   deserializeJson(doc, "{\"hello\":42}");
   JsonObject obj = doc.as<JsonObject>();
   std::string result;
@@ -24,7 +24,7 @@ TEST_CASE("serializeMsgPack(MemberProxy)") {
 }
 
 TEST_CASE("serializeMsgPack(ElementProxy)") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   deserializeJson(doc, "[42]");
   JsonArray arr = doc.as<JsonArray>();
   std::string result;
@@ -35,7 +35,7 @@ TEST_CASE("serializeMsgPack(ElementProxy)") {
 }
 
 TEST_CASE("serializeMsgPack(JsonVariantSubscript)") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   deserializeJson(doc, "[42]");
   JsonVariant var = doc.as<JsonVariant>();
   std::string result;

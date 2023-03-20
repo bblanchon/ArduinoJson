@@ -8,7 +8,7 @@
 using namespace Catch::Matchers;
 
 TEST_CASE("JsonObject::begin()/end()") {
-  DynamicJsonDocument doc(JSON_OBJECT_SIZE(2));
+  JsonDocument doc(JSON_OBJECT_SIZE(2));
   JsonObject obj = doc.to<JsonObject>();
   obj["ab"] = 12;
   obj["cd"] = 34;
@@ -38,7 +38,7 @@ TEST_CASE("JsonObject::begin()/end()") {
 }
 
 TEST_CASE("JsonObjectConst::begin()/end()") {
-  DynamicJsonDocument doc(JSON_OBJECT_SIZE(2));
+  JsonDocument doc(JSON_OBJECT_SIZE(2));
   JsonObject obj = doc.to<JsonObject>();
   obj["ab"] = 12;
   obj["cd"] = 34;

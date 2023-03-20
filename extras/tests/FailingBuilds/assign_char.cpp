@@ -7,6 +7,6 @@
 // See issue #1498
 
 int main() {
-  DynamicJsonDocument doc(1024);
+  JsonDocument doc(1024);
   doc["dummy"] = 'A';
 }

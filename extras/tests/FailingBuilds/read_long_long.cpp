@@ -11,6 +11,6 @@
 
 ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(long long)
 int main() {
-  DynamicJsonDocument doc(1024);
+  JsonDocument doc(1024);
   doc["dummy"].as<long long>();
 }

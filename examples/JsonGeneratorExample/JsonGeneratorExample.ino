@@ -19,7 +19,7 @@ void setup() {
   // Inside the parentheses, 200 is the RAM allocated to this document.
   // Don't forget to change this value to match your requirement.
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(200);
+  JsonDocument doc(200);
 
   // Add values in the document
   //

@@ -60,21 +60,21 @@ class ControllableAllocator : public Allocator {
   bool _enabled;
 };
 
-TEST_CASE("DynamicJsonDocument's allocator") {
+TEST_CASE("JsonDocument's allocator") {
   SpyingAllocator spyingAllocator;
   ControllableAllocator controllableAllocator;
 
   SECTION("Construct/Destruct") {
-    { DynamicJsonDocument doc(4096, &spyingAllocator); }
+    { JsonDocument doc(4096, &spyingAllocator); }
     REQUIRE(spyingAllocator.log() == "A4096F");
   }
 
   SECTION("Copy construct") {
     {
-      DynamicJsonDocument doc1(4096, &spyingAllocator);
+      JsonDocument doc1(4096, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
 
-      DynamicJsonDocument doc2(doc1);
+      JsonDocument doc2(doc1);
 
       REQUIRE(doc1.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
@@ -85,10 +85,10 @@ TEST_CASE("DynamicJsonDocument's allocator") {
 
   SECTION("Move construct") {
     {
-      DynamicJsonDocument doc1(4096, &spyingAllocator);
+      JsonDocument doc1(4096, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
 
-      DynamicJsonDocument doc2(std::move(doc1));
+      JsonDocument doc2(std::move(doc1));
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc1.as<std::string>() == "null");
@@ -100,9 +100,9 @@ TEST_CASE("DynamicJsonDocument's allocator") {
 
   SECTION("Copy assign larger") {
     {
-      DynamicJsonDocument doc1(4096, &spyingAllocator);
+      JsonDocument doc1(4096, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
-      DynamicJsonDocument doc2(8, &spyingAllocator);
+      JsonDocument doc2(8, &spyingAllocator);
 
       doc2 = doc1;
 
@@ -115,9 +115,9 @@ TEST_CASE("DynamicJsonDocument's allocator") {
 
   SECTION("Copy assign smaller") {
     {
-      DynamicJsonDocument doc1(1024, &spyingAllocator);
+      JsonDocument doc1(1024, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
-      DynamicJsonDocument doc2(4096, &spyingAllocator);
+      JsonDocument doc2(4096, &spyingAllocator);
 
       doc2 = doc1;
 
@@ -130,9 +130,9 @@ TEST_CASE("DynamicJsonDocument's allocator") {
 
   SECTION("Copy assign same size") {
     {
-      DynamicJsonDocument doc1(1024, &spyingAllocator);
+      JsonDocument doc1(1024, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
-      DynamicJsonDocument doc2(1024, &spyingAllocator);
+      JsonDocument doc2(1024, &spyingAllocator);
 
       doc2 = doc1;
 
@@ -145,9 +145,9 @@ TEST_CASE("DynamicJsonDocument's allocator") {
 
   SECTION("Move assign") {
     {
-      DynamicJsonDocument doc1(4096, &spyingAllocator);
+      JsonDocument doc1(4096, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
-      DynamicJsonDocument doc2(8, &spyingAllocator);
+      JsonDocument doc2(8, &spyingAllocator);
 
       doc2 = std::move(doc1);
 
@@ -160,7 +160,7 @@ TEST_CASE("DynamicJsonDocument's allocator") {
   }
 
   SECTION("garbageCollect()") {
-    DynamicJsonDocument doc(4096, &controllableAllocator);
+    JsonDocument doc(4096, &controllableAllocator);
 
     SECTION("when allocation succeeds") {
       deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");

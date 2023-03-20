@@ -8,7 +8,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Comments in arrays") {
-  DynamicJsonDocument doc(2048);
+  JsonDocument doc(2048);
 
   SECTION("Block comments") {
     SECTION("Before opening bracket") {
@@ -161,7 +161,7 @@ TEST_CASE("Comments in arrays") {
 }
 
 TEST_CASE("Comments in objects") {
-  DynamicJsonDocument doc(2048);
+  JsonDocument doc(2048);
 
   SECTION("Block comments") {
     SECTION("Before opening brace") {
@@ -371,7 +371,7 @@ TEST_CASE("Comments in objects") {
 }
 
 TEST_CASE("Comments alone") {
-  DynamicJsonDocument doc(2048);
+  JsonDocument doc(2048);
 
   SECTION("Just a trailing comment with no line break") {
     DeserializationError err = deserializeJson(doc, "// comment");

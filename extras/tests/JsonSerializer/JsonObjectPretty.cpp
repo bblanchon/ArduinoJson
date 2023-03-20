@@ -19,7 +19,7 @@ static void checkObjectPretty(const JsonObject obj,
 }
 
 TEST_CASE("serializeJsonPretty(JsonObject)") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("EmptyObject") {

@@ -7,7 +7,7 @@
 #include <string>
 
 TEST_CASE("JsonObject::size()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("initial size is zero") {

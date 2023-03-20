@@ -29,7 +29,7 @@
 #include "ArduinoJson/Object/JsonObject.hpp"
 #include "ArduinoJson/Variant/JsonVariantConst.hpp"
 
-#include "ArduinoJson/Document/DynamicJsonDocument.hpp"
+#include "ArduinoJson/Document/JsonDocument.hpp"
 
 #include "ArduinoJson/Array/ElementProxy.hpp"
 #include "ArduinoJson/Array/JsonArrayImpl.hpp"

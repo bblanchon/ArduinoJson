@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::nesting()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("return 0 if uninitialized") {

@@ -6,8 +6,8 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonObject::set()") {
-  DynamicJsonDocument doc1(4096);
-  DynamicJsonDocument doc2(4096);
+  JsonDocument doc1(4096);
+  JsonDocument doc2(4096);
 
   JsonObject obj1 = doc1.to<JsonObject>();
   JsonObject obj2 = doc2.to<JsonObject>();
@@ -72,7 +72,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("destination too small to store the key") {
-    DynamicJsonDocument doc3(JSON_OBJECT_SIZE(1));
+    JsonDocument doc3(JSON_OBJECT_SIZE(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1[std::string("hello")] = "world";
@@ -84,7 +84,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("destination too small to store the value") {
-    DynamicJsonDocument doc3(JSON_OBJECT_SIZE(1));
+    JsonDocument doc3(JSON_OBJECT_SIZE(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1["hello"] = std::string("world");

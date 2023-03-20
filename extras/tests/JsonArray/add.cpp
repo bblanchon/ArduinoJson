@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::add()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("int") {
@@ -51,7 +51,7 @@ TEST_CASE("JsonArray::add()") {
 #endif
 
   SECTION("nested array") {
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     JsonArray arr = doc2.to<JsonArray>();
 
     array.add(arr);
@@ -62,7 +62,7 @@ TEST_CASE("JsonArray::add()") {
   }
 
   SECTION("nested object") {
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     JsonObject obj = doc2.to<JsonObject>();
 
     array.add(obj);
@@ -74,7 +74,7 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("array subscript") {
     const char* str = "hello";
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     JsonArray arr = doc2.to<JsonArray>();
     arr.add(str);
 
@@ -85,7 +85,7 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("object subscript") {
     const char* str = "hello";
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     JsonObject obj = doc2.to<JsonObject>();
     obj["x"] = str;
 

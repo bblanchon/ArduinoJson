@@ -3,7 +3,7 @@
 #include <catch.hpp>
 
 TEST_CASE("nullptr") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("JsonVariant == nullptr") {

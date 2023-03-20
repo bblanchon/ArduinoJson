@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::isNull()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("returns true if uninitialized") {
     REQUIRE(doc.isNull() == true);

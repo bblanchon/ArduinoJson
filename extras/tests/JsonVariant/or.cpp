@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::operator|()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant variant = doc["value"].to<JsonVariant>();
 
   SECTION("null") {

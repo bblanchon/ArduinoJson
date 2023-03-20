@@ -18,7 +18,7 @@ TEST_CASE("JsonVariant from JsonArray") {
   }
 
   SECTION("JsonArray is not null") {
-    DynamicJsonDocument doc(4096);
+    JsonDocument doc(4096);
     JsonArray arr = doc.to<JsonArray>();
     arr.add(12);
     arr.add(34);
@@ -40,7 +40,7 @@ TEST_CASE("JsonVariant from JsonObject") {
   }
 
   SECTION("JsonObject is not null") {
-    DynamicJsonDocument doc(4096);
+    JsonDocument doc(4096);
     JsonObject obj = doc.to<JsonObject>();
     obj["a"] = 12;
     obj["b"] = 34;

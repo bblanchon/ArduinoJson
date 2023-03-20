@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("deserialize JSON array") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
 
   SECTION("An empty array") {
     DeserializationError err = deserializeJson(doc, "[]");
@@ -254,7 +254,7 @@ TEST_CASE("deserialize JSON array") {
 
 TEST_CASE("deserialize JSON array under memory constraints") {
   SECTION("buffer of the right size for an empty array") {
-    DynamicJsonDocument doc(JSON_ARRAY_SIZE(0));
+    JsonDocument doc(JSON_ARRAY_SIZE(0));
     char input[] = "[]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -263,7 +263,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer too small for an array with one element") {
-    DynamicJsonDocument doc(JSON_ARRAY_SIZE(0));
+    JsonDocument doc(JSON_ARRAY_SIZE(0));
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -272,7 +272,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer of the right size for an array with one element") {
-    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1));
+    JsonDocument doc(JSON_ARRAY_SIZE(1));
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -281,7 +281,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer too small for an array with a nested object") {
-    DynamicJsonDocument doc(JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(0));
+    JsonDocument doc(JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(0));
     char input[] = "[{}]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -290,7 +290,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer of the right size for an array with a nested object") {
-    DynamicJsonDocument doc(JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0));
+    JsonDocument doc(JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0));
     char input[] = "[{}]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -299,7 +299,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("don't store space characters") {
-    DynamicJsonDocument doc(100);
+    JsonDocument doc(100);
 
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
@@ -309,7 +309,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("Should clear the JsonArray") {
-    DynamicJsonDocument doc(JSON_ARRAY_SIZE(4));
+    JsonDocument doc(JSON_ARRAY_SIZE(4));
     char input[] = "[1,2,3,4]";
 
     deserializeJson(doc, input);
@@ -321,7 +321,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer of the right size for an array with two element") {
-    DynamicJsonDocument doc(JSON_ARRAY_SIZE(2));
+    JsonDocument doc(JSON_ARRAY_SIZE(2));
     char input[] = "[1,2]";
 
     DeserializationError err = deserializeJson(doc, input);

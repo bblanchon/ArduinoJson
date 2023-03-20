@@ -4,7 +4,7 @@
 #include <catch.hpp>
 
 TEST_CASE("ARDUINOJSON_DECODE_UNICODE == 0") {
-  DynamicJsonDocument doc(2048);
+  JsonDocument doc(2048);
   DeserializationError err = deserializeJson(doc, "\"\\uD834\\uDD1E\"");
 
   REQUIRE(err == DeserializationError::Ok);

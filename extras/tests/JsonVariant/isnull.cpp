@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::isNull()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("returns true when Undefined") {
@@ -20,7 +20,7 @@ TEST_CASE("JsonVariant::isNull()") {
   }
 
   SECTION("returns false when EmptyArray") {
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     JsonArray array = doc2.to<JsonArray>();
 
     variant.set(array);
@@ -28,7 +28,7 @@ TEST_CASE("JsonVariant::isNull()") {
   }
 
   SECTION("returns false when EmptyObject") {
-    DynamicJsonDocument doc2(4096);
+    JsonDocument doc2(4096);
     JsonObject obj = doc2.to<JsonObject>();
 
     variant.set(obj);
@@ -71,13 +71,13 @@ TEST_CASE("JsonVariant::isNull()") {
   }
 
   SECTION("returns true for a shallow null copy") {
-    DynamicJsonDocument doc2(128);
+    JsonDocument doc2(128);
     variant.shallowCopy(doc2);
     CHECK(variant.isNull() == true);
   }
 
   SECTION("returns false for a shallow array copy") {
-    DynamicJsonDocument doc2(128);
+    JsonDocument doc2(128);
     doc2[0] = 42;
     variant.shallowCopy(doc2);
     CHECK(variant.isNull() == false);

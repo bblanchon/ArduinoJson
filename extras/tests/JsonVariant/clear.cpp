@@ -7,7 +7,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::clear()") {
-  DynamicJsonDocument doc(4096);
+  JsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("size goes back to zero") {
