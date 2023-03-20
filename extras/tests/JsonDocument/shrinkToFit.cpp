@@ -8,24 +8,25 @@
 #include <stdlib.h>  // malloc, free
 #include <string>
 
-class ArmoredAllocator {
+class ArmoredAllocator : public Allocator {
  public:
   ArmoredAllocator() : _ptr(0), _size(0) {}
+  virtual ~ArmoredAllocator() {}
 
-  void* allocate(size_t size) {
+  void* allocate(size_t size) override {
     _ptr = malloc(size);
     _size = size;
     return _ptr;
   }
 
-  void deallocate(void* ptr) {
+  void deallocate(void* ptr) override {
     REQUIRE(ptr == _ptr);
     free(ptr);
     _ptr = 0;
     _size = 0;
   }
 
-  void* reallocate(void* ptr, size_t new_size) {
+  void* reallocate(void* ptr, size_t new_size) override {
     REQUIRE(ptr == _ptr);
     // don't call realloc, instead alloc a new buffer and erase the old one
     // this way we make sure we support relocation
@@ -42,9 +43,7 @@ class ArmoredAllocator {
   size_t _size;
 };
 
-typedef BasicJsonDocument<ArmoredAllocator> ShrinkToFitTestDocument;
-
-void testShrinkToFit(ShrinkToFitTestDocument& doc, std::string expected_json,
+void testShrinkToFit(DynamicJsonDocument& doc, std::string expected_json,
                      size_t expected_size) {
   // test twice: shrinkToFit() should be idempotent
   for (int i = 0; i < 2; i++) {
@@ -60,7 +59,8 @@ void testShrinkToFit(ShrinkToFitTestDocument& doc, std::string expected_json,
 }
 
 TEST_CASE("BasicJsonDocument::shrinkToFit()") {
-  ShrinkToFitTestDocument doc(4096);
+  ArmoredAllocator armoredAllocator;
+  DynamicJsonDocument doc(4096, &armoredAllocator);
 
   SECTION("null") {
     testShrinkToFit(doc, "null", 0);

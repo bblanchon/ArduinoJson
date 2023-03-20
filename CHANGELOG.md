@@ -5,3 +5,4 @@ HEAD
 ----
 
 * Remove `StaticJsonDocument`
+* Add abstract `Allocator` class

@@ -5,58 +5,60 @@
 #pragma once
 
 #include <ArduinoJson/Document/JsonDocument.hpp>
+#include <ArduinoJson/Memory/Allocator.hpp>
+
+#include <stdlib.h>  // malloc, free
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Helper to implement the "base-from-member" idiom
 // (we need to store the allocator before constructing JsonDocument)
-template <typename TAllocator>
 class AllocatorOwner {
  public:
-  AllocatorOwner() {}
-  AllocatorOwner(TAllocator a) : _allocator(a) {}
+  AllocatorOwner(Allocator* allocator) : _allocator(allocator) {}
 
   void* allocate(size_t size) {
-    return _allocator.allocate(size);
+    return _allocator->allocate(size);
   }
 
   void deallocate(void* ptr) {
     if (ptr)
-      _allocator.deallocate(ptr);
+      _allocator->deallocate(ptr);
   }
 
   void* reallocate(void* ptr, size_t new_size) {
-    return _allocator.reallocate(ptr, new_size);
+    return _allocator->reallocate(ptr, new_size);
   }
 
-  TAllocator& allocator() {
+  Allocator* allocator() {
     return _allocator;
   }
 
  private:
-  TAllocator _allocator;
+  Allocator* _allocator;
 };
 
 // A JsonDocument that uses the provided allocator to allocate its memory pool.
 // https://arduinojson.org/v6/api/basicjsondocument/
-template <typename TAllocator>
-class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
+class BasicJsonDocument : AllocatorOwner, public JsonDocument {
  public:
-  explicit BasicJsonDocument(size_t capa, TAllocator alloc = TAllocator())
-      : AllocatorOwner<TAllocator>(alloc), JsonDocument(allocPool(capa)) {}
+  explicit BasicJsonDocument(
+      size_t capa, Allocator* alloc = detail::DefaultAllocator::instance())
+      : AllocatorOwner(alloc), JsonDocument(allocPool(capa)) {}
 
   // Copy-constructor
   BasicJsonDocument(const BasicJsonDocument& src)
-      : AllocatorOwner<TAllocator>(src), JsonDocument() {
+      : AllocatorOwner(src), JsonDocument() {
     copyAssignFrom(src);
   }
 
   // Move-constructor
-  BasicJsonDocument(BasicJsonDocument&& src) : AllocatorOwner<TAllocator>(src) {
+  BasicJsonDocument(BasicJsonDocument&& src) : AllocatorOwner(src) {
     moveAssignFrom(src);
   }
 
-  BasicJsonDocument(const JsonDocument& src) {
+  BasicJsonDocument(const JsonDocument& src)
+      : AllocatorOwner(detail::DefaultAllocator::instance()) {
     copyAssignFrom(src);
   }
 
@@ -70,13 +72,14 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
                         detail::is_same<T, JsonArrayConst>::value ||
                         detail::is_same<T, JsonObject>::value ||
                         detail::is_same<T, JsonObjectConst>::value>::type* = 0)
-      : JsonDocument(allocPool(src.memoryUsage())) {
+      : BasicJsonDocument(src.memoryUsage()) {
     set(src);
   }
 
   // disambiguate
   BasicJsonDocument(JsonVariant src)
-      : JsonDocument(allocPool(src.memoryUsage())) {
+      : AllocatorOwner(detail::DefaultAllocator::instance()),
+        JsonDocument(allocPool(src.memoryUsage())) {
     set(src);
   }
 
@@ -132,7 +135,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
     return true;
   }
 
-  using AllocatorOwner<TAllocator>::allocator;
+  using AllocatorOwner::allocator;
 
  private:
   detail::MemoryPool allocPool(size_t requiredSize) {
