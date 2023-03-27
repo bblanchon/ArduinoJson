@@ -14,5 +14,5 @@ cp -r "$SOURCE_DIR/src" "$WORK_DIR/"
 cp -r "$SOURCE_DIR/examples" "$WORK_DIR/"
 
 cd "$WORK_DIR"
-particle library upload
-particle library publish
+particle library upload -v
+particle library publish -v
