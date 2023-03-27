@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.21.1 (2023-03-27)
+-------
 
 * Double speed of `DynamicJsonDocument::garbageCollect()`
 * Fix compatibility with GCC 5.2 (issue #1897)
