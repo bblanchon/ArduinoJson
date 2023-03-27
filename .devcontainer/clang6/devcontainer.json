@@ -1,0 +1,18 @@
+{
+	"name": "Clang 6",
+	"image": "conanio/clang60",
+	"runArgs": [
+		"--name=ArduinoJson-clang6"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools"
+			],
+			"settings": {
+				"cmake.generator": "Unix Makefiles",
+				"cmake.buildDirectory": "/tmp/build"
+			}
+		}
+	}
+}

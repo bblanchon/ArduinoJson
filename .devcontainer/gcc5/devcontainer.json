@@ -1,0 +1,18 @@
+{
+	"name": "GCC 5",
+	"image": "conanio/gcc5",
+	"runArgs": [
+		"--name=ArduinoJson-gcc5"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools"
+			],
+			"settings": {
+				"cmake.generator": "Unix Makefiles",
+				"cmake.buildDirectory": "/tmp/build"
+			}
+		}
+	}
+}

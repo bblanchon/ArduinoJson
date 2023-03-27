@@ -13,6 +13,7 @@
     "url": "https://blog.benoitblanchon.fr"
   },
   "exclude": [
+    ".devcontainer",
     ".github",
     "extras"
   ],
