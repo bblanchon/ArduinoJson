@@ -8,5 +8,6 @@ url: https://arduinojson.org/
 files:
   exclude:
     - "**/.vs/**/*"
+    - ".devcontainer/**/*"
     - "examples/**/*"
     - "extras/**/*"

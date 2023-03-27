@@ -1,0 +1,18 @@
+{
+	"name": "Clang 10",
+	"image": "conanio/clang10",
+	"runArgs": [
+		"--name=ArduinoJson-clang10"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools"
+			],
+			"settings": {
+				"cmake.generator": "Unix Makefiles",
+				"cmake.buildDirectory": "/tmp/build"
+			}
+		}
+	}
+}
