@@ -24,6 +24,30 @@ TEST_CASE("deserializeJson(char*)") {
   }
 }
 
+TEST_CASE("deserializeJson(unsigned char*, unsigned int)") {  // issue #1897
+  JsonDocument doc(1024);
+
+  unsigned char input[] = "{\"hello\":\"world\"}";
+  unsigned char* input_ptr = input;
+  unsigned int size = sizeof(input);
+
+  DeserializationError err = deserializeJson(doc, input_ptr, size);
+
+  REQUIRE(err == DeserializationError::Ok);
+}
+
+TEST_CASE("deserializeJson(uint8_t*, size_t)") {  // issue #1898
+  JsonDocument doc(1024);
+
+  uint8_t input[] = "{\"hello\":\"world\"}";
+  uint8_t* input_ptr = input;
+  size_t size = sizeof(input);
+
+  DeserializationError err = deserializeJson(doc, input_ptr, size);
+
+  REQUIRE(err == DeserializationError::Ok);
+}
+
 TEST_CASE("deserializeJson(const std::string&)") {
   JsonDocument doc(4096);
 
