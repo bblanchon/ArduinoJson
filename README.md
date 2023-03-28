@@ -4,10 +4,10 @@
 
 ---
 
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bblanchon/ArduinoJson/ci.yml?branch=6.x&logo=github)](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22+branch%3A6.x)
-[![Continuous Integration](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/6.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bblanchon/ArduinoJson/ci.yml?branch=7.x&logo=github)](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22+branch%3A7.x)
+[![Continuous Integration](https://ci.appveyor.com/api/projects/status/m7s53wav1l0abssg/branch/7.x?svg=true)](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/7.x)
 [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/arduinojson.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
-[![Coveralls branch](https://img.shields.io/coveralls/github/bblanchon/ArduinoJson/6.x?logo=coveralls)](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)  
+[![Coveralls branch](https://img.shields.io/coveralls/github/bblanchon/ArduinoJson/7.x?logo=coveralls)](https://coveralls.io/github/bblanchon/ArduinoJson?branch=7.x)  
 [![GitHub stars](https://img.shields.io/github/stars/bblanchon/ArduinoJson?style=flat&logo=github&color=orange)](https://github.com/bblanchon/ArduinoJson/stargazers)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/bblanchon?logo=github&color=orange)](https://github.com/sponsors/bblanchon)
 
@@ -78,9 +78,9 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [TMP friendly](https://en.wikipedia.org/wiki/Template_metaprogramming)
     * Handles [integer overflows](https://arduinojson.org/v6/api/jsonvariant/as/#integer-overflows)
 * Well tested
-    * [Unit test coverage close to 100%](https://coveralls.io/github/bblanchon/ArduinoJson?branch=6.x)
+    * [Unit test coverage close to 100%](https://coveralls.io/github/bblanchon/ArduinoJson?branch=7.x)
     * Continuously tested on
-        * [Visual Studio 2017, 2019, 2022](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/6.x)
+        * [Visual Studio 2017, 2019, 2022](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/7.x)
         * [GCC 6, 7, 8, 9, 10, 11](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22)
         * [Clang 3.8, 3.9, 4.0, 5.0, 6.0, 7, 8, 9, 10](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22)
     * [Continuously fuzzed with Google OSS Fuzz](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
