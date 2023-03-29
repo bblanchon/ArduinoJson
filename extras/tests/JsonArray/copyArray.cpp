@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+
 TEST_CASE("copyArray()") {
   SECTION("int[] -> JsonArray") {
     JsonDocument doc(4096);
@@ -107,7 +109,7 @@ TEST_CASE("copyArray()") {
   }
 
   SECTION("int[] -> JsonArray, but not enough memory") {
-    const size_t SIZE = JSON_ARRAY_SIZE(2);
+    const size_t SIZE = sizeofArray(2);
     JsonDocument doc(SIZE);
     JsonArray array = doc.to<JsonArray>();
     char json[32];
@@ -158,8 +160,7 @@ TEST_CASE("copyArray()") {
   }
 
   SECTION("int[][] -> JsonArray, but not enough memory") {
-    const size_t SIZE =
-        JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(2);
+    const size_t SIZE = sizeofArray(2) + sizeofArray(3) + sizeofArray(2);
     JsonDocument doc(SIZE);
     JsonArray array = doc.to<JsonArray>();
     char json[32] = "";

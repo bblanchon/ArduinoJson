@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("JsonObject::set()") {
   JsonDocument doc1(4096);
   JsonDocument doc2(4096);
@@ -72,7 +74,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("destination too small to store the key") {
-    JsonDocument doc3(JSON_OBJECT_SIZE(1));
+    JsonDocument doc3(sizeofObject(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1[std::string("hello")] = "world";
@@ -84,7 +86,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("destination too small to store the value") {
-    JsonDocument doc3(JSON_OBJECT_SIZE(1));
+    JsonDocument doc3(sizeofObject(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1["hello"] = std::string("world");

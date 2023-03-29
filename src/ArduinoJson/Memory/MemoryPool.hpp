@@ -13,19 +13,22 @@
 
 #include <string.h>  // memmove
 
-#define JSON_STRING_SIZE(SIZE) (SIZE + 1)
-
-// Computes the size required to store an array in a JsonDocument.
-// https://arduinojson.org/v6/how-to/determine-the-capacity-of-the-jsondocument/
-#define JSON_ARRAY_SIZE(NUMBER_OF_ELEMENTS) \
-  ((NUMBER_OF_ELEMENTS) * sizeof(ArduinoJson::detail::VariantSlot))
-
-// Returns the size (in bytes) of an object with n elements.
-// Can be very handy to determine the size of a StaticMemoryPool.
-#define JSON_OBJECT_SIZE(NUMBER_OF_ELEMENTS) \
-  ((NUMBER_OF_ELEMENTS) * sizeof(ArduinoJson::detail::VariantSlot))
-
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
+
+// Returns the size (in bytes) of an array with n elements.
+constexpr size_t sizeofArray(size_t n) {
+  return n * sizeof(VariantSlot);
+}
+
+// Returns the size (in bytes) of an object with n members.
+constexpr size_t sizeofObject(size_t n) {
+  return n * sizeof(VariantSlot);
+}
+
+// Returns the size (in bytes) of an string with n characters.
+constexpr size_t sizeofString(size_t n) {
+  return n + 1;
+}
 
 // _begin                                   _end
 // v                                           v

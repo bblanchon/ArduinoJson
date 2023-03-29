@@ -7,6 +7,8 @@
 
 using namespace Catch::Matchers;
 
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("deserializeJson(JsonDocument&)") {
   JsonDocument doc(4096);
 
@@ -112,6 +114,6 @@ TEST_CASE("deserializeJson(JsonDocument&)") {
     deserializeJson(doc, "{}");
 
     REQUIRE(doc.is<JsonObject>());
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
+    REQUIRE(doc.memoryUsage() == sizeofObject(0));
   }
 }

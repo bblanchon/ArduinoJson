@@ -5,6 +5,10 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
+
 template <typename T>
 static void checkValue(const char* input, T expected) {
   JsonDocument doc(4096);
@@ -185,89 +189,88 @@ TEST_CASE("deserializeMsgPack() under memory constaints") {
   }
 
   SECTION("fixarray") {
-    checkError(JSON_ARRAY_SIZE(0), "\x90", DeserializationError::Ok);  // []
-    checkError(JSON_ARRAY_SIZE(0), "\x91\x01",
+    checkError(sizeofArray(0), "\x90", DeserializationError::Ok);  // []
+    checkError(sizeofArray(0), "\x91\x01",
                DeserializationError::NoMemory);  // [1]
-    checkError(JSON_ARRAY_SIZE(1), "\x91\x01",
+    checkError(sizeofArray(1), "\x91\x01",
                DeserializationError::Ok);  // [1]
-    checkError(JSON_ARRAY_SIZE(1), "\x92\x01\x02",
+    checkError(sizeofArray(1), "\x92\x01\x02",
                DeserializationError::NoMemory);  // [1,2]
   }
 
   SECTION("array 16") {
-    checkError(JSON_ARRAY_SIZE(0), "\xDC\x00\x00", DeserializationError::Ok);
-    checkError(JSON_ARRAY_SIZE(0), "\xDC\x00\x01\x01",
+    checkError(sizeofArray(0), "\xDC\x00\x00", DeserializationError::Ok);
+    checkError(sizeofArray(0), "\xDC\x00\x01\x01",
                DeserializationError::NoMemory);
-    checkError(JSON_ARRAY_SIZE(1), "\xDC\x00\x01\x01",
-               DeserializationError::Ok);
-    checkError(JSON_ARRAY_SIZE(1), "\xDC\x00\x02\x01\x02",
+    checkError(sizeofArray(1), "\xDC\x00\x01\x01", DeserializationError::Ok);
+    checkError(sizeofArray(1), "\xDC\x00\x02\x01\x02",
                DeserializationError::NoMemory);
   }
 
   SECTION("array 32") {
-    checkError(JSON_ARRAY_SIZE(0), "\xDD\x00\x00\x00\x00",
+    checkError(sizeofArray(0), "\xDD\x00\x00\x00\x00",
                DeserializationError::Ok);
-    checkError(JSON_ARRAY_SIZE(0), "\xDD\x00\x00\x00\x01\x01",
+    checkError(sizeofArray(0), "\xDD\x00\x00\x00\x01\x01",
                DeserializationError::NoMemory);
-    checkError(JSON_ARRAY_SIZE(1), "\xDD\x00\x00\x00\x01\x01",
+    checkError(sizeofArray(1), "\xDD\x00\x00\x00\x01\x01",
                DeserializationError::Ok);
-    checkError(JSON_ARRAY_SIZE(1), "\xDD\x00\x00\x00\x02\x01\x02",
+    checkError(sizeofArray(1), "\xDD\x00\x00\x00\x02\x01\x02",
                DeserializationError::NoMemory);
   }
 
   SECTION("fixmap") {
     SECTION("{}") {
-      checkError(JSON_OBJECT_SIZE(0), "\x80", DeserializationError::Ok);
+      checkError(sizeofObject(0), "\x80", DeserializationError::Ok);
     }
     SECTION("{H:1}") {
-      checkError(JSON_OBJECT_SIZE(0), "\x81\xA1H\x01",
+      checkError(sizeofObject(0), "\x81\xA1H\x01",
                  DeserializationError::NoMemory);
-      checkError(JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2), "\x81\xA1H\x01",
+      checkError(sizeofObject(1) + sizeofString(2), "\x81\xA1H\x01",
                  DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      checkError(JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2),
-                 "\x82\xA1H\x01\xA1W\x02", DeserializationError::NoMemory);
-      checkError(JSON_OBJECT_SIZE(2) + 2 * JSON_STRING_SIZE(2),
+      checkError(sizeofObject(1) + sizeofString(2), "\x82\xA1H\x01\xA1W\x02",
+                 DeserializationError::NoMemory);
+      checkError(sizeofObject(2) + 2 * sizeofString(2),
                  "\x82\xA1H\x01\xA1W\x02", DeserializationError::Ok);
     }
   }
 
   SECTION("map 16") {
     SECTION("{}") {
-      checkError(JSON_OBJECT_SIZE(0), "\xDE\x00\x00", DeserializationError::Ok);
+      checkError(sizeofObject(0), "\xDE\x00\x00", DeserializationError::Ok);
     }
     SECTION("{H:1}") {
-      checkError(JSON_OBJECT_SIZE(0), "\xDE\x00\x01\xA1H\x01",
+      checkError(sizeofObject(0), "\xDE\x00\x01\xA1H\x01",
                  DeserializationError::NoMemory);
-      checkError(JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2),
-                 "\xDE\x00\x01\xA1H\x01", DeserializationError::Ok);
+      checkError(sizeofObject(1) + sizeofString(2), "\xDE\x00\x01\xA1H\x01",
+                 DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      checkError(JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2),
+      checkError(sizeofObject(1) + sizeofString(2),
                  "\xDE\x00\x02\xA1H\x01\xA1W\x02",
                  DeserializationError::NoMemory);
-      checkError(JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(1),
+      checkError(sizeofObject(2) + 2 * sizeofObject(1),
                  "\xDE\x00\x02\xA1H\x01\xA1W\x02", DeserializationError::Ok);
     }
   }
 
   SECTION("map 32") {
     SECTION("{}") {
-      checkError(JSON_OBJECT_SIZE(0), "\xDF\x00\x00\x00\x00",
+      checkError(sizeofObject(0), "\xDF\x00\x00\x00\x00",
                  DeserializationError::Ok);
     }
     SECTION("{H:1}") {
-      checkError(JSON_OBJECT_SIZE(0), "\xDF\x00\x00\x00\x01\xA1H\x01",
+      checkError(sizeofObject(0), "\xDF\x00\x00\x00\x01\xA1H\x01",
                  DeserializationError::NoMemory);
-      checkError(JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2),
+      checkError(sizeofObject(1) + sizeofString(2),
                  "\xDF\x00\x00\x00\x01\xA1H\x01", DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      checkError(JSON_OBJECT_SIZE(1) + JSON_STRING_SIZE(2),
+      checkError(sizeofObject(1) + sizeofString(2),
                  "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
                  DeserializationError::NoMemory);
-      checkError(JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(1),
+      checkError(sizeofObject(2) + 2 * sizeofObject(1),
                  "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
                  DeserializationError::Ok);
     }

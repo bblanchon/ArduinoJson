@@ -5,6 +5,9 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("JsonArray::memoryUsage()") {
   JsonDocument doc(4096);
   JsonArray arr = doc.to<JsonArray>();
@@ -14,29 +17,29 @@ TEST_CASE("JsonArray::memoryUsage()") {
     REQUIRE(unitialized.memoryUsage() == 0);
   }
 
-  SECTION("JSON_ARRAY_SIZE(0) if empty") {
-    REQUIRE(arr.memoryUsage() == JSON_ARRAY_SIZE(0));
+  SECTION("sizeofArray(0) if empty") {
+    REQUIRE(arr.memoryUsage() == sizeofArray(0));
   }
 
-  SECTION("JSON_ARRAY_SIZE(1) after add") {
+  SECTION("sizeofArray(1) after add") {
     arr.add("hello");
-    REQUIRE(arr.memoryUsage() == JSON_ARRAY_SIZE(1));
+    REQUIRE(arr.memoryUsage() == sizeofArray(1));
   }
 
   SECTION("includes the size of the string") {
     arr.add(std::string("hello"));
-    REQUIRE(arr.memoryUsage() == JSON_ARRAY_SIZE(1) + 6);
+    REQUIRE(arr.memoryUsage() == sizeofArray(1) + 6);
   }
 
   SECTION("includes the size of the nested array") {
     JsonArray nested = arr.createNestedArray();
     nested.add(42);
-    REQUIRE(arr.memoryUsage() == 2 * JSON_ARRAY_SIZE(1));
+    REQUIRE(arr.memoryUsage() == 2 * sizeofArray(1));
   }
 
   SECTION("includes the size of the nested arrect") {
     JsonObject nested = arr.createNestedObject();
     nested["hello"] = "world";
-    REQUIRE(arr.memoryUsage() == JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(1));
+    REQUIRE(arr.memoryUsage() == sizeofObject(1) + sizeofArray(1));
   }
 }

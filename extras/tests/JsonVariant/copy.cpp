@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofString;
+
 TEST_CASE("JsonVariant::set(JsonVariant)") {
   JsonDocument doc1(4096);
   JsonDocument doc2(4096);
@@ -47,16 +49,16 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     var1.set(str);
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc1.memoryUsage() == sizeofString(7));
+    REQUIRE(doc2.memoryUsage() == sizeofString(7));
   }
 
   SECTION("stores std::string by copy") {
     var1.set(std::string("hello!!"));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc1.memoryUsage() == sizeofString(7));
+    REQUIRE(doc2.memoryUsage() == sizeofString(7));
   }
 
   SECTION("stores Serialized<const char*> by reference") {
@@ -72,16 +74,16 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     var1.set(serialized(str, 7));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc1.memoryUsage() == sizeofString(7));
+    REQUIRE(doc2.memoryUsage() == sizeofString(7));
   }
 
   SECTION("stores Serialized<std::string> by copy") {
     var1.set(serialized(std::string("hello!!")));
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == JSON_STRING_SIZE(7));
-    REQUIRE(doc2.memoryUsage() == JSON_STRING_SIZE(7));
+    REQUIRE(doc1.memoryUsage() == sizeofString(7));
+    REQUIRE(doc2.memoryUsage() == sizeofString(7));
   }
 
   SECTION("destination is unbound") {

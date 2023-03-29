@@ -9,6 +9,8 @@
 
 #include "CustomReader.hpp"
 
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("deserializeJson(char*)") {
   JsonDocument doc(1024);
 
@@ -18,9 +20,9 @@ TEST_CASE("deserializeJson(char*)") {
     DeserializationError err = deserializeJson(doc, input);
 
     REQUIRE(err == DeserializationError::Ok);
-    CHECK(doc.memoryUsage() == JSON_OBJECT_SIZE(1));
+    CHECK(doc.memoryUsage() == sizeofObject(1));
     CHECK(doc.as<JsonVariant>().memoryUsage() ==
-          JSON_OBJECT_SIZE(1));  // issue #1318
+          sizeofObject(1));  // issue #1318
   }
 }
 
@@ -149,7 +151,7 @@ TEST_CASE("deserializeJson(VLA)") {
   char vla[i];
   strcpy(vla, "{\"a\":42}");
 
-  JsonDocument doc(JSON_OBJECT_SIZE(1));
+  JsonDocument doc(sizeofObject(1));
   DeserializationError err = deserializeJson(doc, vla);
 
   REQUIRE(err == DeserializationError::Ok);

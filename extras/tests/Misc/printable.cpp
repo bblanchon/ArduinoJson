@@ -8,6 +8,8 @@
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
 #include <ArduinoJson.h>
 
+using ArduinoJson::detail::sizeofArray;
+
 struct PrintOneCharacterAtATime {
   static size_t printStringTo(const std::string& s, Print& p) {
     size_t result = 0;
@@ -139,6 +141,6 @@ TEST_CASE("Printable") {
     REQUIRE(doc.size() == 2);
     CHECK(doc[0] == "Hello World!");
     CHECK(doc[1] == "Hello World!");
-    CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 13);
+    CHECK(doc.memoryUsage() == sizeofArray(2) + 13);
   }
 }

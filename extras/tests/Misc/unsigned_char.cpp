@@ -9,11 +9,13 @@
 #  define CONFLICTS_WITH_BUILTIN_OPERATOR
 #endif
 
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("unsigned char[]") {
   SECTION("deserializeJson()") {
     unsigned char input[] = "{\"a\":42}";
 
-    JsonDocument doc(JSON_OBJECT_SIZE(1));
+    JsonDocument doc(sizeofObject(1));
     DeserializationError err = deserializeJson(doc, input);
 
     REQUIRE(err == DeserializationError::Ok);
@@ -22,7 +24,7 @@ TEST_CASE("unsigned char[]") {
   SECTION("deserializeMsgPack()") {
     unsigned char input[] = "\xDE\x00\x01\xA5Hello\xA5world";
 
-    JsonDocument doc(JSON_OBJECT_SIZE(2));
+    JsonDocument doc(sizeofObject(2));
     DeserializationError err = deserializeMsgPack(doc, input);
 
     REQUIRE(err == DeserializationError::Ok);
@@ -30,7 +32,7 @@ TEST_CASE("unsigned char[]") {
 
   SECTION("serializeMsgPack(unsigned char[])") {
     unsigned char buffer[32];
-    JsonDocument doc(JSON_OBJECT_SIZE(2));
+    JsonDocument doc(sizeofObject(2));
     doc["hello"] = "world";
 
     size_t n = serializeMsgPack(doc, buffer);
@@ -41,7 +43,7 @@ TEST_CASE("unsigned char[]") {
 
   SECTION("serializeMsgPack(unsigned char*)") {
     unsigned char buffer[32];
-    JsonDocument doc(JSON_OBJECT_SIZE(2));
+    JsonDocument doc(sizeofObject(2));
     doc["hello"] = "world";
 
     size_t n = serializeMsgPack(doc, buffer, sizeof(buffer));
@@ -52,7 +54,7 @@ TEST_CASE("unsigned char[]") {
 
   SECTION("serializeJson(unsigned char[])") {
     unsigned char buffer[32];
-    JsonDocument doc(JSON_OBJECT_SIZE(2));
+    JsonDocument doc(sizeofObject(2));
     doc["hello"] = "world";
 
     size_t n = serializeJson(doc, buffer);
@@ -63,7 +65,7 @@ TEST_CASE("unsigned char[]") {
 
   SECTION("serializeJson(unsigned char*)") {
     unsigned char buffer[32];
-    JsonDocument doc(JSON_OBJECT_SIZE(2));
+    JsonDocument doc(sizeofObject(2));
     doc["hello"] = "world";
 
     size_t n = serializeJson(doc, buffer, sizeof(buffer));
@@ -74,7 +76,7 @@ TEST_CASE("unsigned char[]") {
 
   SECTION("serializeJsonPretty(unsigned char[])") {
     unsigned char buffer[32];
-    JsonDocument doc(JSON_OBJECT_SIZE(2));
+    JsonDocument doc(sizeofObject(2));
     doc["hello"] = "world";
 
     size_t n = serializeJsonPretty(doc, buffer);
@@ -84,7 +86,7 @@ TEST_CASE("unsigned char[]") {
 
   SECTION("serializeJsonPretty(unsigned char*)") {
     unsigned char buffer[32];
-    JsonDocument doc(JSON_OBJECT_SIZE(2));
+    JsonDocument doc(sizeofObject(2));
     doc["hello"] = "world";
 
     size_t n = serializeJsonPretty(doc, buffer, sizeof(buffer));

@@ -5,6 +5,9 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofString;
+
 TEST_CASE("JsonArray::add()") {
   JsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
@@ -96,43 +99,43 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("should not duplicate const char*") {
     array.add("world");
-    const size_t expectedSize = JSON_ARRAY_SIZE(1);
+    const size_t expectedSize = sizeofArray(1);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate char*") {
     array.add(const_cast<char*>("world"));
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(5);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate std::string") {
     array.add(std::string("world"));
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(5);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should not duplicate serialized(const char*)") {
     array.add(serialized("{}"));
-    const size_t expectedSize = JSON_ARRAY_SIZE(1);
+    const size_t expectedSize = sizeofArray(1);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate serialized(char*)") {
     array.add(serialized(const_cast<char*>("{}")));
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(2);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(2);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate serialized(std::string)") {
     array.add(serialized(std::string("{}")));
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(2);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(2);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate serialized(std::string)") {
     array.add(serialized(std::string("\0XX", 3)));
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(3);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(3);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 }

@@ -5,6 +5,10 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
+
 TEST_CASE("deserialize JSON array") {
   JsonDocument doc(4096);
 
@@ -248,13 +252,13 @@ TEST_CASE("deserialize JSON array") {
     JsonArray arr = doc.as<JsonArray>();
 
     REQUIRE(arr.size() == 0);
-    REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
+    REQUIRE(doc.memoryUsage() == sizeofArray(0));
   }
 }
 
 TEST_CASE("deserialize JSON array under memory constraints") {
   SECTION("buffer of the right size for an empty array") {
-    JsonDocument doc(JSON_ARRAY_SIZE(0));
+    JsonDocument doc(sizeofArray(0));
     char input[] = "[]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -263,7 +267,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer too small for an array with one element") {
-    JsonDocument doc(JSON_ARRAY_SIZE(0));
+    JsonDocument doc(sizeofArray(0));
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -272,7 +276,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer of the right size for an array with one element") {
-    JsonDocument doc(JSON_ARRAY_SIZE(1));
+    JsonDocument doc(sizeofArray(1));
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -281,7 +285,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer too small for an array with a nested object") {
-    JsonDocument doc(JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(0));
+    JsonDocument doc(sizeofArray(0) + sizeofObject(0));
     char input[] = "[{}]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -290,7 +294,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("buffer of the right size for an array with a nested object") {
-    JsonDocument doc(JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(0));
+    JsonDocument doc(sizeofArray(1) + sizeofObject(0));
     char input[] = "[{}]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -303,13 +307,13 @@ TEST_CASE("deserialize JSON array under memory constraints") {
 
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
-    REQUIRE(JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(7) == doc.memoryUsage());
+    REQUIRE(sizeofArray(1) + sizeofString(7) == doc.memoryUsage());
     // note: we use a string of 8 bytes to be sure that the MemoryPool
     // will not insert bytes to enforce alignement
   }
 
   SECTION("Should clear the JsonArray") {
-    JsonDocument doc(JSON_ARRAY_SIZE(4));
+    JsonDocument doc(sizeofArray(4));
     char input[] = "[1,2,3,4]";
 
     deserializeJson(doc, input);
@@ -317,11 +321,11 @@ TEST_CASE("deserialize JSON array under memory constraints") {
 
     JsonArray arr = doc.as<JsonArray>();
     REQUIRE(arr.size() == 0);
-    REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
+    REQUIRE(doc.memoryUsage() == sizeofArray(0));
   }
 
   SECTION("buffer of the right size for an array with two element") {
-    JsonDocument doc(JSON_ARRAY_SIZE(2));
+    JsonDocument doc(sizeofArray(2));
     char input[] = "[1,2]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -329,7 +333,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<JsonArray>());
-    REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(2));
+    REQUIRE(doc.memoryUsage() == sizeofArray(2));
     REQUIRE(arr[0] == 1);
     REQUIRE(arr[1] == 2);
   }

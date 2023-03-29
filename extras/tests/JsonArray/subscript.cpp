@@ -6,6 +6,9 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofString;
+
 TEST_CASE("JsonArray::operator[]") {
   JsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
@@ -112,19 +115,19 @@ TEST_CASE("JsonArray::operator[]") {
 
   SECTION("should not duplicate const char*") {
     array[0] = "world";
-    const size_t expectedSize = JSON_ARRAY_SIZE(1);
+    const size_t expectedSize = sizeofArray(1);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate char*") {
     array[0] = const_cast<char*>("world");
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(5);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
   SECTION("should duplicate std::string") {
     array[0] = std::string("world");
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + JSON_STRING_SIZE(5);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 

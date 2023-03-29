@@ -6,6 +6,8 @@
 #include <catch.hpp>
 
 using ArduinoJson::detail::addPadding;
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
 
 static void REQUIRE_JSON(JsonDocument& doc, const std::string& expected) {
   std::string json;
@@ -31,19 +33,19 @@ TEST_CASE("JsonDocument") {
       REQUIRE(doc.memoryUsage() == 0);
     }
 
-    SECTION("JSON_ARRAY_SIZE(0)") {
+    SECTION("sizeofArray(0)") {
       doc.to<JsonArray>();
-      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
+      REQUIRE(doc.memoryUsage() == sizeofArray(0));
     }
 
-    SECTION("JSON_ARRAY_SIZE(1)") {
+    SECTION("sizeofArray(1)") {
       doc.to<JsonArray>().add(42);
-      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1));
+      REQUIRE(doc.memoryUsage() == sizeofArray(1));
     }
 
-    SECTION("JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(0)") {
+    SECTION("sizeofArray(1) + sizeofArray(0)") {
       doc.to<JsonArray>().createNestedArray();
-      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(0));
+      REQUIRE(doc.memoryUsage() == sizeofArray(1) + sizeofArray(0));
     }
   }
 
@@ -63,21 +65,21 @@ TEST_CASE("JsonDocument") {
     SECTION("Increases after adding value to array") {
       JsonArray arr = doc.to<JsonArray>();
 
-      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(0));
+      REQUIRE(doc.memoryUsage() == sizeofArray(0));
       arr.add(42);
-      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1));
+      REQUIRE(doc.memoryUsage() == sizeofArray(1));
       arr.add(43);
-      REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(2));
+      REQUIRE(doc.memoryUsage() == sizeofArray(2));
     }
 
     SECTION("Increases after adding value to object") {
       JsonObject obj = doc.to<JsonObject>();
 
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
+      REQUIRE(doc.memoryUsage() == sizeofObject(0));
       obj["a"] = 1;
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1));
+      REQUIRE(doc.memoryUsage() == sizeofObject(1));
       obj["b"] = 2;
-      REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(2));
+      REQUIRE(doc.memoryUsage() == sizeofObject(2));
     }
   }
 }

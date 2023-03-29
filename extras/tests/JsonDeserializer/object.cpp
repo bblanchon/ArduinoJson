@@ -5,6 +5,9 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("deserialize JSON object") {
   JsonDocument doc(4096);
 
@@ -304,7 +307,7 @@ TEST_CASE("deserialize JSON object") {
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(obj.size() == 0);
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
+    REQUIRE(doc.memoryUsage() == sizeofObject(0));
   }
 
   SECTION("Issue #1335") {
@@ -316,7 +319,7 @@ TEST_CASE("deserialize JSON object") {
 
 TEST_CASE("deserialize JSON object under memory constraints") {
   SECTION("buffer for the right size for an empty object") {
-    JsonDocument doc(JSON_OBJECT_SIZE(0));
+    JsonDocument doc(sizeofObject(0));
     char input[] = "{}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -325,7 +328,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("buffer too small for an empty object") {
-    JsonDocument doc(JSON_OBJECT_SIZE(0));
+    JsonDocument doc(sizeofObject(0));
     char input[] = "{\"a\":1}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -334,7 +337,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("buffer of the right size for an object with one member") {
-    JsonDocument doc(JSON_OBJECT_SIZE(1));
+    JsonDocument doc(sizeofObject(1));
     char input[] = "{\"a\":1}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -343,7 +346,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("buffer too small for an object with a nested array") {
-    JsonDocument doc(JSON_OBJECT_SIZE(0) + JSON_ARRAY_SIZE(0));
+    JsonDocument doc(sizeofObject(0) + sizeofArray(0));
     char input[] = "{\"a\":[]}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -352,7 +355,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("buffer of the right size for an object with a nested array") {
-    JsonDocument doc(JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(0));
+    JsonDocument doc(sizeofObject(1) + sizeofArray(0));
     char input[] = "{\"a\":[]}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -361,13 +364,13 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("Should clear the JsonObject") {
-    JsonDocument doc(JSON_OBJECT_SIZE(1));
+    JsonDocument doc(sizeofObject(1));
     char input[] = "{\"hello\":\"world\"}";
 
     deserializeJson(doc, input);
     deserializeJson(doc, "{}");
 
     REQUIRE(doc.as<JsonObject>().size() == 0);
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(0));
+    REQUIRE(doc.memoryUsage() == sizeofObject(0));
   }
 }

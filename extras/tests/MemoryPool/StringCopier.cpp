@@ -9,7 +9,7 @@ using namespace ArduinoJson::detail;
 
 TEST_CASE("StringCopier") {
   SECTION("Works when buffer is big enough") {
-    MemoryPool pool(addPadding(JSON_STRING_SIZE(5)));
+    MemoryPool pool(addPadding(sizeofString(5)));
     StringCopier str(&pool);
 
     str.startString();
@@ -32,7 +32,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Increases size of memory pool") {
-    MemoryPool pool(addPadding(JSON_STRING_SIZE(6)));
+    MemoryPool pool(addPadding(sizeofString(6)));
     StringCopier str(&pool);
 
     str.startString();

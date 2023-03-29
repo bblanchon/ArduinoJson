@@ -6,6 +6,9 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
+
 TEST_CASE("Valid JSON strings value") {
   struct TestCase {
     const char* input;
@@ -93,7 +96,7 @@ TEST_CASE("Invalid JSON string") {
 }
 
 TEST_CASE("Not enough room to save the key") {
-  JsonDocument doc(JSON_OBJECT_SIZE(1) + 8);
+  JsonDocument doc(sizeofObject(1) + 8);
 
   SECTION("Quoted string") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==

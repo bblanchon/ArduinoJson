@@ -9,6 +9,9 @@
 #include <sstream>
 #include <string>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("Filtering") {
   struct TestCase {
     const char* input;
@@ -43,7 +46,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"abcdefg\":\"hijklmn\"}",
-      JSON_OBJECT_SIZE(1) + 16
+      sizeofObject(1) + 16
     },
     {
       "{\"hello\":\"world\"}",
@@ -51,7 +54,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // Input in an object, but filter wants an array
@@ -69,7 +72,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":null}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // Member is a number, but filter wants an array
@@ -78,7 +81,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":null}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // Input is an array, but filter wants an object
@@ -114,7 +117,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // skip a float
@@ -123,7 +126,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // skip false
@@ -132,7 +135,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // skip true
@@ -141,7 +144,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // skip null
@@ -150,7 +153,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip a double-quoted string
@@ -159,7 +162,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip a single-quoted string
@@ -168,7 +171,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip an empty array
@@ -177,7 +180,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip an empty array with spaces in it
@@ -186,7 +189,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip an array
@@ -195,7 +198,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip an array with spaces in it
@@ -204,7 +207,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip an empty object
@@ -213,7 +216,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip an empty object with spaces in it
@@ -222,7 +225,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // can skip an object
@@ -231,7 +234,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // skip an object with spaces in it
@@ -240,7 +243,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       "{\"an_integer\": 0,\"example\":{\"type\":\"int\",\"outcome\":42}}",
@@ -248,7 +251,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":{\"outcome\":42}}",
-      2 * JSON_OBJECT_SIZE(1) + 16
+      2 * sizeofObject(1) + 16
     },
     {
       // wildcard
@@ -257,7 +260,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":{\"outcome\":42}}",
-      2 * JSON_OBJECT_SIZE(1) + 16
+      2 * sizeofObject(1) + 16
     },
     {
       // exclusion filter (issue #1628)
@@ -266,7 +269,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":1}",
-      JSON_OBJECT_SIZE(1) + 8
+      sizeofObject(1) + 8
     },
     {
       // only the first element of array counts
@@ -275,7 +278,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "[1,2,3]",
-      JSON_ARRAY_SIZE(3)
+      sizeofArray(3)
     },
     {
       // only the first element of array counts
@@ -284,7 +287,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "[]",
-      JSON_ARRAY_SIZE(0)
+      sizeofArray(0)
     },
     {
       // filter members of object in array
@@ -293,7 +296,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "[{\"example\":1},{\"example\":3}]",
-      JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(1) + 8
+      sizeofArray(2) + 2 * sizeofObject(1) + 8
     },
     {
       "[',2,3]",
@@ -301,7 +304,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::IncompleteInput,
       "[]",
-      JSON_ARRAY_SIZE(0)
+      sizeofArray(0)
     },
     {
       "[\",2,3]",
@@ -309,7 +312,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::IncompleteInput,
       "[]",
-      JSON_ARRAY_SIZE(0)
+      sizeofArray(0)
     },
     {
       // detect errors in skipped value
@@ -318,7 +321,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::InvalidInput,
       "[]",
-      JSON_ARRAY_SIZE(0)
+      sizeofArray(0)
     },
     {
       // detect incomplete string event if it's skipped
@@ -471,7 +474,7 @@ TEST_CASE("Filtering") {
       1,
       DeserializationError::TooDeep,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // check nesting limit even for ignored arrays
@@ -498,7 +501,7 @@ TEST_CASE("Filtering") {
       1,
       DeserializationError::TooDeep,
       "[]",
-      JSON_ARRAY_SIZE(0)
+      sizeofArray(0)
     },
     {
       // supports back-slash at the end of skipped string
@@ -543,7 +546,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::InvalidInput,
       "[]",
-      JSON_ARRAY_SIZE(0)
+      sizeofArray(0)
     },
     {
       // incomplete comment at the begining of an array
@@ -552,7 +555,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::IncompleteInput,
       "[]",
-      JSON_ARRAY_SIZE(0)
+      sizeofArray(0)
     },
     {
       // invalid comment before key
@@ -561,7 +564,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::InvalidInput,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // incomplete comment before key
@@ -570,7 +573,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::IncompleteInput,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // invalid comment after key
@@ -579,7 +582,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::InvalidInput,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // incomplete comment after key
@@ -588,7 +591,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::IncompleteInput,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // invalid comment after colon
@@ -597,7 +600,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::InvalidInput,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // incomplete comment after colon
@@ -606,7 +609,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::IncompleteInput,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // comment next to an integer
@@ -615,7 +618,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{}",
-      JSON_OBJECT_SIZE(0)
+      sizeofObject(0)
     },
     {
       // invalid comment after opening brace of a skipped object

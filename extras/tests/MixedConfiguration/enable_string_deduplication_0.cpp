@@ -11,6 +11,9 @@
 
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
   JsonDocument doc(1024);
 
@@ -18,15 +21,14 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
     SECTION("Deduplicate values") {
       deserializeJson(doc, "[\"example\",\"example\"]");
 
-      CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 16);
+      CHECK(doc.memoryUsage() == sizeofArray(2) + 16);
       CHECK(doc[0].as<const char*>() != doc[1].as<const char*>());
     }
 
     SECTION("Deduplicate keys") {
       deserializeJson(doc, "[{\"example\":1},{\"example\":2}]");
 
-      CHECK(doc.memoryUsage() ==
-            2 * JSON_OBJECT_SIZE(1) + JSON_ARRAY_SIZE(2) + 16);
+      CHECK(doc.memoryUsage() == 2 * sizeofObject(1) + sizeofArray(2) + 16);
 
       const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
       const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -41,7 +43,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc.add(std::string("example"));
         doc.add(std::string("example"));
 
-        CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 16);
         CHECK(doc[0].as<const char*>() != doc[1].as<const char*>());
       }
 
@@ -50,7 +52,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc.add(value);
         doc.add(value);
 
-        CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 16);
         CHECK(doc[0].as<const char*>() != doc[1].as<const char*>());
       }
 
@@ -58,7 +60,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc.add(String("example"));
         doc.add(String("example"));
 
-        CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 16);
         CHECK(doc[0].as<const char*>() != doc[1].as<const char*>());
       }
 
@@ -66,7 +68,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc.add(F("example"));
         doc.add(F("example"));
 
-        CHECK(doc.memoryUsage() == JSON_ARRAY_SIZE(2) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 16);
         CHECK(doc[0].as<const char*>() != doc[1].as<const char*>());
       }
     }
@@ -76,8 +78,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc[0][std::string("example")] = 1;
         doc[1][std::string("example")] = 2;
 
-        CHECK(doc.memoryUsage() ==
-              JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(1) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 16);
 
         const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
         const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -89,8 +90,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc[0][key] = 1;
         doc[1][key] = 2;
 
-        CHECK(doc.memoryUsage() ==
-              JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(1) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 16);
 
         const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
         const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -101,8 +101,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc[0][String("example")] = 1;
         doc[1][String("example")] = 2;
 
-        CHECK(doc.memoryUsage() ==
-              JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(1) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 16);
 
         const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
         const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -113,8 +112,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_STRING_DEDUPLICATION = 0") {
         doc[0][F("example")] = 1;
         doc[1][F("example")] = 2;
 
-        CHECK(doc.memoryUsage() ==
-              JSON_ARRAY_SIZE(2) + 2 * JSON_OBJECT_SIZE(1) + 16);
+        CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 16);
 
         const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
         const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();

@@ -8,6 +8,9 @@
 #include <stdlib.h>  // malloc, free
 #include <string>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+
 class ArmoredAllocator : public Allocator {
  public:
   ArmoredAllocator() : _ptr(0), _size(0) {}
@@ -68,12 +71,12 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
 
   SECTION("empty object") {
     deserializeJson(doc, "{}");
-    testShrinkToFit(doc, "{}", JSON_OBJECT_SIZE(0));
+    testShrinkToFit(doc, "{}", sizeofObject(0));
   }
 
   SECTION("empty array") {
     deserializeJson(doc, "[]");
-    testShrinkToFit(doc, "[]", JSON_ARRAY_SIZE(0));
+    testShrinkToFit(doc, "[]", sizeofArray(0));
   }
 
   SECTION("linked string") {
@@ -98,43 +101,43 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
 
   SECTION("linked key") {
     doc["key"] = 42;
-    testShrinkToFit(doc, "{\"key\":42}", JSON_OBJECT_SIZE(1));
+    testShrinkToFit(doc, "{\"key\":42}", sizeofObject(1));
   }
 
   SECTION("owned key") {
     doc[std::string("abcdefg")] = 42;
-    testShrinkToFit(doc, "{\"abcdefg\":42}", JSON_OBJECT_SIZE(1) + 8);
+    testShrinkToFit(doc, "{\"abcdefg\":42}", sizeofObject(1) + 8);
   }
 
   SECTION("linked string in array") {
     doc.add("hello");
-    testShrinkToFit(doc, "[\"hello\"]", JSON_ARRAY_SIZE(1));
+    testShrinkToFit(doc, "[\"hello\"]", sizeofArray(1));
   }
 
   SECTION("owned string in array") {
     doc.add(std::string("abcdefg"));
-    testShrinkToFit(doc, "[\"abcdefg\"]", JSON_ARRAY_SIZE(1) + 8);
+    testShrinkToFit(doc, "[\"abcdefg\"]", sizeofArray(1) + 8);
   }
 
   SECTION("linked string in object") {
     doc["key"] = "hello";
-    testShrinkToFit(doc, "{\"key\":\"hello\"}", JSON_OBJECT_SIZE(1));
+    testShrinkToFit(doc, "{\"key\":\"hello\"}", sizeofObject(1));
   }
 
   SECTION("owned string in object") {
     doc["key"] = std::string("abcdefg");
-    testShrinkToFit(doc, "{\"key\":\"abcdefg\"}", JSON_ARRAY_SIZE(1) + 8);
+    testShrinkToFit(doc, "{\"key\":\"abcdefg\"}", sizeofArray(1) + 8);
   }
 
   SECTION("unaligned") {
     doc.add(std::string("?"));  // two bytes in the string pool
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + 2);
+    REQUIRE(doc.memoryUsage() == sizeofObject(1) + 2);
 
     doc.shrinkToFit();
 
     // the new capacity should be padded to align the pointers
-    REQUIRE(doc.capacity() == JSON_OBJECT_SIZE(1) + sizeof(void*));
-    REQUIRE(doc.memoryUsage() == JSON_OBJECT_SIZE(1) + 2);
+    REQUIRE(doc.capacity() == sizeofObject(1) + sizeof(void*));
+    REQUIRE(doc.memoryUsage() == sizeofObject(1) + 2);
     REQUIRE(doc[0] == "?");
   }
 }

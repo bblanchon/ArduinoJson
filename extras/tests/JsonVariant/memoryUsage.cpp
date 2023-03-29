@@ -6,6 +6,9 @@
 #include <catch.hpp>
 #include <string>
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("JsonVariant::memoryUsage()") {
   JsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
@@ -18,13 +21,13 @@ TEST_CASE("JsonVariant::memoryUsage()") {
   SECTION("returns size of object") {
     JsonObject obj = var.to<JsonObject>();
     obj["hello"] = 42;
-    REQUIRE(var.memoryUsage() == JSON_OBJECT_SIZE(1));
+    REQUIRE(var.memoryUsage() == sizeofObject(1));
   }
 
   SECTION("returns size of array") {
     JsonArray arr = var.to<JsonArray>();
     arr.add(42);
-    REQUIRE(var.memoryUsage() == JSON_ARRAY_SIZE(1));
+    REQUIRE(var.memoryUsage() == sizeofArray(1));
   }
 
   SECTION("returns size of owned string") {

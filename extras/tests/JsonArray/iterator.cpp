@@ -5,9 +5,11 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofArray;
+
 template <typename TArray>
 static void run_iterator_test() {
-  JsonDocument doc(JSON_ARRAY_SIZE(2));
+  JsonDocument doc(sizeofArray(2));
   JsonArray tmp = doc.to<JsonArray>();
   tmp.add(12);
   tmp.add(34);
