@@ -14,8 +14,6 @@ add_executable(MixedConfigurationTests
 	enable_nan_0.cpp
 	enable_nan_1.cpp
 	enable_progmem_1.cpp
-	enable_string_deduplication_0.cpp
-	enable_string_deduplication_1.cpp
 	issue1707.cpp
 	use_double_0.cpp
 	use_double_1.cpp

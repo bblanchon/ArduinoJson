@@ -10,17 +10,17 @@
 
 #ifndef ARDUINOJSON_VERSION_NAMESPACE
 
-#  define ARDUINOJSON_VERSION_NAMESPACE                                       \
-    ARDUINOJSON_CONCAT3(                                                      \
-        ARDUINOJSON_CONCAT4(V, ARDUINOJSON_VERSION_MAJOR,                     \
-                            ARDUINOJSON_VERSION_MINOR,                        \
-                            ARDUINOJSON_VERSION_REVISION),                    \
-        ARDUINOJSON_BIN2ALPHA(                                                \
-            ARDUINOJSON_ENABLE_PROGMEM, ARDUINOJSON_USE_LONG_LONG,            \
-            ARDUINOJSON_USE_DOUBLE, ARDUINOJSON_ENABLE_STRING_DEDUPLICATION), \
-        ARDUINOJSON_BIN2ALPHA(                                                \
-            ARDUINOJSON_ENABLE_NAN, ARDUINOJSON_ENABLE_INFINITY,              \
-            ARDUINOJSON_ENABLE_COMMENTS, ARDUINOJSON_DECODE_UNICODE))
+#  define ARDUINOJSON_VERSION_NAMESPACE                                    \
+    ARDUINOJSON_CONCAT3(ARDUINOJSON_CONCAT4(V, ARDUINOJSON_VERSION_MAJOR,  \
+                                            ARDUINOJSON_VERSION_MINOR,     \
+                                            ARDUINOJSON_VERSION_REVISION), \
+                        ARDUINOJSON_BIN2ALPHA(ARDUINOJSON_ENABLE_PROGMEM,  \
+                                              ARDUINOJSON_USE_LONG_LONG,   \
+                                              ARDUINOJSON_USE_DOUBLE, 1),  \
+                        ARDUINOJSON_BIN2ALPHA(ARDUINOJSON_ENABLE_NAN,      \
+                                              ARDUINOJSON_ENABLE_INFINITY, \
+                                              ARDUINOJSON_ENABLE_COMMENTS, \
+                                              ARDUINOJSON_DECODE_UNICODE))
 
 #endif
 

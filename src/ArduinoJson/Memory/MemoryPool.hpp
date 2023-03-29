@@ -105,11 +105,9 @@ class MemoryPool {
     if (str.isNull())
       return 0;
 
-#if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
     const char* existingCopy = findString(str);
     if (existingCopy)
       return existingCopy;
-#endif
 
     size_t n = str.size();
 
@@ -127,11 +125,9 @@ class MemoryPool {
   }
 
   const char* saveStringFromFreeZone(size_t len) {
-#if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
     const char* dup = findString(adaptString(_left, len));
     if (dup)
       return dup;
-#endif
 
     const char* str = _left;
     _left += len;
@@ -221,7 +217,6 @@ class MemoryPool {
     ARDUINOJSON_ASSERT(isAligned(_right));
   }
 
-#if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
   template <typename TAdaptedString>
   const char* findString(const TAdaptedString& str) const {
     size_t n = str.size();
@@ -235,7 +230,6 @@ class MemoryPool {
     }
     return 0;
   }
-#endif
 
   char* allocString(size_t n) {
     if (!canAlloc(n)) {
