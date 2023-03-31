@@ -5,37 +5,11 @@
 #include <ArduinoJson.h>
 #include <stdlib.h>  // malloc, free
 #include <catch.hpp>
-#include <sstream>
 #include <utility>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofObject;
-
-class SpyingAllocator : public Allocator {
- public:
-  virtual ~SpyingAllocator() {}
-
-  void* allocate(size_t n) override {
-    _log << "A" << n;
-    return malloc(n);
-  }
-
-  void deallocate(void* p) override {
-    _log << "F";
-    free(p);
-  }
-
-  void* reallocate(void* ptr, size_t n) override {
-    _log << "R" << n;
-    return realloc(ptr, n);
-  }
-
-  std::string log() const {
-    return _log.str();
-  }
-
- private:
-  std::ostringstream _log;
-};
 
 class ControllableAllocator : public Allocator {
  public:
