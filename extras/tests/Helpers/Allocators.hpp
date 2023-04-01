@@ -37,24 +37,27 @@ class AllocatorLog {
   };
 
   struct Reallocate {
-    Reallocate(size_t s) : size(s) {}
-    size_t size;
+    Reallocate(size_t s1, size_t s2) : oldSize(s1), newSize(s2) {}
+    size_t oldSize, newSize;
   };
 
-  struct Deallocate {};
+  struct Deallocate {
+    Deallocate(size_t s) : size(s) {}
+    size_t size;
+  };
 
   AllocatorLog& operator<<(const Allocate& a) {
     _log << "allocate(" << a.size << ")\n";
     return *this;
   }
 
-  AllocatorLog& operator<<(const Deallocate&) {
-    _log << "deallocate()\n";
+  AllocatorLog& operator<<(const Deallocate& d) {
+    _log << "deallocate(" << d.size << ")\n";
     return *this;
   }
 
   AllocatorLog& operator<<(const Reallocate& a) {
-    _log << "reallocate(" << a.size << ")\n";
+    _log << "reallocate(" << a.oldSize << ", " << a.newSize << ")\n";
     return *this;
   }
 
@@ -85,17 +88,25 @@ class SpyingAllocator : public ArduinoJson::Allocator {
 
   void* allocate(size_t n) override {
     _log << AllocatorLog::Allocate(n);
-    return malloc(n);
+    auto block = reinterpret_cast<AllocatedBlock*>(
+        malloc(sizeof(AllocatedBlock) + n - 1));
+    block->size = n;
+    return block->payload;
   }
 
   void deallocate(void* p) override {
-    _log << AllocatorLog::Deallocate();
-    free(p);
+    auto block = AllocatedBlock::fromPayload(p);
+    _log << AllocatorLog::Deallocate(block->size);
+    free(block);
   }
 
-  void* reallocate(void* ptr, size_t n) override {
-    _log << AllocatorLog::Reallocate(n);
-    return realloc(ptr, n);
+  void* reallocate(void* p, size_t n) override {
+    auto block = AllocatedBlock::fromPayload(p);
+    _log << AllocatorLog::Reallocate(block->size, n);
+    block = reinterpret_cast<AllocatedBlock*>(
+        realloc(block, sizeof(AllocatedBlock) + n - 1));
+    block->size = n;
+    return block->payload;
   }
 
   const AllocatorLog& log() const {
@@ -103,5 +114,18 @@ class SpyingAllocator : public ArduinoJson::Allocator {
   }
 
  private:
+  struct AllocatedBlock {
+    size_t size;
+    char payload[1];
+
+    static AllocatedBlock* fromPayload(void* p) {
+      return reinterpret_cast<AllocatedBlock*>(
+          // Cast to void* to silence "cast increases required alignment of
+          // target type [-Werror=cast-align]"
+          reinterpret_cast<void*>(reinterpret_cast<char*>(p) -
+                                  offsetof(AllocatedBlock, payload)));
+    }
+  };
+
   AllocatorLog _log;
 };
