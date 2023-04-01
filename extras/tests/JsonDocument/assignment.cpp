@@ -5,30 +5,90 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("JsonDocument assignment") {
+  SpyingAllocator spyingAllocator;
+
+  SECTION("Copy assignment same capacity") {
+    {
+      JsonDocument doc1(1024, &spyingAllocator);
+      deserializeJson(doc1, "{\"hello\":\"world\"}");
+      JsonDocument doc2(1024, &spyingAllocator);
+
+      doc2 = doc1;
+
+      REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
+      REQUIRE(doc2.capacity() == doc1.capacity());
+    }
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Deallocate(1024)
+                                         << AllocatorLog::Deallocate(1024));
+  }
+
   SECTION("Copy assignment reallocates when capacity is smaller") {
-    JsonDocument doc1(1234);
-    deserializeJson(doc1, "{\"hello\":\"world\"}");
-    JsonDocument doc2(8);
+    {
+      JsonDocument doc1(4096, &spyingAllocator);
+      deserializeJson(doc1, "{\"hello\":\"world\"}");
+      JsonDocument doc2(8, &spyingAllocator);
 
-    doc2 = doc1;
+      doc2 = doc1;
 
-    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.capacity() == doc1.capacity());
+      REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
+      REQUIRE(doc2.capacity() == doc1.capacity());
+    }
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Allocate(8)
+                                         << AllocatorLog::Deallocate(8)
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate(4096)
+                                         << AllocatorLog::Deallocate(4096));
   }
 
   SECTION("Copy assignment reallocates when capacity is larger") {
-    JsonDocument doc1(100);
-    deserializeJson(doc1, "{\"hello\":\"world\"}");
-    JsonDocument doc2(1234);
+    {
+      JsonDocument doc1(1024, &spyingAllocator);
+      deserializeJson(doc1, "{\"hello\":\"world\"}");
+      JsonDocument doc2(4096, &spyingAllocator);
 
-    doc2 = doc1;
+      doc2 = doc1;
 
-    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.capacity() == doc1.capacity());
+      REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
+      REQUIRE(doc2.capacity() == doc1.capacity());
+    }
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate(4096)
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Deallocate(1024)
+                                         << AllocatorLog::Deallocate(1024));
+  }
+
+  SECTION("Move assign") {
+    {
+      JsonDocument doc1(4096, &spyingAllocator);
+      doc1.set(std::string("The size of this string is 32!!"));
+      JsonDocument doc2(8, &spyingAllocator);
+
+      doc2 = std::move(doc1);
+
+      REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
+      REQUIRE(doc1.as<std::string>() == "null");
+      REQUIRE(doc1.capacity() == 0);
+      REQUIRE(doc2.capacity() == 4096);
+    }
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Allocate(8)
+                                         << AllocatorLog::Deallocate(8)
+                                         << AllocatorLog::Deallocate(4096));
   }
 
   SECTION("Assign from JsonObject") {
