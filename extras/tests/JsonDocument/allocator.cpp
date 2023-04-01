@@ -42,7 +42,9 @@ TEST_CASE("JsonDocument's allocator") {
 
   SECTION("Construct/Destruct") {
     { JsonDocument doc(4096, &spyingAllocator); }
-    REQUIRE(spyingAllocator.log() == "A4096F");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate());
   }
 
   SECTION("Copy construct") {
@@ -56,7 +58,11 @@ TEST_CASE("JsonDocument's allocator") {
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.capacity() == 4096);
     }
-    REQUIRE(spyingAllocator.log() == "A4096A4096FF");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate()
+                                         << AllocatorLog::Deallocate());
   }
 
   SECTION("Move construct") {
@@ -71,7 +77,9 @@ TEST_CASE("JsonDocument's allocator") {
       REQUIRE(doc1.capacity() == 0);
       REQUIRE(doc2.capacity() == 4096);
     }
-    REQUIRE(spyingAllocator.log() == "A4096F");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate());
   }
 
   SECTION("Copy assign larger") {
@@ -86,7 +94,13 @@ TEST_CASE("JsonDocument's allocator") {
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.capacity() == 4096);
     }
-    REQUIRE(spyingAllocator.log() == "A4096A8FA4096FF");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Allocate(8)
+                                         << AllocatorLog::Deallocate()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate()
+                                         << AllocatorLog::Deallocate());
   }
 
   SECTION("Copy assign smaller") {
@@ -101,7 +115,13 @@ TEST_CASE("JsonDocument's allocator") {
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.capacity() == 1024);
     }
-    REQUIRE(spyingAllocator.log() == "A1024A4096FA1024FF");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate()
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Deallocate()
+                                         << AllocatorLog::Deallocate());
   }
 
   SECTION("Copy assign same size") {
@@ -116,7 +136,11 @@ TEST_CASE("JsonDocument's allocator") {
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.capacity() == 1024);
     }
-    REQUIRE(spyingAllocator.log() == "A1024A1024FF");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Allocate(1024)
+                                         << AllocatorLog::Deallocate()
+                                         << AllocatorLog::Deallocate());
   }
 
   SECTION("Move assign") {
@@ -132,7 +156,11 @@ TEST_CASE("JsonDocument's allocator") {
       REQUIRE(doc1.capacity() == 0);
       REQUIRE(doc2.capacity() == 4096);
     }
-    REQUIRE(spyingAllocator.log() == "A4096A8FF");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Allocate(8)
+                                         << AllocatorLog::Deallocate()
+                                         << AllocatorLog::Deallocate());
   }
 
   SECTION("garbageCollect()") {
