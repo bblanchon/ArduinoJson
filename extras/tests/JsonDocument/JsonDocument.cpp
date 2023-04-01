@@ -9,12 +9,6 @@ using ArduinoJson::detail::addPadding;
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 
-static void REQUIRE_JSON(JsonDocument& doc, const std::string& expected) {
-  std::string json;
-  serializeJson(doc, json);
-  REQUIRE(json == expected);
-}
-
 TEST_CASE("JsonDocument") {
   JsonDocument doc(4096);
 
@@ -91,7 +85,7 @@ TEST_CASE("JsonDocument constructor") {
 
     JsonDocument doc2 = doc1;
 
-    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
 
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
@@ -103,7 +97,7 @@ TEST_CASE("JsonDocument constructor") {
 
     JsonDocument doc2 = obj;
 
-    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
   }
 
@@ -114,7 +108,7 @@ TEST_CASE("JsonDocument constructor") {
 
     JsonDocument doc2 = arr;
 
-    REQUIRE_JSON(doc2, "[\"hello\"]");
+    REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
     REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
   }
 
@@ -124,7 +118,7 @@ TEST_CASE("JsonDocument constructor") {
 
     JsonDocument doc2 = doc1.as<JsonVariant>();
 
-    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.as<std::string>() == "42");
     REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
   }
 }
@@ -137,7 +131,7 @@ TEST_CASE("JsonDocument assignment") {
 
     doc2 = doc1;
 
-    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
@@ -148,7 +142,7 @@ TEST_CASE("JsonDocument assignment") {
 
     doc2 = doc1;
 
-    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(doc2.capacity() == doc1.capacity());
   }
 
@@ -160,7 +154,7 @@ TEST_CASE("JsonDocument assignment") {
     JsonDocument doc2(4096);
     doc2 = obj;
 
-    REQUIRE_JSON(doc2, "{\"hello\":\"world\"}");
+    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(doc2.capacity() == 4096);
   }
 
@@ -172,7 +166,7 @@ TEST_CASE("JsonDocument assignment") {
     JsonDocument doc2(4096);
     doc2 = arr;
 
-    REQUIRE_JSON(doc2, "[\"hello\"]");
+    REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
     REQUIRE(doc2.capacity() == 4096);
   }
 
@@ -183,7 +177,7 @@ TEST_CASE("JsonDocument assignment") {
     JsonDocument doc2(4096);
     doc2 = doc1.as<JsonVariant>();
 
-    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.as<std::string>() == "42");
     REQUIRE(doc2.capacity() == 4096);
   }
 
@@ -194,7 +188,7 @@ TEST_CASE("JsonDocument assignment") {
     JsonDocument doc2(4096);
     doc2 = doc1["value"];
 
-    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.as<std::string>() == "42");
     REQUIRE(doc2.capacity() == 4096);
   }
 
@@ -205,7 +199,7 @@ TEST_CASE("JsonDocument assignment") {
     JsonDocument doc2(4096);
     doc2 = doc1[0];
 
-    REQUIRE_JSON(doc2, "42");
+    REQUIRE(doc2.as<std::string>() == "42");
     REQUIRE(doc2.capacity() == 4096);
   }
 }
