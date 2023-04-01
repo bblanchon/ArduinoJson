@@ -5,15 +5,18 @@
 add_executable(JsonDocumentTests
 	add.cpp
 	allocator.cpp
+	assignment.cpp
+	capacity.cpp
 	cast.cpp
 	compare.cpp
+	constructor.cpp
 	containsKey.cpp
 	createNested.cpp
-	JsonDocument.cpp
 	ElementProxy.cpp
 	isNull.cpp
 	issue1120.cpp
 	MemberProxy.cpp
+	memoryUsage.cpp
 	nesting.cpp
 	overflowed.cpp
 	remove.cpp
