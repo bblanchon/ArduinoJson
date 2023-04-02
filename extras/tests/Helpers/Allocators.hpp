@@ -84,12 +84,15 @@ class AllocatorLog {
 
 class SpyingAllocator : public ArduinoJson::Allocator {
  public:
+  SpyingAllocator(
+      Allocator* upstream = ArduinoJson::detail::DefaultAllocator::instance())
+      : _upstream(upstream) {}
   virtual ~SpyingAllocator() {}
 
   void* allocate(size_t n) override {
     _log << AllocatorLog::Allocate(n);
     auto block = reinterpret_cast<AllocatedBlock*>(
-        malloc(sizeof(AllocatedBlock) + n - 1));
+        _upstream->allocate(sizeof(AllocatedBlock) + n - 1));
     block->size = n;
     return block->payload;
   }
@@ -97,14 +100,14 @@ class SpyingAllocator : public ArduinoJson::Allocator {
   void deallocate(void* p) override {
     auto block = AllocatedBlock::fromPayload(p);
     _log << AllocatorLog::Deallocate(block->size);
-    free(block);
+    _upstream->deallocate(block);
   }
 
   void* reallocate(void* p, size_t n) override {
     auto block = AllocatedBlock::fromPayload(p);
     _log << AllocatorLog::Reallocate(block->size, n);
     block = reinterpret_cast<AllocatedBlock*>(
-        realloc(block, sizeof(AllocatedBlock) + n - 1));
+        _upstream->reallocate(block, sizeof(AllocatedBlock) + n - 1));
     block->size = n;
     return block->payload;
   }
@@ -128,6 +131,7 @@ class SpyingAllocator : public ArduinoJson::Allocator {
   };
 
   AllocatorLog _log;
+  Allocator* _upstream;
 };
 
 class ControllableAllocator : public ArduinoJson::Allocator {
