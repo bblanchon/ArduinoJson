@@ -28,7 +28,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
   // Copy-constructor
   JsonDocument(const JsonDocument& src)
-      : JsonDocument(src.capacity(), src.allocator()) {
+      : JsonDocument(src._pool.capacity(), src.allocator()) {
     set(src);
   }
 
@@ -41,6 +41,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Construct from variant, array, or object
   template <typename T>
   JsonDocument(const T& src,
+               Allocator* alloc = detail::DefaultAllocator::instance(),
                typename detail::enable_if<
                    detail::is_same<T, JsonVariant>::value ||
                    detail::is_same<T, JsonVariantConst>::value ||
@@ -48,7 +49,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
                    detail::is_same<T, JsonArrayConst>::value ||
                    detail::is_same<T, JsonObject>::value ||
                    detail::is_same<T, JsonObjectConst>::value>::type* = 0)
-      : JsonDocument(src.memoryUsage()) {
+      : JsonDocument(src.memoryUsage(), alloc) {
     set(src);
   }
 
@@ -73,7 +74,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename T>
   JsonDocument& operator=(const T& src) {
     size_t requiredSize = src.memoryUsage();
-    if (requiredSize > capacity())
+    if (requiredSize > _pool.capacity())
       _pool.reallocPool(requiredSize);
     set(src);
     return *this;
@@ -94,7 +95,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   bool garbageCollect() {
     // make a temporary clone and move assign
     JsonDocument tmp(*this);
-    if (!tmp.capacity())
+    if (!tmp._pool.capacity())
       return false;
     tmp.set(*this);
     moveAssignFrom(tmp);
@@ -158,12 +159,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/nesting/
   size_t nesting() const {
     return variantNesting(&_data);
-  }
-
-  // Returns the capacity of the memory pool.
-  // https://arduinojson.org/v6/api/jsondocument/capacity/
-  size_t capacity() const {
-    return _pool.capacity();
   }
 
   // Returns the number of elements in the root array or object.
@@ -364,7 +359,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   void copyAssignFrom(const JsonDocument& src) {
-    _pool.reallocPool(src.capacity());
+    _pool.reallocPool(src._pool.capacity());
     set(src);
   }
 

@@ -22,7 +22,6 @@ TEST_CASE("JsonDocument assignment") {
       doc2 = doc1;
 
       REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-      REQUIRE(doc2.capacity() == doc1.capacity());
     }
     REQUIRE(spyingAllocator.log() == AllocatorLog()
                                          << AllocatorLog::Allocate(1024)
@@ -40,7 +39,6 @@ TEST_CASE("JsonDocument assignment") {
       doc2 = doc1;
 
       REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-      REQUIRE(doc2.capacity() == doc1.capacity());
     }
     REQUIRE(spyingAllocator.log() == AllocatorLog()
                                          << AllocatorLog::Allocate(4096)
@@ -60,7 +58,6 @@ TEST_CASE("JsonDocument assignment") {
       doc2 = doc1;
 
       REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-      REQUIRE(doc2.capacity() == doc1.capacity());
     }
     REQUIRE(spyingAllocator.log() == AllocatorLog()
                                          << AllocatorLog::Allocate(1024)
@@ -81,8 +78,6 @@ TEST_CASE("JsonDocument assignment") {
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc1.as<std::string>() == "null");
-      REQUIRE(doc1.capacity() == 0);
-      REQUIRE(doc2.capacity() == 4096);
     }
     REQUIRE(spyingAllocator.log() == AllocatorLog()
                                          << AllocatorLog::Allocate(4096)
@@ -100,7 +95,6 @@ TEST_CASE("JsonDocument assignment") {
     doc2 = obj;
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.capacity() == 4096);
   }
 
   SECTION("Assign from JsonArray") {
@@ -112,7 +106,6 @@ TEST_CASE("JsonDocument assignment") {
     doc2 = arr;
 
     REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
-    REQUIRE(doc2.capacity() == 4096);
   }
 
   SECTION("Assign from JsonVariant") {
@@ -123,7 +116,6 @@ TEST_CASE("JsonDocument assignment") {
     doc2 = doc1.as<JsonVariant>();
 
     REQUIRE(doc2.as<std::string>() == "42");
-    REQUIRE(doc2.capacity() == 4096);
   }
 
   SECTION("Assign from MemberProxy") {
@@ -134,7 +126,6 @@ TEST_CASE("JsonDocument assignment") {
     doc2 = doc1["value"];
 
     REQUIRE(doc2.as<std::string>() == "42");
-    REQUIRE(doc2.capacity() == 4096);
   }
 
   SECTION("Assign from ElementProxy") {
@@ -145,6 +136,5 @@ TEST_CASE("JsonDocument assignment") {
     doc2 = doc1[0];
 
     REQUIRE(doc2.as<std::string>() == "42");
-    REQUIRE(doc2.capacity() == 4096);
   }
 }

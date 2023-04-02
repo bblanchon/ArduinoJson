@@ -12,13 +12,12 @@
 using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("JsonDocument::garbageCollect()") {
-  SpyingAllocator spyingAllocator;
   ControllableAllocator controllableAllocator;
-  JsonDocument doc(4096, &controllableAllocator);
+  SpyingAllocator spyingAllocator(&controllableAllocator);
+  JsonDocument doc(4096, &spyingAllocator);
 
   SECTION("when allocation succeeds") {
     deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");
-    REQUIRE(doc.capacity() == 4096);
     REQUIRE(doc.memoryUsage() == sizeofObject(2) + 16);
     doc.remove("blanket");
 
@@ -26,13 +25,15 @@ TEST_CASE("JsonDocument::garbageCollect()") {
 
     REQUIRE(result == true);
     REQUIRE(doc.memoryUsage() == sizeofObject(1) + 8);
-    REQUIRE(doc.capacity() == 4096);
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Deallocate(4096));
   }
 
   SECTION("when allocation fails") {
     deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");
-    REQUIRE(doc.capacity() == 4096);
     REQUIRE(doc.memoryUsage() == sizeofObject(2) + 16);
     doc.remove("blanket");
     controllableAllocator.disable();
@@ -41,7 +42,10 @@ TEST_CASE("JsonDocument::garbageCollect()") {
 
     REQUIRE(result == false);
     REQUIRE(doc.memoryUsage() == sizeofObject(2) + 16);
-    REQUIRE(doc.capacity() == 4096);
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
+
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::AllocateFail(4096));
   }
 }

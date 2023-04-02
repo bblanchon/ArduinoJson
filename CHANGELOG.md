@@ -10,3 +10,4 @@ HEAD
 * Merge `DynamicJsonDocument` with `JsonDocument`
 * Remove `JSON_ARRAY_SIZE()`, `JSON_OBJECT_SIZE()`, and `JSON_STRING_SIZE()`
 * Remove `ARDUINOJSON_ENABLE_STRING_DEDUPLICATION` (string deduplication cannot be enabled anymore)
+* Remove `JsonDocument::capacity()`

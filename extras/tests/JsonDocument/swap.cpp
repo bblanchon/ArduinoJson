@@ -19,9 +19,7 @@ TEST_CASE("std::swap") {
 
     swap(doc1, doc2);
 
-    CHECK(doc1.capacity() == 0x20);
     CHECK(doc1.as<string>() == "world");
-    CHECK(doc2.capacity() == 0x10);
     CHECK(doc2.as<string>() == "hello");
   }
 }

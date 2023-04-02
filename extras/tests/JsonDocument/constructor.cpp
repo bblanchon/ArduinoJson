@@ -28,7 +28,6 @@ TEST_CASE("JsonDocument constructor") {
 
       REQUIRE(doc1.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
-      REQUIRE(doc2.capacity() == 4096);
     }
     REQUIRE(spyingAllocator.log() == AllocatorLog()
                                          << AllocatorLog::Allocate(4096)
@@ -46,8 +45,6 @@ TEST_CASE("JsonDocument constructor") {
 
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
       REQUIRE(doc1.as<std::string>() == "null");
-      REQUIRE(doc1.capacity() == 0);
-      REQUIRE(doc2.capacity() == 4096);
     }
     REQUIRE(spyingAllocator.log() == AllocatorLog()
                                          << AllocatorLog::Allocate(4096)
@@ -59,10 +56,11 @@ TEST_CASE("JsonDocument constructor") {
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
 
-    JsonDocument doc2 = obj;
+    JsonDocument doc2(obj, &spyingAllocator);
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
+    REQUIRE(spyingAllocator.log() == AllocatorLog() << AllocatorLog::Allocate(
+                                         addPadding(doc1.memoryUsage())));
   }
 
   SECTION("Construct from JsonArray") {
@@ -70,19 +68,21 @@ TEST_CASE("JsonDocument constructor") {
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
 
-    JsonDocument doc2 = arr;
+    JsonDocument doc2(arr, &spyingAllocator);
 
     REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
-    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
+    REQUIRE(spyingAllocator.log() == AllocatorLog() << AllocatorLog::Allocate(
+                                         addPadding(doc1.memoryUsage())));
   }
 
   SECTION("Construct from JsonVariant") {
     JsonDocument doc1(200);
-    deserializeJson(doc1, "42");
+    deserializeJson(doc1, "\"hello\"");
 
-    JsonDocument doc2 = doc1.as<JsonVariant>();
+    JsonDocument doc2(doc1.as<JsonVariant>(), &spyingAllocator);
 
-    REQUIRE(doc2.as<std::string>() == "42");
-    REQUIRE(doc2.capacity() == addPadding(doc1.memoryUsage()));
+    REQUIRE(doc2.as<std::string>() == "hello");
+    REQUIRE(spyingAllocator.log() == AllocatorLog() << AllocatorLog::Allocate(
+                                         addPadding(doc1.memoryUsage())));
   }
 }

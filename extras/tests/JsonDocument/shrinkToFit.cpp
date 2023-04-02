@@ -8,8 +8,11 @@
 #include <stdlib.h>  // malloc, free
 #include <string>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
 
 class ArmoredAllocator : public Allocator {
  public:
@@ -46,87 +49,153 @@ class ArmoredAllocator : public Allocator {
   size_t _size;
 };
 
-void testShrinkToFit(JsonDocument& doc, std::string expected_json,
-                     size_t expected_size) {
-  // test twice: shrinkToFit() should be idempotent
-  for (int i = 0; i < 2; i++) {
-    doc.shrinkToFit();
-
-    REQUIRE(doc.capacity() == expected_size);
-    REQUIRE(doc.memoryUsage() == expected_size);
-
-    std::string json;
-    serializeJson(doc, json);
-    REQUIRE(json == expected_json);
-  }
-}
-
 TEST_CASE("JsonDocument::shrinkToFit()") {
   ArmoredAllocator armoredAllocator;
-  JsonDocument doc(4096, &armoredAllocator);
+  SpyingAllocator spyingAllocator(&armoredAllocator);
+  JsonDocument doc(4096, &spyingAllocator);
 
   SECTION("null") {
-    testShrinkToFit(doc, "null", 0);
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "null");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Reallocate(4096, 0));
   }
 
   SECTION("empty object") {
     deserializeJson(doc, "{}");
-    testShrinkToFit(doc, "{}", sizeofObject(0));
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "{}");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(4096, sizeofObject(0)));
   }
 
   SECTION("empty array") {
     deserializeJson(doc, "[]");
-    testShrinkToFit(doc, "[]", sizeofArray(0));
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "[]");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(4096, sizeofArray(0)));
   }
 
   SECTION("linked string") {
     doc.set("hello");
-    testShrinkToFit(doc, "\"hello\"", 0);
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "hello");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Reallocate(4096, 0));
   }
 
   SECTION("owned string") {
     doc.set(std::string("abcdefg"));
-    testShrinkToFit(doc, "\"abcdefg\"", 8);
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "abcdefg");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(4096, sizeofString(7)));
   }
 
   SECTION("linked raw") {
     doc.set(serialized("[{},123]"));
-    testShrinkToFit(doc, "[{},123]", 0);
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "[{},123]");
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(4096)
+                                         << AllocatorLog::Reallocate(4096, 0));
   }
 
   SECTION("owned raw") {
     doc.set(serialized(std::string("[{},12]")));
-    testShrinkToFit(doc, "[{},12]", 8);
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "[{},12]");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(4096, sizeofString(7)));
   }
 
   SECTION("linked key") {
     doc["key"] = 42;
-    testShrinkToFit(doc, "{\"key\":42}", sizeofObject(1));
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "{\"key\":42}");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(4096, sizeofObject(1)));
   }
 
   SECTION("owned key") {
     doc[std::string("abcdefg")] = 42;
-    testShrinkToFit(doc, "{\"abcdefg\":42}", sizeofObject(1) + 8);
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "{\"abcdefg\":42}");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(
+                                  4096, sizeofObject(1) + sizeofString(7)));
   }
 
   SECTION("linked string in array") {
     doc.add("hello");
-    testShrinkToFit(doc, "[\"hello\"]", sizeofArray(1));
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "[\"hello\"]");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(4096, sizeofArray(1)));
   }
 
   SECTION("owned string in array") {
     doc.add(std::string("abcdefg"));
-    testShrinkToFit(doc, "[\"abcdefg\"]", sizeofArray(1) + 8);
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "[\"abcdefg\"]");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(
+                                  4096, sizeofArray(1) + sizeofString(7)));
   }
 
   SECTION("linked string in object") {
     doc["key"] = "hello";
-    testShrinkToFit(doc, "{\"key\":\"hello\"}", sizeofObject(1));
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "{\"key\":\"hello\"}");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(4096, sizeofObject(1)));
   }
 
   SECTION("owned string in object") {
     doc["key"] = std::string("abcdefg");
-    testShrinkToFit(doc, "{\"key\":\"abcdefg\"}", sizeofArray(1) + 8);
+
+    doc.shrinkToFit();
+
+    REQUIRE(doc.as<std::string>() == "{\"key\":\"abcdefg\"}");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(
+                                  4096, sizeofObject(1) + sizeofString(7)));
   }
 
   SECTION("unaligned") {
@@ -136,8 +205,10 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     doc.shrinkToFit();
 
     // the new capacity should be padded to align the pointers
-    REQUIRE(doc.capacity() == sizeofObject(1) + sizeof(void*));
-    REQUIRE(doc.memoryUsage() == sizeofObject(1) + 2);
     REQUIRE(doc[0] == "?");
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Reallocate(
+                                  4096, sizeofArray(1) + sizeof(void*)));
   }
 }
