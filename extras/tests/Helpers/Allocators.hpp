@@ -136,19 +136,21 @@ class SpyingAllocator : public ArduinoJson::Allocator {
 
 class ControllableAllocator : public ArduinoJson::Allocator {
  public:
-  ControllableAllocator() : _enabled(true) {}
+  ControllableAllocator(
+      Allocator* upstream = ArduinoJson::detail::DefaultAllocator::instance())
+      : _enabled(true), _upstream(upstream) {}
   virtual ~ControllableAllocator() {}
 
   void* allocate(size_t n) override {
-    return _enabled ? malloc(n) : 0;
+    return _enabled ? _upstream->allocate(n) : 0;
   }
 
   void deallocate(void* p) override {
-    free(p);
+    _upstream->deallocate(p);
   }
 
   void* reallocate(void* ptr, size_t n) override {
-    return realloc(ptr, n);
+    return _upstream->reallocate(ptr, n);
   }
 
   void disable() {
@@ -157,4 +159,5 @@ class ControllableAllocator : public ArduinoJson::Allocator {
 
  private:
   bool _enabled;
+  Allocator* _upstream;
 };
