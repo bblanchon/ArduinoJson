@@ -31,33 +31,38 @@ struct FailingAllocator : ArduinoJson::Allocator {
 
 class AllocatorLog {
  public:
-  struct Allocate {
-    Allocate(size_t s) : size(s) {}
-    size_t size;
-  };
-
-  struct Reallocate {
-    Reallocate(size_t s1, size_t s2) : oldSize(s1), newSize(s2) {}
-    size_t oldSize, newSize;
-  };
-
-  struct Deallocate {
-    Deallocate(size_t s) : size(s) {}
-    size_t size;
-  };
-
-  AllocatorLog& operator<<(const Allocate& a) {
-    _log << "allocate(" << a.size << ")\n";
-    return *this;
+  static std::string Allocate(size_t s) {
+    char buffer[32];
+    sprintf(buffer, "allocate(%zu)", s);
+    return buffer;
   }
 
-  AllocatorLog& operator<<(const Deallocate& d) {
-    _log << "deallocate(" << d.size << ")\n";
-    return *this;
+  static std::string AllocateFail(size_t s) {
+    char buffer[32];
+    sprintf(buffer, "allocate(%zu) -> nullptr", s);
+    return buffer;
   }
 
-  AllocatorLog& operator<<(const Reallocate& a) {
-    _log << "reallocate(" << a.oldSize << ", " << a.newSize << ")\n";
+  static std::string Reallocate(size_t s1, size_t s2) {
+    char buffer[32];
+    sprintf(buffer, "reallocate(%zu, %zu)", s1, s2);
+    return buffer;
+  };
+
+  static std::string ReallocateFail(size_t s1, size_t s2) {
+    char buffer[32];
+    sprintf(buffer, "reallocate(%zu, %zu) -> nullptr", s1, s2);
+    return buffer;
+  };
+
+  static std::string Deallocate(size_t s) {
+    char buffer[32];
+    sprintf(buffer, "deallocate(%zu)", s);
+    return buffer;
+  };
+
+  AllocatorLog& operator<<(const std::string& s) {
+    _log << s << "\n";
     return *this;
   }
 
@@ -90,11 +95,16 @@ class SpyingAllocator : public ArduinoJson::Allocator {
   virtual ~SpyingAllocator() {}
 
   void* allocate(size_t n) override {
-    _log << AllocatorLog::Allocate(n);
     auto block = reinterpret_cast<AllocatedBlock*>(
         _upstream->allocate(sizeof(AllocatedBlock) + n - 1));
-    block->size = n;
-    return block->payload;
+    if (block) {
+      _log << AllocatorLog::Allocate(n);
+      block->size = n;
+      return block->payload;
+    } else {
+      _log << AllocatorLog::AllocateFail(n);
+      return nullptr;
+    }
   }
 
   void deallocate(void* p) override {
@@ -105,11 +115,17 @@ class SpyingAllocator : public ArduinoJson::Allocator {
 
   void* reallocate(void* p, size_t n) override {
     auto block = AllocatedBlock::fromPayload(p);
-    _log << AllocatorLog::Reallocate(block->size, n);
+    auto oldSize = block->size;
     block = reinterpret_cast<AllocatedBlock*>(
         _upstream->reallocate(block, sizeof(AllocatedBlock) + n - 1));
-    block->size = n;
-    return block->payload;
+    if (block) {
+      _log << AllocatorLog::Reallocate(oldSize, n);
+      block->size = n;
+      return block->payload;
+    } else {
+      _log << AllocatorLog::ReallocateFail(oldSize, n);
+      return nullptr;
+    }
   }
 
   const AllocatorLog& log() const {
