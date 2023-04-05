@@ -97,7 +97,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     JsonDocument tmp(*this);
     if (!tmp._pool.capacity())
       return false;
-    tmp.set(*this);
     moveAssignFrom(tmp);
     return true;
   }
