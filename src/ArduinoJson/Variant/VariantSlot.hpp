@@ -17,10 +17,10 @@ class VariantSlot {
   // CAUTION: same layout as VariantData
   // we cannot use composition because it adds padding
   // (+20% on ESP8266 for example)
-  VariantContent _content;
-  uint8_t _flags;
-  VariantSlotDiff _next;
-  const char* _key;
+  VariantContent content_;
+  uint8_t flags_;
+  VariantSlotDiff next_;
+  const char* key_;
 
  public:
   // Must be a POD!
@@ -30,15 +30,15 @@ class VariantSlot {
   // - no inheritance
 
   VariantData* data() {
-    return reinterpret_cast<VariantData*>(&_content);
+    return reinterpret_cast<VariantData*>(&content_);
   }
 
   const VariantData* data() const {
-    return reinterpret_cast<const VariantData*>(&_content);
+    return reinterpret_cast<const VariantData*>(&content_);
   }
 
   VariantSlot* next() {
-    return _next ? this + _next : 0;
+    return next_ ? this + next_ : 0;
   }
 
   const VariantSlot* next() const {
@@ -48,9 +48,9 @@ class VariantSlot {
   VariantSlot* next(size_t distance) {
     VariantSlot* slot = this;
     while (distance--) {
-      if (!slot->_next)
+      if (!slot->next_)
         return 0;
-      slot += slot->_next;
+      slot += slot->next_;
     }
     return slot;
   }
@@ -64,7 +64,7 @@ class VariantSlot {
                                     numeric_limits<VariantSlotDiff>::lowest());
     ARDUINOJSON_ASSERT(!slot || slot - this <=
                                     numeric_limits<VariantSlotDiff>::highest());
-    _next = VariantSlotDiff(slot ? slot - this : 0);
+    next_ = VariantSlotDiff(slot ? slot - this : 0);
   }
 
   void setNextNotNull(VariantSlot* slot) {
@@ -73,39 +73,39 @@ class VariantSlot {
                        numeric_limits<VariantSlotDiff>::lowest());
     ARDUINOJSON_ASSERT(slot - this <=
                        numeric_limits<VariantSlotDiff>::highest());
-    _next = VariantSlotDiff(slot - this);
+    next_ = VariantSlotDiff(slot - this);
   }
 
   void setKey(JsonString k) {
     ARDUINOJSON_ASSERT(k);
     if (k.isLinked())
-      _flags &= VALUE_MASK;
+      flags_ &= VALUE_MASK;
     else
-      _flags |= OWNED_KEY_BIT;
-    _key = k.c_str();
+      flags_ |= OWNED_KEY_BIT;
+    key_ = k.c_str();
   }
 
   const char* key() const {
-    return _key;
+    return key_;
   }
 
   bool ownsKey() const {
-    return (_flags & OWNED_KEY_BIT) != 0;
+    return (flags_ & OWNED_KEY_BIT) != 0;
   }
 
   void clear() {
-    _next = 0;
-    _flags = 0;
-    _key = 0;
+    next_ = 0;
+    flags_ = 0;
+    key_ = 0;
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
-    if (_flags & OWNED_KEY_BIT)
-      _key += stringDistance;
-    if (_flags & OWNED_VALUE_BIT)
-      _content.asString.data += stringDistance;
-    if (_flags & COLLECTION_MASK)
-      _content.asCollection.movePointers(stringDistance, variantDistance);
+    if (flags_ & OWNED_KEY_BIT)
+      key_ += stringDistance;
+    if (flags_ & OWNED_VALUE_BIT)
+      content_.asString.data += stringDistance;
+    if (flags_ & COLLECTION_MASK)
+      content_.asCollection.movePointers(stringDistance, variantDistance);
   }
 };
 

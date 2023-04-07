@@ -205,43 +205,43 @@ struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
 namespace detail {
 class MemoryPoolPrint : public Print {
  public:
-  MemoryPoolPrint(MemoryPool* pool) : _pool(pool), _size(0) {
-    pool->getFreeZone(&_string, &_capacity);
+  MemoryPoolPrint(MemoryPool* pool) : pool_(pool), size_(0) {
+    pool->getFreeZone(&string_, &capacity_);
   }
 
   JsonString str() {
-    ARDUINOJSON_ASSERT(_size < _capacity);
-    return JsonString(_pool->saveStringFromFreeZone(_size), _size,
+    ARDUINOJSON_ASSERT(size_ < capacity_);
+    return JsonString(pool_->saveStringFromFreeZone(size_), size_,
                       JsonString::Copied);
   }
 
   size_t write(uint8_t c) {
-    if (_size >= _capacity)
+    if (size_ >= capacity_)
       return 0;
 
-    _string[_size++] = char(c);
+    string_[size_++] = char(c);
     return 1;
   }
 
   size_t write(const uint8_t* buffer, size_t size) {
-    if (_size + size >= _capacity) {
-      _size = _capacity;  // mark as overflowed
+    if (size_ + size >= capacity_) {
+      size_ = capacity_;  // mark as overflowed
       return 0;
     }
-    memcpy(&_string[_size], buffer, size);
-    _size += size;
+    memcpy(&string_[size_], buffer, size);
+    size_ += size;
     return size;
   }
 
   bool overflowed() const {
-    return _size >= _capacity;
+    return size_ >= capacity_;
   }
 
  private:
-  MemoryPool* _pool;
-  size_t _size;
-  char* _string;
-  size_t _capacity;
+  MemoryPool* pool_;
+  size_t size_;
+  char* string_;
+  size_t capacity_;
 };
 }  // namespace detail
 

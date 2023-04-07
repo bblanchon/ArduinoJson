@@ -14,27 +14,27 @@ template <typename TAllocator>
 class AllocatorOwner {
  public:
   AllocatorOwner() {}
-  AllocatorOwner(TAllocator a) : _allocator(a) {}
+  AllocatorOwner(TAllocator a) : allocator_(a) {}
 
   void* allocate(size_t size) {
-    return _allocator.allocate(size);
+    return allocator_.allocate(size);
   }
 
   void deallocate(void* ptr) {
     if (ptr)
-      _allocator.deallocate(ptr);
+      allocator_.deallocate(ptr);
   }
 
   void* reallocate(void* ptr, size_t new_size) {
-    return _allocator.reallocate(ptr, new_size);
+    return allocator_.reallocate(ptr, new_size);
   }
 
   TAllocator& allocator() {
-    return _allocator;
+    return allocator_;
   }
 
  private:
-  TAllocator _allocator;
+  TAllocator allocator_;
 };
 
 // A JsonDocument that uses the provided allocator to allocate its memory pool.
@@ -106,18 +106,18 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
   // Reduces the capacity of the memory pool to match the current usage.
   // https://arduinojson.org/v6/api/basicjsondocument/shrinktofit/
   void shrinkToFit() {
-    ptrdiff_t bytes_reclaimed = _pool.squash();
+    ptrdiff_t bytes_reclaimed = pool_.squash();
     if (bytes_reclaimed == 0)
       return;
 
-    void* old_ptr = _pool.buffer();
-    void* new_ptr = this->reallocate(old_ptr, _pool.capacity());
+    void* old_ptr = pool_.buffer();
+    void* new_ptr = this->reallocate(old_ptr, pool_.capacity());
 
     ptrdiff_t ptr_offset =
         static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
 
-    _pool.movePointers(ptr_offset);
-    _data.movePointers(ptr_offset, ptr_offset - bytes_reclaimed);
+    pool_.movePointers(ptr_offset);
+    data_.movePointers(ptr_offset, ptr_offset - bytes_reclaimed);
   }
 
   // Reclaims the memory leaked when removing and replacing values.
@@ -141,7 +141,7 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   void reallocPool(size_t requiredSize) {
     size_t capa = detail::addPadding(requiredSize);
-    if (capa == _pool.capacity())
+    if (capa == pool_.capacity())
       return;
     freePool();
     replacePool(allocPool(detail::addPadding(requiredSize)));
@@ -158,10 +158,10 @@ class BasicJsonDocument : AllocatorOwner<TAllocator>, public JsonDocument {
 
   void moveAssignFrom(BasicJsonDocument& src) {
     freePool();
-    _data = src._data;
-    _pool = src._pool;
-    src._data.setNull();
-    src._pool = {0, 0};
+    data_ = src.data_;
+    pool_ = src.pool_;
+    src.data_.setNull();
+    src.pool_ = {0, 0};
   }
 };
 

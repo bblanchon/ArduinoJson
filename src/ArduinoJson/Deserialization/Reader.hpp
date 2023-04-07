@@ -15,18 +15,18 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename TSource, typename Enable = void>
 struct Reader {
  public:
-  Reader(TSource& source) : _source(&source) {}
+  Reader(TSource& source) : source_(&source) {}
 
   int read() {
-    return _source->read();  // Error here? You passed an unsupported input type
+    return source_->read();  // Error here? You passed an unsupported input type
   }
 
   size_t readBytes(char* buffer, size_t length) {
-    return _source->readBytes(buffer, length);
+    return source_->readBytes(buffer, length);
   }
 
  private:
-  TSource* _source;
+  TSource* source_;
 };
 
 template <typename TSource, typename Enable = void>

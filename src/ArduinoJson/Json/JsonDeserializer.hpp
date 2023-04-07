@@ -23,10 +23,10 @@ class JsonDeserializer {
  public:
   JsonDeserializer(MemoryPool* pool, TReader reader,
                    TStringStorage stringStorage)
-      : _stringStorage(stringStorage),
-        _foundSomething(false),
-        _latch(reader),
-        _pool(pool) {}
+      : stringStorage_(stringStorage),
+        foundSomething_(false),
+        latch_(reader),
+        pool_(pool) {}
 
   template <typename TFilter>
   DeserializationError parse(VariantData& variant, TFilter filter,
@@ -35,7 +35,7 @@ class JsonDeserializer {
 
     err = parseVariant(variant, filter, nestingLimit);
 
-    if (!err && _latch.last() != 0 && !variant.isEnclosed()) {
+    if (!err && latch_.last() != 0 && !variant.isEnclosed()) {
       // We don't detect trailing characters earlier, so we need to check now
       return DeserializationError::InvalidInput;
     }
@@ -45,11 +45,11 @@ class JsonDeserializer {
 
  private:
   char current() {
-    return _latch.current();
+    return latch_.current();
   }
 
   void move() {
-    _latch.clear();
+    latch_.clear();
   }
 
   bool eat(char charToSkip) {
@@ -173,7 +173,7 @@ class JsonDeserializer {
     for (;;) {
       if (memberFilter.allow()) {
         // Allocate slot in array
-        VariantData* value = array.addElement(_pool);
+        VariantData* value = array.addElement(pool_);
         if (!value)
           return DeserializationError::NoMemory;
 
@@ -269,7 +269,7 @@ class JsonDeserializer {
       if (!eat(':'))
         return DeserializationError::InvalidInput;
 
-      JsonString key = _stringStorage.str();
+      JsonString key = stringStorage_.str();
 
       TFilter memberFilter = filter[key.c_str()];
 
@@ -278,10 +278,10 @@ class JsonDeserializer {
         if (!variant) {
           // Save key in memory pool.
           // This MUST be done before adding the slot.
-          key = _stringStorage.save();
+          key = stringStorage_.save();
 
           // Allocate slot in object
-          VariantSlot* slot = object.addSlot(_pool);
+          VariantSlot* slot = object.addSlot(pool_);
           if (!slot)
             return DeserializationError::NoMemory;
 
@@ -377,7 +377,7 @@ class JsonDeserializer {
   }
 
   DeserializationError::Code parseKey() {
-    _stringStorage.startString();
+    stringStorage_.startString();
     if (isQuote(current())) {
       return parseQuotedString();
     } else {
@@ -388,13 +388,13 @@ class JsonDeserializer {
   DeserializationError::Code parseStringValue(VariantData& variant) {
     DeserializationError::Code err;
 
-    _stringStorage.startString();
+    stringStorage_.startString();
 
     err = parseQuotedString();
     if (err)
       return err;
 
-    variant.setString(_stringStorage.save());
+    variant.setString(stringStorage_.save());
 
     return DeserializationError::Ok;
   }
@@ -430,9 +430,9 @@ class JsonDeserializer {
           if (err)
             return err;
           if (codepoint.append(codeunit))
-            Utf8::encodeCodepoint(codepoint.value(), _stringStorage);
+            Utf8::encodeCodepoint(codepoint.value(), stringStorage_);
 #else
-          _stringStorage.append('\\');
+          stringStorage_.append('\\');
 #endif
           continue;
         }
@@ -444,10 +444,10 @@ class JsonDeserializer {
         move();
       }
 
-      _stringStorage.append(c);
+      stringStorage_.append(c);
     }
 
-    if (!_stringStorage.isValid())
+    if (!stringStorage_.isValid())
       return DeserializationError::NoMemory;
 
     return DeserializationError::Ok;
@@ -460,14 +460,14 @@ class JsonDeserializer {
     if (canBeInNonQuotedString(c)) {  // no quotes
       do {
         move();
-        _stringStorage.append(c);
+        stringStorage_.append(c);
         c = current();
       } while (canBeInNonQuotedString(c));
     } else {
       return DeserializationError::InvalidInput;
     }
 
-    if (!_stringStorage.isValid())
+    if (!stringStorage_.isValid())
       return DeserializationError::NoMemory;
 
     return DeserializationError::Ok;
@@ -516,12 +516,12 @@ class JsonDeserializer {
     char c = current();
     while (canBeInNumber(c) && n < 63) {
       move();
-      _buffer[n++] = c;
+      buffer_[n++] = c;
       c = current();
     }
-    _buffer[n] = 0;
+    buffer_[n] = 0;
 
-    if (!parseNumber(_buffer, result))
+    if (!parseNumber(buffer_, result))
       return DeserializationError::InvalidInput;
 
     return DeserializationError::Ok;
@@ -585,7 +585,7 @@ class JsonDeserializer {
       switch (current()) {
         // end of string
         case '\0':
-          return _foundSomething ? DeserializationError::IncompleteInput
+          return foundSomething_ ? DeserializationError::IncompleteInput
                                  : DeserializationError::EmptyInput;
 
         // spaces
@@ -640,7 +640,7 @@ class JsonDeserializer {
 #endif
 
         default:
-          _foundSomething = true;
+          foundSomething_ = true;
           return DeserializationError::Ok;
       }
     }
@@ -659,11 +659,11 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  TStringStorage _stringStorage;
-  bool _foundSomething;
-  Latch<TReader> _latch;
-  MemoryPool* _pool;
-  char _buffer[64];  // using a member instead of a local variable because it
+  TStringStorage stringStorage_;
+  bool foundSomething_;
+  Latch<TReader> latch_;
+  MemoryPool* pool_;
+  char buffer_[64];  // using a member instead of a local variable because it
                      // ended in the recursive path after compiler inlined the
                      // code
 };

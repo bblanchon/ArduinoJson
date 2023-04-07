@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix compatibility with the Zephyr Project (issue #1905)
+
 v6.21.1 (2023-03-27)
 -------
 

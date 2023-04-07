@@ -10,19 +10,19 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class StringCopier {
  public:
-  StringCopier(MemoryPool* pool) : _pool(pool) {}
+  StringCopier(MemoryPool* pool) : pool_(pool) {}
 
   void startString() {
-    _pool->getFreeZone(&_ptr, &_capacity);
-    _size = 0;
-    if (_capacity == 0)
-      _pool->markAsOverflowed();
+    pool_->getFreeZone(&ptr_, &capacity_);
+    size_ = 0;
+    if (capacity_ == 0)
+      pool_->markAsOverflowed();
   }
 
   JsonString save() {
-    ARDUINOJSON_ASSERT(_ptr);
-    ARDUINOJSON_ASSERT(_size < _capacity);  // needs room for the terminator
-    return JsonString(_pool->saveStringFromFreeZone(_size), _size,
+    ARDUINOJSON_ASSERT(ptr_);
+    ARDUINOJSON_ASSERT(size_ < capacity_);  // needs room for the terminator
+    return JsonString(pool_->saveStringFromFreeZone(size_), size_,
                       JsonString::Copied);
   }
 
@@ -37,36 +37,36 @@ class StringCopier {
   }
 
   void append(char c) {
-    if (_size + 1 < _capacity)
-      _ptr[_size++] = c;
+    if (size_ + 1 < capacity_)
+      ptr_[size_++] = c;
     else
-      _pool->markAsOverflowed();
+      pool_->markAsOverflowed();
   }
 
   bool isValid() const {
-    return !_pool->overflowed();
+    return !pool_->overflowed();
   }
 
   size_t size() const {
-    return _size;
+    return size_;
   }
 
   JsonString str() const {
-    ARDUINOJSON_ASSERT(_ptr);
-    ARDUINOJSON_ASSERT(_size < _capacity);
-    _ptr[_size] = 0;
-    return JsonString(_ptr, _size, JsonString::Copied);
+    ARDUINOJSON_ASSERT(ptr_);
+    ARDUINOJSON_ASSERT(size_ < capacity_);
+    ptr_[size_] = 0;
+    return JsonString(ptr_, size_, JsonString::Copied);
   }
 
  private:
-  MemoryPool* _pool;
+  MemoryPool* pool_;
 
   // These fields aren't initialized by the constructor but startString()
   //
   // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.UninitializedObject)
-  char* _ptr;
+  char* ptr_;
   // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.UninitializedObject)
-  size_t _size, _capacity;
+  size_t size_, capacity_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

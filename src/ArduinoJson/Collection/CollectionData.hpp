@@ -16,8 +16,8 @@ class VariantData;
 class VariantSlot;
 
 class CollectionData {
-  VariantSlot* _head;
-  VariantSlot* _tail;
+  VariantSlot* head_;
+  VariantSlot* tail_;
 
  public:
   // Must be a POD!
@@ -67,7 +67,7 @@ class CollectionData {
   bool copyFrom(const CollectionData& src, MemoryPool* pool);
 
   VariantSlot* head() const {
-    return _head;
+    return head_;
   }
 
   void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance);

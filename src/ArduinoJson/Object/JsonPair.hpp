@@ -17,25 +17,25 @@ class JsonPair {
   // INTERNAL USE ONLY
   JsonPair(detail::MemoryPool* pool, detail::VariantSlot* slot) {
     if (slot) {
-      _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
+      key_ = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
                                                      : JsonString::Linked);
-      _value = JsonVariant(pool, slot->data());
+      value_ = JsonVariant(pool, slot->data());
     }
   }
 
   // Returns the key.
   JsonString key() const {
-    return _key;
+    return key_;
   }
 
   // Returns the value.
   JsonVariant value() const {
-    return _value;
+    return value_;
   }
 
  private:
-  JsonString _key;
-  JsonVariant _value;
+  JsonString key_;
+  JsonVariant value_;
 };
 
 // A read-only key-value pair.
@@ -44,25 +44,25 @@ class JsonPairConst {
  public:
   JsonPairConst(const detail::VariantSlot* slot) {
     if (slot) {
-      _key = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
+      key_ = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
                                                      : JsonString::Linked);
-      _value = JsonVariantConst(slot->data());
+      value_ = JsonVariantConst(slot->data());
     }
   }
 
   // Returns the key.
   JsonString key() const {
-    return _key;
+    return key_;
   }
 
   // Returns the value.
   JsonVariantConst value() const {
-    return _value;
+    return value_;
   }
 
  private:
-  JsonString _key;
-  JsonVariantConst _value;
+  JsonString key_;
+  JsonVariantConst value_;
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

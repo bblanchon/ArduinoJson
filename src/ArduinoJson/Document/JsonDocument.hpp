@@ -40,8 +40,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Empties the document and resets the memory pool
   // https://arduinojson.org/v6/api/jsondocument/clear/
   void clear() {
-    _pool.clear();
-    _data.setNull();
+    pool_.clear();
+    data_.setNull();
   }
 
   // Returns true if the root is of the specified type.
@@ -67,31 +67,31 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Returns the number of used bytes in the memory pool.
   // https://arduinojson.org/v6/api/jsondocument/memoryusage/
   size_t memoryUsage() const {
-    return _pool.size();
+    return pool_.size();
   }
 
   // Returns trues if the memory pool was too small.
   // https://arduinojson.org/v6/api/jsondocument/overflowed/
   bool overflowed() const {
-    return _pool.overflowed();
+    return pool_.overflowed();
   }
 
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsondocument/nesting/
   size_t nesting() const {
-    return variantNesting(&_data);
+    return variantNesting(&data_);
   }
 
   // Returns the capacity of the memory pool.
   // https://arduinojson.org/v6/api/jsondocument/capacity/
   size_t capacity() const {
-    return _pool.capacity();
+    return pool_.capacity();
   }
 
   // Returns the number of elements in the root array or object.
   // https://arduinojson.org/v6/api/jsondocument/size/
   size_t size() const {
-    return _data.size();
+    return data_.size();
   }
 
   // Copies the specified document.
@@ -161,14 +161,14 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/containskey/
   template <typename TChar>
   bool containsKey(TChar* key) const {
-    return _data.getMember(detail::adaptString(key)) != 0;
+    return data_.getMember(detail::adaptString(key)) != 0;
   }
 
   // Returns true if the root object contains the specified key.
   // https://arduinojson.org/v6/api/jsondocument/containskey/
   template <typename TString>
   bool containsKey(const TString& key) const {
-    return _data.getMember(detail::adaptString(key)) != 0;
+    return data_.getMember(detail::adaptString(key)) != 0;
   }
 
   // Gets or sets a root object's member.
@@ -197,7 +197,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
-    return JsonVariantConst(_data.getMember(detail::adaptString(key)));
+    return JsonVariantConst(data_.getMember(detail::adaptString(key)));
   }
 
   // Gets a root object's member.
@@ -206,7 +206,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
-    return JsonVariantConst(_data.getMember(detail::adaptString(key)));
+    return JsonVariantConst(data_.getMember(detail::adaptString(key)));
   }
 
   // Gets or sets a root array's element.
@@ -218,14 +218,14 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Gets a root array's member.
   // https://arduinojson.org/v6/api/jsondocument/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(_data.getElement(index));
+    return JsonVariantConst(data_.getElement(index));
   }
 
   // Appends a new (null) element to the root array.
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsondocument/add/
   FORCE_INLINE JsonVariant add() {
-    return JsonVariant(&_pool, _data.addElement(&_pool));
+    return JsonVariant(&pool_, data_.addElement(&pool_));
   }
 
   // Appends a value to the root array.
@@ -246,7 +246,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsondocument/remove/
   FORCE_INLINE void remove(size_t index) {
-    _data.remove(index);
+    data_.remove(index);
   }
 
   // Removes a member of the root object.
@@ -255,7 +255,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename TChar>
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value>::type
   remove(TChar* key) {
-    _data.remove(detail::adaptString(key));
+    data_.remove(detail::adaptString(key));
   }
 
   // Removes a member of the root object.
@@ -265,7 +265,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value>::type
       remove(const TString& key) {
-    _data.remove(detail::adaptString(key));
+    data_.remove(detail::adaptString(key));
   }
 
   FORCE_INLINE operator JsonVariant() {
@@ -277,44 +277,44 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
  protected:
-  JsonDocument() : _pool(0, 0) {}
+  JsonDocument() : pool_(0, 0) {}
 
-  JsonDocument(detail::MemoryPool pool) : _pool(pool) {}
+  JsonDocument(detail::MemoryPool pool) : pool_(pool) {}
 
-  JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {}
+  JsonDocument(char* buf, size_t capa) : pool_(buf, capa) {}
 
   ~JsonDocument() {}
 
   void replacePool(detail::MemoryPool pool) {
-    _pool = pool;
+    pool_ = pool;
   }
 
   JsonVariant getVariant() {
-    return JsonVariant(&_pool, &_data);
+    return JsonVariant(&pool_, &data_);
   }
 
   JsonVariantConst getVariant() const {
-    return JsonVariantConst(&_data);
+    return JsonVariantConst(&data_);
   }
 
-  detail::MemoryPool _pool;
-  detail::VariantData _data;
+  detail::MemoryPool pool_;
+  detail::VariantData data_;
 
  protected:
   detail::MemoryPool* getPool() {
-    return &_pool;
+    return &pool_;
   }
 
   detail::VariantData* getData() {
-    return &_data;
+    return &data_;
   }
 
   const detail::VariantData* getData() const {
-    return &_data;
+    return &data_;
   }
 
   detail::VariantData* getOrCreateData() {
-    return &_data;
+    return &data_;
   }
 };
 

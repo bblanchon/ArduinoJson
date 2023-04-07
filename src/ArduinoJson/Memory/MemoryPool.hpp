@@ -26,43 +26,43 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-// _begin                                   _end
+// begin_                                   end_
 // v                                           v
 // +-------------+--------------+--------------+
 // | strings...  |   (free)     |  ...variants |
 // +-------------+--------------+--------------+
 //               ^              ^
-//             _left          _right
+//             left_          right_
 
 class MemoryPool {
  public:
   MemoryPool(char* buf, size_t capa)
-      : _begin(buf),
-        _left(buf),
-        _right(buf ? buf + capa : 0),
-        _end(buf ? buf + capa : 0),
-        _overflowed(false) {
-    ARDUINOJSON_ASSERT(isAligned(_begin));
-    ARDUINOJSON_ASSERT(isAligned(_right));
-    ARDUINOJSON_ASSERT(isAligned(_end));
+      : begin_(buf),
+        left_(buf),
+        right_(buf ? buf + capa : 0),
+        end_(buf ? buf + capa : 0),
+        overflowed_(false) {
+    ARDUINOJSON_ASSERT(isAligned(begin_));
+    ARDUINOJSON_ASSERT(isAligned(right_));
+    ARDUINOJSON_ASSERT(isAligned(end_));
   }
 
   void* buffer() {
-    return _begin;  // NOLINT(clang-analyzer-unix.Malloc)
+    return begin_;  // NOLINT(clang-analyzer-unix.Malloc)
                     // movePointers() alters this pointer
   }
 
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
-    return size_t(_end - _begin);
+    return size_t(end_ - begin_);
   }
 
   size_t size() const {
-    return size_t(_left - _begin + _end - _right);
+    return size_t(left_ - begin_ + end_ - right_);
   }
 
   bool overflowed() const {
-    return _overflowed;
+    return overflowed_;
   }
 
   VariantSlot* allocVariant() {
@@ -91,40 +91,40 @@ class MemoryPool {
   }
 
   void getFreeZone(char** zoneStart, size_t* zoneSize) const {
-    *zoneStart = _left;
-    *zoneSize = size_t(_right - _left);
+    *zoneStart = left_;
+    *zoneSize = size_t(right_ - left_);
   }
 
   const char* saveStringFromFreeZone(size_t len) {
 #if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
-    const char* dup = findString(adaptString(_left, len));
+    const char* dup = findString(adaptString(left_, len));
     if (dup)
       return dup;
 #endif
 
-    const char* str = _left;
-    _left += len;
-    *_left++ = 0;
+    const char* str = left_;
+    left_ += len;
+    *left_++ = 0;
     checkInvariants();
     return str;
   }
 
   void markAsOverflowed() {
-    _overflowed = true;
+    overflowed_ = true;
   }
 
   void clear() {
-    _left = _begin;
-    _right = _end;
-    _overflowed = false;
+    left_ = begin_;
+    right_ = end_;
+    overflowed_ = false;
   }
 
   bool canAlloc(size_t bytes) const {
-    return _left + bytes <= _right;
+    return left_ + bytes <= right_;
   }
 
   bool owns(void* p) const {
-    return _begin <= p && p < _end;
+    return begin_ <= p && p < end_;
   }
 
   // Workaround for missing placement new
@@ -134,51 +134,51 @@ class MemoryPool {
 
   // Squash the free space between strings and variants
   //
-  // _begin                    _end
+  // begin_                    end_
   // v                            v
   // +-------------+--------------+
   // | strings...  |  ...variants |
   // +-------------+--------------+
   //               ^
-  //          _left _right
+  //          left_ right_
   //
   // This funcion is called before a realloc.
   ptrdiff_t squash() {
-    char* new_right = addPadding(_left);
-    if (new_right >= _right)
+    char* new_right = addPadding(left_);
+    if (new_right >= right_)
       return 0;
 
-    size_t right_size = static_cast<size_t>(_end - _right);
-    memmove(new_right, _right, right_size);
+    size_t right_size = static_cast<size_t>(end_ - right_);
+    memmove(new_right, right_, right_size);
 
-    ptrdiff_t bytes_reclaimed = _right - new_right;
-    _right = new_right;
-    _end = new_right + right_size;
+    ptrdiff_t bytes_reclaimed = right_ - new_right;
+    right_ = new_right;
+    end_ = new_right + right_size;
     return bytes_reclaimed;
   }
 
   // Move all pointers together
   // This funcion is called after a realloc.
   void movePointers(ptrdiff_t offset) {
-    _begin += offset;
-    _left += offset;
-    _right += offset;
-    _end += offset;
+    begin_ += offset;
+    left_ += offset;
+    right_ += offset;
+    end_ += offset;
   }
 
  private:
   void checkInvariants() {
-    ARDUINOJSON_ASSERT(_begin <= _left);
-    ARDUINOJSON_ASSERT(_left <= _right);
-    ARDUINOJSON_ASSERT(_right <= _end);
-    ARDUINOJSON_ASSERT(isAligned(_right));
+    ARDUINOJSON_ASSERT(begin_ <= left_);
+    ARDUINOJSON_ASSERT(left_ <= right_);
+    ARDUINOJSON_ASSERT(right_ <= end_);
+    ARDUINOJSON_ASSERT(isAligned(right_));
   }
 
 #if ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
   template <typename TAdaptedString>
   const char* findString(const TAdaptedString& str) const {
     size_t n = str.size();
-    for (char* next = _begin; next + n < _left; ++next) {
+    for (char* next = begin_; next + n < left_; ++next) {
       if (next[n] == '\0' && stringEquals(str, adaptString(next, n)))
         return next;
 
@@ -192,11 +192,11 @@ class MemoryPool {
 
   char* allocString(size_t n) {
     if (!canAlloc(n)) {
-      _overflowed = true;
+      overflowed_ = true;
       return 0;
     }
-    char* s = _left;
-    _left += n;
+    char* s = left_;
+    left_ += n;
     checkInvariants();
     return s;
   }
@@ -208,15 +208,15 @@ class MemoryPool {
 
   void* allocRight(size_t bytes) {
     if (!canAlloc(bytes)) {
-      _overflowed = true;
+      overflowed_ = true;
       return 0;
     }
-    _right -= bytes;
-    return _right;
+    right_ -= bytes;
+    return right_;
   }
 
-  char *_begin, *_left, *_right, *_end;
-  bool _overflowed;
+  char *begin_, *left_, *right_, *end_;
+  bool overflowed_;
 };
 
 template <typename TAdaptedString, typename TCallback>

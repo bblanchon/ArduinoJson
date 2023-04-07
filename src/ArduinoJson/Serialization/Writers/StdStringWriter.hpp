@@ -24,20 +24,20 @@ template <typename TDestination>
 class Writer<TDestination,
              typename enable_if<is_std_string<TDestination>::value>::type> {
  public:
-  Writer(TDestination& str) : _str(&str) {}
+  Writer(TDestination& str) : str_(&str) {}
 
   size_t write(uint8_t c) {
-    _str->push_back(static_cast<char>(c));
+    str_->push_back(static_cast<char>(c));
     return 1;
   }
 
   size_t write(const uint8_t* s, size_t n) {
-    _str->append(reinterpret_cast<const char*>(s), n);
+    str_->append(reinterpret_cast<const char*>(s), n);
     return n;
   }
 
  private:
-  TDestination* _str;
+  TDestination* str_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -52,5 +52,8 @@
 #define BLOCKSIZE
 #define CAPACITY
 
+// issue #1905
+#define _current
+
 // catch.hpp mutes several warnings, this file also allows to detect them
 #include "ArduinoJson.h"

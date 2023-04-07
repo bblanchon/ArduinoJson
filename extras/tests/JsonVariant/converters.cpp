@@ -74,18 +74,18 @@ TEST_CASE("Custom converter with overloading") {
 
 class Complex {
  public:
-  explicit Complex(double r, double i) : _real(r), _imag(i) {}
+  explicit Complex(double r, double i) : real_(r), imag_(i) {}
 
   double real() const {
-    return _real;
+    return real_;
   }
 
   double imag() const {
-    return _imag;
+    return imag_;
   }
 
  private:
-  double _real, _imag;
+  double real_, imag_;
 };
 
 namespace ArduinoJson {

@@ -29,21 +29,21 @@ struct PrintAllAtOnce {
 
 template <typename PrintPolicy>
 struct PrintableString : public Printable {
-  PrintableString(const char* s) : _str(s), _total(0) {}
+  PrintableString(const char* s) : str_(s), total_(0) {}
 
   virtual size_t printTo(Print& p) const {
-    size_t result = PrintPolicy::printStringTo(_str, p);
-    _total += result;
+    size_t result = PrintPolicy::printStringTo(str_, p);
+    total_ += result;
     return result;
   }
 
   size_t totalBytesWritten() const {
-    return _total;
+    return total_;
   }
 
  private:
-  std::string _str;
-  mutable size_t _total;
+  std::string str_;
+  mutable size_t total_;
 };
 
 TEST_CASE("Printable") {

@@ -12,43 +12,43 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 template <typename T>
 class SerializedValue {
  public:
-  explicit SerializedValue(T str) : _str(str) {}
+  explicit SerializedValue(T str) : str_(str) {}
   operator T() const {
-    return _str;
+    return str_;
   }
 
   const char* data() const {
-    return _str.c_str();
+    return str_.c_str();
   }
 
   size_t size() const {
     // CAUTION: the old Arduino String doesn't have size()
-    return _str.length();
+    return str_.length();
   }
 
  private:
-  T _str;
+  T str_;
 };
 
 template <typename TChar>
 class SerializedValue<TChar*> {
  public:
-  explicit SerializedValue(TChar* p, size_t n) : _data(p), _size(n) {}
+  explicit SerializedValue(TChar* p, size_t n) : data_(p), size_(n) {}
   operator TChar*() const {
-    return _data;
+    return data_;
   }
 
   TChar* data() const {
-    return _data;
+    return data_;
   }
 
   size_t size() const {
-    return _size;
+    return size_;
   }
 
  private:
-  TChar* _data;
-  size_t _size;
+  TChar* data_;
+  size_t size_;
 };
 
 template <typename T>

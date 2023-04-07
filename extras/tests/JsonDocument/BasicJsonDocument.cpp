@@ -10,29 +10,29 @@
 
 class SpyingAllocator {
  public:
-  SpyingAllocator(const SpyingAllocator& src) : _log(src._log) {}
-  SpyingAllocator(std::ostream& log) : _log(log) {}
+  SpyingAllocator(const SpyingAllocator& src) : log_(src.log_) {}
+  SpyingAllocator(std::ostream& log) : log_(log) {}
   SpyingAllocator& operator=(const SpyingAllocator& src) = delete;
 
   void* allocate(size_t n) {
-    _log << "A" << n;
+    log_ << "A" << n;
     return malloc(n);
   }
   void deallocate(void* p) {
-    _log << "F";
+    log_ << "F";
     free(p);
   }
 
  private:
-  std::ostream& _log;
+  std::ostream& log_;
 };
 
 class ControllableAllocator {
  public:
-  ControllableAllocator() : _enabled(true) {}
+  ControllableAllocator() : enabled_(true) {}
 
   void* allocate(size_t n) {
-    return _enabled ? malloc(n) : 0;
+    return enabled_ ? malloc(n) : 0;
   }
 
   void deallocate(void* p) {
@@ -40,11 +40,11 @@ class ControllableAllocator {
   }
 
   void disable() {
-    _enabled = false;
+    enabled_ = false;
   }
 
  private:
-  bool _enabled;
+  bool enabled_;
 };
 
 TEST_CASE("BasicJsonDocument") {

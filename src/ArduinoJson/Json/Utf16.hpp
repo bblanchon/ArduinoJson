@@ -31,31 +31,31 @@ inline bool isLowSurrogate(uint16_t codeunit) {
 
 class Codepoint {
  public:
-  Codepoint() : _highSurrogate(0), _codepoint(0) {}
+  Codepoint() : highSurrogate_(0), codepoint_(0) {}
 
   bool append(uint16_t codeunit) {
     if (isHighSurrogate(codeunit)) {
-      _highSurrogate = codeunit & 0x3FF;
+      highSurrogate_ = codeunit & 0x3FF;
       return false;
     }
 
     if (isLowSurrogate(codeunit)) {
-      _codepoint =
-          uint32_t(0x10000 + ((_highSurrogate << 10) | (codeunit & 0x3FF)));
+      codepoint_ =
+          uint32_t(0x10000 + ((highSurrogate_ << 10) | (codeunit & 0x3FF)));
       return true;
     }
 
-    _codepoint = codeunit;
+    codepoint_ = codeunit;
     return true;
   }
 
   uint32_t value() const {
-    return _codepoint;
+    return codepoint_;
   }
 
  private:
-  uint16_t _highSurrogate;
-  uint32_t _codepoint;
+  uint16_t highSurrogate_;
+  uint32_t codepoint_;
 };
 }  // namespace Utf16
 ARDUINOJSON_END_PRIVATE_NAMESPACE

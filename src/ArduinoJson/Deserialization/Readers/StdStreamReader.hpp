@@ -12,19 +12,19 @@ template <typename TSource>
 struct Reader<TSource, typename enable_if<
                            is_base_of<std::istream, TSource>::value>::type> {
  public:
-  explicit Reader(std::istream& stream) : _stream(&stream) {}
+  explicit Reader(std::istream& stream) : stream_(&stream) {}
 
   int read() {
-    return _stream->get();
+    return stream_->get();
   }
 
   size_t readBytes(char* buffer, size_t length) {
-    _stream->read(buffer, static_cast<std::streamsize>(length));
-    return static_cast<size_t>(_stream->gcount());
+    stream_->read(buffer, static_cast<std::streamsize>(length));
+    return static_cast<size_t>(stream_->gcount());
   }
 
  private:
-  std::istream* _stream;
+  std::istream* stream_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -27,10 +27,10 @@ struct is_convertible {
   static int probe(To);
   static char probe(...);
 
-  static From& _from;
+  static From& from_;
 
  public:
-  static const bool value = sizeof(probe(_from)) == sizeof(int);
+  static const bool value = sizeof(probe(from_)) == sizeof(int);
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
