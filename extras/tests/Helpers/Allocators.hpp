@@ -177,3 +177,38 @@ class ControllableAllocator : public ArduinoJson::Allocator {
   bool _enabled;
   Allocator* _upstream;
 };
+
+class TimebombAllocator : public ArduinoJson::Allocator {
+ public:
+  TimebombAllocator(
+      size_t initialCountdown,
+      Allocator* upstream = ArduinoJson::detail::DefaultAllocator::instance())
+      : _countdown(initialCountdown), _upstream(upstream) {}
+  virtual ~TimebombAllocator() {}
+
+  void* allocate(size_t n) override {
+    if (!_countdown)
+      return nullptr;
+    _countdown--;
+    return _upstream->allocate(n);
+  }
+
+  void deallocate(void* p) override {
+    _upstream->deallocate(p);
+  }
+
+  void* reallocate(void* ptr, size_t n) override {
+    if (!_countdown)
+      return nullptr;
+    _countdown--;
+    return _upstream->reallocate(ptr, n);
+  }
+
+  void setCountdown(size_t value) {
+    _countdown = value;
+  }
+
+ private:
+  size_t _countdown = 0;
+  Allocator* _upstream;
+};
