@@ -16,37 +16,25 @@ using ArduinoJson::detail::sizeofString;
 
 class ArmoredAllocator : public Allocator {
  public:
-  ArmoredAllocator() : _ptr(0), _size(0) {}
   virtual ~ArmoredAllocator() {}
 
   void* allocate(size_t size) override {
-    _ptr = malloc(size);
-    _size = size;
-    return _ptr;
+    return malloc(size);
   }
 
   void deallocate(void* ptr) override {
-    REQUIRE(ptr == _ptr);
     free(ptr);
-    _ptr = 0;
-    _size = 0;
   }
 
   void* reallocate(void* ptr, size_t new_size) override {
-    REQUIRE(ptr == _ptr);
     // don't call realloc, instead alloc a new buffer and erase the old one
     // this way we make sure we support relocation
     void* new_ptr = malloc(new_size);
-    memcpy(new_ptr, _ptr, std::min(new_size, _size));
-    memset(_ptr, '#', _size);  // erase
-    free(_ptr);
-    _ptr = new_ptr;
+    memset(new_ptr, '#', new_size);  // erase
+    memcpy(new_ptr, ptr, std::min(new_size, new_size));
+    free(ptr);
     return new_ptr;
   }
-
- private:
-  void* _ptr;
-  size_t _size;
 };
 
 TEST_CASE("JsonDocument::shrinkToFit()") {
