@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <Arduino.h>
-
 #include <ArduinoJson/Polyfills/pgmspace.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 

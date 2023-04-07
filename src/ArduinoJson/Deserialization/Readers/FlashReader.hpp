@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <ArduinoJson/Polyfills/pgmspace.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 

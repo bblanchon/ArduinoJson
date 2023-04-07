@@ -2,6 +2,8 @@
 // Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 
+#pragma once
+
 #include <stdint.h>  // uint8_t
 
 #define PROGMEM

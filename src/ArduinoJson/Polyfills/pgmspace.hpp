@@ -4,7 +4,13 @@
 
 #pragma once
 
-#include <Arduino.h>
+#ifdef ARDUINO
+#  include <Arduino.h>
+#else
+// Allow using PROGMEM outside of Arduino (issue #1903)
+class __FlashStringHelper;
+#  include <avr/pgmspace.h>
+#endif
 
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Namespace.hpp>

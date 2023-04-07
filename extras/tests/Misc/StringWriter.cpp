@@ -2,10 +2,13 @@
 // Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 
-#define ARDUINOJSON_ENABLE_ARDUINO_STRING 1
+#include <Arduino.h>
+
 #define ARDUINOJSON_STRING_BUFFER_SIZE 5
 #include <ArduinoJson.h>
+
 #include <catch.hpp>
+
 #include "custom_string.hpp"
 
 using namespace ArduinoJson::detail;
