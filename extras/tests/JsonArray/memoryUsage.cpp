@@ -7,6 +7,7 @@
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::memoryUsage()") {
   JsonDocument doc(4096);
@@ -28,7 +29,7 @@ TEST_CASE("JsonArray::memoryUsage()") {
 
   SECTION("includes the size of the string") {
     arr.add(std::string("hello"));
-    REQUIRE(arr.memoryUsage() == sizeofArray(1) + 6);
+    REQUIRE(arr.memoryUsage() == sizeofArray(1) + sizeofString(5));
   }
 
   SECTION("includes the size of the nested array") {

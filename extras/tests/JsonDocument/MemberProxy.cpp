@@ -12,6 +12,7 @@
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
 
 typedef ArduinoJson::detail::MemberProxy<JsonDocument&, const char*>
     MemberProxy;
@@ -248,7 +249,7 @@ TEST_CASE("MemberProxy::memoryUsage()") {
 
   SECTION("return the size for a string") {
     mp.set(std::string("hello"));
-    REQUIRE(mp.memoryUsage() == 6);
+    REQUIRE(mp.memoryUsage() == sizeofString(5));
   }
 }
 
@@ -342,7 +343,8 @@ TEST_CASE("Deduplicate keys") {
     doc[0][std::string("example")] = 1;
     doc[1][std::string("example")] = 2;
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 8);
+    CHECK(doc.memoryUsage() ==
+          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
 
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -354,7 +356,8 @@ TEST_CASE("Deduplicate keys") {
     doc[0][key] = 1;
     doc[1][key] = 2;
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 8);
+    CHECK(doc.memoryUsage() ==
+          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
 
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -365,7 +368,8 @@ TEST_CASE("Deduplicate keys") {
     doc[0][String("example")] = 1;
     doc[1][String("example")] = 2;
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 8);
+    CHECK(doc.memoryUsage() ==
+          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
 
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -376,7 +380,8 @@ TEST_CASE("Deduplicate keys") {
     doc[0][F("example")] = 1;
     doc[1][F("example")] = 2;
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 2 * sizeofObject(1) + 8);
+    CHECK(doc.memoryUsage() ==
+          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
 
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();

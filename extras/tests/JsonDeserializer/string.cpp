@@ -97,7 +97,7 @@ TEST_CASE("Invalid JSON string") {
 }
 
 TEST_CASE("Not enough room to save the key") {
-  JsonDocument doc(sizeofObject(1) + 8);
+  JsonDocument doc(sizeofObject(1) + sizeofString(7));
 
   SECTION("Quoted string") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
@@ -139,7 +139,7 @@ TEST_CASE("Deduplicate values") {
   JsonDocument doc(1024);
   deserializeJson(doc, "[\"example\",\"example\"]");
 
-  CHECK(doc.memoryUsage() == sizeofArray(2) + 8);
+  CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
   CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
 }
 
@@ -147,7 +147,8 @@ TEST_CASE("Deduplicate keys") {
   JsonDocument doc(1024);
   deserializeJson(doc, "[{\"example\":1},{\"example\":2}]");
 
-  CHECK(doc.memoryUsage() == 2 * sizeofObject(1) + sizeofArray(2) + 8);
+  CHECK(doc.memoryUsage() ==
+        2 * sizeofObject(1) + sizeofArray(2) + sizeofString(7));
 
   const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
   const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();

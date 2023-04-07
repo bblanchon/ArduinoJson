@@ -8,6 +8,7 @@
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::memoryUsage()") {
   JsonDocument doc(4096);
@@ -32,13 +33,13 @@ TEST_CASE("JsonVariant::memoryUsage()") {
 
   SECTION("returns size of owned string") {
     var.set(std::string("hello"));
-    REQUIRE(var.memoryUsage() == 6);
+    REQUIRE(var.memoryUsage() == sizeofString(5));
     REQUIRE(var.memoryUsage() == doc.memoryUsage());
   }
 
   SECTION("returns size of owned raw") {
     var.set(serialized(std::string("hello")));
-    REQUIRE(var.memoryUsage() == 6);
+    REQUIRE(var.memoryUsage() == sizeofString(5));
     REQUIRE(var.memoryUsage() == doc.memoryUsage());
   }
 }

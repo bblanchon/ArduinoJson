@@ -69,7 +69,7 @@ TEST_CASE("StringCopier::save() deduplicates strings") {
 
     REQUIRE(s1 == s3);
     REQUIRE(s2 != s3);
-    REQUIRE(pool.size() == 12);
+    REQUIRE(pool.size() == 2 * sizeofString(5));
   }
 
   SECTION("Requires terminator") {
@@ -77,7 +77,7 @@ TEST_CASE("StringCopier::save() deduplicates strings") {
     const char* s2 = addStringToPool(pool, "hello");
 
     REQUIRE(s2 != s1);
-    REQUIRE(pool.size() == 12 + 6);
+    REQUIRE(pool.size() == sizeofString(11) + sizeofString(5));
   }
 
   SECTION("Don't overrun") {
@@ -85,6 +85,6 @@ TEST_CASE("StringCopier::save() deduplicates strings") {
     const char* s2 = addStringToPool(pool, "wor");
 
     REQUIRE(s2 != s1);
-    REQUIRE(pool.size() == 12 + 4);
+    REQUIRE(pool.size() == sizeofString(11) + sizeofString(3));
   }
 }

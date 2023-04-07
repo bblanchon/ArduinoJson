@@ -9,6 +9,7 @@
 #include <ArduinoJson.h>
 
 using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofString;
 
 struct PrintOneCharacterAtATime {
   static size_t printStringTo(const std::string& s, Print& p) {
@@ -61,8 +62,8 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(doc.memoryUsage() == 8);
-      CHECK(doc.as<JsonVariant>().memoryUsage() == 8);
+      CHECK(doc.memoryUsage() == sizeofString(7));
+      CHECK(doc.as<JsonVariant>().memoryUsage() == sizeofString(7));
     }
 
     SECTION("Via Print::write(const char* size_t)") {
@@ -71,8 +72,8 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(doc.memoryUsage() == 8);
-      CHECK(doc.as<JsonVariant>().memoryUsage() == 8);
+      CHECK(doc.memoryUsage() == sizeofString(7));
+      CHECK(doc.as<JsonVariant>().memoryUsage() == sizeofString(7));
     }
   }
 
@@ -141,6 +142,6 @@ TEST_CASE("Printable") {
     REQUIRE(doc.size() == 2);
     CHECK(doc[0] == "Hello World!");
     CHECK(doc[1] == "Hello World!");
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 13);
+    CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(12));
   }
 }

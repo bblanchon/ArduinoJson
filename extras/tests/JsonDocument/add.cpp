@@ -11,6 +11,7 @@
 #include <catch.hpp>
 
 using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument::add()") {
   JsonDocument doc(4096);
@@ -31,7 +32,7 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(std::string("example"));
     doc.add(std::string("example"));
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 8);
+    CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
   }
 
@@ -40,7 +41,7 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(value);
     doc.add(value);
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 8);
+    CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
   }
 
@@ -48,7 +49,7 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(String("example"));
     doc.add(String("example"));
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 8);
+    CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
   }
 
@@ -56,7 +57,7 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(F("example"));
     doc.add(F("example"));
 
-    CHECK(doc.memoryUsage() == sizeofArray(2) + 8);
+    CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
   }
 }

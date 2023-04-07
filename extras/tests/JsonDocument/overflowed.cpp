@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument::overflowed()") {
   SECTION("returns false on a fresh object") {
@@ -32,7 +33,7 @@ TEST_CASE("JsonDocument::overflowed()") {
   }
 
   SECTION("returns false after a successful string copy") {
-    JsonDocument doc(sizeofArray(1) + 8);
+    JsonDocument doc(sizeofArray(1) + sizeofString(7));
     doc.add(std::string("example"));
     CHECK(doc.overflowed() == false);
   }
@@ -50,7 +51,7 @@ TEST_CASE("JsonDocument::overflowed()") {
   }
 
   SECTION("returns false after a successful deserialization") {
-    JsonDocument doc(sizeofArray(1) + 8);
+    JsonDocument doc(sizeofArray(1) + sizeofString(7));
     deserializeJson(doc, "[\"example\"]");
     CHECK(doc.overflowed() == false);
   }

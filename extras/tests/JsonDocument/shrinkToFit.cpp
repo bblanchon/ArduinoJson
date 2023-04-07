@@ -200,7 +200,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
 
   SECTION("unaligned") {
     doc.add(std::string("?"));  // two bytes in the string pool
-    REQUIRE(doc.memoryUsage() == sizeofObject(1) + 2);
+    REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(1));
 
     doc.shrinkToFit();
 

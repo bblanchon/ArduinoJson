@@ -11,7 +11,7 @@
 using namespace ArduinoJson::detail;
 
 static const char* saveString(MemoryPool& pool, const char* s) {
-  return pool.saveString(adaptString(const_cast<char*>(s)));
+  return pool.saveString(adaptString(s));
 }
 
 static const char* saveString(MemoryPool& pool, const char* s, size_t n) {
@@ -25,21 +25,20 @@ TEST_CASE("MemoryPool::saveString()") {
     const char* a = saveString(pool, "hello");
     const char* b = saveString(pool, "world");
     REQUIRE(a != b);
-    REQUIRE(pool.size() == 6 + 6);
+    REQUIRE(pool.size() == 2 * sizeofString(5));
   }
 
   SECTION("Deduplicates identical strings") {
     const char* a = saveString(pool, "hello");
     const char* b = saveString(pool, "hello");
     REQUIRE(a == b);
-    REQUIRE(pool.size() == 6);
+    REQUIRE(pool.size() == sizeofString(5));
   }
 
   SECTION("Deduplicates identical strings that contain NUL") {
     const char* a = saveString(pool, "hello\0world", 11);
     const char* b = saveString(pool, "hello\0world", 11);
     REQUIRE(a == b);
-    REQUIRE(pool.size() == 12);
   }
 
   SECTION("Reuse part of a string if it ends with NUL") {
@@ -47,13 +46,14 @@ TEST_CASE("MemoryPool::saveString()") {
     const char* b = saveString(pool, "hello");
     REQUIRE(a == b);
     REQUIRE(pool.size() == 12);
+    REQUIRE(pool.size() == sizeofString(11));
   }
 
   SECTION("Don't stop on first NUL") {
     const char* a = saveString(pool, "hello");
     const char* b = saveString(pool, "hello\0world", 11);
     REQUIRE(a != b);
-    REQUIRE(pool.size() == 18);
+    REQUIRE(pool.size() == sizeofString(5) + sizeofString(11));
   }
 
   SECTION("Returns NULL when full") {

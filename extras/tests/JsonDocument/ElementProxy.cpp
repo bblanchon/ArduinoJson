@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("ElementProxy::add()") {
   JsonDocument doc(4096);
@@ -199,7 +200,7 @@ TEST_CASE("ElementProxy::memoryUsage()") {
 
   SECTION("returns size for string") {
     ep.set(std::string("hello"));
-    REQUIRE(ep.memoryUsage() == 6);
+    REQUIRE(ep.memoryUsage() == sizeofString(5));
   }
 }
 

@@ -8,6 +8,7 @@
 #endif
 
 using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("string_view") {
   JsonDocument doc(256);
@@ -55,16 +56,18 @@ TEST_CASE("string_view") {
 
   SECTION("String deduplication") {
     doc.add(std::string_view("example one", 7));
-    REQUIRE(doc.memoryUsage() == sizeofArray(1) + 8);
+    REQUIRE(doc.memoryUsage() == sizeofArray(1) + sizeofString(7));
 
     doc.add(std::string_view("example two", 7));
-    REQUIRE(doc.memoryUsage() == sizeofArray(2) + 8);
+    REQUIRE(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
 
     doc.add(std::string_view("example\0tree", 12));
-    REQUIRE(doc.memoryUsage() == sizeofArray(3) + 21);
+    REQUIRE(doc.memoryUsage() ==
+            sizeofArray(3) + sizeofString(7) + sizeofString(12));
 
     doc.add(std::string_view("example\0tree and a half", 12));
-    REQUIRE(doc.memoryUsage() == sizeofArray(4) + 21);
+    REQUIRE(doc.memoryUsage() ==
+            sizeofArray(4) + sizeofString(7) + sizeofString(12));
   }
 
   SECTION("as<std::string_view>()") {

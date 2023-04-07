@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+using ArduinoJson::detail::sizeofString;
+
 TEST_CASE("serialize JsonArray to std::string") {
   JsonDocument doc(4096);
   JsonArray array = doc.to<JsonArray>();
@@ -49,7 +51,7 @@ TEST_CASE("serialize JsonObject to std::string") {
 TEST_CASE("serialize an std::string containing a NUL") {
   JsonDocument doc(256);
   doc.set(std::string("hello\0world", 11));
-  CHECK(doc.memoryUsage() == 12);
+  CHECK(doc.memoryUsage() == sizeofString(11));
 
   std::string json;
   serializeJson(doc, json);
