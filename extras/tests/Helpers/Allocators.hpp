@@ -120,12 +120,17 @@ class SpyingAllocator : public ArduinoJson::Allocator {
         _upstream->reallocate(block, sizeof(AllocatedBlock) + n - 1));
     if (block) {
       _log << AllocatorLog::Reallocate(oldSize, n);
+      ARDUINOJSON_ASSERT(block->size == oldSize);
       block->size = n;
       return block->payload;
     } else {
       _log << AllocatorLog::ReallocateFail(oldSize, n);
       return nullptr;
     }
+  }
+
+  void clearLog() {
+    _log = AllocatorLog();
   }
 
   const AllocatorLog& log() const {
