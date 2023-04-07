@@ -13,7 +13,8 @@
 // Include Arduino.h before stdlib.h to avoid conflict with atexit()
 // https://github.com/bblanchon/ArduinoJson/pull/1693#issuecomment-1001060240
 #if ARDUINOJSON_ENABLE_ARDUINO_STRING || ARDUINOJSON_ENABLE_ARDUINO_STREAM || \
-    ARDUINOJSON_ENABLE_ARDUINO_PRINT || ARDUINOJSON_ENABLE_PROGMEM
+    ARDUINOJSON_ENABLE_ARDUINO_PRINT ||                                       \
+    (ARDUINOJSON_ENABLE_PROGMEM && defined(ARDUINO))
 #  include <Arduino.h>
 #endif
 
