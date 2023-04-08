@@ -46,16 +46,14 @@ class MemoryPool {
   }
 
   ~MemoryPool() {
-    if (_begin)
-      _allocator->deallocate(_begin);
+    deallocPool();
   }
 
   MemoryPool(const MemoryPool&) = delete;
   MemoryPool& operator=(const MemoryPool& src) = delete;
 
   MemoryPool& operator=(MemoryPool&& src) {
-    if (_begin)
-      _allocator->deallocate(_begin);
+    deallocPool();
     _allocator = src._allocator;
     _begin = src._begin;
     _end = src._end;
@@ -263,6 +261,11 @@ class MemoryPool {
     ARDUINOJSON_ASSERT(isAligned(_begin));
     ARDUINOJSON_ASSERT(isAligned(_right));
     ARDUINOJSON_ASSERT(isAligned(_end));
+  }
+
+  void deallocPool() {
+    if (_begin)
+      _allocator->deallocate(_begin);
   }
 
   Allocator* _allocator;
