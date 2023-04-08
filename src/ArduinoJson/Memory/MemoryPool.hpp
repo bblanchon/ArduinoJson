@@ -36,14 +36,6 @@ constexpr size_t sizeofString(size_t n) {
   return n + 1 + offsetof(StringNode, data);
 }
 
-// _begin                                   _end
-// v                                           v
-// +-------------+--------------+--------------+
-// | strings...  |   (free)     |  ...variants |
-// +-------------+--------------+--------------+
-//               ^              ^
-//             _left          _right
-
 class MemoryPool {
  public:
   MemoryPool(size_t capa, Allocator* allocator = DefaultAllocator::instance())
@@ -65,10 +57,9 @@ class MemoryPool {
     _allocator = src._allocator;
     _begin = src._begin;
     _end = src._end;
-    _left = src._left;
     _right = src._right;
     _overflowed = src._overflowed;
-    src._begin = src._end = src._left = src._right = nullptr;
+    src._begin = src._end = src._right = nullptr;
     _strings = src._strings;
     src._strings = nullptr;
     return *this;
@@ -97,7 +88,7 @@ class MemoryPool {
   }
 
   size_t size() const {
-    size_t total = size_t(_left - _begin + _end - _right);
+    size_t total = size_t(_end - _right);
     for (auto node = _strings; node; node = node->next)
       total += sizeofString(node->length);
     return total;
@@ -177,14 +168,13 @@ class MemoryPool {
   }
 
   void clear() {
-    _left = _begin;
     _right = _end;
     _overflowed = false;
     deallocAllStrings();
   }
 
   bool canAlloc(size_t bytes) const {
-    return _left + bytes <= _right;
+    return _begin + bytes <= _right;
   }
 
   bool owns(void* p) const {
@@ -213,19 +203,8 @@ class MemoryPool {
   }
 
  private:
-  // Squash the free space between strings and variants
-  //
-  // _begin                    _end
-  // v                            v
-  // +-------------+--------------+
-  // | strings...  |  ...variants |
-  // +-------------+--------------+
-  //               ^
-  //          _left _right
-  //
-  // This funcion is called before a realloc.
   ptrdiff_t squash() {
-    char* new_right = addPadding(_left);
+    char* new_right = addPadding(_begin);
     if (new_right >= _right)
       return 0;
 
@@ -242,14 +221,12 @@ class MemoryPool {
   // This funcion is called after a realloc.
   void movePointers(ptrdiff_t offset) {
     _begin += offset;
-    _left += offset;
     _right += offset;
     _end += offset;
   }
 
   void checkInvariants() {
-    ARDUINOJSON_ASSERT(_begin <= _left);
-    ARDUINOJSON_ASSERT(_left <= _right);
+    ARDUINOJSON_ASSERT(_begin <= _right);
     ARDUINOJSON_ASSERT(_right <= _end);
     ARDUINOJSON_ASSERT(isAligned(_right));
   }
@@ -278,7 +255,7 @@ class MemoryPool {
 
   void allocPool(size_t capa) {
     auto buf = capa ? reinterpret_cast<char*>(_allocator->allocate(capa)) : 0;
-    _begin = _left = buf;
+    _begin = buf;
     _end = _right = buf ? buf + capa : 0;
     ARDUINOJSON_ASSERT(isAligned(_begin));
     ARDUINOJSON_ASSERT(isAligned(_right));
@@ -291,7 +268,7 @@ class MemoryPool {
   }
 
   Allocator* _allocator;
-  char *_begin, *_left, *_right, *_end;
+  char *_begin, *_right, *_end;
   bool _overflowed;
   StringNode* _strings = nullptr;
 };
