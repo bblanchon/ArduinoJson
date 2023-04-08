@@ -171,7 +171,7 @@ class ControllableAllocator : public ArduinoJson::Allocator {
   }
 
   void* reallocate(void* ptr, size_t n) override {
-    return _upstream->reallocate(ptr, n);
+    return _enabled ? _upstream->reallocate(ptr, n) : 0;
   }
 
   void disable() {
