@@ -168,7 +168,7 @@ inline size_t CollectionData::memoryUsage() const {
   for (VariantSlot* s = _head; s; s = s->next()) {
     total += sizeof(VariantSlot) + s->data()->memoryUsage();
     if (s->ownsKey())
-      total += strlen(s->key()) + 1;
+      total += sizeofString(strlen(s->key()));
   }
   return total;
 }
@@ -186,12 +186,11 @@ inline void movePointer(T*& p, ptrdiff_t offset) {
   ARDUINOJSON_ASSERT(isAligned(p));
 }
 
-inline void CollectionData::movePointers(ptrdiff_t stringDistance,
-                                         ptrdiff_t variantDistance) {
+inline void CollectionData::movePointers(ptrdiff_t variantDistance) {
   movePointer(_head, variantDistance);
   movePointer(_tail, variantDistance);
   for (VariantSlot* slot = _head; slot; slot = slot->next())
-    slot->movePointers(stringDistance, variantDistance);
+    slot->movePointers(variantDistance);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

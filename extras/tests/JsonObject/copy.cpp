@@ -77,24 +77,25 @@ TEST_CASE("JsonObject::set()") {
     JsonDocument doc3(sizeofObject(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
-    obj1[std::string("hello")] = "world";
+    obj1["a"] = 1;
+    obj1["b"] = 2;
 
     bool success = obj3.set(obj1);
 
     REQUIRE(success == false);
-    REQUIRE(doc3.as<std::string>() == "{}");
+    REQUIRE(doc3.as<std::string>() == "{\"a\":1}");
   }
 
   SECTION("destination too small to store the value") {
     JsonDocument doc3(sizeofObject(1));
     JsonObject obj3 = doc3.to<JsonObject>();
 
-    obj1["hello"] = std::string("world");
+    obj1["hello"][1] = "world";
 
     bool success = obj3.set(obj1);
 
     REQUIRE(success == false);
-    REQUIRE(doc3.as<std::string>() == "{\"hello\":null}");
+    REQUIRE(doc3.as<std::string>() == "{\"hello\":[]}");
   }
 
   SECTION("destination is null") {

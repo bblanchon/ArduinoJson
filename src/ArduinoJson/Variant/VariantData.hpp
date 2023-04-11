@@ -226,9 +226,7 @@ class VariantData {
     switch (type()) {
       case VALUE_IS_OWNED_STRING:
       case VALUE_IS_OWNED_RAW:
-        // We always add a zero at the end: the deduplication function uses it
-        // to detect the beginning of the next string.
-        return _content.asString.size + 1;
+        return sizeofString(_content.asString.size);
       case VALUE_IS_OBJECT:
       case VALUE_IS_ARRAY:
         return _content.asCollection.memoryUsage();
@@ -277,11 +275,9 @@ class VariantData {
     return _content.asCollection.getOrAddMember(key, pool);
   }
 
-  void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
-    if (_flags & OWNED_VALUE_BIT)
-      _content.asString.data += stringDistance;
+  void movePointers(ptrdiff_t variantDistance) {
     if (_flags & COLLECTION_MASK)
-      _content.asCollection.movePointers(stringDistance, variantDistance);
+      _content.asCollection.movePointers(variantDistance);
   }
 
   uint8_t type() const {

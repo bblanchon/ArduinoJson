@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 enum ErrorCode { ERROR_01 = 1, ERROR_10 = 10 };
 
 TEST_CASE("JsonVariant::set() when there is enough memory") {
@@ -128,7 +130,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 }
 
 TEST_CASE("JsonVariant::set() with not enough memory") {
-  JsonDocument doc(1);
+  JsonDocument doc(1, FailingAllocator::instance());
 
   JsonVariant v = doc.to<JsonVariant>();
 

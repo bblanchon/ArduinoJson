@@ -6,6 +6,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
@@ -96,42 +98,67 @@ TEST_CASE("Invalid JSON string") {
   }
 }
 
-TEST_CASE("Not enough room to save the key") {
-  JsonDocument doc(sizeofObject(1) + sizeofString(7));
+TEST_CASE("Allocation of the key fails") {
+  TimebombAllocator timebombAllocator(1);
+  SpyingAllocator spyingAllocator(&timebombAllocator);
+  JsonDocument doc(1024, &spyingAllocator);
 
-  SECTION("Quoted string") {
+  SECTION("Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
-            DeserializationError::Ok);
-    REQUIRE(deserializeJson(doc, "{\"accuracy\":1}") ==
             DeserializationError::NoMemory);
-    REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
-            DeserializationError::NoMemory);  // fails in the second string
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(1024)
+                           << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
-  SECTION("Non-quoted string") {
-    REQUIRE(deserializeJson(doc, "{example:1}") == DeserializationError::Ok);
-    REQUIRE(deserializeJson(doc, "{accuracy:1}") ==
+  SECTION("Quoted string, second member") {
+    timebombAllocator.setCountdown(2);
+    REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
             DeserializationError::NoMemory);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(1024)
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(5))
+                           << AllocatorLog::AllocateFail(sizeofString(31)));
+  }
+
+  SECTION("Non-Quoted string, first member") {
+    REQUIRE(deserializeJson(doc, "{example:1}") ==
+            DeserializationError::NoMemory);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(1024)
+                           << AllocatorLog::AllocateFail(sizeofString(31)));
+  }
+
+  SECTION("Non-Quoted string, second member") {
+    timebombAllocator.setCountdown(2);
     REQUIRE(deserializeJson(doc, "{hello:1,world}") ==
-            DeserializationError::NoMemory);  // fails in the second string
+            DeserializationError::NoMemory);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(1024)
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(5))
+                           << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 }
 
-TEST_CASE("Empty memory pool") {
-  // NOLINTNEXTLINE(clang-analyzer-optin.portability.UnixAPI)
-  JsonDocument doc(0);
+TEST_CASE("String allocation fails") {
+  SpyingAllocator spyingAllocator(FailingAllocator::instance());
+  JsonDocument doc(0, &spyingAllocator);
 
   SECTION("Input is const char*") {
     REQUIRE(deserializeJson(doc, "\"hello\"") ==
             DeserializationError::NoMemory);
-    REQUIRE(deserializeJson(doc, "\"\"") == DeserializationError::NoMemory);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
   SECTION("Input is const char*") {
     char hello[] = "\"hello\"";
     REQUIRE(deserializeJson(doc, hello) == DeserializationError::Ok);
-    char empty[] = "\"hello\"";
-    REQUIRE(deserializeJson(doc, empty) == DeserializationError::Ok);
+    REQUIRE(spyingAllocator.log() == AllocatorLog());
   }
 }
 

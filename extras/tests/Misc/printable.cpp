@@ -8,6 +8,8 @@
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
 #include <ArduinoJson.h>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
@@ -52,7 +54,7 @@ struct PrintableString : public Printable {
 TEST_CASE("Printable") {
   SECTION("Doesn't overflow") {
     JsonDocument doc(8);
-    const char* value = "example";  // == 7 chars
+    const char* value = "example";
 
     doc.set(666);  // to make sure we override the value
 
@@ -77,53 +79,82 @@ TEST_CASE("Printable") {
     }
   }
 
-  SECTION("Overflows early") {
-    JsonDocument doc(8);
-    const char* value = "hello world";  // > 8 chars
+  SECTION("First allocation fails") {
+    SpyingAllocator spyingAllocator(FailingAllocator::instance());
+    JsonDocument doc(0, &spyingAllocator);
+    const char* value = "hello world";
 
     doc.set(666);  // to make sure we override the value
 
     SECTION("Via Print::write(char)") {
       PrintableString<PrintOneCharacterAtATime> printable(value);
-      CHECK(doc.set(printable) == false);
-      CHECK(doc.isNull());
-      CHECK(printable.totalBytesWritten() == 8);
-      CHECK(doc.overflowed() == true);
-      CHECK(doc.memoryUsage() == 0);
-    }
 
-    SECTION("Via Print::write(const char*, size_t)") {
-      PrintableString<PrintAllAtOnce> printable(value);
-      CHECK(doc.set(printable) == false);
+      bool success = doc.set(printable);
+
+      CHECK(success == false);
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
       CHECK(doc.overflowed() == true);
       CHECK(doc.memoryUsage() == 0);
+      CHECK(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
+    }
+
+    SECTION("Via Print::write(const char*, size_t)") {
+      PrintableString<PrintAllAtOnce> printable(value);
+
+      bool success = doc.set(printable);
+
+      CHECK(success == false);
+      CHECK(doc.isNull());
+      CHECK(printable.totalBytesWritten() == 0);
+      CHECK(doc.overflowed() == true);
+      CHECK(doc.memoryUsage() == 0);
+      CHECK(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
     }
   }
 
-  SECTION("Overflows adding terminator") {
-    JsonDocument doc(8);
-    const char* value = "overflow";  // == 8 chars
+  SECTION("Reallocation fails") {
+    TimebombAllocator timebombAllocator(1);
+    SpyingAllocator spyingAllocator(&timebombAllocator);
+    JsonDocument doc(0, &spyingAllocator);
+    const char* value = "Lorem ipsum dolor sit amet, cons";  // > 31 chars
 
     doc.set(666);  // to make sure we override the value
 
     SECTION("Via Print::write(char)") {
       PrintableString<PrintOneCharacterAtATime> printable(value);
-      CHECK(doc.set(printable) == false);
+
+      bool success = doc.set(printable);
+
+      CHECK(success == false);
       CHECK(doc.isNull());
-      CHECK(printable.totalBytesWritten() == 8);
+      CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
       CHECK(doc.memoryUsage() == 0);
+      CHECK(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::ReallocateFail(sizeofString(31),
+                                                           sizeofString(63))
+                           << AllocatorLog::Deallocate(sizeofString(31)));
     }
 
     SECTION("Via Print::write(const char*, size_t)") {
       PrintableString<PrintAllAtOnce> printable(value);
-      CHECK(doc.set(printable) == false);
+
+      bool success = doc.set(printable);
+
+      CHECK(success == false);
       CHECK(doc.isNull());
-      CHECK(printable.totalBytesWritten() == 0);
+      CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
       CHECK(doc.memoryUsage() == 0);
+      CHECK(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::ReallocateFail(sizeofString(31),
+                                                           sizeofString(63))
+                           << AllocatorLog::Deallocate(sizeofString(31)));
     }
   }
 

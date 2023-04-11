@@ -39,13 +39,6 @@ TEST_CASE("MemoryPool::saveString()") {
     const char* a = saveString(pool, "hello\0world", 11);
     const char* b = saveString(pool, "hello\0world", 11);
     REQUIRE(a == b);
-  }
-
-  SECTION("Reuse part of a string if it ends with NUL") {
-    const char* a = saveString(pool, "hello\0world", 11);
-    const char* b = saveString(pool, "hello");
-    REQUIRE(a == b);
-    REQUIRE(pool.size() == 12);
     REQUIRE(pool.size() == sizeofString(11));
   }
 
@@ -56,52 +49,8 @@ TEST_CASE("MemoryPool::saveString()") {
     REQUIRE(pool.size() == sizeofString(5) + sizeofString(11));
   }
 
-  SECTION("Returns NULL when full") {
-    REQUIRE(pool.capacity() == 32);
-
-    const void* p1 = saveString(pool, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    REQUIRE(p1 != 0);
-    REQUIRE(pool.size() == 32);
-
-    const void* p2 = saveString(pool, "b");
-    REQUIRE(p2 == 0);
-  }
-
-  SECTION("Returns NULL when pool is too small") {
-    const void* p = saveString(pool, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    REQUIRE(0 == p);
-  }
-
-  SECTION("Returns NULL when buffer is NULL") {
+  SECTION("Returns NULL when allocation fails") {
     MemoryPool pool2(32, FailingAllocator::instance());
     REQUIRE(0 == saveString(pool2, "a"));
-  }
-
-  SECTION("Returns NULL when capacity is 0") {
-    MemoryPool pool2(0);
-    REQUIRE(0 == saveString(pool2, "a"));
-  }
-
-  SECTION("Returns same address after clear()") {
-    const void* a = saveString(pool, "hello");
-    pool.clear();
-    const void* b = saveString(pool, "world");
-
-    REQUIRE(a == b);
-  }
-
-  SECTION("Can use full capacity when fresh") {
-    const void* a = saveString(pool, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-    REQUIRE(a != 0);
-  }
-
-  SECTION("Can use full capacity after clear") {
-    saveString(pool, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    pool.clear();
-
-    const void* a = saveString(pool, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
-
-    REQUIRE(a != 0);
   }
 }

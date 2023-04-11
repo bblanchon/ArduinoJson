@@ -21,16 +21,19 @@ TEST_CASE("JsonDocument::garbageCollect()") {
     deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");
     REQUIRE(doc.memoryUsage() == sizeofObject(2) + 2 * sizeofString(7));
     doc.remove("blanket");
+    spyingAllocator.clearLog();
 
     bool result = doc.garbageCollect();
 
     REQUIRE(result == true);
     REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(7));
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
-    REQUIRE(spyingAllocator.log() == AllocatorLog()
-                                         << AllocatorLog::Allocate(4096)
-                                         << AllocatorLog::Allocate(4096)
-                                         << AllocatorLog::Deallocate(4096));
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Allocate(sizeofString(7))
+                           << AllocatorLog::Deallocate(sizeofString(7))
+                           << AllocatorLog::Deallocate(sizeofString(7))
+                           << AllocatorLog::Deallocate(4096));
   }
 
   SECTION("when allocation fails") {
@@ -38,6 +41,7 @@ TEST_CASE("JsonDocument::garbageCollect()") {
     REQUIRE(doc.memoryUsage() == sizeofObject(2) + 2 * sizeofString(7));
     doc.remove("blanket");
     controllableAllocator.disable();
+    spyingAllocator.clearLog();
 
     bool result = doc.garbageCollect();
 
@@ -46,7 +50,6 @@ TEST_CASE("JsonDocument::garbageCollect()") {
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
 
     REQUIRE(spyingAllocator.log() == AllocatorLog()
-                                         << AllocatorLog::Allocate(4096)
                                          << AllocatorLog::AllocateFail(4096));
   }
 }

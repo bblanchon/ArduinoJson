@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Json/JsonSerializer.hpp>
+#include <ArduinoJson/StringStorage/StringCopier.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 
@@ -205,43 +206,35 @@ struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
 namespace detail {
 class MemoryPoolPrint : public Print {
  public:
-  MemoryPoolPrint(MemoryPool* pool) : _pool(pool), _size(0) {
-    pool->getFreeZone(&_string, &_capacity);
+  MemoryPoolPrint(MemoryPool* pool) : _copier(pool) {
+    _copier.startString();
   }
 
   JsonString str() {
-    ARDUINOJSON_ASSERT(_size < _capacity);
-    return JsonString(_pool->saveStringFromFreeZone(_size), _size,
-                      JsonString::Copied);
+    ARDUINOJSON_ASSERT(!overflowed());
+    return _copier.save();
   }
 
   size_t write(uint8_t c) {
-    if (_size >= _capacity)
-      return 0;
-
-    _string[_size++] = char(c);
-    return 1;
+    _copier.append(char(c));
+    return _copier.isValid() ? 1 : 0;
   }
 
   size_t write(const uint8_t* buffer, size_t size) {
-    if (_size + size >= _capacity) {
-      _size = _capacity;  // mark as overflowed
-      return 0;
+    for (size_t i = 0; i < size; i++) {
+      _copier.append(char(buffer[i]));
+      if (!_copier.isValid())
+        return i;
     }
-    memcpy(&_string[_size], buffer, size);
-    _size += size;
     return size;
   }
 
   bool overflowed() const {
-    return _size >= _capacity;
+    return !_copier.isValid();
   }
 
  private:
-  MemoryPool* _pool;
-  size_t _size;
-  char* _string;
-  size_t _capacity;
+  StringCopier _copier;
 };
 }  // namespace detail
 
@@ -253,7 +246,6 @@ inline void convertToJson(const ::Printable& src, JsonVariant dst) {
   detail::MemoryPoolPrint print(pool);
   src.printTo(print);
   if (print.overflowed()) {
-    pool->markAsOverflowed();
     data->setNull();
     return;
   }

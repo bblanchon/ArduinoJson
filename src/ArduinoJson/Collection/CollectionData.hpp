@@ -70,7 +70,7 @@ class CollectionData {
     return _head;
   }
 
-  void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance);
+  void movePointers(ptrdiff_t variantDistance);
 
  private:
   VariantSlot* getSlot(size_t index) const;

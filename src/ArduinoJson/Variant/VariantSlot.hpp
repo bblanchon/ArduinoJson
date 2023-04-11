@@ -99,13 +99,9 @@ class VariantSlot {
     _key = 0;
   }
 
-  void movePointers(ptrdiff_t stringDistance, ptrdiff_t variantDistance) {
-    if (_flags & OWNED_KEY_BIT)
-      _key += stringDistance;
-    if (_flags & OWNED_VALUE_BIT)
-      _content.asString.data += stringDistance;
+  void movePointers(ptrdiff_t variantDistance) {
     if (_flags & COLLECTION_MASK)
-      _content.asCollection.movePointers(stringDistance, variantDistance);
+      _content.asCollection.movePointers(variantDistance);
   }
 };
 

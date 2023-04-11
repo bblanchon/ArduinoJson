@@ -5,8 +5,9 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument::overflowed()") {
   SECTION("returns false on a fresh object") {
@@ -27,13 +28,15 @@ TEST_CASE("JsonDocument::overflowed()") {
   }
 
   SECTION("returns true after a failed string copy") {
-    JsonDocument doc(sizeofArray(1));
+    ControllableAllocator allocator;
+    JsonDocument doc(sizeofArray(1), &allocator);
+    allocator.disable();
     doc.add(std::string("example"));
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns false after a successful string copy") {
-    JsonDocument doc(sizeofArray(1) + sizeofString(7));
+    JsonDocument doc(sizeofArray(1));
     doc.add(std::string("example"));
     CHECK(doc.overflowed() == false);
   }
@@ -46,12 +49,12 @@ TEST_CASE("JsonDocument::overflowed()") {
 
   SECTION("returns true after a failed deserialization") {
     JsonDocument doc(sizeofArray(1));
-    deserializeJson(doc, "[\"example\"]");
+    deserializeJson(doc, "[1, 2]");
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns false after a successful deserialization") {
-    JsonDocument doc(sizeofArray(1) + sizeofString(7));
+    JsonDocument doc(sizeofArray(1));
     deserializeJson(doc, "[\"example\"]");
     CHECK(doc.overflowed() == false);
   }

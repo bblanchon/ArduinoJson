@@ -277,7 +277,6 @@ class JsonDeserializer {
         VariantData* variant = object.getMember(adaptString(key.c_str()));
         if (!variant) {
           // Save key in memory pool.
-          // This MUST be done before adding the slot.
           key = _stringStorage.save();
 
           // Allocate slot in object

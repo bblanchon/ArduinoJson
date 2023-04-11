@@ -10,6 +10,11 @@ TEST_CASE("VariantData") {
           true);
 }
 
+TEST_CASE("StringNode") {
+  REQUIRE(std::is_standard_layout<ArduinoJson::detail::StringNode>::value ==
+          true);
+}
+
 TEST_CASE("JsonVariant from JsonArray") {
   SECTION("JsonArray is null") {
     JsonArray arr;

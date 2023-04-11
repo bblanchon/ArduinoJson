@@ -25,9 +25,15 @@ constexpr size_t sizeofObject(size_t n) {
   return n * sizeof(VariantSlot);
 }
 
+struct StringNode {
+  struct StringNode* next;
+  uint16_t length;
+  char data[1];
+};
+
 // Returns the size (in bytes) of an string with n characters.
 constexpr size_t sizeofString(size_t n) {
-  return n + 1;
+  return n + 1 + offsetof(StringNode, data);
 }
 
 // _begin                                   _end
@@ -46,6 +52,7 @@ class MemoryPool {
   }
 
   ~MemoryPool() {
+    deallocAllStrings();
     deallocPool();
   }
 
@@ -53,6 +60,7 @@ class MemoryPool {
   MemoryPool& operator=(const MemoryPool& src) = delete;
 
   MemoryPool& operator=(MemoryPool&& src) {
+    deallocAllStrings();
     deallocPool();
     _allocator = src._allocator;
     _begin = src._begin;
@@ -61,6 +69,8 @@ class MemoryPool {
     _right = src._right;
     _overflowed = src._overflowed;
     src._begin = src._end = src._left = src._right = nullptr;
+    _strings = src._strings;
+    src._strings = nullptr;
     return *this;
   }
 
@@ -87,7 +97,10 @@ class MemoryPool {
   }
 
   size_t size() const {
-    return size_t(_left - _begin + _end - _right);
+    size_t total = size_t(_left - _begin + _end - _right);
+    for (auto node = _strings; node; node = node->next)
+      total += sizeofString(node->length);
+    return total;
   }
 
   bool overflowed() const {
@@ -103,45 +116,71 @@ class MemoryPool {
     if (str.isNull())
       return 0;
 
-    const char* existingCopy = findString(str);
-    if (existingCopy)
-      return existingCopy;
+    auto node = findString(str);
+    if (node) {
+      return node->data;
+    }
 
     size_t n = str.size();
 
-    char* newCopy = allocString(n + 1);
-    if (newCopy) {
-      stringGetChars(str, newCopy, n);
-      newCopy[n] = 0;  // force null-terminator
+    node = allocString(n);
+    if (!node)
+      return nullptr;
+
+    stringGetChars(str, node->data, n);
+    node->data[n] = 0;  // force NUL terminator
+    addStringToList(node);
+    return node->data;
+  }
+
+  void addStringToList(StringNode* node) {
+    ARDUINOJSON_ASSERT(node != nullptr);
+    node->next = _strings;
+    _strings = node;
+  }
+
+  template <typename TAdaptedString>
+  StringNode* findString(const TAdaptedString& str) const {
+    for (auto node = _strings; node; node = node->next) {
+      if (stringEquals(str, adaptString(node->data, node->length)))
+        return node;
     }
-    return newCopy;
+    return nullptr;
   }
 
-  void getFreeZone(char** zoneStart, size_t* zoneSize) const {
-    *zoneStart = _left;
-    *zoneSize = size_t(_right - _left);
+  StringNode* allocString(size_t length) {
+    auto node = reinterpret_cast<StringNode*>(
+        _allocator->allocate(sizeofString(length)));
+    if (node) {
+      node->length = uint16_t(length);
+    } else {
+      _overflowed = true;
+    }
+    return node;
   }
 
-  const char* saveStringFromFreeZone(size_t len) {
-    const char* dup = findString(adaptString(_left, len));
-    if (dup)
-      return dup;
-
-    const char* str = _left;
-    _left += len;
-    *_left++ = 0;
-    checkInvariants();
-    return str;
+  StringNode* reallocString(StringNode* node, size_t length) {
+    ARDUINOJSON_ASSERT(node != nullptr);
+    auto newNode = reinterpret_cast<StringNode*>(
+        _allocator->reallocate(node, sizeofString(length)));
+    if (newNode) {
+      newNode->length = uint16_t(length);
+    } else {
+      _overflowed = true;
+      _allocator->deallocate(node);
+    }
+    return newNode;
   }
 
-  void markAsOverflowed() {
-    _overflowed = true;
+  void deallocString(StringNode* node) {
+    _allocator->deallocate(node);
   }
 
   void clear() {
     _left = _begin;
     _right = _end;
     _overflowed = false;
+    deallocAllStrings();
   }
 
   bool canAlloc(size_t bytes) const {
@@ -169,8 +208,8 @@ class MemoryPool {
         static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
 
     movePointers(ptr_offset);
-    reinterpret_cast<VariantSlot&>(variant).movePointers(
-        ptr_offset, ptr_offset - bytes_reclaimed);
+    reinterpret_cast<VariantSlot&>(variant).movePointers(ptr_offset -
+                                                         bytes_reclaimed);
   }
 
  private:
@@ -215,29 +254,12 @@ class MemoryPool {
     ARDUINOJSON_ASSERT(isAligned(_right));
   }
 
-  template <typename TAdaptedString>
-  const char* findString(const TAdaptedString& str) const {
-    size_t n = str.size();
-    for (char* next = _begin; next + n < _left; ++next) {
-      if (next[n] == '\0' && stringEquals(str, adaptString(next, n)))
-        return next;
-
-      // jump to next terminator
-      while (*next)
-        ++next;
+  void deallocAllStrings() {
+    while (_strings) {
+      auto node = _strings;
+      _strings = node->next;
+      deallocString(node);
     }
-    return 0;
-  }
-
-  char* allocString(size_t n) {
-    if (!canAlloc(n)) {
-      _overflowed = true;
-      return 0;
-    }
-    char* s = _left;
-    _left += n;
-    checkInvariants();
-    return s;
   }
 
   template <typename T>
@@ -271,6 +293,7 @@ class MemoryPool {
   Allocator* _allocator;
   char *_begin, *_left, *_right, *_end;
   bool _overflowed;
+  StringNode* _strings = nullptr;
 };
 
 template <typename TAdaptedString, typename TCallback>

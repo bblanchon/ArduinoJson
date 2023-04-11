@@ -5,11 +5,30 @@
 #include <ArduinoJson/StringStorage/StringCopier.hpp>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using namespace ArduinoJson::detail;
 
 TEST_CASE("StringCopier") {
-  SECTION("Works when buffer is big enough") {
-    MemoryPool pool(addPadding(sizeofString(5)));
+  ControllableAllocator controllableAllocator;
+  SpyingAllocator spyingAllocator(&controllableAllocator);
+  MemoryPool pool(0, &spyingAllocator);
+
+  SECTION("Empty string") {
+    StringCopier str(&pool);
+
+    str.startString();
+    str.save();
+
+    REQUIRE(pool.size() == sizeofString(0));
+    REQUIRE(pool.overflowed() == false);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(0)));
+  }
+
+  SECTION("Short string fits in first allocation") {
     StringCopier str(&pool);
 
     str.startString();
@@ -18,37 +37,59 @@ TEST_CASE("StringCopier") {
     REQUIRE(str.isValid() == true);
     REQUIRE(str.str() == "hello");
     REQUIRE(pool.overflowed() == false);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31)));
   }
 
-  SECTION("Returns null when too small") {
-    MemoryPool pool(sizeof(void*));
+  SECTION("Long string needs reallocation") {
     StringCopier str(&pool);
 
     str.startString();
-    str.append("hello world!");
+    str.append(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
+        "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
-    REQUIRE(str.isValid() == false);
-    REQUIRE(pool.overflowed() == true);
-  }
-
-  SECTION("Increases size of memory pool") {
-    MemoryPool pool(addPadding(sizeofString(6)));
-    StringCopier str(&pool);
-
-    str.startString();
-    str.save();
-
-    REQUIRE(1 == pool.size());
+    REQUIRE(str.isValid() == true);
+    REQUIRE(str.str() ==
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
+            "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
     REQUIRE(pool.overflowed() == false);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(63))
+                           << AllocatorLog::Reallocate(sizeofString(63),
+                                                       sizeofString(127)));
   }
 
-  SECTION("Works when memory pool is 0 bytes") {
-    MemoryPool pool(0);
+  SECTION("Realloc fails") {
     StringCopier str(&pool);
 
     str.startString();
+    controllableAllocator.disable();
+    str.append(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
+        "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::ReallocateFail(sizeofString(31),
+                                                           sizeofString(63))
+                           << AllocatorLog::Deallocate(sizeofString(31)));
     REQUIRE(str.isValid() == false);
     REQUIRE(pool.overflowed() == true);
+  }
+
+  SECTION("Initial allocation fails") {
+    StringCopier str(&pool);
+
+    controllableAllocator.disable();
+    str.startString();
+
+    REQUIRE(str.isValid() == false);
+    REQUIRE(pool.overflowed() == true);
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 }
 
