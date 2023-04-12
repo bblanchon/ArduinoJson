@@ -132,9 +132,11 @@ jobs:
       - name: Install
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++-multilib
+          sudo apt-get install -y g++-multilib gcc-avr avr-libc
       - name: Checkout
         uses: actions/checkout@v3
+      - name: AVR
+        run: avr-g++ -std=c++11 -Isrc extras/conf_test/avr.cpp
       - name: GCC 32-bit
         run: g++ -std=c++11 -m32 -Isrc extras/conf_test/x86.cpp
       - name: GCC 64-bit
