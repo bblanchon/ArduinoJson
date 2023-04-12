@@ -130,9 +130,13 @@
 #    define ARDUINOJSON_ENABLE_ARDUINO_PRINT 0
 #  endif
 
-// Disable support for PROGMEM
+// Enable PROGMEM support on AVR only
 #  ifndef ARDUINOJSON_ENABLE_PROGMEM
-#    define ARDUINOJSON_ENABLE_PROGMEM 0
+#    ifdef __AVR__
+#      define ARDUINOJSON_ENABLE_PROGMEM 1
+#    else
+#      define ARDUINOJSON_ENABLE_PROGMEM 0
+#    endif
 #  endif
 
 #endif  // ARDUINO
