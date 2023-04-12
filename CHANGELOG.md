@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.21.2 (2023-04-12)
+-------
 
 * Fix compatibility with the Zephyr Project (issue #1905)
 * Allow using PROGMEM outside of Arduino (issue #1903)

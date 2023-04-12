@@ -1,4 +1,4 @@
-version: 6.21.1.{build}
+version: 6.21.2.{build}
 environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
