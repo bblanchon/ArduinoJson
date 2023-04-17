@@ -90,8 +90,10 @@ inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
     case VALUE_IS_OBJECT:
       return toObject().copyFrom(src._content.asCollection, pool);
     case VALUE_IS_OWNED_STRING: {
-      JsonString value = src.asString();
-      return setString(adaptString(value), pool);
+      auto str = storeString(pool, adaptString(src.asString()),
+                             StringStoragePolicy::Copy());
+      setString(str);
+      return !str.isNull();
     }
     case VALUE_IS_OWNED_RAW:
       return storeOwnedRaw(

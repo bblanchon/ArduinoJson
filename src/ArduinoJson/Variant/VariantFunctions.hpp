@@ -38,9 +38,15 @@ inline void variantSetNull(VariantData* var) {
 }
 
 template <typename TAdaptedString>
-inline bool variantSetString(VariantData* var, TAdaptedString value,
+inline void variantSetString(VariantData* var, TAdaptedString value,
                              MemoryPool* pool) {
-  return var != 0 ? var->setString(value, pool) : 0;
+  if (!var)
+    return;
+  JsonString str = storeString(pool, value);
+  if (str)
+    var->setString(str);
+  else
+    var->setNull();
 }
 
 inline size_t variantSize(const VariantData* var) {

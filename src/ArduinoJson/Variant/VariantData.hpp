@@ -284,35 +284,11 @@ class VariantData {
     return _flags & VALUE_MASK;
   }
 
-  template <typename TAdaptedString>
-  inline bool setString(TAdaptedString value, MemoryPool* pool) {
-    if (value.isNull()) {
-      setNull();
-      return true;
-    }
-
-    return storeString(pool, value, VariantStringSetter(this));
-  }
-
  private:
   void setType(uint8_t t) {
     _flags &= OWNED_KEY_BIT;
     _flags |= t;
   }
-
-  struct VariantStringSetter {
-    VariantStringSetter(VariantData* instance) : _instance(instance) {}
-
-    template <typename TStoredString>
-    void operator()(TStoredString s) {
-      if (s)
-        _instance->setString(s);
-      else
-        _instance->setNull();
-    }
-
-    VariantData* _instance;
-  };
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

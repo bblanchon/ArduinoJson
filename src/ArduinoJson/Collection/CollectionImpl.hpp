@@ -37,10 +37,14 @@ template <typename TAdaptedString>
 inline VariantData* CollectionData::addMember(TAdaptedString key,
                                               MemoryPool* pool) {
   VariantSlot* slot = addSlot(pool);
-  if (!slotSetKey(slot, key, pool)) {
+  if (!slot)
+    return 0;
+  auto storedKey = storeString(pool, key);
+  if (!storedKey) {
     removeSlot(slot);
     return 0;
   }
+  slot->setKey(storedKey);
   return slot->data();
 }
 

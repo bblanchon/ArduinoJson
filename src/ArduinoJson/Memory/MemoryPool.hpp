@@ -273,35 +273,30 @@ class MemoryPool {
   StringNode* _strings = nullptr;
 };
 
-template <typename TAdaptedString, typename TCallback>
-bool storeString(MemoryPool* pool, TAdaptedString str,
-                 StringStoragePolicy::Copy, TCallback callback) {
-  const char* copy = pool->saveString(str);
-  JsonString storedString(copy, str.size(), JsonString::Copied);
-  callback(storedString);
-  return copy != 0;
+template <typename TAdaptedString>
+JsonString storeString(MemoryPool* pool, TAdaptedString str,
+                       StringStoragePolicy::Copy) {
+  return JsonString(pool->saveString(str), str.size(), JsonString::Copied);
 }
 
-template <typename TAdaptedString, typename TCallback>
-bool storeString(MemoryPool*, TAdaptedString str, StringStoragePolicy::Link,
-                 TCallback callback) {
-  JsonString storedString(str.data(), str.size(), JsonString::Linked);
-  callback(storedString);
-  return !str.isNull();
+template <typename TAdaptedString>
+JsonString storeString(MemoryPool*, TAdaptedString str,
+                       StringStoragePolicy::Link) {
+  return JsonString(str.data(), str.size(), JsonString::Linked);
 }
 
-template <typename TAdaptedString, typename TCallback>
-bool storeString(MemoryPool* pool, TAdaptedString str,
-                 StringStoragePolicy::LinkOrCopy policy, TCallback callback) {
+template <typename TAdaptedString>
+JsonString storeString(MemoryPool* pool, TAdaptedString str,
+                       StringStoragePolicy::LinkOrCopy policy) {
   if (policy.link)
-    return storeString(pool, str, StringStoragePolicy::Link(), callback);
+    return storeString(pool, str, StringStoragePolicy::Link());
   else
-    return storeString(pool, str, StringStoragePolicy::Copy(), callback);
+    return storeString(pool, str, StringStoragePolicy::Copy());
 }
 
-template <typename TAdaptedString, typename TCallback>
-bool storeString(MemoryPool* pool, TAdaptedString str, TCallback callback) {
-  return storeString(pool, str, str.storagePolicy(), callback);
+template <typename TAdaptedString>
+JsonString storeString(MemoryPool* pool, TAdaptedString str) {
+  return storeString(pool, str, str.storagePolicy());
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

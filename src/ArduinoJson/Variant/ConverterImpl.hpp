@@ -153,12 +153,12 @@ struct Converter<JsonString> : private detail::VariantAttorney {
 };
 
 template <typename T>
-inline typename detail::enable_if<detail::IsString<T>::value, bool>::type
+inline typename detail::enable_if<detail::IsString<T>::value>::type
 convertToJson(const T& src, JsonVariant dst) {
   using namespace detail;
   auto data = VariantAttorney::getData(dst);
   auto pool = VariantAttorney::getPool(dst);
-  return variantSetString(data, adaptString(src), pool);
+  variantSetString(data, adaptString(src), pool);
 }
 
 template <>
