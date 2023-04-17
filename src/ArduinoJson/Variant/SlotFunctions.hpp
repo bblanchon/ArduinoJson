@@ -18,10 +18,6 @@ inline size_t slotSize(const VariantSlot* var) {
   return n;
 }
 
-inline VariantData* slotData(VariantSlot* slot) {
-  return reinterpret_cast<VariantData*>(slot);
-}
-
 inline void slotRelease(const VariantSlot* slot, MemoryPool* pool) {
   ARDUINOJSON_ASSERT(slot != nullptr);
   if (slot->ownsKey())

@@ -195,7 +195,7 @@ inline NO_INLINE VariantData* variantGetOrAddElement(VariantData* var,
     slot = pool->allocVariant();
     if (!slot)
       return nullptr;
-    array->addSlot(slot);
+    array->add(slot);
     index--;
   }
   return slot->data();
@@ -223,7 +223,7 @@ VariantData* variantGetOrAddMember(VariantData* var, TAdaptedString key,
   auto obj = var->isNull() ? &var->toObject() : var->asObject();
   if (!obj)
     return nullptr;
-  auto slot = obj->getSlot(key);
+  auto slot = obj->get(key);
   if (slot)
     return slot->data();
   return collectionAddMember(obj, key, pool);

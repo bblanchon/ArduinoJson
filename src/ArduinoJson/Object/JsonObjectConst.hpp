@@ -130,7 +130,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   const detail::VariantData* getMember(TAdaptedString key) const {
     if (!_data)
       return 0;
-    return _data->getMember(key);
+    return slotData(_data->get(key));
   }
 
   const detail::CollectionData* _data;

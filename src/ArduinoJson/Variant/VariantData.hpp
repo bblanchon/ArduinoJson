@@ -226,14 +226,18 @@ class VariantData {
   }
 
   VariantData* getElement(size_t index) const {
-    const CollectionData* col = asArray();
-    return col ? col->getElement(index) : 0;
+    auto array = asArray();
+    if (!array)
+      return nullptr;
+    return slotData(array->get(index));
   }
 
   template <typename TAdaptedString>
   VariantData* getMember(TAdaptedString key) const {
-    const CollectionData* col = asObject();
-    return col ? col->getMember(key) : 0;
+    auto object = asObject();
+    if (!object)
+      return nullptr;
+    return slotData(object->get(key));
   }
 
   void movePointers(ptrdiff_t variantDistance) {

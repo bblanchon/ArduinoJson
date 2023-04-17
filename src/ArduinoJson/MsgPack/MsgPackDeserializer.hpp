@@ -501,7 +501,7 @@ class MsgPackDeserializer {
           return DeserializationError::NoMemory;
 
         slot->setKey(key);
-        object->addSlot(slot);
+        object->add(slot);
 
         member = slot->data();
       } else {

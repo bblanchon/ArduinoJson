@@ -15,7 +15,7 @@ inline VariantData* collectionAddElement(CollectionData* array,
   auto slot = pool->allocVariant();
   if (!slot)
     return nullptr;
-  array->addSlot(slot);
+  array->add(slot);
   return slot->data();
 }
 
@@ -33,7 +33,7 @@ inline VariantData* collectionAddMember(CollectionData* obj, TAdaptedString key,
   if (!storedKey)
     return nullptr;
   slot->setKey(storedKey);
-  obj->addSlot(slot);
+  obj->add(slot);
   return slot->data();
 }
 
@@ -71,7 +71,7 @@ inline void collectionRemove(CollectionData* data, VariantSlot* slot,
                              MemoryPool* pool) {
   if (!data || !slot)
     return;
-  data->removeSlot(slot);
+  data->remove(slot);
   slotRelease(slot, pool);
 }
 
@@ -79,7 +79,7 @@ inline void collectionRemoveElement(CollectionData* array, size_t index,
                                     MemoryPool* pool) {
   if (!array)
     return;
-  collectionRemove(array, array->getSlot(index), pool);
+  collectionRemove(array, array->get(index), pool);
 }
 
 template <typename TAdaptedString>
@@ -87,7 +87,7 @@ inline void collectionRemoveMember(CollectionData* obj, TAdaptedString key,
                                    MemoryPool* pool) {
   if (!obj)
     return;
-  collectionRemove(obj, obj->getSlot(key), pool);
+  collectionRemove(obj, obj->get(key), pool);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

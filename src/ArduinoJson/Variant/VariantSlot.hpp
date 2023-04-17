@@ -105,4 +105,8 @@ class VariantSlot {
   }
 };
 
+inline VariantData* slotData(VariantSlot* slot) {
+  return reinterpret_cast<VariantData*>(slot);
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

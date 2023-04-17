@@ -70,7 +70,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the element at the specified index.
   // https://arduinojson.org/v6/api/jsonarrayconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(_data ? _data->getElement(index) : 0);
+    return JsonVariantConst(_data ? slotData(_data->get(index)) : 0);
   }
 
   operator JsonVariantConst() const {

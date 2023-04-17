@@ -11,7 +11,7 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline void CollectionData::addSlot(VariantSlot* slot) {
+inline void CollectionData::add(VariantSlot* slot) {
   ARDUINOJSON_ASSERT(slot != nullptr);
 
   if (_tail) {
@@ -29,12 +29,7 @@ inline void CollectionData::clear() {
 }
 
 template <typename TAdaptedString>
-inline bool CollectionData::containsKey(const TAdaptedString& key) const {
-  return getSlot(key) != 0;
-}
-
-template <typename TAdaptedString>
-inline VariantSlot* CollectionData::getSlot(TAdaptedString key) const {
+inline VariantSlot* CollectionData::get(TAdaptedString key) const {
   if (key.isNull())
     return 0;
   VariantSlot* slot = _head;
@@ -46,13 +41,13 @@ inline VariantSlot* CollectionData::getSlot(TAdaptedString key) const {
   return slot;
 }
 
-inline VariantSlot* CollectionData::getSlot(size_t index) const {
+inline VariantSlot* CollectionData::get(size_t index) const {
   if (!_head)
     return 0;
   return _head->next(index);
 }
 
-inline VariantSlot* CollectionData::getPreviousSlot(VariantSlot* target) const {
+inline VariantSlot* CollectionData::getPrevious(VariantSlot* target) const {
   VariantSlot* current = _head;
   while (current) {
     VariantSlot* next = current->next();
@@ -63,21 +58,10 @@ inline VariantSlot* CollectionData::getPreviousSlot(VariantSlot* target) const {
   return 0;
 }
 
-template <typename TAdaptedString>
-inline VariantData* CollectionData::getMember(TAdaptedString key) const {
-  VariantSlot* slot = getSlot(key);
-  return slot ? slot->data() : 0;
-}
-
-inline VariantData* CollectionData::getElement(size_t index) const {
-  VariantSlot* slot = getSlot(index);
-  return slot ? slot->data() : 0;
-}
-
-inline void CollectionData::removeSlot(VariantSlot* slot) {
+inline void CollectionData::remove(VariantSlot* slot) {
   if (!slot)
     return;
-  VariantSlot* prev = getPreviousSlot(slot);
+  VariantSlot* prev = getPrevious(slot);
   VariantSlot* next = slot->next();
   if (prev)
     prev->setNext(next);

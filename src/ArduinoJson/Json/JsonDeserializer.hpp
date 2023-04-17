@@ -274,24 +274,23 @@ class JsonDeserializer {
       TFilter memberFilter = filter[key.c_str()];
 
       if (memberFilter.allow()) {
-        VariantData* variant = object.getMember(adaptString(key.c_str()));
-        if (!variant) {
+        VariantSlot* slot = object.get(adaptString(key.c_str()));
+        if (!slot) {
           // Save key in memory pool.
           key = _stringStorage.save();
 
           // Allocate slot in object
-          VariantSlot* slot = _pool->allocVariant();
+          slot = _pool->allocVariant();
           if (!slot)
             return DeserializationError::NoMemory;
 
           slot->setKey(key);
-          object.addSlot(slot);
-
-          variant = slot->data();
+          object.add(slot);
         }
 
         // Parse value
-        err = parseVariant(*variant, memberFilter, nestingLimit.decrement());
+        err =
+            parseVariant(*slot->data(), memberFilter, nestingLimit.decrement());
         if (err)
           return err;
       } else {

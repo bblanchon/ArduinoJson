@@ -203,12 +203,12 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   inline detail::VariantData* getMember(TAdaptedString key) const {
     if (!_data)
       return 0;
-    return _data->getMember(key);
+    return slotData(_data->get(key));
   }
 
   template <typename TAdaptedString>
   void removeMember(TAdaptedString key) const {
-    collectionRemove(_data, _data->getSlot(key), _pool);
+    collectionRemove(_data, _data->get(key), _pool);
   }
 
   detail::CollectionData* _data;
