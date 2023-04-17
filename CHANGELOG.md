@@ -12,3 +12,4 @@ HEAD
 * Remove `ARDUINOJSON_ENABLE_STRING_DEDUPLICATION` (string deduplication cannot be enabled anymore)
 * Remove `JsonDocument::capacity()`
 * Store the strings in the heap
+* Reference-count shared strings

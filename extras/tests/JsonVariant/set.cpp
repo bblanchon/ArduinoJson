@@ -7,6 +7,9 @@
 
 #include "Allocators.hpp"
 
+using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
+
 enum ErrorCode { ERROR_01 = 1, ERROR_10 = 10 };
 
 TEST_CASE("JsonVariant::set() when there is enough memory") {
@@ -171,4 +174,37 @@ TEST_CASE("JsonVariant::set(JsonDocument)") {
   std::string json;
   serializeJson(doc2, json);
   REQUIRE(json == "{\"hello\":\"world\"}");
+}
+
+TEST_CASE("JsonVariant::set() releases the previous value") {
+  JsonDocument doc(1024);
+  doc["hello"] = std::string("world");
+  REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(5));
+
+  JsonVariant v = doc["hello"];
+
+  SECTION("int") {
+    v.set(42);
+    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+  }
+
+  SECTION("bool") {
+    v.set(false);
+    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+  }
+
+  SECTION("const char*") {
+    v.set("hello");
+    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+  }
+
+  SECTION("float") {
+    v.set(1.2);
+    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+  }
+
+  SECTION("Serialized<const char*>") {
+    v.set(serialized("[]"));
+    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+  }
 }

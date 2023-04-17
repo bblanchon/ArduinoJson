@@ -28,6 +28,7 @@ constexpr size_t sizeofObject(size_t n) {
 struct StringNode {
   struct StringNode* next;
   uint16_t length;
+  uint16_t references;
   char data[1];
 };
 
@@ -112,6 +113,7 @@ class MemoryPool {
 
     auto node = findString(str);
     if (node) {
+      node->references++;
       return node->data;
     }
 
@@ -147,6 +149,7 @@ class MemoryPool {
         _allocator->allocate(sizeofString(length)));
     if (node) {
       node->length = uint16_t(length);
+      node->references = 1;
     } else {
       _overflowed = true;
     }
@@ -168,6 +171,23 @@ class MemoryPool {
 
   void deallocString(StringNode* node) {
     _allocator->deallocate(node);
+  }
+
+  void dereferenceString(const char* s) {
+    StringNode* prev = nullptr;
+    for (auto node = _strings; node; node = node->next) {
+      if (node->data == s) {
+        if (--node->references == 0) {
+          if (prev)
+            prev->next = node->next;
+          else
+            _strings = node->next;
+          _allocator->deallocate(node);
+        }
+        return;
+      }
+      prev = node;
+    }
   }
 
   void clear() {

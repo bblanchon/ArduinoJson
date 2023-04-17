@@ -6,35 +6,67 @@
 #include <stdint.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonVariant::remove()") {
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofString;
+
+TEST_CASE("JsonVariant::remove(int)") {
+  JsonDocument doc(4096);
+
+  SECTION("release top level strings") {
+    doc.add(std::string("hello"));
+    doc.add(std::string("hello"));
+    doc.add(std::string("world"));
+
+    JsonVariant var = doc.as<JsonVariant>();
+    REQUIRE(var.as<std::string>() == "[\"hello\",\"hello\",\"world\"]");
+    REQUIRE(doc.memoryUsage() == sizeofArray(3) + 2 * sizeofString(5));
+
+    var.remove(1);
+    REQUIRE(var.as<std::string>() == "[\"hello\",\"world\"]");
+    REQUIRE(doc.memoryUsage() == sizeofArray(3) + 2 * sizeofString(5));
+
+    var.remove(1);
+    REQUIRE(var.as<std::string>() == "[\"hello\"]");
+    REQUIRE(doc.memoryUsage() == sizeofArray(3) + 1 * sizeofString(5));
+
+    var.remove(0);
+    REQUIRE(var.as<std::string>() == "[]");
+    REQUIRE(doc.memoryUsage() == sizeofArray(3));
+  }
+
+  SECTION("release strings in nested array") {
+    doc[0][0] = std::string("hello");
+
+    JsonVariant var = doc.as<JsonVariant>();
+    REQUIRE(var.as<std::string>() == "[[\"hello\"]]");
+    REQUIRE(doc.memoryUsage() == 2 * sizeofArray(1) + sizeofString(5));
+
+    var.remove(0);
+    REQUIRE(var.as<std::string>() == "[]");
+    REQUIRE(doc.memoryUsage() == 2 * sizeofArray(1));
+  }
+}
+
+TEST_CASE("JsonVariant::remove(const char *)") {
   JsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
 
-  SECTION("remove(int)") {
-    var.add(1);
-    var.add(2);
-    var.add(3);
+  var["a"] = 1;
+  var["b"] = 2;
 
-    var.remove(1);
+  var.remove("a");
 
-    REQUIRE(var.as<std::string>() == "[1,3]");
-  }
+  REQUIRE(var.as<std::string>() == "{\"b\":2}");
+}
 
-  SECTION("remove(const char *)") {
-    var["a"] = 1;
-    var["b"] = 2;
+TEST_CASE("JsonVariant::remove(std::string)") {
+  JsonDocument doc(4096);
+  JsonVariant var = doc.to<JsonVariant>();
 
-    var.remove("a");
+  var["a"] = 1;
+  var["b"] = 2;
 
-    REQUIRE(var.as<std::string>() == "{\"b\":2}");
-  }
+  var.remove(std::string("b"));
 
-  SECTION("remove(std::string)") {
-    var["a"] = 1;
-    var["b"] = 2;
-
-    var.remove(std::string("b"));
-
-    REQUIRE(var.as<std::string>() == "{\"a\":1}");
-  }
+  REQUIRE(var.as<std::string>() == "{\"a\":1}");
 }

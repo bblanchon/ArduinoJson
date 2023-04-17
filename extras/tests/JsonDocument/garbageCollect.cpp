@@ -32,7 +32,6 @@ TEST_CASE("JsonDocument::garbageCollect()") {
             AllocatorLog() << AllocatorLog::Allocate(4096)
                            << AllocatorLog::Allocate(sizeofString(7))
                            << AllocatorLog::Deallocate(sizeofString(7))
-                           << AllocatorLog::Deallocate(sizeofString(7))
                            << AllocatorLog::Deallocate(4096));
   }
 
@@ -46,7 +45,7 @@ TEST_CASE("JsonDocument::garbageCollect()") {
     bool result = doc.garbageCollect();
 
     REQUIRE(result == false);
-    REQUIRE(doc.memoryUsage() == sizeofObject(2) + 2 * sizeofString(7));
+    REQUIRE(doc.memoryUsage() == sizeofObject(2) + sizeofString(7));
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
 
     REQUIRE(spyingAllocator.log() == AllocatorLog()

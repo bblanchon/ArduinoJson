@@ -33,6 +33,8 @@ class StringCopier {
       node = _pool->reallocString(_node, _size);
       _pool->addStringToList(node);
       _node = nullptr;  // next time we need a new string
+    } else {
+      node->references++;
     }
     return JsonString(node->data, node->length, JsonString::Copied);
   }

@@ -24,6 +24,8 @@ inline VariantData* slotData(VariantSlot* slot) {
 
 inline void slotRelease(const VariantSlot* slot, MemoryPool* pool) {
   ARDUINOJSON_ASSERT(slot != nullptr);
+  if (slot->ownsKey())
+    pool->dereferenceString(slot->key());
   variantRelease(slot->data(), pool);
 }
 

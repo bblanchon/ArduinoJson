@@ -33,6 +33,10 @@ inline typename TVisitor::result_type variantAccept(const VariantData* var,
 
 inline void variantRelease(const VariantData* var, MemoryPool* pool) {
   ARDUINOJSON_ASSERT(var != nullptr);
+  auto s = var->getOwnedString();
+  if (s)
+    pool->dereferenceString(s);
+
   auto c = var->asCollection();
   if (c) {
     for (auto slot = c->head(); slot; slot = slot->next())
