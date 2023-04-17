@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Array/ElementProxy.hpp>
 #include <ArduinoJson/Array/JsonArrayConst.hpp>
+#include <ArduinoJson/Collection/CollectionFunctions.hpp>
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
@@ -43,9 +44,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsonarray/add/
   JsonVariant add() const {
-    if (!_data)
-      return JsonVariant();
-    return JsonVariant(_pool, _data->addElement(_pool));
+    return JsonVariant(_pool, collectionAddElement(_data, _pool));
   }
 
   // Appends a value to the array.
@@ -79,9 +78,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Copies an array.
   // https://arduinojson.org/v6/api/jsonarray/set/
   FORCE_INLINE bool set(JsonArrayConst src) const {
-    if (!_data || !src._data)
-      return false;
-    return _data->copyFrom(*src._data, _pool);
+    return collectionCopy(_data, src._data, _pool);
   }
 
   // Compares the content of two arrays.
@@ -93,27 +90,21 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/
   FORCE_INLINE void remove(iterator it) const {
-    if (!_data)
-      return;
-    _data->removeSlot(it._slot);
+    collectionRemove(_data, it._slot, _pool);
   }
 
   // Removes the element at the specified index.
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/
   FORCE_INLINE void remove(size_t index) const {
-    if (!_data)
-      return;
-    _data->removeElement(index);
+    collectionRemoveElement(_data, index, _pool);
   }
 
   // Removes all the elements of the array.
   // ⚠️ Doesn't release the memory associated with the removed elements.
   // https://arduinojson.org/v6/api/jsonarray/clear/
   void clear() const {
-    if (!_data)
-      return;
-    _data->clear();
+    collectionClear(_data, _pool);
   }
 
   // Gets or sets the element at the specified index.

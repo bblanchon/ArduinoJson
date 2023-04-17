@@ -10,6 +10,8 @@
 
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
@@ -386,5 +388,21 @@ TEST_CASE("Deduplicate keys") {
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
+  }
+}
+
+TEST_CASE("MemberProxy under memory constraints") {
+  ControllableAllocator allocator;
+  JsonDocument doc(4096, &allocator);
+
+  SECTION("key allocation fails") {
+    allocator.disable();
+
+    doc[std::string("hello")] = "world";
+
+    REQUIRE(doc.is<JsonObject>());
+    REQUIRE(doc.size() == 0);
+    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+    REQUIRE(doc.overflowed() == true);
   }
 }

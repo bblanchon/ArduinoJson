@@ -87,17 +87,13 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // ⚠️ Doesn't release the memory associated with the removed members.
   // https://arduinojson.org/v6/api/jsonobject/clear/
   void clear() const {
-    if (!_data)
-      return;
-    _data->clear();
+    collectionClear(_data, _pool);
   }
 
   // Copies an object.
   // https://arduinojson.org/v6/api/jsonobject/set/
   FORCE_INLINE bool set(JsonObjectConst src) {
-    if (!_data || !src._data)
-      return false;
-    return _data->copyFrom(*src._data, _pool);
+    return collectionCopy(_data, src._data, _pool);
   }
 
   // Compares the content of two objects.
@@ -129,9 +125,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // ⚠️ Doesn't release the memory associated with the removed member.
   // https://arduinojson.org/v6/api/jsonobject/remove/
   FORCE_INLINE void remove(iterator it) const {
-    if (!_data)
-      return;
-    _data->removeSlot(it._slot);
+    collectionRemove(_data, it._slot, _pool);
   }
 
   // Removes the member with the specified key.
@@ -139,7 +133,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TString>
   FORCE_INLINE void remove(const TString& key) const {
-    removeMember(detail::adaptString(key));
+    collectionRemoveMember(_data, detail::adaptString(key), _pool);
   }
 
   // Removes the member with the specified key.
@@ -147,7 +141,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TChar>
   FORCE_INLINE void remove(TChar* key) const {
-    removeMember(detail::adaptString(key));
+    collectionRemoveMember(_data, detail::adaptString(key), _pool);
   }
 
   // Returns true if the object contains the specified key.
@@ -214,9 +208,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   template <typename TAdaptedString>
   void removeMember(TAdaptedString key) const {
-    if (!_data)
-      return;
-    _data->removeMember(key);
+    collectionRemove(_data, _data->getSlot(key), _pool);
   }
 
   detail::CollectionData* _data;

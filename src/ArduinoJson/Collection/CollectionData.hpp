@@ -11,7 +11,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class MemoryPool;
 class VariantData;
 class VariantSlot;
 
@@ -28,29 +27,12 @@ class CollectionData {
 
   // Array only
 
-  VariantData* addElement(MemoryPool* pool);
-
   VariantData* getElement(size_t index) const;
-
-  VariantData* getOrAddElement(size_t index, MemoryPool* pool);
-
-  void removeElement(size_t index);
 
   // Object only
 
   template <typename TAdaptedString>
-  VariantData* addMember(TAdaptedString key, MemoryPool* pool);
-
-  template <typename TAdaptedString>
   VariantData* getMember(TAdaptedString key) const;
-
-  template <typename TAdaptedString>
-  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool);
-
-  template <typename TAdaptedString>
-  void removeMember(TAdaptedString key) {
-    removeSlot(getSlot(key));
-  }
 
   template <typename TAdaptedString>
   bool containsKey(const TAdaptedString& key) const;
@@ -61,10 +43,8 @@ class CollectionData {
   size_t memoryUsage() const;
   size_t size() const;
 
-  VariantSlot* addSlot(MemoryPool*);
+  void addSlot(VariantSlot*);
   void removeSlot(VariantSlot* slot);
-
-  bool copyFrom(const CollectionData& src, MemoryPool* pool);
 
   VariantSlot* head() const {
     return _head;
@@ -72,12 +52,12 @@ class CollectionData {
 
   void movePointers(ptrdiff_t variantDistance);
 
- private:
   VariantSlot* getSlot(size_t index) const;
 
   template <typename TAdaptedString>
   VariantSlot* getSlot(TAdaptedString key) const;
 
+ private:
   VariantSlot* getPreviousSlot(VariantSlot*) const;
 };
 

@@ -83,26 +83,16 @@ inline JsonString VariantData::asString() const {
   }
 }
 
-inline bool VariantData::copyFrom(const VariantData& src, MemoryPool* pool) {
-  switch (src.type()) {
-    case VALUE_IS_ARRAY:
-      return toArray().copyFrom(src._content.asCollection, pool);
-    case VALUE_IS_OBJECT:
-      return toObject().copyFrom(src._content.asCollection, pool);
-    case VALUE_IS_OWNED_STRING: {
-      auto str = storeString(pool, adaptString(src.asString()),
-                             StringStoragePolicy::Copy());
-      setString(str);
-      return !str.isNull();
-    }
+inline JsonString VariantData::asRaw() const {
+  switch (type()) {
+    case VALUE_IS_LINKED_RAW:
+      return JsonString(_content.asString.data, _content.asString.size,
+                        JsonString::Linked);
     case VALUE_IS_OWNED_RAW:
-      return storeOwnedRaw(
-          serialized(src._content.asString.data, src._content.asString.size),
-          pool);
+      return JsonString(_content.asString.data, _content.asString.size,
+                        JsonString::Copied);
     default:
-      setType(src.type());
-      _content = src._content;
-      return true;
+      return JsonString();
   }
 }
 
@@ -126,21 +116,21 @@ template <typename TDerived>
 template <typename T>
 inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonArray(getPool(), variantToArray(getOrCreateData()));
+  return JsonArray(getPool(), variantToArray(getOrCreateData(), getPool()));
 }
 
 template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonObject(getPool(), variantToObject(getOrCreateData()));
+  return JsonObject(getPool(), variantToObject(getOrCreateData(), getPool()));
 }
 
 template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
 VariantRefBase<TDerived>::to() const {
-  variantSetNull(getOrCreateData());
+  variantSetNull(getOrCreateData(), getPool());
   return *this;
 }
 

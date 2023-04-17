@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Strings/JsonString.hpp>
@@ -19,6 +18,10 @@ class VariantData {
 
  public:
   VariantData() : _flags(VALUE_IS_NULL) {}
+
+  void reset() {
+    _flags = VALUE_IS_NULL;
+  }
 
   void operator=(const VariantData& src) {
     _content = src._content;
@@ -68,8 +71,16 @@ class VariantData {
   T asFloat() const;
 
   JsonString asString() const;
+  JsonString asRaw() const;
 
   bool asBoolean() const;
+
+  const char* getOwnedString() const {
+    if (_flags & OWNED_VALUE_BIT)
+      return _content.asString.data;
+    else
+      return nullptr;
+  }
 
   CollectionData* asArray() {
     return isArray() ? &_content.asCollection : 0;
@@ -90,8 +101,6 @@ class VariantData {
   const CollectionData* asObject() const {
     return const_cast<VariantData*>(this)->asObject();
   }
-
-  bool copyFrom(const VariantData& src, MemoryPool* pool);
 
   bool isArray() const {
     return (_flags & VALUE_IS_ARRAY) != 0;
@@ -139,17 +148,6 @@ class VariantData {
     return !isFloat();
   }
 
-  void remove(size_t index) {
-    if (isArray())
-      _content.asCollection.removeElement(index);
-  }
-
-  template <typename TAdaptedString>
-  void remove(TAdaptedString key) {
-    if (isObject())
-      _content.asCollection.removeMember(key);
-  }
-
   void setBoolean(bool value) {
     setType(VALUE_IS_BOOLEAN);
     _content.asBoolean = value;
@@ -160,28 +158,16 @@ class VariantData {
     _content.asFloat = value;
   }
 
-  void setLinkedRaw(SerializedValue<const char*> value) {
-    if (value.data()) {
-      setType(VALUE_IS_LINKED_RAW);
-      _content.asString.data = value.data();
-      _content.asString.size = value.size();
-    } else {
-      setType(VALUE_IS_NULL);
-    }
+  void setLinkedRaw(const char* data, size_t n) {
+    setType(VALUE_IS_LINKED_RAW);
+    _content.asString.data = data;
+    _content.asString.size = n;
   }
 
-  template <typename T>
-  bool storeOwnedRaw(SerializedValue<T> value, MemoryPool* pool) {
-    const char* dup = pool->saveString(adaptString(value.data(), value.size()));
-    if (dup) {
-      setType(VALUE_IS_OWNED_RAW);
-      _content.asString.data = dup;
-      _content.asString.size = value.size();
-      return true;
-    } else {
-      setType(VALUE_IS_NULL);
-      return false;
-    }
+  void setOwnedRaw(const char* data, size_t n) {
+    setType(VALUE_IS_OWNED_RAW);
+    _content.asString.data = data;
+    _content.asString.size = n;
   }
 
   template <typename T>
@@ -239,40 +225,15 @@ class VariantData {
     return isCollection() ? _content.asCollection.size() : 0;
   }
 
-  VariantData* addElement(MemoryPool* pool) {
-    if (isNull())
-      toArray();
-    if (!isArray())
-      return 0;
-    return _content.asCollection.addElement(pool);
-  }
-
   VariantData* getElement(size_t index) const {
     const CollectionData* col = asArray();
     return col ? col->getElement(index) : 0;
-  }
-
-  VariantData* getOrAddElement(size_t index, MemoryPool* pool) {
-    if (isNull())
-      toArray();
-    if (!isArray())
-      return 0;
-    return _content.asCollection.getOrAddElement(index, pool);
   }
 
   template <typename TAdaptedString>
   VariantData* getMember(TAdaptedString key) const {
     const CollectionData* col = asObject();
     return col ? col->getMember(key) : 0;
-  }
-
-  template <typename TAdaptedString>
-  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool) {
-    if (isNull())
-      toObject();
-    if (!isObject())
-      return 0;
-    return _content.asCollection.getOrAddMember(key, pool);
   }
 
   void movePointers(ptrdiff_t variantDistance) {

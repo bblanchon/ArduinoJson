@@ -30,7 +30,7 @@ class VariantRefBase : public VariantTag {
   // ⚠️ Doesn't release the memory associated with the previous value.
   // https://arduinojson.org/v6/api/jsonvariant/clear/
   FORCE_INLINE void clear() const {
-    variantSetNull(getData());
+    variantSetNull(getOrCreateData(), getPool());
   }
 
   // Returns true if the value is null or the reference is unbound.
@@ -112,11 +112,10 @@ class VariantRefBase : public VariantTag {
     VariantData* data = getOrCreateData();
     if (!data)
       return;
+    variantSetNull(data, getPool());
     const VariantData* targetData = VariantAttorney::getData(target);
     if (targetData)
       *data = *targetData;
-    else
-      data->setNull();
   }
 
   // Copies the specified value.
@@ -179,9 +178,7 @@ class VariantRefBase : public VariantTag {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonvariant/remove/
   FORCE_INLINE void remove(size_t index) const {
-    VariantData* data = getData();
-    if (data)
-      data->remove(index);
+    variantRemoveElement(getData(), index, getPool());
   }
 
   // Removes a member of the object.
@@ -190,9 +187,7 @@ class VariantRefBase : public VariantTag {
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value>::type remove(
       TChar* key) const {
-    VariantData* data = getData();
-    if (data)
-      data->remove(adaptString(key));
+    variantRemoveMember(getData(), adaptString(key), getPool());
   }
 
   // Removes a member of the object.
@@ -201,9 +196,7 @@ class VariantRefBase : public VariantTag {
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
       const TString& key) const {
-    VariantData* data = getData();
-    if (data)
-      data->remove(adaptString(key));
+    variantRemoveMember(getData(), adaptString(key), getPool());
   }
 
   // Creates an array and appends it to the array.

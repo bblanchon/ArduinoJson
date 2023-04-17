@@ -11,41 +11,16 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline VariantSlot* CollectionData::addSlot(MemoryPool* pool) {
-  VariantSlot* slot = pool->allocVariant();
-  if (!slot)
-    return 0;
+inline void CollectionData::addSlot(VariantSlot* slot) {
+  ARDUINOJSON_ASSERT(slot != nullptr);
 
   if (_tail) {
-    ARDUINOJSON_ASSERT(pool->owns(_tail));  // Can't alter a linked array/object
     _tail->setNextNotNull(slot);
     _tail = slot;
   } else {
     _head = slot;
     _tail = slot;
   }
-
-  slot->clear();
-  return slot;
-}
-
-inline VariantData* CollectionData::addElement(MemoryPool* pool) {
-  return slotData(addSlot(pool));
-}
-
-template <typename TAdaptedString>
-inline VariantData* CollectionData::addMember(TAdaptedString key,
-                                              MemoryPool* pool) {
-  VariantSlot* slot = addSlot(pool);
-  if (!slot)
-    return 0;
-  auto storedKey = storeString(pool, key);
-  if (!storedKey) {
-    removeSlot(slot);
-    return 0;
-  }
-  slot->setKey(storedKey);
-  return slot->data();
 }
 
 inline void CollectionData::clear() {
@@ -56,26 +31,6 @@ inline void CollectionData::clear() {
 template <typename TAdaptedString>
 inline bool CollectionData::containsKey(const TAdaptedString& key) const {
   return getSlot(key) != 0;
-}
-
-inline bool CollectionData::copyFrom(const CollectionData& src,
-                                     MemoryPool* pool) {
-  clear();
-  for (VariantSlot* s = src._head; s; s = s->next()) {
-    VariantData* var;
-    if (s->key() != 0) {
-      JsonString key(s->key(),
-                     s->ownsKey() ? JsonString::Copied : JsonString::Linked);
-      var = addMember(adaptString(key), pool);
-    } else {
-      var = addElement(pool);
-    }
-    if (!var)
-      return false;
-    if (!var->copyFrom(*s->data(), pool))
-      return false;
-  }
-  return true;
 }
 
 template <typename TAdaptedString>
@@ -114,40 +69,9 @@ inline VariantData* CollectionData::getMember(TAdaptedString key) const {
   return slot ? slot->data() : 0;
 }
 
-template <typename TAdaptedString>
-inline VariantData* CollectionData::getOrAddMember(TAdaptedString key,
-                                                   MemoryPool* pool) {
-  // ignore null key
-  if (key.isNull())
-    return 0;
-
-  // search a matching key
-  VariantSlot* slot = getSlot(key);
-  if (slot)
-    return slot->data();
-
-  return addMember(key, pool);
-}
-
 inline VariantData* CollectionData::getElement(size_t index) const {
   VariantSlot* slot = getSlot(index);
   return slot ? slot->data() : 0;
-}
-
-inline VariantData* CollectionData::getOrAddElement(size_t index,
-                                                    MemoryPool* pool) {
-  VariantSlot* slot = _head;
-  while (slot && index > 0) {
-    slot = slot->next();
-    index--;
-  }
-  if (!slot)
-    index++;
-  while (index > 0) {
-    slot = addSlot(pool);
-    index--;
-  }
-  return slotData(slot);
 }
 
 inline void CollectionData::removeSlot(VariantSlot* slot) {
@@ -161,10 +85,6 @@ inline void CollectionData::removeSlot(VariantSlot* slot) {
     _head = next;
   if (!next)
     _tail = prev;
-}
-
-inline void CollectionData::removeElement(size_t index) {
-  removeSlot(getSlot(index));
 }
 
 inline size_t CollectionData::memoryUsage() const {

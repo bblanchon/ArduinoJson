@@ -42,10 +42,8 @@ struct Converter<
                                   !detail::is_same<char, T>::value>::type>
     : private detail::VariantAttorney {
   static void toJson(T src, JsonVariant dst) {
-    auto data = getData(dst);
     ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
-    if (data)
-      data->setInteger(src);
+    variantSetInteger(getData(dst), src, getPool(dst));
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -81,9 +79,7 @@ struct Converter<T, typename detail::enable_if<detail::is_enum<T>::value>::type>
 template <>
 struct Converter<bool> : private detail::VariantAttorney {
   static void toJson(bool src, JsonVariant dst) {
-    auto data = getData(dst);
-    if (data)
-      data->setBoolean(src);
+    variantSetBoolean(getData(dst), src, getPool(dst));
   }
 
   static bool fromJson(JsonVariantConst src) {
@@ -102,9 +98,7 @@ struct Converter<
     T, typename detail::enable_if<detail::is_floating_point<T>::value>::type>
     : private detail::VariantAttorney {
   static void toJson(T src, JsonVariant dst) {
-    auto data = getData(dst);
-    if (data)
-      data->setFloat(static_cast<JsonFloat>(src));
+    variantSetFloat(getData(dst), static_cast<JsonFloat>(src), getPool(dst));
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -165,9 +159,7 @@ template <>
 struct Converter<SerializedValue<const char*>>
     : private detail::VariantAttorney {
   static void toJson(SerializedValue<const char*> src, JsonVariant dst) {
-    auto data = getData(dst);
-    if (data)
-      data->setLinkedRaw(src);
+    variantSetLinkedRaw(getData(dst), src, getPool(dst));
   }
 };
 
@@ -180,17 +172,14 @@ struct Converter<
     typename detail::enable_if<!detail::is_same<const char*, T>::value>::type>
     : private detail::VariantAttorney {
   static void toJson(SerializedValue<T> src, JsonVariant dst) {
-    auto data = getData(dst);
-    auto pool = getPool(dst);
-    if (data)
-      data->storeOwnedRaw(src, pool);
+    variantSetOwnedRaw(getData(dst), src, getPool(dst));
   }
 };
 
 template <>
 struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
   static void toJson(decltype(nullptr), JsonVariant dst) {
-    variantSetNull(getData(dst));
+    variantSetNull(getData(dst), getPool(dst));
   }
   static decltype(nullptr) fromJson(JsonVariantConst) {
     return nullptr;

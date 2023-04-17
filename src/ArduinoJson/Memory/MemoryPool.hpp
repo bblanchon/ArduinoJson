@@ -99,7 +99,10 @@ class MemoryPool {
   }
 
   VariantSlot* allocVariant() {
-    return allocRight<VariantSlot>();
+    auto slot = allocRight<VariantSlot>();
+    if (slot)
+      slot->clear();
+    return slot;
   }
 
   template <typename TAdaptedString>

@@ -119,7 +119,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/clear/
   void clear() {
     _pool.clear();
-    _data.setNull();
+    _data.reset();
   }
 
   // Returns true if the root is of the specified type.
@@ -297,7 +297,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsondocument/add/
   FORCE_INLINE JsonVariant add() {
-    return JsonVariant(&_pool, _data.addElement(&_pool));
+    return JsonVariant(&_pool, variantAddElement(&_data, &_pool));
   }
 
   // Appends a value to the root array.
@@ -318,7 +318,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsondocument/remove/
   FORCE_INLINE void remove(size_t index) {
-    _data.remove(index);
+    variantRemoveElement(getData(), index, getPool());
   }
 
   // Removes a member of the root object.
@@ -327,7 +327,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename TChar>
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value>::type
   remove(TChar* key) {
-    _data.remove(detail::adaptString(key));
+    variantRemoveMember(getData(), detail::adaptString(key), getPool());
   }
 
   // Removes a member of the root object.
@@ -337,7 +337,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value>::type
       remove(const TString& key) {
-    _data.remove(detail::adaptString(key));
+    variantRemoveMember(getData(), detail::adaptString(key), getPool());
   }
 
   FORCE_INLINE operator JsonVariant() {
@@ -364,7 +364,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
   void moveAssignFrom(JsonDocument& src) {
     _data = src._data;
-    src._data.setNull();
+    src._data.reset();
     _pool = move(src._pool);
   }
 
