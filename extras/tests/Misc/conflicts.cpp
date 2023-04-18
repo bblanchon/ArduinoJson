@@ -55,5 +55,8 @@
 // issue #1905
 #define _current
 
+// issue #1914
+#define V6 6
+
 // catch.hpp mutes several warnings, this file also allows to detect them
 #include "ArduinoJson.h"
