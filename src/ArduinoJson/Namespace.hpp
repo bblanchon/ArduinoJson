@@ -11,9 +11,7 @@
 #ifndef ARDUINOJSON_VERSION_NAMESPACE
 
 #  define ARDUINOJSON_VERSION_NAMESPACE                                    \
-    ARDUINOJSON_CONCAT3(ARDUINOJSON_CONCAT4(V, ARDUINOJSON_VERSION_MAJOR,  \
-                                            ARDUINOJSON_VERSION_MINOR,     \
-                                            ARDUINOJSON_VERSION_REVISION), \
+    ARDUINOJSON_CONCAT3(ARDUINOJSON_VERSION_MACRO,                         \
                         ARDUINOJSON_BIN2ALPHA(ARDUINOJSON_ENABLE_PROGMEM,  \
                                               ARDUINOJSON_USE_LONG_LONG,   \
                                               ARDUINOJSON_USE_DOUBLE, 1),  \
