@@ -24,8 +24,6 @@ inline VariantData* collectionAddMember(CollectionData* obj, TAdaptedString key,
                                         MemoryPool* pool) {
   ARDUINOJSON_ASSERT(!key.isNull());
   ARDUINOJSON_ASSERT(obj != nullptr);
-  if (!obj)
-    return nullptr;
   auto slot = pool->allocVariant();
   if (!slot)
     return nullptr;
@@ -65,6 +63,14 @@ inline bool collectionCopy(CollectionData* dst, const CollectionData* src,
       return false;
   }
   return true;
+}
+
+template <typename TAdaptedString>
+inline VariantData* collectionGetMember(const CollectionData* obj,
+                                        TAdaptedString key) {
+  if (!obj)
+    return nullptr;
+  return slotData(obj->get(key));
 }
 
 inline void collectionRemove(CollectionData* data, VariantSlot* slot,

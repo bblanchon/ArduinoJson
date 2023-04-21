@@ -150,7 +150,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value, bool>::type
       containsKey(const TString& key) const {
-    return getMember(detail::adaptString(key)) != 0;
+    return collectionGetMember(_data, detail::adaptString(key)) != 0;
   }
 
   // Returns true if the object contains the specified key.
@@ -159,7 +159,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
       containsKey(TChar* key) const {
-    return getMember(detail::adaptString(key)) != 0;
+    return collectionGetMember(_data, detail::adaptString(key)) != 0;
   }
 
   // Creates an array and adds it to the object.
@@ -197,13 +197,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   detail::VariantData* getOrCreateData() const {
     return detail::collectionToVariant(_data);
-  }
-
-  template <typename TAdaptedString>
-  inline detail::VariantData* getMember(TAdaptedString key) const {
-    if (!_data)
-      return 0;
-    return slotData(_data->get(key));
   }
 
   template <typename TAdaptedString>

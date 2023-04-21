@@ -44,6 +44,7 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant.set(42L));
     CHECK_FALSE(variant.set(42U));
     CHECK_FALSE(variant.set(serialized("42")));
+    CHECK_FALSE(variant.set(serialized(std::string("42"))));
     CHECK_FALSE(variant.set(true));
   }
 
@@ -62,5 +63,14 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant[0].set(1));
     CHECK_FALSE(variant["key"].set(1));
     CHECK_FALSE(variant[std::string("key")].set(1));
+  }
+
+  SECTION("containsKey()") {
+    CHECK_FALSE(variant.containsKey("hello"));
+  }
+
+  SECTION("remove()") {
+    variant.remove(0);
+    variant.remove("hello");
   }
 }

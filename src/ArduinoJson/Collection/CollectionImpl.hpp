@@ -59,8 +59,7 @@ inline VariantSlot* CollectionData::getPrevious(VariantSlot* target) const {
 }
 
 inline void CollectionData::remove(VariantSlot* slot) {
-  if (!slot)
-    return;
+  ARDUINOJSON_ASSERT(slot != nullptr);
   VariantSlot* prev = getPrevious(slot);
   VariantSlot* next = slot->next();
   if (prev)

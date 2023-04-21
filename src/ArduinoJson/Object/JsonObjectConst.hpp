@@ -76,14 +76,14 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return getMember(detail::adaptString(key)) != 0;
+    return collectionGetMember(_data, detail::adaptString(key)) != 0;
   }
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
-    return getMember(detail::adaptString(key)) != 0;
+    return collectionGetMember(_data, detail::adaptString(key)) != 0;
   }
 
   // Gets the member with specified key.
@@ -92,7 +92,8 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
-    return JsonVariantConst(getMember(detail::adaptString(key)));
+    return JsonVariantConst(
+        collectionGetMember(_data, detail::adaptString(key)));
   }
 
   // Gets the member with specified key.
@@ -101,7 +102,8 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
-    return JsonVariantConst(getMember(detail::adaptString(key)));
+    return JsonVariantConst(
+        collectionGetMember(_data, detail::adaptString(key)));
   }
 
   // Compares objects.
@@ -124,13 +126,6 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
  private:
   const detail::VariantData* getData() const {
     return collectionToVariant(_data);
-  }
-
-  template <typename TAdaptedString>
-  const detail::VariantData* getMember(TAdaptedString key) const {
-    if (!_data)
-      return 0;
-    return slotData(_data->get(key));
   }
 
   const detail::CollectionData* _data;
