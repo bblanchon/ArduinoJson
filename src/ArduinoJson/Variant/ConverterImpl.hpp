@@ -195,35 +195,35 @@ struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
 namespace detail {
 class MemoryPoolPrint : public Print {
  public:
-  MemoryPoolPrint(MemoryPool* pool) : _copier(pool) {
-    _copier.startString();
+  MemoryPoolPrint(MemoryPool* pool) : copier_(pool) {
+    copier_.startString();
   }
 
   JsonString str() {
     ARDUINOJSON_ASSERT(!overflowed());
-    return _copier.save();
+    return copier_.save();
   }
 
   size_t write(uint8_t c) {
-    _copier.append(char(c));
-    return _copier.isValid() ? 1 : 0;
+    copier_.append(char(c));
+    return copier_.isValid() ? 1 : 0;
   }
 
   size_t write(const uint8_t* buffer, size_t size) {
     for (size_t i = 0; i < size; i++) {
-      _copier.append(char(buffer[i]));
-      if (!_copier.isValid())
+      copier_.append(char(buffer[i]));
+      if (!copier_.isValid())
         return i;
     }
     return size;
   }
 
   bool overflowed() const {
-    return !_copier.isValid();
+    return !copier_.isValid();
   }
 
  private:
-  StringCopier _copier;
+  StringCopier copier_;
 };
 }  // namespace detail
 

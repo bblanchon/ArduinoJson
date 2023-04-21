@@ -13,21 +13,21 @@ class Writer<
     TDestination,
     typename enable_if<is_base_of<std::ostream, TDestination>::value>::type> {
  public:
-  explicit Writer(std::ostream& os) : _os(&os) {}
+  explicit Writer(std::ostream& os) : os_(&os) {}
 
   size_t write(uint8_t c) {
-    _os->put(static_cast<char>(c));
+    os_->put(static_cast<char>(c));
     return 1;
   }
 
   size_t write(const uint8_t* s, size_t n) {
-    _os->write(reinterpret_cast<const char*>(s),
+    os_->write(reinterpret_cast<const char*>(s),
                static_cast<std::streamsize>(n));
     return n;
   }
 
  private:
-  std::ostream* _os;
+  std::ostream* os_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

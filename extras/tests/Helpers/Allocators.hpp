@@ -62,12 +62,12 @@ class AllocatorLog {
   };
 
   AllocatorLog& operator<<(const std::string& s) {
-    _log << s << "\n";
+    log_ << s << "\n";
     return *this;
   }
 
   std::string str() const {
-    auto s = _log.str();
+    auto s = log_.str();
     if (s.empty())
       return "(empty)";
     s.pop_back();  // remove the trailing '\n'
@@ -84,57 +84,57 @@ class AllocatorLog {
   }
 
  private:
-  std::ostringstream _log;
+  std::ostringstream log_;
 };
 
 class SpyingAllocator : public ArduinoJson::Allocator {
  public:
   SpyingAllocator(
       Allocator* upstream = ArduinoJson::detail::DefaultAllocator::instance())
-      : _upstream(upstream) {}
+      : upstream_(upstream) {}
   virtual ~SpyingAllocator() {}
 
   void* allocate(size_t n) override {
     auto block = reinterpret_cast<AllocatedBlock*>(
-        _upstream->allocate(sizeof(AllocatedBlock) + n - 1));
+        upstream_->allocate(sizeof(AllocatedBlock) + n - 1));
     if (block) {
-      _log << AllocatorLog::Allocate(n);
+      log_ << AllocatorLog::Allocate(n);
       block->size = n;
       return block->payload;
     } else {
-      _log << AllocatorLog::AllocateFail(n);
+      log_ << AllocatorLog::AllocateFail(n);
       return nullptr;
     }
   }
 
   void deallocate(void* p) override {
     auto block = AllocatedBlock::fromPayload(p);
-    _log << AllocatorLog::Deallocate(block->size);
-    _upstream->deallocate(block);
+    log_ << AllocatorLog::Deallocate(block->size);
+    upstream_->deallocate(block);
   }
 
   void* reallocate(void* p, size_t n) override {
     auto block = AllocatedBlock::fromPayload(p);
     auto oldSize = block->size;
     block = reinterpret_cast<AllocatedBlock*>(
-        _upstream->reallocate(block, sizeof(AllocatedBlock) + n - 1));
+        upstream_->reallocate(block, sizeof(AllocatedBlock) + n - 1));
     if (block) {
-      _log << AllocatorLog::Reallocate(oldSize, n);
+      log_ << AllocatorLog::Reallocate(oldSize, n);
       ARDUINOJSON_ASSERT(block->size == oldSize);
       block->size = n;
       return block->payload;
     } else {
-      _log << AllocatorLog::ReallocateFail(oldSize, n);
+      log_ << AllocatorLog::ReallocateFail(oldSize, n);
       return nullptr;
     }
   }
 
   void clearLog() {
-    _log = AllocatorLog();
+    log_ = AllocatorLog();
   }
 
   const AllocatorLog& log() const {
-    return _log;
+    return log_;
   }
 
  private:
@@ -151,36 +151,36 @@ class SpyingAllocator : public ArduinoJson::Allocator {
     }
   };
 
-  AllocatorLog _log;
-  Allocator* _upstream;
+  AllocatorLog log_;
+  Allocator* upstream_;
 };
 
 class ControllableAllocator : public ArduinoJson::Allocator {
  public:
   ControllableAllocator(
       Allocator* upstream = ArduinoJson::detail::DefaultAllocator::instance())
-      : _enabled(true), _upstream(upstream) {}
+      : enabled_(true), upstream_(upstream) {}
   virtual ~ControllableAllocator() {}
 
   void* allocate(size_t n) override {
-    return _enabled ? _upstream->allocate(n) : 0;
+    return enabled_ ? upstream_->allocate(n) : 0;
   }
 
   void deallocate(void* p) override {
-    _upstream->deallocate(p);
+    upstream_->deallocate(p);
   }
 
   void* reallocate(void* ptr, size_t n) override {
-    return _enabled ? _upstream->reallocate(ptr, n) : 0;
+    return enabled_ ? upstream_->reallocate(ptr, n) : 0;
   }
 
   void disable() {
-    _enabled = false;
+    enabled_ = false;
   }
 
  private:
-  bool _enabled;
-  Allocator* _upstream;
+  bool enabled_;
+  Allocator* upstream_;
 };
 
 class TimebombAllocator : public ArduinoJson::Allocator {
@@ -188,32 +188,32 @@ class TimebombAllocator : public ArduinoJson::Allocator {
   TimebombAllocator(
       size_t initialCountdown,
       Allocator* upstream = ArduinoJson::detail::DefaultAllocator::instance())
-      : _countdown(initialCountdown), _upstream(upstream) {}
+      : countdown_(initialCountdown), upstream_(upstream) {}
   virtual ~TimebombAllocator() {}
 
   void* allocate(size_t n) override {
-    if (!_countdown)
+    if (!countdown_)
       return nullptr;
-    _countdown--;
-    return _upstream->allocate(n);
+    countdown_--;
+    return upstream_->allocate(n);
   }
 
   void deallocate(void* p) override {
-    _upstream->deallocate(p);
+    upstream_->deallocate(p);
   }
 
   void* reallocate(void* ptr, size_t n) override {
-    if (!_countdown)
+    if (!countdown_)
       return nullptr;
-    _countdown--;
-    return _upstream->reallocate(ptr, n);
+    countdown_--;
+    return upstream_->reallocate(ptr, n);
   }
 
   void setCountdown(size_t value) {
-    _countdown = value;
+    countdown_ = value;
   }
 
  private:
-  size_t _countdown = 0;
-  Allocator* _upstream;
+  size_t countdown_ = 0;
+  Allocator* upstream_;
 };

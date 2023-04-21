@@ -11,23 +11,23 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename TWriter>
 class CountingDecorator {
  public:
-  explicit CountingDecorator(TWriter& writer) : _writer(writer), _count(0) {}
+  explicit CountingDecorator(TWriter& writer) : writer_(writer), count_(0) {}
 
   void write(uint8_t c) {
-    _count += _writer.write(c);
+    count_ += writer_.write(c);
   }
 
   void write(const uint8_t* s, size_t n) {
-    _count += _writer.write(s, n);
+    count_ += writer_.write(s, n);
   }
 
   size_t count() const {
-    return _count;
+    return count_;
   }
 
  private:
-  TWriter _writer;
-  size_t _count;
+  TWriter writer_;
+  size_t count_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

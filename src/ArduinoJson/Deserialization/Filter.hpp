@@ -11,34 +11,34 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 namespace DeserializationOption {
 class Filter {
  public:
-  explicit Filter(JsonVariantConst v) : _variant(v) {}
+  explicit Filter(JsonVariantConst v) : variant_(v) {}
 
   bool allow() const {
-    return _variant;
+    return variant_;
   }
 
   bool allowArray() const {
-    return _variant == true || _variant.is<JsonArrayConst>();
+    return variant_ == true || variant_.is<JsonArrayConst>();
   }
 
   bool allowObject() const {
-    return _variant == true || _variant.is<JsonObjectConst>();
+    return variant_ == true || variant_.is<JsonObjectConst>();
   }
 
   bool allowValue() const {
-    return _variant == true;
+    return variant_ == true;
   }
 
   template <typename TKey>
   Filter operator[](const TKey& key) const {
-    if (_variant == true)  // "true" means "allow recursively"
+    if (variant_ == true)  // "true" means "allow recursively"
       return *this;
-    JsonVariantConst member = _variant[key];
-    return Filter(member.isNull() ? _variant["*"] : member);
+    JsonVariantConst member = variant_[key];
+    return Filter(member.isNull() ? variant_["*"] : member);
   }
 
  private:
-  JsonVariantConst _variant;
+  JsonVariantConst variant_;
 };
 }  // namespace DeserializationOption
 

@@ -40,7 +40,7 @@ constexpr size_t sizeofString(size_t n) {
 class MemoryPool {
  public:
   MemoryPool(size_t capa, Allocator* allocator = DefaultAllocator::instance())
-      : _allocator(allocator), _overflowed(false) {
+      : allocator_(allocator), overflowed_(false) {
     allocPool(addPadding(capa));
   }
 
@@ -55,48 +55,48 @@ class MemoryPool {
   MemoryPool& operator=(MemoryPool&& src) {
     deallocAllStrings();
     deallocPool();
-    _allocator = src._allocator;
-    _begin = src._begin;
-    _end = src._end;
-    _right = src._right;
-    _overflowed = src._overflowed;
-    src._begin = src._end = src._right = nullptr;
-    _strings = src._strings;
-    src._strings = nullptr;
+    allocator_ = src.allocator_;
+    begin_ = src.begin_;
+    end_ = src.end_;
+    right_ = src.right_;
+    overflowed_ = src.overflowed_;
+    src.begin_ = src.end_ = src.right_ = nullptr;
+    strings_ = src.strings_;
+    src.strings_ = nullptr;
     return *this;
   }
 
   Allocator* allocator() const {
-    return _allocator;
+    return allocator_;
   }
 
   void reallocPool(size_t requiredSize) {
     size_t capa = addPadding(requiredSize);
     if (capa == capacity())
       return;
-    _allocator->deallocate(_begin);
+    allocator_->deallocate(begin_);
     allocPool(requiredSize);
   }
 
   void* buffer() {
-    return _begin;  // NOLINT(clang-analyzer-unix.Malloc)
+    return begin_;  // NOLINT(clang-analyzer-unix.Malloc)
                     // movePointers() alters this pointer
   }
 
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
-    return size_t(_end - _begin);
+    return size_t(end_ - begin_);
   }
 
   size_t size() const {
-    size_t total = size_t(_end - _right);
-    for (auto node = _strings; node; node = node->next)
+    size_t total = size_t(end_ - right_);
+    for (auto node = strings_; node; node = node->next)
       total += sizeofString(node->length);
     return total;
   }
 
   bool overflowed() const {
-    return _overflowed;
+    return overflowed_;
   }
 
   VariantSlot* allocVariant() {
@@ -131,13 +131,13 @@ class MemoryPool {
 
   void addStringToList(StringNode* node) {
     ARDUINOJSON_ASSERT(node != nullptr);
-    node->next = _strings;
-    _strings = node;
+    node->next = strings_;
+    strings_ = node;
   }
 
   template <typename TAdaptedString>
   StringNode* findString(const TAdaptedString& str) const {
-    for (auto node = _strings; node; node = node->next) {
+    for (auto node = strings_; node; node = node->next) {
       if (stringEquals(str, adaptString(node->data, node->length)))
         return node;
     }
@@ -146,12 +146,12 @@ class MemoryPool {
 
   StringNode* allocString(size_t length) {
     auto node = reinterpret_cast<StringNode*>(
-        _allocator->allocate(sizeofString(length)));
+        allocator_->allocate(sizeofString(length)));
     if (node) {
       node->length = uint16_t(length);
       node->references = 1;
     } else {
-      _overflowed = true;
+      overflowed_ = true;
     }
     return node;
   }
@@ -159,30 +159,30 @@ class MemoryPool {
   StringNode* reallocString(StringNode* node, size_t length) {
     ARDUINOJSON_ASSERT(node != nullptr);
     auto newNode = reinterpret_cast<StringNode*>(
-        _allocator->reallocate(node, sizeofString(length)));
+        allocator_->reallocate(node, sizeofString(length)));
     if (newNode) {
       newNode->length = uint16_t(length);
     } else {
-      _overflowed = true;
-      _allocator->deallocate(node);
+      overflowed_ = true;
+      allocator_->deallocate(node);
     }
     return newNode;
   }
 
   void deallocString(StringNode* node) {
-    _allocator->deallocate(node);
+    allocator_->deallocate(node);
   }
 
   void dereferenceString(const char* s) {
     StringNode* prev = nullptr;
-    for (auto node = _strings; node; node = node->next) {
+    for (auto node = strings_; node; node = node->next) {
       if (node->data == s) {
         if (--node->references == 0) {
           if (prev)
             prev->next = node->next;
           else
-            _strings = node->next;
-          _allocator->deallocate(node);
+            strings_ = node->next;
+          allocator_->deallocate(node);
         }
         return;
       }
@@ -191,17 +191,17 @@ class MemoryPool {
   }
 
   void clear() {
-    _right = _end;
-    _overflowed = false;
+    right_ = end_;
+    overflowed_ = false;
     deallocAllStrings();
   }
 
   bool canAlloc(size_t bytes) const {
-    return _begin + bytes <= _right;
+    return begin_ + bytes <= right_;
   }
 
   bool owns(void* p) const {
-    return _begin <= p && p < _end;
+    return begin_ <= p && p < end_;
   }
 
   // Workaround for missing placement new
@@ -214,8 +214,8 @@ class MemoryPool {
     if (bytes_reclaimed == 0)
       return;
 
-    void* old_ptr = _begin;
-    void* new_ptr = _allocator->reallocate(old_ptr, capacity());
+    void* old_ptr = begin_;
+    void* new_ptr = allocator_->reallocate(old_ptr, capacity());
 
     ptrdiff_t ptr_offset =
         static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
@@ -227,37 +227,37 @@ class MemoryPool {
 
  private:
   ptrdiff_t squash() {
-    char* new_right = addPadding(_begin);
-    if (new_right >= _right)
+    char* new_right = addPadding(begin_);
+    if (new_right >= right_)
       return 0;
 
-    size_t right_size = static_cast<size_t>(_end - _right);
-    memmove(new_right, _right, right_size);
+    size_t right_size = static_cast<size_t>(end_ - right_);
+    memmove(new_right, right_, right_size);
 
-    ptrdiff_t bytes_reclaimed = _right - new_right;
-    _right = new_right;
-    _end = new_right + right_size;
+    ptrdiff_t bytes_reclaimed = right_ - new_right;
+    right_ = new_right;
+    end_ = new_right + right_size;
     return bytes_reclaimed;
   }
 
   // Move all pointers together
   // This funcion is called after a realloc.
   void movePointers(ptrdiff_t offset) {
-    _begin += offset;
-    _right += offset;
-    _end += offset;
+    begin_ += offset;
+    right_ += offset;
+    end_ += offset;
   }
 
   void checkInvariants() {
-    ARDUINOJSON_ASSERT(_begin <= _right);
-    ARDUINOJSON_ASSERT(_right <= _end);
-    ARDUINOJSON_ASSERT(isAligned(_right));
+    ARDUINOJSON_ASSERT(begin_ <= right_);
+    ARDUINOJSON_ASSERT(right_ <= end_);
+    ARDUINOJSON_ASSERT(isAligned(right_));
   }
 
   void deallocAllStrings() {
-    while (_strings) {
-      auto node = _strings;
-      _strings = node->next;
+    while (strings_) {
+      auto node = strings_;
+      strings_ = node->next;
       deallocString(node);
     }
   }
@@ -269,31 +269,31 @@ class MemoryPool {
 
   void* allocRight(size_t bytes) {
     if (!canAlloc(bytes)) {
-      _overflowed = true;
+      overflowed_ = true;
       return 0;
     }
-    _right -= bytes;
-    return _right;
+    right_ -= bytes;
+    return right_;
   }
 
   void allocPool(size_t capa) {
-    auto buf = capa ? reinterpret_cast<char*>(_allocator->allocate(capa)) : 0;
-    _begin = buf;
-    _end = _right = buf ? buf + capa : 0;
-    ARDUINOJSON_ASSERT(isAligned(_begin));
-    ARDUINOJSON_ASSERT(isAligned(_right));
-    ARDUINOJSON_ASSERT(isAligned(_end));
+    auto buf = capa ? reinterpret_cast<char*>(allocator_->allocate(capa)) : 0;
+    begin_ = buf;
+    end_ = right_ = buf ? buf + capa : 0;
+    ARDUINOJSON_ASSERT(isAligned(begin_));
+    ARDUINOJSON_ASSERT(isAligned(right_));
+    ARDUINOJSON_ASSERT(isAligned(end_));
   }
 
   void deallocPool() {
-    if (_begin)
-      _allocator->deallocate(_begin);
+    if (begin_)
+      allocator_->deallocate(begin_);
   }
 
-  Allocator* _allocator;
-  char *_begin, *_right, *_end;
-  bool _overflowed;
-  StringNode* _strings = nullptr;
+  Allocator* allocator_;
+  char *begin_, *right_, *end_;
+  bool overflowed_;
+  StringNode* strings_ = nullptr;
 };
 
 template <typename TAdaptedString>

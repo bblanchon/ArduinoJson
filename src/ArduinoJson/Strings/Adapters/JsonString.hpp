@@ -13,15 +13,15 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 class JsonStringAdapter : public SizedRamString {
  public:
   JsonStringAdapter(const JsonString& s)
-      : SizedRamString(s.c_str(), s.size()), _linked(s.isLinked()) {}
+      : SizedRamString(s.c_str(), s.size()), linked_(s.isLinked()) {}
 
   StringStoragePolicy::LinkOrCopy storagePolicy() const {
-    StringStoragePolicy::LinkOrCopy policy = {_linked};
+    StringStoragePolicy::LinkOrCopy policy = {linked_};
     return policy;
   }
 
  private:
-  bool _linked;
+  bool linked_;
 };
 
 template <>

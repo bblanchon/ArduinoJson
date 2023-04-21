@@ -19,51 +19,51 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   typedef JsonObjectConstIterator iterator;
 
   // Creates an unbound reference.
-  JsonObjectConst() : _data(0) {}
+  JsonObjectConst() : data_(0) {}
 
   // INTERNAL USE ONLY
-  JsonObjectConst(const detail::CollectionData* data) : _data(data) {}
+  JsonObjectConst(const detail::CollectionData* data) : data_(data) {}
 
   operator JsonVariantConst() const {
-    return JsonVariantConst(collectionToVariant(_data));
+    return JsonVariantConst(collectionToVariant(data_));
   }
 
   // Returns true if the reference is unbound.
   // https://arduinojson.org/v6/api/jsonobjectconst/isnull/
   FORCE_INLINE bool isNull() const {
-    return _data == 0;
+    return data_ == 0;
   }
 
   // Returns true if the reference is bound.
   // https://arduinojson.org/v6/api/jsonobjectconst/isnull/
   FORCE_INLINE operator bool() const {
-    return _data != 0;
+    return data_ != 0;
   }
 
   // Returns the number of bytes occupied by the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
-    return _data ? _data->memoryUsage() : 0;
+    return data_ ? data_->memoryUsage() : 0;
   }
 
   // Returns the depth (nesting level) of the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(collectionToVariant(_data));
+    return variantNesting(collectionToVariant(data_));
   }
 
   // Returns the number of members in the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/size/
   FORCE_INLINE size_t size() const {
-    return _data ? _data->size() : 0;
+    return data_ ? data_->size() : 0;
   }
 
   // Returns an iterator to the first key-value pair of the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/begin/
   FORCE_INLINE iterator begin() const {
-    if (!_data)
+    if (!data_)
       return iterator();
-    return iterator(_data->head());
+    return iterator(data_->head());
   }
 
   // Returns an iterator following the last key-value pair of the object.
@@ -76,14 +76,14 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return collectionGetMember(_data, detail::adaptString(key)) != 0;
+    return collectionGetMember(data_, detail::adaptString(key)) != 0;
   }
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
-    return collectionGetMember(_data, detail::adaptString(key)) != 0;
+    return collectionGetMember(data_, detail::adaptString(key)) != 0;
   }
 
   // Gets the member with specified key.
@@ -93,7 +93,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
     return JsonVariantConst(
-        collectionGetMember(_data, detail::adaptString(key)));
+        collectionGetMember(data_, detail::adaptString(key)));
   }
 
   // Gets the member with specified key.
@@ -103,15 +103,15 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
     return JsonVariantConst(
-        collectionGetMember(_data, detail::adaptString(key)));
+        collectionGetMember(data_, detail::adaptString(key)));
   }
 
   // Compares objects.
   FORCE_INLINE bool operator==(JsonObjectConst rhs) const {
-    if (_data == rhs._data)
+    if (data_ == rhs.data_)
       return true;
 
-    if (!_data || !rhs._data)
+    if (!data_ || !rhs.data_)
       return false;
 
     size_t count = 0;
@@ -125,10 +125,10 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
 
  private:
   const detail::VariantData* getData() const {
-    return collectionToVariant(_data);
+    return collectionToVariant(data_);
   }
 
-  const detail::CollectionData* _data;
+  const detail::CollectionData* data_;
 };
 
 template <>

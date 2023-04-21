@@ -7,18 +7,18 @@
 #include <sstream>
 
 class CustomReader {
-  std::stringstream _stream;
+  std::stringstream stream_;
 
  public:
-  CustomReader(const char* input) : _stream(input) {}
+  CustomReader(const char* input) : stream_(input) {}
   CustomReader(const CustomReader&) = delete;
 
   int read() {
-    return _stream.get();
+    return stream_.get();
   }
 
   size_t readBytes(char* buffer, size_t length) {
-    _stream.read(buffer, static_cast<std::streamsize>(length));
-    return static_cast<size_t>(_stream.gcount());
+    stream_.read(buffer, static_cast<std::streamsize>(length));
+    return static_cast<size_t>(stream_.gcount());
   }
 };

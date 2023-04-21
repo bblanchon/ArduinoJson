@@ -30,39 +30,39 @@ class JsonVariantConst : public detail::VariantTag,
 
  public:
   // Creates an unbound reference.
-  JsonVariantConst() : _data(0) {}
+  JsonVariantConst() : data_(0) {}
 
   // INTERNAL USE ONLY
-  explicit JsonVariantConst(const detail::VariantData* data) : _data(data) {}
+  explicit JsonVariantConst(const detail::VariantData* data) : data_(data) {}
 
   // Returns true if the value is null or the reference is unbound.
   // https://arduinojson.org/v6/api/jsonvariantconst/isnull/
   FORCE_INLINE bool isNull() const {
     using namespace detail;
-    return variantIsNull(_data);
+    return variantIsNull(data_);
   }
 
   // Returns true if the reference is unbound.
   FORCE_INLINE bool isUnbound() const {
-    return !_data;
+    return !data_;
   }
 
   // Returns the number of bytes occupied by the value.
   // https://arduinojson.org/v6/api/jsonvariantconst/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
-    return _data ? _data->memoryUsage() : 0;
+    return data_ ? data_->memoryUsage() : 0;
   }
 
   // Returns the depth (nesting level) of the value.
   // https://arduinojson.org/v6/api/jsonvariantconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(_data);
+    return variantNesting(data_);
   }
 
   // Returns the size of the array or object.
   // https://arduinojson.org/v6/api/jsonvariantconst/size/
   size_t size() const {
-    return variantSize(_data);
+    return variantSize(data_);
   }
 
   // Casts the value to the specified type.
@@ -93,7 +93,7 @@ class JsonVariantConst : public detail::VariantTag,
   // Gets array's element at specified index.
   // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(variantGetElement(_data, index));
+    return JsonVariantConst(variantGetElement(data_, index));
   }
 
   // Gets object's member with specified key.
@@ -102,7 +102,7 @@ class JsonVariantConst : public detail::VariantTag,
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
-    return JsonVariantConst(variantGetMember(_data, detail::adaptString(key)));
+    return JsonVariantConst(variantGetMember(data_, detail::adaptString(key)));
   }
 
   // Gets object's member with specified key.
@@ -111,7 +111,7 @@ class JsonVariantConst : public detail::VariantTag,
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
-    return JsonVariantConst(variantGetMember(_data, detail::adaptString(key)));
+    return JsonVariantConst(variantGetMember(data_, detail::adaptString(key)));
   }
 
   // Returns true if tge object contains the specified key.
@@ -134,11 +134,11 @@ class JsonVariantConst : public detail::VariantTag,
 
  protected:
   const detail::VariantData* getData() const {
-    return _data;
+    return data_;
   }
 
  private:
-  const detail::VariantData* _data;
+  const detail::VariantData* data_;
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

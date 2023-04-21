@@ -170,19 +170,19 @@ TEST_CASE("IteratorReader") {
 
 class StreamStub : public Stream {
  public:
-  StreamStub(const char* s) : _stream(s) {}
+  StreamStub(const char* s) : stream_(s) {}
 
   int read() {
-    return _stream.get();
+    return stream_.get();
   }
 
   size_t readBytes(char* buffer, size_t length) {
-    _stream.read(buffer, static_cast<std::streamsize>(length));
-    return static_cast<size_t>(_stream.gcount());
+    stream_.read(buffer, static_cast<std::streamsize>(length));
+    return static_cast<size_t>(stream_.gcount());
   }
 
  private:
-  std::istringstream _stream;
+  std::istringstream stream_;
 };
 
 TEST_CASE("Reader<Stream>") {

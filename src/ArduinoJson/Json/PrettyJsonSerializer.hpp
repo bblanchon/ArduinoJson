@@ -16,13 +16,13 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
   typedef JsonSerializer<TWriter> base;
 
  public:
-  PrettyJsonSerializer(TWriter writer) : base(writer), _nesting(0) {}
+  PrettyJsonSerializer(TWriter writer) : base(writer), nesting_(0) {}
 
   size_t visitArray(const CollectionData& array) {
     const VariantSlot* slot = array.head();
     if (slot) {
       base::write("[\r\n");
-      _nesting++;
+      nesting_++;
       while (slot != 0) {
         indent();
         slot->data()->accept(*this);
@@ -30,7 +30,7 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
         slot = slot->next();
         base::write(slot ? ",\r\n" : "\r\n");
       }
-      _nesting--;
+      nesting_--;
       indent();
       base::write("]");
     } else {
@@ -43,7 +43,7 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
     const VariantSlot* slot = object.head();
     if (slot) {
       base::write("{\r\n");
-      _nesting++;
+      nesting_++;
       while (slot != 0) {
         indent();
         base::visitString(slot->key());
@@ -53,7 +53,7 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
         slot = slot->next();
         base::write(slot ? ",\r\n" : "\r\n");
       }
-      _nesting--;
+      nesting_--;
       indent();
       base::write("}");
     } else {
@@ -64,11 +64,11 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
 
  private:
   void indent() {
-    for (uint8_t i = 0; i < _nesting; i++)
+    for (uint8_t i = 0; i < nesting_; i++)
       base::write(ARDUINOJSON_TAB);
   }
 
-  uint8_t _nesting;
+  uint8_t nesting_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

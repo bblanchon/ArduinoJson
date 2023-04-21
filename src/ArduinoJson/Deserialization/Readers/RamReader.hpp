@@ -21,19 +21,19 @@ struct IsCharOrVoid<const T> : IsCharOrVoid<T> {};
 template <typename TSource>
 struct Reader<TSource*,
               typename enable_if<IsCharOrVoid<TSource>::value>::type> {
-  const char* _ptr;
+  const char* ptr_;
 
  public:
   explicit Reader(const void* ptr)
-      : _ptr(ptr ? reinterpret_cast<const char*>(ptr) : "") {}
+      : ptr_(ptr ? reinterpret_cast<const char*>(ptr) : "") {}
 
   int read() {
-    return static_cast<unsigned char>(*_ptr++);
+    return static_cast<unsigned char>(*ptr_++);
   }
 
   size_t readBytes(char* buffer, size_t length) {
     for (size_t i = 0; i < length; i++)
-      buffer[i] = *_ptr++;
+      buffer[i] = *ptr_++;
     return length;
   }
 };

@@ -12,21 +12,21 @@ class CustomWriter {
   CustomWriter& operator=(const CustomWriter&) = delete;
 
   size_t write(uint8_t c) {
-    _str.append(1, static_cast<char>(c));
+    str_.append(1, static_cast<char>(c));
     return 1;
   }
 
   size_t write(const uint8_t* s, size_t n) {
-    _str.append(reinterpret_cast<const char*>(s), n);
+    str_.append(reinterpret_cast<const char*>(s), n);
     return n;
   }
 
   const std::string& str() const {
-    return _str;
+    return str_;
   }
 
  private:
-  std::string _str;
+  std::string str_;
 };
 
 TEST_CASE("CustomWriter") {

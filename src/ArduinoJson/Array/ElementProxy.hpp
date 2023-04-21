@@ -17,10 +17,10 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream>>,
 
  public:
   ElementProxy(TUpstream upstream, size_t index)
-      : _upstream(upstream), _index(index) {}
+      : upstream_(upstream), index_(index) {}
 
   ElementProxy(const ElementProxy& src)
-      : _upstream(src._upstream), _index(src._index) {}
+      : upstream_(src.upstream_), index_(src.index_) {}
 
   FORCE_INLINE ElementProxy& operator=(const ElementProxy& src) {
     this->set(src);
@@ -41,20 +41,20 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream>>,
 
  private:
   FORCE_INLINE MemoryPool* getPool() const {
-    return VariantAttorney::getPool(_upstream);
+    return VariantAttorney::getPool(upstream_);
   }
 
   FORCE_INLINE VariantData* getData() const {
-    return variantGetElement(VariantAttorney::getData(_upstream), _index);
+    return variantGetElement(VariantAttorney::getData(upstream_), index_);
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {
-    return variantGetOrAddElement(VariantAttorney::getOrCreateData(_upstream),
-                                  _index, VariantAttorney::getPool(_upstream));
+    return variantGetOrAddElement(VariantAttorney::getOrCreateData(upstream_),
+                                  index_, VariantAttorney::getPool(upstream_));
   }
 
-  TUpstream _upstream;
-  size_t _index;
+  TUpstream upstream_;
+  size_t index_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

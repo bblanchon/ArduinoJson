@@ -14,25 +14,25 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 inline void CollectionData::add(VariantSlot* slot) {
   ARDUINOJSON_ASSERT(slot != nullptr);
 
-  if (_tail) {
-    _tail->setNextNotNull(slot);
-    _tail = slot;
+  if (tail_) {
+    tail_->setNextNotNull(slot);
+    tail_ = slot;
   } else {
-    _head = slot;
-    _tail = slot;
+    head_ = slot;
+    tail_ = slot;
   }
 }
 
 inline void CollectionData::clear() {
-  _head = 0;
-  _tail = 0;
+  head_ = 0;
+  tail_ = 0;
 }
 
 template <typename TAdaptedString>
 inline VariantSlot* CollectionData::get(TAdaptedString key) const {
   if (key.isNull())
     return 0;
-  VariantSlot* slot = _head;
+  VariantSlot* slot = head_;
   while (slot) {
     if (stringEquals(key, adaptString(slot->key())))
       break;
@@ -42,13 +42,13 @@ inline VariantSlot* CollectionData::get(TAdaptedString key) const {
 }
 
 inline VariantSlot* CollectionData::get(size_t index) const {
-  if (!_head)
+  if (!head_)
     return 0;
-  return _head->next(index);
+  return head_->next(index);
 }
 
 inline VariantSlot* CollectionData::getPrevious(VariantSlot* target) const {
-  VariantSlot* current = _head;
+  VariantSlot* current = head_;
   while (current) {
     VariantSlot* next = current->next();
     if (next == target)
@@ -65,14 +65,14 @@ inline void CollectionData::remove(VariantSlot* slot) {
   if (prev)
     prev->setNext(next);
   else
-    _head = next;
+    head_ = next;
   if (!next)
-    _tail = prev;
+    tail_ = prev;
 }
 
 inline size_t CollectionData::memoryUsage() const {
   size_t total = 0;
-  for (VariantSlot* s = _head; s; s = s->next()) {
+  for (VariantSlot* s = head_; s; s = s->next()) {
     total += sizeof(VariantSlot) + s->data()->memoryUsage();
     if (s->ownsKey())
       total += sizeofString(strlen(s->key()));
@@ -81,7 +81,7 @@ inline size_t CollectionData::memoryUsage() const {
 }
 
 inline size_t CollectionData::size() const {
-  return slotSize(_head);
+  return slotSize(head_);
 }
 
 template <typename T>
@@ -94,9 +94,9 @@ inline void movePointer(T*& p, ptrdiff_t offset) {
 }
 
 inline void CollectionData::movePointers(ptrdiff_t variantDistance) {
-  movePointer(_head, variantDistance);
-  movePointer(_tail, variantDistance);
-  for (VariantSlot* slot = _head; slot; slot = slot->next())
+  movePointer(head_, variantDistance);
+  movePointer(tail_, variantDistance);
+  for (VariantSlot* slot = head_; slot; slot = slot->next())
     slot->movePointers(variantDistance);
 }
 

@@ -21,31 +21,31 @@ class ZeroTerminatedRamString {
  public:
   static const size_t typeSortKey = 3;
 
-  ZeroTerminatedRamString(const char* str) : _str(str) {}
+  ZeroTerminatedRamString(const char* str) : str_(str) {}
 
   bool isNull() const {
-    return !_str;
+    return !str_;
   }
 
   size_t size() const {
-    return _str ? ::strlen(_str) : 0;
+    return str_ ? ::strlen(str_) : 0;
   }
 
   char operator[](size_t i) const {
-    ARDUINOJSON_ASSERT(_str != 0);
+    ARDUINOJSON_ASSERT(str_ != 0);
     ARDUINOJSON_ASSERT(i <= size());
-    return _str[i];
+    return str_[i];
   }
 
   const char* data() const {
-    return _str;
+    return str_;
   }
 
   friend int stringCompare(ZeroTerminatedRamString a,
                            ZeroTerminatedRamString b) {
     ARDUINOJSON_ASSERT(!a.isNull());
     ARDUINOJSON_ASSERT(!b.isNull());
-    return ::strcmp(a._str, b._str);
+    return ::strcmp(a.str_, b.str_);
   }
 
   friend bool stringEquals(ZeroTerminatedRamString a,
@@ -58,7 +58,7 @@ class ZeroTerminatedRamString {
   }
 
  protected:
-  const char* _str;
+  const char* str_;
 };
 
 template <typename TChar>
@@ -101,24 +101,24 @@ class SizedRamString {
  public:
   static const size_t typeSortKey = 2;
 
-  SizedRamString(const char* str, size_t sz) : _str(str), _size(sz) {}
+  SizedRamString(const char* str, size_t sz) : str_(str), size_(sz) {}
 
   bool isNull() const {
-    return !_str;
+    return !str_;
   }
 
   size_t size() const {
-    return _size;
+    return size_;
   }
 
   char operator[](size_t i) const {
-    ARDUINOJSON_ASSERT(_str != 0);
+    ARDUINOJSON_ASSERT(str_ != 0);
     ARDUINOJSON_ASSERT(i <= size());
-    return _str[i];
+    return str_[i];
   }
 
   const char* data() const {
-    return _str;
+    return str_;
   }
 
   StringStoragePolicy::Copy storagePolicy() const {
@@ -126,8 +126,8 @@ class SizedRamString {
   }
 
  protected:
-  const char* _str;
-  size_t _size;
+  const char* str_;
+  size_t size_;
 };
 
 template <typename TChar>

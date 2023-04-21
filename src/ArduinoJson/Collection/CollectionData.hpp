@@ -15,8 +15,8 @@ class VariantData;
 class VariantSlot;
 
 class CollectionData {
-  VariantSlot* _head;
-  VariantSlot* _tail;
+  VariantSlot* head_;
+  VariantSlot* tail_;
 
  public:
   void clear();
@@ -27,7 +27,7 @@ class CollectionData {
   void remove(VariantSlot* slot);
 
   VariantSlot* head() const {
-    return _head;
+    return head_;
   }
 
   void movePointers(ptrdiff_t variantDistance);

@@ -18,17 +18,17 @@ class MsgPackDeserializer {
  public:
   MsgPackDeserializer(MemoryPool* pool, TReader reader,
                       TStringStorage stringStorage)
-      : _pool(pool),
-        _reader(reader),
-        _stringStorage(stringStorage),
-        _foundSomething(false) {}
+      : pool_(pool),
+        reader_(reader),
+        stringStorage_(stringStorage),
+        foundSomething_(false) {}
 
   template <typename TFilter>
   DeserializationError parse(VariantData& variant, TFilter filter,
                              DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
     err = parseVariant(&variant, filter, nestingLimit);
-    return _foundSomething ? err : DeserializationError::EmptyInput;
+    return foundSomething_ ? err : DeserializationError::EmptyInput;
   }
 
  private:
@@ -43,7 +43,7 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    _foundSomething = true;
+    foundSomething_ = true;
 
     bool allowValue = filter.allowValue();
 
@@ -224,7 +224,7 @@ class MsgPackDeserializer {
   }
 
   DeserializationError::Code readByte(uint8_t& value) {
-    int c = _reader.read();
+    int c = reader_.read();
     if (c < 0)
       return DeserializationError::IncompleteInput;
     value = static_cast<uint8_t>(c);
@@ -232,7 +232,7 @@ class MsgPackDeserializer {
   }
 
   DeserializationError::Code readBytes(uint8_t* p, size_t n) {
-    if (_reader.readBytes(reinterpret_cast<char*>(p), n) == n)
+    if (reader_.readBytes(reinterpret_cast<char*>(p), n) == n)
       return DeserializationError::Ok;
     return DeserializationError::IncompleteInput;
   }
@@ -244,7 +244,7 @@ class MsgPackDeserializer {
 
   DeserializationError::Code skipBytes(size_t n) {
     for (; n; --n) {
-      if (_reader.read() < 0)
+      if (reader_.read() < 0)
         return DeserializationError::IncompleteInput;
     }
     return DeserializationError::Ok;
@@ -371,14 +371,14 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    variant->setString(_stringStorage.save());
+    variant->setString(stringStorage_.save());
     return DeserializationError::Ok;
   }
 
   DeserializationError::Code readString(size_t n) {
     DeserializationError::Code err;
 
-    _stringStorage.startString();
+    stringStorage_.startString();
     for (; n; --n) {
       uint8_t c;
 
@@ -386,10 +386,10 @@ class MsgPackDeserializer {
       if (err)
         return err;
 
-      _stringStorage.append(static_cast<char>(c));
+      stringStorage_.append(static_cast<char>(c));
     }
 
-    if (!_stringStorage.isValid())
+    if (!stringStorage_.isValid())
       return DeserializationError::NoMemory;
 
     return DeserializationError::Ok;
@@ -435,7 +435,7 @@ class MsgPackDeserializer {
 
       if (memberFilter.allow()) {
         ARDUINOJSON_ASSERT(array != 0);
-        value = collectionAddElement(array, _pool);
+        value = collectionAddElement(array, pool_);
         if (!value)
           return DeserializationError::NoMemory;
       } else {
@@ -486,7 +486,7 @@ class MsgPackDeserializer {
       if (err)
         return err;
 
-      JsonString key = _stringStorage.str();
+      JsonString key = stringStorage_.str();
       TFilter memberFilter = filter[key.c_str()];
       VariantData* member;
 
@@ -494,9 +494,9 @@ class MsgPackDeserializer {
         ARDUINOJSON_ASSERT(object != 0);
 
         // Save key in memory pool.
-        key = _stringStorage.save();
+        key = stringStorage_.save();
 
-        VariantSlot* slot = _pool->allocVariant();
+        VariantSlot* slot = pool_->allocVariant();
         if (!slot)
           return DeserializationError::NoMemory;
 
@@ -554,10 +554,10 @@ class MsgPackDeserializer {
     return skipBytes(size + 1U);
   }
 
-  MemoryPool* _pool;
-  TReader _reader;
-  TStringStorage _stringStorage;
-  bool _foundSomething;
+  MemoryPool* pool_;
+  TReader reader_;
+  TStringStorage stringStorage_;
+  bool foundSomething_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

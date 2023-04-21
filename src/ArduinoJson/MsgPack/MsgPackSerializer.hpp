@@ -19,7 +19,7 @@ class MsgPackSerializer : public Visitor<size_t> {
  public:
   static const bool producesText = false;
 
-  MsgPackSerializer(TWriter writer) : _writer(writer) {}
+  MsgPackSerializer(TWriter writer) : writer_(writer) {}
 
   template <typename T>
   typename enable_if<sizeof(T) == 4, size_t>::type visitFloat(T value32) {
@@ -177,15 +177,15 @@ class MsgPackSerializer : public Visitor<size_t> {
 
  private:
   size_t bytesWritten() const {
-    return _writer.count();
+    return writer_.count();
   }
 
   void writeByte(uint8_t c) {
-    _writer.write(c);
+    writer_.write(c);
   }
 
   void writeBytes(const uint8_t* p, size_t n) {
-    _writer.write(p, n);
+    writer_.write(p, n);
   }
 
   template <typename T>
@@ -194,7 +194,7 @@ class MsgPackSerializer : public Visitor<size_t> {
     writeBytes(reinterpret_cast<uint8_t*>(&value), sizeof(value));
   }
 
-  CountingDecorator<TWriter> _writer;
+  CountingDecorator<TWriter> writer_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

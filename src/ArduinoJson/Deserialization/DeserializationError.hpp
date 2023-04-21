@@ -26,49 +26,49 @@ class DeserializationError {
   };
 
   DeserializationError() {}
-  DeserializationError(Code c) : _code(c) {}
+  DeserializationError(Code c) : code_(c) {}
 
   // Compare with DeserializationError
   friend bool operator==(const DeserializationError& lhs,
                          const DeserializationError& rhs) {
-    return lhs._code == rhs._code;
+    return lhs.code_ == rhs.code_;
   }
   friend bool operator!=(const DeserializationError& lhs,
                          const DeserializationError& rhs) {
-    return lhs._code != rhs._code;
+    return lhs.code_ != rhs.code_;
   }
 
   // Compare with Code
   friend bool operator==(const DeserializationError& lhs, Code rhs) {
-    return lhs._code == rhs;
+    return lhs.code_ == rhs;
   }
   friend bool operator==(Code lhs, const DeserializationError& rhs) {
-    return lhs == rhs._code;
+    return lhs == rhs.code_;
   }
   friend bool operator!=(const DeserializationError& lhs, Code rhs) {
-    return lhs._code != rhs;
+    return lhs.code_ != rhs;
   }
   friend bool operator!=(Code lhs, const DeserializationError& rhs) {
-    return lhs != rhs._code;
+    return lhs != rhs.code_;
   }
 
   // Returns true if there is an error
   explicit operator bool() const {
-    return _code != Ok;
+    return code_ != Ok;
   }
 
   // Returns internal enum, useful for switch statement
   Code code() const {
-    return _code;
+    return code_;
   }
 
   const char* c_str() const {
     static const char* messages[] = {
         "Ok",           "EmptyInput", "IncompleteInput",
         "InvalidInput", "NoMemory",   "TooDeep"};
-    ARDUINOJSON_ASSERT(static_cast<size_t>(_code) <
+    ARDUINOJSON_ASSERT(static_cast<size_t>(code_) <
                        sizeof(messages) / sizeof(messages[0]));
-    return messages[_code];
+    return messages[code_];
   }
 
 #if ARDUINOJSON_ENABLE_PROGMEM
@@ -82,12 +82,12 @@ class DeserializationError {
     ARDUINOJSON_DEFINE_PROGMEM_ARRAY(const char*, messages,
                                      {s0, s1, s2, s3, s4, s5});
     return reinterpret_cast<const __FlashStringHelper*>(
-        detail::pgm_read(messages + _code));
+        detail::pgm_read(messages + code_));
   }
 #endif
 
  private:
-  Code _code;
+  Code code_;
 };
 
 #if ARDUINOJSON_ENABLE_STD_STREAM

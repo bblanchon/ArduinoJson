@@ -12,27 +12,27 @@ class StringCopier {
  public:
   static const size_t initialCapacity = 31;
 
-  StringCopier(MemoryPool* pool) : _pool(pool) {}
+  StringCopier(MemoryPool* pool) : pool_(pool) {}
 
   ~StringCopier() {
-    if (_node)
-      _pool->deallocString(_node);
+    if (node_)
+      pool_->deallocString(node_);
   }
 
   void startString() {
-    _size = 0;
-    if (!_node)
-      _node = _pool->allocString(initialCapacity);
+    size_ = 0;
+    if (!node_)
+      node_ = pool_->allocString(initialCapacity);
   }
 
   JsonString save() {
-    ARDUINOJSON_ASSERT(_node != nullptr);
-    _node->data[_size] = 0;
-    StringNode* node = _pool->findString(adaptString(_node->data, _size));
+    ARDUINOJSON_ASSERT(node_ != nullptr);
+    node_->data[size_] = 0;
+    StringNode* node = pool_->findString(adaptString(node_->data, size_));
     if (!node) {
-      node = _pool->reallocString(_node, _size);
-      _pool->addStringToList(node);
-      _node = nullptr;  // next time we need a new string
+      node = pool_->reallocString(node_, size_);
+      pool_->addStringToList(node);
+      node_ = nullptr;  // next time we need a new string
     } else {
       node->references++;
     }
@@ -50,30 +50,30 @@ class StringCopier {
   }
 
   void append(char c) {
-    if (_node && _size == _node->length)
-      _node = _pool->reallocString(_node, _size * 2U + 1);
-    if (_node)
-      _node->data[_size++] = c;
+    if (node_ && size_ == node_->length)
+      node_ = pool_->reallocString(node_, size_ * 2U + 1);
+    if (node_)
+      node_->data[size_++] = c;
   }
 
   bool isValid() const {
-    return _node != nullptr;
+    return node_ != nullptr;
   }
 
   size_t size() const {
-    return _size;
+    return size_;
   }
 
   JsonString str() const {
-    ARDUINOJSON_ASSERT(_node != nullptr);
-    _node->data[_size] = 0;
-    return JsonString(_node->data, _size, JsonString::Copied);
+    ARDUINOJSON_ASSERT(node_ != nullptr);
+    node_->data[size_] = 0;
+    return JsonString(node_->data, size_, JsonString::Copied);
   }
 
  private:
-  MemoryPool* _pool;
-  StringNode* _node = nullptr;
-  size_t _size = 0;
+  MemoryPool* pool_;
+  StringNode* node_ = nullptr;
+  size_t size_ = 0;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

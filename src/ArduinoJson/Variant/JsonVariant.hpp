@@ -16,27 +16,27 @@ class JsonVariant : public detail::VariantRefBase<JsonVariant>,
 
  public:
   // Creates an unbound reference.
-  JsonVariant() : _data(0), _pool(0) {}
+  JsonVariant() : data_(0), pool_(0) {}
 
   // INTERNAL USE ONLY
   JsonVariant(detail::MemoryPool* pool, detail::VariantData* data)
-      : _data(data), _pool(pool) {}
+      : data_(data), pool_(pool) {}
 
  private:
   FORCE_INLINE detail::MemoryPool* getPool() const {
-    return _pool;
+    return pool_;
   }
 
   FORCE_INLINE detail::VariantData* getData() const {
-    return _data;
+    return data_;
   }
 
   FORCE_INLINE detail::VariantData* getOrCreateData() const {
-    return _data;
+    return data_;
   }
 
-  detail::VariantData* _data;
-  detail::MemoryPool* _pool;
+  detail::VariantData* data_;
+  detail::MemoryPool* pool_;
 };
 
 template <>

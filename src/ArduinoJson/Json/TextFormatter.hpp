@@ -20,13 +20,13 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename TWriter>
 class TextFormatter {
  public:
-  explicit TextFormatter(TWriter writer) : _writer(writer) {}
+  explicit TextFormatter(TWriter writer) : writer_(writer) {}
 
   TextFormatter& operator=(const TextFormatter&) = delete;
 
   // Returns the number of bytes sent to the TWriter implementation.
   size_t bytesWritten() const {
-    return _writer.count();
+    return writer_.count();
   }
 
   void writeBoolean(bool value) {
@@ -146,28 +146,28 @@ class TextFormatter {
   }
 
   void writeRaw(const char* s) {
-    _writer.write(reinterpret_cast<const uint8_t*>(s), strlen(s));
+    writer_.write(reinterpret_cast<const uint8_t*>(s), strlen(s));
   }
 
   void writeRaw(const char* s, size_t n) {
-    _writer.write(reinterpret_cast<const uint8_t*>(s), n);
+    writer_.write(reinterpret_cast<const uint8_t*>(s), n);
   }
 
   void writeRaw(const char* begin, const char* end) {
-    _writer.write(reinterpret_cast<const uint8_t*>(begin),
+    writer_.write(reinterpret_cast<const uint8_t*>(begin),
                   static_cast<size_t>(end - begin));
   }
 
   template <size_t N>
   void writeRaw(const char (&s)[N]) {
-    _writer.write(reinterpret_cast<const uint8_t*>(s), N - 1);
+    writer_.write(reinterpret_cast<const uint8_t*>(s), N - 1);
   }
   void writeRaw(char c) {
-    _writer.write(static_cast<uint8_t>(c));
+    writer_.write(static_cast<uint8_t>(c));
   }
 
  protected:
-  CountingDecorator<TWriter> _writer;
+  CountingDecorator<TWriter> writer_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

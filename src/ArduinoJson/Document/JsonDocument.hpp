@@ -24,16 +24,16 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
  public:
   explicit JsonDocument(size_t capa,
                         Allocator* alloc = detail::DefaultAllocator::instance())
-      : _pool(capa, alloc) {}
+      : pool_(capa, alloc) {}
 
   // Copy-constructor
   JsonDocument(const JsonDocument& src)
-      : JsonDocument(src._pool.capacity(), src.allocator()) {
+      : JsonDocument(src.pool_.capacity(), src.allocator()) {
     set(src);
   }
 
   // Move-constructor
-  JsonDocument(JsonDocument&& src) : _pool(0, src.allocator()) {
+  JsonDocument(JsonDocument&& src) : pool_(0, src.allocator()) {
     // TODO: use the copy and swap idiom
     moveAssignFrom(src);
   }
@@ -74,20 +74,20 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename T>
   JsonDocument& operator=(const T& src) {
     size_t requiredSize = src.memoryUsage();
-    if (requiredSize > _pool.capacity())
-      _pool.reallocPool(requiredSize);
+    if (requiredSize > pool_.capacity())
+      pool_.reallocPool(requiredSize);
     set(src);
     return *this;
   }
 
   Allocator* allocator() const {
-    return _pool.allocator();
+    return pool_.allocator();
   }
 
   // Reduces the capacity of the memory pool to match the current usage.
   // https://arduinojson.org/v6/api/JsonDocument/shrinktofit/
   void shrinkToFit() {
-    _pool.shrinkToFit(_data);
+    pool_.shrinkToFit(data_);
   }
 
   // Reclaims the memory leaked when removing and replacing values.
@@ -95,7 +95,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   bool garbageCollect() {
     // make a temporary clone and move assign
     JsonDocument tmp(*this);
-    if (!tmp._pool.capacity())
+    if (!tmp.pool_.capacity())
       return false;
     moveAssignFrom(tmp);
     return true;
@@ -118,8 +118,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Empties the document and resets the memory pool
   // https://arduinojson.org/v6/api/jsondocument/clear/
   void clear() {
-    _pool.clear();
-    _data.reset();
+    pool_.clear();
+    data_.reset();
   }
 
   // Returns true if the root is of the specified type.
@@ -145,25 +145,25 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Returns the number of used bytes in the memory pool.
   // https://arduinojson.org/v6/api/jsondocument/memoryusage/
   size_t memoryUsage() const {
-    return _pool.size();
+    return pool_.size();
   }
 
   // Returns trues if the memory pool was too small.
   // https://arduinojson.org/v6/api/jsondocument/overflowed/
   bool overflowed() const {
-    return _pool.overflowed();
+    return pool_.overflowed();
   }
 
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsondocument/nesting/
   size_t nesting() const {
-    return variantNesting(&_data);
+    return variantNesting(&data_);
   }
 
   // Returns the number of elements in the root array or object.
   // https://arduinojson.org/v6/api/jsondocument/size/
   size_t size() const {
-    return _data.size();
+    return data_.size();
   }
 
   // Copies the specified document.
@@ -233,14 +233,14 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/containskey/
   template <typename TChar>
   bool containsKey(TChar* key) const {
-    return _data.getMember(detail::adaptString(key)) != 0;
+    return data_.getMember(detail::adaptString(key)) != 0;
   }
 
   // Returns true if the root object contains the specified key.
   // https://arduinojson.org/v6/api/jsondocument/containskey/
   template <typename TString>
   bool containsKey(const TString& key) const {
-    return _data.getMember(detail::adaptString(key)) != 0;
+    return data_.getMember(detail::adaptString(key)) != 0;
   }
 
   // Gets or sets a root object's member.
@@ -269,7 +269,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
-    return JsonVariantConst(_data.getMember(detail::adaptString(key)));
+    return JsonVariantConst(data_.getMember(detail::adaptString(key)));
   }
 
   // Gets a root object's member.
@@ -278,7 +278,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
-    return JsonVariantConst(_data.getMember(detail::adaptString(key)));
+    return JsonVariantConst(data_.getMember(detail::adaptString(key)));
   }
 
   // Gets or sets a root array's element.
@@ -290,14 +290,14 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Gets a root array's member.
   // https://arduinojson.org/v6/api/jsondocument/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(_data.getElement(index));
+    return JsonVariantConst(data_.getElement(index));
   }
 
   // Appends a new (null) element to the root array.
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsondocument/add/
   FORCE_INLINE JsonVariant add() {
-    return JsonVariant(&_pool, variantAddElement(&_data, &_pool));
+    return JsonVariant(&pool_, variantAddElement(&data_, &pool_));
   }
 
   // Appends a value to the root array.
@@ -350,42 +350,42 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
  private:
   JsonVariant getVariant() {
-    return JsonVariant(&_pool, &_data);
+    return JsonVariant(&pool_, &data_);
   }
 
   JsonVariantConst getVariant() const {
-    return JsonVariantConst(&_data);
+    return JsonVariantConst(&data_);
   }
 
   void copyAssignFrom(const JsonDocument& src) {
-    _pool.reallocPool(src._pool.capacity());
+    pool_.reallocPool(src.pool_.capacity());
     set(src);
   }
 
   void moveAssignFrom(JsonDocument& src) {
-    _data = src._data;
-    src._data.reset();
-    _pool = move(src._pool);
+    data_ = src.data_;
+    src.data_.reset();
+    pool_ = move(src.pool_);
   }
 
   detail::MemoryPool* getPool() {
-    return &_pool;
+    return &pool_;
   }
 
   detail::VariantData* getData() {
-    return &_data;
+    return &data_;
   }
 
   const detail::VariantData* getData() const {
-    return &_data;
+    return &data_;
   }
 
   detail::VariantData* getOrCreateData() {
-    return &_data;
+    return &data_;
   }
 
-  detail::MemoryPool _pool;
-  detail::VariantData _data;
+  detail::MemoryPool pool_;
+  detail::VariantData data_;
 };
 
 inline void convertToJson(const JsonDocument& src, JsonVariant dst) {

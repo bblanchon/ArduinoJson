@@ -11,45 +11,45 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename TReader>
 class Latch {
  public:
-  Latch(TReader reader) : _reader(reader), _loaded(false) {
+  Latch(TReader reader) : reader_(reader), loaded_(false) {
 #if ARDUINOJSON_DEBUG
-    _ended = false;
+    ended_ = false;
 #endif
   }
 
   void clear() {
-    _loaded = false;
+    loaded_ = false;
   }
 
   int last() const {
-    return _current;
+    return current_;
   }
 
   FORCE_INLINE char current() {
-    if (!_loaded) {
+    if (!loaded_) {
       load();
     }
-    return _current;
+    return current_;
   }
 
  private:
   void load() {
-    ARDUINOJSON_ASSERT(!_ended);
-    int c = _reader.read();
+    ARDUINOJSON_ASSERT(!ended_);
+    int c = reader_.read();
 #if ARDUINOJSON_DEBUG
     if (c <= 0)
-      _ended = true;
+      ended_ = true;
 #endif
-    _current = static_cast<char>(c > 0 ? c : 0);
-    _loaded = true;
+    current_ = static_cast<char>(c > 0 ? c : 0);
+    loaded_ = true;
   }
 
-  TReader _reader;
-  char _current;  // NOLINT(clang-analyzer-optin.cplusplus.UninitializedObject)
+  TReader reader_;
+  char current_;  // NOLINT(clang-analyzer-optin.cplusplus.UninitializedObject)
                   // Not initialized in constructor (+10 bytes on AVR)
-  bool _loaded;
+  bool loaded_;
 #if ARDUINOJSON_DEBUG
-  bool _ended;
+  bool ended_;
 #endif
 };
 

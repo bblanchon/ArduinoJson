@@ -12,112 +12,112 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 class JsonPairPtr {
  public:
   JsonPairPtr(detail::MemoryPool* pool, detail::VariantSlot* slot)
-      : _pair(pool, slot) {}
+      : pair_(pool, slot) {}
 
   const JsonPair* operator->() const {
-    return &_pair;
+    return &pair_;
   }
 
   const JsonPair& operator*() const {
-    return _pair;
+    return pair_;
   }
 
  private:
-  JsonPair _pair;
+  JsonPair pair_;
 };
 
 class JsonObjectIterator {
   friend class JsonObject;
 
  public:
-  JsonObjectIterator() : _slot(0) {}
+  JsonObjectIterator() : slot_(0) {}
 
   explicit JsonObjectIterator(detail::MemoryPool* pool,
                               detail::VariantSlot* slot)
-      : _pool(pool), _slot(slot) {}
+      : pool_(pool), slot_(slot) {}
 
   JsonPair operator*() const {
-    return JsonPair(_pool, _slot);
+    return JsonPair(pool_, slot_);
   }
   JsonPairPtr operator->() {
-    return JsonPairPtr(_pool, _slot);
+    return JsonPairPtr(pool_, slot_);
   }
 
   bool operator==(const JsonObjectIterator& other) const {
-    return _slot == other._slot;
+    return slot_ == other.slot_;
   }
 
   bool operator!=(const JsonObjectIterator& other) const {
-    return _slot != other._slot;
+    return slot_ != other.slot_;
   }
 
   JsonObjectIterator& operator++() {
-    _slot = _slot->next();
+    slot_ = slot_->next();
     return *this;
   }
 
   JsonObjectIterator& operator+=(size_t distance) {
-    _slot = _slot->next(distance);
+    slot_ = slot_->next(distance);
     return *this;
   }
 
  private:
-  detail::MemoryPool* _pool;
-  detail::VariantSlot* _slot;
+  detail::MemoryPool* pool_;
+  detail::VariantSlot* slot_;
 };
 
 class JsonPairConstPtr {
  public:
-  JsonPairConstPtr(const detail::VariantSlot* slot) : _pair(slot) {}
+  JsonPairConstPtr(const detail::VariantSlot* slot) : pair_(slot) {}
 
   const JsonPairConst* operator->() const {
-    return &_pair;
+    return &pair_;
   }
 
   const JsonPairConst& operator*() const {
-    return _pair;
+    return pair_;
   }
 
  private:
-  JsonPairConst _pair;
+  JsonPairConst pair_;
 };
 
 class JsonObjectConstIterator {
   friend class JsonObject;
 
  public:
-  JsonObjectConstIterator() : _slot(0) {}
+  JsonObjectConstIterator() : slot_(0) {}
 
   explicit JsonObjectConstIterator(const detail::VariantSlot* slot)
-      : _slot(slot) {}
+      : slot_(slot) {}
 
   JsonPairConst operator*() const {
-    return JsonPairConst(_slot);
+    return JsonPairConst(slot_);
   }
   JsonPairConstPtr operator->() {
-    return JsonPairConstPtr(_slot);
+    return JsonPairConstPtr(slot_);
   }
 
   bool operator==(const JsonObjectConstIterator& other) const {
-    return _slot == other._slot;
+    return slot_ == other.slot_;
   }
 
   bool operator!=(const JsonObjectConstIterator& other) const {
-    return _slot != other._slot;
+    return slot_ != other.slot_;
   }
 
   JsonObjectConstIterator& operator++() {
-    _slot = _slot->next();
+    slot_ = slot_->next();
     return *this;
   }
 
   JsonObjectConstIterator& operator+=(size_t distance) {
-    _slot = _slot->next(distance);
+    slot_ = slot_->next(distance);
     return *this;
   }
 
  private:
-  const detail::VariantSlot* _slot;
+  const detail::VariantSlot* slot_;
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

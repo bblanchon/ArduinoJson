@@ -8,23 +8,23 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TIterator>
 class IteratorReader {
-  TIterator _ptr, _end;
+  TIterator ptr_, end_;
 
  public:
   explicit IteratorReader(TIterator begin, TIterator end)
-      : _ptr(begin), _end(end) {}
+      : ptr_(begin), end_(end) {}
 
   int read() {
-    if (_ptr < _end)
-      return static_cast<unsigned char>(*_ptr++);
+    if (ptr_ < end_)
+      return static_cast<unsigned char>(*ptr_++);
     else
       return -1;
   }
 
   size_t readBytes(char* buffer, size_t length) {
     size_t i = 0;
-    while (i < length && _ptr < _end)
-      buffer[i++] = *_ptr++;
+    while (i < length && ptr_ < end_)
+      buffer[i++] = *ptr_++;
     return i;
   }
 };

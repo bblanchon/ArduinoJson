@@ -81,12 +81,12 @@ struct Comparer<decltype(nullptr), void> : NullComparer {
 };
 
 struct ArrayComparer : ComparerBase {
-  const CollectionData* _rhs;
+  const CollectionData* rhs_;
 
-  explicit ArrayComparer(const CollectionData& rhs) : _rhs(&rhs) {}
+  explicit ArrayComparer(const CollectionData& rhs) : rhs_(&rhs) {}
 
   CompareResult visitArray(const CollectionData& lhs) {
-    if (JsonArrayConst(&lhs) == JsonArrayConst(_rhs))
+    if (JsonArrayConst(&lhs) == JsonArrayConst(rhs_))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -94,12 +94,12 @@ struct ArrayComparer : ComparerBase {
 };
 
 struct ObjectComparer : ComparerBase {
-  const CollectionData* _rhs;
+  const CollectionData* rhs_;
 
-  explicit ObjectComparer(const CollectionData& rhs) : _rhs(&rhs) {}
+  explicit ObjectComparer(const CollectionData& rhs) : rhs_(&rhs) {}
 
   CompareResult visitObject(const CollectionData& lhs) {
-    if (JsonObjectConst(&lhs) == JsonObjectConst(_rhs))
+    if (JsonObjectConst(&lhs) == JsonObjectConst(rhs_))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -107,15 +107,15 @@ struct ObjectComparer : ComparerBase {
 };
 
 struct RawComparer : ComparerBase {
-  const char* _rhsData;
-  size_t _rhsSize;
+  const char* rhsData_;
+  size_t rhsSize_;
 
   explicit RawComparer(const char* rhsData, size_t rhsSize)
-      : _rhsData(rhsData), _rhsSize(rhsSize) {}
+      : rhsData_(rhsData), rhsSize_(rhsSize) {}
 
   CompareResult visitRawJson(const char* lhsData, size_t lhsSize) {
-    size_t size = _rhsSize < lhsSize ? _rhsSize : lhsSize;
-    int n = memcmp(lhsData, _rhsData, size);
+    size_t size = rhsSize_ < lhsSize ? rhsSize_ : lhsSize;
+    int n = memcmp(lhsData, rhsData_, size);
     if (n < 0)
       return COMPARE_RESULT_LESS;
     else if (n > 0)
