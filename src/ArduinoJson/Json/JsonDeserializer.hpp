@@ -277,14 +277,14 @@ class JsonDeserializer {
         VariantSlot* slot = object.get(adaptString(key.c_str()));
         if (!slot) {
           // Save key in memory pool.
-          key = stringStorage_.save();
+          auto savedKey = stringStorage_.save();
 
           // Allocate slot in object
           slot = pool_->allocVariant();
           if (!slot)
             return DeserializationError::NoMemory;
 
-          slot->setKey(key);
+          slot->setKey(savedKey);
           object.add(slot);
         }
 

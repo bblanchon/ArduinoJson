@@ -157,10 +157,11 @@ class VariantData {
     content_.asFloat = value;
   }
 
-  void setRawString(const char* data, size_t n) {
+  void setRawString(StringNode* s) {
+    ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_RAW_STRING);
-    content_.asString.data = data;
-    content_.asString.size = n;
+    content_.asString.data = s->data;
+    content_.asString.size = s->length;
   }
 
   template <typename T>
@@ -179,14 +180,18 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setString(JsonString s) {
+  void setString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
-    if (s.isLinked())
-      setType(VALUE_IS_LINKED_STRING);
-    else
-      setType(VALUE_IS_OWNED_STRING);
-    content_.asString.data = s.c_str();
-    content_.asString.size = s.size();
+    setType(VALUE_IS_OWNED_STRING);
+    content_.asString.data = s->data;
+    content_.asString.size = s->length;
+  }
+
+  void setString(const char* s) {
+    ARDUINOJSON_ASSERT(s);
+    setType(VALUE_IS_LINKED_STRING);
+    content_.asString.data = s;
+    content_.asString.size = strlen(s);
   }
 
   CollectionData& toArray() {

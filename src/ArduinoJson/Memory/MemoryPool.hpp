@@ -107,14 +107,14 @@ class MemoryPool {
   }
 
   template <typename TAdaptedString>
-  const char* saveString(TAdaptedString str) {
+  StringNode* saveString(TAdaptedString str) {
     if (str.isNull())
       return 0;
 
     auto node = findString(str);
     if (node) {
       node->references++;
-      return node->data;
+      return node;
     }
 
     size_t n = str.size();
@@ -126,7 +126,7 @@ class MemoryPool {
     stringGetChars(str, node->data, n);
     node->data[n] = 0;  // force NUL terminator
     addStringToList(node);
-    return node->data;
+    return node;
   }
 
   void addStringToList(StringNode* node) {

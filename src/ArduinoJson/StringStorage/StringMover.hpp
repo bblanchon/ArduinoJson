@@ -17,10 +17,9 @@ class StringMover {
     startPtr_ = writePtr_;
   }
 
-  FORCE_INLINE JsonString save() {
-    JsonString s = str();
-    writePtr_++;
-    return s;
+  FORCE_INLINE const char* save() {
+    *writePtr_++ = 0;  // terminator
+    return startPtr_;
   }
 
   void append(char c) {

@@ -494,13 +494,13 @@ class MsgPackDeserializer {
         ARDUINOJSON_ASSERT(object != 0);
 
         // Save key in memory pool.
-        key = stringStorage_.save();
+        auto savedKey = stringStorage_.save();
 
         VariantSlot* slot = pool_->allocVariant();
         if (!slot)
           return DeserializationError::NoMemory;
 
-        slot->setKey(key);
+        slot->setKey(savedKey);
         object->add(slot);
 
         member = slot->data();

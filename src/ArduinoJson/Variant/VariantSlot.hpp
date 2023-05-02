@@ -11,6 +11,8 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
+struct StringNode;
+
 typedef int_t<ARDUINOJSON_SLOT_OFFSET_SIZE * 8>::type VariantSlotDiff;
 
 class VariantSlot {
@@ -76,14 +78,13 @@ class VariantSlot {
     next_ = VariantSlotDiff(slot - this);
   }
 
-  void setKey(JsonString k) {
+  void setKey(const char* k) {
     ARDUINOJSON_ASSERT(k);
-    if (k.isLinked())
-      flags_ &= VALUE_MASK;
-    else
-      flags_ |= OWNED_KEY_BIT;
-    key_ = k.c_str();
+    flags_ &= VALUE_MASK;
+    key_ = k;
   }
+
+  void setKey(StringNode* k);
 
   const char* key() const {
     return key_;

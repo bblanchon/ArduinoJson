@@ -137,4 +137,10 @@ inline void convertToJson(const VariantRefBase<TDerived>& src,
   dst.set(src.template as<JsonVariantConst>());
 }
 
+inline void VariantSlot::setKey(StringNode* k) {
+  ARDUINOJSON_ASSERT(k);
+  flags_ |= OWNED_KEY_BIT;
+  key_ = k->data;
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

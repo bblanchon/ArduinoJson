@@ -93,39 +93,46 @@ TEST_CASE("StringCopier") {
   }
 }
 
-static const char* addStringToPool(MemoryPool& pool, const char* s) {
+static StringNode* addStringToPool(MemoryPool& pool, const char* s) {
   StringCopier str(&pool);
   str.startString();
   str.append(s);
-  return str.save().c_str();
+  return str.save();
 }
 
 TEST_CASE("StringCopier::save() deduplicates strings") {
   MemoryPool pool(4096);
 
   SECTION("Basic") {
-    const char* s1 = addStringToPool(pool, "hello");
-    const char* s2 = addStringToPool(pool, "world");
-    const char* s3 = addStringToPool(pool, "hello");
+    auto s1 = addStringToPool(pool, "hello");
+    auto s2 = addStringToPool(pool, "world");
+    auto s3 = addStringToPool(pool, "hello");
 
     REQUIRE(s1 == s3);
     REQUIRE(s2 != s3);
+    REQUIRE(s1->references == 2);
+    REQUIRE(s2->references == 1);
+    REQUIRE(s3->references == 2);
     REQUIRE(pool.size() == 2 * sizeofString(5));
   }
 
   SECTION("Requires terminator") {
-    const char* s1 = addStringToPool(pool, "hello world");
-    const char* s2 = addStringToPool(pool, "hello");
+    auto s1 = addStringToPool(pool, "hello world");
+    auto s2 = addStringToPool(pool, "hello");
 
     REQUIRE(s2 != s1);
+    REQUIRE(s1->references == 1);
+    REQUIRE(s2->references == 1);
     REQUIRE(pool.size() == sizeofString(11) + sizeofString(5));
   }
 
   SECTION("Don't overrun") {
-    const char* s1 = addStringToPool(pool, "hello world");
-    const char* s2 = addStringToPool(pool, "wor");
+    auto s1 = addStringToPool(pool, "hello world");
+    auto s2 = addStringToPool(pool, "wor");
 
     REQUIRE(s2 != s1);
+    REQUIRE(s1->references == 1);
+    REQUIRE(s2->references == 1);
     REQUIRE(pool.size() == sizeofString(11) + sizeofString(3));
   }
 }

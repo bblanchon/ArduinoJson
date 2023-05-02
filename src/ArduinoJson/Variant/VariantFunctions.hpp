@@ -61,7 +61,7 @@ inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
       auto dup = pool->saveString(str);
       if (!dup)
         return false;
-      dst->setString(JsonString(dup, str.size(), JsonString::Copied));
+      dst->setString(dup);
       return true;
     }
     case VALUE_IS_RAW_STRING: {
@@ -69,7 +69,7 @@ inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
       auto dup = pool->saveString(str);
       if (!dup)
         return false;
-      dst->setRawString(dup, str.size());
+      dst->setRawString(dup);
       return true;
     }
     default:
@@ -121,13 +121,13 @@ inline void variantSetString(VariantData* var, TAdaptedString value,
   }
 
   if (value.isLinked()) {
-    var->setString(JsonString(value.data(), value.size(), JsonString::Linked));
+    var->setString(value.data());
     return;
   }
 
   auto dup = pool->saveString(value);
   if (dup)
-    var->setString(JsonString(dup, value.size(), JsonString::Copied));
+    var->setString(dup);
   else
     var->setNull();
 }
@@ -138,9 +138,9 @@ inline void variantSetRawString(VariantData* var, SerializedValue<T> value,
   if (!var)
     return;
   variantRelease(var, pool);
-  const char* dup = pool->saveString(adaptString(value.data(), value.size()));
+  auto dup = pool->saveString(adaptString(value.data(), value.size()));
   if (dup)
-    var->setRawString(dup, value.size());
+    var->setRawString(dup);
   else
     var->setNull();
 }

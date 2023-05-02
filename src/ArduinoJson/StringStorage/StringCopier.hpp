@@ -25,7 +25,7 @@ class StringCopier {
       node_ = pool_->allocString(initialCapacity);
   }
 
-  JsonString save() {
+  StringNode* save() {
     ARDUINOJSON_ASSERT(node_ != nullptr);
     node_->data[size_] = 0;
     StringNode* node = pool_->findString(adaptString(node_->data, size_));
@@ -36,7 +36,7 @@ class StringCopier {
     } else {
       node->references++;
     }
-    return JsonString(node->data, node->length, JsonString::Copied);
+    return node;
   }
 
   void append(const char* s) {

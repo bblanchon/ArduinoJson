@@ -188,7 +188,7 @@ class MemoryPoolPrint : public Print {
     copier_.startString();
   }
 
-  JsonString str() {
+  StringNode* save() {
     ARDUINOJSON_ASSERT(!overflowed());
     return copier_.save();
   }
@@ -227,7 +227,7 @@ inline void convertToJson(const ::Printable& src, JsonVariant dst) {
     data->setNull();
     return;
   }
-  data->setString(print.str());
+  data->setString(print.save());
 }
 
 #endif
