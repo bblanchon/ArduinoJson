@@ -46,8 +46,8 @@ class VariantData {
                                    content_.asString.size);
 
       case VALUE_IS_RAW_STRING:
-        return visitor.visitRawJson(content_.asString.data,
-                                    content_.asString.size);
+        return visitor.visitRawString(content_.asString.data,
+                                      content_.asString.size);
 
       case VALUE_IS_SIGNED_INTEGER:
         return visitor.visitSignedInteger(content_.asSignedInteger);

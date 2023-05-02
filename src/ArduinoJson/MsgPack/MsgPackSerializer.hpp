@@ -102,7 +102,7 @@ class MsgPackSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitRawJson(const char* data, size_t size) {
+  size_t visitRawString(const char* data, size_t size) {
     writeBytes(reinterpret_cast<const uint8_t*>(data), size);
     return bytesWritten();
   }

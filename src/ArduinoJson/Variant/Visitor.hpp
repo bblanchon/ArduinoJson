@@ -42,7 +42,7 @@ struct Visitor {
     return TResult();
   }
 
-  TResult visitRawJson(const char*, size_t) {
+  TResult visitRawString(const char*, size_t) {
     return TResult();
   }
 

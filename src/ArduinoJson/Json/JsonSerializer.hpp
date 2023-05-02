@@ -73,7 +73,7 @@ class JsonSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitRawJson(const char* data, size_t n) {
+  size_t visitRawString(const char* data, size_t n) {
     formatter_.writeRaw(data, n);
     return bytesWritten();
   }

@@ -113,7 +113,7 @@ struct RawComparer : ComparerBase {
   explicit RawComparer(const char* rhsData, size_t rhsSize)
       : rhsData_(rhsData), rhsSize_(rhsSize) {}
 
-  CompareResult visitRawJson(const char* lhsData, size_t lhsSize) {
+  CompareResult visitRawString(const char* lhsData, size_t lhsSize) {
     size_t size = rhsSize_ < lhsSize ? rhsSize_ : lhsSize;
     int n = memcmp(lhsData, rhsData_, size);
     if (n < 0)
@@ -150,7 +150,7 @@ struct VariantComparer : ComparerBase {
     return accept(comparer);
   }
 
-  CompareResult visitRawJson(const char* lhsData, size_t lhsSize) {
+  CompareResult visitRawString(const char* lhsData, size_t lhsSize) {
     RawComparer comparer(lhsData, lhsSize);
     return accept(comparer);
   }
