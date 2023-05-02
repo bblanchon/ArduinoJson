@@ -296,30 +296,4 @@ class MemoryPool {
   StringNode* strings_ = nullptr;
 };
 
-template <typename TAdaptedString>
-JsonString storeString(MemoryPool* pool, TAdaptedString str,
-                       StringStoragePolicy::Copy) {
-  return JsonString(pool->saveString(str), str.size(), JsonString::Copied);
-}
-
-template <typename TAdaptedString>
-JsonString storeString(MemoryPool*, TAdaptedString str,
-                       StringStoragePolicy::Link) {
-  return JsonString(str.data(), str.size(), JsonString::Linked);
-}
-
-template <typename TAdaptedString>
-JsonString storeString(MemoryPool* pool, TAdaptedString str,
-                       StringStoragePolicy::LinkOrCopy policy) {
-  if (policy.link)
-    return storeString(pool, str, StringStoragePolicy::Link());
-  else
-    return storeString(pool, str, StringStoragePolicy::Copy());
-}
-
-template <typename TAdaptedString>
-JsonString storeString(MemoryPool* pool, TAdaptedString str) {
-  return storeString(pool, str, str.storagePolicy());
-}
-
 ARDUINOJSON_END_PRIVATE_NAMESPACE

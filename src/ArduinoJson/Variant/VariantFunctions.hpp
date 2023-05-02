@@ -6,7 +6,6 @@
 
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
-#include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 #include <ArduinoJson/Variant/Visitor.hpp>
 
@@ -59,18 +58,18 @@ inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
       return collectionCopy(&dst->toObject(), src->asObject(), pool);
     case VALUE_IS_OWNED_STRING: {
       auto str = adaptString(src->asString());
-      auto dup = storeString(pool, str, StringStoragePolicy::Copy());
+      auto dup = pool->saveString(str);
       if (!dup)
         return false;
-      dst->setString(dup);
+      dst->setString(JsonString(dup, str.size(), JsonString::Copied));
       return true;
     }
     case VALUE_IS_RAW_STRING: {
       auto str = adaptString(src->asRawString());
-      auto dup = storeString(pool, str, StringStoragePolicy::Copy());
+      auto dup = pool->saveString(str);
       if (!dup)
         return false;
-      dst->setRawString(dup.c_str(), str.size());
+      dst->setRawString(dup, str.size());
       return true;
     }
     default:
@@ -115,9 +114,20 @@ inline void variantSetString(VariantData* var, TAdaptedString value,
   if (!var)
     return;
   variantRelease(var, pool);
-  JsonString str = storeString(pool, value);
-  if (str)
-    var->setString(str);
+
+  if (value.isNull()) {
+    var->setNull();
+    return;
+  }
+
+  if (value.isLinked()) {
+    var->setString(JsonString(value.data(), value.size(), JsonString::Linked));
+    return;
+  }
+
+  auto dup = pool->saveString(value);
+  if (dup)
+    var->setString(JsonString(dup, value.size(), JsonString::Copied));
   else
     var->setNull();
 }

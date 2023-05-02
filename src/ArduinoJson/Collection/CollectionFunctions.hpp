@@ -27,10 +27,14 @@ inline VariantData* collectionAddMember(CollectionData* obj, TAdaptedString key,
   auto slot = pool->allocVariant();
   if (!slot)
     return nullptr;
-  auto storedKey = storeString(pool, key);
-  if (!storedKey)
-    return nullptr;
-  slot->setKey(storedKey);
+  if (key.isLinked())
+    slot->setKey(JsonString(key.data(), key.size(), JsonString::Linked));
+  else {
+    auto storedKey = pool->saveString(key);
+    if (!storedKey)
+      return nullptr;
+    slot->setKey(JsonString(storedKey, key.size(), JsonString::Copied));
+  }
   obj->add(slot);
   return slot->data();
 }

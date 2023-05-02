@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Collection/CollectionData.hpp>
-#include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 

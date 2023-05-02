@@ -10,7 +10,6 @@
 #include <ArduinoJson/Object/JsonObject.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
 #include <ArduinoJson/Polyfills/utility.hpp>
-#include <ArduinoJson/Strings/StoragePolicy.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 

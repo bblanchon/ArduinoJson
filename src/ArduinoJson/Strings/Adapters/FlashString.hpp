@@ -26,6 +26,10 @@ class FlashString {
     return static_cast<char>(pgm_read_byte(str_ + i));
   }
 
+  const char* data() const {
+    return nullptr;
+  }
+
   size_t size() const {
     return size_;
   }
@@ -59,8 +63,8 @@ class FlashString {
     ::memcpy_P(p, s.str_, n);
   }
 
-  StringStoragePolicy::Copy storagePolicy() const {
-    return StringStoragePolicy::Copy();
+  bool isLinked() const {
+    return false;
   }
 
  private:
