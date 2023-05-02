@@ -37,8 +37,8 @@ TEST_CASE("JsonVariant::memoryUsage()") {
     REQUIRE(var.memoryUsage() == doc.memoryUsage());
   }
 
-  SECTION("returns size of owned raw") {
-    var.set(serialized(std::string("hello")));
+  SECTION("returns size of raw string") {
+    var.set(serialized("hello"));
     REQUIRE(var.memoryUsage() == sizeofString(5));
     REQUIRE(var.memoryUsage() == doc.memoryUsage());
   }

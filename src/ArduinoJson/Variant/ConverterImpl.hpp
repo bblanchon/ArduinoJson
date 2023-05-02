@@ -161,7 +161,7 @@ convertToJson(const T& src, JsonVariant dst) {
 template <typename T>
 struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
   static void toJson(SerializedValue<T> src, JsonVariant dst) {
-    variantSetOwnedRaw(getData(dst), src, getPool(dst));
+    variantSetRawString(getData(dst), src, getPool(dst));
   }
 };
 

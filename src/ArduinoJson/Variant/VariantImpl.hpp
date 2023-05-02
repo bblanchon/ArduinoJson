@@ -83,9 +83,9 @@ inline JsonString VariantData::asString() const {
   }
 }
 
-inline JsonString VariantData::asRaw() const {
+inline JsonString VariantData::asRawString() const {
   switch (type()) {
-    case VALUE_IS_OWNED_RAW:
+    case VALUE_IS_RAW_STRING:
       return JsonString(content_.asString.data, content_.asString.size,
                         JsonString::Copied);
     default:

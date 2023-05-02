@@ -45,7 +45,7 @@ class VariantData {
         return visitor.visitString(content_.asString.data,
                                    content_.asString.size);
 
-      case VALUE_IS_OWNED_RAW:
+      case VALUE_IS_RAW_STRING:
         return visitor.visitRawJson(content_.asString.data,
                                     content_.asString.size);
 
@@ -70,7 +70,7 @@ class VariantData {
   T asFloat() const;
 
   JsonString asString() const;
-  JsonString asRaw() const;
+  JsonString asRawString() const;
 
   bool asBoolean() const;
 
@@ -157,8 +157,8 @@ class VariantData {
     content_.asFloat = value;
   }
 
-  void setOwnedRaw(const char* data, size_t n) {
-    setType(VALUE_IS_OWNED_RAW);
+  void setRawString(const char* data, size_t n) {
+    setType(VALUE_IS_RAW_STRING);
     content_.asString.data = data;
     content_.asString.size = n;
   }
@@ -204,7 +204,7 @@ class VariantData {
   size_t memoryUsage() const {
     switch (type()) {
       case VALUE_IS_OWNED_STRING:
-      case VALUE_IS_OWNED_RAW:
+      case VALUE_IS_RAW_STRING:
         return sizeofString(content_.asString.size);
       case VALUE_IS_OBJECT:
       case VALUE_IS_ARRAY:

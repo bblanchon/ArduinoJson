@@ -65,12 +65,12 @@ inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
       dst->setString(dup);
       return true;
     }
-    case VALUE_IS_OWNED_RAW: {
-      auto str = adaptString(src->asRaw());
+    case VALUE_IS_RAW_STRING: {
+      auto str = adaptString(src->asRawString());
       auto dup = storeString(pool, str, StringStoragePolicy::Copy());
       if (!dup)
         return false;
-      dst->setOwnedRaw(dup.c_str(), str.size());
+      dst->setRawString(dup.c_str(), str.size());
       return true;
     }
     default:
@@ -123,14 +123,14 @@ inline void variantSetString(VariantData* var, TAdaptedString value,
 }
 
 template <typename T>
-inline void variantSetOwnedRaw(VariantData* var, SerializedValue<T> value,
-                               MemoryPool* pool) {
+inline void variantSetRawString(VariantData* var, SerializedValue<T> value,
+                                MemoryPool* pool) {
   if (!var)
     return;
   variantRelease(var, pool);
   const char* dup = pool->saveString(adaptString(value.data(), value.size()));
   if (dup)
-    var->setOwnedRaw(dup, value.size());
+    var->setRawString(dup, value.size());
   else
     var->setNull();
 }

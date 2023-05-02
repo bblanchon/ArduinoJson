@@ -97,8 +97,8 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
                            << AllocatorLog::Reallocate(4096, 0));
   }
 
-  SECTION("owned raw") {
-    doc.set(serialized(std::string("[{},12]")));
+  SECTION("raw string") {
+    doc.set(serialized("[{},12]"));
 
     doc.shrinkToFit();
 
