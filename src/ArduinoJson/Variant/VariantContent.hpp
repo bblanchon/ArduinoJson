@@ -37,11 +37,6 @@ enum {
   OWNED_KEY_BIT = 0x80
 };
 
-struct RawData {
-  const char* data;
-  size_t size;
-};
-
 union VariantContent {
   JsonFloat asFloat;
   bool asBoolean;
