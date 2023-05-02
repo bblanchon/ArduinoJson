@@ -14,7 +14,7 @@ void setup() {
   while (!Serial) continue;
 
   // The huge input: an extract from OpenWeatherMap response
-  const __FlashStringHelper* input_json = F(
+  auto input_json = F(
       "{\"cod\":\"200\",\"message\":0,\"list\":[{\"dt\":1581498000,\"main\":{"
       "\"temp\":3.23,\"feels_like\":-3.63,\"temp_min\":3.23,\"temp_max\":4.62,"
       "\"pressure\":1014,\"sea_level\":1014,\"grnd_level\":1010,\"humidity\":"
