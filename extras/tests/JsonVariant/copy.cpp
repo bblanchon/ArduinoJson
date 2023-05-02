@@ -89,15 +89,16 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
             AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
   }
 
-  SECTION("stores Serialized<const char*> by reference") {
-    var1.set(serialized("hello!!", 8));
+  SECTION("stores Serialized<const char*> by copy") {
+    var1.set(serialized("hello!!", 7));
     spyingAllocator.clearLog();
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == 0);
-    REQUIRE(doc2.memoryUsage() == 0);
-    REQUIRE(spyingAllocator.log() == AllocatorLog());
+    REQUIRE(doc1.memoryUsage() == sizeofString(7));
+    REQUIRE(doc2.memoryUsage() == sizeofString(7));
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
   }
 
   SECTION("stores Serialized<char*> by copy") {

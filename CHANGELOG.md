@@ -13,3 +13,4 @@ HEAD
 * Remove `JsonDocument::capacity()`
 * Store the strings in the heap
 * Reference-count shared strings
+* Always store `serialized("string")` by copy (#1915)

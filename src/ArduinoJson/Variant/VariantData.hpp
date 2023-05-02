@@ -46,7 +46,6 @@ class VariantData {
                                    content_.asString.size);
 
       case VALUE_IS_OWNED_RAW:
-      case VALUE_IS_LINKED_RAW:
         return visitor.visitRawJson(content_.asString.data,
                                     content_.asString.size);
 
@@ -156,12 +155,6 @@ class VariantData {
   void setFloat(JsonFloat value) {
     setType(VALUE_IS_FLOAT);
     content_.asFloat = value;
-  }
-
-  void setLinkedRaw(const char* data, size_t n) {
-    setType(VALUE_IS_LINKED_RAW);
-    content_.asString.data = data;
-    content_.asString.size = n;
   }
 
   void setOwnedRaw(const char* data, size_t n) {

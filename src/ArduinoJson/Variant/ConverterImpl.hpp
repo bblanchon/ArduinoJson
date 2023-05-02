@@ -155,22 +155,11 @@ convertToJson(const T& src, JsonVariant dst) {
   variantSetString(data, adaptString(src), pool);
 }
 
-template <>
-struct Converter<SerializedValue<const char*>>
-    : private detail::VariantAttorney {
-  static void toJson(SerializedValue<const char*> src, JsonVariant dst) {
-    variantSetLinkedRaw(getData(dst), src, getPool(dst));
-  }
-};
-
 // SerializedValue<std::string>
 // SerializedValue<String>
 // SerializedValue<const __FlashStringHelper*>
 template <typename T>
-struct Converter<
-    SerializedValue<T>,
-    typename detail::enable_if<!detail::is_same<const char*, T>::value>::type>
-    : private detail::VariantAttorney {
+struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
   static void toJson(SerializedValue<T> src, JsonVariant dst) {
     variantSetOwnedRaw(getData(dst), src, getPool(dst));
   }

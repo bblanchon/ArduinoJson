@@ -135,18 +135,6 @@ inline void variantSetOwnedRaw(VariantData* var, SerializedValue<T> value,
     var->setNull();
 }
 
-inline void variantSetLinkedRaw(VariantData* var,
-                                SerializedValue<const char*> value,
-                                MemoryPool* pool) {
-  if (!var)
-    return;
-  variantRelease(var, pool);
-  if (value.data())
-    var->setLinkedRaw(value.data(), value.size());
-  else
-    var->setNull();
-}
-
 inline size_t variantSize(const VariantData* var) {
   return var != 0 ? var->size() : 0;
 }

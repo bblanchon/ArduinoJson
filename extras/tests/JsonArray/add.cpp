@@ -115,9 +115,9 @@ TEST_CASE("JsonArray::add()") {
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 
-  SECTION("should not duplicate serialized(const char*)") {
+  SECTION("should duplicate serialized(const char*)") {
     array.add(serialized("{}"));
-    const size_t expectedSize = sizeofArray(1);
+    const size_t expectedSize = sizeofArray(1) + sizeofString(2);
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 

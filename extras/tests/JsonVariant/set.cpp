@@ -205,6 +205,6 @@ TEST_CASE("JsonVariant::set() releases the previous value") {
 
   SECTION("Serialized<const char*>") {
     v.set(serialized("[]"));
-    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+    REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(2));
   }
 }

@@ -97,17 +97,6 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
                            << AllocatorLog::Reallocate(4096, 0));
   }
 
-  SECTION("linked raw") {
-    doc.set(serialized("[{},123]"));
-
-    doc.shrinkToFit();
-
-    REQUIRE(doc.as<std::string>() == "[{},123]");
-    REQUIRE(spyingAllocator.log() == AllocatorLog()
-                                         << AllocatorLog::Allocate(4096)
-                                         << AllocatorLog::Reallocate(4096, 0));
-  }
-
   SECTION("owned raw") {
     doc.set(serialized(std::string("[{},12]")));
 
