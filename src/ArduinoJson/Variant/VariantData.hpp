@@ -41,13 +41,16 @@ class VariantData {
         return visitor.visitObject(content_.asCollection);
 
       case VALUE_IS_LINKED_STRING:
+        return visitor.visitString(content_.asLinkedString,
+                                   strlen(content_.asLinkedString));
+
       case VALUE_IS_OWNED_STRING:
-        return visitor.visitString(content_.asString.data,
-                                   content_.asString.size);
+        return visitor.visitString(content_.asOwnedString->data,
+                                   content_.asOwnedString->length);
 
       case VALUE_IS_RAW_STRING:
-        return visitor.visitRawString(content_.asString.data,
-                                      content_.asString.size);
+        return visitor.visitRawString(content_.asOwnedString->data,
+                                      content_.asOwnedString->length);
 
       case VALUE_IS_SIGNED_INTEGER:
         return visitor.visitSignedInteger(content_.asSignedInteger);
@@ -76,7 +79,7 @@ class VariantData {
 
   const char* getOwnedString() const {
     if (flags_ & OWNED_VALUE_BIT)
-      return content_.asString.data;
+      return content_.asOwnedString->data;
     else
       return nullptr;
   }
@@ -160,8 +163,7 @@ class VariantData {
   void setRawString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_RAW_STRING);
-    content_.asString.data = s->data;
-    content_.asString.size = s->length;
+    content_.asOwnedString = s;
   }
 
   template <typename T>
@@ -183,15 +185,13 @@ class VariantData {
   void setString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_OWNED_STRING);
-    content_.asString.data = s->data;
-    content_.asString.size = s->length;
+    content_.asOwnedString = s;
   }
 
   void setString(const char* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_LINKED_STRING);
-    content_.asString.data = s;
-    content_.asString.size = strlen(s);
+    content_.asLinkedString = s;
   }
 
   CollectionData& toArray() {
@@ -210,7 +210,7 @@ class VariantData {
     switch (type()) {
       case VALUE_IS_OWNED_STRING:
       case VALUE_IS_RAW_STRING:
-        return sizeofString(content_.asString.size);
+        return sizeofString(content_.asOwnedString->length);
       case VALUE_IS_OBJECT:
       case VALUE_IS_ARRAY:
         return content_.asCollection.memoryUsage();

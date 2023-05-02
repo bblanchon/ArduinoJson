@@ -25,8 +25,9 @@ inline T VariantData::asIntegral() const {
     case VALUE_IS_SIGNED_INTEGER:
       return convertNumber<T>(content_.asSignedInteger);
     case VALUE_IS_LINKED_STRING:
+      return parseNumber<T>(content_.asLinkedString);
     case VALUE_IS_OWNED_STRING:
-      return parseNumber<T>(content_.asString.data);
+      return parseNumber<T>(content_.asOwnedString->data);
     case VALUE_IS_FLOAT:
       return convertNumber<T>(content_.asFloat);
     default:
@@ -62,7 +63,7 @@ inline T VariantData::asFloat() const {
       return static_cast<T>(content_.asSignedInteger);
     case VALUE_IS_LINKED_STRING:
     case VALUE_IS_OWNED_STRING:
-      return parseNumber<T>(content_.asString.data);
+      return parseNumber<T>(content_.asOwnedString->data);
     case VALUE_IS_FLOAT:
       return static_cast<T>(content_.asFloat);
     default:
@@ -73,11 +74,10 @@ inline T VariantData::asFloat() const {
 inline JsonString VariantData::asString() const {
   switch (type()) {
     case VALUE_IS_LINKED_STRING:
-      return JsonString(content_.asString.data, content_.asString.size,
-                        JsonString::Linked);
+      return JsonString(content_.asLinkedString, JsonString::Linked);
     case VALUE_IS_OWNED_STRING:
-      return JsonString(content_.asString.data, content_.asString.size,
-                        JsonString::Copied);
+      return JsonString(content_.asOwnedString->data,
+                        content_.asOwnedString->length, JsonString::Copied);
     default:
       return JsonString();
   }
@@ -86,8 +86,8 @@ inline JsonString VariantData::asString() const {
 inline JsonString VariantData::asRawString() const {
   switch (type()) {
     case VALUE_IS_RAW_STRING:
-      return JsonString(content_.asString.data, content_.asString.size,
-                        JsonString::Copied);
+      return JsonString(content_.asOwnedString->data,
+                        content_.asOwnedString->length, JsonString::Copied);
     default:
       return JsonString();
   }

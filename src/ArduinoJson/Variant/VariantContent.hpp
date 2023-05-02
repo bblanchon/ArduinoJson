@@ -43,10 +43,8 @@ union VariantContent {
   JsonUInt asUnsignedInteger;
   JsonInteger asSignedInteger;
   CollectionData asCollection;
-  struct {
-    const char* data;
-    size_t size;
-  } asString;
+  const char* asLinkedString;
+  struct StringNode* asOwnedString;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
