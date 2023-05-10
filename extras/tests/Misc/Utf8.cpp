@@ -11,7 +11,7 @@ using namespace ArduinoJson::detail;
 
 static void testCodepoint(uint32_t codepoint, std::string expected) {
   MemoryPool pool(4096);
-  StringCopier str(&pool);
+  StringBuilder str(&pool);
   str.startString();
 
   CAPTURE(codepoint);

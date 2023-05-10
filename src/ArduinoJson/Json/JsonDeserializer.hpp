@@ -22,7 +22,7 @@ template <typename TReader>
 class JsonDeserializer {
  public:
   JsonDeserializer(MemoryPool* pool, TReader reader)
-      : stringStorage_(pool),
+      : stringBuilder_(pool),
         foundSomething_(false),
         latch_(reader),
         pool_(pool) {}
@@ -268,7 +268,7 @@ class JsonDeserializer {
       if (!eat(':'))
         return DeserializationError::InvalidInput;
 
-      JsonString key = stringStorage_.str();
+      JsonString key = stringBuilder_.str();
 
       TFilter memberFilter = filter[key.c_str()];
 
@@ -276,7 +276,7 @@ class JsonDeserializer {
         VariantSlot* slot = object.get(adaptString(key.c_str()));
         if (!slot) {
           // Save key in memory pool.
-          auto savedKey = stringStorage_.save();
+          auto savedKey = stringBuilder_.save();
 
           // Allocate slot in object
           slot = pool_->allocVariant();
@@ -375,7 +375,7 @@ class JsonDeserializer {
   }
 
   DeserializationError::Code parseKey() {
-    stringStorage_.startString();
+    stringBuilder_.startString();
     if (isQuote(current())) {
       return parseQuotedString();
     } else {
@@ -386,13 +386,13 @@ class JsonDeserializer {
   DeserializationError::Code parseStringValue(VariantData& variant) {
     DeserializationError::Code err;
 
-    stringStorage_.startString();
+    stringBuilder_.startString();
 
     err = parseQuotedString();
     if (err)
       return err;
 
-    variant.setString(stringStorage_.save());
+    variant.setString(stringBuilder_.save());
 
     return DeserializationError::Ok;
   }
@@ -428,9 +428,9 @@ class JsonDeserializer {
           if (err)
             return err;
           if (codepoint.append(codeunit))
-            Utf8::encodeCodepoint(codepoint.value(), stringStorage_);
+            Utf8::encodeCodepoint(codepoint.value(), stringBuilder_);
 #else
-          stringStorage_.append('\\');
+          stringBuilder_.append('\\');
 #endif
           continue;
         }
@@ -442,10 +442,10 @@ class JsonDeserializer {
         move();
       }
 
-      stringStorage_.append(c);
+      stringBuilder_.append(c);
     }
 
-    if (!stringStorage_.isValid())
+    if (!stringBuilder_.isValid())
       return DeserializationError::NoMemory;
 
     return DeserializationError::Ok;
@@ -458,14 +458,14 @@ class JsonDeserializer {
     if (canBeInNonQuotedString(c)) {  // no quotes
       do {
         move();
-        stringStorage_.append(c);
+        stringBuilder_.append(c);
         c = current();
       } while (canBeInNonQuotedString(c));
     } else {
       return DeserializationError::InvalidInput;
     }
 
-    if (!stringStorage_.isValid())
+    if (!stringBuilder_.isValid())
       return DeserializationError::NoMemory;
 
     return DeserializationError::Ok;
@@ -657,7 +657,7 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  StringCopier stringStorage_;
+  StringBuilder stringBuilder_;
   bool foundSomething_;
   Latch<TReader> latch_;
   MemoryPool* pool_;

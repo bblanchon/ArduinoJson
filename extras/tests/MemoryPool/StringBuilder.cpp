@@ -2,20 +2,20 @@
 // Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 
-#include <ArduinoJson/StringStorage/StringCopier.hpp>
+#include <ArduinoJson/Memory/StringBuilder.hpp>
 #include <catch.hpp>
 
 #include "Allocators.hpp"
 
 using namespace ArduinoJson::detail;
 
-TEST_CASE("StringCopier") {
+TEST_CASE("StringBuilder") {
   ControllableAllocator controllableAllocator;
   SpyingAllocator spyingAllocator(&controllableAllocator);
   MemoryPool pool(0, &spyingAllocator);
 
   SECTION("Empty string") {
-    StringCopier str(&pool);
+    StringBuilder str(&pool);
 
     str.startString();
     str.save();
@@ -29,7 +29,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Short string fits in first allocation") {
-    StringCopier str(&pool);
+    StringBuilder str(&pool);
 
     str.startString();
     str.append("hello");
@@ -42,7 +42,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Long string needs reallocation") {
-    StringCopier str(&pool);
+    StringBuilder str(&pool);
 
     str.startString();
     str.append(
@@ -63,7 +63,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Realloc fails") {
-    StringCopier str(&pool);
+    StringBuilder str(&pool);
 
     str.startString();
     controllableAllocator.disable();
@@ -81,7 +81,7 @@ TEST_CASE("StringCopier") {
   }
 
   SECTION("Initial allocation fails") {
-    StringCopier str(&pool);
+    StringBuilder str(&pool);
 
     controllableAllocator.disable();
     str.startString();
@@ -94,13 +94,13 @@ TEST_CASE("StringCopier") {
 }
 
 static StringNode* addStringToPool(MemoryPool& pool, const char* s) {
-  StringCopier str(&pool);
+  StringBuilder str(&pool);
   str.startString();
   str.append(s);
   return str.save();
 }
 
-TEST_CASE("StringCopier::save() deduplicates strings") {
+TEST_CASE("StringBuilder::save() deduplicates strings") {
   MemoryPool pool(4096);
 
   SECTION("Basic") {

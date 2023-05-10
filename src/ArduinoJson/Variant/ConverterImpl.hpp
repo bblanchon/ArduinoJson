@@ -5,7 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Json/JsonSerializer.hpp>
-#include <ArduinoJson/StringStorage/StringCopier.hpp>
+#include <ArduinoJson/Memory/StringBuilder.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 
@@ -212,7 +212,7 @@ class MemoryPoolPrint : public Print {
   }
 
  private:
-  StringCopier copier_;
+  StringBuilder copier_;
 };
 }  // namespace detail
 

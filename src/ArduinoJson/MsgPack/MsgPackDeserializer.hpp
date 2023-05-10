@@ -19,7 +19,7 @@ class MsgPackDeserializer {
   MsgPackDeserializer(MemoryPool* pool, TReader reader)
       : pool_(pool),
         reader_(reader),
-        stringStorage_(pool),
+        stringBuilder_(pool),
         foundSomething_(false) {}
 
   template <typename TFilter>
@@ -370,14 +370,14 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    variant->setString(stringStorage_.save());
+    variant->setString(stringBuilder_.save());
     return DeserializationError::Ok;
   }
 
   DeserializationError::Code readString(size_t n) {
     DeserializationError::Code err;
 
-    stringStorage_.startString();
+    stringBuilder_.startString();
     for (; n; --n) {
       uint8_t c;
 
@@ -385,10 +385,10 @@ class MsgPackDeserializer {
       if (err)
         return err;
 
-      stringStorage_.append(static_cast<char>(c));
+      stringBuilder_.append(static_cast<char>(c));
     }
 
-    if (!stringStorage_.isValid())
+    if (!stringBuilder_.isValid())
       return DeserializationError::NoMemory;
 
     return DeserializationError::Ok;
@@ -485,7 +485,7 @@ class MsgPackDeserializer {
       if (err)
         return err;
 
-      JsonString key = stringStorage_.str();
+      JsonString key = stringBuilder_.str();
       TFilter memberFilter = filter[key.c_str()];
       VariantData* member;
 
@@ -493,7 +493,7 @@ class MsgPackDeserializer {
         ARDUINOJSON_ASSERT(object != 0);
 
         // Save key in memory pool.
-        auto savedKey = stringStorage_.save();
+        auto savedKey = stringBuilder_.save();
 
         VariantSlot* slot = pool_->allocVariant();
         if (!slot)
@@ -555,7 +555,7 @@ class MsgPackDeserializer {
 
   MemoryPool* pool_;
   TReader reader_;
-  StringCopier stringStorage_;
+  StringBuilder stringBuilder_;
   bool foundSomething_;
 };
 

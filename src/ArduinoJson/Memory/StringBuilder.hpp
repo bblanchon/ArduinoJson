@@ -8,13 +8,13 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class StringCopier {
+class StringBuilder {
  public:
   static const size_t initialCapacity = 31;
 
-  StringCopier(MemoryPool* pool) : pool_(pool) {}
+  StringBuilder(MemoryPool* pool) : pool_(pool) {}
 
-  ~StringCopier() {
+  ~StringBuilder() {
     if (node_)
       pool_->deallocString(node_);
   }
