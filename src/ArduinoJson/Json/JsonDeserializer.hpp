@@ -18,12 +18,11 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-template <typename TReader, typename TStringStorage>
+template <typename TReader>
 class JsonDeserializer {
  public:
-  JsonDeserializer(MemoryPool* pool, TReader reader,
-                   TStringStorage stringStorage)
-      : stringStorage_(stringStorage),
+  JsonDeserializer(MemoryPool* pool, TReader reader)
+      : stringStorage_(pool),
         foundSomething_(false),
         latch_(reader),
         pool_(pool) {}
@@ -658,7 +657,7 @@ class JsonDeserializer {
     return DeserializationError::Ok;
   }
 
-  TStringStorage stringStorage_;
+  StringCopier stringStorage_;
   bool foundSomething_;
   Latch<TReader> latch_;
   MemoryPool* pool_;

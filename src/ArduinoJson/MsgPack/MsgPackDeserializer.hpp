@@ -13,14 +13,13 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-template <typename TReader, typename TStringStorage>
+template <typename TReader>
 class MsgPackDeserializer {
  public:
-  MsgPackDeserializer(MemoryPool* pool, TReader reader,
-                      TStringStorage stringStorage)
+  MsgPackDeserializer(MemoryPool* pool, TReader reader)
       : pool_(pool),
         reader_(reader),
-        stringStorage_(stringStorage),
+        stringStorage_(pool),
         foundSomething_(false) {}
 
   template <typename TFilter>
@@ -556,7 +555,7 @@ class MsgPackDeserializer {
 
   MemoryPool* pool_;
   TReader reader_;
-  TStringStorage stringStorage_;
+  StringCopier stringStorage_;
   bool foundSomething_;
 };
 
