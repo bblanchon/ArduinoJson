@@ -10,20 +10,17 @@
 #include "CustomReader.hpp"
 
 using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserializeJson(char*)") {
   JsonDocument doc(1024);
 
-  SECTION("should not duplicate strings") {
-    char input[] = "{\"hello\":\"world\"}";
+  char input[] = "{\"hello\":\"world\"}";
 
-    DeserializationError err = deserializeJson(doc, input);
+  DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == DeserializationError::Ok);
-    CHECK(doc.memoryUsage() == sizeofObject(1));
-    CHECK(doc.as<JsonVariant>().memoryUsage() ==
-          sizeofObject(1));  // issue #1318
-  }
+  REQUIRE(err == DeserializationError::Ok);
+  CHECK(doc.memoryUsage() == sizeofObject(1) + 2 * sizeofString(5));
 }
 
 TEST_CASE("deserializeJson(unsigned char*, unsigned int)") {  // issue #1897

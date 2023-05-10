@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/StringStorage/StringCopier.hpp>
-#include <ArduinoJson/StringStorage/StringMover.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -15,10 +14,4 @@ StringCopier makeStringStorage(TInput&, MemoryPool* pool) {
   return StringCopier(pool);
 }
 
-template <typename TChar>
-StringMover makeStringStorage(
-    TChar* input, MemoryPool*,
-    typename enable_if<!is_const<TChar>::value>::type* = 0) {
-  return StringMover(reinterpret_cast<char*>(input));
-}
 ARDUINOJSON_END_PRIVATE_NAMESPACE

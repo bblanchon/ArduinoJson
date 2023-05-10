@@ -154,12 +154,6 @@ TEST_CASE("String allocation fails") {
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
   }
-
-  SECTION("Input is const char*") {
-    char hello[] = "\"hello\"";
-    REQUIRE(deserializeJson(doc, hello) == DeserializationError::Ok);
-    REQUIRE(spyingAllocator.log() == AllocatorLog());
-  }
 }
 
 TEST_CASE("Deduplicate values") {

@@ -14,3 +14,4 @@ HEAD
 * Store the strings in the heap
 * Reference-count shared strings
 * Always store `serialized("string")` by copy (#1915)
+* Remove the zero-copy mode of `deserializeJson()` and `deserializeMsgPack()`
