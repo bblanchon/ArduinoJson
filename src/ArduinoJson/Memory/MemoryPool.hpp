@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Memory/Alignment.hpp>
 #include <ArduinoJson/Memory/Allocator.hpp>
+#include <ArduinoJson/Memory/StringNode.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/mpl/max.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
@@ -23,18 +24,6 @@ constexpr size_t sizeofArray(size_t n) {
 // Returns the size (in bytes) of an object with n members.
 constexpr size_t sizeofObject(size_t n) {
   return n * sizeof(VariantSlot);
-}
-
-struct StringNode {
-  struct StringNode* next;
-  uint16_t length;
-  uint16_t references;
-  char data[1];
-};
-
-// Returns the size (in bytes) of an string with n characters.
-constexpr size_t sizeofString(size_t n) {
-  return n + 1 + offsetof(StringNode, data);
 }
 
 class MemoryPool {
