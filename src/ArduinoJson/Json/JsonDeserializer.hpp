@@ -166,18 +166,18 @@ class JsonDeserializer {
     if (eat(']'))
       return DeserializationError::Ok;
 
-    TFilter memberFilter = filter[0UL];
+    TFilter elementFilter = filter[0UL];
 
     // Read each value
     for (;;) {
-      if (memberFilter.allow()) {
+      if (elementFilter.allow()) {
         // Allocate slot in array
         VariantData* value = collectionAddElement(&array, pool_);
         if (!value)
           return DeserializationError::NoMemory;
 
         // 1 - Parse value
-        err = parseVariant(*value, memberFilter, nestingLimit.decrement());
+        err = parseVariant(*value, elementFilter, nestingLimit.decrement());
         if (err)
           return err;
       } else {

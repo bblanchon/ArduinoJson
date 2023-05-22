@@ -427,12 +427,12 @@ class MsgPackDeserializer {
       array = 0;
     }
 
-    TFilter memberFilter = filter[0U];
+    TFilter elementFilter = filter[0U];
 
     for (; n; --n) {
       VariantData* value;
 
-      if (memberFilter.allow()) {
+      if (elementFilter.allow()) {
         ARDUINOJSON_ASSERT(array != 0);
         value = collectionAddElement(array, pool_);
         if (!value)
@@ -441,7 +441,7 @@ class MsgPackDeserializer {
         value = 0;
       }
 
-      err = parseVariant(value, memberFilter, nestingLimit.decrement());
+      err = parseVariant(value, elementFilter, nestingLimit.decrement());
       if (err)
         return err;
     }
