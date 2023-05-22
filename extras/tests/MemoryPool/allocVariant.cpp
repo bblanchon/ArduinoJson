@@ -3,19 +3,20 @@
 // MIT License
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Variant/VariantSlot.hpp>
 #include <catch.hpp>
 
 #include "Allocators.hpp"
 
 using namespace ArduinoJson::detail;
 
-TEST_CASE("MemoryPool::allocVariant()") {
+TEST_CASE("new (pool) VariantSlot()") {
   SECTION("Returns different pointer") {
     MemoryPool pool(4096);
 
-    VariantSlot* s1 = pool.allocVariant();
+    VariantSlot* s1 = new (&pool) VariantSlot();
     REQUIRE(s1 != 0);
-    VariantSlot* s2 = pool.allocVariant();
+    VariantSlot* s2 = new (&pool) VariantSlot();
     REQUIRE(s2 != 0);
 
     REQUIRE(s1 != s2);
@@ -24,27 +25,27 @@ TEST_CASE("MemoryPool::allocVariant()") {
   SECTION("Returns aligned pointers") {
     MemoryPool pool(4096);
 
-    REQUIRE(isAligned(pool.allocVariant()));
-    REQUIRE(isAligned(pool.allocVariant()));
+    REQUIRE(isAligned(new (&pool) VariantSlot()));
+    REQUIRE(isAligned(new (&pool) VariantSlot()));
   }
 
   SECTION("Returns zero if capacity is 0") {
     MemoryPool pool(0);
 
-    REQUIRE(pool.allocVariant() == 0);
+    REQUIRE(new (&pool) VariantSlot() == 0);
   }
 
   SECTION("Returns zero if buffer is null") {
     MemoryPool pool(4096, FailingAllocator::instance());
 
-    REQUIRE(pool.allocVariant() == 0);
+    REQUIRE(new (&pool) VariantSlot() == 0);
   }
 
   SECTION("Returns zero if capacity is insufficient") {
     MemoryPool pool(sizeof(VariantSlot));
 
-    pool.allocVariant();
+    new (&pool) VariantSlot();
 
-    REQUIRE(pool.allocVariant() == 0);
+    REQUIRE(new (&pool) VariantSlot() == 0);
   }
 }

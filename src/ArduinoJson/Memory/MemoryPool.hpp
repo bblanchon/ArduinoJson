@@ -10,21 +10,10 @@
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/mpl/max.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
-#include <ArduinoJson/Variant/VariantSlot.hpp>
 
 #include <string.h>  // memmove
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
-
-// Returns the size (in bytes) of an array with n elements.
-constexpr size_t sizeofArray(size_t n) {
-  return n * sizeof(VariantSlot);
-}
-
-// Returns the size (in bytes) of an object with n members.
-constexpr size_t sizeofObject(size_t n) {
-  return n * sizeof(VariantSlot);
-}
 
 class MemoryPool {
  public:
@@ -88,11 +77,13 @@ class MemoryPool {
     return overflowed_;
   }
 
-  VariantSlot* allocVariant() {
-    auto slot = allocRight<VariantSlot>();
-    if (slot)
-      slot->clear();
-    return slot;
+  void* allocFromPool(size_t bytes) {
+    if (!canAlloc(bytes)) {
+      overflowed_ = true;
+      return 0;
+    }
+    right_ -= bytes;
+    return right_;
   }
 
   template <typename TAdaptedString>
@@ -198,10 +189,10 @@ class MemoryPool {
     return p;
   }
 
-  void shrinkToFit(VariantData& variant) {
+  ptrdiff_t shrinkToFit() {
     ptrdiff_t bytes_reclaimed = squash();
     if (bytes_reclaimed == 0)
-      return;
+      return 0;
 
     void* old_ptr = begin_;
     void* new_ptr = allocator_->reallocate(old_ptr, capacity());
@@ -210,8 +201,7 @@ class MemoryPool {
         static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
 
     movePointers(ptr_offset);
-    reinterpret_cast<VariantSlot&>(variant).movePointers(ptr_offset -
-                                                         bytes_reclaimed);
+    return ptr_offset - bytes_reclaimed;
   }
 
  private:
@@ -249,20 +239,6 @@ class MemoryPool {
       strings_ = node->next;
       deallocString(node);
     }
-  }
-
-  template <typename T>
-  T* allocRight() {
-    return reinterpret_cast<T*>(allocRight(sizeof(T)));
-  }
-
-  void* allocRight(size_t bytes) {
-    if (!canAlloc(bytes)) {
-      overflowed_ = true;
-      return 0;
-    }
-    right_ -= bytes;
-    return right_;
   }
 
   void allocPool(size_t capa) {

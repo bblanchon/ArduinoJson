@@ -12,7 +12,7 @@ inline VariantData* collectionAddElement(CollectionData* array,
                                          MemoryPool* pool) {
   if (!array)
     return nullptr;
-  auto slot = pool->allocVariant();
+  auto slot = new (pool) VariantSlot();
   if (!slot)
     return nullptr;
   array->add(slot);
@@ -24,7 +24,7 @@ inline VariantData* collectionAddMember(CollectionData* obj, TAdaptedString key,
                                         MemoryPool* pool) {
   ARDUINOJSON_ASSERT(!key.isNull());
   ARDUINOJSON_ASSERT(obj != nullptr);
-  auto slot = pool->allocVariant();
+  auto slot = new (pool) VariantSlot();
   if (!slot)
     return nullptr;
   if (key.isLinked())

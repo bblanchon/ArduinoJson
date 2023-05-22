@@ -190,7 +190,7 @@ inline NO_INLINE VariantData* variantGetOrAddElement(VariantData* var,
   if (!slot)
     index++;
   while (index > 0) {
-    slot = pool->allocVariant();
+    slot = new (pool) VariantSlot();
     if (!slot)
       return nullptr;
     array->add(slot);

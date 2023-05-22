@@ -96,7 +96,7 @@ inline void CollectionData::movePointers(ptrdiff_t variantDistance) {
   movePointer(head_, variantDistance);
   movePointer(tail_, variantDistance);
   for (VariantSlot* slot = head_; slot; slot = slot->next())
-    slot->movePointers(variantDistance);
+    slot->data()->movePointers(variantDistance);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

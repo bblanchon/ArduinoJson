@@ -10,6 +10,7 @@
 #include <ArduinoJson/Strings/JsonString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
+#include <ArduinoJson/Variant/VariantSlot.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 

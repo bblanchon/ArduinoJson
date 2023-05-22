@@ -4,6 +4,7 @@
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
+#include <ArduinoJson/Variant/VariantSlot.hpp>
 #include <catch.hpp>
 
 using namespace ArduinoJson::detail;
@@ -14,7 +15,7 @@ TEST_CASE("MemoryPool::clear()") {
   MemoryPool pool(poolCapacity);
 
   SECTION("Discards allocated variants") {
-    pool.allocVariant();
+    new (&pool) VariantSlot();
 
     pool.clear();
     REQUIRE(pool.size() == 0);

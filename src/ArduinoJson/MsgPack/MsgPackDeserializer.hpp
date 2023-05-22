@@ -495,7 +495,7 @@ class MsgPackDeserializer {
         // Save key in memory pool.
         auto savedKey = stringBuilder_.save();
 
-        VariantSlot* slot = pool_->allocVariant();
+        VariantSlot* slot = new (pool_) VariantSlot();
         if (!slot)
           return DeserializationError::NoMemory;
 

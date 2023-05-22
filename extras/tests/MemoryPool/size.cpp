@@ -3,6 +3,7 @@
 // MIT License
 
 #include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Variant/VariantSlot.hpp>
 #include <catch.hpp>
 
 using namespace ArduinoJson::detail;
@@ -24,10 +25,10 @@ TEST_CASE("MemoryPool::size()") {
     const size_t variantCount = pool.capacity() / sizeof(VariantSlot);
 
     for (size_t i = 0; i < variantCount; i++)
-      pool.allocVariant();
+      new (&pool) VariantSlot();
     size_t size = pool.size();
 
-    pool.allocVariant();
+    new (&pool) VariantSlot();
 
     REQUIRE(size == pool.size());
   }

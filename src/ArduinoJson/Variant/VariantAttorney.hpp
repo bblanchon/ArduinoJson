@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Polyfills/attributes.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Variant/VariantData.hpp>
 #include <ArduinoJson/Variant/VariantTo.hpp>
 #include "JsonVariantConst.hpp"
 

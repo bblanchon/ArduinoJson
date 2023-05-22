@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Polyfills/integer.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
@@ -25,11 +26,15 @@ class VariantSlot {
   const char* key_;
 
  public:
-  // Must be a POD!
-  // - no constructor
-  // - no destructor
-  // - no virtual
-  // - no inheritance
+  static void* operator new(size_t size, MemoryPool* pool) noexcept {
+    return pool->allocFromPool(size);
+  }
+
+  static void operator delete(void*, MemoryPool*) noexcept {
+    // we cannot release memory from the pool
+  }
+
+  VariantSlot() : flags_(0), next_(0), key_(0) {}
 
   VariantData* data() {
     return reinterpret_cast<VariantData*>(&content_);
@@ -93,21 +98,20 @@ class VariantSlot {
   bool ownsKey() const {
     return (flags_ & OWNED_KEY_BIT) != 0;
   }
-
-  void clear() {
-    next_ = 0;
-    flags_ = 0;
-    key_ = 0;
-  }
-
-  void movePointers(ptrdiff_t variantDistance) {
-    if (flags_ & COLLECTION_MASK)
-      content_.asCollection.movePointers(variantDistance);
-  }
 };
 
 inline VariantData* slotData(VariantSlot* slot) {
   return reinterpret_cast<VariantData*>(slot);
+}
+
+// Returns the size (in bytes) of an array with n elements.
+constexpr size_t sizeofArray(size_t n) {
+  return n * sizeof(VariantSlot);
+}
+
+// Returns the size (in bytes) of an object with n members.
+constexpr size_t sizeofObject(size_t n) {
+  return n * sizeof(VariantSlot);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
