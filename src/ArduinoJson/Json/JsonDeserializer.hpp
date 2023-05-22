@@ -34,7 +34,7 @@ class JsonDeserializer {
 
     err = parseVariant(variant, filter, nestingLimit);
 
-    if (!err && latch_.last() != 0 && !variant.isEnclosed()) {
+    if (!err && latch_.last() != 0 && variant.isFloat()) {
       // We don't detect trailing characters earlier, so we need to check now
       return DeserializationError::InvalidInput;
     }

@@ -147,10 +147,6 @@ class VariantData {
     return type() == VALUE_IS_NULL;
   }
 
-  bool isEnclosed() const {
-    return !isFloat();
-  }
-
   void setBoolean(bool value) {
     setType(VALUE_IS_BOOLEAN);
     content_.asBoolean = value;
