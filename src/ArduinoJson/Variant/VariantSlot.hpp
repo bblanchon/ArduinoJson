@@ -89,7 +89,11 @@ class VariantSlot {
     key_ = k;
   }
 
-  void setKey(StringNode* k);
+  void setKey(StringNode* k) {
+    ARDUINOJSON_ASSERT(k);
+    flags_ |= OWNED_KEY_BIT;
+    key_ = k->data;
+  }
 
   const char* key() const {
     return key_;

@@ -40,7 +40,6 @@
 #include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Variant/ConverterImpl.hpp"
 #include "ArduinoJson/Variant/VariantCompare.hpp"
-#include "ArduinoJson/Variant/VariantImpl.hpp"
 
 #include "ArduinoJson/Json/JsonDeserializer.hpp"
 #include "ArduinoJson/Json/JsonSerializer.hpp"

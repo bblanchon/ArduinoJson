@@ -79,3 +79,37 @@ struct Converter<JsonVariantConst> : private detail::VariantAttorney {
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE
+
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
+
+template <typename TDerived>
+inline JsonVariant VariantRefBase<TDerived>::add() const {
+  return JsonVariant(getPool(),
+                     variantAddElement(getOrCreateData(), getPool()));
+}
+
+template <typename TDerived>
+inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
+  return JsonVariant(getPool(), getData());
+}
+
+template <typename TDerived>
+inline JsonVariant VariantRefBase<TDerived>::getOrCreateVariant() const {
+  return JsonVariant(getPool(), getOrCreateData());
+}
+
+template <typename TDerived>
+template <typename T>
+typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
+VariantRefBase<TDerived>::to() const {
+  variantSetNull(getOrCreateData(), getPool());
+  return *this;
+}
+
+template <typename TDerived>
+inline void convertToJson(const VariantRefBase<TDerived>& src,
+                          JsonVariant dst) {
+  dst.set(src.template as<JsonVariantConst>());
+}
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE
