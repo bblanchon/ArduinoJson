@@ -24,15 +24,6 @@ class VariantData {
  public:
   VariantData() : flags_(VALUE_IS_NULL) {}
 
-  void reset() {
-    flags_ = VALUE_IS_NULL;
-  }
-
-  void operator=(const VariantData& src) {
-    content_ = src.content_;
-    flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
-  }
-
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor& visitor) const {
     switch (type()) {
@@ -71,25 +62,32 @@ class VariantData {
     }
   }
 
-  template <typename T>
-  T asIntegral() const {
-    static_assert(is_integral<T>::value, "T must be an integral type");
+  bool asBoolean() const {
     switch (type()) {
       case VALUE_IS_BOOLEAN:
         return content_.asBoolean;
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return convertNumber<T>(content_.asUnsignedInteger);
       case VALUE_IS_SIGNED_INTEGER:
-        return convertNumber<T>(content_.asSignedInteger);
-      case VALUE_IS_LINKED_STRING:
-        return parseNumber<T>(content_.asLinkedString);
-      case VALUE_IS_OWNED_STRING:
-        return parseNumber<T>(content_.asOwnedString->data);
+      case VALUE_IS_UNSIGNED_INTEGER:
+        return content_.asUnsignedInteger != 0;
       case VALUE_IS_FLOAT:
-        return convertNumber<T>(content_.asFloat);
+        return content_.asFloat != 0;
+      case VALUE_IS_NULL:
+        return false;
       default:
-        return 0;
+        return true;
     }
+  }
+
+  CollectionData* asArray() {
+    return isArray() ? &content_.asCollection : 0;
+  }
+
+  const CollectionData* asArray() const {
+    return const_cast<VariantData*>(this)->asArray();
+  }
+
+  const CollectionData* asCollection() const {
+    return isCollection() ? &content_.asCollection : 0;
   }
 
   template <typename T>
@@ -112,16 +110,33 @@ class VariantData {
     }
   }
 
-  JsonString asString() const {
+  template <typename T>
+  T asIntegral() const {
+    static_assert(is_integral<T>::value, "T must be an integral type");
     switch (type()) {
+      case VALUE_IS_BOOLEAN:
+        return content_.asBoolean;
+      case VALUE_IS_UNSIGNED_INTEGER:
+        return convertNumber<T>(content_.asUnsignedInteger);
+      case VALUE_IS_SIGNED_INTEGER:
+        return convertNumber<T>(content_.asSignedInteger);
       case VALUE_IS_LINKED_STRING:
-        return JsonString(content_.asLinkedString, JsonString::Linked);
+        return parseNumber<T>(content_.asLinkedString);
       case VALUE_IS_OWNED_STRING:
-        return JsonString(content_.asOwnedString->data,
-                          content_.asOwnedString->length, JsonString::Copied);
+        return parseNumber<T>(content_.asOwnedString->data);
+      case VALUE_IS_FLOAT:
+        return convertNumber<T>(content_.asFloat);
       default:
-        return JsonString();
+        return 0;
     }
+  }
+
+  CollectionData* asObject() {
+    return isObject() ? &content_.asCollection : 0;
+  }
+
+  const CollectionData* asObject() const {
+    return const_cast<VariantData*>(this)->asObject();
   }
 
   JsonString asRawString() const {
@@ -134,162 +149,16 @@ class VariantData {
     }
   }
 
-  bool asBoolean() const {
+  JsonString asString() const {
     switch (type()) {
-      case VALUE_IS_BOOLEAN:
-        return content_.asBoolean;
-      case VALUE_IS_SIGNED_INTEGER:
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return content_.asUnsignedInteger != 0;
-      case VALUE_IS_FLOAT:
-        return content_.asFloat != 0;
-      case VALUE_IS_NULL:
-        return false;
-      default:
-        return true;
-    }
-  }
-
-  const char* getOwnedString() const {
-    if (flags_ & OWNED_VALUE_BIT)
-      return content_.asOwnedString->data;
-    else
-      return nullptr;
-  }
-
-  CollectionData* asArray() {
-    return isArray() ? &content_.asCollection : 0;
-  }
-
-  const CollectionData* asArray() const {
-    return const_cast<VariantData*>(this)->asArray();
-  }
-
-  const CollectionData* asCollection() const {
-    return isCollection() ? &content_.asCollection : 0;
-  }
-
-  CollectionData* asObject() {
-    return isObject() ? &content_.asCollection : 0;
-  }
-
-  const CollectionData* asObject() const {
-    return const_cast<VariantData*>(this)->asObject();
-  }
-
-  bool isArray() const {
-    return (flags_ & VALUE_IS_ARRAY) != 0;
-  }
-
-  bool isBoolean() const {
-    return type() == VALUE_IS_BOOLEAN;
-  }
-
-  bool isCollection() const {
-    return (flags_ & COLLECTION_MASK) != 0;
-  }
-
-  template <typename T>
-  bool isInteger() const {
-    switch (type()) {
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return canConvertNumber<T>(content_.asUnsignedInteger);
-
-      case VALUE_IS_SIGNED_INTEGER:
-        return canConvertNumber<T>(content_.asSignedInteger);
-
-      default:
-        return false;
-    }
-  }
-
-  bool isFloat() const {
-    return (flags_ & NUMBER_BIT) != 0;
-  }
-
-  bool isString() const {
-    return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
-  }
-
-  bool isObject() const {
-    return (flags_ & VALUE_IS_OBJECT) != 0;
-  }
-
-  bool isNull() const {
-    return type() == VALUE_IS_NULL;
-  }
-
-  void setBoolean(bool value) {
-    setType(VALUE_IS_BOOLEAN);
-    content_.asBoolean = value;
-  }
-
-  void setFloat(JsonFloat value) {
-    setType(VALUE_IS_FLOAT);
-    content_.asFloat = value;
-  }
-
-  void setRawString(StringNode* s) {
-    ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_RAW_STRING);
-    content_.asOwnedString = s;
-  }
-
-  template <typename T>
-  typename enable_if<is_unsigned<T>::value>::type setInteger(T value) {
-    setType(VALUE_IS_UNSIGNED_INTEGER);
-    content_.asUnsignedInteger = static_cast<JsonUInt>(value);
-  }
-
-  template <typename T>
-  typename enable_if<is_signed<T>::value>::type setInteger(T value) {
-    setType(VALUE_IS_SIGNED_INTEGER);
-    content_.asSignedInteger = value;
-  }
-
-  void setNull() {
-    setType(VALUE_IS_NULL);
-  }
-
-  void setString(StringNode* s) {
-    ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_OWNED_STRING);
-    content_.asOwnedString = s;
-  }
-
-  void setString(const char* s) {
-    ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_LINKED_STRING);
-    content_.asLinkedString = s;
-  }
-
-  CollectionData& toArray() {
-    setType(VALUE_IS_ARRAY);
-    content_.asCollection.clear();
-    return content_.asCollection;
-  }
-
-  CollectionData& toObject() {
-    setType(VALUE_IS_OBJECT);
-    content_.asCollection.clear();
-    return content_.asCollection;
-  }
-
-  size_t memoryUsage() const {
-    switch (type()) {
+      case VALUE_IS_LINKED_STRING:
+        return JsonString(content_.asLinkedString, JsonString::Linked);
       case VALUE_IS_OWNED_STRING:
-      case VALUE_IS_RAW_STRING:
-        return sizeofString(content_.asOwnedString->length);
-      case VALUE_IS_OBJECT:
-      case VALUE_IS_ARRAY:
-        return content_.asCollection.memoryUsage();
+        return JsonString(content_.asOwnedString->data,
+                          content_.asOwnedString->length, JsonString::Copied);
       default:
-        return 0;
+        return JsonString();
     }
-  }
-
-  size_t size() const {
-    return isCollection() ? content_.asCollection.size() : 0;
   }
 
   VariantData* getElement(size_t index) const {
@@ -307,9 +176,140 @@ class VariantData {
     return slotData(object->get(key));
   }
 
+  const char* getOwnedString() const {
+    if (flags_ & OWNED_VALUE_BIT)
+      return content_.asOwnedString->data;
+    else
+      return nullptr;
+  }
+
+  bool isArray() const {
+    return (flags_ & VALUE_IS_ARRAY) != 0;
+  }
+
+  bool isBoolean() const {
+    return type() == VALUE_IS_BOOLEAN;
+  }
+
+  bool isCollection() const {
+    return (flags_ & COLLECTION_MASK) != 0;
+  }
+
+  bool isFloat() const {
+    return (flags_ & NUMBER_BIT) != 0;
+  }
+
+  template <typename T>
+  bool isInteger() const {
+    switch (type()) {
+      case VALUE_IS_UNSIGNED_INTEGER:
+        return canConvertNumber<T>(content_.asUnsignedInteger);
+
+      case VALUE_IS_SIGNED_INTEGER:
+        return canConvertNumber<T>(content_.asSignedInteger);
+
+      default:
+        return false;
+    }
+  }
+
+  bool isNull() const {
+    return type() == VALUE_IS_NULL;
+  }
+
+  bool isObject() const {
+    return (flags_ & VALUE_IS_OBJECT) != 0;
+  }
+
+  bool isString() const {
+    return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
+  }
+
+  size_t memoryUsage() const {
+    switch (type()) {
+      case VALUE_IS_OWNED_STRING:
+      case VALUE_IS_RAW_STRING:
+        return sizeofString(content_.asOwnedString->length);
+      case VALUE_IS_OBJECT:
+      case VALUE_IS_ARRAY:
+        return content_.asCollection.memoryUsage();
+      default:
+        return 0;
+    }
+  }
+
   void movePointers(ptrdiff_t variantDistance) {
     if (flags_ & COLLECTION_MASK)
       content_.asCollection.movePointers(variantDistance);
+  }
+
+  void operator=(const VariantData& src) {
+    content_ = src.content_;
+    flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
+  }
+
+  void reset() {
+    flags_ = VALUE_IS_NULL;
+  }
+
+  void setBoolean(bool value) {
+    setType(VALUE_IS_BOOLEAN);
+    content_.asBoolean = value;
+  }
+
+  void setFloat(JsonFloat value) {
+    setType(VALUE_IS_FLOAT);
+    content_.asFloat = value;
+  }
+
+  template <typename T>
+  typename enable_if<is_signed<T>::value>::type setInteger(T value) {
+    setType(VALUE_IS_SIGNED_INTEGER);
+    content_.asSignedInteger = value;
+  }
+
+  template <typename T>
+  typename enable_if<is_unsigned<T>::value>::type setInteger(T value) {
+    setType(VALUE_IS_UNSIGNED_INTEGER);
+    content_.asUnsignedInteger = static_cast<JsonUInt>(value);
+  }
+
+  void setNull() {
+    setType(VALUE_IS_NULL);
+  }
+
+  void setRawString(StringNode* s) {
+    ARDUINOJSON_ASSERT(s);
+    setType(VALUE_IS_RAW_STRING);
+    content_.asOwnedString = s;
+  }
+
+  void setString(const char* s) {
+    ARDUINOJSON_ASSERT(s);
+    setType(VALUE_IS_LINKED_STRING);
+    content_.asLinkedString = s;
+  }
+
+  void setString(StringNode* s) {
+    ARDUINOJSON_ASSERT(s);
+    setType(VALUE_IS_OWNED_STRING);
+    content_.asOwnedString = s;
+  }
+
+  size_t size() const {
+    return isCollection() ? content_.asCollection.size() : 0;
+  }
+
+  CollectionData& toArray() {
+    setType(VALUE_IS_ARRAY);
+    content_.asCollection.clear();
+    return content_.asCollection;
+  }
+
+  CollectionData& toObject() {
+    setType(VALUE_IS_OBJECT);
+    content_.asCollection.clear();
+    return content_.asCollection;
   }
 
   uint8_t type() const {
