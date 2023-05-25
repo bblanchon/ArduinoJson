@@ -131,24 +131,7 @@ inline NO_INLINE VariantData* variantGetOrAddElement(VariantData* var,
                                                      MemoryPool* pool) {
   if (!var)
     return nullptr;
-  auto array = var->isNull() ? &var->toArray() : var->asArray();
-  if (!array)
-    return nullptr;
-  VariantSlot* slot = array->head();
-  while (slot && index > 0) {
-    slot = slot->next();
-    index--;
-  }
-  if (!slot)
-    index++;
-  while (index > 0) {
-    slot = new (pool) VariantSlot();
-    if (!slot)
-      return nullptr;
-    array->add(slot);
-    index--;
-  }
-  return slot->data();
+  return var->getOrAddElement(index, pool);
 }
 
 inline void variantRemoveElement(VariantData* var, size_t index,

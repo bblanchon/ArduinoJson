@@ -185,6 +185,27 @@ class VariantData {
     return slotData(object->get(key));
   }
 
+  VariantData* getOrAddElement(size_t index, MemoryPool* pool) {
+    auto array = isNull() ? &toArray() : asArray();
+    if (!array)
+      return nullptr;
+    VariantSlot* slot = array->head();
+    while (slot && index > 0) {
+      slot = slot->next();
+      index--;
+    }
+    if (!slot)
+      index++;
+    while (index > 0) {
+      slot = new (pool) VariantSlot();
+      if (!slot)
+        return nullptr;
+      array->add(slot);
+      index--;
+    }
+    return slot->data();
+  }
+
   template <typename TAdaptedString>
   VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool) {
     if (key.isNull())
