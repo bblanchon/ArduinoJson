@@ -370,7 +370,7 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    variant->setString(stringBuilder_.save());
+    variant->setOwnedString(stringBuilder_.save());
     return DeserializationError::Ok;
   }
 

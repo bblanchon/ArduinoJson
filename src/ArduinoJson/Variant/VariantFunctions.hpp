@@ -47,7 +47,7 @@ inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
       auto dup = pool->saveString(str);
       if (!dup)
         return false;
-      dst->setString(dup);
+      dst->setOwnedString(dup);
       return true;
     }
     case VALUE_IS_RAW_STRING: {
@@ -95,21 +95,7 @@ inline void variantSetString(VariantData* var, TAdaptedString value,
                              MemoryPool* pool) {
   if (!var)
     return;
-  var->setNull(pool);
-
-  if (value.isNull())
-    return;
-
-  if (value.isLinked()) {
-    var->setString(value.data());
-    return;
-  }
-
-  auto dup = pool->saveString(value);
-  if (dup)
-    var->setString(dup);
-  else
-    var->setNull();
+  var->setString(value, pool);
 }
 
 template <typename T>

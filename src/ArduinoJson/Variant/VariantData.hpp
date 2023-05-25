@@ -304,13 +304,30 @@ class VariantData {
     setRawString(s);
   }
 
-  void setString(const char* s) {
+  template <typename TAdaptedString>
+  void setString(TAdaptedString value, MemoryPool* pool) {
+    setNull(pool);
+
+    if (value.isNull())
+      return;
+
+    if (value.isLinked()) {
+      setLinkedString(value.data());
+      return;
+    }
+
+    auto dup = pool->saveString(value);
+    if (dup)
+      setOwnedString(dup);
+  }
+
+  void setLinkedString(const char* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_LINKED_STRING);
     content_.asLinkedString = s;
   }
 
-  void setString(StringNode* s) {
+  void setOwnedString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_OWNED_STRING);
     content_.asOwnedString = s;
