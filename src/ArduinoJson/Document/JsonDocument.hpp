@@ -157,7 +157,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsondocument/nesting/
   size_t nesting() const {
-    return variantNesting(&data_);
+    return data_.nesting();
   }
 
   // Returns the number of elements in the root array or object.

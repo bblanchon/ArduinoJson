@@ -190,18 +190,7 @@ inline bool variantIsNull(const VariantData* var) {
 inline size_t variantNesting(const VariantData* var) {
   if (!var)
     return 0;
-
-  const CollectionData* collection = var->asCollection();
-  if (!collection)
-    return 0;
-
-  size_t maxChildNesting = 0;
-  for (const VariantSlot* s = collection->head(); s; s = s->next()) {
-    size_t childNesting = variantNesting(s->data());
-    if (childNesting > maxChildNesting)
-      maxChildNesting = childNesting;
-  }
-  return maxChildNesting + 1;
+  return var->nesting();
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -256,6 +256,20 @@ class VariantData {
       content_.asCollection.movePointers(variantDistance);
   }
 
+  size_t nesting() const {
+    auto collection = asCollection();
+    if (!collection)
+      return 0;
+
+    size_t maxChildNesting = 0;
+    for (const VariantSlot* s = collection->head(); s; s = s->next()) {
+      size_t childNesting = s->data()->nesting();
+      if (childNesting > maxChildNesting)
+        maxChildNesting = childNesting;
+    }
+    return maxChildNesting + 1;
+  }
+
   void operator=(const VariantData& src) {
     content_ = src.content_;
     flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
