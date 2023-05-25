@@ -16,6 +16,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 T parseNumber(const char* s);
+void slotRelease(VariantSlot* slot, MemoryPool* pool);
 
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant
@@ -176,13 +177,6 @@ class VariantData {
     return slotData(object->get(key));
   }
 
-  const char* getOwnedString() const {
-    if (flags_ & OWNED_VALUE_BIT)
-      return content_.asOwnedString->data;
-    else
-      return nullptr;
-  }
-
   bool isArray() const {
     return (flags_ & VALUE_IS_ARRAY) != 0;
   }
@@ -257,9 +251,19 @@ class VariantData {
     content_.asBoolean = value;
   }
 
+  void setBoolean(bool value, MemoryPool* pool) {
+    release(pool);
+    setBoolean(value);
+  }
+
   void setFloat(JsonFloat value) {
     setType(VALUE_IS_FLOAT);
     content_.asFloat = value;
+  }
+
+  void setFloat(JsonFloat value, MemoryPool* pool) {
+    release(pool);
+    setFloat(value);
   }
 
   template <typename T>
@@ -274,14 +278,30 @@ class VariantData {
     content_.asUnsignedInteger = static_cast<JsonUInt>(value);
   }
 
+  template <typename T>
+  void setInteger(T value, MemoryPool* pool) {
+    release(pool);
+    setInteger(value);
+  }
+
   void setNull() {
     setType(VALUE_IS_NULL);
+  }
+
+  void setNull(MemoryPool* pool) {
+    release(pool);
+    setNull();
   }
 
   void setRawString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_RAW_STRING);
     content_.asOwnedString = s;
+  }
+
+  void setRawString(StringNode* s, MemoryPool* pool) {
+    release(pool);
+    setRawString(s);
   }
 
   void setString(const char* s) {
@@ -306,10 +326,20 @@ class VariantData {
     return content_.asCollection;
   }
 
+  CollectionData& toArray(MemoryPool* pool) {
+    release(pool);
+    return toArray();
+  }
+
   CollectionData& toObject() {
     setType(VALUE_IS_OBJECT);
     content_.asCollection.clear();
     return content_.asCollection;
+  }
+
+  CollectionData& toObject(MemoryPool* pool) {
+    release(pool);
+    return toObject();
   }
 
   uint8_t type() const {
@@ -317,6 +347,17 @@ class VariantData {
   }
 
  private:
+  void release(MemoryPool* pool) {
+    if (flags_ & OWNED_VALUE_BIT)
+      pool->dereferenceString(content_.asOwnedString->data);
+
+    auto c = asCollection();
+    if (c) {
+      for (auto slot = c->head(); slot; slot = slot->next())
+        slotRelease(slot, pool);
+    }
+  }
+
   void setType(uint8_t t) {
     flags_ &= OWNED_KEY_BIT;
     flags_ |= t;

@@ -11,7 +11,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-void slotRelease(const VariantSlot* slot, MemoryPool* pool);
 bool collectionCopy(CollectionData* dst, const CollectionData* src,
                     MemoryPool* pool);
 VariantData* collectionAddElement(CollectionData* array, MemoryPool* pool);
@@ -28,19 +27,6 @@ inline typename TVisitor::result_type variantAccept(const VariantData* var,
     return var->accept(visitor);
   else
     return visitor.visitNull();
-}
-
-inline void variantRelease(const VariantData* var, MemoryPool* pool) {
-  ARDUINOJSON_ASSERT(var != nullptr);
-  auto s = var->getOwnedString();
-  if (s)
-    pool->dereferenceString(s);
-
-  auto c = var->asCollection();
-  if (c) {
-    for (auto slot = c->head(); slot; slot = slot->next())
-      slotRelease(slot, pool);
-  }
 }
 
 inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
@@ -81,31 +67,27 @@ inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
 inline void variantSetNull(VariantData* var, MemoryPool* pool) {
   if (!var)
     return;
-  variantRelease(var, pool);
-  var->setNull();
+  var->setNull(pool);
 }
 
 inline void variantSetBoolean(VariantData* var, bool value, MemoryPool* pool) {
   if (!var)
     return;
-  variantRelease(var, pool);
-  var->setBoolean(value);
+  var->setBoolean(value, pool);
 }
 
 inline void variantSetFloat(VariantData* var, JsonFloat value,
                             MemoryPool* pool) {
   if (!var)
     return;
-  variantRelease(var, pool);
-  var->setFloat(value);
+  var->setFloat(value, pool);
 }
 
 template <typename T>
 inline void variantSetInteger(VariantData* var, T value, MemoryPool* pool) {
   if (!var)
     return;
-  variantRelease(var, pool);
-  var->setInteger(value);
+  var->setInteger(value, pool);
 }
 
 template <typename TAdaptedString>
@@ -113,12 +95,10 @@ inline void variantSetString(VariantData* var, TAdaptedString value,
                              MemoryPool* pool) {
   if (!var)
     return;
-  variantRelease(var, pool);
+  var->setNull(pool);
 
-  if (value.isNull()) {
-    var->setNull();
+  if (value.isNull())
     return;
-  }
 
   if (value.isLinked()) {
     var->setString(value.data());
@@ -137,12 +117,11 @@ inline void variantSetRawString(VariantData* var, SerializedValue<T> value,
                                 MemoryPool* pool) {
   if (!var)
     return;
-  variantRelease(var, pool);
   auto dup = pool->saveString(adaptString(value.data(), value.size()));
   if (dup)
-    var->setRawString(dup);
+    var->setRawString(dup, pool);
   else
-    var->setNull();
+    var->setNull(pool);
 }
 
 inline size_t variantSize(const VariantData* var) {
@@ -152,15 +131,13 @@ inline size_t variantSize(const VariantData* var) {
 inline CollectionData* variantToArray(VariantData* var, MemoryPool* pool) {
   if (!var)
     return 0;
-  variantRelease(var, pool);
-  return &var->toArray();
+  return &var->toArray(pool);
 }
 
 inline CollectionData* variantToObject(VariantData* var, MemoryPool* pool) {
   if (!var)
     return 0;
-  variantRelease(var, pool);
-  return &var->toObject();
+  return &var->toObject(pool);
 }
 
 inline VariantData* variantGetElement(const VariantData* var, size_t index) {
