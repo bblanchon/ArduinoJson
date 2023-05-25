@@ -13,8 +13,6 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 bool collectionCopy(CollectionData* dst, const CollectionData* src,
                     MemoryPool* pool);
-void collectionRemoveElement(CollectionData* data, size_t index,
-                             MemoryPool* pool);
 
 template <typename TVisitor>
 inline typename TVisitor::result_type variantAccept(const VariantData* var,
@@ -157,7 +155,7 @@ inline void variantRemoveElement(VariantData* var, size_t index,
                                  MemoryPool* pool) {
   if (!var)
     return;
-  collectionRemoveElement(var->asArray(), index, pool);
+  var->removeElement(index, pool);
 }
 
 template <typename TAdaptedString>

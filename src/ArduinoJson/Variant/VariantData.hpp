@@ -15,6 +15,8 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 VariantData* collectionAddElement(CollectionData* array, MemoryPool* pool);
+void collectionRemoveElement(CollectionData* data, size_t index,
+                             MemoryPool* pool);
 template <typename T>
 T parseNumber(const char* s);
 void slotRelease(VariantSlot* slot, MemoryPool* pool);
@@ -273,6 +275,10 @@ class VariantData {
   void operator=(const VariantData& src) {
     content_ = src.content_;
     flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
+  }
+
+  void removeElement(size_t index, MemoryPool* pool) {
+    collectionRemoveElement(asArray(), index, pool);
   }
 
   template <typename TAdaptedString>
