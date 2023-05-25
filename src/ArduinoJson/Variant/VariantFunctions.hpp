@@ -11,9 +11,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-bool collectionCopy(CollectionData* dst, const CollectionData* src,
-                    MemoryPool* pool);
-
 template <typename TVisitor>
 inline typename TVisitor::result_type variantAccept(const VariantData* var,
                                                     TVisitor& visitor) {
@@ -27,35 +24,7 @@ inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
                             MemoryPool* pool) {
   if (!dst)
     return false;
-  if (!src) {
-    dst->setNull();
-    return true;
-  }
-  switch (src->type()) {
-    case VALUE_IS_ARRAY:
-      return collectionCopy(&dst->toArray(), src->asArray(), pool);
-    case VALUE_IS_OBJECT:
-      return collectionCopy(&dst->toObject(), src->asObject(), pool);
-    case VALUE_IS_OWNED_STRING: {
-      auto str = adaptString(src->asString());
-      auto dup = pool->saveString(str);
-      if (!dup)
-        return false;
-      dst->setOwnedString(dup);
-      return true;
-    }
-    case VALUE_IS_RAW_STRING: {
-      auto str = adaptString(src->asRawString());
-      auto dup = pool->saveString(str);
-      if (!dup)
-        return false;
-      dst->setRawString(dup);
-      return true;
-    }
-    default:
-      *dst = *src;
-      return true;
-  }
+  return dst->copyFrom(src, pool);
 }
 
 inline void variantSetNull(VariantData* var, MemoryPool* pool) {

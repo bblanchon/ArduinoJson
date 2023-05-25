@@ -15,6 +15,8 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 VariantData* collectionAddElement(CollectionData* array, MemoryPool* pool);
+bool collectionCopy(CollectionData* dst, const CollectionData* src,
+                    MemoryPool* pool);
 void collectionRemoveElement(CollectionData* data, size_t index,
                              MemoryPool* pool);
 template <typename T>
@@ -167,6 +169,40 @@ class VariantData {
                           content_.asOwnedString->length, JsonString::Copied);
       default:
         return JsonString();
+    }
+  }
+
+  bool copyFrom(const VariantData* src, MemoryPool* pool) {
+    release(pool);
+    if (!src) {
+      setNull();
+      return true;
+    }
+    switch (src->type()) {
+      case VALUE_IS_ARRAY:
+        return collectionCopy(&toArray(), src->asArray(), pool);
+      case VALUE_IS_OBJECT:
+        return collectionCopy(&toObject(), src->asObject(), pool);
+      case VALUE_IS_OWNED_STRING: {
+        auto str = adaptString(src->asString());
+        auto dup = pool->saveString(str);
+        if (!dup)
+          return false;
+        setOwnedString(dup);
+        return true;
+      }
+      case VALUE_IS_RAW_STRING: {
+        auto str = adaptString(src->asRawString());
+        auto dup = pool->saveString(str);
+        if (!dup)
+          return false;
+        setRawString(dup);
+        return true;
+      }
+      default:
+        content_ = src->content_;
+        flags_ = src->flags_;
+        return true;
     }
   }
 
