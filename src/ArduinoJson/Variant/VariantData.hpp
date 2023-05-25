@@ -183,6 +183,19 @@ class VariantData {
     return slotData(object->get(key));
   }
 
+  template <typename TAdaptedString>
+  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool) {
+    if (key.isNull())
+      return nullptr;
+    auto obj = isNull() ? &toObject() : asObject();
+    if (!obj)
+      return nullptr;
+    auto slot = obj->get(key);
+    if (slot)
+      return slot->data();
+    return collectionAddMember(obj, key, pool);
+  }
+
   bool isArray() const {
     return (flags_ & VALUE_IS_ARRAY) != 0;
   }

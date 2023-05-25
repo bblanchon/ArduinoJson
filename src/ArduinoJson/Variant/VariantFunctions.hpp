@@ -173,15 +173,9 @@ VariantData* variantGetMember(const VariantData* var, TAdaptedString key) {
 template <typename TAdaptedString>
 VariantData* variantGetOrAddMember(VariantData* var, TAdaptedString key,
                                    MemoryPool* pool) {
-  if (!var || key.isNull())
+  if (!var)
     return nullptr;
-  auto obj = var->isNull() ? &var->toObject() : var->asObject();
-  if (!obj)
-    return nullptr;
-  auto slot = obj->get(key);
-  if (slot)
-    return slot->data();
-  return collectionAddMember(obj, key, pool);
+  return var->getOrAddMember(key, pool);
 }
 
 template <typename TAdaptedString>
