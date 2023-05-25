@@ -7,6 +7,7 @@
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
+using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON object") {
   JsonDocument doc(4096);
@@ -281,6 +282,7 @@ TEST_CASE("deserialize JSON object") {
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc["a"] == 2);
+      REQUIRE(doc.memoryUsage() == 3 * sizeofObject(1) + sizeofString(1));
     }
 
     SECTION("Repeated key with zero copy mode") {  // issue #1697

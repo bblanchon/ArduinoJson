@@ -285,6 +285,8 @@ class JsonDeserializer {
 
           slot->setKey(savedKey);
           object.add(slot);
+        } else {
+          variantRelease(slot->data(), pool_);
         }
 
         // Parse value
