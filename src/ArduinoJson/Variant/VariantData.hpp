@@ -14,6 +14,7 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
+VariantData* collectionAddElement(CollectionData* array, MemoryPool* pool);
 template <typename T>
 T parseNumber(const char* s);
 void slotRelease(VariantSlot* slot, MemoryPool* pool);
@@ -61,6 +62,11 @@ class VariantData {
       default:
         return visitor.visitNull();
     }
+  }
+
+  VariantData* addElement(MemoryPool* pool) {
+    auto array = isNull() ? &toArray() : asArray();
+    return collectionAddElement(array, pool);
   }
 
   bool asBoolean() const {

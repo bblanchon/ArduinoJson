@@ -13,7 +13,6 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 bool collectionCopy(CollectionData* dst, const CollectionData* src,
                     MemoryPool* pool);
-VariantData* collectionAddElement(CollectionData* array, MemoryPool* pool);
 void collectionRemoveElement(CollectionData* data, size_t index,
                              MemoryPool* pool);
 template <typename TAdaptedString>
@@ -129,8 +128,7 @@ inline VariantData* variantGetElement(const VariantData* var, size_t index) {
 inline VariantData* variantAddElement(VariantData* var, MemoryPool* pool) {
   if (!var)
     return nullptr;
-  auto array = var->isNull() ? &var->toArray() : var->asArray();
-  return collectionAddElement(array, pool);
+  return var->addElement(pool);
 }
 
 inline NO_INLINE VariantData* variantGetOrAddElement(VariantData* var,

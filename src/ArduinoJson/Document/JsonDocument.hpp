@@ -297,7 +297,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsondocument/add/
   FORCE_INLINE JsonVariant add() {
-    return JsonVariant(&pool_, variantAddElement(&data_, &pool_));
+    return JsonVariant(&pool_, data_.addElement(&pool_));
   }
 
   // Appends a value to the root array.
