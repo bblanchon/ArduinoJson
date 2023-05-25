@@ -261,6 +261,11 @@ class VariantData {
     flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
   }
 
+  template <typename TAdaptedString>
+  void removeMember(TAdaptedString key, MemoryPool* pool) {
+    collectionRemoveMember(asObject(), key, pool);
+  }
+
   void reset() {
     flags_ = VALUE_IS_NULL;
   }

@@ -15,9 +15,6 @@ bool collectionCopy(CollectionData* dst, const CollectionData* src,
                     MemoryPool* pool);
 void collectionRemoveElement(CollectionData* data, size_t index,
                              MemoryPool* pool);
-template <typename TAdaptedString>
-void collectionRemoveMember(CollectionData* data, TAdaptedString key,
-                            MemoryPool* pool);
 
 template <typename TVisitor>
 inline typename TVisitor::result_type variantAccept(const VariantData* var,
@@ -183,7 +180,7 @@ void variantRemoveMember(VariantData* var, TAdaptedString key,
                          MemoryPool* pool) {
   if (!var)
     return;
-  collectionRemoveMember(var->asObject(), key, pool);
+  var->removeMember(key, pool);
 }
 
 inline bool variantIsNull(const VariantData* var) {
