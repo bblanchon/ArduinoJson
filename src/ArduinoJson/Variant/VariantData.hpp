@@ -487,4 +487,137 @@ class VariantData {
   }
 };
 
+template <typename TVisitor>
+typename TVisitor::result_type variantAccept(const VariantData* var,
+                                             TVisitor& visitor) {
+  if (var != 0)
+    return var->accept(visitor);
+  else
+    return visitor.visitNull();
+}
+
+inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
+                            MemoryPool* pool) {
+  if (!dst)
+    return false;
+  return dst->copyFrom(src, pool);
+}
+
+inline VariantData* variantAddElement(VariantData* var, MemoryPool* pool) {
+  if (!var)
+    return nullptr;
+  return var->addElement(pool);
+}
+
+inline VariantData* variantGetElement(const VariantData* var, size_t index) {
+  return var != 0 ? var->getElement(index) : 0;
+}
+
+template <typename TAdaptedString>
+VariantData* variantGetMember(const VariantData* var, TAdaptedString key) {
+  if (!var)
+    return 0;
+  return var->getMember(key);
+}
+
+inline VariantData* variantGetOrAddElement(VariantData* var, size_t index,
+                                           MemoryPool* pool) {
+  if (!var)
+    return nullptr;
+  return var->getOrAddElement(index, pool);
+}
+
+template <typename TAdaptedString>
+VariantData* variantGetOrAddMember(VariantData* var, TAdaptedString key,
+                                   MemoryPool* pool) {
+  if (!var)
+    return nullptr;
+  return var->getOrAddMember(key, pool);
+}
+
+inline bool variantIsNull(const VariantData* var) {
+  if (!var)
+    return true;
+  return var->isNull();
+}
+
+inline size_t variantNesting(const VariantData* var) {
+  if (!var)
+    return 0;
+  return var->nesting();
+}
+
+inline void variantRemoveElement(VariantData* var, size_t index,
+                                 MemoryPool* pool) {
+  if (!var)
+    return;
+  var->removeElement(index, pool);
+}
+
+template <typename TAdaptedString>
+void variantRemoveMember(VariantData* var, TAdaptedString key,
+                         MemoryPool* pool) {
+  if (!var)
+    return;
+  var->removeMember(key, pool);
+}
+
+inline void variantSetBoolean(VariantData* var, bool value, MemoryPool* pool) {
+  if (!var)
+    return;
+  var->setBoolean(value, pool);
+}
+
+inline void variantSetFloat(VariantData* var, JsonFloat value,
+                            MemoryPool* pool) {
+  if (!var)
+    return;
+  var->setFloat(value, pool);
+}
+
+template <typename T>
+void variantSetInteger(VariantData* var, T value, MemoryPool* pool) {
+  if (!var)
+    return;
+  var->setInteger(value, pool);
+}
+
+inline void variantSetNull(VariantData* var, MemoryPool* pool) {
+  if (!var)
+    return;
+  var->setNull(pool);
+}
+
+template <typename T>
+void variantSetRawString(VariantData* var, SerializedValue<T> value,
+                         MemoryPool* pool) {
+  if (!var)
+    return;
+  var->setRawString(value, pool);
+}
+
+template <typename TAdaptedString>
+void variantSetString(VariantData* var, TAdaptedString value,
+                      MemoryPool* pool) {
+  if (!var)
+    return;
+  var->setString(value, pool);
+}
+
+inline size_t variantSize(const VariantData* var) {
+  return var != 0 ? var->size() : 0;
+}
+
+inline CollectionData* variantToArray(VariantData* var, MemoryPool* pool) {
+  if (!var)
+    return 0;
+  return &var->toArray(pool);
+}
+
+inline CollectionData* variantToObject(VariantData* var, MemoryPool* pool) {
+  if (!var)
+    return 0;
+  return &var->toObject(pool);
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

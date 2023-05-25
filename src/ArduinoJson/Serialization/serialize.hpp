@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Serialization/Writer.hpp>
-#include <ArduinoJson/Variant/VariantFunctions.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 

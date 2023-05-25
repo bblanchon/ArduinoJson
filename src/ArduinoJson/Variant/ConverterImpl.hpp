@@ -7,7 +7,6 @@
 #include <ArduinoJson/Json/JsonSerializer.hpp>
 #include <ArduinoJson/Memory/StringBuilder.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
-#include <ArduinoJson/Variant/VariantFunctions.hpp>
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
