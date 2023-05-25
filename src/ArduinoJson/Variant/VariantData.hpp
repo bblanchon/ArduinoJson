@@ -299,9 +299,14 @@ class VariantData {
     content_.asOwnedString = s;
   }
 
-  void setRawString(StringNode* s, MemoryPool* pool) {
+  template <typename T>
+  void setRawString(SerializedValue<T> value, MemoryPool* pool) {
     release(pool);
-    setRawString(s);
+    auto dup = pool->saveString(adaptString(value.data(), value.size()));
+    if (dup)
+      setRawString(dup);
+    else
+      setNull();
   }
 
   template <typename TAdaptedString>

@@ -103,11 +103,7 @@ inline void variantSetRawString(VariantData* var, SerializedValue<T> value,
                                 MemoryPool* pool) {
   if (!var)
     return;
-  auto dup = pool->saveString(adaptString(value.data(), value.size()));
-  if (dup)
-    var->setRawString(dup, pool);
-  else
-    var->setNull(pool);
+  var->setRawString(value, pool);
 }
 
 inline size_t variantSize(const VariantData* var) {
