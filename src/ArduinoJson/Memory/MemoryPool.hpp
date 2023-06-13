@@ -56,11 +56,6 @@ class MemoryPool {
     allocPool(requiredSize);
   }
 
-  void* buffer() {
-    return begin_;  // NOLINT(clang-analyzer-unix.Malloc)
-                    // movePointers() alters this pointer
-  }
-
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
     return size_t(end_ - begin_);
@@ -180,10 +175,6 @@ class MemoryPool {
     return begin_ + bytes <= right_;
   }
 
-  bool owns(void* p) const {
-    return begin_ <= p && p < end_;
-  }
-
   // Workaround for missing placement new
   void* operator new(size_t, void* p) {
     return p;
@@ -225,12 +216,6 @@ class MemoryPool {
     begin_ += offset;
     right_ += offset;
     end_ += offset;
-  }
-
-  void checkInvariants() {
-    ARDUINOJSON_ASSERT(begin_ <= right_);
-    ARDUINOJSON_ASSERT(right_ <= end_);
-    ARDUINOJSON_ASSERT(isAligned(right_));
   }
 
   void deallocAllStrings() {
