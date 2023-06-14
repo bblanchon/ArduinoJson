@@ -62,7 +62,7 @@ class MemoryPool {
   }
 
   size_t size() const {
-    size_t total = size_t(end_ - right_);
+    size_t total = size_t(right_ - begin_);
     for (auto node = strings_; node; node = node->next)
       total += sizeofString(node->length);
     return total;
@@ -77,8 +77,9 @@ class MemoryPool {
       overflowed_ = true;
       return 0;
     }
-    right_ -= bytes;
-    return right_;
+    auto p = right_;
+    right_ += bytes;
+    return p;
   }
 
   template <typename TAdaptedString>
@@ -166,13 +167,13 @@ class MemoryPool {
   }
 
   void clear() {
-    right_ = end_;
+    right_ = begin_;
     overflowed_ = false;
     deallocAllStrings();
   }
 
   bool canAlloc(size_t bytes) const {
-    return begin_ + bytes <= right_;
+    return right_ + bytes <= end_;
   }
 
   // Workaround for missing placement new
@@ -181,43 +182,17 @@ class MemoryPool {
   }
 
   ptrdiff_t shrinkToFit() {
-    ptrdiff_t bytes_reclaimed = squash();
-    if (bytes_reclaimed == 0)
-      return 0;
+    auto oldBegin = begin_;
+    auto newCapacity = size_t(right_ - begin_);
 
-    void* old_ptr = begin_;
-    void* new_ptr = allocator_->reallocate(old_ptr, capacity());
+    begin_ =
+        reinterpret_cast<char*>(allocator_->reallocate(begin_, newCapacity));
+    end_ = right_ = begin_ + newCapacity;
 
-    ptrdiff_t ptr_offset =
-        static_cast<char*>(new_ptr) - static_cast<char*>(old_ptr);
-
-    movePointers(ptr_offset);
-    return ptr_offset - bytes_reclaimed;
+    return begin_ - oldBegin;
   }
 
  private:
-  ptrdiff_t squash() {
-    char* new_right = addPadding(begin_);
-    if (new_right >= right_)
-      return 0;
-
-    size_t right_size = static_cast<size_t>(end_ - right_);
-    memmove(new_right, right_, right_size);
-
-    ptrdiff_t bytes_reclaimed = right_ - new_right;
-    right_ = new_right;
-    end_ = new_right + right_size;
-    return bytes_reclaimed;
-  }
-
-  // Move all pointers together
-  // This funcion is called after a realloc.
-  void movePointers(ptrdiff_t offset) {
-    begin_ += offset;
-    right_ += offset;
-    end_ += offset;
-  }
-
   void deallocAllStrings() {
     while (strings_) {
       auto node = strings_;
@@ -228,8 +203,8 @@ class MemoryPool {
 
   void allocPool(size_t capa) {
     auto buf = capa ? reinterpret_cast<char*>(allocator_->allocate(capa)) : 0;
-    begin_ = buf;
-    end_ = right_ = buf ? buf + capa : 0;
+    begin_ = right_ = buf;
+    end_ = buf ? buf + capa : 0;
     ARDUINOJSON_ASSERT(isAligned(begin_));
     ARDUINOJSON_ASSERT(isAligned(right_));
     ARDUINOJSON_ASSERT(isAligned(end_));
