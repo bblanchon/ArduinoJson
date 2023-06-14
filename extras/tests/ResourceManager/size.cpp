@@ -9,7 +9,7 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("ResourceManager::capacity()") {
-  const size_t capacity = 64;
+  const size_t capacity = 4 * sizeof(VariantSlot);
   ResourceManager resources(capacity);
   REQUIRE(capacity == resources.capacity());
 }
@@ -25,10 +25,10 @@ TEST_CASE("ResourceManager::size()") {
     const size_t variantCount = resources.capacity() / sizeof(VariantSlot);
 
     for (size_t i = 0; i < variantCount; i++)
-      resources.allocVariant();
+      resources.allocSlot();
     size_t size = resources.size();
 
-    resources.allocVariant();
+    resources.allocSlot();
 
     REQUIRE(size == resources.size());
   }

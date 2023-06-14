@@ -19,7 +19,8 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
  public:
   static const bool producesText = false;
 
-  MsgPackSerializer(TWriter writer) : writer_(writer) {}
+  MsgPackSerializer(TWriter writer, const ResourceManager* resources)
+      : writer_(writer), resources_(resources) {}
 
   template <typename T>
   typename enable_if<is_floating_point<T>::value && sizeof(T) == 4,
@@ -48,7 +49,7 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
   }
 
   size_t visit(const ArrayData& array) {
-    size_t n = array.size();
+    size_t n = array.size(resources_);
     if (n < 0x10) {
       writeByte(uint8_t(0x90 + n));
     } else if (n < 0x10000) {
@@ -58,14 +59,15 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
       writeByte(0xDD);
       writeInteger(uint32_t(n));
     }
-    for (auto it = array.createIterator(); !it.done(); it.next()) {
+    for (auto it = array.createIterator(resources_); !it.done();
+         it.next(resources_)) {
       it->accept(*this);
     }
     return bytesWritten();
   }
 
   size_t visit(const ObjectData& object) {
-    size_t n = object.size();
+    size_t n = object.size(resources_);
     if (n < 0x10) {
       writeByte(uint8_t(0x80 + n));
     } else if (n < 0x10000) {
@@ -75,7 +77,8 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
       writeByte(0xDF);
       writeInteger(uint32_t(n));
     }
-    for (auto it = object.createIterator(); !it.done(); it.next()) {
+    for (auto it = object.createIterator(resources_); !it.done();
+         it.next(resources_)) {
       visit(it.key());
       it->accept(*this);
     }
@@ -200,6 +203,7 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
   }
 
   CountingDecorator<TWriter> writer_;
+  const ResourceManager* resources_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

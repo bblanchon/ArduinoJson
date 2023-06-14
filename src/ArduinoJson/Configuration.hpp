@@ -75,19 +75,18 @@
 #  define ARDUINOJSON_DEFAULT_NESTING_LIMIT 10
 #endif
 
-// Number of bits to store the pointer to next node
-// (saves RAM but limits the number of values in a document)
-#ifndef ARDUINOJSON_SLOT_OFFSET_SIZE
+// Number of bits to store the variant identifier
+#ifndef ARDUINOJSON_SLOT_ID_SIZE
 #  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ <= 2
 // Address space == 16-bit => max 127 values
-#    define ARDUINOJSON_SLOT_OFFSET_SIZE 1
+#    define ARDUINOJSON_SLOT_ID_SIZE 1
 #  elif defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ >= 8 || \
       defined(_WIN64) && _WIN64
 // Address space == 64-bit => max 2147483647 values
-#    define ARDUINOJSON_SLOT_OFFSET_SIZE 4
+#    define ARDUINOJSON_SLOT_ID_SIZE 4
 #  else
 // Address space == 32-bit => max 32767 values
-#    define ARDUINOJSON_SLOT_OFFSET_SIZE 2
+#    define ARDUINOJSON_SLOT_ID_SIZE 2
 #  endif
 #endif
 

@@ -22,8 +22,9 @@ TEST_CASE("JsonDocument constructor") {
   }
 
   SECTION("JsonDocument(const JsonDocument&)") {
+    const size_t capacity = 100 * sizeof(ArduinoJson::detail::VariantSlot);
     {
-      JsonDocument doc1(4096, &spyingAllocator);
+      JsonDocument doc1(capacity, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
 
       JsonDocument doc2(doc1);
@@ -32,14 +33,14 @@ TEST_CASE("JsonDocument constructor") {
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
     }
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(4096)
+            AllocatorLog() << AllocatorLog::Allocate(capacity)
                            << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Allocate(capacity)
                            << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Deallocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(4096)
+                           << AllocatorLog::Deallocate(capacity)
                            << AllocatorLog::Deallocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(4096));
+                           << AllocatorLog::Deallocate(capacity));
   }
 
   SECTION("JsonDocument(JsonDocument&&)") {

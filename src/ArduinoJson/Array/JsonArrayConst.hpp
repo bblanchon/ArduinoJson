@@ -26,7 +26,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->createIterator(), resources_);
+    return iterator(data_->createIterator(resources_), resources_);
   }
 
   // Returns an iterator to the element following the last element of the array.
@@ -46,8 +46,8 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the element at the specified index.
   // https://arduinojson.org/v6/api/jsonarrayconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(detail::ArrayData::getElement(data_, index),
-                            resources_);
+    return JsonVariantConst(
+        detail::ArrayData::getElement(data_, index, resources_), resources_);
   }
 
   operator JsonVariantConst() const {
@@ -69,19 +69,19 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the number of bytes occupied by the array.
   // https://arduinojson.org/v6/api/jsonarrayconst/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
-    return data_ ? data_->memoryUsage() : 0;
+    return data_ ? data_->memoryUsage(resources_) : 0;
   }
 
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsonarrayconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return detail::VariantData::nesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_), resources_);
   }
 
   // Returns the number of elements in the array.
   // https://arduinojson.org/v6/api/jsonarrayconst/size/
   FORCE_INLINE size_t size() const {
-    return data_ ? data_->size() : 0;
+    return data_ ? data_->size(resources_) : 0;
   }
 
  private:

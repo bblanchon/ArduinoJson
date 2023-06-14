@@ -45,19 +45,19 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   // Returns the number of bytes occupied by the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
-    return data_ ? data_->memoryUsage() : 0;
+    return data_ ? data_->memoryUsage(resources_) : 0;
   }
 
   // Returns the depth (nesting level) of the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return detail::VariantData::nesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_), resources_);
   }
 
   // Returns the number of members in the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/size/
   FORCE_INLINE size_t size() const {
-    return data_ ? data_->size() : 0;
+    return data_ ? data_->size(resources_) : 0;
   }
 
   // Returns an iterator to the first key-value pair of the object.
@@ -65,7 +65,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->createIterator(), resources_);
+    return iterator(data_->createIterator(resources_), resources_);
   }
 
   // Returns an iterator following the last key-value pair of the object.
@@ -78,14 +78,16 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key),
+                                         resources_) != 0;
   }
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
-    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key),
+                                         resources_) != 0;
   }
 
   // Gets the member with specified key.
@@ -94,9 +96,9 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
-    return JsonVariantConst(
-        detail::ObjectData::getMember(data_, detail::adaptString(key)),
-        resources_);
+    return JsonVariantConst(detail::ObjectData::getMember(
+                                data_, detail::adaptString(key), resources_),
+                            resources_);
   }
 
   // Gets the member with specified key.

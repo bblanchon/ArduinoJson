@@ -2,6 +2,8 @@
 // Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 
+#define ARDUINOJSON_SLOT_ID_SIZE 4  // required to reach 65536 elements
+
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
@@ -55,6 +57,7 @@ TEST_CASE("serialize MsgPack array") {
     const char* nil = 0;
     for (int i = 0; i < 65536; i++)
       array.add(nil);
+    REQUIRE(array.size() == 65536);
 
     check(array,
           std::string("\xDD\x00\x01\x00\x00", 5) + std::string(65536, '\xc0'));

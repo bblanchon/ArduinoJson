@@ -16,17 +16,18 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
  public:
   static const bool producesText = true;
 
-  JsonSerializer(TWriter writer) : formatter_(writer) {}
+  JsonSerializer(TWriter writer, const ResourceManager* resources)
+      : formatter_(writer), resources_(resources) {}
 
   FORCE_INLINE size_t visit(const ArrayData& array) {
     write('[');
 
-    auto it = array.createIterator();
+    auto it = array.createIterator(resources_);
 
     while (!it.done()) {
       it->accept(*this);
 
-      it.next();
+      it.next(resources_);
       if (it.done())
         break;
 
@@ -40,14 +41,14 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
   size_t visit(const ObjectData& object) {
     write('{');
 
-    auto it = object.createIterator();
+    auto it = object.createIterator(resources_);
 
     while (!it.done()) {
       formatter_.writeString(it.key());
       write(':');
       it->accept(*this);
 
-      it.next();
+      it.next(resources_);
       if (it.done())
         break;
 
@@ -113,6 +114,9 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
 
  private:
   TextFormatter<TWriter> formatter_;
+
+ protected:
+  const ResourceManager* resources_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -50,7 +50,7 @@ class JsonArrayIterator {
   }
 
   JsonArrayIterator& operator++() {
-    iterator_.next();
+    iterator_.next(resources_);
     return *this;
   }
 
@@ -84,7 +84,7 @@ class JsonArrayConstIterator {
   }
 
   JsonArrayConstIterator& operator++() {
-    iterator_.next();
+    iterator_.next(resources_);
     return *this;
   }
 

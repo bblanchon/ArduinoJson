@@ -20,7 +20,7 @@ class CollectionIterator {
  public:
   CollectionIterator() : slot_(nullptr) {}
 
-  void next();
+  void next(const ResourceManager* resources);
 
   bool done() const {
     return slot_ == nullptr;
@@ -70,8 +70,8 @@ class CollectionIterator {
 };
 
 class CollectionData {
-  VariantSlot* head_ = 0;
-  VariantSlot* tail_ = 0;
+  SlotId head_ = NULL_SLOT;
+  SlotId tail_ = NULL_SLOT;
 
  public:
   // Placement new
@@ -83,13 +83,13 @@ class CollectionData {
 
   using iterator = CollectionIterator;
 
-  iterator createIterator() const {
-    return iterator(head_);
+  iterator createIterator(const ResourceManager* resources) const {
+    return iterator(resources->getSlot(head_));
   }
 
-  size_t memoryUsage() const;
-  size_t size() const;
-  size_t nesting() const;
+  size_t memoryUsage(const ResourceManager*) const;
+  size_t size(const ResourceManager*) const;
+  size_t nesting(const ResourceManager*) const;
 
   void clear(ResourceManager* resources);
 
@@ -98,8 +98,6 @@ class CollectionData {
       return;
     collection->clear(resources);
   }
-
-  void movePointers(ptrdiff_t variantDistance);
 
   void remove(iterator it, ResourceManager* resources);
 
@@ -113,7 +111,7 @@ class CollectionData {
   iterator addSlot(ResourceManager*);
 
  private:
-  VariantSlot* getPreviousSlot(VariantSlot*) const;
+  SlotWithId getPreviousSlot(VariantSlot*, const ResourceManager*) const;
   static void releaseSlot(VariantSlot*, ResourceManager*);
 };
 

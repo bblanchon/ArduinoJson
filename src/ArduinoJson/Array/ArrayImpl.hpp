@@ -9,10 +9,11 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline ArrayData::iterator ArrayData::at(size_t index) const {
-  auto it = createIterator();
+inline ArrayData::iterator ArrayData::at(
+    size_t index, const ResourceManager* resources) const {
+  auto it = createIterator(resources);
   while (!it.done() && index) {
-    it.next();
+    it.next(resources);
     --index;
   }
   return it;
@@ -20,9 +21,9 @@ inline ArrayData::iterator ArrayData::at(size_t index) const {
 
 inline VariantData* ArrayData::getOrAddElement(size_t index,
                                                ResourceManager* resources) {
-  auto it = createIterator();
+  auto it = createIterator(resources);
   while (!it.done() && index > 0) {
-    it.next();
+    it.next(resources);
     index--;
   }
   if (it.done())
@@ -37,12 +38,13 @@ inline VariantData* ArrayData::getOrAddElement(size_t index,
   return element;
 }
 
-inline VariantData* ArrayData::getElement(size_t index) const {
-  return at(index).data();
+inline VariantData* ArrayData::getElement(
+    size_t index, const ResourceManager* resources) const {
+  return at(index, resources).data();
 }
 
 inline void ArrayData::removeElement(size_t index, ResourceManager* resources) {
-  remove(at(index), resources);
+  remove(at(index, resources), resources);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

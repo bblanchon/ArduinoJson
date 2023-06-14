@@ -67,11 +67,15 @@ class ResourceManager {
     return overflowed_;
   }
 
-  VariantSlot* allocVariant() {
-    auto p = variantPool_.allocVariant();
+  SlotWithId allocSlot() {
+    auto p = variantPool_.allocSlot();
     if (!p)
       overflowed_ = true;
     return p;
+  }
+
+  VariantSlot* getSlot(SlotId id) const {
+    return variantPool_.getSlot(id);
   }
 
   template <typename TAdaptedString>
@@ -123,8 +127,8 @@ class ResourceManager {
     stringPool_.clear(allocator_);
   }
 
-  ptrdiff_t shrinkToFit() {
-    return variantPool_.shrinkToFit(allocator_);
+  void shrinkToFit() {
+    variantPool_.shrinkToFit(allocator_);
   }
 
  private:

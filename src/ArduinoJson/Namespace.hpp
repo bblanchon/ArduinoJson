@@ -19,7 +19,7 @@
                                               ARDUINOJSON_ENABLE_INFINITY, \
                                               ARDUINOJSON_ENABLE_COMMENTS, \
                                               ARDUINOJSON_DECODE_UNICODE), \
-                        ARDUINOJSON_SLOT_OFFSET_SIZE)
+                        ARDUINOJSON_SLOT_ID_SIZE)
 
 #endif
 

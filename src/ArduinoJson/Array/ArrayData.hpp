@@ -22,12 +22,13 @@ class ArrayData : public CollectionData {
 
   VariantData* getOrAddElement(size_t index, ResourceManager* resources);
 
-  VariantData* getElement(size_t index) const;
+  VariantData* getElement(size_t index, const ResourceManager* resources) const;
 
-  static VariantData* getElement(const ArrayData* array, size_t index) {
+  static VariantData* getElement(const ArrayData* array, size_t index,
+                                 const ResourceManager* resources) {
     if (!array)
       return nullptr;
-    return array->getElement(index);
+    return array->getElement(index, resources);
   }
 
   void removeElement(size_t index, ResourceManager* resources);
@@ -50,7 +51,7 @@ class ArrayData : public CollectionData {
   }
 
  private:
-  iterator at(size_t index) const;
+  iterator at(size_t index, const ResourceManager* resources) const;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

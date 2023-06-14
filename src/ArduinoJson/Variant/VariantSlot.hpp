@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
-#include <ArduinoJson/Polyfills/integer.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
@@ -14,15 +13,13 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 struct StringNode;
 
-typedef int_t<ARDUINOJSON_SLOT_OFFSET_SIZE * 8>::type VariantSlotDiff;
-
 class VariantSlot {
   // CAUTION: same layout as VariantData
   // we cannot use composition because it adds padding
   // (+20% on ESP8266 for example)
   VariantContent content_;
   uint8_t flags_;
-  VariantSlotDiff next_;
+  SlotId next_;
   const char* key_;
 
  public:
@@ -33,7 +30,7 @@ class VariantSlot {
 
   static void operator delete(void*, void*) noexcept {}
 
-  VariantSlot() : flags_(0), next_(0), key_(0) {}
+  VariantSlot() : flags_(0), next_(NULL_SLOT), key_(0) {}
 
   VariantData* data() {
     return reinterpret_cast<VariantData*>(&content_);
@@ -43,29 +40,12 @@ class VariantSlot {
     return reinterpret_cast<const VariantData*>(&content_);
   }
 
-  VariantSlot* next() {
-    return next_ ? this + next_ : 0;
+  SlotId next() const {
+    return next_;
   }
 
-  const VariantSlot* next() const {
-    return const_cast<VariantSlot*>(this)->next();
-  }
-
-  void setNext(VariantSlot* slot) {
-    ARDUINOJSON_ASSERT(!slot || slot - this >=
-                                    numeric_limits<VariantSlotDiff>::lowest());
-    ARDUINOJSON_ASSERT(!slot || slot - this <=
-                                    numeric_limits<VariantSlotDiff>::highest());
-    next_ = VariantSlotDiff(slot ? slot - this : 0);
-  }
-
-  void setNextNotNull(VariantSlot* slot) {
-    ARDUINOJSON_ASSERT(slot != 0);
-    ARDUINOJSON_ASSERT(slot - this >=
-                       numeric_limits<VariantSlotDiff>::lowest());
-    ARDUINOJSON_ASSERT(slot - this <=
-                       numeric_limits<VariantSlotDiff>::highest());
-    next_ = VariantSlotDiff(slot - this);
+  void setNext(SlotId slot) {
+    next_ = slot;
   }
 
   void setKey(const char* k) {

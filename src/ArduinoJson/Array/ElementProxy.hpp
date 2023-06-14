@@ -45,7 +45,9 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream>>,
   }
 
   FORCE_INLINE VariantData* getData() const {
-    return VariantData::getElement(VariantAttorney::getData(upstream_), index_);
+    return VariantData::getElement(
+        VariantAttorney::getData(upstream_), index_,
+        VariantAttorney::getResourceManager(upstream_));
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {

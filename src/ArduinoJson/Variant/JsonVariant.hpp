@@ -94,7 +94,7 @@ inline JsonVariant VariantRefBase<TDerived>::add() const {
 }
 
 template <typename TDerived>
-inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
+inline JsonVariant VariantRefBase<TDerived>::getSlot() const {
   return JsonVariant(getData(), getResourceManager());
 }
 

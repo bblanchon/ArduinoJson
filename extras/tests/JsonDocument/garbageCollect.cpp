@@ -13,9 +13,10 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument::garbageCollect()") {
+  const size_t capacity = 100 * sizeof(ArduinoJson::detail::VariantSlot);
   ControllableAllocator controllableAllocator;
   SpyingAllocator spyingAllocator(&controllableAllocator);
-  JsonDocument doc(4096, &spyingAllocator);
+  JsonDocument doc(capacity, &spyingAllocator);
 
   SECTION("when allocation succeeds") {
     deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");
@@ -29,10 +30,10 @@ TEST_CASE("JsonDocument::garbageCollect()") {
     REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(7));
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(4096)
+            AllocatorLog() << AllocatorLog::Allocate(capacity)
                            << AllocatorLog::Allocate(sizeofString(7))
                            << AllocatorLog::Deallocate(sizeofString(7))
-                           << AllocatorLog::Deallocate(4096));
+                           << AllocatorLog::Deallocate(capacity));
   }
 
   SECTION("when allocation fails") {
@@ -49,7 +50,7 @@ TEST_CASE("JsonDocument::garbageCollect()") {
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
 
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(4096)
+            AllocatorLog() << AllocatorLog::AllocateFail(capacity)
                            << AllocatorLog::AllocateFail(sizeofString(7)));
   }
 }

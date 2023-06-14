@@ -34,100 +34,93 @@ inline bool CollectionIterator::ownsKey() const {
   return slot_->ownsKey();
 }
 
-inline void CollectionIterator::next() {
+inline void CollectionIterator::next(const ResourceManager* resources) {
   ARDUINOJSON_ASSERT(slot_ != nullptr);
-  slot_ = slot_->next();
+  auto nextId = slot_->next();
+  if (nextId != NULL_SLOT)
+    slot_ = resources->getSlot(nextId);
+  else
+    slot_ = nullptr;
 }
 
 inline CollectionData::iterator CollectionData::addSlot(
     ResourceManager* resources) {
-  auto slot = resources->allocVariant();
+  auto slot = resources->allocSlot();
   if (!slot)
     return nullptr;
-  if (tail_) {
-    tail_->setNextNotNull(slot);
-    tail_ = slot;
+  if (tail_ != NULL_SLOT) {
+    auto tail = resources->getSlot(tail_);
+    tail->setNext(slot.id());
+    tail_ = slot.id();
   } else {
-    head_ = slot;
-    tail_ = slot;
+    head_ = slot.id();
+    tail_ = slot.id();
   }
-  return slot;
+  return iterator(slot);
 }
 
 inline void CollectionData::clear(ResourceManager* resources) {
-  for (auto slot = head_; slot; slot = slot->next())
-    releaseSlot(slot, resources);
-  head_ = 0;
-  tail_ = 0;
+  for (auto it = createIterator(resources); !it.done(); it.next(resources))
+    releaseSlot(it.slot_, resources);
+  head_ = NULL_SLOT;
+  tail_ = NULL_SLOT;
 }
 
-inline VariantSlot* CollectionData::getPreviousSlot(VariantSlot* target) const {
-  VariantSlot* current = head_;
-  while (current) {
-    VariantSlot* next = current->next();
-    if (next == target)
-      return current;
-    current = next;
+inline SlotWithId CollectionData::getPreviousSlot(
+    VariantSlot* target, const ResourceManager* resources) const {
+  auto prev = SlotWithId();
+  auto currentId = head_;
+  while (currentId != NULL_SLOT) {
+    auto currentSlot = resources->getSlot(currentId);
+    if (currentSlot == target)
+      return prev;
+    prev = SlotWithId(currentSlot, currentId);
+    currentId = currentSlot->next();
   }
-  return 0;
+  return SlotWithId();
 }
 
 inline void CollectionData::remove(iterator it, ResourceManager* resources) {
   if (it.done())
     return;
   auto curr = it.slot_;
-  auto prev = getPreviousSlot(curr);
+  auto prev = getPreviousSlot(curr, resources);
   auto next = curr->next();
   if (prev)
     prev->setNext(next);
   else
     head_ = next;
-  if (!next)
-    tail_ = prev;
+  if (next == NULL_SLOT)
+    tail_ = prev.id();
   releaseSlot(curr, resources);
 }
 
-inline size_t CollectionData::memoryUsage() const {
+inline size_t CollectionData::memoryUsage(
+    const ResourceManager* resources) const {
   size_t total = 0;
-  for (auto it = createIterator(); !it.done(); it.next()) {
-    total += sizeof(VariantSlot) + it->memoryUsage();
+  for (auto it = createIterator(resources); !it.done(); it.next(resources)) {
+    total += sizeof(VariantSlot) + it->memoryUsage(resources);
     if (it.ownsKey())
       total += sizeofString(strlen(it.key()));
   }
   return total;
 }
 
-inline size_t CollectionData::nesting() const {
+inline size_t CollectionData::nesting(const ResourceManager* resources) const {
   size_t maxChildNesting = 0;
-  for (auto it = createIterator(); !it.done(); it.next()) {
-    size_t childNesting = it->nesting();
+  for (auto it = createIterator(resources); !it.done(); it.next(resources)) {
+    size_t childNesting = it->nesting(resources);
     if (childNesting > maxChildNesting)
       maxChildNesting = childNesting;
   }
   return maxChildNesting + 1;
 }
 
-inline size_t CollectionData::size() const {
+inline size_t CollectionData::size(const ResourceManager* resources) const {
   size_t count = 0;
-  for (auto it = createIterator(); !it.done(); it.next())
+  for (auto it = createIterator(resources); !it.done(); it.next(resources))
     count++;
   return count;
-}
-
-template <typename T>
-inline void movePointer(T*& p, ptrdiff_t offset) {
-  if (!p)
-    return;
-  p = reinterpret_cast<T*>(
-      reinterpret_cast<void*>(reinterpret_cast<char*>(p) + offset));
-  ARDUINOJSON_ASSERT(isAligned(p));
-}
-
-inline void CollectionData::movePointers(ptrdiff_t variantDistance) {
-  movePointer(head_, variantDistance);
-  movePointer(tail_, variantDistance);
-  for (VariantSlot* slot = head_; slot; slot = slot->next())
-    slot->data()->movePointers(variantDistance);
 }
 
 inline void CollectionData::releaseSlot(VariantSlot* slot,

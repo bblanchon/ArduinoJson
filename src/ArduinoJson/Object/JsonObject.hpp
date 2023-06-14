@@ -56,19 +56,19 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Returns the number of bytes occupied by the object.
   // https://arduinojson.org/v6/api/jsonobject/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
-    return data_ ? data_->memoryUsage() : 0;
+    return data_ ? data_->memoryUsage(resources_) : 0;
   }
 
   // Returns the depth (nesting level) of the object.
   // https://arduinojson.org/v6/api/jsonobject/nesting/
   FORCE_INLINE size_t nesting() const {
-    return detail::VariantData::nesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_), resources_);
   }
 
   // Returns the number of members in the object.
   // https://arduinojson.org/v6/api/jsonobject/size/
   FORCE_INLINE size_t size() const {
-    return data_ ? data_->size() : 0;
+    return data_ ? data_->size(resources_) : 0;
   }
 
   // Returns an iterator to the first key-value pair of the object.
@@ -76,7 +76,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->createIterator(), resources_);
+    return iterator(data_->createIterator(resources_), resources_);
   }
 
   // Returns an iterator following the last key-value pair of the object.
@@ -158,7 +158,8 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value, bool>::type
       containsKey(const TString& key) const {
-    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key),
+                                         resources_) != 0;
   }
 
   // Returns true if the object contains the specified key.
@@ -167,7 +168,8 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
       containsKey(TChar* key) const {
-    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key),
+                                         resources_) != 0;
   }
 
   // Creates an array and adds it to the object.

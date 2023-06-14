@@ -54,16 +54,16 @@ template <typename TDerived>
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, bool>::type
 VariantRefBase<TDerived>::containsKey(const TString& key) const {
-  return VariantData::getMember(VariantAttorney::getData(derived()),
-                                adaptString(key)) != 0;
+  return VariantData::getMember(getData(), adaptString(key),
+                                getResourceManager()) != 0;
 }
 
 template <typename TDerived>
 template <typename TChar>
 inline typename enable_if<IsString<TChar*>::value, bool>::type
 VariantRefBase<TDerived>::containsKey(TChar* key) const {
-  return VariantData::getMember(VariantAttorney::getData(derived()),
-                                adaptString(key)) != 0;
+  return VariantData::getMember(getData(), adaptString(key),
+                                getResourceManager()) != 0;
 }
 
 template <typename TDerived>

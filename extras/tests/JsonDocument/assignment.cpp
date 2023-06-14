@@ -31,7 +31,8 @@ TEST_CASE("JsonDocument assignment") {
   }
 
   SECTION("Copy assignment reallocates when capacity is smaller") {
-    JsonDocument doc1(4096, &spyingAllocator);
+    const size_t capacity = 100 * sizeof(ArduinoJson::detail::VariantSlot);
+    JsonDocument doc1(capacity, &spyingAllocator);
     deserializeJson(doc1, "[{\"hello\":\"world\"}]");
     JsonDocument doc2(sizeofArray(1), &spyingAllocator);
     spyingAllocator.clearLog();
@@ -41,14 +42,15 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "[{\"hello\":\"world\"}]");
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Deallocate(sizeofArray(1))
-                           << AllocatorLog::Allocate(4096)
+                           << AllocatorLog::Allocate(capacity)
                            << AllocatorLog::Allocate(sizeofString(5))  // hello
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );
   }
 
   SECTION("Copy assignment reallocates when capacity is larger") {
-    JsonDocument doc1(1024, &spyingAllocator);
+    const size_t capacity1 = 100 * sizeof(ArduinoJson::detail::VariantSlot);
+    JsonDocument doc1(capacity1, &spyingAllocator);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
     JsonDocument doc2(4096, &spyingAllocator);
     spyingAllocator.clearLog();
@@ -58,7 +60,7 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Deallocate(4096)
-                           << AllocatorLog::Allocate(1024)
+                           << AllocatorLog::Allocate(capacity1)
                            << AllocatorLog::Allocate(sizeofString(5))  // hello
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );

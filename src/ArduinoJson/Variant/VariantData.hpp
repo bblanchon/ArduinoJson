@@ -185,30 +185,28 @@ class VariantData {
     }
   }
 
-  VariantData* getElement(size_t index) const {
-    auto array = asArray();
-    if (!array)
-      return nullptr;
-    return array->getElement(index);
+  VariantData* getElement(size_t index,
+                          const ResourceManager* resources) const {
+    return ArrayData::getElement(asArray(), index, resources);
   }
 
-  static VariantData* getElement(const VariantData* var, size_t index) {
-    return var != 0 ? var->getElement(index) : 0;
-  }
-
-  template <typename TAdaptedString>
-  VariantData* getMember(TAdaptedString key) const {
-    auto object = asObject();
-    if (!object)
-      return nullptr;
-    return object->getMember(key);
+  static VariantData* getElement(const VariantData* var, size_t index,
+                                 const ResourceManager* resources) {
+    return var != 0 ? var->getElement(index, resources) : 0;
   }
 
   template <typename TAdaptedString>
-  static VariantData* getMember(const VariantData* var, TAdaptedString key) {
+  VariantData* getMember(TAdaptedString key,
+                         const ResourceManager* resources) const {
+    return ObjectData::getMember(asObject(), key, resources);
+  }
+
+  template <typename TAdaptedString>
+  static VariantData* getMember(const VariantData* var, TAdaptedString key,
+                                const ResourceManager* resources) {
     if (!var)
       return 0;
-    return var->getMember(key);
+    return var->getMember(key, resources);
   }
 
   VariantData* getOrAddElement(size_t index, ResourceManager* resources) {
@@ -276,36 +274,32 @@ class VariantData {
     return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
   }
 
-  size_t memoryUsage() const {
+  size_t memoryUsage(const ResourceManager* resources) const {
     switch (type()) {
       case VALUE_IS_OWNED_STRING:
       case VALUE_IS_RAW_STRING:
         return sizeofString(content_.asOwnedString->length);
       case VALUE_IS_OBJECT:
       case VALUE_IS_ARRAY:
-        return content_.asCollection.memoryUsage();
+        return content_.asCollection.memoryUsage(resources);
       default:
         return 0;
     }
   }
 
-  void movePointers(ptrdiff_t variantDistance) {
-    if (flags_ & COLLECTION_MASK)
-      content_.asCollection.movePointers(variantDistance);
-  }
-
-  size_t nesting() const {
+  size_t nesting(const ResourceManager* resources) const {
     auto collection = asCollection();
     if (collection)
-      return collection->nesting();
+      return collection->nesting(resources);
     else
       return 0;
   }
 
-  static size_t nesting(const VariantData* var) {
+  static size_t nesting(const VariantData* var,
+                        const ResourceManager* resources) {
     if (!var)
       return 0;
-    return var->nesting();
+    return var->nesting(resources);
   }
 
   void operator=(const VariantData& src) {
@@ -455,12 +449,12 @@ class VariantData {
     content_.asOwnedString = s;
   }
 
-  size_t size() const {
-    return isCollection() ? content_.asCollection.size() : 0;
+  size_t size(const ResourceManager* resources) const {
+    return isCollection() ? content_.asCollection.size(resources) : 0;
   }
 
-  static size_t size(const VariantData* var) {
-    return var != 0 ? var->size() : 0;
+  static size_t size(const VariantData* var, const ResourceManager* resources) {
+    return var != 0 ? var->size(resources) : 0;
   }
 
   ArrayData& toArray() {

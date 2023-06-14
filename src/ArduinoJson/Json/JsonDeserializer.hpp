@@ -273,7 +273,7 @@ class JsonDeserializer {
       TFilter memberFilter = filter[key.c_str()];
 
       if (memberFilter.allow()) {
-        auto member = object.getMember(adaptString(key.c_str()));
+        auto member = object.getMember(adaptString(key.c_str()), resources_);
         if (!member) {
           // Save key in memory pool.
           auto savedKey = stringBuilder_.save();

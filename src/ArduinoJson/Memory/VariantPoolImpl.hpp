@@ -28,29 +28,31 @@ inline void VariantPool::destroy(Allocator* allocator) {
   usage_ = 0;
 }
 
-inline ptrdiff_t VariantPool::shrinkToFit(Allocator* allocator) {
-  auto originalPool = slots_;
+inline void VariantPool::shrinkToFit(Allocator* allocator) {
   slots_ = reinterpret_cast<VariantSlot*>(
       allocator->reallocate(slots_, slotsToBytes(usage_)));
-  if (slots_)
-    capacity_ = usage_;
-  return reinterpret_cast<char*>(slots_) -
-         reinterpret_cast<char*>(originalPool);
+  capacity_ = usage_;
 }
 
-inline VariantSlot* VariantPool::allocVariant() {
+inline SlotWithId VariantPool::allocSlot() {
   if (!slots_)
-    return nullptr;
-  if (usage_ + 1 > capacity_)
-    return nullptr;
-  return new (&slots_[usage_++]) VariantSlot;
+    return {};
+  if (usage_ >= capacity_)
+    return {};
+  auto index = usage_++;
+  auto slot = &slots_[index];
+  return {new (slot) VariantSlot, SlotId(index)};
 }
 
-inline size_t VariantPool::usage() const {
+inline VariantSlot* VariantPool::getSlot(SlotId id) const {
+  return id == NULL_SLOT ? nullptr : &slots_[id];
+}
+
+inline SlotCount VariantPool::usage() const {
   return usage_;
 }
 
-inline size_t VariantPool::capacity() const {
+inline SlotCount VariantPool::capacity() const {
   return capacity_;
 }
 
@@ -58,11 +60,11 @@ inline void VariantPool::clear() {
   usage_ = 0;
 }
 
-inline size_t VariantPool::bytesToSlots(size_t n) {
-  return n / sizeof(VariantSlot);
+inline SlotCount VariantPool::bytesToSlots(size_t n) {
+  return static_cast<SlotCount>(n / sizeof(VariantSlot));
 }
 
-inline size_t VariantPool::slotsToBytes(size_t n) {
+inline size_t VariantPool::slotsToBytes(SlotCount n) {
   return n * sizeof(VariantSlot);
 }
 

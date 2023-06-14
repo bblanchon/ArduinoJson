@@ -43,13 +43,15 @@ class ObjectData : public CollectionData {
   VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources);
 
   template <typename TAdaptedString>
-  VariantData* getMember(TAdaptedString key) const;
+  VariantData* getMember(TAdaptedString key,
+                         const ResourceManager* resources) const;
 
   template <typename TAdaptedString>
-  static VariantData* getMember(const ObjectData* object, TAdaptedString key) {
+  static VariantData* getMember(const ObjectData* object, TAdaptedString key,
+                                const ResourceManager* resources) {
     if (!object)
       return nullptr;
-    return object->getMember(key);
+    return object->getMember(key, resources);
   }
 
   template <typename TAdaptedString>
@@ -65,7 +67,7 @@ class ObjectData : public CollectionData {
 
  private:
   template <typename TAdaptedString>
-  iterator findKey(TAdaptedString key) const;
+  iterator findKey(TAdaptedString key, const ResourceManager* resources) const;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

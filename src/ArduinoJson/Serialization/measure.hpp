@@ -11,7 +11,8 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <template <typename> class TSerializer>
 size_t measure(ArduinoJson::JsonVariantConst source) {
   DummyWriter dp;
-  TSerializer<DummyWriter> serializer(dp);
+  TSerializer<DummyWriter> serializer(
+      dp, VariantAttorney::getResourceManager(source));
   return VariantData::accept(VariantAttorney::getData(source), serializer);
 }
 

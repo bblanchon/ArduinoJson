@@ -68,7 +68,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->createIterator(), resources_);
+    return iterator(data_->createIterator(resources_), resources_);
   }
 
   // Returns an iterator following the last element of the array.
@@ -148,19 +148,19 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns the number of bytes occupied by the array.
   // https://arduinojson.org/v6/api/jsonarray/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
-    return data_ ? data_->memoryUsage() : 0;
+    return data_ ? data_->memoryUsage(resources_) : 0;
   }
 
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsonarray/nesting/
   FORCE_INLINE size_t nesting() const {
-    return detail::VariantData::nesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_), resources_);
   }
 
   // Returns the number of elements in the array.
   // https://arduinojson.org/v6/api/jsonarray/size/
   FORCE_INLINE size_t size() const {
-    return data_ ? data_->size() : 0;
+    return data_ ? data_->size(resources_) : 0;
   }
 
  private:

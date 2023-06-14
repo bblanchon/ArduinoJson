@@ -58,7 +58,7 @@ class VariantRefBase : public VariantTag {
   template <typename T>
   FORCE_INLINE typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
   as() const {
-    return Converter<T>::fromJson(getVariant());
+    return Converter<T>::fromJson(getSlot());
   }
 
   template <typename T>
@@ -92,7 +92,7 @@ class VariantRefBase : public VariantTag {
   FORCE_INLINE
       typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
       is() const {
-    return Converter<T>::checkJson(getVariant());
+    return Converter<T>::checkJson(getSlot());
   }
 
   // Returns true if the value is of the specified type.
@@ -127,20 +127,20 @@ class VariantRefBase : public VariantTag {
   // Returns the size of the array or object.
   // https://arduinojson.org/v6/api/jsonvariant/size/
   FORCE_INLINE size_t size() const {
-    return VariantData::size(getData());
+    return VariantData::size(getData(), getResourceManager());
   }
 
   // Returns the number of bytes occupied by the value.
   // https://arduinojson.org/v6/api/jsonvariant/memoryusage/
   FORCE_INLINE size_t memoryUsage() const {
     VariantData* data = getData();
-    return data ? data->memoryUsage() : 0;
+    return data ? data->memoryUsage(getResourceManager()) : 0;
   }
 
   // Returns the depth (nesting level) of the value.
   // https://arduinojson.org/v6/api/jsonvariant/nesting/
   FORCE_INLINE size_t nesting() const {
-    return VariantData::nesting(getData());
+    return VariantData::nesting(getData(), getResourceManager());
   }
 
   // Appends a new (null) element to the array.
@@ -269,7 +269,7 @@ class VariantRefBase : public VariantTag {
   }
 
  private:
-  FORCE_INLINE ArduinoJson::JsonVariant getVariant() const;
+  FORCE_INLINE ArduinoJson::JsonVariant getSlot() const;
 
   FORCE_INLINE ArduinoJson::JsonVariantConst getVariantConst() const {
     return ArduinoJson::JsonVariantConst(getData(), getResourceManager());
