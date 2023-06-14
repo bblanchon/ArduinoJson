@@ -34,11 +34,12 @@ class MemoryPool {
     deallocAllStrings();
     deallocPool();
     allocator_ = src.allocator_;
-    begin_ = src.begin_;
-    end_ = src.end_;
-    right_ = src.right_;
+    pool_ = src.pool_;
+    poolCapacity_ = src.poolCapacity_;
+    poolUsage_ = src.poolUsage_;
     overflowed_ = src.overflowed_;
-    src.begin_ = src.end_ = src.right_ = nullptr;
+    src.pool_ = nullptr;
+    src.poolCapacity_ = src.poolUsage_ = 0;
     strings_ = src.strings_;
     src.strings_ = nullptr;
     return *this;
@@ -52,17 +53,17 @@ class MemoryPool {
     size_t capa = addPadding(requiredSize);
     if (capa == capacity())
       return;
-    allocator_->deallocate(begin_);
+    allocator_->deallocate(pool_);
     allocPool(requiredSize);
   }
 
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
-    return size_t(end_ - begin_);
+    return poolCapacity_;
   }
 
   size_t size() const {
-    size_t total = size_t(right_ - begin_);
+    size_t total = poolUsage_;
     for (auto node = strings_; node; node = node->next)
       total += sizeofString(node->length);
     return total;
@@ -77,8 +78,8 @@ class MemoryPool {
       overflowed_ = true;
       return 0;
     }
-    auto p = right_;
-    right_ += bytes;
+    auto p = pool_ + poolUsage_;
+    poolUsage_ += bytes;
     return p;
   }
 
@@ -167,13 +168,13 @@ class MemoryPool {
   }
 
   void clear() {
-    right_ = begin_;
+    poolUsage_ = 0;
     overflowed_ = false;
     deallocAllStrings();
   }
 
   bool canAlloc(size_t bytes) const {
-    return right_ + bytes <= end_;
+    return poolUsage_ + bytes <= poolCapacity_;
   }
 
   // Workaround for missing placement new
@@ -182,14 +183,10 @@ class MemoryPool {
   }
 
   ptrdiff_t shrinkToFit() {
-    auto oldBegin = begin_;
-    auto newCapacity = size_t(right_ - begin_);
-
-    begin_ =
-        reinterpret_cast<char*>(allocator_->reallocate(begin_, newCapacity));
-    end_ = right_ = begin_ + newCapacity;
-
-    return begin_ - oldBegin;
+    auto originalPoolAddress = pool_;
+    pool_ = reinterpret_cast<char*>(allocator_->reallocate(pool_, poolUsage_));
+    poolCapacity_ = poolUsage_;
+    return pool_ - originalPoolAddress;
   }
 
  private:
@@ -202,21 +199,20 @@ class MemoryPool {
   }
 
   void allocPool(size_t capa) {
-    auto buf = capa ? reinterpret_cast<char*>(allocator_->allocate(capa)) : 0;
-    begin_ = right_ = buf;
-    end_ = buf ? buf + capa : 0;
-    ARDUINOJSON_ASSERT(isAligned(begin_));
-    ARDUINOJSON_ASSERT(isAligned(right_));
-    ARDUINOJSON_ASSERT(isAligned(end_));
+    pool_ = capa ? reinterpret_cast<char*>(allocator_->allocate(capa)) : 0;
+    poolUsage_ = 0;
+    poolCapacity_ = pool_ ? capa : 0;
+    ARDUINOJSON_ASSERT(isAligned(pool_));
   }
 
   void deallocPool() {
-    if (begin_)
-      allocator_->deallocate(begin_);
+    if (pool_)
+      allocator_->deallocate(pool_);
   }
 
   Allocator* allocator_;
-  char *begin_, *right_, *end_;
+  char* pool_;
+  size_t poolUsage_, poolCapacity_;
   bool overflowed_;
   StringNode* strings_ = nullptr;
 };
