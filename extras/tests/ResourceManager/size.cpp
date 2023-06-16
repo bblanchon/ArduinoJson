@@ -25,10 +25,10 @@ TEST_CASE("ResourceManager::size()") {
     const size_t variantCount = resources.capacity() / sizeof(VariantSlot);
 
     for (size_t i = 0; i < variantCount; i++)
-      new (&resources) VariantSlot();
+      resources.allocVariant();
     size_t size = resources.size();
 
-    new (&resources) VariantSlot();
+    resources.allocVariant();
 
     REQUIRE(size == resources.size());
   }

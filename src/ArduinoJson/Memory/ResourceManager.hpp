@@ -12,6 +12,8 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
+class VariantSlot;
+
 class ResourceManager {
  public:
   ResourceManager(size_t capa,
@@ -71,15 +73,7 @@ class ResourceManager {
     return overflowed_;
   }
 
-  void* allocFromPool(size_t bytes) {
-    if (!canAlloc(bytes)) {
-      overflowed_ = true;
-      return 0;
-    }
-    auto p = pool_ + poolUsage_;
-    poolUsage_ += bytes;
-    return p;
-  }
+  VariantSlot* allocVariant();
 
   template <typename TAdaptedString>
   StringNode* saveString(TAdaptedString str) {
@@ -169,10 +163,6 @@ class ResourceManager {
     poolUsage_ = 0;
     overflowed_ = false;
     deallocAllStrings();
-  }
-
-  bool canAlloc(size_t bytes) const {
-    return poolUsage_ + bytes <= poolCapacity_;
   }
 
   // Workaround for missing placement new

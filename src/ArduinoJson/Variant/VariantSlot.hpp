@@ -26,13 +26,12 @@ class VariantSlot {
   const char* key_;
 
  public:
-  static void* operator new(size_t size, ResourceManager* resources) noexcept {
-    return resources->allocFromPool(size);
+  // Placement new
+  static void* operator new(size_t, void* p) noexcept {
+    return p;
   }
 
-  static void operator delete(void*, ResourceManager*) noexcept {
-    // we cannot release memory from the pool
-  }
+  static void operator delete(void*, void*) noexcept {}
 
   VariantSlot() : flags_(0), next_(0), key_(0) {}
 
@@ -116,6 +115,16 @@ constexpr size_t sizeofArray(size_t n) {
 // Returns the size (in bytes) of an object with n members.
 constexpr size_t sizeofObject(size_t n) {
   return n * sizeof(VariantSlot);
+}
+
+inline VariantSlot* ResourceManager::allocVariant() {
+  if (poolUsage_ + sizeof(VariantSlot) > poolCapacity_) {
+    overflowed_ = true;
+    return 0;
+  }
+  auto p = pool_ + poolUsage_;
+  poolUsage_ += sizeof(VariantSlot);
+  return new (p) VariantSlot;
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

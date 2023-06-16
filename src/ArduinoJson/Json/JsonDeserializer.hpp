@@ -279,7 +279,7 @@ class JsonDeserializer {
           auto savedKey = stringBuilder_.save();
 
           // Allocate slot in object
-          slot = new (resources_) VariantSlot();
+          slot = resources_->allocVariant();
           if (!slot)
             return DeserializationError::NoMemory;
 

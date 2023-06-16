@@ -234,7 +234,7 @@ class VariantData {
     if (!slot)
       index++;
     while (index > 0) {
-      slot = new (resources) VariantSlot();
+      slot = resources->allocVariant();
       if (!slot)
         return nullptr;
       array->add(slot);

@@ -15,7 +15,7 @@ TEST_CASE("ResourceManager::clear()") {
   ResourceManager resources(poolCapacity);
 
   SECTION("Discards allocated variants") {
-    new (&resources) VariantSlot();
+    resources.allocVariant();
 
     resources.clear();
     REQUIRE(resources.size() == 0);
