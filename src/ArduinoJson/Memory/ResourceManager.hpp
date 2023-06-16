@@ -8,10 +8,7 @@
 #include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Memory/StringNode.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
-#include <ArduinoJson/Polyfills/mpl/max.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
-
-#include <string.h>  // memmove
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
