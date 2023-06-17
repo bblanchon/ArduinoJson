@@ -11,8 +11,8 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class JsonPairPtr {
  public:
-  JsonPairPtr(detail::MemoryPool* pool, detail::VariantSlot* slot)
-      : pair_(pool, slot) {}
+  JsonPairPtr(detail::ResourceManager* resources, detail::VariantSlot* slot)
+      : pair_(resources, slot) {}
 
   const JsonPair* operator->() const {
     return &pair_;
@@ -32,15 +32,15 @@ class JsonObjectIterator {
  public:
   JsonObjectIterator() : slot_(0) {}
 
-  explicit JsonObjectIterator(detail::MemoryPool* pool,
+  explicit JsonObjectIterator(detail::ResourceManager* resources,
                               detail::VariantSlot* slot)
-      : pool_(pool), slot_(slot) {}
+      : resources_(resources), slot_(slot) {}
 
   JsonPair operator*() const {
-    return JsonPair(pool_, slot_);
+    return JsonPair(resources_, slot_);
   }
   JsonPairPtr operator->() {
-    return JsonPairPtr(pool_, slot_);
+    return JsonPairPtr(resources_, slot_);
   }
 
   bool operator==(const JsonObjectIterator& other) const {
@@ -62,7 +62,7 @@ class JsonObjectIterator {
   }
 
  private:
-  detail::MemoryPool* pool_;
+  detail::ResourceManager* resources_;
   detail::VariantSlot* slot_;
 };
 

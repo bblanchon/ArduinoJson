@@ -40,8 +40,8 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream>>,
   }
 
  private:
-  FORCE_INLINE MemoryPool* getPool() const {
-    return VariantAttorney::getPool(upstream_);
+  FORCE_INLINE ResourceManager* getResourceManager() const {
+    return VariantAttorney::getResourceManager(upstream_);
   }
 
   FORCE_INLINE VariantData* getData() const {
@@ -49,8 +49,9 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream>>,
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {
-    return variantGetOrAddElement(VariantAttorney::getOrCreateData(upstream_),
-                                  index_, VariantAttorney::getPool(upstream_));
+    return variantGetOrAddElement(
+        VariantAttorney::getOrCreateData(upstream_), index_,
+        VariantAttorney::getResourceManager(upstream_));
   }
 
   TUpstream upstream_;

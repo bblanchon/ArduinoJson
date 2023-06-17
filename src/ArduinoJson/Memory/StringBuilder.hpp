@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Memory/ResourceManager.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -12,26 +12,26 @@ class StringBuilder {
  public:
   static const size_t initialCapacity = 31;
 
-  StringBuilder(MemoryPool* pool) : pool_(pool) {}
+  StringBuilder(ResourceManager* resources) : resources_(resources) {}
 
   ~StringBuilder() {
     if (node_)
-      pool_->deallocString(node_);
+      resources_->deallocString(node_);
   }
 
   void startString() {
     size_ = 0;
     if (!node_)
-      node_ = pool_->allocString(initialCapacity);
+      node_ = resources_->allocString(initialCapacity);
   }
 
   StringNode* save() {
     ARDUINOJSON_ASSERT(node_ != nullptr);
     node_->data[size_] = 0;
-    StringNode* node = pool_->findString(adaptString(node_->data, size_));
+    StringNode* node = resources_->findString(adaptString(node_->data, size_));
     if (!node) {
-      node = pool_->reallocString(node_, size_);
-      pool_->addStringToList(node);
+      node = resources_->reallocString(node_, size_);
+      resources_->addStringToList(node);
       node_ = nullptr;  // next time we need a new string
     } else {
       node->references++;
@@ -51,7 +51,7 @@ class StringBuilder {
 
   void append(char c) {
     if (node_ && size_ == node_->length)
-      node_ = pool_->reallocString(node_, size_ * 2U + 1);
+      node_ = resources_->reallocString(node_, size_ * 2U + 1);
     if (node_)
       node_->data[size_++] = c;
   }
@@ -71,7 +71,7 @@ class StringBuilder {
   }
 
  private:
-  MemoryPool* pool_;
+  ResourceManager* resources_;
   StringNode* node_ = nullptr;
   size_t size_ = 0;
 };

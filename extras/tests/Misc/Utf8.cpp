@@ -10,8 +10,8 @@
 using namespace ArduinoJson::detail;
 
 static void testCodepoint(uint32_t codepoint, std::string expected) {
-  MemoryPool pool(4096);
-  StringBuilder str(&pool);
+  ResourceManager resources(4096);
+  StringBuilder str(&resources);
   str.startString();
 
   CAPTURE(codepoint);

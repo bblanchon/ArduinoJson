@@ -42,7 +42,7 @@ struct Converter<
     : private detail::VariantAttorney {
   static void toJson(T src, JsonVariant dst) {
     ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
-    variantSetInteger(getData(dst), src, getPool(dst));
+    variantSetInteger(getData(dst), src, getResourceManager(dst));
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -78,7 +78,7 @@ struct Converter<T, typename detail::enable_if<detail::is_enum<T>::value>::type>
 template <>
 struct Converter<bool> : private detail::VariantAttorney {
   static void toJson(bool src, JsonVariant dst) {
-    variantSetBoolean(getData(dst), src, getPool(dst));
+    variantSetBoolean(getData(dst), src, getResourceManager(dst));
   }
 
   static bool fromJson(JsonVariantConst src) {
@@ -97,7 +97,8 @@ struct Converter<
     T, typename detail::enable_if<detail::is_floating_point<T>::value>::type>
     : private detail::VariantAttorney {
   static void toJson(T src, JsonVariant dst) {
-    variantSetFloat(getData(dst), static_cast<JsonFloat>(src), getPool(dst));
+    variantSetFloat(getData(dst), static_cast<JsonFloat>(src),
+                    getResourceManager(dst));
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -114,7 +115,8 @@ struct Converter<
 template <>
 struct Converter<const char*> : private detail::VariantAttorney {
   static void toJson(const char* src, JsonVariant dst) {
-    variantSetString(getData(dst), detail::adaptString(src), getPool(dst));
+    variantSetString(getData(dst), detail::adaptString(src),
+                     getResourceManager(dst));
   }
 
   static const char* fromJson(JsonVariantConst src) {
@@ -131,7 +133,8 @@ struct Converter<const char*> : private detail::VariantAttorney {
 template <>
 struct Converter<JsonString> : private detail::VariantAttorney {
   static void toJson(JsonString src, JsonVariant dst) {
-    variantSetString(getData(dst), detail::adaptString(src), getPool(dst));
+    variantSetString(getData(dst), detail::adaptString(src),
+                     getResourceManager(dst));
   }
 
   static JsonString fromJson(JsonVariantConst src) {
@@ -150,8 +153,8 @@ inline typename detail::enable_if<detail::IsString<T>::value>::type
 convertToJson(const T& src, JsonVariant dst) {
   using namespace detail;
   auto data = VariantAttorney::getData(dst);
-  auto pool = VariantAttorney::getPool(dst);
-  variantSetString(data, adaptString(src), pool);
+  auto resources = VariantAttorney::getResourceManager(dst);
+  variantSetString(data, adaptString(src), resources);
 }
 
 // SerializedValue<std::string>
@@ -160,14 +163,14 @@ convertToJson(const T& src, JsonVariant dst) {
 template <typename T>
 struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
   static void toJson(SerializedValue<T> src, JsonVariant dst) {
-    variantSetRawString(getData(dst), src, getPool(dst));
+    variantSetRawString(getData(dst), src, getResourceManager(dst));
   }
 };
 
 template <>
 struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
   static void toJson(decltype(nullptr), JsonVariant dst) {
-    variantSetNull(getData(dst), getPool(dst));
+    variantSetNull(getData(dst), getResourceManager(dst));
   }
   static decltype(nullptr) fromJson(JsonVariantConst) {
     return nullptr;
@@ -181,9 +184,9 @@ struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
 #if ARDUINOJSON_ENABLE_ARDUINO_STREAM
 
 namespace detail {
-class MemoryPoolPrint : public Print {
+class StringBuilderPrint : public Print {
  public:
-  MemoryPoolPrint(MemoryPool* pool) : copier_(pool) {
+  StringBuilderPrint(ResourceManager* resources) : copier_(resources) {
     copier_.startString();
   }
 
@@ -216,11 +219,11 @@ class MemoryPoolPrint : public Print {
 }  // namespace detail
 
 inline void convertToJson(const ::Printable& src, JsonVariant dst) {
-  auto pool = detail::VariantAttorney::getPool(dst);
+  auto resources = detail::VariantAttorney::getResourceManager(dst);
   auto data = detail::VariantAttorney::getData(dst);
-  if (!pool || !data)
+  if (!resources || !data)
     return;
-  detail::MemoryPoolPrint print(pool);
+  detail::StringBuilderPrint print(resources);
   src.printTo(print);
   if (print.overflowed()) {
     data->setNull();

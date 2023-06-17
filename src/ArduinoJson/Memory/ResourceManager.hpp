@@ -15,22 +15,23 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class MemoryPool {
+class ResourceManager {
  public:
-  MemoryPool(size_t capa, Allocator* allocator = DefaultAllocator::instance())
+  ResourceManager(size_t capa,
+                  Allocator* allocator = DefaultAllocator::instance())
       : allocator_(allocator), overflowed_(false) {
     allocPool(addPadding(capa));
   }
 
-  ~MemoryPool() {
+  ~ResourceManager() {
     deallocAllStrings();
     deallocPool();
   }
 
-  MemoryPool(const MemoryPool&) = delete;
-  MemoryPool& operator=(const MemoryPool& src) = delete;
+  ResourceManager(const ResourceManager&) = delete;
+  ResourceManager& operator=(const ResourceManager& src) = delete;
 
-  MemoryPool& operator=(MemoryPool&& src) {
+  ResourceManager& operator=(ResourceManager&& src) {
     deallocAllStrings();
     deallocPool();
     allocator_ = src.allocator_;

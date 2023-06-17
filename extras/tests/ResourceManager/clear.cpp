@@ -2,7 +2,7 @@
 // Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 
-#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantSlot.hpp>
 #include <catch.hpp>
@@ -11,22 +11,22 @@ using namespace ArduinoJson::detail;
 
 static const size_t poolCapacity = 512;
 
-TEST_CASE("MemoryPool::clear()") {
-  MemoryPool pool(poolCapacity);
+TEST_CASE("ResourceManager::clear()") {
+  ResourceManager resources(poolCapacity);
 
   SECTION("Discards allocated variants") {
-    new (&pool) VariantSlot();
+    new (&resources) VariantSlot();
 
-    pool.clear();
-    REQUIRE(pool.size() == 0);
+    resources.clear();
+    REQUIRE(resources.size() == 0);
   }
 
   SECTION("Discards allocated strings") {
-    pool.saveString(adaptString("123456789"));
-    REQUIRE(pool.size() == sizeofString(9));
+    resources.saveString(adaptString("123456789"));
+    REQUIRE(resources.size() == sizeofString(9));
 
-    pool.clear();
+    resources.clear();
 
-    REQUIRE(pool.size() == 0);
+    REQUIRE(resources.size() == 0);
   }
 }

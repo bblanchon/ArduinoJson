@@ -9,7 +9,7 @@
 #include <ArduinoJson/Json/Latch.hpp>
 #include <ArduinoJson/Json/Utf16.hpp>
 #include <ArduinoJson/Json/Utf8.hpp>
-#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Numbers/parseNumber.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
@@ -21,11 +21,11 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename TReader>
 class JsonDeserializer {
  public:
-  JsonDeserializer(MemoryPool* pool, TReader reader)
-      : stringBuilder_(pool),
+  JsonDeserializer(ResourceManager* resources, TReader reader)
+      : stringBuilder_(resources),
         foundSomething_(false),
         latch_(reader),
-        pool_(pool) {}
+        resources_(resources) {}
 
   template <typename TFilter>
   DeserializationError parse(VariantData& variant, TFilter filter,
@@ -172,7 +172,7 @@ class JsonDeserializer {
     for (;;) {
       if (elementFilter.allow()) {
         // Allocate slot in array
-        VariantData* value = collectionAddElement(&array, pool_);
+        VariantData* value = collectionAddElement(&array, resources_);
         if (!value)
           return DeserializationError::NoMemory;
 
@@ -279,14 +279,14 @@ class JsonDeserializer {
           auto savedKey = stringBuilder_.save();
 
           // Allocate slot in object
-          slot = new (pool_) VariantSlot();
+          slot = new (resources_) VariantSlot();
           if (!slot)
             return DeserializationError::NoMemory;
 
           slot->setKey(savedKey);
           object.add(slot);
         } else {
-          slot->data()->setNull(pool_);
+          slot->data()->setNull(resources_);
         }
 
         // Parse value
@@ -662,7 +662,7 @@ class JsonDeserializer {
   StringBuilder stringBuilder_;
   bool foundSomething_;
   Latch<TReader> latch_;
-  MemoryPool* pool_;
+  ResourceManager* resources_;
   char buffer_[64];  // using a member instead of a local variable because it
                      // ended in the recursive path after compiler inlined the
                      // code

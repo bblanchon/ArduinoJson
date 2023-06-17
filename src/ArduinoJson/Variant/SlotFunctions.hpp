@@ -18,11 +18,11 @@ inline size_t slotSize(const VariantSlot* var) {
   return n;
 }
 
-inline void slotRelease(VariantSlot* slot, MemoryPool* pool) {
+inline void slotRelease(VariantSlot* slot, ResourceManager* resources) {
   ARDUINOJSON_ASSERT(slot != nullptr);
   if (slot->ownsKey())
-    pool->dereferenceString(slot->key());
-  slot->data()->setNull(pool);
+    resources->dereferenceString(slot->key());
+  slot->data()->setNull(resources);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

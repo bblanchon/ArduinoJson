@@ -30,8 +30,8 @@ class VariantAttorney {
 
  public:
   template <typename TClient>
-  FORCE_INLINE static MemoryPool* getPool(TClient& client) {
-    return client.getPool();
+  FORCE_INLINE static ResourceManager* getResourceManager(TClient& client) {
+    return client.getResourceManager();
   }
 
   template <typename TClient>

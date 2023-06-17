@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Array/ElementProxy.hpp>
 #include <ArduinoJson/Memory/Allocator.hpp>
-#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Object/JsonObject.hpp>
 #include <ArduinoJson/Object/MemberProxy.hpp>
 #include <ArduinoJson/Polyfills/utility.hpp>
@@ -23,16 +23,16 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
  public:
   explicit JsonDocument(size_t capa,
                         Allocator* alloc = detail::DefaultAllocator::instance())
-      : pool_(capa, alloc) {}
+      : resources_(capa, alloc) {}
 
   // Copy-constructor
   JsonDocument(const JsonDocument& src)
-      : JsonDocument(src.pool_.capacity(), src.allocator()) {
+      : JsonDocument(src.resources_.capacity(), src.allocator()) {
     set(src);
   }
 
   // Move-constructor
-  JsonDocument(JsonDocument&& src) : pool_(0, src.allocator()) {
+  JsonDocument(JsonDocument&& src) : resources_(0, src.allocator()) {
     // TODO: use the copy and swap idiom
     moveAssignFrom(src);
   }
@@ -73,20 +73,20 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename T>
   JsonDocument& operator=(const T& src) {
     size_t requiredSize = src.memoryUsage();
-    if (requiredSize > pool_.capacity())
-      pool_.reallocPool(requiredSize);
+    if (requiredSize > resources_.capacity())
+      resources_.reallocPool(requiredSize);
     set(src);
     return *this;
   }
 
   Allocator* allocator() const {
-    return pool_.allocator();
+    return resources_.allocator();
   }
 
   // Reduces the capacity of the memory pool to match the current usage.
   // https://arduinojson.org/v6/api/JsonDocument/shrinktofit/
   void shrinkToFit() {
-    auto offset = pool_.shrinkToFit();
+    auto offset = resources_.shrinkToFit();
     data_.movePointers(offset);
   }
 
@@ -95,7 +95,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   bool garbageCollect() {
     // make a temporary clone and move assign
     JsonDocument tmp(*this);
-    if (!tmp.pool_.capacity())
+    if (!tmp.resources_.capacity())
       return false;
     moveAssignFrom(tmp);
     return true;
@@ -118,7 +118,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Empties the document and resets the memory pool
   // https://arduinojson.org/v6/api/jsondocument/clear/
   void clear() {
-    pool_.clear();
+    resources_.clear();
     data_.reset();
   }
 
@@ -145,13 +145,13 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Returns the number of used bytes in the memory pool.
   // https://arduinojson.org/v6/api/jsondocument/memoryusage/
   size_t memoryUsage() const {
-    return pool_.size();
+    return resources_.size();
   }
 
   // Returns trues if the memory pool was too small.
   // https://arduinojson.org/v6/api/jsondocument/overflowed/
   bool overflowed() const {
-    return pool_.overflowed();
+    return resources_.overflowed();
   }
 
   // Returns the depth (nesting level) of the array.
@@ -297,7 +297,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsondocument/add/
   FORCE_INLINE JsonVariant add() {
-    return JsonVariant(&pool_, data_.addElement(&pool_));
+    return JsonVariant(&resources_, data_.addElement(&resources_));
   }
 
   // Appends a value to the root array.
@@ -318,7 +318,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsondocument/remove/
   FORCE_INLINE void remove(size_t index) {
-    variantRemoveElement(getData(), index, getPool());
+    variantRemoveElement(getData(), index, getResourceManager());
   }
 
   // Removes a member of the root object.
@@ -327,7 +327,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename TChar>
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value>::type
   remove(TChar* key) {
-    variantRemoveMember(getData(), detail::adaptString(key), getPool());
+    variantRemoveMember(getData(), detail::adaptString(key),
+                        getResourceManager());
   }
 
   // Removes a member of the root object.
@@ -337,7 +338,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value>::type
       remove(const TString& key) {
-    variantRemoveMember(getData(), detail::adaptString(key), getPool());
+    variantRemoveMember(getData(), detail::adaptString(key),
+                        getResourceManager());
   }
 
   FORCE_INLINE operator JsonVariant() {
@@ -350,7 +352,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
  private:
   JsonVariant getVariant() {
-    return JsonVariant(&pool_, &data_);
+    return JsonVariant(&resources_, &data_);
   }
 
   JsonVariantConst getVariant() const {
@@ -358,18 +360,18 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   void copyAssignFrom(const JsonDocument& src) {
-    pool_.reallocPool(src.pool_.capacity());
+    resources_.reallocPool(src.resources_.capacity());
     set(src);
   }
 
   void moveAssignFrom(JsonDocument& src) {
     data_ = src.data_;
     src.data_.reset();
-    pool_ = move(src.pool_);
+    resources_ = move(src.resources_);
   }
 
-  detail::MemoryPool* getPool() {
-    return &pool_;
+  detail::ResourceManager* getResourceManager() {
+    return &resources_;
   }
 
   detail::VariantData* getData() {
@@ -384,7 +386,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return &data_;
   }
 
-  detail::MemoryPool pool_;
+  detail::ResourceManager resources_;
   detail::VariantData data_;
 };
 

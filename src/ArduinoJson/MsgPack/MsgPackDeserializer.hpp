@@ -5,7 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Deserialization/deserialize.hpp>
-#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/MsgPack/endianess.hpp>
 #include <ArduinoJson/MsgPack/ieee754.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
@@ -16,10 +16,10 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename TReader>
 class MsgPackDeserializer {
  public:
-  MsgPackDeserializer(MemoryPool* pool, TReader reader)
-      : pool_(pool),
+  MsgPackDeserializer(ResourceManager* resources, TReader reader)
+      : resources_(resources),
         reader_(reader),
-        stringBuilder_(pool),
+        stringBuilder_(resources),
         foundSomething_(false) {}
 
   template <typename TFilter>
@@ -434,7 +434,7 @@ class MsgPackDeserializer {
 
       if (elementFilter.allow()) {
         ARDUINOJSON_ASSERT(array != 0);
-        value = collectionAddElement(array, pool_);
+        value = collectionAddElement(array, resources_);
         if (!value)
           return DeserializationError::NoMemory;
       } else {
@@ -495,7 +495,7 @@ class MsgPackDeserializer {
         // Save key in memory pool.
         auto savedKey = stringBuilder_.save();
 
-        VariantSlot* slot = new (pool_) VariantSlot();
+        VariantSlot* slot = new (resources_) VariantSlot();
         if (!slot)
           return DeserializationError::NoMemory;
 
@@ -553,7 +553,7 @@ class MsgPackDeserializer {
     return skipBytes(size + 1U);
   }
 
-  MemoryPool* pool_;
+  ResourceManager* resources_;
   TReader reader_;
   StringBuilder stringBuilder_;
   bool foundSomething_;

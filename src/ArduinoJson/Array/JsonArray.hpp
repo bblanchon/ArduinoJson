@@ -21,17 +21,19 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   typedef JsonArrayIterator iterator;
 
   // Constructs an unbound reference.
-  FORCE_INLINE JsonArray() : data_(0), pool_(0) {}
+  FORCE_INLINE JsonArray() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonArray(detail::MemoryPool* pool, detail::CollectionData* data)
-      : data_(data), pool_(pool) {}
+  FORCE_INLINE JsonArray(detail::ResourceManager* resources,
+                         detail::CollectionData* data)
+      : data_(data), resources_(resources) {}
 
   // Returns a JsonVariant pointing to the array.
   // https://arduinojson.org/v6/api/jsonvariant/
   operator JsonVariant() {
     void* data = data_;  // prevent warning cast-align
-    return JsonVariant(pool_, reinterpret_cast<detail::VariantData*>(data));
+    return JsonVariant(resources_,
+                       reinterpret_cast<detail::VariantData*>(data));
   }
 
   // Returns a read-only reference to the array.
@@ -44,7 +46,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsonarray/add/
   JsonVariant add() const {
-    return JsonVariant(pool_, collectionAddElement(data_, pool_));
+    return JsonVariant(resources_, collectionAddElement(data_, resources_));
   }
 
   // Appends a value to the array.
@@ -66,7 +68,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(pool_, data_->head());
+    return iterator(resources_, data_->head());
   }
 
   // Returns an iterator following the last element of the array.
@@ -78,7 +80,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Copies an array.
   // https://arduinojson.org/v6/api/jsonarray/set/
   FORCE_INLINE bool set(JsonArrayConst src) const {
-    return collectionCopy(data_, src.data_, pool_);
+    return collectionCopy(data_, src.data_, resources_);
   }
 
   // Compares the content of two arrays.
@@ -90,21 +92,21 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/
   FORCE_INLINE void remove(iterator it) const {
-    collectionRemove(data_, it.slot_, pool_);
+    collectionRemove(data_, it.slot_, resources_);
   }
 
   // Removes the element at the specified index.
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/
   FORCE_INLINE void remove(size_t index) const {
-    collectionRemoveElement(data_, index, pool_);
+    collectionRemoveElement(data_, index, resources_);
   }
 
   // Removes all the elements of the array.
   // ⚠️ Doesn't release the memory associated with the removed elements.
   // https://arduinojson.org/v6/api/jsonarray/clear/
   void clear() const {
-    collectionClear(data_, pool_);
+    collectionClear(data_, resources_);
   }
 
   // Gets or sets the element at the specified index.
@@ -158,8 +160,8 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
  private:
-  detail::MemoryPool* getPool() const {
-    return pool_;
+  detail::ResourceManager* getResourceManager() const {
+    return resources_;
   }
 
   detail::VariantData* getData() const {
@@ -171,19 +173,19 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
   detail::CollectionData* data_;
-  detail::MemoryPool* pool_;
+  detail::ResourceManager* resources_;
 };
 
 template <>
 struct Converter<JsonArray> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getPool(dst));
+    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
   }
 
   static JsonArray fromJson(JsonVariant src) {
     auto data = getData(src);
-    auto pool = getPool(src);
-    return JsonArray(pool, data != 0 ? data->asArray() : 0);
+    auto resources = getResourceManager(src);
+    return JsonArray(resources, data != 0 ? data->asArray() : 0);
   }
 
   static detail::InvalidConversion<JsonVariantConst, JsonArray> fromJson(
@@ -207,7 +209,8 @@ template <typename TDerived>
 template <typename T>
 inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonArray(getPool(), variantToArray(getOrCreateData(), getPool()));
+  return JsonArray(getResourceManager(),
+                   variantToArray(getOrCreateData(), getResourceManager()));
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

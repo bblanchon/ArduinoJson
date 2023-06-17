@@ -23,9 +23,10 @@ struct first_or_void<T, Rest...> {
 };
 
 template <template <typename> class TDeserializer, typename TReader>
-TDeserializer<TReader> makeDeserializer(MemoryPool* pool, TReader reader) {
-  ARDUINOJSON_ASSERT(pool != 0);
-  return TDeserializer<TReader>(pool, reader);
+TDeserializer<TReader> makeDeserializer(ResourceManager* resources,
+                                        TReader reader) {
+  ARDUINOJSON_ASSERT(resources != 0);
+  return TDeserializer<TReader>(resources, reader);
 }
 
 template <template <typename> class TDeserializer, typename TStream,
@@ -36,10 +37,10 @@ DeserializationError deserialize(JsonDocument& doc, TStream&& input,
                                  Args... args) {
   auto reader = makeReader(detail::forward<TStream>(input));
   auto data = VariantAttorney::getData(doc);
-  auto pool = VariantAttorney::getPool(doc);
+  auto resources = VariantAttorney::getResourceManager(doc);
   auto options = makeDeserializationOptions(args...);
   doc.clear();
-  return makeDeserializer<TDeserializer>(pool, reader)
+  return makeDeserializer<TDeserializer>(resources, reader)
       .parse(*data, options.filter, options.nestingLimit);
 }
 
@@ -50,10 +51,10 @@ DeserializationError deserialize(JsonDocument& doc, TChar* input,
                                  Size inputSize, Args... args) {
   auto reader = makeReader(input, size_t(inputSize));
   auto data = VariantAttorney::getData(doc);
-  auto pool = VariantAttorney::getPool(doc);
+  auto resources = VariantAttorney::getResourceManager(doc);
   auto options = makeDeserializationOptions(args...);
   doc.clear();
-  return makeDeserializer<TDeserializer>(pool, reader)
+  return makeDeserializer<TDeserializer>(resources, reader)
       .parse(*data, options.filter, options.nestingLimit);
 }
 

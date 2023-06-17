@@ -11,8 +11,8 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class VariantPtr {
  public:
-  VariantPtr(detail::MemoryPool* pool, detail::VariantData* data)
-      : variant_(pool, data) {}
+  VariantPtr(detail::ResourceManager* resources, detail::VariantData* data)
+      : variant_(resources, data) {}
 
   JsonVariant* operator->() {
     return &variant_;
@@ -31,15 +31,15 @@ class JsonArrayIterator {
 
  public:
   JsonArrayIterator() : slot_(0) {}
-  explicit JsonArrayIterator(detail::MemoryPool* pool,
+  explicit JsonArrayIterator(detail::ResourceManager* resources,
                              detail::VariantSlot* slot)
-      : pool_(pool), slot_(slot) {}
+      : resources_(resources), slot_(slot) {}
 
   JsonVariant operator*() const {
-    return JsonVariant(pool_, slot_->data());
+    return JsonVariant(resources_, slot_->data());
   }
   VariantPtr operator->() {
-    return VariantPtr(pool_, slot_->data());
+    return VariantPtr(resources_, slot_->data());
   }
 
   bool operator==(const JsonArrayIterator& other) const {
@@ -61,7 +61,7 @@ class JsonArrayIterator {
   }
 
  private:
-  detail::MemoryPool* pool_;
+  detail::ResourceManager* resources_;
   detail::VariantSlot* slot_;
 };
 

@@ -14,14 +14,15 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-VariantData* collectionAddElement(CollectionData* array, MemoryPool* pool);
+VariantData* collectionAddElement(CollectionData* array,
+                                  ResourceManager* resources);
 bool collectionCopy(CollectionData* dst, const CollectionData* src,
-                    MemoryPool* pool);
+                    ResourceManager* resources);
 void collectionRemoveElement(CollectionData* data, size_t index,
-                             MemoryPool* pool);
+                             ResourceManager* resources);
 template <typename T>
 T parseNumber(const char* s);
-void slotRelease(VariantSlot* slot, MemoryPool* pool);
+void slotRelease(VariantSlot* slot, ResourceManager* resources);
 
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant
@@ -68,9 +69,9 @@ class VariantData {
     }
   }
 
-  VariantData* addElement(MemoryPool* pool) {
+  VariantData* addElement(ResourceManager* resources) {
     auto array = isNull() ? &toArray() : asArray();
-    return collectionAddElement(array, pool);
+    return collectionAddElement(array, resources);
   }
 
   bool asBoolean() const {
@@ -172,20 +173,20 @@ class VariantData {
     }
   }
 
-  bool copyFrom(const VariantData* src, MemoryPool* pool) {
-    release(pool);
+  bool copyFrom(const VariantData* src, ResourceManager* resources) {
+    release(resources);
     if (!src) {
       setNull();
       return true;
     }
     switch (src->type()) {
       case VALUE_IS_ARRAY:
-        return collectionCopy(&toArray(), src->asArray(), pool);
+        return collectionCopy(&toArray(), src->asArray(), resources);
       case VALUE_IS_OBJECT:
-        return collectionCopy(&toObject(), src->asObject(), pool);
+        return collectionCopy(&toObject(), src->asObject(), resources);
       case VALUE_IS_OWNED_STRING: {
         auto str = adaptString(src->asString());
-        auto dup = pool->saveString(str);
+        auto dup = resources->saveString(str);
         if (!dup)
           return false;
         setOwnedString(dup);
@@ -193,7 +194,7 @@ class VariantData {
       }
       case VALUE_IS_RAW_STRING: {
         auto str = adaptString(src->asRawString());
-        auto dup = pool->saveString(str);
+        auto dup = resources->saveString(str);
         if (!dup)
           return false;
         setRawString(dup);
@@ -221,7 +222,7 @@ class VariantData {
     return slotData(object->get(key));
   }
 
-  VariantData* getOrAddElement(size_t index, MemoryPool* pool) {
+  VariantData* getOrAddElement(size_t index, ResourceManager* resources) {
     auto array = isNull() ? &toArray() : asArray();
     if (!array)
       return nullptr;
@@ -233,7 +234,7 @@ class VariantData {
     if (!slot)
       index++;
     while (index > 0) {
-      slot = new (pool) VariantSlot();
+      slot = new (resources) VariantSlot();
       if (!slot)
         return nullptr;
       array->add(slot);
@@ -243,7 +244,7 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  VariantData* getOrAddMember(TAdaptedString key, MemoryPool* pool) {
+  VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources) {
     if (key.isNull())
       return nullptr;
     auto obj = isNull() ? &toObject() : asObject();
@@ -252,7 +253,7 @@ class VariantData {
     auto slot = obj->get(key);
     if (slot)
       return slot->data();
-    return collectionAddMember(obj, key, pool);
+    return collectionAddMember(obj, key, resources);
   }
 
   bool isArray() const {
@@ -334,13 +335,13 @@ class VariantData {
     flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
   }
 
-  void removeElement(size_t index, MemoryPool* pool) {
-    collectionRemoveElement(asArray(), index, pool);
+  void removeElement(size_t index, ResourceManager* resources) {
+    collectionRemoveElement(asArray(), index, resources);
   }
 
   template <typename TAdaptedString>
-  void removeMember(TAdaptedString key, MemoryPool* pool) {
-    collectionRemoveMember(asObject(), key, pool);
+  void removeMember(TAdaptedString key, ResourceManager* resources) {
+    collectionRemoveMember(asObject(), key, resources);
   }
 
   void reset() {
@@ -352,8 +353,8 @@ class VariantData {
     content_.asBoolean = value;
   }
 
-  void setBoolean(bool value, MemoryPool* pool) {
-    release(pool);
+  void setBoolean(bool value, ResourceManager* resources) {
+    release(resources);
     setBoolean(value);
   }
 
@@ -362,8 +363,8 @@ class VariantData {
     content_.asFloat = value;
   }
 
-  void setFloat(JsonFloat value, MemoryPool* pool) {
-    release(pool);
+  void setFloat(JsonFloat value, ResourceManager* resources) {
+    release(resources);
     setFloat(value);
   }
 
@@ -380,8 +381,8 @@ class VariantData {
   }
 
   template <typename T>
-  void setInteger(T value, MemoryPool* pool) {
-    release(pool);
+  void setInteger(T value, ResourceManager* resources) {
+    release(resources);
     setInteger(value);
   }
 
@@ -389,8 +390,8 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setNull(MemoryPool* pool) {
-    release(pool);
+  void setNull(ResourceManager* resources) {
+    release(resources);
     setNull();
   }
 
@@ -401,9 +402,9 @@ class VariantData {
   }
 
   template <typename T>
-  void setRawString(SerializedValue<T> value, MemoryPool* pool) {
-    release(pool);
-    auto dup = pool->saveString(adaptString(value.data(), value.size()));
+  void setRawString(SerializedValue<T> value, ResourceManager* resources) {
+    release(resources);
+    auto dup = resources->saveString(adaptString(value.data(), value.size()));
     if (dup)
       setRawString(dup);
     else
@@ -411,8 +412,8 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  void setString(TAdaptedString value, MemoryPool* pool) {
-    setNull(pool);
+  void setString(TAdaptedString value, ResourceManager* resources) {
+    setNull(resources);
 
     if (value.isNull())
       return;
@@ -422,7 +423,7 @@ class VariantData {
       return;
     }
 
-    auto dup = pool->saveString(value);
+    auto dup = resources->saveString(value);
     if (dup)
       setOwnedString(dup);
   }
@@ -449,8 +450,8 @@ class VariantData {
     return content_.asCollection;
   }
 
-  CollectionData& toArray(MemoryPool* pool) {
-    release(pool);
+  CollectionData& toArray(ResourceManager* resources) {
+    release(resources);
     return toArray();
   }
 
@@ -460,8 +461,8 @@ class VariantData {
     return content_.asCollection;
   }
 
-  CollectionData& toObject(MemoryPool* pool) {
-    release(pool);
+  CollectionData& toObject(ResourceManager* resources) {
+    release(resources);
     return toObject();
   }
 
@@ -470,14 +471,14 @@ class VariantData {
   }
 
  private:
-  void release(MemoryPool* pool) {
+  void release(ResourceManager* resources) {
     if (flags_ & OWNED_VALUE_BIT)
-      pool->dereferenceString(content_.asOwnedString->data);
+      resources->dereferenceString(content_.asOwnedString->data);
 
     auto c = asCollection();
     if (c) {
       for (auto slot = c->head(); slot; slot = slot->next())
-        slotRelease(slot, pool);
+        slotRelease(slot, resources);
     }
   }
 
@@ -497,16 +498,17 @@ typename TVisitor::result_type variantAccept(const VariantData* var,
 }
 
 inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
-                            MemoryPool* pool) {
+                            ResourceManager* resources) {
   if (!dst)
     return false;
-  return dst->copyFrom(src, pool);
+  return dst->copyFrom(src, resources);
 }
 
-inline VariantData* variantAddElement(VariantData* var, MemoryPool* pool) {
+inline VariantData* variantAddElement(VariantData* var,
+                                      ResourceManager* resources) {
   if (!var)
     return nullptr;
-  return var->addElement(pool);
+  return var->addElement(resources);
 }
 
 inline VariantData* variantGetElement(const VariantData* var, size_t index) {
@@ -521,18 +523,18 @@ VariantData* variantGetMember(const VariantData* var, TAdaptedString key) {
 }
 
 inline VariantData* variantGetOrAddElement(VariantData* var, size_t index,
-                                           MemoryPool* pool) {
+                                           ResourceManager* resources) {
   if (!var)
     return nullptr;
-  return var->getOrAddElement(index, pool);
+  return var->getOrAddElement(index, resources);
 }
 
 template <typename TAdaptedString>
 VariantData* variantGetOrAddMember(VariantData* var, TAdaptedString key,
-                                   MemoryPool* pool) {
+                                   ResourceManager* resources) {
   if (!var)
     return nullptr;
-  return var->getOrAddMember(key, pool);
+  return var->getOrAddMember(key, resources);
 }
 
 inline bool variantIsNull(const VariantData* var) {
@@ -548,76 +550,79 @@ inline size_t variantNesting(const VariantData* var) {
 }
 
 inline void variantRemoveElement(VariantData* var, size_t index,
-                                 MemoryPool* pool) {
+                                 ResourceManager* resources) {
   if (!var)
     return;
-  var->removeElement(index, pool);
+  var->removeElement(index, resources);
 }
 
 template <typename TAdaptedString>
 void variantRemoveMember(VariantData* var, TAdaptedString key,
-                         MemoryPool* pool) {
+                         ResourceManager* resources) {
   if (!var)
     return;
-  var->removeMember(key, pool);
+  var->removeMember(key, resources);
 }
 
-inline void variantSetBoolean(VariantData* var, bool value, MemoryPool* pool) {
+inline void variantSetBoolean(VariantData* var, bool value,
+                              ResourceManager* resources) {
   if (!var)
     return;
-  var->setBoolean(value, pool);
+  var->setBoolean(value, resources);
 }
 
 inline void variantSetFloat(VariantData* var, JsonFloat value,
-                            MemoryPool* pool) {
+                            ResourceManager* resources) {
   if (!var)
     return;
-  var->setFloat(value, pool);
+  var->setFloat(value, resources);
 }
 
 template <typename T>
-void variantSetInteger(VariantData* var, T value, MemoryPool* pool) {
+void variantSetInteger(VariantData* var, T value, ResourceManager* resources) {
   if (!var)
     return;
-  var->setInteger(value, pool);
+  var->setInteger(value, resources);
 }
 
-inline void variantSetNull(VariantData* var, MemoryPool* pool) {
+inline void variantSetNull(VariantData* var, ResourceManager* resources) {
   if (!var)
     return;
-  var->setNull(pool);
+  var->setNull(resources);
 }
 
 template <typename T>
 void variantSetRawString(VariantData* var, SerializedValue<T> value,
-                         MemoryPool* pool) {
+                         ResourceManager* resources) {
   if (!var)
     return;
-  var->setRawString(value, pool);
+  var->setRawString(value, resources);
 }
 
 template <typename TAdaptedString>
 void variantSetString(VariantData* var, TAdaptedString value,
-                      MemoryPool* pool) {
+                      ResourceManager* resources) {
   if (!var)
     return;
-  var->setString(value, pool);
+  var->setString(value, resources);
 }
 
 inline size_t variantSize(const VariantData* var) {
   return var != 0 ? var->size() : 0;
 }
 
-inline CollectionData* variantToArray(VariantData* var, MemoryPool* pool) {
+inline CollectionData* variantToArray(VariantData* var,
+                                      ResourceManager* resources) {
   if (!var)
     return 0;
-  return &var->toArray(pool);
+  return &var->toArray(resources);
 }
 
-inline CollectionData* variantToObject(VariantData* var, MemoryPool* pool) {
+inline CollectionData* variantToObject(VariantData* var,
+                                       ResourceManager* resources) {
   if (!var)
     return 0;
-  return &var->toObject(pool);
+  return &var->toObject(resources);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

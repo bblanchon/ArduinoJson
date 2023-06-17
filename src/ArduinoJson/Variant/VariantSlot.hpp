@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/MemoryPool.hpp>
+#include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Polyfills/integer.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
@@ -26,11 +26,11 @@ class VariantSlot {
   const char* key_;
 
  public:
-  static void* operator new(size_t size, MemoryPool* pool) noexcept {
-    return pool->allocFromPool(size);
+  static void* operator new(size_t size, ResourceManager* resources) noexcept {
+    return resources->allocFromPool(size);
   }
 
-  static void operator delete(void*, MemoryPool*) noexcept {
+  static void operator delete(void*, ResourceManager*) noexcept {
     // we cannot release memory from the pool
   }
 

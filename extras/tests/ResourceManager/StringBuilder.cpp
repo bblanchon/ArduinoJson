@@ -12,16 +12,16 @@ using namespace ArduinoJson::detail;
 TEST_CASE("StringBuilder") {
   ControllableAllocator controllableAllocator;
   SpyingAllocator spyingAllocator(&controllableAllocator);
-  MemoryPool pool(0, &spyingAllocator);
+  ResourceManager resources(0, &spyingAllocator);
 
   SECTION("Empty string") {
-    StringBuilder str(&pool);
+    StringBuilder str(&resources);
 
     str.startString();
     str.save();
 
-    REQUIRE(pool.size() == sizeofString(0));
-    REQUIRE(pool.overflowed() == false);
+    REQUIRE(resources.size() == sizeofString(0));
+    REQUIRE(resources.overflowed() == false);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Reallocate(sizeofString(31),
@@ -29,20 +29,20 @@ TEST_CASE("StringBuilder") {
   }
 
   SECTION("Short string fits in first allocation") {
-    StringBuilder str(&pool);
+    StringBuilder str(&resources);
 
     str.startString();
     str.append("hello");
 
     REQUIRE(str.isValid() == true);
     REQUIRE(str.str() == "hello");
-    REQUIRE(pool.overflowed() == false);
+    REQUIRE(resources.overflowed() == false);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31)));
   }
 
   SECTION("Long string needs reallocation") {
-    StringBuilder str(&pool);
+    StringBuilder str(&resources);
 
     str.startString();
     str.append(
@@ -53,7 +53,7 @@ TEST_CASE("StringBuilder") {
     REQUIRE(str.str() ==
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
             "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-    REQUIRE(pool.overflowed() == false);
+    REQUIRE(resources.overflowed() == false);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Reallocate(sizeofString(31),
@@ -63,7 +63,7 @@ TEST_CASE("StringBuilder") {
   }
 
   SECTION("Realloc fails") {
-    StringBuilder str(&pool);
+    StringBuilder str(&resources);
 
     str.startString();
     controllableAllocator.disable();
@@ -77,62 +77,62 @@ TEST_CASE("StringBuilder") {
                                                            sizeofString(63))
                            << AllocatorLog::Deallocate(sizeofString(31)));
     REQUIRE(str.isValid() == false);
-    REQUIRE(pool.overflowed() == true);
+    REQUIRE(resources.overflowed() == true);
   }
 
   SECTION("Initial allocation fails") {
-    StringBuilder str(&pool);
+    StringBuilder str(&resources);
 
     controllableAllocator.disable();
     str.startString();
 
     REQUIRE(str.isValid() == false);
-    REQUIRE(pool.overflowed() == true);
+    REQUIRE(resources.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 }
 
-static StringNode* addStringToPool(MemoryPool& pool, const char* s) {
-  StringBuilder str(&pool);
+static StringNode* addStringToPool(ResourceManager& resources, const char* s) {
+  StringBuilder str(&resources);
   str.startString();
   str.append(s);
   return str.save();
 }
 
 TEST_CASE("StringBuilder::save() deduplicates strings") {
-  MemoryPool pool(4096);
+  ResourceManager resources(4096);
 
   SECTION("Basic") {
-    auto s1 = addStringToPool(pool, "hello");
-    auto s2 = addStringToPool(pool, "world");
-    auto s3 = addStringToPool(pool, "hello");
+    auto s1 = addStringToPool(resources, "hello");
+    auto s2 = addStringToPool(resources, "world");
+    auto s3 = addStringToPool(resources, "hello");
 
     REQUIRE(s1 == s3);
     REQUIRE(s2 != s3);
     REQUIRE(s1->references == 2);
     REQUIRE(s2->references == 1);
     REQUIRE(s3->references == 2);
-    REQUIRE(pool.size() == 2 * sizeofString(5));
+    REQUIRE(resources.size() == 2 * sizeofString(5));
   }
 
   SECTION("Requires terminator") {
-    auto s1 = addStringToPool(pool, "hello world");
-    auto s2 = addStringToPool(pool, "hello");
+    auto s1 = addStringToPool(resources, "hello world");
+    auto s2 = addStringToPool(resources, "hello");
 
     REQUIRE(s2 != s1);
     REQUIRE(s1->references == 1);
     REQUIRE(s2->references == 1);
-    REQUIRE(pool.size() == sizeofString(11) + sizeofString(5));
+    REQUIRE(resources.size() == sizeofString(11) + sizeofString(5));
   }
 
   SECTION("Don't overrun") {
-    auto s1 = addStringToPool(pool, "hello world");
-    auto s2 = addStringToPool(pool, "wor");
+    auto s1 = addStringToPool(resources, "hello world");
+    auto s2 = addStringToPool(resources, "wor");
 
     REQUIRE(s2 != s1);
     REQUIRE(s1->references == 1);
     REQUIRE(s2->references == 1);
-    REQUIRE(pool.size() == sizeofString(11) + sizeofString(3));
+    REQUIRE(resources.size() == sizeofString(11) + sizeofString(3));
   }
 }

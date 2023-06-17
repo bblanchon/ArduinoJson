@@ -134,7 +134,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
 template <>
 struct Converter<JsonObjectConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getPool(dst));
+    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
   }
 
   static JsonObjectConst fromJson(JsonVariantConst src) {

@@ -308,8 +308,6 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
     REQUIRE(sizeofArray(1) + sizeofString(7) == doc.memoryUsage());
-    // note: we use a string of 8 bytes to be sure that the MemoryPool
-    // will not insert bytes to enforce alignement
   }
 
   SECTION("Should clear the JsonArray") {

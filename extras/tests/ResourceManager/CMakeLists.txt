@@ -2,7 +2,7 @@
 # Copyright © 2014-2023, Benoit BLANCHON
 # MIT License
 
-add_executable(MemoryPoolTests
+add_executable(ResourceManagerTests
 	allocVariant.cpp
 	clear.cpp
 	saveString.cpp
@@ -10,9 +10,9 @@ add_executable(MemoryPoolTests
 	StringBuilder.cpp
 )
 
-add_test(MemoryPool MemoryPoolTests)
+add_test(ResourceManager ResourceManagerTests)
 
-set_tests_properties(MemoryPool
+set_tests_properties(ResourceManager
 	PROPERTIES
 		LABELS "Catch"
 )

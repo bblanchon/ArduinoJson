@@ -41,8 +41,8 @@ class MemberProxy
   }
 
  private:
-  FORCE_INLINE MemoryPool* getPool() const {
-    return VariantAttorney::getPool(upstream_);
+  FORCE_INLINE ResourceManager* getResourceManager() const {
+    return VariantAttorney::getResourceManager(upstream_);
   }
 
   FORCE_INLINE VariantData* getData() const {
@@ -51,9 +51,9 @@ class MemberProxy
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {
-    return variantGetOrAddMember(VariantAttorney::getOrCreateData(upstream_),
-                                 adaptString(key_),
-                                 VariantAttorney::getPool(upstream_));
+    return variantGetOrAddMember(
+        VariantAttorney::getOrCreateData(upstream_), adaptString(key_),
+        VariantAttorney::getResourceManager(upstream_));
   }
 
  private:

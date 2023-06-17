@@ -20,15 +20,17 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   typedef JsonObjectIterator iterator;
 
   // Creates an unbound reference.
-  FORCE_INLINE JsonObject() : data_(0), pool_(0) {}
+  FORCE_INLINE JsonObject() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonObject(detail::MemoryPool* buf, detail::CollectionData* data)
-      : data_(data), pool_(buf) {}
+  FORCE_INLINE JsonObject(detail::ResourceManager* buf,
+                          detail::CollectionData* data)
+      : data_(data), resources_(buf) {}
 
   operator JsonVariant() const {
     void* data = data_;  // prevent warning cast-align
-    return JsonVariant(pool_, reinterpret_cast<detail::VariantData*>(data));
+    return JsonVariant(resources_,
+                       reinterpret_cast<detail::VariantData*>(data));
   }
 
   operator JsonObjectConst() const {
@@ -74,7 +76,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(pool_, data_->head());
+    return iterator(resources_, data_->head());
   }
 
   // Returns an iterator following the last key-value pair of the object.
@@ -87,13 +89,13 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // ⚠️ Doesn't release the memory associated with the removed members.
   // https://arduinojson.org/v6/api/jsonobject/clear/
   void clear() const {
-    collectionClear(data_, pool_);
+    collectionClear(data_, resources_);
   }
 
   // Copies an object.
   // https://arduinojson.org/v6/api/jsonobject/set/
   FORCE_INLINE bool set(JsonObjectConst src) {
-    return collectionCopy(data_, src.data_, pool_);
+    return collectionCopy(data_, src.data_, resources_);
   }
 
   // Compares the content of two objects.
@@ -125,7 +127,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // ⚠️ Doesn't release the memory associated with the removed member.
   // https://arduinojson.org/v6/api/jsonobject/remove/
   FORCE_INLINE void remove(iterator it) const {
-    collectionRemove(data_, it.slot_, pool_);
+    collectionRemove(data_, it.slot_, resources_);
   }
 
   // Removes the member with the specified key.
@@ -133,7 +135,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TString>
   FORCE_INLINE void remove(const TString& key) const {
-    collectionRemoveMember(data_, detail::adaptString(key), pool_);
+    collectionRemoveMember(data_, detail::adaptString(key), resources_);
   }
 
   // Removes the member with the specified key.
@@ -141,7 +143,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TChar>
   FORCE_INLINE void remove(TChar* key) const {
-    collectionRemoveMember(data_, detail::adaptString(key), pool_);
+    collectionRemoveMember(data_, detail::adaptString(key), resources_);
   }
 
   // Returns true if the object contains the specified key.
@@ -187,8 +189,8 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   }
 
  private:
-  detail::MemoryPool* getPool() const {
-    return pool_;
+  detail::ResourceManager* getResourceManager() const {
+    return resources_;
   }
 
   detail::VariantData* getData() const {
@@ -201,23 +203,23 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   template <typename TAdaptedString>
   void removeMember(TAdaptedString key) const {
-    collectionRemove(data_, data_->get(key), pool_);
+    collectionRemove(data_, data_->get(key), resources_);
   }
 
   detail::CollectionData* data_;
-  detail::MemoryPool* pool_;
+  detail::ResourceManager* resources_;
 };
 
 template <>
 struct Converter<JsonObject> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getPool(dst));
+    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
   }
 
   static JsonObject fromJson(JsonVariant src) {
     auto data = getData(src);
-    auto pool = getPool(src);
-    return JsonObject(pool, data != 0 ? data->asObject() : 0);
+    auto resources = getResourceManager(src);
+    return JsonObject(resources, data != 0 ? data->asObject() : 0);
   }
 
   static detail::InvalidConversion<JsonVariantConst, JsonObject> fromJson(
@@ -241,7 +243,8 @@ template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonObject(getPool(), variantToObject(getOrCreateData(), getPool()));
+  return JsonObject(getResourceManager(),
+                    variantToObject(getOrCreateData(), getResourceManager()));
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

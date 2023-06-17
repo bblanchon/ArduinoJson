@@ -16,15 +16,15 @@ class JsonVariant : public detail::VariantRefBase<JsonVariant>,
 
  public:
   // Creates an unbound reference.
-  JsonVariant() : data_(0), pool_(0) {}
+  JsonVariant() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  JsonVariant(detail::MemoryPool* pool, detail::VariantData* data)
-      : data_(data), pool_(pool) {}
+  JsonVariant(detail::ResourceManager* resources, detail::VariantData* data)
+      : data_(data), resources_(resources) {}
 
  private:
-  FORCE_INLINE detail::MemoryPool* getPool() const {
-    return pool_;
+  FORCE_INLINE detail::ResourceManager* getResourceManager() const {
+    return resources_;
   }
 
   FORCE_INLINE detail::VariantData* getData() const {
@@ -36,13 +36,14 @@ class JsonVariant : public detail::VariantRefBase<JsonVariant>,
   }
 
   detail::VariantData* data_;
-  detail::MemoryPool* pool_;
+  detail::ResourceManager* resources_;
 };
 
 template <>
 struct Converter<JsonVariant> : private detail::VariantAttorney {
   static void toJson(JsonVariant src, JsonVariant dst) {
-    detail::variantCopyFrom(getData(dst), getData(src), getPool(dst));
+    detail::variantCopyFrom(getData(dst), getData(src),
+                            getResourceManager(dst));
   }
 
   static JsonVariant fromJson(JsonVariant src) {
@@ -65,7 +66,7 @@ struct Converter<JsonVariant> : private detail::VariantAttorney {
 template <>
 struct Converter<JsonVariantConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getPool(dst));
+    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
   }
 
   static JsonVariantConst fromJson(JsonVariantConst src) {
@@ -84,25 +85,26 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::add() const {
-  return JsonVariant(getPool(),
-                     variantAddElement(getOrCreateData(), getPool()));
+  return JsonVariant(
+      getResourceManager(),
+      variantAddElement(getOrCreateData(), getResourceManager()));
 }
 
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
-  return JsonVariant(getPool(), getData());
+  return JsonVariant(getResourceManager(), getData());
 }
 
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::getOrCreateVariant() const {
-  return JsonVariant(getPool(), getOrCreateData());
+  return JsonVariant(getResourceManager(), getOrCreateData());
 }
 
 template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
 VariantRefBase<TDerived>::to() const {
-  variantSetNull(getOrCreateData(), getPool());
+  variantSetNull(getOrCreateData(), getResourceManager());
   return *this;
 }
 

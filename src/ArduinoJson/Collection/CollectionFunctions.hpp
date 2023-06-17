@@ -9,10 +9,10 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 inline VariantData* collectionAddElement(CollectionData* array,
-                                         MemoryPool* pool) {
+                                         ResourceManager* resources) {
   if (!array)
     return nullptr;
-  auto slot = new (pool) VariantSlot();
+  auto slot = new (resources) VariantSlot();
   if (!slot)
     return nullptr;
   array->add(slot);
@@ -21,16 +21,16 @@ inline VariantData* collectionAddElement(CollectionData* array,
 
 template <typename TAdaptedString>
 inline VariantData* collectionAddMember(CollectionData* obj, TAdaptedString key,
-                                        MemoryPool* pool) {
+                                        ResourceManager* resources) {
   ARDUINOJSON_ASSERT(!key.isNull());
   ARDUINOJSON_ASSERT(obj != nullptr);
-  auto slot = new (pool) VariantSlot();
+  auto slot = new (resources) VariantSlot();
   if (!slot)
     return nullptr;
   if (key.isLinked())
     slot->setKey(key.data());
   else {
-    auto storedKey = pool->saveString(key);
+    auto storedKey = resources->saveString(key);
     if (!storedKey)
       return nullptr;
     slot->setKey(storedKey);
@@ -39,31 +39,31 @@ inline VariantData* collectionAddMember(CollectionData* obj, TAdaptedString key,
   return slot->data();
 }
 
-inline void collectionClear(CollectionData* c, MemoryPool* pool) {
+inline void collectionClear(CollectionData* c, ResourceManager* resources) {
   if (!c)
     return;
   for (auto slot = c->head(); slot; slot = slot->next())
-    slotRelease(slot, pool);
+    slotRelease(slot, resources);
   c->clear();
 }
 
 inline bool collectionCopy(CollectionData* dst, const CollectionData* src,
-                           MemoryPool* pool) {
+                           ResourceManager* resources) {
   if (!dst || !src)
     return false;
 
-  collectionClear(dst, pool);
+  collectionClear(dst, resources);
 
   for (VariantSlot* s = src->head(); s; s = s->next()) {
     VariantData* var;
     if (s->key() != 0) {
       JsonString key(s->key(),
                      s->ownsKey() ? JsonString::Copied : JsonString::Linked);
-      var = collectionAddMember(dst, adaptString(key), pool);
+      var = collectionAddMember(dst, adaptString(key), resources);
     } else {
-      var = collectionAddElement(dst, pool);
+      var = collectionAddElement(dst, resources);
     }
-    if (!variantCopyFrom(var, s->data(), pool))
+    if (!variantCopyFrom(var, s->data(), resources))
       return false;
   }
   return true;
@@ -78,26 +78,26 @@ inline VariantData* collectionGetMember(const CollectionData* obj,
 }
 
 inline void collectionRemove(CollectionData* data, VariantSlot* slot,
-                             MemoryPool* pool) {
+                             ResourceManager* resources) {
   if (!data || !slot)
     return;
   data->remove(slot);
-  slotRelease(slot, pool);
+  slotRelease(slot, resources);
 }
 
 inline void collectionRemoveElement(CollectionData* array, size_t index,
-                                    MemoryPool* pool) {
+                                    ResourceManager* resources) {
   if (!array)
     return;
-  collectionRemove(array, array->get(index), pool);
+  collectionRemove(array, array->get(index), resources);
 }
 
 template <typename TAdaptedString>
 inline void collectionRemoveMember(CollectionData* obj, TAdaptedString key,
-                                   MemoryPool* pool) {
+                                   ResourceManager* resources) {
   if (!obj)
     return;
-  collectionRemove(obj, obj->get(key), pool);
+  collectionRemove(obj, obj->get(key), resources);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

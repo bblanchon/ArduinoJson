@@ -15,11 +15,11 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 class JsonPair {
  public:
   // INTERNAL USE ONLY
-  JsonPair(detail::MemoryPool* pool, detail::VariantSlot* slot) {
+  JsonPair(detail::ResourceManager* resources, detail::VariantSlot* slot) {
     if (slot) {
       key_ = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
                                                      : JsonString::Linked);
-      value_ = JsonVariant(pool, slot->data());
+      value_ = JsonVariant(resources, slot->data());
     }
   }
 
