@@ -169,11 +169,6 @@ class ResourceManager {
     deallocAllStrings();
   }
 
-  // Workaround for missing placement new
-  void* operator new(size_t, void* p) {
-    return p;
-  }
-
   ptrdiff_t shrinkToFit() {
     return variantPool_.shrinkToFit(allocator_);
   }
