@@ -36,6 +36,7 @@
 #include "ArduinoJson/Array/JsonArrayImpl.hpp"
 #include "ArduinoJson/Array/Utilities.hpp"
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
+#include "ArduinoJson/Memory/VariantPoolImpl.hpp"
 #include "ArduinoJson/Object/JsonObjectImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Variant/ConverterImpl.hpp"

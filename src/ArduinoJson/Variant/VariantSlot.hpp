@@ -117,14 +117,4 @@ constexpr size_t sizeofObject(size_t n) {
   return n * sizeof(VariantSlot);
 }
 
-inline VariantSlot* ResourceManager::allocVariant() {
-  if (poolUsage_ + sizeof(VariantSlot) > poolCapacity_) {
-    overflowed_ = true;
-    return 0;
-  }
-  auto p = pool_ + poolUsage_;
-  poolUsage_ += sizeof(VariantSlot);
-  return new (p) VariantSlot;
-}
-
 ARDUINOJSON_END_PRIVATE_NAMESPACE

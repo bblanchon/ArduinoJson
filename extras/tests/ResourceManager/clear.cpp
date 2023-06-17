@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
+#include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
-#include <ArduinoJson/Variant/VariantSlot.hpp>
 #include <catch.hpp>
 
 using namespace ArduinoJson::detail;

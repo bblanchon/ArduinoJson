@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
-#include <ArduinoJson/Variant/VariantSlot.hpp>
+#include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <catch.hpp>
 
 #include "Allocators.hpp"

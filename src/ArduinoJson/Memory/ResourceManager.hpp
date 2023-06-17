@@ -7,24 +7,27 @@
 #include <ArduinoJson/Memory/Alignment.hpp>
 #include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Memory/StringNode.hpp>
+#include <ArduinoJson/Memory/VariantPool.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
+#include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class VariantSlot;
+class VariantPool;
 
 class ResourceManager {
  public:
   ResourceManager(size_t capa,
                   Allocator* allocator = DefaultAllocator::instance())
       : allocator_(allocator), overflowed_(false) {
-    allocPool(addPadding(capa));
+    variantPool_.create(addPadding(capa), allocator);
   }
 
   ~ResourceManager() {
     deallocAllStrings();
-    deallocPool();
+    variantPool_.destroy(allocator_);
   }
 
   ResourceManager(const ResourceManager&) = delete;
@@ -32,14 +35,10 @@ class ResourceManager {
 
   ResourceManager& operator=(ResourceManager&& src) {
     deallocAllStrings();
-    deallocPool();
+    variantPool_.destroy(allocator_);
     allocator_ = src.allocator_;
-    pool_ = src.pool_;
-    poolCapacity_ = src.poolCapacity_;
-    poolUsage_ = src.poolUsage_;
+    variantPool_ = detail::move(src.variantPool_);
     overflowed_ = src.overflowed_;
-    src.pool_ = nullptr;
-    src.poolCapacity_ = src.poolUsage_ = 0;
     strings_ = src.strings_;
     src.strings_ = nullptr;
     return *this;
@@ -53,17 +52,17 @@ class ResourceManager {
     size_t capa = addPadding(requiredSize);
     if (capa == capacity())
       return;
-    allocator_->deallocate(pool_);
-    allocPool(requiredSize);
+    variantPool_.destroy(allocator_);
+    variantPool_.create(requiredSize, allocator_);
   }
 
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
-    return poolCapacity_;
+    return variantPool_.capacity();
   }
 
   size_t size() const {
-    size_t total = poolUsage_;
+    size_t total = variantPool_.usage();
     for (auto node = strings_; node; node = node->next)
       total += sizeofString(node->length);
     return total;
@@ -73,7 +72,12 @@ class ResourceManager {
     return overflowed_;
   }
 
-  VariantSlot* allocVariant();
+  VariantSlot* allocVariant() {
+    auto p = variantPool_.allocVariant();
+    if (!p)
+      overflowed_ = true;
+    return p;
+  }
 
   template <typename TAdaptedString>
   StringNode* saveString(TAdaptedString str) {
@@ -160,7 +164,7 @@ class ResourceManager {
   }
 
   void clear() {
-    poolUsage_ = 0;
+    variantPool_.clear();
     overflowed_ = false;
     deallocAllStrings();
   }
@@ -171,10 +175,7 @@ class ResourceManager {
   }
 
   ptrdiff_t shrinkToFit() {
-    auto originalPoolAddress = pool_;
-    pool_ = reinterpret_cast<char*>(allocator_->reallocate(pool_, poolUsage_));
-    poolCapacity_ = poolUsage_;
-    return pool_ - originalPoolAddress;
+    return variantPool_.shrinkToFit(allocator_);
   }
 
  private:
@@ -186,23 +187,10 @@ class ResourceManager {
     }
   }
 
-  void allocPool(size_t capa) {
-    pool_ = capa ? reinterpret_cast<char*>(allocator_->allocate(capa)) : 0;
-    poolUsage_ = 0;
-    poolCapacity_ = pool_ ? capa : 0;
-    ARDUINOJSON_ASSERT(isAligned(pool_));
-  }
-
-  void deallocPool() {
-    if (pool_)
-      allocator_->deallocate(pool_);
-  }
-
   Allocator* allocator_;
-  char* pool_;
-  size_t poolUsage_, poolCapacity_;
   bool overflowed_;
   StringNode* strings_ = nullptr;
+  VariantPool variantPool_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
