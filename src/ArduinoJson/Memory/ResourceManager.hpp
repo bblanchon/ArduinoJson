@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Memory/Alignment.hpp>
 #include <ArduinoJson/Memory/Allocator.hpp>
-#include <ArduinoJson/Memory/StringNode.hpp>
+#include <ArduinoJson/Memory/StringPool.hpp>
 #include <ArduinoJson/Memory/VariantPool.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/utility.hpp>
@@ -26,7 +26,7 @@ class ResourceManager {
   }
 
   ~ResourceManager() {
-    deallocAllStrings();
+    stringPool_.clear(allocator_);
     variantPool_.destroy(allocator_);
   }
 
@@ -34,13 +34,12 @@ class ResourceManager {
   ResourceManager& operator=(const ResourceManager& src) = delete;
 
   ResourceManager& operator=(ResourceManager&& src) {
-    deallocAllStrings();
+    stringPool_.clear(allocator_);
     variantPool_.destroy(allocator_);
     allocator_ = src.allocator_;
     variantPool_ = detail::move(src.variantPool_);
     overflowed_ = src.overflowed_;
-    strings_ = src.strings_;
-    src.strings_ = nullptr;
+    stringPool_ = detail::move(src.stringPool_);
     return *this;
   }
 
@@ -62,10 +61,7 @@ class ResourceManager {
   }
 
   size_t size() const {
-    size_t total = variantPool_.usage();
-    for (auto node = strings_; node; node = node->next)
-      total += sizeofString(node->length);
-    return total;
+    return variantPool_.usage() + stringPool_.size();
   }
 
   bool overflowed() const {
@@ -84,37 +80,20 @@ class ResourceManager {
     if (str.isNull())
       return 0;
 
-    auto node = findString(str);
-    if (node) {
-      node->references++;
-      return node;
-    }
-
-    size_t n = str.size();
-
-    node = allocString(n);
+    auto node = stringPool_.add(str, allocator_);
     if (!node)
-      return nullptr;
+      overflowed_ = true;
 
-    stringGetChars(str, node->data, n);
-    node->data[n] = 0;  // force NUL terminator
-    addStringToList(node);
     return node;
   }
 
   void addStringToList(StringNode* node) {
-    ARDUINOJSON_ASSERT(node != nullptr);
-    node->next = strings_;
-    strings_ = node;
+    stringPool_.add(node);
   }
 
   template <typename TAdaptedString>
   StringNode* findString(const TAdaptedString& str) const {
-    for (auto node = strings_; node; node = node->next) {
-      if (stringEquals(str, adaptString(node->data, node->length)))
-        return node;
-    }
-    return nullptr;
+    return stringPool_.get(str);
   }
 
   StringNode* allocString(size_t length) {
@@ -136,26 +115,13 @@ class ResourceManager {
   }
 
   void dereferenceString(const char* s) {
-    StringNode* prev = nullptr;
-    for (auto node = strings_; node; node = node->next) {
-      if (node->data == s) {
-        if (--node->references == 0) {
-          if (prev)
-            prev->next = node->next;
-          else
-            strings_ = node->next;
-          StringNode::destroy(node, allocator_);
-        }
-        return;
-      }
-      prev = node;
-    }
+    stringPool_.dereference(s, allocator_);
   }
 
   void clear() {
     variantPool_.clear();
     overflowed_ = false;
-    deallocAllStrings();
+    stringPool_.clear(allocator_);
   }
 
   ptrdiff_t shrinkToFit() {
@@ -163,17 +129,9 @@ class ResourceManager {
   }
 
  private:
-  void deallocAllStrings() {
-    while (strings_) {
-      auto node = strings_;
-      strings_ = node->next;
-      deallocString(node);
-    }
-  }
-
   Allocator* allocator_;
   bool overflowed_;
-  StringNode* strings_ = nullptr;
+  StringPool stringPool_;
   VariantPool variantPool_;
 };
 
