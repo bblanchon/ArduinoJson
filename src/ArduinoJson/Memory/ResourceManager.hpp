@@ -118,32 +118,21 @@ class ResourceManager {
   }
 
   StringNode* allocString(size_t length) {
-    auto node = reinterpret_cast<StringNode*>(
-        allocator_->allocate(sizeofString(length)));
-    if (node) {
-      node->length = uint16_t(length);
-      node->references = 1;
-    } else {
+    auto node = StringNode::create(length, allocator_);
+    if (!node)
       overflowed_ = true;
-    }
     return node;
   }
 
   StringNode* reallocString(StringNode* node, size_t length) {
-    ARDUINOJSON_ASSERT(node != nullptr);
-    auto newNode = reinterpret_cast<StringNode*>(
-        allocator_->reallocate(node, sizeofString(length)));
-    if (newNode) {
-      newNode->length = uint16_t(length);
-    } else {
+    node = StringNode::resize(node, length, allocator_);
+    if (!node)
       overflowed_ = true;
-      allocator_->deallocate(node);
-    }
-    return newNode;
+    return node;
   }
 
   void deallocString(StringNode* node) {
-    allocator_->deallocate(node);
+    StringNode::destroy(node, allocator_);
   }
 
   void dereferenceString(const char* s) {
@@ -155,7 +144,7 @@ class ResourceManager {
             prev->next = node->next;
           else
             strings_ = node->next;
-          allocator_->deallocate(node);
+          StringNode::destroy(node, allocator_);
         }
         return;
       }
