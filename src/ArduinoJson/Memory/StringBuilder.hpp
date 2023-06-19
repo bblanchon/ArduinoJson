@@ -16,22 +16,22 @@ class StringBuilder {
 
   ~StringBuilder() {
     if (node_)
-      resources_->deallocString(node_);
+      resources_->destroyString(node_);
   }
 
   void startString() {
     size_ = 0;
     if (!node_)
-      node_ = resources_->allocString(initialCapacity);
+      node_ = resources_->createString(initialCapacity);
   }
 
   StringNode* save() {
     ARDUINOJSON_ASSERT(node_ != nullptr);
     node_->data[size_] = 0;
-    StringNode* node = resources_->findString(adaptString(node_->data, size_));
+    StringNode* node = resources_->getString(adaptString(node_->data, size_));
     if (!node) {
-      node = resources_->reallocString(node_, size_);
-      resources_->addStringToList(node);
+      node = resources_->resizeString(node_, size_);
+      resources_->saveString(node);
       node_ = nullptr;  // next time we need a new string
     } else {
       node->references++;
@@ -51,7 +51,7 @@ class StringBuilder {
 
   void append(char c) {
     if (node_ && size_ == node_->length)
-      node_ = resources_->reallocString(node_, size_ * 2U + 1);
+      node_ = resources_->resizeString(node_, size_ * 2U + 1);
     if (node_)
       node_->data[size_++] = c;
   }

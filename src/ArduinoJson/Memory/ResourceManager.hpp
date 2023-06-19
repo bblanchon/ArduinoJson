@@ -87,30 +87,30 @@ class ResourceManager {
     return node;
   }
 
-  void addStringToList(StringNode* node) {
+  void saveString(StringNode* node) {
     stringPool_.add(node);
   }
 
   template <typename TAdaptedString>
-  StringNode* findString(const TAdaptedString& str) const {
+  StringNode* getString(const TAdaptedString& str) const {
     return stringPool_.get(str);
   }
 
-  StringNode* allocString(size_t length) {
+  StringNode* createString(size_t length) {
     auto node = StringNode::create(length, allocator_);
     if (!node)
       overflowed_ = true;
     return node;
   }
 
-  StringNode* reallocString(StringNode* node, size_t length) {
+  StringNode* resizeString(StringNode* node, size_t length) {
     node = StringNode::resize(node, length, allocator_);
     if (!node)
       overflowed_ = true;
     return node;
   }
 
-  void deallocString(StringNode* node) {
+  void destroyString(StringNode* node) {
     StringNode::destroy(node, allocator_);
   }
 
