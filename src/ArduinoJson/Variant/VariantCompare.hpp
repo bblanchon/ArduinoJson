@@ -12,8 +12,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class CollectionData;
-
 struct ComparerBase : Visitor<CompareResult> {};
 
 template <typename T, typename Enable = void>
@@ -86,7 +84,7 @@ struct ArrayComparer : ComparerBase {
   explicit ArrayComparer(const CollectionData& rhs) : rhs_(&rhs) {}
 
   CompareResult visitArray(const CollectionData& lhs) {
-    if (JsonArrayConst(&lhs) == JsonArrayConst(rhs_))
+    if (arrayEquals(lhs, *rhs_))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -99,7 +97,7 @@ struct ObjectComparer : ComparerBase {
   explicit ObjectComparer(const CollectionData& rhs) : rhs_(&rhs) {}
 
   CompareResult visitObject(const CollectionData& lhs) {
-    if (JsonObjectConst(&lhs) == JsonObjectConst(rhs_))
+    if (objectEquals(lhs, *rhs_))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -202,6 +200,11 @@ template <typename T>
 CompareResult compare(ArduinoJson::JsonVariantConst lhs, const T& rhs) {
   Comparer<T> comparer(rhs);
   return variantAccept(VariantAttorney::getData(lhs), comparer);
+}
+
+inline CompareResult compare(const VariantData* lhs, const VariantData* rhs) {
+  VariantComparer comparer(rhs);
+  return variantAccept(lhs, comparer);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

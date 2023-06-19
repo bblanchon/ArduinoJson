@@ -50,21 +50,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
     if (!data_ || !rhs.data_)
       return false;
 
-    iterator it1 = begin();
-    iterator it2 = rhs.begin();
-
-    for (;;) {
-      bool end1 = it1 == end();
-      bool end2 = it2 == rhs.end();
-      if (end1 && end2)
-        return true;
-      if (end1 || end2)
-        return false;
-      if (*it1 != *it2)
-        return false;
-      ++it1;
-      ++it2;
-    }
+    return arrayEquals(*data_, *rhs.data_);
   }
 
   // Returns the element at the specified index.

@@ -114,13 +114,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
     if (!data_ || !rhs.data_)
       return false;
 
-    size_t count = 0;
-    for (iterator it = begin(); it != end(); ++it) {
-      if (it->value() != rhs[it->key()])
-        return false;
-      count++;
-    }
-    return count == rhs.size();
+    return objectEquals(*data_, *rhs.data_);
   }
 
  private:

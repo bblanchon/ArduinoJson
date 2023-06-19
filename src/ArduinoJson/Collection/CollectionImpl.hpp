@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Collection/CollectionData.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
+#include <ArduinoJson/Variant/VariantCompare.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
@@ -97,6 +98,35 @@ inline void CollectionData::movePointers(ptrdiff_t variantDistance) {
   movePointer(tail_, variantDistance);
   for (VariantSlot* slot = head_; slot; slot = slot->next())
     slot->data()->movePointers(variantDistance);
+}
+
+inline bool arrayEquals(const CollectionData& lhs, const CollectionData& rhs) {
+  auto a = lhs.head();
+  auto b = rhs.head();
+
+  for (;;) {
+    if (!a && !b)  // both ended
+      return true;
+    if (!a || !b)  // one ended
+      return false;
+    if (compare(a->data(), b->data()) != COMPARE_RESULT_EQUAL)
+      return false;
+    a = a->next();
+    b = b->next();
+  }
+}
+
+inline bool objectEquals(const CollectionData& lhs, const CollectionData& rhs) {
+  size_t count = 0;
+  for (auto a = lhs.head(); a; a = a->next()) {
+    auto b = rhs.get(adaptString(a->key()));
+    if (!b)
+      return false;
+    if (compare(a->data(), b->data()) != COMPARE_RESULT_EQUAL)
+      return false;
+    count++;
+  }
+  return count == rhs.size();
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

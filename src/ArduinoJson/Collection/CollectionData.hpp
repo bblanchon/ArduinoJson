@@ -52,4 +52,9 @@ inline VariantData* collectionToVariant(CollectionData* collection) {
   return reinterpret_cast<VariantData*>(data);
 }
 
+bool arrayEquals(const detail::CollectionData& lhs,
+                 const detail::CollectionData& rhs);
+bool objectEquals(const detail::CollectionData& lhs,
+                  const detail::CollectionData& rhs);
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE
