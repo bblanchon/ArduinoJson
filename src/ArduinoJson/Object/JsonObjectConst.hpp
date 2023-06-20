@@ -108,13 +108,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
 
   // Compares objects.
   FORCE_INLINE bool operator==(JsonObjectConst rhs) const {
-    if (data_ == rhs.data_)
-      return true;
-
-    if (!data_ || !rhs.data_)
-      return false;
-
-    return objectEquals(*data_, *rhs.data_);
+    return objectEquals(data_, rhs.data_);
   }
 
  private:

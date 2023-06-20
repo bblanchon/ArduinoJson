@@ -138,4 +138,14 @@ inline bool objectEquals(const CollectionData& lhs, const CollectionData& rhs) {
   return count == rhs.size();
 }
 
+inline bool objectEquals(const CollectionData* lhs, const CollectionData* rhs) {
+  if (lhs == rhs)
+    return true;
+
+  if (!lhs || !rhs)
+    return false;
+
+  return objectEquals(*lhs, *rhs);
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

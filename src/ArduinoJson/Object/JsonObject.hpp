@@ -100,7 +100,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   // Compares the content of two objects.
   FORCE_INLINE bool operator==(JsonObject rhs) const {
-    return JsonObjectConst(data_) == JsonObjectConst(rhs.data_);
+    return objectEquals(data_, rhs.data_);
   }
 
   // Gets or sets the member with specified key.
