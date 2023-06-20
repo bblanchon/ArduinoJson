@@ -23,9 +23,9 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE JsonObject() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonObject(detail::ResourceManager* buf,
-                          detail::CollectionData* data)
-      : data_(data), resources_(buf) {}
+  FORCE_INLINE JsonObject(detail::CollectionData* data,
+                          detail::ResourceManager* resource)
+      : data_(data), resources_(resource) {}
 
   operator JsonVariant() const {
     void* data = data_;  // prevent warning cast-align
@@ -219,7 +219,7 @@ struct Converter<JsonObject> : private detail::VariantAttorney {
   static JsonObject fromJson(JsonVariant src) {
     auto data = getData(src);
     auto resources = getResourceManager(src);
-    return JsonObject(resources, data != 0 ? data->asObject() : 0);
+    return JsonObject(data != 0 ? data->asObject() : 0, resources);
   }
 
   static detail::InvalidConversion<JsonVariantConst, JsonObject> fromJson(
@@ -243,8 +243,8 @@ template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonObject(getResourceManager(),
-                    variantToObject(getOrCreateData(), getResourceManager()));
+  return JsonObject(variantToObject(getOrCreateData(), getResourceManager()),
+                    getResourceManager());
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
