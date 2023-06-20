@@ -29,8 +29,8 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   operator JsonVariant() const {
     void* data = data_;  // prevent warning cast-align
-    return JsonVariant(resources_,
-                       reinterpret_cast<detail::VariantData*>(data));
+    return JsonVariant(reinterpret_cast<detail::VariantData*>(data),
+                       resources_);
   }
 
   operator JsonObjectConst() const {

@@ -19,7 +19,7 @@ class JsonVariant : public detail::VariantRefBase<JsonVariant>,
   JsonVariant() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  JsonVariant(detail::ResourceManager* resources, detail::VariantData* data)
+  JsonVariant(detail::VariantData* data, detail::ResourceManager* resources)
       : data_(data), resources_(resources) {}
 
  private:
@@ -85,19 +85,18 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::add() const {
-  return JsonVariant(
-      getResourceManager(),
-      variantAddElement(getOrCreateData(), getResourceManager()));
+  return JsonVariant(variantAddElement(getOrCreateData(), getResourceManager()),
+                     getResourceManager());
 }
 
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
-  return JsonVariant(getResourceManager(), getData());
+  return JsonVariant(getData(), getResourceManager());
 }
 
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::getOrCreateVariant() const {
-  return JsonVariant(getResourceManager(), getOrCreateData());
+  return JsonVariant(getOrCreateData(), getResourceManager());
 }
 
 template <typename TDerived>

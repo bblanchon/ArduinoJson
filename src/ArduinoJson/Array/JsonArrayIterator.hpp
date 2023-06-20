@@ -36,7 +36,7 @@ class JsonArrayIterator {
       : resources_(resources), slot_(slot) {}
 
   JsonVariant operator*() const {
-    return JsonVariant(resources_, slot_->data());
+    return JsonVariant(slot_->data(), resources_);
   }
   Ptr<JsonVariant> operator->() {
     return operator*();

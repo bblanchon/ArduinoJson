@@ -32,8 +32,8 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // https://arduinojson.org/v6/api/jsonvariant/
   operator JsonVariant() {
     void* data = data_;  // prevent warning cast-align
-    return JsonVariant(resources_,
-                       reinterpret_cast<detail::VariantData*>(data));
+    return JsonVariant(reinterpret_cast<detail::VariantData*>(data),
+                       resources_);
   }
 
   // Returns a read-only reference to the array.
@@ -46,7 +46,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsonarray/add/
   JsonVariant add() const {
-    return JsonVariant(resources_, collectionAddElement(data_, resources_));
+    return JsonVariant(collectionAddElement(data_, resources_), resources_);
   }
 
   // Appends a value to the array.

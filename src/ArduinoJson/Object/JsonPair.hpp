@@ -19,7 +19,7 @@ class JsonPair {
     if (slot) {
       key_ = JsonString(slot->key(), slot->ownsKey() ? JsonString::Copied
                                                      : JsonString::Linked);
-      value_ = JsonVariant(resources, slot->data());
+      value_ = JsonVariant(slot->data(), resources);
     }
   }
 
