@@ -45,12 +45,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Compares the content of two arrays.
   // Returns true if the two arrays are equal.
   FORCE_INLINE bool operator==(JsonArrayConst rhs) const {
-    if (data_ == rhs.data_)
-      return true;
-    if (!data_ || !rhs.data_)
-      return false;
-
-    return arrayEquals(*data_, *rhs.data_);
+    return arrayEquals(data_, rhs.data_);
   }
 
   // Returns the element at the specified index.

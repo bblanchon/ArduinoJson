@@ -116,6 +116,15 @@ inline bool arrayEquals(const CollectionData& lhs, const CollectionData& rhs) {
   }
 }
 
+inline bool arrayEquals(const CollectionData* lhs, const CollectionData* rhs) {
+  if (lhs == rhs)
+    return true;
+  if (!lhs || !rhs)
+    return false;
+
+  return arrayEquals(*lhs, *rhs);
+}
+
 inline bool objectEquals(const CollectionData& lhs, const CollectionData& rhs) {
   size_t count = 0;
   for (auto a = lhs.head(); a; a = a->next()) {

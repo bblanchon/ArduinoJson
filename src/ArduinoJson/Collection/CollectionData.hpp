@@ -54,6 +54,8 @@ inline VariantData* collectionToVariant(CollectionData* collection) {
 
 bool arrayEquals(const detail::CollectionData& lhs,
                  const detail::CollectionData& rhs);
+bool arrayEquals(const detail::CollectionData* lhs,
+                 const detail::CollectionData* rhs);
 bool objectEquals(const detail::CollectionData& lhs,
                   const detail::CollectionData& rhs);
 

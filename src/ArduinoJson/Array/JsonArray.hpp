@@ -85,7 +85,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
 
   // Compares the content of two arrays.
   FORCE_INLINE bool operator==(JsonArray rhs) const {
-    return JsonArrayConst(data_) == JsonArrayConst(rhs.data_);
+    return arrayEquals(data_, rhs.data_);
   }
 
   // Removes the element at the specified iterator.
