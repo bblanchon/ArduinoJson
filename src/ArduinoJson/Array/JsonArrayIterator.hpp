@@ -9,21 +9,21 @@
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
-class VariantPtr {
+template <typename T>
+class Ptr {
  public:
-  VariantPtr(detail::ResourceManager* resources, detail::VariantData* data)
-      : variant_(resources, data) {}
+  Ptr(T value) : value_(value) {}
 
-  JsonVariant* operator->() {
-    return &variant_;
+  T* operator->() {
+    return &value_;
   }
 
-  JsonVariant& operator*() {
-    return variant_;
+  T& operator*() {
+    return value_;
   }
 
  private:
-  JsonVariant variant_;
+  T value_;
 };
 
 class JsonArrayIterator {
@@ -38,8 +38,8 @@ class JsonArrayIterator {
   JsonVariant operator*() const {
     return JsonVariant(resources_, slot_->data());
   }
-  VariantPtr operator->() {
-    return VariantPtr(resources_, slot_->data());
+  Ptr<JsonVariant> operator->() {
+    return operator*();
   }
 
   bool operator==(const JsonArrayIterator& other) const {
@@ -65,22 +65,6 @@ class JsonArrayIterator {
   detail::VariantSlot* slot_;
 };
 
-class VariantConstPtr {
- public:
-  VariantConstPtr(const detail::VariantData* data) : variant_(data) {}
-
-  JsonVariantConst* operator->() {
-    return &variant_;
-  }
-
-  JsonVariantConst& operator*() {
-    return variant_;
-  }
-
- private:
-  JsonVariantConst variant_;
-};
-
 class JsonArrayConstIterator {
   friend class JsonArray;
 
@@ -92,8 +76,8 @@ class JsonArrayConstIterator {
   JsonVariantConst operator*() const {
     return JsonVariantConst(slot_->data());
   }
-  VariantConstPtr operator->() {
-    return VariantConstPtr(slot_->data());
+  Ptr<JsonVariantConst> operator->() {
+    return operator*();
   }
 
   bool operator==(const JsonArrayConstIterator& other) const {

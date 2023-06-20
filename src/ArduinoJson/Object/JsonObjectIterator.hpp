@@ -9,23 +9,6 @@
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
-class JsonPairPtr {
- public:
-  JsonPairPtr(detail::ResourceManager* resources, detail::VariantSlot* slot)
-      : pair_(resources, slot) {}
-
-  const JsonPair* operator->() const {
-    return &pair_;
-  }
-
-  const JsonPair& operator*() const {
-    return pair_;
-  }
-
- private:
-  JsonPair pair_;
-};
-
 class JsonObjectIterator {
   friend class JsonObject;
 
@@ -39,8 +22,8 @@ class JsonObjectIterator {
   JsonPair operator*() const {
     return JsonPair(resources_, slot_);
   }
-  JsonPairPtr operator->() {
-    return JsonPairPtr(resources_, slot_);
+  Ptr<JsonPair> operator->() {
+    return operator*();
   }
 
   bool operator==(const JsonObjectIterator& other) const {
@@ -66,22 +49,6 @@ class JsonObjectIterator {
   detail::VariantSlot* slot_;
 };
 
-class JsonPairConstPtr {
- public:
-  JsonPairConstPtr(const detail::VariantSlot* slot) : pair_(slot) {}
-
-  const JsonPairConst* operator->() const {
-    return &pair_;
-  }
-
-  const JsonPairConst& operator*() const {
-    return pair_;
-  }
-
- private:
-  JsonPairConst pair_;
-};
-
 class JsonObjectConstIterator {
   friend class JsonObject;
 
@@ -94,8 +61,8 @@ class JsonObjectConstIterator {
   JsonPairConst operator*() const {
     return JsonPairConst(slot_);
   }
-  JsonPairConstPtr operator->() {
-    return JsonPairConstPtr(slot_);
+  Ptr<JsonPairConst> operator->() {
+    return operator*();
   }
 
   bool operator==(const JsonObjectConstIterator& other) const {
