@@ -24,8 +24,8 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   FORCE_INLINE JsonArray() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonArray(detail::ResourceManager* resources,
-                         detail::CollectionData* data)
+  FORCE_INLINE JsonArray(detail::CollectionData* data,
+                         detail::ResourceManager* resources)
       : data_(data), resources_(resources) {}
 
   // Returns a JsonVariant pointing to the array.
@@ -185,7 +185,7 @@ struct Converter<JsonArray> : private detail::VariantAttorney {
   static JsonArray fromJson(JsonVariant src) {
     auto data = getData(src);
     auto resources = getResourceManager(src);
-    return JsonArray(resources, data != 0 ? data->asArray() : 0);
+    return JsonArray(data != 0 ? data->asArray() : 0, resources);
   }
 
   static detail::InvalidConversion<JsonVariantConst, JsonArray> fromJson(
@@ -209,8 +209,8 @@ template <typename TDerived>
 template <typename T>
 inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonArray(getResourceManager(),
-                   variantToArray(getOrCreateData(), getResourceManager()));
+  return JsonArray(variantToArray(getOrCreateData(), getResourceManager()),
+                   getResourceManager());
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
