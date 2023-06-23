@@ -201,11 +201,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
     return detail::collectionToVariant(data_);
   }
 
-  template <typename TAdaptedString>
-  void removeMember(TAdaptedString key) const {
-    collectionRemove(data_, data_->get(key), resources_);
-  }
-
   detail::CollectionData* data_;
   detail::ResourceManager* resources_;
 };

@@ -15,16 +15,46 @@ class VariantData;
 class VariantSlot;
 
 class CollectionData {
-  VariantSlot* head_;
-  VariantSlot* tail_;
+  VariantSlot* head_ = 0;
+  VariantSlot* tail_ = 0;
 
  public:
-  void clear();
+  // Placement new
+  static void* operator new(size_t, void* p) noexcept {
+    return p;
+  }
+
+  static void operator delete(void*, void*) noexcept {}
+
   size_t memoryUsage() const;
   size_t size() const;
 
-  void add(VariantSlot*);
-  void remove(VariantSlot* slot);
+  VariantData* addElement(ResourceManager* resources);
+
+  VariantData* addMember(StringNode* key, ResourceManager* resources);
+
+  template <typename TAdaptedString>
+  VariantData* addMember(TAdaptedString key, ResourceManager* resources);
+
+  void clear(ResourceManager* resources);
+  bool copyFrom(const CollectionData& src, ResourceManager* resources);
+
+  VariantData* getOrAddElement(size_t index, ResourceManager* resources);
+
+  VariantData* getElement(size_t index) const;
+
+  template <typename TAdaptedString>
+  VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources);
+
+  template <typename TAdaptedString>
+  VariantData* getMember(TAdaptedString key) const;
+
+  void removeSlot(VariantSlot* slot, ResourceManager* resources);
+
+  void removeElement(size_t index, ResourceManager* resources);
+
+  template <typename TAdaptedString>
+  void removeMember(TAdaptedString key, ResourceManager* resources);
 
   VariantSlot* head() const {
     return head_;
@@ -32,13 +62,15 @@ class CollectionData {
 
   void movePointers(ptrdiff_t variantDistance);
 
-  VariantSlot* get(size_t index) const;
+ private:
+  void addSlot(VariantSlot*);
+
+  VariantSlot* getPreviousSlot(VariantSlot*) const;
+
+  VariantSlot* getSlot(size_t index) const;
 
   template <typename TAdaptedString>
-  VariantSlot* get(TAdaptedString key) const;
-
- private:
-  VariantSlot* getPrevious(VariantSlot*) const;
+  VariantSlot* getSlot(TAdaptedString key) const;
 };
 
 inline const VariantData* collectionToVariant(

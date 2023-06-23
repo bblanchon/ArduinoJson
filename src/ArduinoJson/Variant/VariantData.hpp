@@ -211,7 +211,7 @@ class VariantData {
     auto array = asArray();
     if (!array)
       return nullptr;
-    return slotData(array->get(index));
+    return array->getElement(index);
   }
 
   template <typename TAdaptedString>
@@ -219,28 +219,14 @@ class VariantData {
     auto object = asObject();
     if (!object)
       return nullptr;
-    return slotData(object->get(key));
+    return object->getMember(key);
   }
 
   VariantData* getOrAddElement(size_t index, ResourceManager* resources) {
     auto array = isNull() ? &toArray() : asArray();
     if (!array)
       return nullptr;
-    VariantSlot* slot = array->head();
-    while (slot && index > 0) {
-      slot = slot->next();
-      index--;
-    }
-    if (!slot)
-      index++;
-    while (index > 0) {
-      slot = resources->allocVariant();
-      if (!slot)
-        return nullptr;
-      array->add(slot);
-      index--;
-    }
-    return slot->data();
+    return array->getOrAddElement(index, resources);
   }
 
   template <typename TAdaptedString>
@@ -250,10 +236,7 @@ class VariantData {
     auto obj = isNull() ? &toObject() : asObject();
     if (!obj)
       return nullptr;
-    auto slot = obj->get(key);
-    if (slot)
-      return slot->data();
-    return collectionAddMember(obj, key, resources);
+    return obj->getOrAddMember(key, resources);
   }
 
   bool isArray() const {
@@ -446,7 +429,7 @@ class VariantData {
 
   CollectionData& toArray() {
     setType(VALUE_IS_ARRAY);
-    content_.asCollection.clear();
+    new (&content_.asCollection) CollectionData();
     return content_.asCollection;
   }
 
@@ -457,7 +440,7 @@ class VariantData {
 
   CollectionData& toObject() {
     setType(VALUE_IS_OBJECT);
-    content_.asCollection.clear();
+    new (&content_.asCollection) CollectionData();
     return content_.asCollection;
   }
 

@@ -38,6 +38,8 @@ enum {
 };
 
 union VariantContent {
+  VariantContent() {}
+
   JsonFloat asFloat;
   bool asBoolean;
   JsonUInt asUnsignedInteger;

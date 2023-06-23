@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Array/JsonArrayIterator.hpp>
+#include <ArduinoJson/Collection/CollectionFunctions.hpp>
 #include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 
@@ -51,7 +52,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the element at the specified index.
   // https://arduinojson.org/v6/api/jsonarrayconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(data_ ? slotData(data_->get(index)) : 0);
+    return JsonVariantConst(collectionGetElement(data_, index));
   }
 
   operator JsonVariantConst() const {
