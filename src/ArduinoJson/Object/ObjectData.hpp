@@ -63,7 +63,7 @@ class ObjectData : public CollectionData {
 
  private:
   template <typename TAdaptedString>
-  VariantSlot* getSlot(TAdaptedString key) const;
+  iterator findKey(TAdaptedString key) const;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

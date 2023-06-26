@@ -14,6 +14,58 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 class VariantData;
 class VariantSlot;
 
+class CollectionIterator {
+  friend class CollectionData;
+
+ public:
+  CollectionIterator() : slot_(nullptr) {}
+
+  CollectionIterator& operator++();
+
+  operator bool() const {
+    return slot_ != nullptr;
+  }
+
+  bool operator==(const CollectionIterator& other) const {
+    return slot_ == other.slot_;
+  }
+
+  bool operator!=(const CollectionIterator& other) const {
+    return slot_ != other.slot_;
+  }
+
+  VariantData* operator->() {
+    ARDUINOJSON_ASSERT(slot_ != nullptr);
+    return data();
+  }
+
+  VariantData& operator*() {
+    ARDUINOJSON_ASSERT(slot_ != nullptr);
+    return *data();
+  }
+
+  const VariantData& operator*() const {
+    ARDUINOJSON_ASSERT(slot_ != nullptr);
+    return *data();
+  }
+
+  const char* key() const;
+  bool ownsKey() const;
+
+  VariantData* data() {
+    return reinterpret_cast<VariantData*>(slot_);
+  }
+
+  const VariantData* data() const {
+    return reinterpret_cast<const VariantData*>(slot_);
+  }
+
+ private:
+  CollectionIterator(VariantSlot* slot) : slot_(slot) {}
+
+  VariantSlot* slot_;
+};
+
 class CollectionData {
   VariantSlot* head_ = 0;
   VariantSlot* tail_ = 0;
@@ -26,8 +78,19 @@ class CollectionData {
 
   static void operator delete(void*, void*) noexcept {}
 
+  using iterator = CollectionIterator;
+
+  iterator begin() const {
+    return iterator(head_);
+  }
+
+  iterator end() const {
+    return iterator(nullptr);
+  }
+
   size_t memoryUsage() const;
   size_t size() const;
+  size_t nesting() const;
 
   void clear(ResourceManager* resources);
 
@@ -37,20 +100,15 @@ class CollectionData {
     collection->clear(resources);
   }
 
-  void removeSlot(VariantSlot* slot, ResourceManager* resources);
-
-  static void removeSlot(CollectionData* collection, VariantSlot* slot,
-                         ResourceManager* resources) {
-    if (!collection)
-      return;
-    collection->removeSlot(slot, resources);
-  }
-
-  VariantSlot* head() const {
-    return head_;
-  }
-
   void movePointers(ptrdiff_t variantDistance);
+
+  void remove(iterator it, ResourceManager* resources);
+
+  static void remove(CollectionData* collection, iterator it,
+                     ResourceManager* resources) {
+    if (collection)
+      return collection->remove(it, resources);
+  }
 
  protected:
   void addSlot(VariantSlot*);

@@ -51,7 +51,8 @@ TEST_CASE("JsonObject::remove()") {
     }
 
     SECTION("Remove last") {
-      it += 2;
+      ++it;
+      ++it;
       obj.remove(it);
       serializeJson(obj, result);
       REQUIRE("{\"a\":0,\"b\":1}" == result);

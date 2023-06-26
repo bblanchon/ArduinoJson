@@ -26,7 +26,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->head());
+    return iterator(data_->begin());
   }
 
   // Returns an iterator to the element following the last element of the array.

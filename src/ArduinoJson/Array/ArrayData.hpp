@@ -59,7 +59,7 @@ class ArrayData : public CollectionData {
   }
 
  private:
-  VariantSlot* getSlot(size_t index) const;
+  iterator at(size_t index) const;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

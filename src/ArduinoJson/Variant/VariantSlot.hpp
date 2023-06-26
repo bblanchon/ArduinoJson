@@ -51,20 +51,6 @@ class VariantSlot {
     return const_cast<VariantSlot*>(this)->next();
   }
 
-  VariantSlot* next(size_t distance) {
-    VariantSlot* slot = this;
-    while (distance--) {
-      if (!slot->next_)
-        return 0;
-      slot += slot->next_;
-    }
-    return slot;
-  }
-
-  const VariantSlot* next(size_t distance) const {
-    return const_cast<VariantSlot*>(this)->next(distance);
-  }
-
   void setNext(VariantSlot* slot) {
     ARDUINOJSON_ASSERT(!slot || slot - this >=
                                     numeric_limits<VariantSlotDiff>::lowest());

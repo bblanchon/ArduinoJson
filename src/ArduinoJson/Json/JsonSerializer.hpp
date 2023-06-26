@@ -21,13 +21,13 @@ class JsonSerializer : public Visitor<size_t> {
   FORCE_INLINE size_t visitArray(const ArrayData& array) {
     write('[');
 
-    const VariantSlot* slot = array.head();
+    auto it = array.begin();
 
-    while (slot != 0) {
-      slot->data()->accept(*this);
+    while (it) {
+      it->accept(*this);
 
-      slot = slot->next();
-      if (slot == 0)
+      ++it;
+      if (!it)
         break;
 
       write(',');
@@ -40,15 +40,15 @@ class JsonSerializer : public Visitor<size_t> {
   size_t visitObject(const ObjectData& object) {
     write('{');
 
-    const VariantSlot* slot = object.head();
+    auto it = object.begin();
 
-    while (slot != 0) {
-      formatter_.writeString(slot->key());
+    while (it) {
+      formatter_.writeString(it.key());
       write(':');
-      slot->data()->accept(*this);
+      it->accept(*this);
 
-      slot = slot->next();
-      if (slot == 0)
+      ++it;
+      if (!it)
         break;
 
       write(',');

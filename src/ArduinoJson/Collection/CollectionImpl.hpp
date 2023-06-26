@@ -11,6 +11,22 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
+inline const char* CollectionIterator::key() const {
+  ARDUINOJSON_ASSERT(slot_ != nullptr);
+  return slot_->key();
+}
+
+inline bool CollectionIterator::ownsKey() const {
+  ARDUINOJSON_ASSERT(slot_ != nullptr);
+  return slot_->ownsKey();
+}
+
+inline CollectionIterator& CollectionIterator::operator++() {
+  ARDUINOJSON_ASSERT(slot_ != nullptr);
+  slot_ = slot_->next();
+  return *this;
+}
+
 inline void CollectionData::addSlot(VariantSlot* slot) {
   ARDUINOJSON_ASSERT(slot != nullptr);
 
@@ -41,19 +57,19 @@ inline VariantSlot* CollectionData::getPreviousSlot(VariantSlot* target) const {
   return 0;
 }
 
-inline void CollectionData::removeSlot(VariantSlot* slot,
-                                       ResourceManager* resources) {
-  if (!slot)
+inline void CollectionData::remove(iterator it, ResourceManager* resources) {
+  if (!it)
     return;
-  VariantSlot* prev = getPreviousSlot(slot);
-  VariantSlot* next = slot->next();
+  auto curr = it.slot_;
+  auto prev = getPreviousSlot(curr);
+  auto next = curr->next();
   if (prev)
     prev->setNext(next);
   else
     head_ = next;
   if (!next)
     tail_ = prev;
-  slotRelease(slot, resources);
+  slotRelease(curr, resources);
 }
 
 inline size_t CollectionData::memoryUsage() const {
@@ -64,6 +80,16 @@ inline size_t CollectionData::memoryUsage() const {
       total += sizeofString(strlen(s->key()));
   }
   return total;
+}
+
+inline size_t CollectionData::nesting() const {
+  size_t maxChildNesting = 0;
+  for (const VariantSlot* s = head_; s; s = s->next()) {
+    size_t childNesting = s->data()->nesting();
+    if (childNesting > maxChildNesting)
+      maxChildNesting = childNesting;
+  }
+  return maxChildNesting + 1;
 }
 
 inline size_t CollectionData::size() const {

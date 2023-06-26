@@ -68,7 +68,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(resources_, data_->head());
+    return iterator(data_->begin(), resources_);
   }
 
   // Returns an iterator following the last element of the array.
@@ -92,7 +92,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/
   FORCE_INLINE void remove(iterator it) const {
-    detail::ArrayData::removeSlot(data_, it.slot_, resources_);
+    detail::ArrayData::remove(data_, it.iterator_, resources_);
   }
 
   // Removes the element at the specified index.

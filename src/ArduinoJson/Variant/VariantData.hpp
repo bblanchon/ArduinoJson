@@ -107,8 +107,12 @@ class VariantData {
     return const_cast<VariantData*>(this)->asArray();
   }
 
-  const CollectionData* asCollection() const {
+  CollectionData* asCollection() {
     return isCollection() ? &content_.asCollection : 0;
+  }
+
+  const CollectionData* asCollection() const {
+    return const_cast<VariantData*>(this)->asCollection();
   }
 
   template <typename T>
@@ -182,19 +186,15 @@ class VariantData {
     }
   }
 
-  bool copyFrom(const VariantData* src, ResourceManager* resources) {
+  bool copyFrom(const VariantData& src, ResourceManager* resources) {
     release(resources);
-    if (!src) {
-      setNull();
-      return true;
-    }
-    switch (src->type()) {
+    switch (src.type()) {
       case VALUE_IS_ARRAY:
-        return toArray().copyFrom(*src->asArray(), resources);
+        return toArray().copyFrom(src.content_.asArray, resources);
       case VALUE_IS_OBJECT:
-        return toObject().copyFrom(*src->asObject(), resources);
+        return toObject().copyFrom(src.content_.asObject, resources);
       case VALUE_IS_OWNED_STRING: {
-        auto str = adaptString(src->asString());
+        auto str = adaptString(src.asString());
         auto dup = resources->saveString(str);
         if (!dup)
           return false;
@@ -202,7 +202,7 @@ class VariantData {
         return true;
       }
       case VALUE_IS_RAW_STRING: {
-        auto str = adaptString(src->asRawString());
+        auto str = adaptString(src.asRawString());
         auto dup = resources->saveString(str);
         if (!dup)
           return false;
@@ -210,8 +210,8 @@ class VariantData {
         return true;
       }
       default:
-        content_ = src->content_;
-        flags_ = src->flags_;
+        content_ = src.content_;
+        flags_ = src.flags_;
         return true;
     }
   }
@@ -220,7 +220,11 @@ class VariantData {
                    ResourceManager* resources) {
     if (!dst)
       return false;
-    return dst->copyFrom(src, resources);
+    if (!src) {
+      dst->setNull();
+      return true;
+    }
+    return dst->copyFrom(*src, resources);
   }
 
   VariantData* getElement(size_t index) const {
@@ -334,16 +338,10 @@ class VariantData {
 
   size_t nesting() const {
     auto collection = asCollection();
-    if (!collection)
+    if (collection)
+      return collection->nesting();
+    else
       return 0;
-
-    size_t maxChildNesting = 0;
-    for (const VariantSlot* s = collection->head(); s; s = s->next()) {
-      size_t childNesting = s->data()->nesting();
-      if (childNesting > maxChildNesting)
-        maxChildNesting = childNesting;
-    }
-    return maxChildNesting + 1;
   }
 
   static size_t nesting(const VariantData* var) {
@@ -550,11 +548,9 @@ class VariantData {
     if (flags_ & OWNED_VALUE_BIT)
       resources->dereferenceString(content_.asOwnedString->data);
 
-    auto c = asCollection();
-    if (c) {
-      for (auto slot = c->head(); slot; slot = slot->next())
-        slotRelease(slot, resources);
-    }
+    auto collection = asCollection();
+    if (collection)
+      collection->clear(resources);
   }
 
   void setType(uint8_t t) {
