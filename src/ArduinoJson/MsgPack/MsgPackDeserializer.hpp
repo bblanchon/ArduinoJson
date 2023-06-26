@@ -472,7 +472,7 @@ class MsgPackDeserializer {
     if (nestingLimit.reached())
       return DeserializationError::TooDeep;
 
-    CollectionData* object;
+    ObjectData* object;
     if (filter.allowObject()) {
       ARDUINOJSON_ASSERT(variant != 0);
       object = &variant->toObject();

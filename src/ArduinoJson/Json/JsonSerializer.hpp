@@ -37,7 +37,7 @@ class JsonSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitObject(const CollectionData& object) {
+  size_t visitObject(const ObjectData& object) {
     write('{');
 
     const VariantSlot* slot = object.head();

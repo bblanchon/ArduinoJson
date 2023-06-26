@@ -7,10 +7,9 @@
 #include <stddef.h>  // size_t
 
 #include <ArduinoJson/Array/ArrayData.hpp>
-#include <ArduinoJson/Collection/CollectionData.hpp>
 #include <ArduinoJson/Numbers/JsonFloat.hpp>
 #include <ArduinoJson/Numbers/JsonInteger.hpp>
-
+#include <ArduinoJson/Object/ObjectData.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -46,8 +45,9 @@ union VariantContent {
   bool asBoolean;
   JsonUInt asUnsignedInteger;
   JsonInteger asSignedInteger;
-  CollectionData asCollection;
   ArrayData asArray;
+  ObjectData asObject;
+  CollectionData asCollection;
   const char* asLinkedString;
   struct StringNode* asOwnedString;
 };

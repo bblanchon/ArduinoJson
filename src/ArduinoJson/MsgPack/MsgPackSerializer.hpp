@@ -61,7 +61,7 @@ class MsgPackSerializer : public Visitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitObject(const CollectionData& object) {
+  size_t visitObject(const ObjectData& object) {
     size_t n = object.size();
     if (n < 0x10) {
       writeByte(uint8_t(0x80 + n));

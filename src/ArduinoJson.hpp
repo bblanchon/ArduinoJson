@@ -40,6 +40,7 @@
 #include "ArduinoJson/Memory/VariantPoolImpl.hpp"
 #include "ArduinoJson/Object/JsonObjectImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
+#include "ArduinoJson/Object/ObjectImpl.hpp"
 #include "ArduinoJson/Variant/ConverterImpl.hpp"
 #include "ArduinoJson/Variant/VariantCompare.hpp"
 

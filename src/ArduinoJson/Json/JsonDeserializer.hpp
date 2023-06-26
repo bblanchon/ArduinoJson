@@ -232,7 +232,7 @@ class JsonDeserializer {
 
   template <typename TFilter>
   DeserializationError::Code parseObject(
-      CollectionData& object, TFilter filter,
+      ObjectData& object, TFilter filter,
       DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 

@@ -22,7 +22,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   JsonObjectConst() : data_(0) {}
 
   // INTERNAL USE ONLY
-  JsonObjectConst(const detail::CollectionData* data) : data_(data) {}
+  JsonObjectConst(const detail::ObjectData* data) : data_(data) {}
 
   operator JsonVariantConst() const {
     return JsonVariantConst(collectionToVariant(data_));
@@ -76,14 +76,14 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TString>
   FORCE_INLINE bool containsKey(const TString& key) const {
-    return collectionGetMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
   }
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v6/api/jsonobjectconst/containskey/
   template <typename TChar>
   FORCE_INLINE bool containsKey(TChar* key) const {
-    return collectionGetMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
   }
 
   // Gets the member with specified key.
@@ -93,7 +93,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
     return JsonVariantConst(
-        collectionGetMember(data_, detail::adaptString(key)));
+        detail::ObjectData::getMember(data_, detail::adaptString(key)));
   }
 
   // Gets the member with specified key.
@@ -103,12 +103,12 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
     return JsonVariantConst(
-        collectionGetMember(data_, detail::adaptString(key)));
+        detail::ObjectData::getMember(data_, detail::adaptString(key)));
   }
 
   // Compares objects.
   FORCE_INLINE bool operator==(JsonObjectConst rhs) const {
-    return objectEquals(data_, rhs.data_);
+    return detail::ObjectData::equals(data_, rhs.data_);
   }
 
  private:
@@ -116,7 +116,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
     return collectionToVariant(data_);
   }
 
-  const detail::CollectionData* data_;
+  const detail::ObjectData* data_;
 };
 
 template <>

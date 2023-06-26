@@ -92,12 +92,12 @@ struct ArrayComparer : ComparerBase {
 };
 
 struct ObjectComparer : ComparerBase {
-  const CollectionData* rhs_;
+  const ObjectData* rhs_;
 
-  explicit ObjectComparer(const CollectionData& rhs) : rhs_(&rhs) {}
+  explicit ObjectComparer(const ObjectData& rhs) : rhs_(&rhs) {}
 
-  CompareResult visitObject(const CollectionData& lhs) {
-    if (objectEquals(lhs, *rhs_))
+  CompareResult visitObject(const ObjectData& lhs) {
+    if (rhs_->equals(lhs))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -133,7 +133,7 @@ struct VariantComparer : ComparerBase {
     return accept(comparer);
   }
 
-  CompareResult visitObject(const CollectionData& lhs) {
+  CompareResult visitObject(const ObjectData& lhs) {
     ObjectComparer comparer(lhs);
     return accept(comparer);
   }

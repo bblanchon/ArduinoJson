@@ -14,8 +14,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-bool collectionCopy(CollectionData* dst, const CollectionData* src,
-                    ResourceManager* resources);
 template <typename T>
 T parseNumber(const char* s);
 void slotRelease(VariantSlot* slot, ResourceManager* resources);
@@ -37,7 +35,7 @@ class VariantData {
         return visitor.visitArray(content_.asArray);
 
       case VALUE_IS_OBJECT:
-        return visitor.visitObject(content_.asCollection);
+        return visitor.visitObject(content_.asObject);
 
       case VALUE_IS_LINKED_STRING:
         return visitor.visitString(content_.asLinkedString,
@@ -139,11 +137,11 @@ class VariantData {
     }
   }
 
-  CollectionData* asObject() {
-    return isObject() ? &content_.asCollection : 0;
+  ObjectData* asObject() {
+    return isObject() ? &content_.asObject : 0;
   }
 
-  const CollectionData* asObject() const {
+  const ObjectData* asObject() const {
     return const_cast<VariantData*>(this)->asObject();
   }
 
@@ -179,7 +177,7 @@ class VariantData {
       case VALUE_IS_ARRAY:
         return toArray().copyFrom(*src->asArray(), resources);
       case VALUE_IS_OBJECT:
-        return collectionCopy(&toObject(), src->asObject(), resources);
+        return toObject().copyFrom(*src->asObject(), resources);
       case VALUE_IS_OWNED_STRING: {
         auto str = adaptString(src->asString());
         auto dup = resources->saveString(str);
@@ -320,7 +318,7 @@ class VariantData {
 
   template <typename TAdaptedString>
   void removeMember(TAdaptedString key, ResourceManager* resources) {
-    collectionRemoveMember(asObject(), key, resources);
+    ObjectData::removeMember(asObject(), key, resources);
   }
 
   void reset() {
@@ -434,13 +432,13 @@ class VariantData {
     return toArray();
   }
 
-  CollectionData& toObject() {
+  ObjectData& toObject() {
     setType(VALUE_IS_OBJECT);
-    new (&content_.asCollection) CollectionData();
-    return content_.asCollection;
+    new (&content_.asObject) ObjectData();
+    return content_.asObject;
   }
 
-  CollectionData& toObject(ResourceManager* resources) {
+  ObjectData& toObject(ResourceManager* resources) {
     release(resources);
     return toObject();
   }
@@ -596,8 +594,8 @@ inline ArrayData* variantToArray(VariantData* var, ResourceManager* resources) {
   return &var->toArray(resources);
 }
 
-inline CollectionData* variantToObject(VariantData* var,
-                                       ResourceManager* resources) {
+inline ObjectData* variantToObject(VariantData* var,
+                                   ResourceManager* resources) {
   if (!var)
     return 0;
   return &var->toObject(resources);

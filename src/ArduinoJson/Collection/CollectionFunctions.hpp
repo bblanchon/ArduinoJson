@@ -14,35 +14,11 @@ inline void collectionClear(CollectionData* c, ResourceManager* resources) {
   c->clear(resources);
 }
 
-inline bool collectionCopy(CollectionData* dst, const CollectionData* src,
-                           ResourceManager* resources) {
-  if (!dst || !src)
-    return false;
-
-  return dst->copyFrom(*src, resources);
-}
-
-template <typename TAdaptedString>
-inline VariantData* collectionGetMember(const CollectionData* obj,
-                                        TAdaptedString key) {
-  if (!obj)
-    return nullptr;
-  return obj->getMember(key);
-}
-
 inline void collectionRemove(CollectionData* data, VariantSlot* slot,
                              ResourceManager* resources) {
   if (!data)
     return;
   data->removeSlot(slot, resources);
-}
-
-template <typename TAdaptedString>
-inline void collectionRemoveMember(CollectionData* obj, TAdaptedString key,
-                                   ResourceManager* resources) {
-  if (!obj)
-    return;
-  obj->removeMember(key, resources);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

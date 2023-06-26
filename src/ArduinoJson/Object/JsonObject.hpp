@@ -23,7 +23,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE JsonObject() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonObject(detail::CollectionData* data,
+  FORCE_INLINE JsonObject(detail::ObjectData* data,
                           detail::ResourceManager* resource)
       : data_(data), resources_(resource) {}
 
@@ -95,12 +95,12 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Copies an object.
   // https://arduinojson.org/v6/api/jsonobject/set/
   FORCE_INLINE bool set(JsonObjectConst src) {
-    return collectionCopy(data_, src.data_, resources_);
+    return detail::ObjectData::copy(data_, src.data_, resources_);
   }
 
   // Compares the content of two objects.
   FORCE_INLINE bool operator==(JsonObject rhs) const {
-    return objectEquals(data_, rhs.data_);
+    return detail::ObjectData::equals(data_, rhs.data_);
   }
 
   // Gets or sets the member with specified key.
@@ -135,7 +135,8 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TString>
   FORCE_INLINE void remove(const TString& key) const {
-    collectionRemoveMember(data_, detail::adaptString(key), resources_);
+    detail::ObjectData::removeMember(data_, detail::adaptString(key),
+                                     resources_);
   }
 
   // Removes the member with the specified key.
@@ -143,7 +144,8 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // https://arduinojson.org/v6/api/jsonobject/remove/
   template <typename TChar>
   FORCE_INLINE void remove(TChar* key) const {
-    collectionRemoveMember(data_, detail::adaptString(key), resources_);
+    detail::ObjectData::removeMember(data_, detail::adaptString(key),
+                                     resources_);
   }
 
   // Returns true if the object contains the specified key.
@@ -152,7 +154,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value, bool>::type
       containsKey(const TString& key) const {
-    return collectionGetMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
   }
 
   // Returns true if the object contains the specified key.
@@ -161,7 +163,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
       containsKey(TChar* key) const {
-    return collectionGetMember(data_, detail::adaptString(key)) != 0;
+    return detail::ObjectData::getMember(data_, detail::adaptString(key)) != 0;
   }
 
   // Creates an array and adds it to the object.
@@ -201,7 +203,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
     return detail::collectionToVariant(data_);
   }
 
-  detail::CollectionData* data_;
+  detail::ObjectData* data_;
   detail::ResourceManager* resources_;
 };
 

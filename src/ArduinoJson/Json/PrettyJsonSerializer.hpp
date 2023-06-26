@@ -39,7 +39,7 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
     return this->bytesWritten();
   }
 
-  size_t visitObject(const CollectionData& object) {
+  size_t visitObject(const ObjectData& object) {
     const VariantSlot* slot = object.head();
     if (slot) {
       base::write("{\r\n");

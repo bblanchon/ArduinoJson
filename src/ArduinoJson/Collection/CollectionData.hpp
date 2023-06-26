@@ -29,24 +29,9 @@ class CollectionData {
   size_t memoryUsage() const;
   size_t size() const;
 
-  VariantData* addMember(StringNode* key, ResourceManager* resources);
-
-  template <typename TAdaptedString>
-  VariantData* addMember(TAdaptedString key, ResourceManager* resources);
-
   void clear(ResourceManager* resources);
-  bool copyFrom(const CollectionData& src, ResourceManager* resources);
-
-  template <typename TAdaptedString>
-  VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources);
-
-  template <typename TAdaptedString>
-  VariantData* getMember(TAdaptedString key) const;
 
   void removeSlot(VariantSlot* slot, ResourceManager* resources);
-
-  template <typename TAdaptedString>
-  void removeMember(TAdaptedString key, ResourceManager* resources);
 
   VariantSlot* head() const {
     return head_;
@@ -56,9 +41,6 @@ class CollectionData {
 
  protected:
   void addSlot(VariantSlot*);
-
-  template <typename TAdaptedString>
-  VariantSlot* getSlot(TAdaptedString key) const;
 
  private:
   VariantSlot* getPreviousSlot(VariantSlot*) const;
@@ -74,10 +56,5 @@ inline VariantData* collectionToVariant(CollectionData* collection) {
   void* data = collection;  // prevent warning cast-align
   return reinterpret_cast<VariantData*>(data);
 }
-
-bool objectEquals(const detail::CollectionData& lhs,
-                  const detail::CollectionData& rhs);
-bool objectEquals(const detail::CollectionData* lhs,
-                  const detail::CollectionData* rhs);
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

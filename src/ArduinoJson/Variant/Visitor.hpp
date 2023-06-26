@@ -4,9 +4,10 @@
 
 #pragma once
 
-#include <ArduinoJson/Collection/CollectionData.hpp>
+#include <ArduinoJson/Array/ArrayData.hpp>
 #include <ArduinoJson/Numbers/JsonFloat.hpp>
 #include <ArduinoJson/Numbers/JsonInteger.hpp>
+#include <ArduinoJson/Object/ObjectData.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -34,7 +35,7 @@ struct Visitor {
     return TResult();
   }
 
-  TResult visitObject(const CollectionData&) {
+  TResult visitObject(const ObjectData&) {
     return TResult();
   }
 
