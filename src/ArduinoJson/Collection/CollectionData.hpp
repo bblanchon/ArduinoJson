@@ -31,7 +31,20 @@ class CollectionData {
 
   void clear(ResourceManager* resources);
 
+  static void clear(CollectionData* collection, ResourceManager* resources) {
+    if (!collection)
+      return;
+    collection->clear(resources);
+  }
+
   void removeSlot(VariantSlot* slot, ResourceManager* resources);
+
+  static void removeSlot(CollectionData* collection, VariantSlot* slot,
+                         ResourceManager* resources) {
+    if (!collection)
+      return;
+    collection->removeSlot(slot, resources);
+  }
 
   VariantSlot* head() const {
     return head_;

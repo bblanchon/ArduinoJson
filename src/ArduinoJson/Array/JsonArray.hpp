@@ -6,7 +6,6 @@
 
 #include <ArduinoJson/Array/ElementProxy.hpp>
 #include <ArduinoJson/Array/JsonArrayConst.hpp>
-#include <ArduinoJson/Collection/CollectionFunctions.hpp>
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
@@ -93,7 +92,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/
   FORCE_INLINE void remove(iterator it) const {
-    collectionRemove(data_, it.slot_, resources_);
+    detail::ArrayData::removeSlot(data_, it.slot_, resources_);
   }
 
   // Removes the element at the specified index.
@@ -107,7 +106,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // ⚠️ Doesn't release the memory associated with the removed elements.
   // https://arduinojson.org/v6/api/jsonarray/clear/
   void clear() const {
-    collectionClear(data_, resources_);
+    detail::ArrayData::clear(data_, resources_);
   }
 
   // Gets or sets the element at the specified index.

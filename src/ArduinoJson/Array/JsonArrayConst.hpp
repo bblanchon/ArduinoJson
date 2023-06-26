@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Array/JsonArrayIterator.hpp>
-#include <ArduinoJson/Collection/CollectionFunctions.hpp>
 #include <ArduinoJson/Variant/VariantAttorney.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
 

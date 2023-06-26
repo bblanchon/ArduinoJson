@@ -89,7 +89,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // ⚠️ Doesn't release the memory associated with the removed members.
   // https://arduinojson.org/v6/api/jsonobject/clear/
   void clear() const {
-    collectionClear(data_, resources_);
+    detail::ObjectData::clear(data_, resources_);
   }
 
   // Copies an object.
@@ -127,7 +127,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // ⚠️ Doesn't release the memory associated with the removed member.
   // https://arduinojson.org/v6/api/jsonobject/remove/
   FORCE_INLINE void remove(iterator it) const {
-    collectionRemove(data_, it.slot_, resources_);
+    detail::ObjectData::removeSlot(data_, it.slot_, resources_);
   }
 
   // Removes the member with the specified key.
