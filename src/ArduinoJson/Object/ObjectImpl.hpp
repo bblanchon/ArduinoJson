@@ -49,7 +49,9 @@ inline bool ObjectData::copyFrom(const ObjectData& src,
     JsonString key(s->key(),
                    s->ownsKey() ? JsonString::Copied : JsonString::Linked);
     auto var = addMember(adaptString(key), resources);
-    if (!variantCopyFrom(var, s->data(), resources))
+    if (!var)
+      return false;
+    if (!var->copyFrom(s->data(), resources))
       return false;
   }
   return true;

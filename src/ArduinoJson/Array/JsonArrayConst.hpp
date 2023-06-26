@@ -78,7 +78,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsonarrayconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_));
   }
 
   // Returns the number of elements in the array.
@@ -98,7 +98,8 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
 template <>
 struct Converter<JsonArrayConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
   }
 
   static JsonArrayConst fromJson(JsonVariantConst src) {

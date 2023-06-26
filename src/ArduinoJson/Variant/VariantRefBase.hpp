@@ -30,13 +30,13 @@ class VariantRefBase : public VariantTag {
   // ⚠️ Doesn't release the memory associated with the previous value.
   // https://arduinojson.org/v6/api/jsonvariant/clear/
   FORCE_INLINE void clear() const {
-    variantSetNull(getOrCreateData(), getResourceManager());
+    VariantData::setNull(getOrCreateData(), getResourceManager());
   }
 
   // Returns true if the value is null or the reference is unbound.
   // https://arduinojson.org/v6/api/jsonvariant/isnull/
   FORCE_INLINE bool isNull() const {
-    return variantIsNull(getData());
+    return VariantData::isNull(getData());
   }
 
   // Returns true if the reference is unbound.
@@ -112,7 +112,7 @@ class VariantRefBase : public VariantTag {
     VariantData* data = getOrCreateData();
     if (!data)
       return;
-    variantSetNull(data, getResourceManager());
+    data->setNull(getResourceManager());
     const VariantData* targetData = VariantAttorney::getData(target);
     if (targetData)
       *data = *targetData;
@@ -139,7 +139,7 @@ class VariantRefBase : public VariantTag {
   // Returns the size of the array or object.
   // https://arduinojson.org/v6/api/jsonvariant/size/
   FORCE_INLINE size_t size() const {
-    return variantSize(getData());
+    return VariantData::size(getData());
   }
 
   // Returns the number of bytes occupied by the value.
@@ -152,7 +152,7 @@ class VariantRefBase : public VariantTag {
   // Returns the depth (nesting level) of the value.
   // https://arduinojson.org/v6/api/jsonvariant/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(getData());
+    return VariantData::nesting(getData());
   }
 
   // Appends a new (null) element to the array.
@@ -178,7 +178,7 @@ class VariantRefBase : public VariantTag {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonvariant/remove/
   FORCE_INLINE void remove(size_t index) const {
-    variantRemoveElement(getData(), index, getResourceManager());
+    VariantData::removeElement(getData(), index, getResourceManager());
   }
 
   // Removes a member of the object.
@@ -187,7 +187,8 @@ class VariantRefBase : public VariantTag {
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value>::type remove(
       TChar* key) const {
-    variantRemoveMember(getData(), adaptString(key), getResourceManager());
+    VariantData::removeMember(getData(), adaptString(key),
+                              getResourceManager());
   }
 
   // Removes a member of the object.
@@ -196,7 +197,8 @@ class VariantRefBase : public VariantTag {
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
       const TString& key) const {
-    variantRemoveMember(getData(), adaptString(key), getResourceManager());
+    VariantData::removeMember(getData(), adaptString(key),
+                              getResourceManager());
   }
 
   // Creates an array and appends it to the array.

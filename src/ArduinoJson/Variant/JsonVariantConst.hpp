@@ -37,8 +37,7 @@ class JsonVariantConst : public detail::VariantTag,
   // Returns true if the value is null or the reference is unbound.
   // https://arduinojson.org/v6/api/jsonvariantconst/isnull/
   FORCE_INLINE bool isNull() const {
-    using namespace detail;
-    return variantIsNull(data_);
+    return detail::VariantData::isNull(data_);
   }
 
   // Returns true if the reference is unbound.
@@ -55,13 +54,13 @@ class JsonVariantConst : public detail::VariantTag,
   // Returns the depth (nesting level) of the value.
   // https://arduinojson.org/v6/api/jsonvariantconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(data_);
+    return detail::VariantData::nesting(data_);
   }
 
   // Returns the size of the array or object.
   // https://arduinojson.org/v6/api/jsonvariantconst/size/
   size_t size() const {
-    return variantSize(data_);
+    return detail::VariantData::size(data_);
   }
 
   // Casts the value to the specified type.
@@ -92,7 +91,7 @@ class JsonVariantConst : public detail::VariantTag,
   // Gets array's element at specified index.
   // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(variantGetElement(data_, index));
+    return JsonVariantConst(detail::VariantData::getElement(data_, index));
   }
 
   // Gets object's member with specified key.
@@ -101,7 +100,8 @@ class JsonVariantConst : public detail::VariantTag,
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
-    return JsonVariantConst(variantGetMember(data_, detail::adaptString(key)));
+    return JsonVariantConst(
+        detail::VariantData::getMember(data_, detail::adaptString(key)));
   }
 
   // Gets object's member with specified key.
@@ -110,7 +110,8 @@ class JsonVariantConst : public detail::VariantTag,
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
-    return JsonVariantConst(variantGetMember(data_, detail::adaptString(key)));
+    return JsonVariantConst(
+        detail::VariantData::getMember(data_, detail::adaptString(key)));
   }
 
   // Returns true if tge object contains the specified key.
@@ -119,7 +120,8 @@ class JsonVariantConst : public detail::VariantTag,
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value, bool>::type
       containsKey(const TString& key) const {
-    return variantGetMember(getData(), detail::adaptString(key)) != 0;
+    return detail::VariantData::getMember(getData(),
+                                          detail::adaptString(key)) != 0;
   }
 
   // Returns true if tge object contains the specified key.
@@ -128,7 +130,8 @@ class JsonVariantConst : public detail::VariantTag,
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
       containsKey(TChar* key) const {
-    return variantGetMember(getData(), detail::adaptString(key)) != 0;
+    return detail::VariantData::getMember(getData(),
+                                          detail::adaptString(key)) != 0;
   }
 
  protected:

@@ -150,7 +150,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsonarray/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_));
   }
 
   // Returns the number of elements in the array.
@@ -179,7 +179,8 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
 template <>
 struct Converter<JsonArray> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
   }
 
   static JsonArray fromJson(JsonVariant src) {
@@ -209,8 +210,9 @@ template <typename TDerived>
 template <typename T>
 inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonArray(variantToArray(getOrCreateData(), getResourceManager()),
-                   getResourceManager());
+  return JsonArray(
+      VariantData::toArray(getOrCreateData(), getResourceManager()),
+      getResourceManager());
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

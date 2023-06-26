@@ -49,7 +49,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   // Returns the depth (nesting level) of the object.
   // https://arduinojson.org/v6/api/jsonobjectconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_));
   }
 
   // Returns the number of members in the object.
@@ -122,7 +122,8 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
 template <>
 struct Converter<JsonObjectConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
   }
 
   static JsonObjectConst fromJson(JsonVariantConst src) {

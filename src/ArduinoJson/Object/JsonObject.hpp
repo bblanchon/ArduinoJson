@@ -62,7 +62,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Returns the depth (nesting level) of the object.
   // https://arduinojson.org/v6/api/jsonobject/nesting/
   FORCE_INLINE size_t nesting() const {
-    return variantNesting(collectionToVariant(data_));
+    return detail::VariantData::nesting(collectionToVariant(data_));
   }
 
   // Returns the number of members in the object.
@@ -210,7 +210,8 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 template <>
 struct Converter<JsonObject> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
   }
 
   static JsonObject fromJson(JsonVariant src) {
@@ -240,8 +241,9 @@ template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
 VariantRefBase<TDerived>::to() const {
-  return JsonObject(variantToObject(getOrCreateData(), getResourceManager()),
-                    getResourceManager());
+  return JsonObject(
+      VariantData::toObject(getOrCreateData(), getResourceManager()),
+      getResourceManager());
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

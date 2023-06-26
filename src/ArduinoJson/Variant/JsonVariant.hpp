@@ -42,8 +42,8 @@ class JsonVariant : public detail::VariantRefBase<JsonVariant>,
 template <>
 struct Converter<JsonVariant> : private detail::VariantAttorney {
   static void toJson(JsonVariant src, JsonVariant dst) {
-    detail::variantCopyFrom(getData(dst), getData(src),
-                            getResourceManager(dst));
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
   }
 
   static JsonVariant fromJson(JsonVariant src) {
@@ -66,7 +66,8 @@ struct Converter<JsonVariant> : private detail::VariantAttorney {
 template <>
 struct Converter<JsonVariantConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    variantCopyFrom(getData(dst), getData(src), getResourceManager(dst));
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
   }
 
   static JsonVariantConst fromJson(JsonVariantConst src) {
@@ -85,8 +86,9 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::add() const {
-  return JsonVariant(variantAddElement(getOrCreateData(), getResourceManager()),
-                     getResourceManager());
+  return JsonVariant(
+      detail::VariantData::addElement(getOrCreateData(), getResourceManager()),
+      getResourceManager());
 }
 
 template <typename TDerived>
@@ -103,7 +105,7 @@ template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
 VariantRefBase<TDerived>::to() const {
-  variantSetNull(getOrCreateData(), getResourceManager());
+  detail::VariantData::setNull(getOrCreateData(), getResourceManager());
   return *this;
 }
 

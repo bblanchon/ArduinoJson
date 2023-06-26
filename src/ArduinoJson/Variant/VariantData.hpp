@@ -63,9 +63,24 @@ class VariantData {
     }
   }
 
+  template <typename TVisitor>
+  static typename TVisitor::result_type accept(const VariantData* var,
+                                               TVisitor& visitor) {
+    if (var != 0)
+      return var->accept(visitor);
+    else
+      return visitor.visitNull();
+  }
+
   VariantData* addElement(ResourceManager* resources) {
     auto array = isNull() ? &toArray() : asArray();
     return detail::ArrayData::addElement(array, resources);
+  }
+
+  static VariantData* addElement(VariantData* var, ResourceManager* resources) {
+    if (!var)
+      return nullptr;
+    return var->addElement(resources);
   }
 
   bool asBoolean() const {
@@ -201,11 +216,22 @@ class VariantData {
     }
   }
 
+  static bool copy(VariantData* dst, const VariantData* src,
+                   ResourceManager* resources) {
+    if (!dst)
+      return false;
+    return dst->copyFrom(src, resources);
+  }
+
   VariantData* getElement(size_t index) const {
     auto array = asArray();
     if (!array)
       return nullptr;
     return array->getElement(index);
+  }
+
+  static VariantData* getElement(const VariantData* var, size_t index) {
+    return var != 0 ? var->getElement(index) : 0;
   }
 
   template <typename TAdaptedString>
@@ -214,6 +240,13 @@ class VariantData {
     if (!object)
       return nullptr;
     return object->getMember(key);
+  }
+
+  template <typename TAdaptedString>
+  static VariantData* getMember(const VariantData* var, TAdaptedString key) {
+    if (!var)
+      return 0;
+    return var->getMember(key);
   }
 
   VariantData* getOrAddElement(size_t index, ResourceManager* resources) {
@@ -267,6 +300,12 @@ class VariantData {
     return type() == VALUE_IS_NULL;
   }
 
+  static bool isNull(const VariantData* var) {
+    if (!var)
+      return true;
+    return var->isNull();
+  }
+
   bool isObject() const {
     return (flags_ & VALUE_IS_OBJECT) != 0;
   }
@@ -307,6 +346,12 @@ class VariantData {
     return maxChildNesting + 1;
   }
 
+  static size_t nesting(const VariantData* var) {
+    if (!var)
+      return 0;
+    return var->nesting();
+  }
+
   void operator=(const VariantData& src) {
     content_ = src.content_;
     flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
@@ -316,9 +361,24 @@ class VariantData {
     ArrayData::removeElement(asArray(), index, resources);
   }
 
+  static void removeElement(VariantData* var, size_t index,
+                            ResourceManager* resources) {
+    if (!var)
+      return;
+    var->removeElement(index, resources);
+  }
+
   template <typename TAdaptedString>
   void removeMember(TAdaptedString key, ResourceManager* resources) {
     ObjectData::removeMember(asObject(), key, resources);
+  }
+
+  template <typename TAdaptedString>
+  static void removeMember(VariantData* var, TAdaptedString key,
+                           ResourceManager* resources) {
+    if (!var)
+      return;
+    var->removeMember(key, resources);
   }
 
   void reset() {
@@ -372,6 +432,12 @@ class VariantData {
     setNull();
   }
 
+  static void setNull(VariantData* var, ResourceManager* resources) {
+    if (!var)
+      return;
+    var->setNull(resources);
+  }
+
   void setRawString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_RAW_STRING);
@@ -386,6 +452,14 @@ class VariantData {
       setRawString(dup);
     else
       setNull();
+  }
+
+  template <typename T>
+  static void setRawString(VariantData* var, SerializedValue<T> value,
+                           ResourceManager* resources) {
+    if (!var)
+      return;
+    var->setRawString(value, resources);
   }
 
   template <typename TAdaptedString>
@@ -405,6 +479,14 @@ class VariantData {
       setOwnedString(dup);
   }
 
+  template <typename TAdaptedString>
+  static void setString(VariantData* var, TAdaptedString value,
+                        ResourceManager* resources) {
+    if (!var)
+      return;
+    var->setString(value, resources);
+  }
+
   void setLinkedString(const char* s) {
     ARDUINOJSON_ASSERT(s);
     setType(VALUE_IS_LINKED_STRING);
@@ -421,6 +503,10 @@ class VariantData {
     return isCollection() ? content_.asCollection.size() : 0;
   }
 
+  static size_t size(const VariantData* var) {
+    return var != 0 ? var->size() : 0;
+  }
+
   ArrayData& toArray() {
     setType(VALUE_IS_ARRAY);
     new (&content_.asArray) ArrayData();
@@ -432,6 +518,12 @@ class VariantData {
     return toArray();
   }
 
+  static ArrayData* toArray(VariantData* var, ResourceManager* resources) {
+    if (!var)
+      return 0;
+    return &var->toArray(resources);
+  }
+
   ObjectData& toObject() {
     setType(VALUE_IS_OBJECT);
     new (&content_.asObject) ObjectData();
@@ -441,6 +533,12 @@ class VariantData {
   ObjectData& toObject(ResourceManager* resources) {
     release(resources);
     return toObject();
+  }
+
+  static ObjectData* toObject(VariantData* var, ResourceManager* resources) {
+    if (!var)
+      return 0;
+    return &var->toObject(resources);
   }
 
   uint8_t type() const {
@@ -464,141 +562,5 @@ class VariantData {
     flags_ |= t;
   }
 };
-
-template <typename TVisitor>
-typename TVisitor::result_type variantAccept(const VariantData* var,
-                                             TVisitor& visitor) {
-  if (var != 0)
-    return var->accept(visitor);
-  else
-    return visitor.visitNull();
-}
-
-inline bool variantCopyFrom(VariantData* dst, const VariantData* src,
-                            ResourceManager* resources) {
-  if (!dst)
-    return false;
-  return dst->copyFrom(src, resources);
-}
-
-inline VariantData* variantAddElement(VariantData* var,
-                                      ResourceManager* resources) {
-  if (!var)
-    return nullptr;
-  return var->addElement(resources);
-}
-
-inline VariantData* variantGetElement(const VariantData* var, size_t index) {
-  return var != 0 ? var->getElement(index) : 0;
-}
-
-template <typename TAdaptedString>
-VariantData* variantGetMember(const VariantData* var, TAdaptedString key) {
-  if (!var)
-    return 0;
-  return var->getMember(key);
-}
-
-inline VariantData* variantGetOrAddElement(VariantData* var, size_t index,
-                                           ResourceManager* resources) {
-  if (!var)
-    return nullptr;
-  return var->getOrAddElement(index, resources);
-}
-
-template <typename TAdaptedString>
-VariantData* variantGetOrAddMember(VariantData* var, TAdaptedString key,
-                                   ResourceManager* resources) {
-  if (!var)
-    return nullptr;
-  return var->getOrAddMember(key, resources);
-}
-
-inline bool variantIsNull(const VariantData* var) {
-  if (!var)
-    return true;
-  return var->isNull();
-}
-
-inline size_t variantNesting(const VariantData* var) {
-  if (!var)
-    return 0;
-  return var->nesting();
-}
-
-inline void variantRemoveElement(VariantData* var, size_t index,
-                                 ResourceManager* resources) {
-  if (!var)
-    return;
-  var->removeElement(index, resources);
-}
-
-template <typename TAdaptedString>
-void variantRemoveMember(VariantData* var, TAdaptedString key,
-                         ResourceManager* resources) {
-  if (!var)
-    return;
-  var->removeMember(key, resources);
-}
-
-inline void variantSetBoolean(VariantData* var, bool value,
-                              ResourceManager* resources) {
-  if (!var)
-    return;
-  var->setBoolean(value, resources);
-}
-
-inline void variantSetFloat(VariantData* var, JsonFloat value,
-                            ResourceManager* resources) {
-  if (!var)
-    return;
-  var->setFloat(value, resources);
-}
-
-template <typename T>
-void variantSetInteger(VariantData* var, T value, ResourceManager* resources) {
-  if (!var)
-    return;
-  var->setInteger(value, resources);
-}
-
-inline void variantSetNull(VariantData* var, ResourceManager* resources) {
-  if (!var)
-    return;
-  var->setNull(resources);
-}
-
-template <typename T>
-void variantSetRawString(VariantData* var, SerializedValue<T> value,
-                         ResourceManager* resources) {
-  if (!var)
-    return;
-  var->setRawString(value, resources);
-}
-
-template <typename TAdaptedString>
-void variantSetString(VariantData* var, TAdaptedString value,
-                      ResourceManager* resources) {
-  if (!var)
-    return;
-  var->setString(value, resources);
-}
-
-inline size_t variantSize(const VariantData* var) {
-  return var != 0 ? var->size() : 0;
-}
-
-inline ArrayData* variantToArray(VariantData* var, ResourceManager* resources) {
-  if (!var)
-    return 0;
-  return &var->toArray(resources);
-}
-
-inline ObjectData* variantToObject(VariantData* var,
-                                   ResourceManager* resources) {
-  if (!var)
-    return 0;
-  return &var->toObject(resources);
-}
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

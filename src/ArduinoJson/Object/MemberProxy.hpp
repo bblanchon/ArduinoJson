@@ -46,14 +46,16 @@ class MemberProxy
   }
 
   FORCE_INLINE VariantData* getData() const {
-    return variantGetMember(VariantAttorney::getData(upstream_),
-                            adaptString(key_));
+    return VariantData::getMember(VariantAttorney::getData(upstream_),
+                                  adaptString(key_));
   }
 
   FORCE_INLINE VariantData* getOrCreateData() const {
-    return variantGetOrAddMember(
-        VariantAttorney::getOrCreateData(upstream_), adaptString(key_),
-        VariantAttorney::getResourceManager(upstream_));
+    auto data = VariantAttorney::getOrCreateData(upstream_);
+    if (!data)
+      return nullptr;
+    return data->getOrAddMember(adaptString(key_),
+                                VariantAttorney::getResourceManager(upstream_));
   }
 
  private:

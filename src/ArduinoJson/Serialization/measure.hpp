@@ -12,7 +12,7 @@ template <template <typename> class TSerializer>
 size_t measure(ArduinoJson::JsonVariantConst source) {
   DummyWriter dp;
   TSerializer<DummyWriter> serializer(dp);
-  return variantAccept(VariantAttorney::getData(source), serializer);
+  return VariantData::accept(VariantAttorney::getData(source), serializer);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

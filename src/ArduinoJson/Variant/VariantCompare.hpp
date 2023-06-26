@@ -176,7 +176,7 @@ struct VariantComparer : ComparerBase {
  private:
   template <typename TComparer>
   CompareResult accept(TComparer& comparer) {
-    CompareResult reversedResult = variantAccept(rhs, comparer);
+    CompareResult reversedResult = VariantData::accept(rhs, comparer);
     switch (reversedResult) {
       case COMPARE_RESULT_GREATER:
         return COMPARE_RESULT_LESS;
@@ -199,12 +199,12 @@ struct Comparer<T, typename enable_if<is_convertible<
 template <typename T>
 CompareResult compare(ArduinoJson::JsonVariantConst lhs, const T& rhs) {
   Comparer<T> comparer(rhs);
-  return variantAccept(VariantAttorney::getData(lhs), comparer);
+  return VariantData::accept(VariantAttorney::getData(lhs), comparer);
 }
 
 inline CompareResult compare(const VariantData* lhs, const VariantData* rhs) {
   VariantComparer comparer(rhs);
-  return variantAccept(lhs, comparer);
+  return VariantData::accept(lhs, comparer);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

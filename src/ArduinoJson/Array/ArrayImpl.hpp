@@ -23,7 +23,9 @@ inline bool ArrayData::copyFrom(const ArrayData& src,
 
   for (VariantSlot* s = src.head(); s; s = s->next()) {
     auto var = addElement(resources);
-    if (!variantCopyFrom(var, s->data(), resources))
+    if (!var)
+      return false;
+    if (!var->copyFrom(s->data(), resources))
       return false;
   }
   return true;

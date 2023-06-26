@@ -42,7 +42,9 @@ struct Converter<
     : private detail::VariantAttorney {
   static void toJson(T src, JsonVariant dst) {
     ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
-    variantSetInteger(getData(dst), src, getResourceManager(dst));
+    auto data = getData(dst);
+    if (data)
+      data->setInteger(src, getResourceManager(dst));
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -78,7 +80,9 @@ struct Converter<T, typename detail::enable_if<detail::is_enum<T>::value>::type>
 template <>
 struct Converter<bool> : private detail::VariantAttorney {
   static void toJson(bool src, JsonVariant dst) {
-    variantSetBoolean(getData(dst), src, getResourceManager(dst));
+    auto data = getData(dst);
+    if (data)
+      data->setBoolean(src, getResourceManager(dst));
   }
 
   static bool fromJson(JsonVariantConst src) {
@@ -97,8 +101,9 @@ struct Converter<
     T, typename detail::enable_if<detail::is_floating_point<T>::value>::type>
     : private detail::VariantAttorney {
   static void toJson(T src, JsonVariant dst) {
-    variantSetFloat(getData(dst), static_cast<JsonFloat>(src),
-                    getResourceManager(dst));
+    auto data = getData(dst);
+    if (data)
+      data->setFloat(static_cast<JsonFloat>(src), getResourceManager(dst));
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -115,8 +120,8 @@ struct Converter<
 template <>
 struct Converter<const char*> : private detail::VariantAttorney {
   static void toJson(const char* src, JsonVariant dst) {
-    variantSetString(getData(dst), detail::adaptString(src),
-                     getResourceManager(dst));
+    detail::VariantData::setString(getData(dst), detail::adaptString(src),
+                                   getResourceManager(dst));
   }
 
   static const char* fromJson(JsonVariantConst src) {
@@ -133,8 +138,8 @@ struct Converter<const char*> : private detail::VariantAttorney {
 template <>
 struct Converter<JsonString> : private detail::VariantAttorney {
   static void toJson(JsonString src, JsonVariant dst) {
-    variantSetString(getData(dst), detail::adaptString(src),
-                     getResourceManager(dst));
+    detail::VariantData::setString(getData(dst), detail::adaptString(src),
+                                   getResourceManager(dst));
   }
 
   static JsonString fromJson(JsonVariantConst src) {
@@ -154,7 +159,7 @@ convertToJson(const T& src, JsonVariant dst) {
   using namespace detail;
   auto data = VariantAttorney::getData(dst);
   auto resources = VariantAttorney::getResourceManager(dst);
-  variantSetString(data, adaptString(src), resources);
+  detail::VariantData::setString(data, adaptString(src), resources);
 }
 
 // SerializedValue<std::string>
@@ -163,14 +168,15 @@ convertToJson(const T& src, JsonVariant dst) {
 template <typename T>
 struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
   static void toJson(SerializedValue<T> src, JsonVariant dst) {
-    variantSetRawString(getData(dst), src, getResourceManager(dst));
+    detail::VariantData::setRawString(getData(dst), src,
+                                      getResourceManager(dst));
   }
 };
 
 template <>
 struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
   static void toJson(decltype(nullptr), JsonVariant dst) {
-    variantSetNull(getData(dst), getResourceManager(dst));
+    detail::VariantData::setNull(getData(dst), getResourceManager(dst));
   }
   static decltype(nullptr) fromJson(JsonVariantConst) {
     return nullptr;
