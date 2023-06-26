@@ -23,14 +23,6 @@ inline void CollectionData::addSlot(VariantSlot* slot) {
   }
 }
 
-inline VariantData* CollectionData::addElement(ResourceManager* resources) {
-  auto slot = resources->allocVariant();
-  if (!slot)
-    return nullptr;
-  addSlot(slot);
-  return slot->data();
-}
-
 inline VariantData* CollectionData::addMember(StringNode* key,
                                               ResourceManager* resources) {
   ARDUINOJSON_ASSERT(key != nullptr);
@@ -67,25 +59,6 @@ inline VariantData* CollectionData::getMember(TAdaptedString key) const {
   return slotData(getSlot(key));
 }
 
-inline VariantData* CollectionData::getOrAddElement(
-    size_t index, ResourceManager* resources) {
-  VariantSlot* slot = head_;
-  while (slot && index > 0) {
-    slot = slot->next();
-    index--;
-  }
-  if (!slot)
-    index++;
-  while (index > 0) {
-    slot = resources->allocVariant();
-    if (!slot)
-      return nullptr;
-    addSlot(slot);
-    index--;
-  }
-  return slot->data();
-}
-
 template <typename TAdaptedString>
 VariantData* CollectionData::getOrAddMember(TAdaptedString key,
                                             ResourceManager* resources) {
@@ -93,10 +66,6 @@ VariantData* CollectionData::getOrAddMember(TAdaptedString key,
   if (slot)
     return slot->data();
   return addMember(key, resources);
-}
-
-inline VariantData* CollectionData::getElement(size_t index) const {
-  return slotData(getSlot(index));
 }
 
 inline void CollectionData::clear(ResourceManager* resources) {
@@ -111,14 +80,10 @@ inline bool CollectionData::copyFrom(const CollectionData& src,
   clear(resources);
 
   for (VariantSlot* s = src.head(); s; s = s->next()) {
-    VariantData* var;
-    if (s->key() != 0) {
-      JsonString key(s->key(),
-                     s->ownsKey() ? JsonString::Copied : JsonString::Linked);
-      var = addMember(adaptString(key), resources);
-    } else {
-      var = addElement(resources);
-    }
+    ARDUINOJSON_ASSERT(s->key() != 0);
+    JsonString key(s->key(),
+                   s->ownsKey() ? JsonString::Copied : JsonString::Linked);
+    auto var = addMember(adaptString(key), resources);
     if (!variantCopyFrom(var, s->data(), resources))
       return false;
   }
@@ -136,12 +101,6 @@ inline VariantSlot* CollectionData::getSlot(TAdaptedString key) const {
     slot = slot->next();
   }
   return slot;
-}
-
-inline VariantSlot* CollectionData::getSlot(size_t index) const {
-  if (!head_)
-    return 0;
-  return head_->next(index);
 }
 
 inline VariantSlot* CollectionData::getPreviousSlot(VariantSlot* target) const {
@@ -168,11 +127,6 @@ inline void CollectionData::removeSlot(VariantSlot* slot,
   if (!next)
     tail_ = prev;
   slotRelease(slot, resources);
-}
-
-inline void CollectionData::removeElement(size_t index,
-                                          ResourceManager* resources) {
-  removeSlot(getSlot(index), resources);
 }
 
 template <typename TAdaptedString>
@@ -209,31 +163,6 @@ inline void CollectionData::movePointers(ptrdiff_t variantDistance) {
   movePointer(tail_, variantDistance);
   for (VariantSlot* slot = head_; slot; slot = slot->next())
     slot->data()->movePointers(variantDistance);
-}
-
-inline bool arrayEquals(const CollectionData& lhs, const CollectionData& rhs) {
-  auto a = lhs.head();
-  auto b = rhs.head();
-
-  for (;;) {
-    if (!a && !b)  // both ended
-      return true;
-    if (!a || !b)  // one ended
-      return false;
-    if (compare(a->data(), b->data()) != COMPARE_RESULT_EQUAL)
-      return false;
-    a = a->next();
-    b = b->next();
-  }
-}
-
-inline bool arrayEquals(const CollectionData* lhs, const CollectionData* rhs) {
-  if (lhs == rhs)
-    return true;
-  if (!lhs || !rhs)
-    return false;
-
-  return arrayEquals(*lhs, *rhs);
 }
 
 inline bool objectEquals(const CollectionData& lhs, const CollectionData& rhs) {

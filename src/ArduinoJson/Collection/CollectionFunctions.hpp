@@ -8,20 +8,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline VariantData* collectionAddElement(CollectionData* array,
-                                         ResourceManager* resources) {
-  if (!array)
-    return nullptr;
-  return array->addElement(resources);
-}
-
-template <typename TAdaptedString>
-inline VariantData* collectionAddMember(CollectionData* obj, TAdaptedString key,
-                                        ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(obj != nullptr);
-  return obj->addMember(key, resources);
-}
-
 inline void collectionClear(CollectionData* c, ResourceManager* resources) {
   if (!c)
     return;
@@ -34,13 +20,6 @@ inline bool collectionCopy(CollectionData* dst, const CollectionData* src,
     return false;
 
   return dst->copyFrom(*src, resources);
-}
-
-inline VariantData* collectionGetElement(const CollectionData* obj,
-                                         size_t index) {
-  if (!obj)
-    return nullptr;
-  return obj->getElement(index);
 }
 
 template <typename TAdaptedString>
@@ -56,13 +35,6 @@ inline void collectionRemove(CollectionData* data, VariantSlot* slot,
   if (!data)
     return;
   data->removeSlot(slot, resources);
-}
-
-inline void collectionRemoveElement(CollectionData* array, size_t index,
-                                    ResourceManager* resources) {
-  if (!array)
-    return;
-  array->removeElement(index, resources);
 }
 
 template <typename TAdaptedString>

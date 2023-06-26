@@ -419,7 +419,7 @@ class MsgPackDeserializer {
 
     bool allowArray = filter.allowArray();
 
-    CollectionData* array;
+    ArrayData* array;
     if (allowArray) {
       ARDUINOJSON_ASSERT(variant != 0);
       array = &variant->toArray();
@@ -434,7 +434,7 @@ class MsgPackDeserializer {
 
       if (elementFilter.allow()) {
         ARDUINOJSON_ASSERT(array != 0);
-        value = collectionAddElement(array, resources_);
+        value = array->addElement(resources_);
         if (!value)
           return DeserializationError::NoMemory;
       } else {

@@ -79,12 +79,12 @@ struct Comparer<decltype(nullptr), void> : NullComparer {
 };
 
 struct ArrayComparer : ComparerBase {
-  const CollectionData* rhs_;
+  const ArrayData* rhs_;
 
-  explicit ArrayComparer(const CollectionData& rhs) : rhs_(&rhs) {}
+  explicit ArrayComparer(const ArrayData& rhs) : rhs_(&rhs) {}
 
-  CompareResult visitArray(const CollectionData& lhs) {
-    if (arrayEquals(lhs, *rhs_))
+  CompareResult visitArray(const ArrayData& lhs) {
+    if (rhs_->equals(lhs))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -128,7 +128,7 @@ struct VariantComparer : ComparerBase {
 
   explicit VariantComparer(const VariantData* value) : rhs(value) {}
 
-  CompareResult visitArray(const CollectionData& lhs) {
+  CompareResult visitArray(const ArrayData& lhs) {
     ArrayComparer comparer(lhs);
     return accept(comparer);
   }

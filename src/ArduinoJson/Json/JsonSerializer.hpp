@@ -18,7 +18,7 @@ class JsonSerializer : public Visitor<size_t> {
 
   JsonSerializer(TWriter writer) : formatter_(writer) {}
 
-  FORCE_INLINE size_t visitArray(const CollectionData& array) {
+  FORCE_INLINE size_t visitArray(const ArrayData& array) {
     write('[');
 
     const VariantSlot* slot = array.head();

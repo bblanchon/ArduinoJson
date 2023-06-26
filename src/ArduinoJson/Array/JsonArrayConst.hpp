@@ -40,19 +40,18 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   FORCE_INLINE JsonArrayConst() : data_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonArrayConst(const detail::CollectionData* data)
-      : data_(data) {}
+  FORCE_INLINE JsonArrayConst(const detail::ArrayData* data) : data_(data) {}
 
   // Compares the content of two arrays.
   // Returns true if the two arrays are equal.
   FORCE_INLINE bool operator==(JsonArrayConst rhs) const {
-    return arrayEquals(data_, rhs.data_);
+    return detail::ArrayData::equals(data_, rhs.data_);
   }
 
   // Returns the element at the specified index.
   // https://arduinojson.org/v6/api/jsonarrayconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(collectionGetElement(data_, index));
+    return JsonVariantConst(detail::ArrayData::getElement(data_, index));
   }
 
   operator JsonVariantConst() const {
@@ -94,7 +93,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
     return collectionToVariant(data_);
   }
 
-  const detail::CollectionData* data_;
+  const detail::ArrayData* data_;
 };
 
 template <>

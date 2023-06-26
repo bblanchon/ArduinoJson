@@ -24,7 +24,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   FORCE_INLINE JsonArray() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonArray(detail::CollectionData* data,
+  FORCE_INLINE JsonArray(detail::ArrayData* data,
                          detail::ResourceManager* resources)
       : data_(data), resources_(resources) {}
 
@@ -46,7 +46,8 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsonarray/add/
   JsonVariant add() const {
-    return JsonVariant(collectionAddElement(data_, resources_), resources_);
+    return JsonVariant(detail::ArrayData::addElement(data_, resources_),
+                       resources_);
   }
 
   // Appends a value to the array.
@@ -80,12 +81,12 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Copies an array.
   // https://arduinojson.org/v6/api/jsonarray/set/
   FORCE_INLINE bool set(JsonArrayConst src) const {
-    return collectionCopy(data_, src.data_, resources_);
+    return detail::ArrayData::copy(data_, src.data_, resources_);
   }
 
   // Compares the content of two arrays.
   FORCE_INLINE bool operator==(JsonArray rhs) const {
-    return arrayEquals(data_, rhs.data_);
+    return detail::ArrayData::equals(data_, rhs.data_);
   }
 
   // Removes the element at the specified iterator.
@@ -99,7 +100,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/
   FORCE_INLINE void remove(size_t index) const {
-    collectionRemoveElement(data_, index, resources_);
+    detail::ArrayData::removeElement(data_, index, resources_);
   }
 
   // Removes all the elements of the array.
@@ -172,7 +173,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
     return collectionToVariant(data_);
   }
 
-  detail::CollectionData* data_;
+  detail::ArrayData* data_;
   detail::ResourceManager* resources_;
 };
 

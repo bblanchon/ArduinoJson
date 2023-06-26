@@ -14,12 +14,8 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-VariantData* collectionAddElement(CollectionData* array,
-                                  ResourceManager* resources);
 bool collectionCopy(CollectionData* dst, const CollectionData* src,
                     ResourceManager* resources);
-void collectionRemoveElement(CollectionData* data, size_t index,
-                             ResourceManager* resources);
 template <typename T>
 T parseNumber(const char* s);
 void slotRelease(VariantSlot* slot, ResourceManager* resources);
@@ -38,7 +34,7 @@ class VariantData {
         return visitor.visitFloat(content_.asFloat);
 
       case VALUE_IS_ARRAY:
-        return visitor.visitArray(content_.asCollection);
+        return visitor.visitArray(content_.asArray);
 
       case VALUE_IS_OBJECT:
         return visitor.visitObject(content_.asCollection);
@@ -71,7 +67,7 @@ class VariantData {
 
   VariantData* addElement(ResourceManager* resources) {
     auto array = isNull() ? &toArray() : asArray();
-    return collectionAddElement(array, resources);
+    return detail::ArrayData::addElement(array, resources);
   }
 
   bool asBoolean() const {
@@ -90,11 +86,11 @@ class VariantData {
     }
   }
 
-  CollectionData* asArray() {
-    return isArray() ? &content_.asCollection : 0;
+  ArrayData* asArray() {
+    return isArray() ? &content_.asArray : 0;
   }
 
-  const CollectionData* asArray() const {
+  const ArrayData* asArray() const {
     return const_cast<VariantData*>(this)->asArray();
   }
 
@@ -181,7 +177,7 @@ class VariantData {
     }
     switch (src->type()) {
       case VALUE_IS_ARRAY:
-        return collectionCopy(&toArray(), src->asArray(), resources);
+        return toArray().copyFrom(*src->asArray(), resources);
       case VALUE_IS_OBJECT:
         return collectionCopy(&toObject(), src->asObject(), resources);
       case VALUE_IS_OWNED_STRING: {
@@ -319,7 +315,7 @@ class VariantData {
   }
 
   void removeElement(size_t index, ResourceManager* resources) {
-    collectionRemoveElement(asArray(), index, resources);
+    ArrayData::removeElement(asArray(), index, resources);
   }
 
   template <typename TAdaptedString>
@@ -427,13 +423,13 @@ class VariantData {
     return isCollection() ? content_.asCollection.size() : 0;
   }
 
-  CollectionData& toArray() {
+  ArrayData& toArray() {
     setType(VALUE_IS_ARRAY);
-    new (&content_.asCollection) CollectionData();
-    return content_.asCollection;
+    new (&content_.asArray) ArrayData();
+    return content_.asArray;
   }
 
-  CollectionData& toArray(ResourceManager* resources) {
+  ArrayData& toArray(ResourceManager* resources) {
     release(resources);
     return toArray();
   }
@@ -594,8 +590,7 @@ inline size_t variantSize(const VariantData* var) {
   return var != 0 ? var->size() : 0;
 }
 
-inline CollectionData* variantToArray(VariantData* var,
-                                      ResourceManager* resources) {
+inline ArrayData* variantToArray(VariantData* var, ResourceManager* resources) {
   if (!var)
     return 0;
   return &var->toArray(resources);

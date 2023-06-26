@@ -14,7 +14,7 @@ template <typename TResult>
 struct Visitor {
   typedef TResult result_type;
 
-  TResult visitArray(const CollectionData&) {
+  TResult visitArray(const ArrayData&) {
     return TResult();
   }
 

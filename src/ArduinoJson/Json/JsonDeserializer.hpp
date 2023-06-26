@@ -146,7 +146,7 @@ class JsonDeserializer {
 
   template <typename TFilter>
   DeserializationError::Code parseArray(
-      CollectionData& array, TFilter filter,
+      ArrayData& array, TFilter filter,
       DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
@@ -172,7 +172,7 @@ class JsonDeserializer {
     for (;;) {
       if (elementFilter.allow()) {
         // Allocate slot in array
-        VariantData* value = collectionAddElement(&array, resources_);
+        VariantData* value = array.addElement(resources_);
         if (!value)
           return DeserializationError::NoMemory;
 

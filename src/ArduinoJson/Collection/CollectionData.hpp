@@ -29,8 +29,6 @@ class CollectionData {
   size_t memoryUsage() const;
   size_t size() const;
 
-  VariantData* addElement(ResourceManager* resources);
-
   VariantData* addMember(StringNode* key, ResourceManager* resources);
 
   template <typename TAdaptedString>
@@ -39,10 +37,6 @@ class CollectionData {
   void clear(ResourceManager* resources);
   bool copyFrom(const CollectionData& src, ResourceManager* resources);
 
-  VariantData* getOrAddElement(size_t index, ResourceManager* resources);
-
-  VariantData* getElement(size_t index) const;
-
   template <typename TAdaptedString>
   VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources);
 
@@ -50,8 +44,6 @@ class CollectionData {
   VariantData* getMember(TAdaptedString key) const;
 
   void removeSlot(VariantSlot* slot, ResourceManager* resources);
-
-  void removeElement(size_t index, ResourceManager* resources);
 
   template <typename TAdaptedString>
   void removeMember(TAdaptedString key, ResourceManager* resources);
@@ -62,15 +54,14 @@ class CollectionData {
 
   void movePointers(ptrdiff_t variantDistance);
 
- private:
+ protected:
   void addSlot(VariantSlot*);
-
-  VariantSlot* getPreviousSlot(VariantSlot*) const;
-
-  VariantSlot* getSlot(size_t index) const;
 
   template <typename TAdaptedString>
   VariantSlot* getSlot(TAdaptedString key) const;
+
+ private:
+  VariantSlot* getPreviousSlot(VariantSlot*) const;
 };
 
 inline const VariantData* collectionToVariant(
@@ -84,10 +75,6 @@ inline VariantData* collectionToVariant(CollectionData* collection) {
   return reinterpret_cast<VariantData*>(data);
 }
 
-bool arrayEquals(const detail::CollectionData& lhs,
-                 const detail::CollectionData& rhs);
-bool arrayEquals(const detail::CollectionData* lhs,
-                 const detail::CollectionData* rhs);
 bool objectEquals(const detail::CollectionData& lhs,
                   const detail::CollectionData& rhs);
 bool objectEquals(const detail::CollectionData* lhs,

@@ -32,6 +32,7 @@
 
 #include "ArduinoJson/Document/JsonDocument.hpp"
 
+#include "ArduinoJson/Array/ArrayImpl.hpp"
 #include "ArduinoJson/Array/ElementProxy.hpp"
 #include "ArduinoJson/Array/JsonArrayImpl.hpp"
 #include "ArduinoJson/Array/Utilities.hpp"
