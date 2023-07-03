@@ -246,11 +246,3 @@ TEST_CASE("ElementProxy cast to JsonVariant") {
 
   CHECK(doc.as<std::string>() == "[\"toto\"]");
 }
-
-TEST_CASE("ElementProxy::shallowCopy()") {
-  JsonDocument doc1(1024), doc2(1024);
-  doc2["hello"] = "world";
-  doc1[0].shallowCopy(doc2);
-
-  CHECK(doc1.as<std::string>() == "[{\"hello\":\"world\"}]");
-}

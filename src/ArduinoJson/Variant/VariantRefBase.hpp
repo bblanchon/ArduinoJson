@@ -106,18 +106,6 @@ class VariantRefBase : public VariantTag {
     return Converter<T>::checkJson(getVariantConst());
   }
 
-  // Shallow copies the specified value.
-  // https://arduinojson.org/v6/api/jsonvariant/shallowcopy/
-  FORCE_INLINE void shallowCopy(ArduinoJson::JsonVariantConst target) {
-    VariantData* data = getOrCreateData();
-    if (!data)
-      return;
-    data->setNull(getResourceManager());
-    const VariantData* targetData = VariantAttorney::getData(target);
-    if (targetData)
-      *data = *targetData;
-  }
-
   // Copies the specified value.
   // https://arduinojson.org/v6/api/jsonvariant/set/
   template <typename T>

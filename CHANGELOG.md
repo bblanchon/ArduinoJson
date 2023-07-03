@@ -18,3 +18,4 @@ HEAD
 * Fix double lookup in `to<JsonVariant>()`
 * Fix double call to `size()` in `serializeMsgPack()`
 * Include `ARDUINOJSON_SLOT_OFFSET_SIZE` in the namespace name
+* Remove `JsonVariant::shallowCopy()` 

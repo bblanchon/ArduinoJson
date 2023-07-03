@@ -328,14 +328,6 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
   CHECK(doc["status"]["weather"]["temp"] == 42);
 }
 
-TEST_CASE("MemberProxy::shallowCopy()") {
-  JsonDocument doc1(1024), doc2(1024);
-  doc2["hello"] = "world";
-  doc1["obj"].shallowCopy(doc2);
-
-  CHECK(doc1.as<std::string>() == "{\"obj\":{\"hello\":\"world\"}}");
-}
-
 TEST_CASE("Deduplicate keys") {
   JsonDocument doc(1024);
 
