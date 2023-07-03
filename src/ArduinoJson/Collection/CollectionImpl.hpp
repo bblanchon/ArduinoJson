@@ -93,7 +93,10 @@ inline size_t CollectionData::nesting() const {
 }
 
 inline size_t CollectionData::size() const {
-  return slotSize(head_);
+  size_t count = 0;
+  for (auto it = createIterator(); !it.done(); it.next())
+    count++;
+  return count;
 }
 
 template <typename T>

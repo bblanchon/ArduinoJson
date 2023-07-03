@@ -9,15 +9,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline size_t slotSize(const VariantSlot* var) {
-  size_t n = 0;
-  while (var) {
-    n++;
-    var = var->next();
-  }
-  return n;
-}
-
 inline void slotRelease(VariantSlot* slot, ResourceManager* resources) {
   ARDUINOJSON_ASSERT(slot != nullptr);
   if (slot->ownsKey())
