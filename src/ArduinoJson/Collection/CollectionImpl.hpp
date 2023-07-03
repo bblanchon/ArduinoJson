@@ -27,9 +27,10 @@ inline void CollectionIterator::next() {
   slot_ = slot_->next();
 }
 
-inline void CollectionData::addSlot(VariantSlot* slot) {
-  ARDUINOJSON_ASSERT(slot != nullptr);
-
+inline VariantSlot* CollectionData::addSlot(ResourceManager* resources) {
+  auto slot = resources->allocVariant();
+  if (!slot)
+    return nullptr;
   if (tail_) {
     tail_->setNextNotNull(slot);
     tail_ = slot;
@@ -37,6 +38,7 @@ inline void CollectionData::addSlot(VariantSlot* slot) {
     head_ = slot;
     tail_ = slot;
   }
+  return slot;
 }
 
 inline void CollectionData::clear(ResourceManager* resources) {

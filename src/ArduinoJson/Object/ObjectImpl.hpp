@@ -12,12 +12,11 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 inline VariantData* ObjectData::addMember(StringNode* key,
                                           ResourceManager* resources) {
   ARDUINOJSON_ASSERT(key != nullptr);
-  auto slot = resources->allocVariant();
+  auto slot = addSlot(resources);
   if (!slot)
     return nullptr;
 
   slot->setKey(key);
-  addSlot(slot);
   return slot->data();
 }
 
@@ -25,7 +24,7 @@ template <typename TAdaptedString>
 inline VariantData* ObjectData::addMember(TAdaptedString key,
                                           ResourceManager* resources) {
   ARDUINOJSON_ASSERT(!key.isNull());
-  auto slot = resources->allocVariant();
+  auto slot = addSlot(resources);
   if (!slot)
     return nullptr;
   if (key.isLinked())
@@ -36,7 +35,6 @@ inline VariantData* ObjectData::addMember(TAdaptedString key,
       return nullptr;
     slot->setKey(storedKey);
   }
-  addSlot(slot);
   return slot->data();
 }
 

@@ -107,7 +107,7 @@ class CollectionData {
   }
 
  protected:
-  void addSlot(VariantSlot*);
+  VariantSlot* addSlot(ResourceManager*);
 
  private:
   VariantSlot* getPreviousSlot(VariantSlot*) const;
