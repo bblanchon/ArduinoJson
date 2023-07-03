@@ -84,8 +84,8 @@ inline size_t CollectionData::memoryUsage() const {
 
 inline size_t CollectionData::nesting() const {
   size_t maxChildNesting = 0;
-  for (const VariantSlot* s = head_; s; s = s->next()) {
-    size_t childNesting = s->data()->nesting();
+  for (auto it = createIterator(); !it.done(); it.next()) {
+    size_t childNesting = it->nesting();
     if (childNesting > maxChildNesting)
       maxChildNesting = childNesting;
   }
