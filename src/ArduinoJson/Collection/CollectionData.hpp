@@ -111,6 +111,7 @@ class CollectionData {
 
  private:
   VariantSlot* getPreviousSlot(VariantSlot*) const;
+  static void releaseSlot(VariantSlot*, ResourceManager*);
 };
 
 inline const VariantData* collectionToVariant(

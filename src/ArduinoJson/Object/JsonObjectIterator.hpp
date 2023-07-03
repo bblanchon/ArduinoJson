@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ArduinoJson/Object/JsonPair.hpp>
-#include <ArduinoJson/Variant/SlotFunctions.hpp>
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 

@@ -16,7 +16,6 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 T parseNumber(const char* s);
-void slotRelease(VariantSlot* slot, ResourceManager* resources);
 
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant

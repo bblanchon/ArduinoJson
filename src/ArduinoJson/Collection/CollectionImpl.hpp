@@ -41,7 +41,7 @@ inline void CollectionData::addSlot(VariantSlot* slot) {
 
 inline void CollectionData::clear(ResourceManager* resources) {
   for (auto slot = head_; slot; slot = slot->next())
-    slotRelease(slot, resources);
+    releaseSlot(slot, resources);
   head_ = 0;
   tail_ = 0;
 }
@@ -69,7 +69,7 @@ inline void CollectionData::remove(iterator it, ResourceManager* resources) {
     head_ = next;
   if (!next)
     tail_ = prev;
-  slotRelease(curr, resources);
+  releaseSlot(curr, resources);
 }
 
 inline size_t CollectionData::memoryUsage() const {
@@ -113,6 +113,14 @@ inline void CollectionData::movePointers(ptrdiff_t variantDistance) {
   movePointer(tail_, variantDistance);
   for (VariantSlot* slot = head_; slot; slot = slot->next())
     slot->data()->movePointers(variantDistance);
+}
+
+inline void CollectionData::releaseSlot(VariantSlot* slot,
+                                        ResourceManager* resources) {
+  ARDUINOJSON_ASSERT(slot != nullptr);
+  if (slot->ownsKey())
+    resources->dereferenceString(slot->key());
+  slot->data()->setNull(resources);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
