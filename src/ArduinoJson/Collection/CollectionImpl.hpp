@@ -74,10 +74,10 @@ inline void CollectionData::remove(iterator it, ResourceManager* resources) {
 
 inline size_t CollectionData::memoryUsage() const {
   size_t total = 0;
-  for (VariantSlot* s = head_; s; s = s->next()) {
-    total += sizeof(VariantSlot) + s->data()->memoryUsage();
-    if (s->ownsKey())
-      total += sizeofString(strlen(s->key()));
+  for (auto it = createIterator(); !it.done(); it.next()) {
+    total += sizeof(VariantSlot) + it->memoryUsage();
+    if (it.ownsKey())
+      total += sizeofString(strlen(it.key()));
   }
   return total;
 }
