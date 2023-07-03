@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/Alignment.hpp>
 #include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Memory/StringPool.hpp>
 #include <ArduinoJson/Memory/VariantPool.hpp>
@@ -22,7 +21,7 @@ class ResourceManager {
   ResourceManager(size_t capa,
                   Allocator* allocator = DefaultAllocator::instance())
       : allocator_(allocator), overflowed_(false) {
-    variantPool_.create(addPadding(capa), allocator);
+    variantPool_.create(capa, allocator);
   }
 
   ~ResourceManager() {
@@ -48,8 +47,8 @@ class ResourceManager {
   }
 
   void reallocPool(size_t requiredSize) {
-    size_t capa = addPadding(requiredSize);
-    if (capa == capacity())
+    size_t capa = VariantPool::bytesToSlots(requiredSize);
+    if (capa == variantPool_.capacity())
       return;
     variantPool_.destroy(allocator_);
     variantPool_.create(requiredSize, allocator_);
@@ -57,11 +56,11 @@ class ResourceManager {
 
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
-    return variantPool_.capacity();
+    return VariantPool::slotsToBytes(variantPool_.capacity());
   }
 
   size_t size() const {
-    return variantPool_.usage() + stringPool_.size();
+    return VariantPool::slotsToBytes(variantPool_.usage()) + stringPool_.size();
   }
 
   bool overflowed() const {

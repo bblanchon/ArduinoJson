@@ -8,6 +8,7 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::addPadding;
+using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument constructor") {
@@ -66,8 +67,8 @@ TEST_CASE("JsonDocument constructor") {
     JsonDocument doc2(obj, &spyingAllocator);
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-    REQUIRE(spyingAllocator.log() == AllocatorLog() << AllocatorLog::Allocate(
-                                         addPadding(doc1.memoryUsage())));
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofObject(1)));
   }
 
   SECTION("Construct from JsonArray") {
@@ -89,9 +90,9 @@ TEST_CASE("JsonDocument constructor") {
     JsonDocument doc2(doc1.as<JsonVariant>(), &spyingAllocator);
 
     REQUIRE(doc2.as<std::string>() == "hello");
-    REQUIRE(
-        spyingAllocator.log() ==
-        AllocatorLog() << AllocatorLog::Allocate(addPadding(doc1.memoryUsage()))
-                       << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(
+                                  sizeofString(5))  // TODO: remove
+                           << AllocatorLog::Allocate(sizeofString(5)));
   }
 }

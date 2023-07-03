@@ -14,7 +14,7 @@ class VariantSlot;
 class VariantPool {
  public:
   ~VariantPool() {
-    ARDUINOJSON_ASSERT(data_ == nullptr);
+    ARDUINOJSON_ASSERT(slots_ == nullptr);
   }
 
   VariantPool& operator=(VariantPool&& src) {
@@ -22,8 +22,8 @@ class VariantPool {
     src.capacity_ = 0;
     usage_ = src.usage_;
     src.usage_ = 0;
-    data_ = src.data_;
-    src.data_ = nullptr;
+    slots_ = src.slots_;
+    src.slots_ = nullptr;
     return *this;
   }
 
@@ -36,12 +36,13 @@ class VariantPool {
   size_t capacity() const;
   size_t usage() const;
 
-  static size_t sizeForCapacity(size_t);
+  static size_t bytesToSlots(size_t);
+  static size_t slotsToBytes(size_t);
 
  private:
   size_t capacity_ = 0;
   size_t usage_ = 0;
-  char* data_ = nullptr;
+  VariantSlot* slots_ = nullptr;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -10,40 +10,40 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 inline void VariantPool::create(size_t cap, Allocator* allocator) {
-  ARDUINOJSON_ASSERT(data_ == nullptr);
+  ARDUINOJSON_ASSERT(slots_ == nullptr);
   if (!cap)
     return;
-  data_ = reinterpret_cast<char*>(allocator->allocate(cap));
-  if (data_) {
-    capacity_ = cap;
+  slots_ = reinterpret_cast<VariantSlot*>(allocator->allocate(cap));
+  if (slots_) {
+    capacity_ = bytesToSlots(cap);
     usage_ = 0;
   }
 }
 
 inline void VariantPool::destroy(Allocator* allocator) {
-  if (data_)
-    allocator->deallocate(data_);
-  data_ = nullptr;
+  if (slots_)
+    allocator->deallocate(slots_);
+  slots_ = nullptr;
   capacity_ = 0;
   usage_ = 0;
 }
 
 inline ptrdiff_t VariantPool::shrinkToFit(Allocator* allocator) {
-  auto originalPool = data_;
-  data_ = reinterpret_cast<char*>(allocator->reallocate(data_, usage_));
-  if (data_)
+  auto originalPool = slots_;
+  slots_ = reinterpret_cast<VariantSlot*>(
+      allocator->reallocate(slots_, slotsToBytes(usage_)));
+  if (slots_)
     capacity_ = usage_;
-  return data_ - originalPool;
+  return reinterpret_cast<char*>(slots_) -
+         reinterpret_cast<char*>(originalPool);
 }
 
 inline VariantSlot* VariantPool::allocVariant() {
-  if (!data_)
+  if (!slots_)
     return nullptr;
-  if (usage_ + sizeof(VariantSlot) > capacity_)
+  if (usage_ + 1 > capacity_)
     return nullptr;
-  auto p = data_ + usage_;
-  usage_ += sizeof(VariantSlot);
-  return new (p) VariantSlot;
+  return new (&slots_[usage_++]) VariantSlot;
 }
 
 inline size_t VariantPool::usage() const {
@@ -56,6 +56,14 @@ inline size_t VariantPool::capacity() const {
 
 inline void VariantPool::clear() {
   usage_ = 0;
+}
+
+inline size_t VariantPool::bytesToSlots(size_t n) {
+  return n / sizeof(VariantSlot);
+}
+
+inline size_t VariantPool::slotsToBytes(size_t n) {
+  return n * sizeof(VariantSlot);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

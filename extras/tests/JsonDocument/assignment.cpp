@@ -32,15 +32,15 @@ TEST_CASE("JsonDocument assignment") {
 
   SECTION("Copy assignment reallocates when capacity is smaller") {
     JsonDocument doc1(4096, &spyingAllocator);
-    deserializeJson(doc1, "{\"hello\":\"world\"}");
-    JsonDocument doc2(8, &spyingAllocator);
+    deserializeJson(doc1, "[{\"hello\":\"world\"}]");
+    JsonDocument doc2(sizeofArray(1), &spyingAllocator);
     spyingAllocator.clearLog();
 
     doc2 = doc1;
 
-    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
+    REQUIRE(doc2.as<std::string>() == "[{\"hello\":\"world\"}]");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Deallocate(8)
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofArray(1))
                            << AllocatorLog::Allocate(4096)
                            << AllocatorLog::Allocate(sizeofString(5))  // hello
                            << AllocatorLog::Allocate(sizeofString(5))  // world
@@ -68,7 +68,7 @@ TEST_CASE("JsonDocument assignment") {
     {
       JsonDocument doc1(4096, &spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
-      JsonDocument doc2(8, &spyingAllocator);
+      JsonDocument doc2(128, &spyingAllocator);
 
       doc2 = std::move(doc1);
 
@@ -78,8 +78,8 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(4096)
                            << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Allocate(8)
-                           << AllocatorLog::Deallocate(8)
+                           << AllocatorLog::Allocate(128)
+                           << AllocatorLog::Deallocate(128)
                            << AllocatorLog::Deallocate(sizeofString(31))
                            << AllocatorLog::Deallocate(4096));
   }
