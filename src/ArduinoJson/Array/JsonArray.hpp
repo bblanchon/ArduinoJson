@@ -68,7 +68,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->begin(), resources_);
+    return iterator(data_->createIterator(), resources_);
   }
 
   // Returns an iterator following the last element of the array.

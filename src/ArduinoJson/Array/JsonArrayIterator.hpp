@@ -51,7 +51,7 @@ class JsonArrayIterator {
   }
 
   JsonArrayIterator& operator++() {
-    ++iterator_;
+    iterator_.next();
     return *this;
   }
 
@@ -65,7 +65,8 @@ class JsonArrayConstIterator {
 
  public:
   JsonArrayConstIterator() {}
-  explicit JsonArrayConstIterator(detail::ArrayData::iterator iterator, const detail::ResourceManager* resources)
+  explicit JsonArrayConstIterator(detail::ArrayData::iterator iterator,
+                                  const detail::ResourceManager* resources)
       : iterator_(iterator), resources_(resources) {}
 
   JsonVariantConst operator*() const {
@@ -84,7 +85,7 @@ class JsonArrayConstIterator {
   }
 
   JsonArrayConstIterator& operator++() {
-    ++iterator_;
+    iterator_.next();
     return *this;
   }
 

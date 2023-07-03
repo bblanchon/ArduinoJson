@@ -44,7 +44,7 @@ inline bool ObjectData::copyFrom(const ObjectData& src,
                                  ResourceManager* resources) {
   clear(resources);
 
-  for (auto it = src.begin(); it; ++it) {
+  for (auto it = src.createIterator(); !it.done(); it.next()) {
     ARDUINOJSON_ASSERT(it.key() != 0);
     JsonString key(it.key(),
                    it.ownsKey() ? JsonString::Copied : JsonString::Linked);
@@ -66,7 +66,7 @@ template <typename TAdaptedString>
 VariantData* ObjectData::getOrAddMember(TAdaptedString key,
                                         ResourceManager* resources) {
   auto it = findKey(key);
-  if (it)
+  if (!it.done())
     return it.data();
   return addMember(key, resources);
 }
@@ -74,12 +74,12 @@ VariantData* ObjectData::getOrAddMember(TAdaptedString key,
 template <typename TAdaptedString>
 inline ObjectData::iterator ObjectData::findKey(TAdaptedString key) const {
   if (key.isNull())
-    return end();
-  for (auto it = begin(); it; ++it) {
+    return iterator();
+  for (auto it = createIterator(); !it.done(); it.next()) {
     if (stringEquals(key, adaptString(it.key())))
       return it;
   }
-  return end();
+  return iterator();
 }
 
 template <typename TAdaptedString>

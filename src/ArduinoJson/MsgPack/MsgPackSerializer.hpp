@@ -55,7 +55,7 @@ class MsgPackSerializer : public Visitor<size_t> {
       writeByte(0xDD);
       writeInteger(uint32_t(n));
     }
-    for (auto it = array.begin(); it; ++it) {
+    for (auto it = array.createIterator(); !it.done(); it.next()) {
       it->accept(*this);
     }
     return bytesWritten();
@@ -72,7 +72,7 @@ class MsgPackSerializer : public Visitor<size_t> {
       writeByte(0xDF);
       writeInteger(uint32_t(n));
     }
-    for (auto it = object.begin(); it; ++it) {
+    for (auto it = object.createIterator(); !it.done(); it.next()) {
       visitString(it.key());
       it->accept(*this);
     }

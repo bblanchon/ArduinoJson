@@ -19,16 +19,16 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
   PrettyJsonSerializer(TWriter writer) : base(writer), nesting_(0) {}
 
   size_t visitArray(const ArrayData& array) {
-    auto it = array.begin();
-    if (it) {
+    auto it = array.createIterator();
+    if (!it.done()) {
       base::write("[\r\n");
       nesting_++;
-      while (it) {
+      while (!it.done()) {
         indent();
         it->accept(*this);
 
-        ++it;
-        base::write(it ? ",\r\n" : "\r\n");
+        it.next();
+        base::write(it.done() ? "\r\n" : ",\r\n");
       }
       nesting_--;
       indent();
@@ -40,18 +40,18 @@ class PrettyJsonSerializer : public JsonSerializer<TWriter> {
   }
 
   size_t visitObject(const ObjectData& object) {
-    auto it = object.begin();
-    if (it) {
+    auto it = object.createIterator();
+    if (!it.done()) {
       base::write("{\r\n");
       nesting_++;
-      while (it) {
+      while (!it.done()) {
         indent();
         base::visitString(it.key());
         base::write(": ");
         it->accept(*this);
 
-        ++it;
-        base::write(it ? ",\r\n" : "\r\n");
+        it.next();
+        base::write(it.done() ? "\r\n" : ",\r\n");
       }
       nesting_--;
       indent();

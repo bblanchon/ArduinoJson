@@ -22,10 +22,9 @@ inline bool CollectionIterator::ownsKey() const {
   return slot_->ownsKey();
 }
 
-inline CollectionIterator& CollectionIterator::operator++() {
+inline void CollectionIterator::next() {
   ARDUINOJSON_ASSERT(slot_ != nullptr);
   slot_ = slot_->next();
-  return *this;
 }
 
 inline void CollectionData::addSlot(VariantSlot* slot) {
@@ -59,7 +58,7 @@ inline VariantSlot* CollectionData::getPreviousSlot(VariantSlot* target) const {
 }
 
 inline void CollectionData::remove(iterator it, ResourceManager* resources) {
-  if (!it)
+  if (it.done())
     return;
   auto curr = it.slot_;
   auto prev = getPreviousSlot(curr);

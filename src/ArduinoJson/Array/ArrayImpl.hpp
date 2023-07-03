@@ -10,9 +10,9 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 inline ArrayData::iterator ArrayData::at(size_t index) const {
-  auto it = begin();
-  while (it && index) {
-    ++it;
+  auto it = createIterator();
+  while (!it.done() && index) {
+    it.next();
     --index;
   }
   return it;
@@ -30,7 +30,7 @@ inline bool ArrayData::copyFrom(const ArrayData& src,
                                 ResourceManager* resources) {
   clear(resources);
 
-  for (auto it = src.begin(); it; ++it) {
+  for (auto it = src.createIterator(); !it.done(); it.next()) {
     auto var = addElement(resources);
     if (!var)
       return false;
@@ -42,12 +42,12 @@ inline bool ArrayData::copyFrom(const ArrayData& src,
 
 inline VariantData* ArrayData::getOrAddElement(size_t index,
                                                ResourceManager* resources) {
-  auto it = begin();
-  while (it && index > 0) {
-    ++it;
+  auto it = createIterator();
+  while (!it.done() && index > 0) {
+    it.next();
     index--;
   }
-  if (!it)
+  if (it.done())
     index++;
   VariantData* element = it.data();
   while (index > 0) {

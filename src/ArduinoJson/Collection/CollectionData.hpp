@@ -20,10 +20,10 @@ class CollectionIterator {
  public:
   CollectionIterator() : slot_(nullptr) {}
 
-  CollectionIterator& operator++();
+  void next();
 
-  operator bool() const {
-    return slot_ != nullptr;
+  bool done() const {
+    return slot_ == nullptr;
   }
 
   bool operator==(const CollectionIterator& other) const {
@@ -80,12 +80,8 @@ class CollectionData {
 
   using iterator = CollectionIterator;
 
-  iterator begin() const {
+  iterator createIterator() const {
     return iterator(head_);
-  }
-
-  iterator end() const {
-    return iterator(nullptr);
   }
 
   size_t memoryUsage() const;

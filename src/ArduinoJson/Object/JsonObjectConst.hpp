@@ -65,7 +65,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->begin(), resources_);
+    return iterator(data_->createIterator(), resources_);
   }
 
   // Returns an iterator following the last key-value pair of the object.
