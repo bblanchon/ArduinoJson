@@ -400,7 +400,7 @@ TEST_CASE("MemberProxy under memory constraints") {
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(doc.size() == 0);
-    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+    REQUIRE(doc.memoryUsage() == 0);
     REQUIRE(doc.overflowed() == true);
   }
 }

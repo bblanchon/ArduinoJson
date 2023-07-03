@@ -18,10 +18,6 @@ inline ArrayData::iterator ArrayData::at(size_t index) const {
   return it;
 }
 
-inline VariantData* ArrayData::addElement(ResourceManager* resources) {
-  return slotData(addSlot(resources));
-}
-
 inline bool ArrayData::copyFrom(const ArrayData& src,
                                 ResourceManager* resources) {
   clear(resources);

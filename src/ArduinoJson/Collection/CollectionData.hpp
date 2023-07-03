@@ -52,6 +52,9 @@ class CollectionIterator {
   const char* key() const;
   bool ownsKey() const;
 
+  void setKey(StringNode*);
+  void setKey(const char*);
+
   VariantData* data() {
     return reinterpret_cast<VariantData*>(slot_);
   }
@@ -107,7 +110,7 @@ class CollectionData {
   }
 
  protected:
-  VariantSlot* addSlot(ResourceManager*);
+  iterator addSlot(ResourceManager*);
 
  private:
   VariantSlot* getPreviousSlot(VariantSlot*) const;

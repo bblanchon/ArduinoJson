@@ -9,35 +9,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline VariantData* ObjectData::addMember(StringNode* key,
-                                          ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(key != nullptr);
-  auto slot = addSlot(resources);
-  if (!slot)
-    return nullptr;
-
-  slot->setKey(key);
-  return slot->data();
-}
-
-template <typename TAdaptedString>
-inline VariantData* ObjectData::addMember(TAdaptedString key,
-                                          ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(!key.isNull());
-  auto slot = addSlot(resources);
-  if (!slot)
-    return nullptr;
-  if (key.isLinked())
-    slot->setKey(key.data());
-  else {
-    auto storedKey = resources->saveString(key);
-    if (!storedKey)
-      return nullptr;
-    slot->setKey(storedKey);
-  }
-  return slot->data();
-}
-
 inline bool ObjectData::copyFrom(const ObjectData& src,
                                  ResourceManager* resources) {
   clear(resources);

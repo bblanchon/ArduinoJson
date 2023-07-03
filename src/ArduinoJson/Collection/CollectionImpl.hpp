@@ -17,6 +17,18 @@ inline const char* CollectionIterator::key() const {
   return slot_->key();
 }
 
+inline void CollectionIterator::setKey(const char* s) {
+  ARDUINOJSON_ASSERT(slot_ != nullptr);
+  ARDUINOJSON_ASSERT(s != nullptr);
+  return slot_->setKey(s);
+}
+
+inline void CollectionIterator::setKey(StringNode* s) {
+  ARDUINOJSON_ASSERT(slot_ != nullptr);
+  ARDUINOJSON_ASSERT(s != nullptr);
+  return slot_->setKey(s);
+}
+
 inline bool CollectionIterator::ownsKey() const {
   ARDUINOJSON_ASSERT(slot_ != nullptr);
   return slot_->ownsKey();
@@ -27,7 +39,8 @@ inline void CollectionIterator::next() {
   slot_ = slot_->next();
 }
 
-inline VariantSlot* CollectionData::addSlot(ResourceManager* resources) {
+inline CollectionData::iterator CollectionData::addSlot(
+    ResourceManager* resources) {
   auto slot = resources->allocVariant();
   if (!slot)
     return nullptr;
