@@ -38,7 +38,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns a read-only reference to the array.
   // https://arduinojson.org/v6/api/jsonarrayconst/
   operator JsonArrayConst() const {
-    return JsonArrayConst(data_);
+    return JsonArrayConst(data_, resources_);
   }
 
   // Appends a new (null) element to the array.
@@ -121,7 +121,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
   operator JsonVariantConst() const {
-    return JsonVariantConst(collectionToVariant(data_));
+    return JsonVariantConst(collectionToVariant(data_), resources_);
   }
 
   // Returns true if the reference is unbound.

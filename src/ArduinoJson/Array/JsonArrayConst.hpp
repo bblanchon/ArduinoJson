@@ -26,7 +26,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->begin());
+    return iterator(data_->begin(), resources_);
   }
 
   // Returns an iterator to the element following the last element of the array.
@@ -39,16 +39,19 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   FORCE_INLINE JsonArrayConst() : data_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonArrayConst(const detail::ArrayData* data) : data_(data) {}
+  FORCE_INLINE JsonArrayConst(const detail::ArrayData* data,
+                              const detail::ResourceManager* resources)
+      : data_(data), resources_(resources) {}
 
   // Returns the element at the specified index.
   // https://arduinojson.org/v6/api/jsonarrayconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(detail::ArrayData::getElement(data_, index));
+    return JsonVariantConst(detail::ArrayData::getElement(data_, index),
+                            resources_);
   }
 
   operator JsonVariantConst() const {
-    return JsonVariantConst(collectionToVariant(data_));
+    return JsonVariantConst(collectionToVariant(data_), resources_);
   }
 
   // Returns true if the reference is unbound.
@@ -87,6 +90,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   }
 
   const detail::ArrayData* data_;
+  const detail::ResourceManager* resources_;
 };
 
 template <>
@@ -98,7 +102,8 @@ struct Converter<JsonArrayConst> : private detail::VariantAttorney {
 
   static JsonArrayConst fromJson(JsonVariantConst src) {
     auto data = getData(src);
-    return data ? data->asArray() : 0;
+    auto array = data ? data->asArray() : nullptr;
+    return JsonArrayConst(array, getResourceManager(src));
   }
 
   static bool checkJson(JsonVariantConst src) {

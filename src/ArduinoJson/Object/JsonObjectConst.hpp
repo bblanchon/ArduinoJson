@@ -22,10 +22,12 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   JsonObjectConst() : data_(0) {}
 
   // INTERNAL USE ONLY
-  JsonObjectConst(const detail::ObjectData* data) : data_(data) {}
+  JsonObjectConst(const detail::ObjectData* data,
+                  const detail::ResourceManager* resources)
+      : data_(data), resources_(resources) {}
 
   operator JsonVariantConst() const {
-    return JsonVariantConst(collectionToVariant(data_));
+    return JsonVariantConst(collectionToVariant(data_), resources_);
   }
 
   // Returns true if the reference is unbound.
@@ -63,7 +65,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
-    return iterator(data_->begin());
+    return iterator(data_->begin(), resources_);
   }
 
   // Returns an iterator following the last key-value pair of the object.
@@ -93,7 +95,8 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
     return JsonVariantConst(
-        detail::ObjectData::getMember(data_, detail::adaptString(key)));
+        detail::ObjectData::getMember(data_, detail::adaptString(key)),
+        resources_);
   }
 
   // Gets the member with specified key.
@@ -112,6 +115,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   }
 
   const detail::ObjectData* data_;
+  const detail::ResourceManager* resources_;
 };
 
 template <>
@@ -123,7 +127,8 @@ struct Converter<JsonObjectConst> : private detail::VariantAttorney {
 
   static JsonObjectConst fromJson(JsonVariantConst src) {
     auto data = getData(src);
-    return data != 0 ? data->asObject() : 0;
+    auto object = data != 0 ? data->asObject() : nullptr;
+    return JsonObjectConst(object, getResourceManager(src));
   }
 
   static bool checkJson(JsonVariantConst src) {

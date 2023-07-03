@@ -71,7 +71,7 @@ struct Converter<JsonVariantConst> : private detail::VariantAttorney {
   }
 
   static JsonVariantConst fromJson(JsonVariantConst src) {
-    return JsonVariantConst(getData(src));
+    return JsonVariantConst(getData(src), getResourceManager(src));
   }
 
   static bool checkJson(JsonVariantConst src) {

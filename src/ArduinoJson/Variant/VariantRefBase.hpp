@@ -284,7 +284,7 @@ class VariantRefBase : public VariantTag {
   FORCE_INLINE ArduinoJson::JsonVariant getVariant() const;
 
   FORCE_INLINE ArduinoJson::JsonVariantConst getVariantConst() const {
-    return ArduinoJson::JsonVariantConst(getData());
+    return ArduinoJson::JsonVariantConst(getData(), getResourceManager());
   }
 
   FORCE_INLINE ArduinoJson::JsonVariant getOrCreateVariant() const;

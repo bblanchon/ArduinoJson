@@ -32,7 +32,9 @@ class JsonVariantConst : public detail::VariantTag,
   JsonVariantConst() : data_(0) {}
 
   // INTERNAL USE ONLY
-  explicit JsonVariantConst(const detail::VariantData* data) : data_(data) {}
+  explicit JsonVariantConst(const detail::VariantData* data,
+                            const detail::ResourceManager* resources)
+      : data_(data), resources_(resources) {}
 
   // Returns true if the value is null or the reference is unbound.
   // https://arduinojson.org/v6/api/jsonvariantconst/isnull/
@@ -91,7 +93,8 @@ class JsonVariantConst : public detail::VariantTag,
   // Gets array's element at specified index.
   // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(detail::VariantData::getElement(data_, index));
+    return JsonVariantConst(detail::VariantData::getElement(data_, index),
+                            resources_);
   }
 
   // Gets object's member with specified key.
@@ -101,7 +104,8 @@ class JsonVariantConst : public detail::VariantTag,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
     return JsonVariantConst(
-        detail::VariantData::getMember(data_, detail::adaptString(key)));
+        detail::VariantData::getMember(data_, detail::adaptString(key)),
+        resources_);
   }
 
   // Gets object's member with specified key.
@@ -111,7 +115,8 @@ class JsonVariantConst : public detail::VariantTag,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
     return JsonVariantConst(
-        detail::VariantData::getMember(data_, detail::adaptString(key)));
+        detail::VariantData::getMember(data_, detail::adaptString(key)),
+        resources_);
   }
 
   // Returns true if tge object contains the specified key.
@@ -139,8 +144,13 @@ class JsonVariantConst : public detail::VariantTag,
     return data_;
   }
 
+  const detail::ResourceManager* getResourceManager() const {
+    return resources_;
+  }
+
  private:
   const detail::VariantData* data_;
+  const detail::ResourceManager* resources_;
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

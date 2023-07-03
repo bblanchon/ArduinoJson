@@ -269,7 +269,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
   operator[](const TString& key) const {
-    return JsonVariantConst(data_.getMember(detail::adaptString(key)));
+    return JsonVariantConst(data_.getMember(detail::adaptString(key)),
+                            &resources_);
   }
 
   // Gets a root object's member.
@@ -278,7 +279,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
-    return JsonVariantConst(data_.getMember(detail::adaptString(key)));
+    return JsonVariantConst(data_.getMember(detail::adaptString(key)),
+                            &resources_);
   }
 
   // Gets or sets a root array's element.
@@ -290,7 +292,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Gets a root array's member.
   // https://arduinojson.org/v6/api/jsondocument/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
-    return JsonVariantConst(data_.getElement(index));
+    return JsonVariantConst(data_.getElement(index), &resources_);
   }
 
   // Appends a new (null) element to the root array.
@@ -356,7 +358,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   JsonVariantConst getVariant() const {
-    return JsonVariantConst(&data_);
+    return JsonVariantConst(&data_, &resources_);
   }
 
   void copyAssignFrom(const JsonDocument& src) {

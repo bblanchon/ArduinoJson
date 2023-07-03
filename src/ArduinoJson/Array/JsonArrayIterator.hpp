@@ -65,11 +65,11 @@ class JsonArrayConstIterator {
 
  public:
   JsonArrayConstIterator() {}
-  explicit JsonArrayConstIterator(detail::ArrayData::iterator iterator)
-      : iterator_(iterator) {}
+  explicit JsonArrayConstIterator(detail::ArrayData::iterator iterator, const detail::ResourceManager* resources)
+      : iterator_(iterator), resources_(resources) {}
 
   JsonVariantConst operator*() const {
-    return JsonVariantConst(iterator_.data());
+    return JsonVariantConst(iterator_.data(), resources_);
   }
   Ptr<JsonVariantConst> operator->() {
     return operator*();
@@ -90,6 +90,7 @@ class JsonArrayConstIterator {
 
  private:
   detail::ArrayData::iterator iterator_;
+  const detail::ResourceManager* resources_;
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

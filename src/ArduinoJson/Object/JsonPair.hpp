@@ -43,7 +43,9 @@ class JsonPair {
 // https://arduinojson.org/v6/api/jsonobjectconst/begin_end/
 class JsonPairConst {
  public:
-  JsonPairConst(detail::ObjectData::iterator iterator) : iterator_(iterator) {}
+  JsonPairConst(detail::ObjectData::iterator iterator,
+                const detail::ResourceManager* resources)
+      : iterator_(iterator), resources_(resources) {}
 
   // Returns the key.
   JsonString key() const {
@@ -57,11 +59,12 @@ class JsonPairConst {
 
   // Returns the value.
   JsonVariantConst value() const {
-    return JsonVariantConst(iterator_.data());
+    return JsonVariantConst(iterator_.data(), resources_);
   }
 
  private:
   detail::ObjectData::iterator iterator_;
+  const detail::ResourceManager* resources_;
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

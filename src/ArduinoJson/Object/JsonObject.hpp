@@ -34,11 +34,11 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   }
 
   operator JsonObjectConst() const {
-    return JsonObjectConst(data_);
+    return JsonObjectConst(data_, resources_);
   }
 
   operator JsonVariantConst() const {
-    return JsonVariantConst(collectionToVariant(data_));
+    return JsonVariantConst(collectionToVariant(data_), resources_);
   }
 
   // Returns true if the reference is unbound.

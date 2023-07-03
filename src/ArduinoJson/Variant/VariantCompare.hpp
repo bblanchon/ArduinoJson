@@ -84,7 +84,7 @@ struct ArrayComparer : ComparerBase {
   explicit ArrayComparer(const ArrayData& rhs) : rhs_(&rhs) {}
 
   CompareResult visitArray(const ArrayData& lhs) {
-    if (JsonArrayConst(&lhs) == JsonArrayConst(rhs_))
+    if (JsonArrayConst(&lhs, nullptr) == JsonArrayConst(rhs_, nullptr))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
@@ -97,7 +97,7 @@ struct ObjectComparer : ComparerBase {
   explicit ObjectComparer(const ObjectData& rhs) : rhs_(&rhs) {}
 
   CompareResult visitObject(const ObjectData& lhs) {
-    if (JsonObjectConst(&lhs) == JsonObjectConst(rhs_))
+    if (JsonObjectConst(&lhs, nullptr) == JsonObjectConst(rhs_, nullptr))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
