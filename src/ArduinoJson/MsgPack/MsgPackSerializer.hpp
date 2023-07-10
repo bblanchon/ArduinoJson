@@ -80,11 +80,13 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
   }
 
   size_t visitString(const char* value) {
-    return visitString(value, strlen(value));
+    return visitString(JsonString(value));
   }
 
-  size_t visitString(const char* value, size_t n) {
+  size_t visitString(JsonString value) {
     ARDUINOJSON_ASSERT(value != NULL);
+
+    auto n = value.size();
 
     if (n < 0x20) {
       writeByte(uint8_t(0xA0 + n));
@@ -98,7 +100,7 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
       writeByte(0xDB);
       writeInteger(uint32_t(n));
     }
-    writeBytes(reinterpret_cast<const uint8_t*>(value), n);
+    writeBytes(reinterpret_cast<const uint8_t*>(value.c_str()), n);
     return bytesWritten();
   }
 

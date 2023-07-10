@@ -47,7 +47,7 @@ struct JsonVariantVisitor {
     return TResult();
   }
 
-  TResult visitString(const char*, size_t) {
+  TResult visitString(JsonString) {
     return TResult();
   }
 };
@@ -72,8 +72,8 @@ class VisitorAdapter {
     return visitor_->visitFloat(value);
   }
 
-  result_type visitString(const char* s, size_t n) {
-    return visitor_->visitString(s, n);
+  result_type visitString(JsonString value) {
+    return visitor_->visitString(value);
   }
 
   result_type visitRawString(const char* p, size_t n) {

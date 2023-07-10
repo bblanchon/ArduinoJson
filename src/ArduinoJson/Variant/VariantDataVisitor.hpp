@@ -47,7 +47,7 @@ struct VariantDataVisitor {
     return TResult();
   }
 
-  TResult visitString(const char*, size_t) {
+  TResult visitString(JsonString) {
     return TResult();
   }
 };

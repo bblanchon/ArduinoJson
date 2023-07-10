@@ -37,12 +37,12 @@ class VariantData {
         return visitor.visitObject(content_.asObject);
 
       case VALUE_IS_LINKED_STRING:
-        return visitor.visitString(content_.asLinkedString,
-                                   strlen(content_.asLinkedString));
+        return visitor.visitString(JsonString(content_.asLinkedString));
 
       case VALUE_IS_OWNED_STRING:
-        return visitor.visitString(content_.asOwnedString->data,
-                                   content_.asOwnedString->length);
+        return visitor.visitString(JsonString(content_.asOwnedString->data,
+                                              content_.asOwnedString->length,
+                                              JsonString::Copied));
 
       case VALUE_IS_RAW_STRING:
         return visitor.visitRawString(content_.asOwnedString->data,

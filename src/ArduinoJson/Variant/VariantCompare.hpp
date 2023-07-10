@@ -24,8 +24,8 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
 
   explicit Comparer(T value) : rhs(value) {}
 
-  CompareResult visitString(const char* lhs, size_t n) {
-    int i = stringCompare(adaptString(rhs), adaptString(lhs, n));
+  CompareResult visitString(JsonString lhs) {
+    int i = stringCompare(adaptString(rhs), adaptString(lhs));
     if (i < 0)
       return COMPARE_RESULT_GREATER;
     else if (i > 0)
@@ -143,8 +143,8 @@ struct VariantComparer : ComparerBase {
     return reverseResult(comparer);
   }
 
-  CompareResult visitString(const char* lhs, size_t) {
-    Comparer<const char*> comparer(lhs);
+  CompareResult visitString(JsonString lhs) {
+    Comparer<JsonString> comparer(lhs);
     return reverseResult(comparer);
   }
 
