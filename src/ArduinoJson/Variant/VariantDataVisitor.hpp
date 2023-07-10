@@ -12,7 +12,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TResult>
-struct Visitor {
+struct VariantDataVisitor {
   typedef TResult result_type;
 
   TResult visitArray(const ArrayData&) {

@@ -8,11 +8,11 @@
 #include <ArduinoJson/Numbers/arithmeticCompare.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
-#include <ArduinoJson/Variant/Visitor.hpp>
+#include <ArduinoJson/Variant/VariantDataVisitor.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-struct ComparerBase : Visitor<CompareResult> {};
+struct ComparerBase : VariantDataVisitor<CompareResult> {};
 
 template <typename T, typename Enable = void>
 struct Comparer;

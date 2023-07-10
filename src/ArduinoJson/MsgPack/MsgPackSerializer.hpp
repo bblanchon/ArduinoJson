@@ -15,7 +15,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TWriter>
-class MsgPackSerializer : public Visitor<size_t> {
+class MsgPackSerializer : public VariantDataVisitor<size_t> {
  public:
   static const bool producesText = false;
 

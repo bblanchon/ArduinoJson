@@ -7,12 +7,12 @@
 #include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/measure.hpp>
 #include <ArduinoJson/Serialization/serialize.hpp>
-#include <ArduinoJson/Variant/Visitor.hpp>
+#include <ArduinoJson/Variant/VariantDataVisitor.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TWriter>
-class JsonSerializer : public Visitor<size_t> {
+class JsonSerializer : public VariantDataVisitor<size_t> {
  public:
   static const bool producesText = true;
 
