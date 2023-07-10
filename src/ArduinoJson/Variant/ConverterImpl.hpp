@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Json/JsonSerializer.hpp>
 #include <ArduinoJson/Memory/StringBuilder.hpp>
+#include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
@@ -174,11 +175,11 @@ struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
 };
 
 template <>
-struct Converter<decltype(nullptr)> : private detail::VariantAttorney {
-  static void toJson(decltype(nullptr), JsonVariant dst) {
+struct Converter<detail::nullptr_t> : private detail::VariantAttorney {
+  static void toJson(detail::nullptr_t, JsonVariant dst) {
     detail::VariantData::setNull(getData(dst), getResourceManager(dst));
   }
-  static decltype(nullptr) fromJson(JsonVariantConst) {
+  static detail::nullptr_t fromJson(JsonVariantConst) {
     return nullptr;
   }
   static bool checkJson(JsonVariantConst src) {

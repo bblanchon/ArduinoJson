@@ -7,6 +7,7 @@
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Numbers/arithmeticCompare.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/JsonVariantVisitor.hpp>
 
@@ -74,8 +75,8 @@ struct NullComparer : ComparerBase {
 };
 
 template <>
-struct Comparer<decltype(nullptr), void> : NullComparer {
-  explicit Comparer(decltype(nullptr)) : NullComparer() {}
+struct Comparer<nullptr_t, void> : NullComparer {
+  explicit Comparer(nullptr_t) : NullComparer() {}
 };
 
 struct ArrayComparer : ComparerBase {

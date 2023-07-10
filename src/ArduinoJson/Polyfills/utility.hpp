@@ -8,6 +8,8 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
+using nullptr_t = decltype(nullptr);
+
 template <class T>
 T&& forward(typename remove_reference<T>::type& t) noexcept {
   return static_cast<T&&>(t);
