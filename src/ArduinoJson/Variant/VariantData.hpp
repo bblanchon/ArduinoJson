@@ -58,7 +58,7 @@ class VariantData {
         return visitor.visitBoolean(content_.asBoolean != 0);
 
       default:
-        return visitor.visitNull();
+        return visitor.visitNull(nullptr);
     }
   }
 
@@ -68,7 +68,7 @@ class VariantData {
     if (var != 0)
       return var->accept(visitor);
     else
-      return visitor.visitNull();
+      return visitor.visitNull(nullptr);
   }
 
   VariantData* addElement(ResourceManager* resources) {

@@ -172,7 +172,7 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitNull() {
+  size_t visitNull(nullptr_t) {
     writeByte(0xC0);
     return bytesWritten();
   }

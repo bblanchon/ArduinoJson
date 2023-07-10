@@ -35,7 +35,7 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
       return COMPARE_RESULT_EQUAL;
   }
 
-  CompareResult visitNull() {
+  CompareResult visitNull(nullptr_t) {
     if (adaptString(rhs).isNull())
       return COMPARE_RESULT_EQUAL;
     else
@@ -69,7 +69,7 @@ struct Comparer<T, typename enable_if<is_integral<T>::value ||
 };
 
 struct NullComparer : ComparerBase {
-  CompareResult visitNull() {
+  CompareResult visitNull(nullptr_t) {
     return COMPARE_RESULT_EQUAL;
   }
 };
@@ -167,7 +167,7 @@ struct VariantComparer : ComparerBase {
     return reverseResult(comparer);
   }
 
-  CompareResult visitNull() {
+  CompareResult visitNull(nullptr_t) {
     NullComparer comparer;
     return reverseResult(comparer);
   }

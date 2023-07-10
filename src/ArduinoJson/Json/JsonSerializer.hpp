@@ -93,7 +93,7 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitNull() {
+  size_t visitNull(nullptr_t) {
     formatter_.writeRaw("null");
     return bytesWritten();
   }

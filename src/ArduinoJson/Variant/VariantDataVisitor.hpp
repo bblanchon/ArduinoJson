@@ -31,7 +31,7 @@ struct VariantDataVisitor {
     return TResult();
   }
 
-  TResult visitNull() {
+  TResult visitNull(nullptr_t) {
     return TResult();
   }
 

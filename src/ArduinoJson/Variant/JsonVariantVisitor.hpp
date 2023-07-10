@@ -31,7 +31,7 @@ struct JsonVariantVisitor {
     return TResult();
   }
 
-  TResult visitNull() {
+  TResult visitNull(nullptr_t) {
     return TResult();
   }
 
@@ -92,8 +92,8 @@ class VisitorAdapter {
     return visitor_->visitBoolean(value);
   }
 
-  result_type visitNull() {
-    return visitor_->visitNull();
+  result_type visitNull(nullptr_t) {
+    return visitor_->visitNull(nullptr);
   }
 
  private:
@@ -106,7 +106,7 @@ typename TVisitor::result_type accept(JsonVariantConst variant,
                                       TVisitor& visitor) {
   auto data = VariantAttorney::getData(variant);
   if (!data)
-    return visitor.visitNull();
+    return visitor.visitNull(nullptr);
   auto resources = VariantAttorney::getResourceManager(variant);
   VisitorAdapter<TVisitor> adapter(visitor, resources);
   return data->accept(adapter);
