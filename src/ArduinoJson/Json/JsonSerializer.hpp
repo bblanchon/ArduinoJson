@@ -73,8 +73,8 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitRawString(const char* data, size_t n) {
-    formatter_.writeRaw(data, n);
+  size_t visitRawString(RawString value) {
+    formatter_.writeRaw(value.data(), value.size());
     return bytesWritten();
   }
 

@@ -51,6 +51,8 @@ class SerializedValue<TChar*> {
   size_t size_;
 };
 
+using RawString = SerializedValue<const char*>;
+
 template <typename T>
 inline SerializedValue<T> serialized(T str) {
   return SerializedValue<T>(str);

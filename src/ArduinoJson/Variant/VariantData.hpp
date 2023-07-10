@@ -45,8 +45,8 @@ class VariantData {
                                               JsonString::Copied));
 
       case VALUE_IS_RAW_STRING:
-        return visitor.visitRawString(content_.asOwnedString->data,
-                                      content_.asOwnedString->length);
+        return visitor.visitRawString(RawString(
+            content_.asOwnedString->data, content_.asOwnedString->length));
 
       case VALUE_IS_SIGNED_INTEGER:
         return visitor.visitSignedInteger(content_.asSignedInteger);

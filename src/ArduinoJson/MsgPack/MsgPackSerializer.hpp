@@ -104,8 +104,8 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitRawString(const char* data, size_t size) {
-    writeBytes(reinterpret_cast<const uint8_t*>(data), size);
+  size_t visitRawString(RawString value) {
+    writeBytes(reinterpret_cast<const uint8_t*>(value.data()), value.size());
     return bytesWritten();
   }
 

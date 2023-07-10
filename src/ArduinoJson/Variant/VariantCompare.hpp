@@ -105,15 +105,13 @@ struct ObjectComparer : ComparerBase {
 };
 
 struct RawComparer : ComparerBase {
-  const char* rhsData_;
-  size_t rhsSize_;
+  RawString rhs_;
 
-  explicit RawComparer(const char* rhsData, size_t rhsSize)
-      : rhsData_(rhsData), rhsSize_(rhsSize) {}
+  explicit RawComparer(RawString rhs) : rhs_(rhs) {}
 
-  CompareResult visitRawString(const char* lhsData, size_t lhsSize) {
-    size_t size = rhsSize_ < lhsSize ? rhsSize_ : lhsSize;
-    int n = memcmp(lhsData, rhsData_, size);
+  CompareResult visitRawString(RawString lhs) {
+    size_t size = rhs_.size() < lhs.size() ? rhs_.size() : lhs.size();
+    int n = memcmp(lhs.data(), rhs_.data(), size);
     if (n < 0)
       return COMPARE_RESULT_LESS;
     else if (n > 0)
@@ -148,8 +146,8 @@ struct VariantComparer : ComparerBase {
     return reverseResult(comparer);
   }
 
-  CompareResult visitRawString(const char* lhsData, size_t lhsSize) {
-    RawComparer comparer(lhsData, lhsSize);
+  CompareResult visitRawString(RawString value) {
+    RawComparer comparer(value);
     return reverseResult(comparer);
   }
 

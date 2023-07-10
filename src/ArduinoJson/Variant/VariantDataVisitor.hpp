@@ -43,7 +43,7 @@ struct VariantDataVisitor {
     return TResult();
   }
 
-  TResult visitRawString(const char*, size_t) {
+  TResult visitRawString(RawString) {
     return TResult();
   }
 
