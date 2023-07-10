@@ -302,9 +302,11 @@ struct ConverterNeedsWriteableRef {
 
 template <>
 struct Converter<JsonArrayConst> : private detail::VariantAttorney {
-  static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
+  static void toJson(JsonArrayConst src, JsonVariant dst) {
+    if (src.isNull())
+      dst.set(nullptr);
+    else
+      dst.to<JsonArray>().set(src);
   }
 
   static JsonArrayConst fromJson(JsonVariantConst src) {
@@ -322,8 +324,10 @@ struct Converter<JsonArrayConst> : private detail::VariantAttorney {
 template <>
 struct Converter<JsonArray> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
+    if (src.isNull())
+      dst.set(nullptr);
+    else
+      dst.to<JsonArray>().set(src);
   }
 
   static JsonArray fromJson(JsonVariant src) {
@@ -348,8 +352,10 @@ struct Converter<JsonArray> : private detail::VariantAttorney {
 template <>
 struct Converter<JsonObjectConst> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
+    if (src.isNull())
+      dst.set(nullptr);
+    else
+      dst.to<JsonObject>().set(src);
   }
 
   static JsonObjectConst fromJson(JsonVariantConst src) {
@@ -367,8 +373,10 @@ struct Converter<JsonObjectConst> : private detail::VariantAttorney {
 template <>
 struct Converter<JsonObject> : private detail::VariantAttorney {
   static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
+    if (src.isNull())
+      dst.set(nullptr);
+    else
+      dst.to<JsonObject>().set(src);
   }
 
   static JsonObject fromJson(JsonVariant src) {

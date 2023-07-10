@@ -24,9 +24,8 @@ inline bool ArrayData::copyFrom(const ArrayData& src,
 
   for (auto it = src.createIterator(); !it.done(); it.next()) {
     auto var = addElement(resources);
-    if (!var)
-      return false;
-    if (!var->copyFrom(*it, resources))
+    if (!copyVariant(JsonVariant(var, resources),
+                     JsonVariantConst(it.data(), resources)))
       return false;
   }
   return true;

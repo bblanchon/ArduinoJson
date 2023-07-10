@@ -185,47 +185,6 @@ class VariantData {
     }
   }
 
-  bool copyFrom(const VariantData& src, ResourceManager* resources) {
-    release(resources);
-    switch (src.type()) {
-      case VALUE_IS_ARRAY:
-        return toArray().copyFrom(src.content_.asArray, resources);
-      case VALUE_IS_OBJECT:
-        return toObject().copyFrom(src.content_.asObject, resources);
-      case VALUE_IS_OWNED_STRING: {
-        auto str = adaptString(src.asString());
-        auto dup = resources->saveString(str);
-        if (!dup)
-          return false;
-        setOwnedString(dup);
-        return true;
-      }
-      case VALUE_IS_RAW_STRING: {
-        auto str = adaptString(src.asRawString());
-        auto dup = resources->saveString(str);
-        if (!dup)
-          return false;
-        setRawString(dup);
-        return true;
-      }
-      default:
-        content_ = src.content_;
-        flags_ = src.flags_;
-        return true;
-    }
-  }
-
-  static bool copy(VariantData* dst, const VariantData* src,
-                   ResourceManager* resources) {
-    if (!dst)
-      return false;
-    if (!src) {
-      dst->setNull();
-      return true;
-    }
-    return dst->copyFrom(*src, resources);
-  }
-
   VariantData* getElement(size_t index) const {
     auto array = asArray();
     if (!array)
