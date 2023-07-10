@@ -97,7 +97,7 @@ struct ObjectComparer : ComparerBase {
   explicit ObjectComparer(const ObjectData& rhs) : rhs_(&rhs) {}
 
   CompareResult visitObject(const ObjectData& lhs) {
-    if (rhs_->equals(lhs))
+    if (JsonObjectConst(&lhs) == JsonObjectConst(rhs_))
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;

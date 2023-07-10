@@ -106,11 +106,6 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
         detail::ObjectData::getMember(data_, detail::adaptString(key)));
   }
 
-  // Compares objects.
-  FORCE_INLINE bool operator==(JsonObjectConst rhs) const {
-    return detail::ObjectData::equals(data_, rhs.data_);
-  }
-
  private:
   const detail::VariantData* getData() const {
     return collectionToVariant(data_);
@@ -136,5 +131,24 @@ struct Converter<JsonObjectConst> : private detail::VariantAttorney {
     return data && data->isObject();
   }
 };
+
+inline bool operator==(JsonObjectConst lhs, JsonObjectConst rhs) {
+  if (!lhs && !rhs)  // both are null
+    return true;
+
+  if (!lhs || !rhs)  // only one is null
+    return false;
+
+  size_t count = 0;
+  for (auto kvp : lhs) {
+    auto rhsValue = rhs[kvp.key()];
+    if (rhsValue.isUnbound())
+      return false;
+    if (kvp.value() != rhsValue)
+      return false;
+    count++;
+  }
+  return count == rhs.size();
+}
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

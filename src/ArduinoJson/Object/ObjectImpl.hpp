@@ -57,20 +57,6 @@ inline bool ObjectData::copyFrom(const ObjectData& src,
   return true;
 }
 
-inline bool ObjectData::equals(const ObjectData& other) const {
-  size_t count = 0;
-  for (auto it = begin(); it; ++it) {
-    auto a = it.data();
-    auto b = other.getMember(adaptString(it.key()));
-    if (!b)
-      return false;
-    if (compare(a, b) != COMPARE_RESULT_EQUAL)
-      return false;
-    count++;
-  }
-  return count == other.size();
-}
-
 template <typename TAdaptedString>
 inline VariantData* ObjectData::getMember(TAdaptedString key) const {
   return findKey(key).data();

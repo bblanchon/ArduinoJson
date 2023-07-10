@@ -98,11 +98,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
     return detail::ObjectData::copy(data_, src.data_, resources_);
   }
 
-  // Compares the content of two objects.
-  FORCE_INLINE bool operator==(JsonObject rhs) const {
-    return detail::ObjectData::equals(data_, rhs.data_);
-  }
-
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v6/api/jsonobject/subscript/
   template <typename TString>

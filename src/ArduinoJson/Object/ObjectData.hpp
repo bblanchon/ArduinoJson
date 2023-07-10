@@ -25,18 +25,6 @@ class ObjectData : public CollectionData {
     return dst->copyFrom(*src, resources);
   }
 
-  bool equals(const ObjectData& other) const;
-
-  static bool equals(const ObjectData* lhs, const ObjectData* rhs) {
-    if (lhs == rhs)
-      return true;
-
-    if (!lhs || !rhs)
-      return false;
-
-    return lhs->equals(*rhs);
-  }
-
   template <typename TAdaptedString>
   VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources);
 
