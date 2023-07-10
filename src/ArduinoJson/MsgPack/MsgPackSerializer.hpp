@@ -22,11 +22,13 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
   MsgPackSerializer(TWriter writer) : writer_(writer) {}
 
   template <typename T>
-  typename enable_if<sizeof(T) == 4, size_t>::type visitFloat(T value32) {
+  typename enable_if<is_floating_point<T>::value && sizeof(T) == 4,
+                     size_t>::type
+  visit(T value32) {
     if (canConvertNumber<JsonInteger>(value32)) {
       JsonInteger truncatedValue = JsonInteger(value32);
       if (value32 == T(truncatedValue))
-        return visitSignedInteger(truncatedValue);
+        return visit(truncatedValue);
     }
     writeByte(0xCA);
     writeInteger(value32);
@@ -35,16 +37,17 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
 
   template <typename T>
   ARDUINOJSON_NO_SANITIZE("float-cast-overflow")
-  typename enable_if<sizeof(T) == 8, size_t>::type visitFloat(T value64) {
+  typename enable_if<is_floating_point<T>::value && sizeof(T) == 8,
+                     size_t>::type visit(T value64) {
     float value32 = float(value64);
     if (value32 == value64)
-      return visitFloat(value32);
+      return visit(value32);
     writeByte(0xCB);
     writeInteger(value64);
     return bytesWritten();
   }
 
-  size_t visitArray(const ArrayData& array) {
+  size_t visit(const ArrayData& array) {
     size_t n = array.size();
     if (n < 0x10) {
       writeByte(uint8_t(0x90 + n));
@@ -61,7 +64,7 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitObject(const ObjectData& object) {
+  size_t visit(const ObjectData& object) {
     size_t n = object.size();
     if (n < 0x10) {
       writeByte(uint8_t(0x80 + n));
@@ -73,17 +76,17 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
       writeInteger(uint32_t(n));
     }
     for (auto it = object.createIterator(); !it.done(); it.next()) {
-      visitString(it.key());
+      visit(it.key());
       it->accept(*this);
     }
     return bytesWritten();
   }
 
-  size_t visitString(const char* value) {
-    return visitString(JsonString(value));
+  size_t visit(const char* value) {
+    return visit(JsonString(value));
   }
 
-  size_t visitString(JsonString value) {
+  size_t visit(JsonString value) {
     ARDUINOJSON_ASSERT(value != NULL);
 
     auto n = value.size();
@@ -104,14 +107,14 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitRawString(RawString value) {
+  size_t visit(RawString value) {
     writeBytes(reinterpret_cast<const uint8_t*>(value.data()), value.size());
     return bytesWritten();
   }
 
-  size_t visitSignedInteger(JsonInteger value) {
+  size_t visit(JsonInteger value) {
     if (value > 0) {
-      visitUnsignedInteger(static_cast<JsonUInt>(value));
+      visit(static_cast<JsonUInt>(value));
     } else if (value >= -0x20) {
       writeInteger(int8_t(value));
     } else if (value >= -0x80) {
@@ -139,7 +142,7 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitUnsignedInteger(JsonUInt value) {
+  size_t visit(JsonUInt value) {
     if (value <= 0x7F) {
       writeInteger(uint8_t(value));
     } else if (value <= 0xFF) {
@@ -167,12 +170,12 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitBoolean(bool value) {
+  size_t visit(bool value) {
     writeByte(value ? 0xC3 : 0xC2);
     return bytesWritten();
   }
 
-  size_t visitNull(nullptr_t) {
+  size_t visit(nullptr_t) {
     writeByte(0xC0);
     return bytesWritten();
   }

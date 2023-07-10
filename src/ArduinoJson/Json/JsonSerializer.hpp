@@ -18,7 +18,7 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
 
   JsonSerializer(TWriter writer) : formatter_(writer) {}
 
-  FORCE_INLINE size_t visitArray(const ArrayData& array) {
+  FORCE_INLINE size_t visit(const ArrayData& array) {
     write('[');
 
     auto it = array.createIterator();
@@ -37,7 +37,7 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitObject(const ObjectData& object) {
+  size_t visit(const ObjectData& object) {
     write('{');
 
     auto it = object.createIterator();
@@ -58,42 +58,42 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visitFloat(JsonFloat value) {
+  size_t visit(JsonFloat value) {
     formatter_.writeFloat(value);
     return bytesWritten();
   }
 
-  size_t visitString(const char* value) {
+  size_t visit(const char* value) {
     formatter_.writeString(value);
     return bytesWritten();
   }
 
-  size_t visitString(JsonString value) {
+  size_t visit(JsonString value) {
     formatter_.writeString(value.c_str(), value.size());
     return bytesWritten();
   }
 
-  size_t visitRawString(RawString value) {
+  size_t visit(RawString value) {
     formatter_.writeRaw(value.data(), value.size());
     return bytesWritten();
   }
 
-  size_t visitSignedInteger(JsonInteger value) {
+  size_t visit(JsonInteger value) {
     formatter_.writeInteger(value);
     return bytesWritten();
   }
 
-  size_t visitUnsignedInteger(JsonUInt value) {
+  size_t visit(JsonUInt value) {
     formatter_.writeInteger(value);
     return bytesWritten();
   }
 
-  size_t visitBoolean(bool value) {
+  size_t visit(bool value) {
     formatter_.writeBoolean(value);
     return bytesWritten();
   }
 
-  size_t visitNull(nullptr_t) {
+  size_t visit(nullptr_t) {
     formatter_.writeRaw("null");
     return bytesWritten();
   }

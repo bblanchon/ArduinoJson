@@ -15,39 +15,8 @@ template <typename TResult>
 struct VariantDataVisitor {
   typedef TResult result_type;
 
-  TResult visitArray(const ArrayData&) {
-    return TResult();
-  }
-
-  TResult visitBoolean(bool) {
-    return TResult();
-  }
-
-  TResult visitFloat(JsonFloat) {
-    return TResult();
-  }
-
-  TResult visitSignedInteger(JsonInteger) {
-    return TResult();
-  }
-
-  TResult visitNull(nullptr_t) {
-    return TResult();
-  }
-
-  TResult visitObject(const ObjectData&) {
-    return TResult();
-  }
-
-  TResult visitUnsignedInteger(JsonUInt) {
-    return TResult();
-  }
-
-  TResult visitRawString(RawString) {
-    return TResult();
-  }
-
-  TResult visitString(JsonString) {
+  template <typename T>
+  TResult visit(const T&) {
     return TResult();
   }
 };

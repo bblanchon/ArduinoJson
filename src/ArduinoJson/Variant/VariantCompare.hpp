@@ -25,7 +25,7 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
 
   explicit Comparer(T value) : rhs(value) {}
 
-  CompareResult visitString(JsonString lhs) {
+  CompareResult visit(JsonString lhs) {
     int i = stringCompare(adaptString(rhs), adaptString(lhs));
     if (i < 0)
       return COMPARE_RESULT_GREATER;
@@ -35,12 +35,14 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
       return COMPARE_RESULT_EQUAL;
   }
 
-  CompareResult visitNull(nullptr_t) {
+  CompareResult visit(nullptr_t) {
     if (adaptString(rhs).isNull())
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
   }
+
+  using ComparerBase::visit;
 };
 
 template <typename T>
@@ -51,27 +53,31 @@ struct Comparer<T, typename enable_if<is_integral<T>::value ||
 
   explicit Comparer(T value) : rhs(value) {}
 
-  CompareResult visitFloat(JsonFloat lhs) {
+  CompareResult visit(JsonFloat lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visitSignedInteger(JsonInteger lhs) {
+  CompareResult visit(JsonInteger lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visitUnsignedInteger(JsonUInt lhs) {
+  CompareResult visit(JsonUInt lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visitBoolean(bool lhs) {
-    return visitUnsignedInteger(static_cast<JsonUInt>(lhs));
+  CompareResult visit(bool lhs) {
+    return visit(static_cast<JsonUInt>(lhs));
   }
+
+  using ComparerBase::visit;
 };
 
 struct NullComparer : ComparerBase {
-  CompareResult visitNull(nullptr_t) {
+  CompareResult visit(nullptr_t) {
     return COMPARE_RESULT_EQUAL;
   }
+
+  using ComparerBase::visit;
 };
 
 template <>
@@ -84,12 +90,14 @@ struct ArrayComparer : ComparerBase {
 
   explicit ArrayComparer(JsonArrayConst rhs) : rhs_(rhs) {}
 
-  CompareResult visitArray(JsonArrayConst lhs) {
+  CompareResult visit(JsonArrayConst lhs) {
     if (rhs_ == lhs)
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
   }
+
+  using ComparerBase::visit;
 };
 
 struct ObjectComparer : ComparerBase {
@@ -97,12 +105,14 @@ struct ObjectComparer : ComparerBase {
 
   explicit ObjectComparer(JsonObjectConst rhs) : rhs_(rhs) {}
 
-  CompareResult visitObject(JsonObjectConst lhs) {
+  CompareResult visit(JsonObjectConst lhs) {
     if (lhs == rhs_)
       return COMPARE_RESULT_EQUAL;
     else
       return COMPARE_RESULT_DIFFER;
   }
+
+  using ComparerBase::visit;
 };
 
 struct RawComparer : ComparerBase {
@@ -110,7 +120,7 @@ struct RawComparer : ComparerBase {
 
   explicit RawComparer(RawString rhs) : rhs_(rhs) {}
 
-  CompareResult visitRawString(RawString lhs) {
+  CompareResult visit(RawString lhs) {
     size_t size = rhs_.size() < lhs.size() ? rhs_.size() : lhs.size();
     int n = memcmp(lhs.data(), rhs_.data(), size);
     if (n < 0)
@@ -120,6 +130,8 @@ struct RawComparer : ComparerBase {
     else
       return COMPARE_RESULT_EQUAL;
   }
+
+  using ComparerBase::visit;
 };
 
 struct VariantComparer : ComparerBase {
@@ -127,47 +139,47 @@ struct VariantComparer : ComparerBase {
 
   explicit VariantComparer(JsonVariantConst value) : rhs(value) {}
 
-  CompareResult visitArray(JsonArrayConst lhs) {
+  CompareResult visit(JsonArrayConst lhs) {
     ArrayComparer comparer(lhs);
     return reverseResult(comparer);
   }
 
-  CompareResult visitObject(JsonObjectConst lhs) {
+  CompareResult visit(JsonObjectConst lhs) {
     ObjectComparer comparer(lhs);
     return reverseResult(comparer);
   }
 
-  CompareResult visitFloat(JsonFloat lhs) {
+  CompareResult visit(JsonFloat lhs) {
     Comparer<JsonFloat> comparer(lhs);
     return reverseResult(comparer);
   }
 
-  CompareResult visitString(JsonString lhs) {
+  CompareResult visit(JsonString lhs) {
     Comparer<JsonString> comparer(lhs);
     return reverseResult(comparer);
   }
 
-  CompareResult visitRawString(RawString value) {
+  CompareResult visit(RawString value) {
     RawComparer comparer(value);
     return reverseResult(comparer);
   }
 
-  CompareResult visitSignedInteger(JsonInteger lhs) {
+  CompareResult visit(JsonInteger lhs) {
     Comparer<JsonInteger> comparer(lhs);
     return reverseResult(comparer);
   }
 
-  CompareResult visitUnsignedInteger(JsonUInt lhs) {
+  CompareResult visit(JsonUInt lhs) {
     Comparer<JsonUInt> comparer(lhs);
     return reverseResult(comparer);
   }
 
-  CompareResult visitBoolean(bool lhs) {
+  CompareResult visit(bool lhs) {
     Comparer<bool> comparer(lhs);
     return reverseResult(comparer);
   }
 
-  CompareResult visitNull(nullptr_t) {
+  CompareResult visit(nullptr_t) {
     NullComparer comparer;
     return reverseResult(comparer);
   }

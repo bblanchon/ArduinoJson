@@ -25,50 +25,50 @@ class VariantData {
   VariantData() : flags_(VALUE_IS_NULL) {}
 
   template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor& visitor) const {
+  typename TVisitor::result_type accept(TVisitor& visit) const {
     switch (type()) {
       case VALUE_IS_FLOAT:
-        return visitor.visitFloat(content_.asFloat);
+        return visit.visit(content_.asFloat);
 
       case VALUE_IS_ARRAY:
-        return visitor.visitArray(content_.asArray);
+        return visit.visit(content_.asArray);
 
       case VALUE_IS_OBJECT:
-        return visitor.visitObject(content_.asObject);
+        return visit.visit(content_.asObject);
 
       case VALUE_IS_LINKED_STRING:
-        return visitor.visitString(JsonString(content_.asLinkedString));
+        return visit.visit(JsonString(content_.asLinkedString));
 
       case VALUE_IS_OWNED_STRING:
-        return visitor.visitString(JsonString(content_.asOwnedString->data,
-                                              content_.asOwnedString->length,
-                                              JsonString::Copied));
+        return visit.visit(JsonString(content_.asOwnedString->data,
+                                      content_.asOwnedString->length,
+                                      JsonString::Copied));
 
       case VALUE_IS_RAW_STRING:
-        return visitor.visitRawString(RawString(
-            content_.asOwnedString->data, content_.asOwnedString->length));
+        return visit.visit(RawString(content_.asOwnedString->data,
+                                     content_.asOwnedString->length));
 
       case VALUE_IS_SIGNED_INTEGER:
-        return visitor.visitSignedInteger(content_.asSignedInteger);
+        return visit.visit(content_.asSignedInteger);
 
       case VALUE_IS_UNSIGNED_INTEGER:
-        return visitor.visitUnsignedInteger(content_.asUnsignedInteger);
+        return visit.visit(content_.asUnsignedInteger);
 
       case VALUE_IS_BOOLEAN:
-        return visitor.visitBoolean(content_.asBoolean != 0);
+        return visit.visit(content_.asBoolean != 0);
 
       default:
-        return visitor.visitNull(nullptr);
+        return visit.visit(nullptr);
     }
   }
 
   template <typename TVisitor>
   static typename TVisitor::result_type accept(const VariantData* var,
-                                               TVisitor& visitor) {
+                                               TVisitor& visit) {
     if (var != 0)
-      return var->accept(visitor);
+      return var->accept(visit);
     else
-      return visitor.visitNull(nullptr);
+      return visit.visit(nullptr);
   }
 
   VariantData* addElement(ResourceManager* resources) {
