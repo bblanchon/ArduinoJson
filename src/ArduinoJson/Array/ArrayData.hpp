@@ -37,17 +37,6 @@ class ArrayData : public CollectionData {
     array->removeElement(index, resources);
   }
 
-  bool equals(const ArrayData&) const;
-
-  static bool equals(const ArrayData* lhs, const ArrayData* rhs) {
-    if (lhs == rhs)
-      return true;
-    if (!lhs || !rhs)
-      return false;
-
-    return lhs->equals(*rhs);
-  }
-
   bool copyFrom(const ArrayData& src, ResourceManager* resources);
 
   static bool copy(ArrayData* dst, const ArrayData* src,

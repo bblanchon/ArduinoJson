@@ -40,22 +40,6 @@ inline bool ArrayData::copyFrom(const ArrayData& src,
   return true;
 }
 
-inline bool ArrayData::equals(const ArrayData& other) const {
-  auto a = begin();
-  auto b = other.begin();
-
-  for (;;) {
-    if (!a && !b)  // both ended
-      return true;
-    if (!a || !b)  // one ended
-      return false;
-    if (compare(a.data(), b.data()) != COMPARE_RESULT_EQUAL)
-      return false;
-    ++a;
-    ++b;
-  }
-}
-
 inline VariantData* ArrayData::getOrAddElement(size_t index,
                                                ResourceManager* resources) {
   auto it = begin();

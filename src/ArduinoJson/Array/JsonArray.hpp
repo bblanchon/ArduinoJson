@@ -83,11 +83,6 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
     return detail::ArrayData::copy(data_, src.data_, resources_);
   }
 
-  // Compares the content of two arrays.
-  FORCE_INLINE bool operator==(JsonArray rhs) const {
-    return detail::ArrayData::equals(data_, rhs.data_);
-  }
-
   // Removes the element at the specified iterator.
   // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v6/api/jsonarray/remove/

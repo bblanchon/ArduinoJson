@@ -41,12 +41,6 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // INTERNAL USE ONLY
   FORCE_INLINE JsonArrayConst(const detail::ArrayData* data) : data_(data) {}
 
-  // Compares the content of two arrays.
-  // Returns true if the two arrays are equal.
-  FORCE_INLINE bool operator==(JsonArrayConst rhs) const {
-    return detail::ArrayData::equals(data_, rhs.data_);
-  }
-
   // Returns the element at the specified index.
   // https://arduinojson.org/v6/api/jsonarrayconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
@@ -112,5 +106,28 @@ struct Converter<JsonArrayConst> : private detail::VariantAttorney {
     return data && data->isArray();
   }
 };
+
+// Compares the content of two arrays.
+// Returns true if the two arrays are equal.
+inline bool operator==(JsonArrayConst lhs, JsonArrayConst rhs) {
+  if (!lhs && !rhs)
+    return true;
+  if (!lhs || !rhs)
+    return false;
+
+  auto a = lhs.begin();
+  auto b = rhs.begin();
+
+  for (;;) {
+    if (a == b)  // same pointer or both null
+      return true;
+    if (a == lhs.end() || b == rhs.end())
+      return false;
+    if (*a != *b)
+      return false;
+    ++a;
+    ++b;
+  }
+}
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE
