@@ -118,25 +118,6 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   const detail::ResourceManager* resources_;
 };
 
-template <>
-struct Converter<JsonObjectConst> : private detail::VariantAttorney {
-  static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
-  }
-
-  static JsonObjectConst fromJson(JsonVariantConst src) {
-    auto data = getData(src);
-    auto object = data != 0 ? data->asObject() : nullptr;
-    return JsonObjectConst(object, getResourceManager(src));
-  }
-
-  static bool checkJson(JsonVariantConst src) {
-    auto data = getData(src);
-    return data && data->isObject();
-  }
-};
-
 inline bool operator==(JsonObjectConst lhs, JsonObjectConst rhs) {
   if (!lhs && !rhs)  // both are null
     return true;

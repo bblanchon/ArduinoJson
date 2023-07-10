@@ -202,32 +202,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   detail::ResourceManager* resources_;
 };
 
-template <>
-struct Converter<JsonObject> : private detail::VariantAttorney {
-  static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
-  }
-
-  static JsonObject fromJson(JsonVariant src) {
-    auto data = getData(src);
-    auto resources = getResourceManager(src);
-    return JsonObject(data != 0 ? data->asObject() : 0, resources);
-  }
-
-  static detail::InvalidConversion<JsonVariantConst, JsonObject> fromJson(
-      JsonVariantConst);
-
-  static bool checkJson(JsonVariantConst) {
-    return false;
-  }
-
-  static bool checkJson(JsonVariant src) {
-    auto data = getData(src);
-    return data && data->isObject();
-  }
-};
-
 ARDUINOJSON_END_PUBLIC_NAMESPACE
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE

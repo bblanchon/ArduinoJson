@@ -171,32 +171,6 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   detail::ResourceManager* resources_;
 };
 
-template <>
-struct Converter<JsonArray> : private detail::VariantAttorney {
-  static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
-  }
-
-  static JsonArray fromJson(JsonVariant src) {
-    auto data = getData(src);
-    auto resources = getResourceManager(src);
-    return JsonArray(data != 0 ? data->asArray() : 0, resources);
-  }
-
-  static detail::InvalidConversion<JsonVariantConst, JsonArray> fromJson(
-      JsonVariantConst);
-
-  static bool checkJson(JsonVariantConst) {
-    return false;
-  }
-
-  static bool checkJson(JsonVariant src) {
-    auto data = getData(src);
-    return data && data->isArray();
-  }
-};
-
 ARDUINOJSON_END_PUBLIC_NAMESPACE
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE

@@ -300,4 +300,94 @@ struct ConverterNeedsWriteableRef {
 };
 }  // namespace detail
 
+template <>
+struct Converter<JsonArrayConst> : private detail::VariantAttorney {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
+  }
+
+  static JsonArrayConst fromJson(JsonVariantConst src) {
+    auto data = getData(src);
+    auto array = data ? data->asArray() : nullptr;
+    return JsonArrayConst(array, getResourceManager(src));
+  }
+
+  static bool checkJson(JsonVariantConst src) {
+    auto data = getData(src);
+    return data && data->isArray();
+  }
+};
+
+template <>
+struct Converter<JsonArray> : private detail::VariantAttorney {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
+  }
+
+  static JsonArray fromJson(JsonVariant src) {
+    auto data = getData(src);
+    auto resources = getResourceManager(src);
+    return JsonArray(data != 0 ? data->asArray() : 0, resources);
+  }
+
+  static detail::InvalidConversion<JsonVariantConst, JsonArray> fromJson(
+      JsonVariantConst);
+
+  static bool checkJson(JsonVariantConst) {
+    return false;
+  }
+
+  static bool checkJson(JsonVariant src) {
+    auto data = getData(src);
+    return data && data->isArray();
+  }
+};
+
+template <>
+struct Converter<JsonObjectConst> : private detail::VariantAttorney {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
+  }
+
+  static JsonObjectConst fromJson(JsonVariantConst src) {
+    auto data = getData(src);
+    auto object = data != 0 ? data->asObject() : nullptr;
+    return JsonObjectConst(object, getResourceManager(src));
+  }
+
+  static bool checkJson(JsonVariantConst src) {
+    auto data = getData(src);
+    return data && data->isObject();
+  }
+};
+
+template <>
+struct Converter<JsonObject> : private detail::VariantAttorney {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
+    detail::VariantData::copy(getData(dst), getData(src),
+                              getResourceManager(dst));
+  }
+
+  static JsonObject fromJson(JsonVariant src) {
+    auto data = getData(src);
+    auto resources = getResourceManager(src);
+    return JsonObject(data != 0 ? data->asObject() : 0, resources);
+  }
+
+  static detail::InvalidConversion<JsonVariantConst, JsonObject> fromJson(
+      JsonVariantConst);
+
+  static bool checkJson(JsonVariantConst) {
+    return false;
+  }
+
+  static bool checkJson(JsonVariant src) {
+    auto data = getData(src);
+    return data && data->isObject();
+  }
+};
+
 ARDUINOJSON_END_PUBLIC_NAMESPACE

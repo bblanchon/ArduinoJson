@@ -93,25 +93,6 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   const detail::ResourceManager* resources_;
 };
 
-template <>
-struct Converter<JsonArrayConst> : private detail::VariantAttorney {
-  static void toJson(JsonVariantConst src, JsonVariant dst) {
-    detail::VariantData::copy(getData(dst), getData(src),
-                              getResourceManager(dst));
-  }
-
-  static JsonArrayConst fromJson(JsonVariantConst src) {
-    auto data = getData(src);
-    auto array = data ? data->asArray() : nullptr;
-    return JsonArrayConst(array, getResourceManager(src));
-  }
-
-  static bool checkJson(JsonVariantConst src) {
-    auto data = getData(src);
-    return data && data->isArray();
-  }
-};
-
 // Compares the content of two arrays.
 // Returns true if the two arrays are equal.
 inline bool operator==(JsonArrayConst lhs, JsonArrayConst rhs) {
