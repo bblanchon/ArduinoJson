@@ -80,7 +80,16 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Copies an array.
   // https://arduinojson.org/v6/api/jsonarray/set/
   FORCE_INLINE bool set(JsonArrayConst src) const {
-    return detail::ArrayData::copy(data_, src.data_, resources_);
+    if (!data_)
+      return false;
+
+    clear();
+    for (auto element : src) {
+      if (!add(element))
+        return false;
+    }
+
+    return true;
   }
 
   // Removes the element at the specified iterator.

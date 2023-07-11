@@ -18,19 +18,6 @@ inline ArrayData::iterator ArrayData::at(size_t index) const {
   return it;
 }
 
-inline bool ArrayData::copyFrom(const ArrayData& src,
-                                ResourceManager* resources) {
-  clear(resources);
-
-  for (auto it = src.createIterator(); !it.done(); it.next()) {
-    auto var = addElement(resources);
-    if (!copyVariant(JsonVariant(var, resources),
-                     JsonVariantConst(it.data(), resources)))
-      return false;
-  }
-  return true;
-}
-
 inline VariantData* ArrayData::getOrAddElement(size_t index,
                                                ResourceManager* resources) {
   auto it = createIterator();
