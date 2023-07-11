@@ -9,22 +9,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline bool ObjectData::copyFrom(const ObjectData& src,
-                                 ResourceManager* resources) {
-  clear(resources);
-
-  for (auto it = src.createIterator(); !it.done(); it.next()) {
-    ARDUINOJSON_ASSERT(it.key() != 0);
-    JsonString key(it.key(),
-                   it.ownsKey() ? JsonString::Copied : JsonString::Linked);
-    auto var = addMember(adaptString(key), resources);
-    if (!copyVariant(JsonVariant(var, resources),
-                     JsonVariantConst(it.data(), resources)))
-      return false;
-  }
-  return true;
-}
-
 template <typename TAdaptedString>
 inline VariantData* ObjectData::getMember(TAdaptedString key) const {
   return findKey(key).data();

@@ -95,7 +95,16 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Copies an object.
   // https://arduinojson.org/v6/api/jsonobject/set/
   FORCE_INLINE bool set(JsonObjectConst src) {
-    return detail::ObjectData::copy(data_, src.data_, resources_);
+    if (!data_ || !src.data_)
+      return false;
+
+    clear();
+    for (auto kvp : src) {
+      if (!operator[](kvp.key()).set(kvp.value()))
+        return false;
+    }
+
+    return true;
   }
 
   // Gets or sets the member with specified key.

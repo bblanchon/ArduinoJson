@@ -39,16 +39,6 @@ class ObjectData : public CollectionData {
     }
   }
 
-  bool copyFrom(const ObjectData& src, ResourceManager* resources);
-
-  static bool copy(ObjectData* dst, const ObjectData* src,
-                   ResourceManager* resources) {
-    if (!dst || !src)
-      return false;
-
-    return dst->copyFrom(*src, resources);
-  }
-
   template <typename TAdaptedString>
   VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources);
 
