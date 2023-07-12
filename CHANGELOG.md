@@ -17,3 +17,4 @@ HEAD
 * Remove the zero-copy mode of `deserializeJson()` and `deserializeMsgPack()`
 * Fix double lookup in `to<JsonVariant>()`
 * Fix double call to `size()` in `serializeMsgPack()`
+* Include `ARDUINOJSON_SLOT_OFFSET_SIZE` in the namespace name
