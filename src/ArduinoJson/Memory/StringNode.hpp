@@ -8,6 +8,7 @@
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 
+#include <stddef.h>  // offsetof
 #include <stdint.h>  // uint16_t
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
