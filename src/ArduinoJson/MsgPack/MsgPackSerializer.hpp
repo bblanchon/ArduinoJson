@@ -47,7 +47,7 @@ class MsgPackSerializer : public Visitor<size_t> {
   size_t visitArray(const CollectionData& array) {
     size_t n = array.size();
     if (n < 0x10) {
-      writeByte(uint8_t(0x90 + array.size()));
+      writeByte(uint8_t(0x90 + n));
     } else if (n < 0x10000) {
       writeByte(0xDC);
       writeInteger(uint16_t(n));

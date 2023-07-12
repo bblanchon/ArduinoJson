@@ -6,6 +6,7 @@ HEAD
 
 * Fix compatibility with the Blynk libary (issue #1914)
 * Fix double lookup in `to<JsonVariant>()`
+* Fix double call to `size()` in `serializeMsgPack()`
 
 v6.21.2 (2023-04-12)
 -------
