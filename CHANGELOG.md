@@ -16,3 +16,4 @@ HEAD
 * Always store `serialized("string")` by copy (#1915)
 * Remove the zero-copy mode of `deserializeJson()` and `deserializeMsgPack()`
 * Fix double lookup in `to<JsonVariant>()`
+* Fix double call to `size()` in `serializeMsgPack()`
