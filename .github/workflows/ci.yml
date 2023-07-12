@@ -403,7 +403,7 @@ jobs:
       - name: Build
         run: ninja
       - name: Test
-        run: ctest -LE 'WillFail|Fuzzing' -T test
+        run: ctest --output-on-failure -LE 'WillFail|Fuzzing' -T test
       - name: lcov --capture
         run: lcov --capture --no-external --directory . --output-file coverage.info
       - name: lcov --remove
@@ -437,7 +437,7 @@ jobs:
       - name: Build
         run: ninja
       - name: Memcheck
-        run: ctest -LE WillFail -T memcheck
+        run: ctest --output-on-failure -LE WillFail -T memcheck
         id: memcheck
       - name: MemoryChecker.*.log
         run: cat Testing/Temporary/MemoryChecker.*.log
