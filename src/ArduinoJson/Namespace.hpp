@@ -11,14 +11,15 @@
 #ifndef ARDUINOJSON_VERSION_NAMESPACE
 
 #  define ARDUINOJSON_VERSION_NAMESPACE                                       \
-    ARDUINOJSON_CONCAT3(                                                      \
+    ARDUINOJSON_CONCAT4(                                                      \
         ARDUINOJSON_VERSION_MACRO,                                            \
         ARDUINOJSON_BIN2ALPHA(                                                \
             ARDUINOJSON_ENABLE_PROGMEM, ARDUINOJSON_USE_LONG_LONG,            \
             ARDUINOJSON_USE_DOUBLE, ARDUINOJSON_ENABLE_STRING_DEDUPLICATION), \
         ARDUINOJSON_BIN2ALPHA(                                                \
             ARDUINOJSON_ENABLE_NAN, ARDUINOJSON_ENABLE_INFINITY,              \
-            ARDUINOJSON_ENABLE_COMMENTS, ARDUINOJSON_DECODE_UNICODE))
+            ARDUINOJSON_ENABLE_COMMENTS, ARDUINOJSON_DECODE_UNICODE),         \
+        ARDUINOJSON_SLOT_OFFSET_SIZE)
 
 #endif
 

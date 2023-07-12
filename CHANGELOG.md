@@ -7,6 +7,7 @@ HEAD
 * Fix compatibility with the Blynk libary (issue #1914)
 * Fix double lookup in `to<JsonVariant>()`
 * Fix double call to `size()` in `serializeMsgPack()`
+* Include `ARDUINOJSON_SLOT_OFFSET_SIZE` in the namespace name
 
 v6.21.2 (2023-04-12)
 -------
