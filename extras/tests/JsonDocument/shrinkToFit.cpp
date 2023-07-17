@@ -31,8 +31,10 @@ class ArmoredAllocator : public Allocator {
     // this way we make sure we support relocation
     void* new_ptr = malloc(new_size);
     memset(new_ptr, '#', new_size);  // erase
-    memcpy(new_ptr, ptr, std::min(new_size, new_size));
-    free(ptr);
+    if (ptr) {
+      memcpy(new_ptr, ptr, std::min(new_size, new_size));
+      free(ptr);
+    }
     return new_ptr;
   }
 };

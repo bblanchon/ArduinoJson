@@ -109,18 +109,17 @@ class SpyingAllocator : public ArduinoJson::Allocator {
 
   void deallocate(void* p) override {
     auto block = AllocatedBlock::fromPayload(p);
-    log_ << AllocatorLog::Deallocate(block->size);
+    log_ << AllocatorLog::Deallocate(block ? block->size : 0);
     upstream_->deallocate(block);
   }
 
   void* reallocate(void* p, size_t n) override {
     auto block = AllocatedBlock::fromPayload(p);
-    auto oldSize = block->size;
+    auto oldSize = block ? block->size : 0;
     block = reinterpret_cast<AllocatedBlock*>(
         upstream_->reallocate(block, sizeof(AllocatedBlock) + n - 1));
     if (block) {
       log_ << AllocatorLog::Reallocate(oldSize, n);
-      ARDUINOJSON_ASSERT(block->size == oldSize);
       block->size = n;
       return block->payload;
     } else {
@@ -143,6 +142,8 @@ class SpyingAllocator : public ArduinoJson::Allocator {
     char payload[1];
 
     static AllocatedBlock* fromPayload(void* p) {
+      if (!p)
+        return nullptr;
       return reinterpret_cast<AllocatedBlock*>(
           // Cast to void* to silence "cast increases required alignment of
           // target type [-Werror=cast-align]"
