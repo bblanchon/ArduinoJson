@@ -42,21 +42,7 @@ class SlotWithId {
 
 class VariantPool {
  public:
-  ~VariantPool() {
-    ARDUINOJSON_ASSERT(slots_ == nullptr);
-  }
-
-  VariantPool& operator=(VariantPool&& src) {
-    capacity_ = src.capacity_;
-    src.capacity_ = 0;
-    usage_ = src.usage_;
-    src.usage_ = 0;
-    slots_ = src.slots_;
-    src.slots_ = nullptr;
-    return *this;
-  }
-
-  void create(size_t cap, Allocator* allocator);
+  void create(SlotCount cap, Allocator* allocator);
   void destroy(Allocator* allocator);
 
   SlotWithId allocSlot();
@@ -70,9 +56,9 @@ class VariantPool {
   static size_t slotsToBytes(SlotCount);
 
  private:
-  SlotCount capacity_ = 0;
-  SlotCount usage_ = 0;
-  VariantSlot* slots_ = nullptr;
+  SlotCount capacity_;
+  SlotCount usage_;
+  VariantSlot* slots_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

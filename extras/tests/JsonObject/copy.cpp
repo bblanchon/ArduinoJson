@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("JsonObject::set()") {
@@ -73,12 +75,13 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(obj2["hello"] == std::string("world"));
   }
 
-  SECTION("destination too small to store the key") {
-    JsonDocument doc3(sizeofObject(1));
+  SECTION("copy fails in the middle of an object") {
+    TimebombAllocator allocator(3);
+    JsonDocument doc3(0, &allocator);
     JsonObject obj3 = doc3.to<JsonObject>();
 
-    obj1["a"] = 1;
-    obj1["b"] = 2;
+    obj1[std::string("a")] = 1;
+    obj1[std::string("b")] = 2;
 
     bool success = obj3.set(obj1);
 
@@ -86,16 +89,17 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(doc3.as<std::string>() == "{\"a\":1}");
   }
 
-  SECTION("destination too small to store the value") {
-    JsonDocument doc3(sizeofObject(1));
+  SECTION("copy fails in the middle of an array") {
+    TimebombAllocator allocator(2);
+    JsonDocument doc3(0, &allocator);
     JsonObject obj3 = doc3.to<JsonObject>();
 
-    obj1["hello"][1] = "world";
+    obj1["hello"][0] = std::string("world");
 
     bool success = obj3.set(obj1);
 
     REQUIRE(success == false);
-    REQUIRE(doc3.as<std::string>() == "{\"hello\":[]}");
+    REQUIRE(doc3.as<std::string>() == "{\"hello\":[null]}");
   }
 
   SECTION("destination is null") {

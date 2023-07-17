@@ -6,25 +6,21 @@
 #include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using namespace ArduinoJson::detail;
 
-TEST_CASE("ResourceManager::capacity()") {
-  const size_t capacity = 4 * sizeof(VariantSlot);
-  ResourceManager resources(capacity);
-  REQUIRE(capacity == resources.capacity());
-}
-
 TEST_CASE("ResourceManager::size()") {
-  ResourceManager resources(4096);
+  TimebombAllocator allocator(0);
+  ResourceManager resources(4096, &allocator);
 
   SECTION("Initial size is 0") {
     REQUIRE(0 == resources.size());
   }
 
-  SECTION("Doesn't grow when memory pool is full") {
-    const size_t variantCount = resources.capacity() / sizeof(VariantSlot);
-
-    for (size_t i = 0; i < variantCount; i++)
+  SECTION("Doesn't grow when allocation of second pool fails") {
+    allocator.setCountdown(2);
+    for (size_t i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
       resources.allocSlot();
     size_t size = resources.size();
 

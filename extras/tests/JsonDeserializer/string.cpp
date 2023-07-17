@@ -99,7 +99,7 @@ TEST_CASE("Invalid JSON string") {
 }
 
 TEST_CASE("Allocation of the key fails") {
-  TimebombAllocator timebombAllocator(1);
+  TimebombAllocator timebombAllocator(0);
   SpyingAllocator spyingAllocator(&timebombAllocator);
   JsonDocument doc(1024, &spyingAllocator);
 
@@ -107,19 +107,19 @@ TEST_CASE("Allocation of the key fails") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
             DeserializationError::NoMemory);
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(1024)
-                           << AllocatorLog::AllocateFail(sizeofString(31)));
+            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
   SECTION("Quoted string, second member") {
-    timebombAllocator.setCountdown(2);
+    timebombAllocator.setCountdown(4);
     REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
             DeserializationError::NoMemory);
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(1024)
-                           << AllocatorLog::Allocate(sizeofString(31))
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Reallocate(sizeofString(31),
                                                        sizeofString(5))
+                           << AllocatorLog::Allocate(sizeofPoolList())
+                           << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
@@ -127,19 +127,19 @@ TEST_CASE("Allocation of the key fails") {
     REQUIRE(deserializeJson(doc, "{example:1}") ==
             DeserializationError::NoMemory);
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(1024)
-                           << AllocatorLog::AllocateFail(sizeofString(31)));
+            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
   SECTION("Non-Quoted string, second member") {
-    timebombAllocator.setCountdown(2);
+    timebombAllocator.setCountdown(4);
     REQUIRE(deserializeJson(doc, "{hello:1,world}") ==
             DeserializationError::NoMemory);
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(1024)
-                           << AllocatorLog::Allocate(sizeofString(31))
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Reallocate(sizeofString(31),
                                                        sizeofString(5))
+                           << AllocatorLog::Allocate(sizeofPoolList())
+                           << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 }

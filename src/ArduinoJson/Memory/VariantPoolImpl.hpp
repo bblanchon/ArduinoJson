@@ -9,15 +9,12 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline void VariantPool::create(size_t cap, Allocator* allocator) {
-  ARDUINOJSON_ASSERT(slots_ == nullptr);
-  if (!cap)
-    return;
-  slots_ = reinterpret_cast<VariantSlot*>(allocator->allocate(cap));
-  if (slots_) {
-    capacity_ = bytesToSlots(cap);
-    usage_ = 0;
-  }
+inline void VariantPool::create(SlotCount cap, Allocator* allocator) {
+  ARDUINOJSON_ASSERT(cap > 0);
+  slots_ =
+      reinterpret_cast<VariantSlot*>(allocator->allocate(slotsToBytes(cap)));
+  capacity_ = slots_ ? cap : 0;
+  usage_ = 0;
 }
 
 inline void VariantPool::destroy(Allocator* allocator) {

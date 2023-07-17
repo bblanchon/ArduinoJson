@@ -16,9 +16,7 @@ TEST_CASE("JsonDocument constructor") {
 
   SECTION("JsonDocument(size_t)") {
     { JsonDocument doc(4096, &spyingAllocator); }
-    REQUIRE(spyingAllocator.log() == AllocatorLog()
-                                         << AllocatorLog::Allocate(4096)
-                                         << AllocatorLog::Deallocate(4096));
+    REQUIRE(spyingAllocator.log() == AllocatorLog());
   }
 
   SECTION("JsonDocument(const JsonDocument&)") {
@@ -33,14 +31,10 @@ TEST_CASE("JsonDocument constructor") {
       REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
     }
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(capacity)
-                           << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Allocate(capacity)
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Deallocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(capacity)
-                           << AllocatorLog::Deallocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(capacity));
+                           << AllocatorLog::Deallocate(sizeofString(31)));
   }
 
   SECTION("JsonDocument(JsonDocument&&)") {
@@ -54,10 +48,8 @@ TEST_CASE("JsonDocument constructor") {
       REQUIRE(doc1.as<std::string>() == "null");
     }
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(4096)
-                           << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(4096));
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Deallocate(sizeofString(31)));
   }
 
   SECTION("JsonDocument(JsonObject)") {
@@ -69,7 +61,8 @@ TEST_CASE("JsonDocument constructor") {
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofObject(1)));
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
+                           << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("Construct from JsonArray") {
@@ -80,8 +73,9 @@ TEST_CASE("JsonDocument constructor") {
     JsonDocument doc2(arr, &spyingAllocator);
 
     REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
-    REQUIRE(spyingAllocator.log() == AllocatorLog() << AllocatorLog::Allocate(
-                                         addPadding(doc1.memoryUsage())));
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
+                           << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("Construct from JsonVariant") {
@@ -92,8 +86,6 @@ TEST_CASE("JsonDocument constructor") {
 
     REQUIRE(doc2.as<std::string>() == "hello");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(
-                                  sizeofString(5))  // TODO: remove
-                           << AllocatorLog::Allocate(sizeofString(5)));
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(5)));
   }
 }

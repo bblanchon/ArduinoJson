@@ -94,7 +94,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   bool garbageCollect() {
     // make a temporary clone and move assign
     JsonDocument tmp(*this);
-    if (!tmp.resources_.capacity())
+    if (tmp.overflowed())
       return false;
     moveAssignFrom(tmp);
     return true;

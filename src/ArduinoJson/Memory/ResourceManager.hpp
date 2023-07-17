@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Memory/StringPool.hpp>
-#include <ArduinoJson/Memory/VariantPool.hpp>
+#include <ArduinoJson/Memory/VariantPoolList.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
@@ -18,15 +18,13 @@ class VariantPool;
 
 class ResourceManager {
  public:
-  ResourceManager(size_t capa,
+  ResourceManager(size_t /*capa*/,
                   Allocator* allocator = DefaultAllocator::instance())
-      : allocator_(allocator), overflowed_(false) {
-    variantPool_.create(capa, allocator);
-  }
+      : allocator_(allocator), overflowed_(false) {}
 
   ~ResourceManager() {
     stringPool_.clear(allocator_);
-    variantPool_.destroy(allocator_);
+    variantPools_.clear(allocator_);
   }
 
   ResourceManager(const ResourceManager&) = delete;
@@ -34,9 +32,9 @@ class ResourceManager {
 
   ResourceManager& operator=(ResourceManager&& src) {
     stringPool_.clear(allocator_);
-    variantPool_.destroy(allocator_);
+    variantPools_.clear(allocator_);
     allocator_ = src.allocator_;
-    variantPool_ = detail::move(src.variantPool_);
+    variantPools_ = detail::move(src.variantPools_);
     overflowed_ = src.overflowed_;
     stringPool_ = detail::move(src.stringPool_);
     return *this;
@@ -48,19 +46,19 @@ class ResourceManager {
 
   void reallocPool(size_t requiredSize) {
     size_t capa = VariantPool::bytesToSlots(requiredSize);
-    if (capa == variantPool_.capacity())
+    if (capa == variantPools_.capacity())
       return;
-    variantPool_.destroy(allocator_);
-    variantPool_.create(requiredSize, allocator_);
+    variantPools_.clear(allocator_);
   }
 
   // Gets the capacity of the memoryPool in bytes
   size_t capacity() const {
-    return VariantPool::slotsToBytes(variantPool_.capacity());
+    return VariantPool::slotsToBytes(variantPools_.capacity());
   }
 
   size_t size() const {
-    return VariantPool::slotsToBytes(variantPool_.usage()) + stringPool_.size();
+    return VariantPool::slotsToBytes(variantPools_.usage()) +
+           stringPool_.size();
   }
 
   bool overflowed() const {
@@ -68,14 +66,14 @@ class ResourceManager {
   }
 
   SlotWithId allocSlot() {
-    auto p = variantPool_.allocSlot();
+    auto p = variantPools_.allocSlot(allocator_);
     if (!p)
       overflowed_ = true;
     return p;
   }
 
   VariantSlot* getSlot(SlotId id) const {
-    return variantPool_.getSlot(id);
+    return variantPools_.getSlot(id);
   }
 
   template <typename TAdaptedString>
@@ -122,20 +120,20 @@ class ResourceManager {
   }
 
   void clear() {
-    variantPool_.clear();
+    variantPools_.clear(allocator_);
     overflowed_ = false;
     stringPool_.clear(allocator_);
   }
 
   void shrinkToFit() {
-    variantPool_.shrinkToFit(allocator_);
+    variantPools_.shrinkToFit(allocator_);
   }
 
  private:
   Allocator* allocator_;
   bool overflowed_;
   StringPool stringPool_;
-  VariantPool variantPool_;
+  VariantPoolList variantPools_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

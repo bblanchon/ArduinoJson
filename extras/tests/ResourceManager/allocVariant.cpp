@@ -30,15 +30,7 @@ TEST_CASE("ResourceManager::allocSlot()") {
     REQUIRE(isAligned(resources.allocSlot().operator VariantSlot*()));
   }
 
-  SECTION("Returns zero if capacity is 0") {
-    ResourceManager resources(0);
-
-    auto variant = resources.allocSlot();
-    REQUIRE(variant.id() == NULL_SLOT);
-    REQUIRE(static_cast<VariantSlot*>(variant) == nullptr);
-  }
-
-  SECTION("Returns zero if buffer is null") {
+  SECTION("Returns null if pool list allocation fails") {
     ResourceManager resources(4096, FailingAllocator::instance());
 
     auto variant = resources.allocSlot();
@@ -46,8 +38,9 @@ TEST_CASE("ResourceManager::allocSlot()") {
     REQUIRE(static_cast<VariantSlot*>(variant) == nullptr);
   }
 
-  SECTION("Returns zero if capacity is insufficient") {
-    ResourceManager resources(sizeof(VariantSlot));
+  SECTION("Returns null if pool allocation fails") {
+    TimebombAllocator allocator(1);
+    ResourceManager resources(4096, &allocator);
 
     resources.allocSlot();
 

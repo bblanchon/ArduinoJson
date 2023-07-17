@@ -26,6 +26,8 @@ TEST_CASE("JsonDocument assignment") {
 
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
+                           << AllocatorLog::Allocate(sizeofPoolList())
+                           << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );
   }
@@ -41,8 +43,8 @@ TEST_CASE("JsonDocument assignment") {
 
     REQUIRE(doc2.as<std::string>() == "[{\"hello\":\"world\"}]");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Deallocate(sizeofArray(1))
-                           << AllocatorLog::Allocate(capacity)
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
+                           << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Allocate(sizeofString(5))  // hello
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );
@@ -59,9 +61,9 @@ TEST_CASE("JsonDocument assignment") {
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Deallocate(4096)
-                           << AllocatorLog::Allocate(capacity1)
-                           << AllocatorLog::Allocate(sizeofString(5))  // hello
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
+                           << AllocatorLog::Allocate(sizeofPoolList())
+                           << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );
   }
@@ -69,21 +71,24 @@ TEST_CASE("JsonDocument assignment") {
   SECTION("Move assign") {
     {
       JsonDocument doc1(4096, &spyingAllocator);
-      doc1.set(std::string("The size of this string is 32!!"));
+      doc1[std::string("hello")] = std::string("world");
       JsonDocument doc2(128, &spyingAllocator);
 
       doc2 = std::move(doc1);
 
-      REQUIRE(doc2.as<std::string>() == "The size of this string is 32!!");
+      REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
       REQUIRE(doc1.as<std::string>() == "null");
     }
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(4096)
-                           << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Allocate(128)
-                           << AllocatorLog::Deallocate(128)
-                           << AllocatorLog::Deallocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(4096));
+    REQUIRE(
+        spyingAllocator.log() ==
+        AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
+                       << AllocatorLog::Allocate(sizeofPoolList())
+                       << AllocatorLog::Allocate(sizeofPool())
+                       << AllocatorLog::Allocate(sizeofString(5))    // world
+                       << AllocatorLog::Deallocate(sizeofString(5))  // hello
+                       << AllocatorLog::Deallocate(sizeofString(5))  // world
+                       << AllocatorLog::Deallocate(sizeofPool())
+                       << AllocatorLog::Deallocate(sizeofPoolList()));
   }
 
   SECTION("Assign from JsonObject") {

@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
@@ -257,8 +259,11 @@ TEST_CASE("deserialize JSON array") {
 }
 
 TEST_CASE("deserialize JSON array under memory constraints") {
-  SECTION("buffer of the right size for an empty array") {
-    JsonDocument doc(sizeofArray(0));
+  TimebombAllocator allocator(100);
+  JsonDocument doc(0, &allocator);
+
+  SECTION("empty array requires no allocation") {
+    allocator.setCountdown(0);
     char input[] = "[]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -266,73 +271,39 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("buffer too small for an array with one element") {
-    JsonDocument doc(sizeofArray(0));
+  SECTION("allocation of pool list fails") {
+    allocator.setCountdown(0);
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
 
     REQUIRE(err == DeserializationError::NoMemory);
+    REQUIRE(doc.as<std::string>() == "[]");
   }
 
-  SECTION("buffer of the right size for an array with one element") {
-    JsonDocument doc(sizeofArray(1));
+  SECTION("allocation of pool fails") {
+    allocator.setCountdown(1);
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
 
-    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(err == DeserializationError::NoMemory);
+    REQUIRE(doc.as<std::string>() == "[]");
   }
 
-  SECTION("buffer too small for an array with a nested object") {
-    JsonDocument doc(sizeofArray(0) + sizeofObject(0));
-    char input[] = "[{}]";
+  SECTION("allocation of string fails in array") {
+    allocator.setCountdown(2);
+    char input[] = "[0,\"hi!\"]";
 
     DeserializationError err = deserializeJson(doc, input);
 
     REQUIRE(err == DeserializationError::NoMemory);
-  }
-
-  SECTION("buffer of the right size for an array with a nested object") {
-    JsonDocument doc(sizeofArray(1) + sizeofObject(0));
-    char input[] = "[{}]";
-
-    DeserializationError err = deserializeJson(doc, input);
-
-    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.as<std::string>() == "[0,null]");
   }
 
   SECTION("don't store space characters") {
-    JsonDocument doc(100);
-
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
     REQUIRE(sizeofArray(1) + sizeofString(7) == doc.memoryUsage());
-  }
-
-  SECTION("Should clear the JsonArray") {
-    JsonDocument doc(sizeofArray(4));
-    char input[] = "[1,2,3,4]";
-
-    deserializeJson(doc, input);
-    deserializeJson(doc, "[]");
-
-    JsonArray arr = doc.as<JsonArray>();
-    REQUIRE(arr.size() == 0);
-    REQUIRE(doc.memoryUsage() == sizeofArray(0));
-  }
-
-  SECTION("buffer of the right size for an array with two element") {
-    JsonDocument doc(sizeofArray(2));
-    char input[] = "[1,2]";
-
-    DeserializationError err = deserializeJson(doc, input);
-    JsonArray arr = doc.as<JsonArray>();
-
-    REQUIRE(err == DeserializationError::Ok);
-    REQUIRE(doc.is<JsonArray>());
-    REQUIRE(doc.memoryUsage() == sizeofArray(2));
-    REQUIRE(arr[0] == 1);
-    REQUIRE(arr[1] == 2);
   }
 }

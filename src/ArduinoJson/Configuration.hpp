@@ -90,6 +90,26 @@
 #  endif
 #endif
 
+// Capacity of each variant pool (in slots)
+#ifndef ARDUINOJSON_POOL_CAPACITY
+#  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ <= 2
+// Address space == 16-bit
+#    define ARDUINOJSON_POOL_CAPACITY 16  // 128 bytes
+#  elif defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ >= 8 || \
+      defined(_WIN64) && _WIN64
+// Address space == 64-bit
+#    define ARDUINOJSON_POOL_CAPACITY 128  // 3072 bytes
+#  else
+// Address space == 32-bit
+#    define ARDUINOJSON_POOL_CAPACITY 64  // 1024 bytes
+#  endif
+#endif
+
+// Capacity of each variant pool (in slots)
+#ifndef ARDUINOJSON_INITIAL_POOL_COUNT
+#  define ARDUINOJSON_INITIAL_POOL_COUNT 4
+#endif
+
 #ifdef ARDUINO
 
 // Enable support for Arduino's String class

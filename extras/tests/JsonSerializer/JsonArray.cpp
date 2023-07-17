@@ -43,14 +43,6 @@ TEST_CASE("serializeJson(JsonArray)") {
     check(array, "[\"hello\",\"world\"]");
   }
 
-  SECTION("OneStringOverCapacity") {
-    array.add("hello");
-    array.add("world");
-    array.add("lost");
-
-    check(array, "[\"hello\",\"world\"]");
-  }
-
   SECTION("One double") {
     array.add(3.1415927);
     check(array, "[3.1415927]");
@@ -82,14 +74,6 @@ TEST_CASE("serializeJson(JsonArray)") {
     check(array, "[{\"key\":\"value\"}]");
   }
 
-  SECTION("OneIntegerOverCapacity") {
-    array.add(1);
-    array.add(2);
-    array.add(3);
-
-    check(array, "[1,2]");
-  }
-
   SECTION("OneTrue") {
     array.add(true);
 
@@ -105,14 +89,6 @@ TEST_CASE("serializeJson(JsonArray)") {
   SECTION("TwoBooleans") {
     array.add(false);
     array.add(true);
-
-    check(array, "[false,true]");
-  }
-
-  SECTION("OneBooleanOverCapacity") {
-    array.add(false);
-    array.add(true);
-    array.add(false);
 
     check(array, "[false,true]");
   }

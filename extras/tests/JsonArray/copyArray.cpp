@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 
 TEST_CASE("copyArray()") {
@@ -109,17 +111,12 @@ TEST_CASE("copyArray()") {
   }
 
   SECTION("int[] -> JsonArray, but not enough memory") {
-    const size_t SIZE = sizeofArray(2);
-    JsonDocument doc(SIZE);
+    JsonDocument doc(0, FailingAllocator::instance());
     JsonArray array = doc.to<JsonArray>();
-    char json[32];
     int source[] = {1, 2, 3};
 
     bool ok = copyArray(source, array);
     REQUIRE_FALSE(ok);
-
-    serializeJson(array, json);
-    CHECK(std::string("[1,2]") == json);
   }
 
   SECTION("int[][] -> JsonArray") {
@@ -160,20 +157,12 @@ TEST_CASE("copyArray()") {
   }
 
   SECTION("int[][] -> JsonArray, but not enough memory") {
-    const size_t SIZE = sizeofArray(2) + sizeofArray(3) + sizeofArray(2);
-    JsonDocument doc(SIZE);
+    JsonDocument doc(0, FailingAllocator::instance());
     JsonArray array = doc.to<JsonArray>();
-    char json[32] = "";
     int source[][3] = {{1, 2, 3}, {4, 5, 6}};
 
-    CAPTURE(SIZE);
-
     bool ok = copyArray(source, array);
-    CAPTURE(doc.memoryUsage());
-    CHECK_FALSE(ok);
-
-    serializeJson(array, json);
-    CHECK(std::string("[[1,2,3],[4,5]]") == json);
+    REQUIRE(ok == false);
   }
 
   SECTION("JsonArray -> int[], with more space than needed") {
