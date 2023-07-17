@@ -49,10 +49,6 @@ inline SlotCount VariantPool::usage() const {
   return usage_;
 }
 
-inline SlotCount VariantPool::capacity() const {
-  return capacity_;
-}
-
 inline void VariantPool::clear() {
   usage_ = 0;
 }

@@ -43,11 +43,6 @@ class ResourceManager {
     return allocator_;
   }
 
-  // Gets the capacity of the memoryPool in bytes
-  size_t capacity() const {
-    return VariantPool::slotsToBytes(variantPools_.capacity());
-  }
-
   size_t size() const {
     return VariantPool::slotsToBytes(variantPools_.usage()) +
            stringPool_.size();

@@ -49,7 +49,6 @@ class VariantPool {
   VariantSlot* getSlot(SlotId id) const;
   void clear();
   void shrinkToFit(Allocator*);
-  SlotCount capacity() const;
   SlotCount usage() const;
 
   static SlotCount bytesToSlots(size_t);

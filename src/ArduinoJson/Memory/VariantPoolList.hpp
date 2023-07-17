@@ -63,13 +63,6 @@ class VariantPoolList {
     capacity_ = 0;
   }
 
-  SlotCount capacity() const {
-    SlotCount total = 0;
-    for (size_t i = 0; i < count_; i++)
-      total = SlotCount(total + pools_[i].capacity());
-    return total;
-  }
-
   SlotCount usage() const {
     SlotCount total = 0;
     for (size_t i = 0; i < count_; i++)
