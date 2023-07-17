@@ -6,10 +6,9 @@
 #include <catch.hpp>
 
 using namespace Catch::Matchers;
-using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("JsonObject::begin()/end()") {
-  JsonDocument doc(sizeofObject(2));
+  JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
   obj["ab"] = 12;
   obj["cd"] = 34;
@@ -39,7 +38,7 @@ TEST_CASE("JsonObject::begin()/end()") {
 }
 
 TEST_CASE("JsonObjectConst::begin()/end()") {
-  JsonDocument doc(sizeofObject(2));
+  JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
   obj["ab"] = 12;
   obj["cd"] = 34;

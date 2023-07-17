@@ -15,7 +15,7 @@ enum MY_ENUM { ONE = 1, TWO = 2 };
 TEST_CASE("JsonVariant::as()") {
   static const char* null = 0;
 
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("not set") {

@@ -8,6 +8,6 @@ struct Stream {};
 
 int main() {
   Stream* stream = 0;
-  JsonDocument doc(1024);
+  JsonDocument doc;
   deserializeJson(doc, stream);
 }

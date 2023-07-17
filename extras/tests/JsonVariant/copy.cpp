@@ -11,8 +11,8 @@ using ArduinoJson::detail::sizeofString;
 TEST_CASE("JsonVariant::set(JsonVariant)") {
   ControllableAllocator allocator;
   SpyingAllocator spyingAllocator(&allocator);
-  JsonDocument doc1(4096, &spyingAllocator);
-  JsonDocument doc2(4096, &spyingAllocator);
+  JsonDocument doc1(&spyingAllocator);
+  JsonDocument doc2(&spyingAllocator);
   JsonVariant var1 = doc1.to<JsonVariant>();
   JsonVariant var2 = doc2.to<JsonVariant>();
 

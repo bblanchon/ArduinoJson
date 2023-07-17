@@ -7,7 +7,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::containsKey()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("containsKey(const char*)") {
@@ -26,7 +26,7 @@ TEST_CASE("JsonVariant::containsKey()") {
 }
 
 TEST_CASE("JsonVariantConst::containsKey()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc["hello"] = "world";
   JsonVariantConst cvar = doc.as<JsonVariant>();
 

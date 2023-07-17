@@ -8,7 +8,7 @@
 
 template <typename T>
 void check(T value, const std::string& expected) {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc.to<JsonVariant>().set(value);
   char buffer[256] = "";
   size_t returnValue = serializeJson(doc, buffer, sizeof(buffer));

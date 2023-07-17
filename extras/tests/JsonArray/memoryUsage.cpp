@@ -10,7 +10,7 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::memoryUsage()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray arr = doc.to<JsonArray>();
 
   SECTION("return 0 if uninitialized") {

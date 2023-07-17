@@ -13,7 +13,7 @@ TEST_CASE("std::swap") {
   }
 
   SECTION("JsonDocument") {
-    JsonDocument doc1(0x10), doc2(0x20);
+    JsonDocument doc1, doc2;
     doc1.set("hello");
     doc2.set("world");
 

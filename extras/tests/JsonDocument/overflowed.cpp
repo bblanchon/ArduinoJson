@@ -7,11 +7,9 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofArray;
-
 TEST_CASE("JsonDocument::overflowed()") {
   TimebombAllocator allocator(10);
-  JsonDocument doc(0, &allocator);
+  JsonDocument doc(&allocator);
 
   SECTION("returns false on a fresh object") {
     allocator.setCountdown(0);

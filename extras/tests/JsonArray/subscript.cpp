@@ -10,7 +10,7 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("Pad with null") {
@@ -68,7 +68,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
   SECTION("nested array") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonArray arr2 = doc2.to<JsonArray>();
 
     array[0] = arr2;
@@ -79,7 +79,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
   SECTION("nested object") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonObject obj = doc2.to<JsonObject>();
 
     array[0] = obj;
@@ -90,7 +90,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
   SECTION("array subscript") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonArray arr2 = doc2.to<JsonArray>();
     const char* str = "hello";
 
@@ -103,7 +103,7 @@ TEST_CASE("JsonArray::operator[]") {
 
   SECTION("object subscript") {
     const char* str = "hello";
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonObject obj = doc2.to<JsonObject>();
 
     obj["x"] = str;
@@ -162,7 +162,7 @@ TEST_CASE("JsonArray::operator[]") {
 }
 
 TEST_CASE("JsonArrayConst::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
   array.add(0);
 

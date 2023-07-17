@@ -12,7 +12,7 @@ using namespace ArduinoJson::detail;
 TEST_CASE("StringBuilder") {
   ControllableAllocator controllableAllocator;
   SpyingAllocator spyingAllocator(&controllableAllocator);
-  ResourceManager resources(0, &spyingAllocator);
+  ResourceManager resources(&spyingAllocator);
 
   SECTION("Empty string") {
     StringBuilder str(&resources);
@@ -101,7 +101,7 @@ static StringNode* addStringToPool(ResourceManager& resources, const char* s) {
 }
 
 TEST_CASE("StringBuilder::save() deduplicates strings") {
-  ResourceManager resources(4096);
+  ResourceManager resources;
 
   SECTION("Basic") {
     auto s1 = addStringToPool(resources, "hello");

@@ -9,7 +9,7 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::add()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("int") {
@@ -54,7 +54,7 @@ TEST_CASE("JsonArray::add()") {
 #endif
 
   SECTION("nested array") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonArray arr = doc2.to<JsonArray>();
 
     array.add(arr);
@@ -65,7 +65,7 @@ TEST_CASE("JsonArray::add()") {
   }
 
   SECTION("nested object") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonObject obj = doc2.to<JsonObject>();
 
     array.add(obj);
@@ -77,7 +77,7 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("array subscript") {
     const char* str = "hello";
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonArray arr = doc2.to<JsonArray>();
     arr.add(str);
 
@@ -88,7 +88,7 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("object subscript") {
     const char* str = "hello";
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonObject obj = doc2.to<JsonObject>();
     obj["x"] = str;
 

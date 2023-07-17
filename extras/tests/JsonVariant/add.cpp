@@ -7,7 +7,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::add()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("add integer to new variant") {

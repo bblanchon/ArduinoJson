@@ -13,10 +13,9 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument::garbageCollect()") {
-  const size_t capacity = 100 * sizeof(ArduinoJson::detail::VariantSlot);
   ControllableAllocator controllableAllocator;
   SpyingAllocator spyingAllocator(&controllableAllocator);
-  JsonDocument doc(capacity, &spyingAllocator);
+  JsonDocument doc(&spyingAllocator);
 
   SECTION("when allocation succeeds") {
     deserializeJson(doc, "{\"blanket\":1,\"dancing\":2}");

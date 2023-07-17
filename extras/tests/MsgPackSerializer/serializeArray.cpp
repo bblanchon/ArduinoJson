@@ -7,8 +7,6 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using ArduinoJson::detail::sizeofArray;
-
 static void check(const JsonArray array, const char* expected_data,
                   size_t expected_len) {
   std::string expected(expected_data, expected_data + expected_len);
@@ -30,7 +28,7 @@ static void check(const JsonArray array, const std::string& expected) {
 }
 
 TEST_CASE("serialize MsgPack array") {
-  JsonDocument doc(sizeofArray(65536));
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("empty") {

@@ -10,6 +10,6 @@
 #endif
 
 int main() {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   doc["dummy"] = static_cast<long long>(42);
 }

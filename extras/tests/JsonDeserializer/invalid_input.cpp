@@ -13,7 +13,7 @@ TEST_CASE("Invalid JSON input") {
                              "3}"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   for (size_t i = 0; i < testCount; i++) {
     const char* input = testCases[i];
@@ -30,7 +30,7 @@ TEST_CASE("Invalid JSON input that should pass") {
   };
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   for (size_t i = 0; i < testCount; i++) {
     const char* input = testCases[i];

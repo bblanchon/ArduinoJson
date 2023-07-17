@@ -13,7 +13,7 @@ using ArduinoJson::detail::sizeofString;
 enum ErrorCode { ERROR_01 = 1, ERROR_10 = 10 };
 
 TEST_CASE("JsonVariant::set() when there is enough memory") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("const char*") {
@@ -133,7 +133,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 }
 
 TEST_CASE("JsonVariant::set() with not enough memory") {
-  JsonDocument doc(1, FailingAllocator::instance());
+  JsonDocument doc(FailingAllocator::instance());
 
   JsonVariant v = doc.to<JsonVariant>();
 
@@ -161,10 +161,10 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
 }
 
 TEST_CASE("JsonVariant::set(JsonDocument)") {
-  JsonDocument doc1(1024);
+  JsonDocument doc1;
   doc1["hello"] = "world";
 
-  JsonDocument doc2(1024);
+  JsonDocument doc2;
   JsonVariant v = doc2.to<JsonVariant>();
 
   // Should copy the doc
@@ -177,7 +177,7 @@ TEST_CASE("JsonVariant::set(JsonDocument)") {
 }
 
 TEST_CASE("JsonVariant::set() releases the previous value") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   doc["hello"] = std::string("world");
   REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(5));
 

@@ -28,7 +28,7 @@ static void check(const JsonObject object, const char (&expected_data)[N]) {
 //}
 
 TEST_CASE("serialize MsgPack object") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonObject object = doc.to<JsonObject>();
 
   SECTION("empty") {

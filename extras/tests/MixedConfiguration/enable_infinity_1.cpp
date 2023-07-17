@@ -9,7 +9,7 @@ using ArduinoJson::detail::isinf;
 }  // namespace my
 
 TEST_CASE("ARDUINOJSON_ENABLE_INFINITY == 1") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("serializeJson()") {
     doc.add(std::numeric_limits<double>::infinity());

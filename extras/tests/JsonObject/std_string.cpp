@@ -12,7 +12,7 @@ static void eraseString(std::string& str) {
 }
 
 TEST_CASE("std::string") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("operator[]") {
     char json[] = "{\"key\":\"value\"}";

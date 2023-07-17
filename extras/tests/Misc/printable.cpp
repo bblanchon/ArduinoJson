@@ -53,7 +53,7 @@ struct PrintableString : public Printable {
 
 TEST_CASE("Printable") {
   SECTION("Doesn't overflow") {
-    JsonDocument doc(8);
+    JsonDocument doc;
     const char* value = "example";
 
     doc.set(666);  // to make sure we override the value
@@ -81,7 +81,7 @@ TEST_CASE("Printable") {
 
   SECTION("First allocation fails") {
     SpyingAllocator spyingAllocator(FailingAllocator::instance());
-    JsonDocument doc(0, &spyingAllocator);
+    JsonDocument doc(&spyingAllocator);
     const char* value = "hello world";
 
     doc.set(666);  // to make sure we override the value
@@ -118,7 +118,7 @@ TEST_CASE("Printable") {
   SECTION("Reallocation fails") {
     TimebombAllocator timebombAllocator(1);
     SpyingAllocator spyingAllocator(&timebombAllocator);
-    JsonDocument doc(0, &spyingAllocator);
+    JsonDocument doc(&spyingAllocator);
     const char* value = "Lorem ipsum dolor sit amet, cons";  // > 31 chars
 
     doc.set(666);  // to make sure we override the value
@@ -167,7 +167,7 @@ TEST_CASE("Printable") {
   }
 
   SECTION("String deduplication") {
-    JsonDocument doc(128);
+    JsonDocument doc;
     doc.add(PrintableString<PrintOneCharacterAtATime>("Hello World!"));
     doc.add(PrintableString<PrintAllAtOnce>("Hello World!"));
     REQUIRE(doc.size() == 2);

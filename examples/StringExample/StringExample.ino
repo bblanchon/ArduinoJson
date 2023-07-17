@@ -13,7 +13,7 @@
 #include <ArduinoJson.h>
 
 void setup() {
-  JsonDocument doc(1024);
+  JsonDocument doc;
 
   // You can use a String as your JSON input.
   // WARNING: the string in the input  will be duplicated in the JsonDocument.

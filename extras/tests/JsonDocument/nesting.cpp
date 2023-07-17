@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::nesting()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("return 0 if uninitialized") {
     REQUIRE(doc.nesting() == 0);

@@ -8,7 +8,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Comments should produce InvalidInput") {
-  JsonDocument doc(2048);
+  JsonDocument doc;
 
   const char* testCases[] = {
       "/*COMMENT*/  [\"hello\"]",

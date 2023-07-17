@@ -11,7 +11,7 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::memoryUsage()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("returns 0 if uninitialized") {

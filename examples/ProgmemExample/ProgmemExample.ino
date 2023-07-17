@@ -14,7 +14,7 @@
 #include <ArduinoJson.h>
 
 void setup() {
-  JsonDocument doc(1024);
+  JsonDocument doc;
 
   // You can use a Flash String as your JSON input.
   // WARNING: the strings in the input will be duplicated in the JsonDocument.

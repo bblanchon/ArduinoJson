@@ -9,7 +9,7 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("JsonDocument::memoryUsage()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("starts at zero") {
     REQUIRE(doc.memoryUsage() == 0);

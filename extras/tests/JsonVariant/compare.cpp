@@ -9,7 +9,7 @@
 // Here, we're just filling the holes
 
 TEST_CASE("Compare JsonVariant with value") {
-  JsonDocument doc(256);
+  JsonDocument doc;
   JsonVariant a = doc.add();
 
   SECTION("null vs (char*)0") {
@@ -37,7 +37,7 @@ TEST_CASE("Compare JsonVariant with value") {
 }
 
 TEST_CASE("Compare JsonVariant with JsonVariant") {
-  JsonDocument doc(256);
+  JsonDocument doc;
   JsonVariant a = doc.add();
   JsonVariant b = doc.add();
 

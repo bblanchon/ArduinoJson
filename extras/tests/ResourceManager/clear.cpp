@@ -9,10 +9,8 @@
 
 using namespace ArduinoJson::detail;
 
-static const size_t poolCapacity = 512;
-
 TEST_CASE("ResourceManager::clear()") {
-  ResourceManager resources(poolCapacity);
+  ResourceManager resources;
 
   SECTION("Discards allocated variants") {
     resources.allocSlot();

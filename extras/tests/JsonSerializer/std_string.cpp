@@ -8,7 +8,7 @@
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("serialize JsonArray to std::string") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
   array.add(4);
   array.add(2);
@@ -29,7 +29,7 @@ TEST_CASE("serialize JsonArray to std::string") {
 }
 
 TEST_CASE("serialize JsonObject to std::string") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
   obj["key"] = "value";
 
@@ -49,7 +49,7 @@ TEST_CASE("serialize JsonObject to std::string") {
 }
 
 TEST_CASE("serialize an std::string containing a NUL") {
-  JsonDocument doc(256);
+  JsonDocument doc;
   doc.set(std::string("hello\0world", 11));
   CHECK(doc.memoryUsage() == sizeofString(11));
 

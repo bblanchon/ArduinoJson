@@ -5,7 +5,7 @@
 #include <limits>
 
 static void assertParseFails(const char* json) {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   DeserializationError err = deserializeJson(doc, json);
 
   REQUIRE(err == DeserializationError::InvalidInput);
@@ -20,7 +20,7 @@ static void assertJsonEquals(const JsonDocument& doc,
 
 TEST_CASE("ARDUINOJSON_ENABLE_INFINITY == 0") {
   SECTION("serializeJson()") {
-    JsonDocument doc(4096);
+    JsonDocument doc;
     doc.add(std::numeric_limits<double>::infinity());
     doc.add(-std::numeric_limits<double>::infinity());
 

@@ -12,7 +12,7 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument::add()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("integer") {
     doc.add(42);

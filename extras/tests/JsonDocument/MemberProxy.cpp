@@ -18,7 +18,7 @@ typedef ArduinoJson::detail::MemberProxy<JsonDocument&, const char*>
     MemberProxy;
 
 TEST_CASE("MemberProxy::add()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("add(int)") {
@@ -35,7 +35,7 @@ TEST_CASE("MemberProxy::add()") {
 }
 
 TEST_CASE("MemberProxy::clear()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("size goes back to zero") {
@@ -54,7 +54,7 @@ TEST_CASE("MemberProxy::clear()") {
 }
 
 TEST_CASE("MemberProxy::operator==()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("1 vs 1") {
     doc["a"] = 1;
@@ -94,7 +94,7 @@ TEST_CASE("MemberProxy::operator==()") {
 }
 
 TEST_CASE("MemberProxy::containsKey()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("containsKey(const char*)") {
@@ -113,7 +113,7 @@ TEST_CASE("MemberProxy::containsKey()") {
 }
 
 TEST_CASE("MemberProxy::operator|()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("const char*") {
     doc["a"] = "hello";
@@ -136,7 +136,7 @@ TEST_CASE("MemberProxy::operator|()") {
     JsonObject object = doc.to<JsonObject>();
     object["hello"] = "world";
 
-    JsonDocument emptyDoc(0);
+    JsonDocument emptyDoc;
     JsonObject anotherObject = object["hello"] | emptyDoc.to<JsonObject>();
 
     REQUIRE(anotherObject.isNull() == false);
@@ -145,7 +145,7 @@ TEST_CASE("MemberProxy::operator|()") {
 }
 
 TEST_CASE("MemberProxy::remove()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("remove(int)") {
@@ -192,7 +192,7 @@ TEST_CASE("MemberProxy::remove()") {
 }
 
 TEST_CASE("MemberProxy::set()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("set(int)") {
@@ -217,7 +217,7 @@ TEST_CASE("MemberProxy::set()") {
 }
 
 TEST_CASE("MemberProxy::size()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("returns 0") {
@@ -240,7 +240,7 @@ TEST_CASE("MemberProxy::size()") {
 }
 
 TEST_CASE("MemberProxy::memoryUsage()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("returns 0 when null") {
@@ -254,7 +254,7 @@ TEST_CASE("MemberProxy::memoryUsage()") {
 }
 
 TEST_CASE("MemberProxy::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   MemberProxy mp = doc["hello"];
 
   SECTION("set member") {
@@ -271,7 +271,7 @@ TEST_CASE("MemberProxy::operator[]") {
 }
 
 TEST_CASE("MemberProxy cast to JsonVariantConst") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc["hello"] = "world";
 
   const MemberProxy mp = doc["hello"];
@@ -282,7 +282,7 @@ TEST_CASE("MemberProxy cast to JsonVariantConst") {
 }
 
 TEST_CASE("MemberProxy cast to JsonVariant") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc["hello"] = "world";
 
   MemberProxy mp = doc["hello"];
@@ -297,7 +297,7 @@ TEST_CASE("MemberProxy cast to JsonVariant") {
 }
 
 TEST_CASE("MemberProxy::createNestedArray()") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   JsonArray arr = doc["items"].createNestedArray();
   arr.add(42);
 
@@ -305,7 +305,7 @@ TEST_CASE("MemberProxy::createNestedArray()") {
 }
 
 TEST_CASE("MemberProxy::createNestedArray(key)") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   JsonArray arr = doc["weather"].createNestedArray("temp");
   arr.add(42);
 
@@ -313,7 +313,7 @@ TEST_CASE("MemberProxy::createNestedArray(key)") {
 }
 
 TEST_CASE("MemberProxy::createNestedObject()") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   JsonObject obj = doc["items"].createNestedObject();
   obj["value"] = 42;
 
@@ -321,7 +321,7 @@ TEST_CASE("MemberProxy::createNestedObject()") {
 }
 
 TEST_CASE("MemberProxy::createNestedObject(key)") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   JsonObject obj = doc["status"].createNestedObject("weather");
   obj["temp"] = 42;
 
@@ -329,7 +329,7 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
 }
 
 TEST_CASE("Deduplicate keys") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
 
   SECTION("std::string") {
     doc[0][std::string("example")] = 1;
@@ -383,7 +383,7 @@ TEST_CASE("Deduplicate keys") {
 
 TEST_CASE("MemberProxy under memory constraints") {
   ControllableAllocator allocator;
-  JsonDocument doc(4096, &allocator);
+  JsonDocument doc(&allocator);
 
   SECTION("key allocation fails") {
     allocator.disable();

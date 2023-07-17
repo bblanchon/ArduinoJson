@@ -14,7 +14,7 @@ TEST_CASE("JsonObject::clear()") {
   }
 
   SECTION("Removes all elements") {
-    JsonDocument doc(64);
+    JsonDocument doc;
     JsonObject obj = doc.to<JsonObject>();
     obj["hello"] = 1;
     obj["world"] = 2;

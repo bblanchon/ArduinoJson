@@ -8,21 +8,19 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::addPadding;
-using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument constructor") {
   SpyingAllocator spyingAllocator;
 
   SECTION("JsonDocument(size_t)") {
-    { JsonDocument doc(4096, &spyingAllocator); }
+    { JsonDocument doc(&spyingAllocator); }
     REQUIRE(spyingAllocator.log() == AllocatorLog());
   }
 
   SECTION("JsonDocument(const JsonDocument&)") {
-    const size_t capacity = 100 * sizeof(ArduinoJson::detail::VariantSlot);
     {
-      JsonDocument doc1(capacity, &spyingAllocator);
+      JsonDocument doc1(&spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
 
       JsonDocument doc2(doc1);
@@ -39,7 +37,7 @@ TEST_CASE("JsonDocument constructor") {
 
   SECTION("JsonDocument(JsonDocument&&)") {
     {
-      JsonDocument doc1(4096, &spyingAllocator);
+      JsonDocument doc1(&spyingAllocator);
       doc1.set(std::string("The size of this string is 32!!"));
 
       JsonDocument doc2(std::move(doc1));
@@ -53,7 +51,7 @@ TEST_CASE("JsonDocument constructor") {
   }
 
   SECTION("JsonDocument(JsonObject)") {
-    JsonDocument doc1(200);
+    JsonDocument doc1;
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
 
@@ -66,7 +64,7 @@ TEST_CASE("JsonDocument constructor") {
   }
 
   SECTION("Construct from JsonArray") {
-    JsonDocument doc1(200);
+    JsonDocument doc1;
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
 
@@ -79,7 +77,7 @@ TEST_CASE("JsonDocument constructor") {
   }
 
   SECTION("Construct from JsonVariant") {
-    JsonDocument doc1(200);
+    JsonDocument doc1;
     deserializeJson(doc1, "\"hello\"");
 
     JsonDocument doc2(doc1.as<JsonVariant>(), &spyingAllocator);

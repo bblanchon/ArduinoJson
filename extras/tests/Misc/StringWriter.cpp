@@ -139,7 +139,7 @@ TEST_CASE("Writer<custom_string>") {
 }
 
 TEST_CASE("serializeJson(doc, String)") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   doc["hello"] = "world";
   ::String output;
 

@@ -18,4 +18,5 @@ HEAD
 * Fix double lookup in `to<JsonVariant>()`
 * Fix double call to `size()` in `serializeMsgPack()`
 * Include `ARDUINOJSON_SLOT_OFFSET_SIZE` in the namespace name
-* Remove `JsonVariant::shallowCopy()` 
+* Remove `JsonVariant::shallowCopy()`
+* `JsonDocument`'s capacity grows as needed, no need to pass it to the constructor anymore

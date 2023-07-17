@@ -13,7 +13,7 @@ int main() {
   // Inside the parentheses, 300 is the size of the memory pool in bytes.
   // Don't forget to change this value to match your JSON document.
   // Use https://arduinojson.org/assistant to compute the capacity.
-  JsonDocument doc(300);
+  JsonDocument doc;
 
   // MessagePack input string.
   //

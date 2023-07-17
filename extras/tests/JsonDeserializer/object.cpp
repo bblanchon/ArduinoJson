@@ -7,12 +7,11 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON object") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("An empty object") {
     DeserializationError err = deserializeJson(doc, "{}");
@@ -323,7 +322,7 @@ TEST_CASE("deserialize JSON object") {
 
 TEST_CASE("deserialize JSON object under memory constraints") {
   TimebombAllocator allocator(1024);
-  JsonDocument doc(0, &allocator);
+  JsonDocument doc(&allocator);
 
   SECTION("empty object requires no allocation") {
     allocator.setCountdown(0);

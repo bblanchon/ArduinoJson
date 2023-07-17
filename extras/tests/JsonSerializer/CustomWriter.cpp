@@ -30,7 +30,7 @@ class CustomWriter {
 };
 
 TEST_CASE("CustomWriter") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
   array.add(4);
   array.add(2);

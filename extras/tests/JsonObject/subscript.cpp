@@ -9,7 +9,7 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonObject::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("int") {
@@ -54,7 +54,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("array") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonArray arr = doc2.to<JsonArray>();
 
     obj["hello"] = arr;
@@ -65,7 +65,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("object") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonObject obj2 = doc2.to<JsonObject>();
 
     obj["hello"] = obj2;
@@ -76,7 +76,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("array subscript") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonArray arr = doc2.to<JsonArray>();
     arr.add(42);
 
@@ -86,7 +86,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 
   SECTION("object subscript") {
-    JsonDocument doc2(4096);
+    JsonDocument doc2;
     JsonObject obj2 = doc2.to<JsonObject>();
     obj2["x"] = 42;
 

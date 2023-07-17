@@ -23,7 +23,7 @@ TEST_CASE("JsonVariant from JsonArray") {
   }
 
   SECTION("JsonArray is not null") {
-    JsonDocument doc(4096);
+    JsonDocument doc;
     JsonArray arr = doc.to<JsonArray>();
     arr.add(12);
     arr.add(34);
@@ -45,7 +45,7 @@ TEST_CASE("JsonVariant from JsonObject") {
   }
 
   SECTION("JsonObject is not null") {
-    JsonDocument doc(4096);
+    JsonDocument doc;
     JsonObject obj = doc.to<JsonObject>();
     obj["a"] = 12;
     obj["b"] = 34;

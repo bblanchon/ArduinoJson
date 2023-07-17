@@ -5,7 +5,7 @@
 #include <limits>
 
 TEST_CASE("ARDUINOJSON_ENABLE_NAN == 0") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonObject root = doc.to<JsonObject>();
 
   SECTION("serializeJson()") {

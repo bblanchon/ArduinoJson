@@ -20,7 +20,7 @@ static StringNode* saveString(ResourceManager& resources, const char* s,
 }
 
 TEST_CASE("ResourceManager::saveString()") {
-  ResourceManager resources(32);
+  ResourceManager resources;
 
   SECTION("Duplicates different strings") {
     auto a = saveString(resources, "hello");
@@ -63,7 +63,7 @@ TEST_CASE("ResourceManager::saveString()") {
   }
 
   SECTION("Returns NULL when allocation fails") {
-    ResourceManager pool2(32, FailingAllocator::instance());
+    ResourceManager pool2(FailingAllocator::instance());
     REQUIRE(saveString(pool2, "a") == nullptr);
   }
 }

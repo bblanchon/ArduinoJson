@@ -10,7 +10,7 @@ using namespace Catch::Matchers;
 using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("deserializeJson(JsonDocument&)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("Edge cases") {
     SECTION("null char*") {

@@ -42,7 +42,7 @@ class ArmoredAllocator : public Allocator {
 TEST_CASE("JsonDocument::shrinkToFit()") {
   ArmoredAllocator armoredAllocator;
   SpyingAllocator spyingAllocator(&armoredAllocator);
-  JsonDocument doc(4096, &spyingAllocator);
+  JsonDocument doc(&spyingAllocator);
 
   SECTION("null") {
     doc.shrinkToFit();

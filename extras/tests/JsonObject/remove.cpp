@@ -7,7 +7,7 @@
 #include <string>
 
 TEST_CASE("JsonObject::remove()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
   obj["a"] = 0;
   obj["b"] = 1;

@@ -6,11 +6,11 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::operator==()") {
-  JsonDocument doc1(4096);
+  JsonDocument doc1;
   JsonArray array1 = doc1.to<JsonArray>();
   JsonArrayConst array1c = array1;
 
-  JsonDocument doc2(4096);
+  JsonDocument doc2;
   JsonArray array2 = doc2.to<JsonArray>();
   JsonArrayConst array2c = array2;
 

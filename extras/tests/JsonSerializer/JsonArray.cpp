@@ -5,8 +5,6 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using ArduinoJson::detail::sizeofArray;
-
 static void check(JsonArray array, std::string expected) {
   std::string actual;
   size_t actualLen = serializeJson(array, actual);
@@ -17,7 +15,7 @@ static void check(JsonArray array, std::string expected) {
 }
 
 TEST_CASE("serializeJson(JsonArray)") {
-  JsonDocument doc(sizeofArray(2));
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("Empty") {

@@ -10,7 +10,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Issue1707") {
-  JsonDocument doc(128);
+  JsonDocument doc;
 
   DeserializationError err = deserializeJson(doc, F("{\"hello\":12}"));
   REQUIRE(err == DeserializationError::Ok);

@@ -106,7 +106,7 @@ Here is a program that parses a JSON document with ArduinoJson.
 ```c++
 char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
-JsonDocument doc(1024);
+JsonDocument doc;
 deserializeJson(doc, json);
 
 const char* sensor = doc["sensor"];
@@ -122,7 +122,7 @@ See the [tutorial on arduinojson.org](https://arduinojson.org/v6/doc/deserializa
 Here is a program that generates a JSON document with ArduinoJson:
 
 ```c++
-JsonDocument doc(1024);
+JsonDocument doc;
 
 doc["sensor"] = "gps";
 doc["time"]   = 1351824120;

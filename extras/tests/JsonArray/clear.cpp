@@ -14,7 +14,7 @@ TEST_CASE("JsonArray::clear()") {
   }
 
   SECTION("Removes all elements") {
-    JsonDocument doc(64);
+    JsonDocument doc;
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add(2);

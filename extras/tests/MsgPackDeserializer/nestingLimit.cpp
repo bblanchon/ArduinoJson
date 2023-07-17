@@ -12,7 +12,7 @@
   REQUIRE(DeserializationError::TooDeep == expression);
 
 TEST_CASE("JsonDeserializer nesting") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("Input = const char*") {
     SECTION("limit = 0") {

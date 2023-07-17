@@ -18,8 +18,7 @@ class VariantPool;
 
 class ResourceManager {
  public:
-  ResourceManager(size_t /*capa*/,
-                  Allocator* allocator = DefaultAllocator::instance())
+  ResourceManager(Allocator* allocator = DefaultAllocator::instance())
       : allocator_(allocator), overflowed_(false) {}
 
   ~ResourceManager() {
@@ -42,13 +41,6 @@ class ResourceManager {
 
   Allocator* allocator() const {
     return allocator_;
-  }
-
-  void reallocPool(size_t requiredSize) {
-    size_t capa = VariantPool::bytesToSlots(requiredSize);
-    if (capa == variantPools_.capacity())
-      return;
-    variantPools_.clear(allocator_);
   }
 
   // Gets the capacity of the memoryPool in bytes

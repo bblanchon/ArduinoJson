@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Compare JsonArray with JsonArray") {
-  JsonDocument doc(256);
+  JsonDocument doc;
 
   SECTION("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
@@ -82,7 +82,7 @@ TEST_CASE("Compare JsonArray with JsonArray") {
 }
 
 TEST_CASE("Compare JsonArray with JsonVariant") {
-  JsonDocument doc(256);
+  JsonDocument doc;
 
   SECTION("Compare with self") {
     JsonArray array = doc.to<JsonArray>();
@@ -153,7 +153,7 @@ TEST_CASE("Compare JsonArray with JsonVariant") {
 }
 
 TEST_CASE("Compare JsonArray with JsonVariantConst") {
-  JsonDocument doc(256);
+  JsonDocument doc;
 
   SECTION("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
@@ -247,7 +247,7 @@ TEST_CASE("Compare JsonArray with JsonVariantConst") {
 }
 
 TEST_CASE("Compare JsonArray with JsonArrayConst") {
-  JsonDocument doc(256);
+  JsonDocument doc;
 
   SECTION("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
@@ -347,7 +347,7 @@ TEST_CASE("Compare JsonArray with JsonArrayConst") {
 }
 
 TEST_CASE("Compare JsonArrayConst with JsonArrayConst") {
-  JsonDocument doc(256);
+  JsonDocument doc;
 
   SECTION("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
@@ -430,7 +430,7 @@ TEST_CASE("Compare JsonArrayConst with JsonArrayConst") {
 }
 
 TEST_CASE("Compare JsonArrayConst with JsonVariant") {
-  JsonDocument doc(256);
+  JsonDocument doc;
 
   SECTION("Compare with self") {
     JsonArray array = doc.to<JsonArray>();

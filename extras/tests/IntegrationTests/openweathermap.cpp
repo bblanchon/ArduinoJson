@@ -53,12 +53,12 @@ TEST_CASE("OpenWeatherMap") {
       "]}";
   // clang-format on
 
-  JsonDocument filter(512);
+  JsonDocument filter;
   filter["list"][0]["dt"] = true;
   filter["list"][0]["main"]["temp"] = true;
   filter["list"][0]["weather"][0]["description"] = true;
 
-  JsonDocument doc(16384);
+  JsonDocument doc;
 
   REQUIRE(
       deserializeJson(doc, input_json, DeserializationOption::Filter(filter)) ==

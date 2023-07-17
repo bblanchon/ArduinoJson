@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("The JsonVariant is null") {
@@ -132,7 +132,7 @@ TEST_CASE("JsonVariant::operator[]") {
 }
 
 TEST_CASE("JsonVariantConst::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
   JsonVariantConst cvar = var;
 

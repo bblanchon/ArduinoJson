@@ -7,7 +7,7 @@
 #include <sstream>
 
 TEST_CASE("operator<<(std::ostream)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   std::ostringstream os;
 
   SECTION("JsonVariant containing false") {

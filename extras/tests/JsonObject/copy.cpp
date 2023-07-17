@@ -7,11 +7,9 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofObject;
-
 TEST_CASE("JsonObject::set()") {
-  JsonDocument doc1(4096);
-  JsonDocument doc2(4096);
+  JsonDocument doc1;
+  JsonDocument doc2;
 
   JsonObject obj1 = doc1.to<JsonObject>();
   JsonObject obj2 = doc2.to<JsonObject>();
@@ -77,7 +75,7 @@ TEST_CASE("JsonObject::set()") {
 
   SECTION("copy fails in the middle of an object") {
     TimebombAllocator allocator(3);
-    JsonDocument doc3(0, &allocator);
+    JsonDocument doc3(&allocator);
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1[std::string("a")] = 1;
@@ -91,7 +89,7 @@ TEST_CASE("JsonObject::set()") {
 
   SECTION("copy fails in the middle of an array") {
     TimebombAllocator allocator(2);
-    JsonDocument doc3(0, &allocator);
+    JsonDocument doc3(&allocator);
     JsonObject obj3 = doc3.to<JsonObject>();
 
     obj1["hello"][0] = std::string("world");

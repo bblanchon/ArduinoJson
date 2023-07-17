@@ -7,6 +7,6 @@
 // See issue #1498
 
 int main() {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   doc["dummy"].as<char>();
 }

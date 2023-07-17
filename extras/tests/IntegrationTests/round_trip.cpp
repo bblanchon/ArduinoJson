@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 void check(std::string originalJson) {
-  JsonDocument doc(16384);
+  JsonDocument doc;
 
   std::string prettyJson;
   deserializeJson(doc, originalJson);

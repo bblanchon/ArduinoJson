@@ -16,7 +16,7 @@ using ArduinoJson::detail::isnan;
 }  // namespace my
 
 TEST_CASE("deserialize an integer") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("Integer") {
     SECTION("0") {

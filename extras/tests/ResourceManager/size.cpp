@@ -12,7 +12,7 @@ using namespace ArduinoJson::detail;
 
 TEST_CASE("ResourceManager::size()") {
   TimebombAllocator allocator(0);
-  ResourceManager resources(4096, &allocator);
+  ResourceManager resources(&allocator);
 
   SECTION("Initial size is 0") {
     REQUIRE(0 == resources.size());

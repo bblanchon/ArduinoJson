@@ -28,7 +28,7 @@ Here is the environment that I'm using':
 Here is a small snippet that demonstrate the problem.
 
 ```c++
-JsonDocument doc(1024);
+JsonDocument doc;
 
 DeserializationError error = deserializeJson(doc, "{\"hello\":\"world\"}");
 

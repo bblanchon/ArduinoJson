@@ -689,8 +689,8 @@ TEST_CASE("Filtering") {
   for (size_t i = 0; i < sizeof(testCases) / sizeof(testCases[0]); i++) {
     CAPTURE(i);
 
-    JsonDocument filter(256);
-    JsonDocument doc(256);
+    JsonDocument filter;
+    JsonDocument doc;
     TestCase& tc = testCases[i];
 
     CAPTURE(tc.filter);
@@ -710,10 +710,10 @@ TEST_CASE("Filtering") {
 TEST_CASE("Zero-copy mode") {  // issue #1697
   char input[] = "{\"include\":42,\"exclude\":666}";
 
-  JsonDocument filter(256);
+  JsonDocument filter;
   filter["include"] = true;
 
-  JsonDocument doc(256);
+  JsonDocument doc;
   DeserializationError err =
       deserializeJson(doc, input, DeserializationOption::Filter(filter));
 
@@ -722,8 +722,8 @@ TEST_CASE("Zero-copy mode") {  // issue #1697
 }
 
 TEST_CASE("Overloads") {
-  JsonDocument doc(256);
-  JsonDocument filter(256);
+  JsonDocument doc;
+  JsonDocument filter;
 
   using namespace DeserializationOption;
 

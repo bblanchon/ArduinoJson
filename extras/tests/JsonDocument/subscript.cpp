@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   const JsonDocument& cdoc = doc;
 
   SECTION("object") {
@@ -37,7 +37,7 @@ TEST_CASE("JsonDocument::operator[]") {
 }
 
 TEST_CASE("JsonDocument automatically promotes to object") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   doc["one"]["two"]["three"] = 4;
 
@@ -45,7 +45,7 @@ TEST_CASE("JsonDocument automatically promotes to object") {
 }
 
 TEST_CASE("JsonDocument automatically promotes to array") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   doc[2] = 2;
 

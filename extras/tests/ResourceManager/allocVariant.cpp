@@ -13,7 +13,7 @@ using namespace ArduinoJson::detail;
 
 TEST_CASE("ResourceManager::allocSlot()") {
   SECTION("Returns different pointer") {
-    ResourceManager resources(4096);
+    ResourceManager resources;
 
     VariantSlot* s1 = resources.allocSlot();
     REQUIRE(s1 != 0);
@@ -24,14 +24,14 @@ TEST_CASE("ResourceManager::allocSlot()") {
   }
 
   SECTION("Returns aligned pointers") {
-    ResourceManager resources(4096);
+    ResourceManager resources;
 
     REQUIRE(isAligned(resources.allocSlot().operator VariantSlot*()));
     REQUIRE(isAligned(resources.allocSlot().operator VariantSlot*()));
   }
 
   SECTION("Returns null if pool list allocation fails") {
-    ResourceManager resources(4096, FailingAllocator::instance());
+    ResourceManager resources(FailingAllocator::instance());
 
     auto variant = resources.allocSlot();
     REQUIRE(variant.id() == NULL_SLOT);
@@ -40,7 +40,7 @@ TEST_CASE("ResourceManager::allocSlot()") {
 
   SECTION("Returns null if pool allocation fails") {
     TimebombAllocator allocator(1);
-    ResourceManager resources(4096, &allocator);
+    ResourceManager resources(&allocator);
 
     resources.allocSlot();
 

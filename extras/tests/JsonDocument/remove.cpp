@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::remove()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("remove(int)") {
     doc.add(1);

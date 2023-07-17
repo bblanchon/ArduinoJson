@@ -10,7 +10,7 @@
 using namespace ArduinoJson::detail;
 
 static void testCodepoint(uint32_t codepoint, std::string expected) {
-  ResourceManager resources(4096);
+  ResourceManager resources;
   StringBuilder str(&resources);
   str.startString();
 

@@ -7,7 +7,7 @@
 
 static void checkMsgPackDocument(const char* input, size_t inputSize,
                                  const char* expectedJson) {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   DeserializationError error = deserializeMsgPack(doc, input, inputSize);
 
@@ -19,7 +19,7 @@ static void checkMsgPackDocument(const char* input, size_t inputSize,
 
 static void checkMsgPackError(const char* input, size_t inputSize,
                               DeserializationError expectedError) {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   DeserializationError error = deserializeMsgPack(doc, input, inputSize);
 

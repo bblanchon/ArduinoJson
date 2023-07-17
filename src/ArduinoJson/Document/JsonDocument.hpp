@@ -21,18 +21,16 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   friend class detail::VariantAttorney;
 
  public:
-  explicit JsonDocument(size_t capa,
-                        Allocator* alloc = detail::DefaultAllocator::instance())
-      : resources_(capa, alloc) {}
+  explicit JsonDocument(Allocator* alloc = detail::DefaultAllocator::instance())
+      : resources_(alloc) {}
 
   // Copy-constructor
-  JsonDocument(const JsonDocument& src)
-      : JsonDocument(src.resources_.capacity(), src.allocator()) {
+  JsonDocument(const JsonDocument& src) : JsonDocument(src.allocator()) {
     set(src);
   }
 
   // Move-constructor
-  JsonDocument(JsonDocument&& src) : resources_(0, src.allocator()) {
+  JsonDocument(JsonDocument&& src) : resources_(src.allocator()) {
     // TODO: use the copy and swap idiom
     moveAssignFrom(src);
   }
@@ -48,13 +46,13 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
                    detail::is_same<T, JsonArrayConst>::value ||
                    detail::is_same<T, JsonObject>::value ||
                    detail::is_same<T, JsonObjectConst>::value>::type* = 0)
-      : JsonDocument(src.memoryUsage(), alloc) {
+      : JsonDocument(alloc) {
     set(src);
   }
 
   // disambiguate
   // TODO: still needed?
-  JsonDocument(JsonVariant src) : JsonDocument(src.memoryUsage()) {
+  JsonDocument(JsonVariant src) {
     set(src);
   }
 
@@ -72,9 +70,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
   template <typename T>
   JsonDocument& operator=(const T& src) {
-    size_t requiredSize = src.memoryUsage();
-    if (requiredSize > resources_.capacity())
-      resources_.reallocPool(requiredSize);
     set(src);
     return *this;
   }
@@ -361,7 +356,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   void copyAssignFrom(const JsonDocument& src) {
-    resources_.reallocPool(src.resources_.capacity());
     set(src);
   }
 

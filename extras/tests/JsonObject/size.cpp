@@ -7,7 +7,7 @@
 #include <string>
 
 TEST_CASE("JsonObject::size()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("initial size is zero") {

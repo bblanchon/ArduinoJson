@@ -6,11 +6,10 @@
 #include <stdint.h>
 #include <catch.hpp>
 
-using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::clear()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("size goes back to zero") {

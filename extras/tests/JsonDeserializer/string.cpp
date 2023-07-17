@@ -41,7 +41,7 @@ TEST_CASE("Valid JSON strings value") {
   };
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   for (size_t i = 0; i < testCount; i++) {
     const TestCase& testCase = testCases[i];
@@ -53,7 +53,7 @@ TEST_CASE("Valid JSON strings value") {
 }
 
 TEST_CASE("\\u0000") {
-  JsonDocument doc(200);
+  JsonDocument doc;
 
   DeserializationError err = deserializeJson(doc, "\"wx\\u0000yz\"");
   REQUIRE(err == DeserializationError::Ok);
@@ -74,7 +74,7 @@ TEST_CASE("Truncated JSON string") {
   const char* testCases[] = {"\"hello", "\'hello", "'\\u", "'\\u00", "'\\u000"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   for (size_t i = 0; i < testCount; i++) {
     const char* input = testCases[i];
@@ -89,7 +89,7 @@ TEST_CASE("Invalid JSON string") {
                              "'\\u000G'", "'\\u000/'", "'\\x1234'"};
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   for (size_t i = 0; i < testCount; i++) {
     const char* input = testCases[i];
@@ -101,7 +101,7 @@ TEST_CASE("Invalid JSON string") {
 TEST_CASE("Allocation of the key fails") {
   TimebombAllocator timebombAllocator(0);
   SpyingAllocator spyingAllocator(&timebombAllocator);
-  JsonDocument doc(1024, &spyingAllocator);
+  JsonDocument doc(&spyingAllocator);
 
   SECTION("Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
@@ -146,7 +146,7 @@ TEST_CASE("Allocation of the key fails") {
 
 TEST_CASE("String allocation fails") {
   SpyingAllocator spyingAllocator(FailingAllocator::instance());
-  JsonDocument doc(0, &spyingAllocator);
+  JsonDocument doc(&spyingAllocator);
 
   SECTION("Input is const char*") {
     REQUIRE(deserializeJson(doc, "\"hello\"") ==
@@ -157,7 +157,7 @@ TEST_CASE("String allocation fails") {
 }
 
 TEST_CASE("Deduplicate values") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   deserializeJson(doc, "[\"example\",\"example\"]");
 
   CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
@@ -165,7 +165,7 @@ TEST_CASE("Deduplicate values") {
 }
 
 TEST_CASE("Deduplicate keys") {
-  JsonDocument doc(1024);
+  JsonDocument doc;
   deserializeJson(doc, "[{\"example\":1},{\"example\":2}]");
 
   CHECK(doc.memoryUsage() ==

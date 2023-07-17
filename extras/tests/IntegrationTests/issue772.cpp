@@ -8,8 +8,8 @@
 // https://github.com/bblanchon/ArduinoJson/issues/772
 
 TEST_CASE("Issue772") {
-  JsonDocument doc1(4096);
-  JsonDocument doc2(4096);
+  JsonDocument doc1;
+  JsonDocument doc2;
   DeserializationError err;
   std::string data =
       "{\"state\":{\"reported\":{\"timestamp\":\"2018-07-02T09:40:12Z\","

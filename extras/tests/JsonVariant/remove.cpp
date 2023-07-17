@@ -10,7 +10,7 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::remove(int)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("release top level strings") {
     doc.add(std::string("hello"));
@@ -48,7 +48,7 @@ TEST_CASE("JsonVariant::remove(int)") {
 }
 
 TEST_CASE("JsonVariant::remove(const char *)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
   var["a"] = 1;
@@ -60,7 +60,7 @@ TEST_CASE("JsonVariant::remove(const char *)") {
 }
 
 TEST_CASE("JsonVariant::remove(std::string)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
   var["a"] = 1;

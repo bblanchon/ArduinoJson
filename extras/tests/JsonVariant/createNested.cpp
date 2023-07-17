@@ -7,7 +7,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonVariant::createNestedObject()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("promotes to array") {
@@ -21,7 +21,7 @@ TEST_CASE("JsonVariant::createNestedObject()") {
 }
 
 TEST_CASE("JsonVariant::createNestedArray()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("promotes to array") {
@@ -33,7 +33,7 @@ TEST_CASE("JsonVariant::createNestedArray()") {
 }
 
 TEST_CASE("JsonVariant::createNestedObject(key)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("promotes to object") {
@@ -46,7 +46,7 @@ TEST_CASE("JsonVariant::createNestedObject(key)") {
 }
 
 TEST_CASE("JsonVariant::createNestedArray(key)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("promotes to object") {

@@ -9,7 +9,7 @@ typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("ElementProxy::add()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -35,7 +35,7 @@ TEST_CASE("ElementProxy::add()") {
 }
 
 TEST_CASE("ElementProxy::clear()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -55,7 +55,7 @@ TEST_CASE("ElementProxy::clear()") {
 }
 
 TEST_CASE("ElementProxy::operator==()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("1 vs 1") {
     doc.add(1);
@@ -95,7 +95,7 @@ TEST_CASE("ElementProxy::operator==()") {
 }
 
 TEST_CASE("ElementProxy::remove()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -143,7 +143,7 @@ TEST_CASE("ElementProxy::remove()") {
 }
 
 TEST_CASE("ElementProxy::set()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   ElementProxy ep = doc[0];
 
   SECTION("set(int)") {
@@ -168,7 +168,7 @@ TEST_CASE("ElementProxy::set()") {
 }
 
 TEST_CASE("ElementProxy::size()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -190,7 +190,7 @@ TEST_CASE("ElementProxy::size()") {
 }
 
 TEST_CASE("ElementProxy::memoryUsage()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc.add();
   ElementProxy ep = doc[0];
 
@@ -205,7 +205,7 @@ TEST_CASE("ElementProxy::memoryUsage()") {
 }
 
 TEST_CASE("ElementProxy::operator[]") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   ElementProxy ep = doc[1];
 
   SECTION("set member") {
@@ -222,7 +222,7 @@ TEST_CASE("ElementProxy::operator[]") {
 }
 
 TEST_CASE("ElementProxy cast to JsonVariantConst") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc[0] = "world";
 
   const ElementProxy ep = doc[0];
@@ -233,7 +233,7 @@ TEST_CASE("ElementProxy cast to JsonVariantConst") {
 }
 
 TEST_CASE("ElementProxy cast to JsonVariant") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   doc[0] = "world";
 
   ElementProxy ep = doc[0];

@@ -12,7 +12,7 @@ TEST_CASE("JsonObject::isNull()") {
   }
 
   SECTION("returns false") {
-    JsonDocument doc(4096);
+    JsonDocument doc;
     JsonObject obj = doc.to<JsonObject>();
     REQUIRE(obj.isNull() == false);
   }
@@ -25,7 +25,7 @@ TEST_CASE("JsonObjectConst::isNull()") {
   }
 
   SECTION("returns false") {
-    JsonDocument doc(4096);
+    JsonDocument doc;
     JsonObjectConst obj = doc.to<JsonObject>();
     REQUIRE(obj.isNull() == false);
   }
@@ -38,7 +38,7 @@ TEST_CASE("JsonObject::operator bool()") {
   }
 
   SECTION("returns true") {
-    JsonDocument doc(4096);
+    JsonDocument doc;
     JsonObject obj = doc.to<JsonObject>();
     REQUIRE(static_cast<bool>(obj) == true);
   }
@@ -51,7 +51,7 @@ TEST_CASE("JsonObjectConst::operator bool()") {
   }
 
   SECTION("returns true") {
-    JsonDocument doc(4096);
+    JsonDocument doc;
     JsonObjectConst obj = doc.to<JsonObject>();
     REQUIRE(static_cast<bool>(obj) == true);
   }

@@ -15,7 +15,7 @@ static void checkArray(JsonArray array, std::string expected) {
 }
 
 TEST_CASE("serializeJsonPretty(JsonArray)") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("Empty") {

@@ -25,7 +25,8 @@
 void setup() {
   // Initialize Serial port
   Serial.begin(9600);
-  while (!Serial) continue;
+  while (!Serial)
+    continue;
 
   // Initialize Ethernet library
   byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
@@ -78,7 +79,7 @@ void setup() {
 
   // Allocate the JSON document
   // Use https://arduinojson.org/v6/assistant to compute the capacity.
-  JsonDocument doc(256);
+  JsonDocument doc;
 
   // Parse JSON object
   DeserializationError error = deserializeJson(doc, client);

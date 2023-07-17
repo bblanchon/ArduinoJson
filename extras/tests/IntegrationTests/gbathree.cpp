@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Gbathree") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   DeserializationError error = deserializeJson(
       doc,

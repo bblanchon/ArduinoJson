@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonArray::nesting()") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonArray arr = doc.to<JsonArray>();
 
   SECTION("return 0 if uninitialized") {

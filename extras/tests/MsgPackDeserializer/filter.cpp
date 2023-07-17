@@ -10,10 +10,10 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("deserializeMsgPack() filter") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   DeserializationError error;
 
-  JsonDocument filter(200);
+  JsonDocument filter;
   DeserializationOption::Filter filterOpt(filter);
 
   SECTION("root is fixmap") {
@@ -1032,10 +1032,10 @@ TEST_CASE("deserializeMsgPack() filter") {
 TEST_CASE("Zero-copy mode") {  // issue #1697
   char input[] = "\x82\xA7include\x01\xA6ignore\x02";
 
-  JsonDocument filter(256);
+  JsonDocument filter;
   filter["include"] = true;
 
-  JsonDocument doc(256);
+  JsonDocument doc;
   DeserializationError err =
       deserializeMsgPack(doc, input, 18, DeserializationOption::Filter(filter));
 
@@ -1044,8 +1044,8 @@ TEST_CASE("Zero-copy mode") {  // issue #1697
 }
 
 TEST_CASE("Overloads") {
-  JsonDocument doc(256);
-  JsonDocument filter(256);
+  JsonDocument doc;
+  JsonDocument filter;
 
   using namespace DeserializationOption;
 

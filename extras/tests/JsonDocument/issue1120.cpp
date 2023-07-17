@@ -3,7 +3,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Issue #1120") {
-  JsonDocument doc(500);
+  JsonDocument doc;
   constexpr char str[] =
       "{\"contents\":[{\"module\":\"Packet\"},{\"module\":\"Analog\"}]}";
   deserializeJson(doc, str);

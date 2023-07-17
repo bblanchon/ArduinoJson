@@ -6,8 +6,8 @@
 #include <catch.hpp>
 
 TEST_CASE("JsonDocument::operator==(const JsonDocument&)") {
-  JsonDocument doc1(4096);
-  JsonDocument doc2(4096);
+  JsonDocument doc1;
+  JsonDocument doc2;
 
   SECTION("Empty") {
     REQUIRE(doc1 == doc2);

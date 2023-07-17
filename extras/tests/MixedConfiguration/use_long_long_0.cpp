@@ -4,7 +4,7 @@
 #include <catch.hpp>
 
 TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 0") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   doc["A"] = 42;
   doc["B"] = 84;

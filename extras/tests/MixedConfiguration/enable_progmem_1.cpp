@@ -8,7 +8,7 @@
 #include <catch.hpp>
 
 TEST_CASE("Flash strings") {
-  JsonDocument doc(2048);
+  JsonDocument doc;
 
   SECTION("deserializeJson()") {
     DeserializationError err = deserializeJson(doc, F("{'hello':'world'}"));

@@ -9,7 +9,7 @@ using ArduinoJson::detail::isnan;
 }  // namespace my
 
 TEST_CASE("ARDUINOJSON_ENABLE_NAN == 1") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
   JsonObject root = doc.to<JsonObject>();
 
   SECTION("serializeJson()") {

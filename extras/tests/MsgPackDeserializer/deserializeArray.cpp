@@ -6,7 +6,7 @@
 #include <catch.hpp>
 
 TEST_CASE("deserialize MsgPack array") {
-  JsonDocument doc(4096);
+  JsonDocument doc;
 
   SECTION("fixarray") {
     SECTION("empty") {

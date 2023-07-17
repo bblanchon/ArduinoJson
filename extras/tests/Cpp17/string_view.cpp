@@ -11,7 +11,7 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("string_view") {
-  JsonDocument doc(256);
+  JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("deserializeJson()") {
