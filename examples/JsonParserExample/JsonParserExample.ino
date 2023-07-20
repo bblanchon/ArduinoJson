@@ -18,7 +18,7 @@ void setup() {
   JsonDocument doc;
 
   // JSON input string.
-  char json[] =
+  const char* json =
       "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 
   // Deserialize the JSON document
