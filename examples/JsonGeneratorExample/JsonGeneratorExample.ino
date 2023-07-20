@@ -15,25 +15,18 @@ void setup() {
     continue;
 
   // Allocate the JSON document
-  //
-  // Inside the parentheses, 200 is the RAM allocated to this document.
-  // Don't forget to change this value to match your requirement.
-  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   JsonDocument doc;
 
   // Add values in the document
-  //
   doc["sensor"] = "gps";
   doc["time"] = 1351824120;
 
   // Add an array.
-  //
   JsonArray data = doc.createNestedArray("data");
   data.add(48.756080);
   data.add(2.302038);
 
   // Generate the minified JSON and send it to the Serial port.
-  //
   serializeJson(doc, Serial);
   // The above line prints:
   // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
@@ -42,7 +35,6 @@ void setup() {
   Serial.println();
 
   // Generate the prettified JSON and send it to the Serial port.
-  //
   serializeJsonPretty(doc, Serial);
   // The above line prints:
   // {

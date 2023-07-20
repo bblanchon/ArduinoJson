@@ -47,7 +47,6 @@ void setup() {
 
 void loop() {
   // Allocate a temporary JsonDocument
-  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   JsonDocument doc;
 
   // Create the "analog" array

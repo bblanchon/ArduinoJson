@@ -24,11 +24,6 @@
 #include <SPI.h>
 
 // Our configuration structure.
-//
-// Never use a JsonDocument to store the configuration!
-// A JsonDocument is *not* a permanent storage; it's only a temporary storage
-// used during the serialization phase. See:
-// https://arduinojson.org/v6/faq/why-must-i-create-a-separate-config-object/
 struct Config {
   char hostname[64];
   int port;
@@ -43,8 +38,6 @@ void loadConfiguration(const char* filename, Config& config) {
   File file = SD.open(filename);
 
   // Allocate a temporary JsonDocument
-  // Don't forget to change the capacity to match your requirements.
-  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   JsonDocument doc;
 
   // Deserialize the JSON document
@@ -75,8 +68,6 @@ void saveConfiguration(const char* filename, const Config& config) {
   }
 
   // Allocate a temporary JsonDocument
-  // Don't forget to change the capacity to match your requirements.
-  // Use https://arduinojson.org/assistant to compute the capacity.
   JsonDocument doc;
 
   // Set the values in the document

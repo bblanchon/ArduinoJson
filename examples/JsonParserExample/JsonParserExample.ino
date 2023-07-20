@@ -15,20 +15,9 @@ void setup() {
     continue;
 
   // Allocate the JSON document
-  //
-  // Inside the parentheses, 200 is the capacity of the memory pool in bytes.
-  // Don't forget to change this value to match your JSON document.
-  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   JsonDocument doc;
 
   // JSON input string.
-  //
-  // Using a char[], as shown here, enables the "zero-copy" mode. This mode uses
-  // the minimal amount of memory because the JsonDocument stores pointers to
-  // the input buffer.
-  // If you use another type of input, ArduinoJson must copy the strings from
-  // the input to the JsonDocument, so you need to increase the capacity of the
-  // JsonDocument.
   char json[] =
       "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 

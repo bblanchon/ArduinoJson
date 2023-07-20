@@ -16,20 +16,9 @@ void setup() {
     continue;
 
   // Allocate the JSON document
-  //
-  // Inside the parentheses, 200 is the capacity of the memory pool in bytes.
-  // Don't forget to change this value to match your JSON document.
-  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   JsonDocument doc;
 
   // MessagePack input string.
-  //
-  // Using a char[], as shown here, enables the "zero-copy" mode. This mode uses
-  // the minimal amount of memory because the JsonDocument stores pointers to
-  // the input buffer.
-  // If you use another type of input, ArduinoJson must copy the strings from
-  // the input to the JsonDocument, so you need to increase the capacity of the
-  // JsonDocument.
   uint8_t input[] = {131, 166, 115, 101, 110, 115, 111, 114, 163, 103, 112, 115,
                      164, 116, 105, 109, 101, 206, 80,  147, 50,  248, 164, 100,
                      97,  116, 97,  146, 203, 64,  72,  96,  199, 58,  188, 148,
