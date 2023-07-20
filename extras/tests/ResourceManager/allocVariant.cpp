@@ -23,6 +23,24 @@ TEST_CASE("ResourceManager::allocSlot()") {
     REQUIRE(s1 != s2);
   }
 
+  SECTION("Returns the same slot after calling freeSlot()") {
+    ResourceManager resources;
+
+    auto s1 = resources.allocSlot();
+    auto s2 = resources.allocSlot();
+    resources.freeSlot(s1);
+    resources.freeSlot(s2);
+    auto s3 = resources.allocSlot();
+    auto s4 = resources.allocSlot();
+    auto s5 = resources.allocSlot();
+
+    REQUIRE(s2.id() != s1.id());
+    REQUIRE(s3.id() == s2.id());
+    REQUIRE(s4.id() == s1.id());
+    REQUIRE(s5.id() != s1.id());
+    REQUIRE(s5.id() != s2.id());
+  }
+
   SECTION("Returns aligned pointers") {
     ResourceManager resources;
 

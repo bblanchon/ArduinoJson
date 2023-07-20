@@ -61,4 +61,17 @@ inline size_t VariantPool::slotsToBytes(SlotCount n) {
   return n * sizeof(VariantSlot);
 }
 
+inline SlotWithId VariantPoolList::allocFromFreeList() {
+  ARDUINOJSON_ASSERT(freeList_ != NULL_SLOT);
+  auto id = freeList_;
+  auto slot = getSlot(freeList_);
+  freeList_ = slot->next();
+  return {new (slot) VariantSlot, id};
+}
+
+inline void VariantPoolList::freeSlot(SlotWithId slot) {
+  slot->setNext(freeList_);
+  freeList_ = slot.id();
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 TEST_CASE("JsonArray::clear()") {
   SECTION("No-op on null JsonArray") {
     JsonArray array;
@@ -21,5 +23,26 @@ TEST_CASE("JsonArray::clear()") {
     array.clear();
     REQUIRE(array.size() == 0);
     REQUIRE(array.isNull() == false);
+  }
+
+  SECTION("Removed elements are recycled") {
+    SpyingAllocator allocator;
+    JsonDocument doc(&allocator);
+    JsonArray array = doc.to<JsonArray>();
+
+    // fill the pool entirely
+    for (int i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
+      array.add(i);
+
+    // clear and fill again
+    array.clear();
+    for (int i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
+      array.add(i);
+
+    REQUIRE(
+        allocator.log() ==
+        AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
+                       << AllocatorLog::Allocate(sizeofPool())  // only one pool
+    );
   }
 }

@@ -59,6 +59,10 @@ class ResourceManager {
     return p;
   }
 
+  void freeSlot(SlotWithId id) {
+    variantPools_.freeSlot(id);
+  }
+
   VariantSlot* getSlot(SlotId id) const {
     return variantPools_.getSlot(id);
   }

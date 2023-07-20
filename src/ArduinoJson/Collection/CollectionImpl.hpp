@@ -133,6 +133,7 @@ inline void CollectionData::releaseSlot(iterator it,
   if (it.ownsKey())
     resources->dereferenceString(it.key());
   it->setNull(resources);
+  resources->freeSlot(SlotWithId(it.slot_, it.currentId_));
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

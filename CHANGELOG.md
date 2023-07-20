@@ -20,3 +20,4 @@ HEAD
 * Include `ARDUINOJSON_SLOT_OFFSET_SIZE` in the namespace name
 * Remove `JsonVariant::shallowCopy()`
 * `JsonDocument`'s capacity grows as needed, no need to pass it to the constructor anymore
+* `JsonDocument`'s allocator is not monotonic anymore, removed values get recycled

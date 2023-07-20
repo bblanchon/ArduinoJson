@@ -29,6 +29,11 @@ class VariantPoolList {
   }
 
   SlotWithId allocSlot(Allocator* allocator) {
+    // try to allocate from free list
+    if (freeList_ != NULL_SLOT) {
+      return allocFromFreeList();
+    }
+
     // try to allocate from last pool (other pools are full)
     if (pools_) {
       auto slot = allocFromLastPool();
@@ -43,6 +48,8 @@ class VariantPoolList {
 
     return allocFromLastPool();
   }
+
+  void freeSlot(SlotWithId slot);
 
   VariantSlot* getSlot(SlotId id) const {
     auto poolIndex = SlotId(id / ARDUINOJSON_POOL_CAPACITY);
@@ -82,6 +89,8 @@ class VariantPoolList {
   }
 
  private:
+  SlotWithId allocFromFreeList();
+
   SlotWithId allocFromLastPool() {
     ARDUINOJSON_ASSERT(pools_ != nullptr);
     auto poolIndex = SlotId(count_ - 1);
@@ -121,6 +130,7 @@ class VariantPoolList {
   VariantPool* pools_ = nullptr;
   size_t count_ = 0;
   size_t capacity_ = 0;
+  SlotId freeList_ = NULL_SLOT;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

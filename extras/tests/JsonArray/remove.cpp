@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 TEST_CASE("JsonArray::remove()") {
   JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
@@ -86,4 +88,26 @@ TEST_CASE("JsonArray::remove()") {
     JsonArray unboundArray;
     unboundArray.remove(unboundArray.begin());
   }
+}
+
+TEST_CASE("Removed elements are recycled") {
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
+  JsonArray array = doc.to<JsonArray>();
+
+  // fill the pool entirely
+  for (int i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
+    array.add(i);
+
+  // free one slot in the pool
+  array.remove(0);
+
+  // add one element; it should use the free slot
+  array.add(42);
+
+  REQUIRE(
+      allocator.log() ==
+      AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
+                     << AllocatorLog::Allocate(sizeofPool())  // only one pool
+  );
 }
