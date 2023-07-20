@@ -9,6 +9,8 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
+using PoolCount = SlotId;
+
 class VariantPoolList {
  public:
   VariantPoolList() = default;
@@ -63,7 +65,7 @@ class VariantPoolList {
   void clear(Allocator* allocator) {
     if (!pools_)
       return;
-    for (size_t i = 0; i < count_; i++)
+    for (PoolCount i = 0; i < count_; i++)
       pools_[i].destroy(allocator);
     allocator->deallocate(pools_);
     pools_ = nullptr;
@@ -73,7 +75,7 @@ class VariantPoolList {
 
   SlotCount usage() const {
     SlotCount total = 0;
-    for (size_t i = 0; i < count_; i++)
+    for (PoolCount i = 0; i < count_; i++)
       total = SlotCount(total + pools_[i].usage());
     return total;
   }
@@ -112,9 +114,9 @@ class VariantPoolList {
 
   bool increaseCapacity(Allocator* allocator) {
     void* newPools;
-    size_t newCapacity;
+    PoolCount newCapacity;
     if (pools_) {
-      newCapacity = capacity_ * 2;
+      newCapacity = PoolCount(capacity_ * 2);
       newPools =
           allocator->reallocate(pools_, newCapacity * sizeof(VariantPool));
     } else {
@@ -129,8 +131,8 @@ class VariantPoolList {
   }
 
   VariantPool* pools_ = nullptr;
-  size_t count_ = 0;
-  size_t capacity_ = 0;
+  PoolCount count_ = 0;
+  PoolCount capacity_ = 0;
   SlotId freeList_ = NULL_SLOT;
 };
 
