@@ -10,6 +10,11 @@ add_executable(ResourceManagerTests
 	StringBuilder.cpp
 )
 
+add_compile_definitions(ResourceManagerTests
+	ARDUINOJSON_SLOT_ID_SIZE=1 # require less RAM for overflow tests
+	ARDUINOJSON_POOL_CAPACITY=16
+)
+
 add_test(ResourceManager ResourceManagerTests)
 
 set_tests_properties(ResourceManager

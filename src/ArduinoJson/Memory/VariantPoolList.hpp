@@ -108,11 +108,16 @@ class VariantPoolList {
     if (count_ == capacity_ && !increaseCapacity(allocator))
       return nullptr;
     auto pool = &pools_[count_++];
-    pool->create(ARDUINOJSON_POOL_CAPACITY, allocator);
+    SlotCount poolCapacity = ARDUINOJSON_POOL_CAPACITY;
+    if (count_ == maxPools)  // last pool is smaller because of NULL_SLOT
+      poolCapacity--;
+    pool->create(poolCapacity, allocator);
     return pool;
   }
 
   bool increaseCapacity(Allocator* allocator) {
+    if (count_ == maxPools)
+      return false;
     void* newPools;
     PoolCount newCapacity;
     if (pools_) {
@@ -134,6 +139,10 @@ class VariantPoolList {
   PoolCount count_ = 0;
   PoolCount capacity_ = 0;
   SlotId freeList_ = NULL_SLOT;
+
+ public:
+  static const PoolCount maxPools =
+      PoolCount(NULL_SLOT / ARDUINOJSON_POOL_CAPACITY + 1);
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

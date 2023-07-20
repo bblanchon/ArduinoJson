@@ -66,4 +66,30 @@ TEST_CASE("ResourceManager::allocSlot()") {
     REQUIRE(variant.id() == NULL_SLOT);
     REQUIRE(static_cast<VariantSlot*>(variant) == nullptr);
   }
+
+  SECTION("Try overflow pool counter") {
+    ResourceManager resources;
+
+    // this test assumes SlotId is 8-bit; otherwise it consumes a lot of memory
+    // tyhe GitHub Workflow gets killed
+    REQUIRE(NULL_SLOT == 255);
+
+    // fill all the pools
+    for (SlotId i = 0; i < NULL_SLOT; i++) {
+      auto slot = resources.allocSlot();
+      REQUIRE(slot.id() == i);  // or != NULL_SLOT
+      REQUIRE(static_cast<VariantSlot*>(slot) != nullptr);
+    }
+
+    REQUIRE(resources.overflowed() == false);
+
+    // now all allocations should fail
+    for (int i = 0; i < 10; i++) {
+      auto slot = resources.allocSlot();
+      REQUIRE(slot.id() == NULL_SLOT);
+      REQUIRE(static_cast<VariantSlot*>(slot) == nullptr);
+    }
+
+    REQUIRE(resources.overflowed() == true);
+  }
 }
