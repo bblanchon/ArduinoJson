@@ -42,7 +42,8 @@ inline SlotWithId VariantPool::allocSlot() {
 }
 
 inline VariantSlot* VariantPool::getSlot(SlotId id) const {
-  return id == NULL_SLOT ? nullptr : &slots_[id];
+  ARDUINOJSON_ASSERT(id < usage_);
+  return &slots_[id];
 }
 
 inline SlotCount VariantPool::usage() const {

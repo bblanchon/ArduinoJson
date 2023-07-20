@@ -52,10 +52,11 @@ class VariantPoolList {
   void freeSlot(SlotWithId slot);
 
   VariantSlot* getSlot(SlotId id) const {
+    if (id == NULL_SLOT)
+      return nullptr;
     auto poolIndex = SlotId(id / ARDUINOJSON_POOL_CAPACITY);
     auto indexInPool = SlotId(id % ARDUINOJSON_POOL_CAPACITY);
-    if (poolIndex >= count_)
-      return nullptr;
+    ARDUINOJSON_ASSERT(poolIndex < count_);
     return pools_[poolIndex].getSlot(indexInPool);
   }
 
