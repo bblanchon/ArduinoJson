@@ -18,7 +18,7 @@ class CollectionIterator {
   friend class CollectionData;
 
  public:
-  CollectionIterator() : slot_(nullptr) {}
+  CollectionIterator() : slot_(nullptr), currentId_(NULL_SLOT) {}
 
   void next(const ResourceManager* resources);
 
@@ -64,9 +64,10 @@ class CollectionIterator {
   }
 
  private:
-  CollectionIterator(VariantSlot* slot) : slot_(slot) {}
+  CollectionIterator(VariantSlot* slot, SlotId slotId);
 
   VariantSlot* slot_;
+  SlotId currentId_, nextId_;
 };
 
 class CollectionData {
@@ -84,7 +85,7 @@ class CollectionData {
   using iterator = CollectionIterator;
 
   iterator createIterator(const ResourceManager* resources) const {
-    return iterator(resources->getSlot(head_));
+    return iterator(resources->getSlot(head_), head_);
   }
 
   size_t memoryUsage(const ResourceManager*) const;

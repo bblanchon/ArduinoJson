@@ -12,6 +12,11 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
+inline CollectionIterator::CollectionIterator(VariantSlot* slot, SlotId slotId)
+    : slot_(slot), currentId_(slotId) {
+  nextId_ = slot_ ? slot_->next() : NULL_SLOT;
+}
+
 inline const char* CollectionIterator::key() const {
   ARDUINOJSON_ASSERT(slot_ != nullptr);
   return slot_->key();
@@ -35,19 +40,18 @@ inline bool CollectionIterator::ownsKey() const {
 }
 
 inline void CollectionIterator::next(const ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(slot_ != nullptr);
-  auto nextId = slot_->next();
-  if (nextId != NULL_SLOT)
-    slot_ = resources->getSlot(nextId);
-  else
-    slot_ = nullptr;
+  ARDUINOJSON_ASSERT(currentId_ != NULL_SLOT);
+  slot_ = resources->getSlot(nextId_);
+  currentId_ = nextId_;
+  if (slot_)
+    nextId_ = slot_->next();
 }
 
 inline CollectionData::iterator CollectionData::addSlot(
     ResourceManager* resources) {
   auto slot = resources->allocSlot();
   if (!slot)
-    return nullptr;
+    return {};
   if (tail_ != NULL_SLOT) {
     auto tail = resources->getSlot(tail_);
     tail->setNext(slot.id());
@@ -56,7 +60,7 @@ inline CollectionData::iterator CollectionData::addSlot(
     head_ = slot.id();
     tail_ = slot.id();
   }
-  return iterator(slot);
+  return iterator(slot, slot.id());
 }
 
 inline void CollectionData::clear(ResourceManager* resources) {
