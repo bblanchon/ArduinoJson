@@ -281,7 +281,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("allocation of pool fails") {
-    allocator.setCountdown(1);
+    allocator.setCountdown(0);
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -291,7 +291,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("allocation of string fails in array") {
-    allocator.setCountdown(2);
+    allocator.setCountdown(1);
     char input[] = "[0,\"hi!\"]";
 
     DeserializationError err = deserializeJson(doc, input);

@@ -178,23 +178,19 @@ TEST_CASE("deserializeMsgPack() under memory constaints") {
     checkError(0, "\x91\x01",
                DeserializationError::NoMemory);  // [1]
     checkError(1, "\x91\x01",
-               DeserializationError::NoMemory);  // [1]
-    checkError(2, "\x91\x01",
                DeserializationError::Ok);  // [1]
   }
 
   SECTION("array 16") {
     checkError(0, "\xDC\x00\x00", DeserializationError::Ok);
     checkError(0, "\xDC\x00\x01\x01", DeserializationError::NoMemory);
-    checkError(1, "\xDC\x00\x01\x01", DeserializationError::NoMemory);
-    checkError(2, "\xDC\x00\x01\x01", DeserializationError::Ok);
+    checkError(1, "\xDC\x00\x01\x01", DeserializationError::Ok);
   }
 
   SECTION("array 32") {
     checkError(0, "\xDD\x00\x00\x00\x00", DeserializationError::Ok);
     checkError(0, "\xDD\x00\x00\x00\x01\x01", DeserializationError::NoMemory);
-    checkError(1, "\xDD\x00\x00\x00\x01\x01", DeserializationError::NoMemory);
-    checkError(2, "\xDD\x00\x00\x00\x01\x01", DeserializationError::Ok);
+    checkError(1, "\xDD\x00\x00\x00\x01\x01", DeserializationError::Ok);
   }
 
   SECTION("fixmap") {
@@ -203,11 +199,11 @@ TEST_CASE("deserializeMsgPack() under memory constaints") {
     }
     SECTION("{H:1}") {
       checkError(0, "\x81\xA1H\x01", DeserializationError::NoMemory);
-      checkError(4, "\x81\xA1H\x01", DeserializationError::Ok);
+      checkError(3, "\x81\xA1H\x01", DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      checkError(4, "\x82\xA1H\x01\xA1W\x02", DeserializationError::NoMemory);
-      checkError(6, "\x82\xA1H\x01\xA1W\x02", DeserializationError::Ok);
+      checkError(3, "\x82\xA1H\x01\xA1W\x02", DeserializationError::NoMemory);
+      checkError(5, "\x82\xA1H\x01\xA1W\x02", DeserializationError::Ok);
     }
   }
 
@@ -217,12 +213,12 @@ TEST_CASE("deserializeMsgPack() under memory constaints") {
     }
     SECTION("{H:1}") {
       checkError(2, "\xDE\x00\x01\xA1H\x01", DeserializationError::NoMemory);
-      checkError(4, "\xDE\x00\x01\xA1H\x01", DeserializationError::Ok);
+      checkError(3, "\xDE\x00\x01\xA1H\x01", DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      checkError(4, "\xDE\x00\x02\xA1H\x01\xA1W\x02",
+      checkError(3, "\xDE\x00\x02\xA1H\x01\xA1W\x02",
                  DeserializationError::NoMemory);
-      checkError(6, "\xDE\x00\x02\xA1H\x01\xA1W\x02", DeserializationError::Ok);
+      checkError(5, "\xDE\x00\x02\xA1H\x01\xA1W\x02", DeserializationError::Ok);
     }
   }
 
@@ -233,12 +229,12 @@ TEST_CASE("deserializeMsgPack() under memory constaints") {
     SECTION("{H:1}") {
       checkError(2, "\xDF\x00\x00\x00\x01\xA1H\x01",
                  DeserializationError::NoMemory);
-      checkError(4, "\xDF\x00\x00\x00\x01\xA1H\x01", DeserializationError::Ok);
+      checkError(3, "\xDF\x00\x00\x00\x01\xA1H\x01", DeserializationError::Ok);
     }
     SECTION("{H:1,W:2}") {
-      checkError(4, "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
+      checkError(3, "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
                  DeserializationError::NoMemory);
-      checkError(6, "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
+      checkError(5, "\xDF\x00\x00\x00\x02\xA1H\x01\xA1W\x02",
                  DeserializationError::Ok);
     }
   }

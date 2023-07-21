@@ -32,38 +32,60 @@ struct FailingAllocator : ArduinoJson::Allocator {
 
 class AllocatorLog {
  public:
-  static std::string Allocate(size_t s) {
+  class Entry {
+   public:
+    Entry(std::string s, size_t n = 1) : str_(s), count_(n) {}
+
+    const std::string& str() const {
+      return str_;
+    }
+
+    size_t count() const {
+      return count_;
+    }
+
+    Entry operator*(size_t n) const {
+      return Entry(str_, n);
+    }
+
+   private:
+    std::string str_;
+    size_t count_;
+  };
+
+  static Entry Allocate(size_t s) {
     char buffer[32];
     sprintf(buffer, "allocate(%zu)", s);
-    return buffer;
+    return Entry(buffer);
   }
 
-  static std::string AllocateFail(size_t s) {
+  static Entry AllocateFail(size_t s) {
     char buffer[32];
     sprintf(buffer, "allocate(%zu) -> nullptr", s);
-    return buffer;
+    return Entry(buffer);
   }
 
-  static std::string Reallocate(size_t s1, size_t s2) {
+  static Entry Reallocate(size_t s1, size_t s2) {
     char buffer[32];
     sprintf(buffer, "reallocate(%zu, %zu)", s1, s2);
-    return buffer;
+    return Entry(buffer);
   };
 
-  static std::string ReallocateFail(size_t s1, size_t s2) {
+  static Entry ReallocateFail(size_t s1, size_t s2) {
     char buffer[32];
     sprintf(buffer, "reallocate(%zu, %zu) -> nullptr", s1, s2);
-    return buffer;
+    return Entry(buffer);
   };
 
-  static std::string Deallocate(size_t s) {
+  static Entry Deallocate(size_t s) {
     char buffer[32];
     sprintf(buffer, "deallocate(%zu)", s);
-    return buffer;
+    return Entry(buffer);
   };
 
-  AllocatorLog& operator<<(const std::string& s) {
-    log_ << s << "\n";
+  AllocatorLog& operator<<(const Entry& entry) {
+    for (size_t i = 0; i < entry.count(); i++)
+      log_ << entry.str() << "\n";
     return *this;
   }
 

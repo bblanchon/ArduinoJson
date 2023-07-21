@@ -344,7 +344,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
     REQUIRE(doc.as<std::string>() == "{}");
   }
 
-  SECTION("pool list allocation fails") {
+  SECTION("pool allocation fails") {
     allocator.setCountdown(2);
     char input[] = "{\"a\":1}";
 
@@ -354,18 +354,8 @@ TEST_CASE("deserialize JSON object under memory constraints") {
     REQUIRE(doc.as<std::string>() == "{}");
   }
 
-  SECTION("pool allocation fails") {
-    allocator.setCountdown(3);
-    char input[] = "{\"a\":1}";
-
-    DeserializationError err = deserializeJson(doc, input);
-
-    REQUIRE(err == DeserializationError::NoMemory);
-    REQUIRE(doc.as<std::string>() == "{}");
-  }
-
   SECTION("string allocation fails") {
-    allocator.setCountdown(4);
+    allocator.setCountdown(3);
     char input[] = "{\"a\":\"b\"}";
 
     DeserializationError err = deserializeJson(doc, input);

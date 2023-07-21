@@ -39,10 +39,7 @@ TEST_CASE("JsonArray::clear()") {
     for (int i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
       array.add(i);
 
-    REQUIRE(
-        allocator.log() ==
-        AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                       << AllocatorLog::Allocate(sizeofPool())  // only one pool
-    );
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 }

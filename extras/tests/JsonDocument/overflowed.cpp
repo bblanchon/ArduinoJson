@@ -47,13 +47,13 @@ TEST_CASE("JsonDocument::overflowed()") {
   }
 
   SECTION("returns true after a failed deserialization") {
-    allocator.setCountdown(1);
+    allocator.setCountdown(0);
     deserializeJson(doc, "[1, 2]");
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns false after a successful deserialization") {
-    allocator.setCountdown(4);
+    allocator.setCountdown(3);
     deserializeJson(doc, "[\"example\"]");
     CHECK(doc.overflowed() == false);
   }

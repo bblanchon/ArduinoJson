@@ -16,15 +16,21 @@ class VariantPoolList {
   VariantPoolList() = default;
 
   ~VariantPoolList() {
-    ARDUINOJSON_ASSERT(pools_ == nullptr);
+    ARDUINOJSON_ASSERT(count_ == 0);
   }
 
   VariantPoolList& operator=(VariantPoolList&& src) {
-    ARDUINOJSON_ASSERT(pools_ == nullptr);
-    pools_ = src.pools_;
+    ARDUINOJSON_ASSERT(count_ == 0);
+    if (src.pools_ == src.preallocatedPools_) {
+      memcpy(preallocatedPools_, src.preallocatedPools_,
+             sizeof(preallocatedPools_));
+      pools_ = preallocatedPools_;
+    } else {
+      pools_ = src.pools_;
+      src.pools_ = nullptr;
+    }
     count_ = src.count_;
     capacity_ = src.capacity_;
-    src.pools_ = nullptr;
     src.count_ = 0;
     src.capacity_ = 0;
     return *this;
@@ -37,7 +43,7 @@ class VariantPoolList {
     }
 
     // try to allocate from last pool (other pools are full)
-    if (pools_) {
+    if (count_) {
       auto slot = allocFromLastPool();
       if (slot)
         return slot;
@@ -63,14 +69,14 @@ class VariantPoolList {
   }
 
   void clear(Allocator* allocator) {
-    if (!pools_)
-      return;
     for (PoolCount i = 0; i < count_; i++)
       pools_[i].destroy(allocator);
-    allocator->deallocate(pools_);
-    pools_ = nullptr;
     count_ = 0;
-    capacity_ = 0;
+    if (pools_ != preallocatedPools_) {
+      allocator->deallocate(pools_);
+      pools_ = preallocatedPools_;
+      capacity_ = ARDUINOJSON_INITIAL_POOL_COUNT;
+    }
   }
 
   SlotCount usage() const {
@@ -81,9 +87,9 @@ class VariantPoolList {
   }
 
   void shrinkToFit(Allocator* allocator) {
-    if (pools_)
+    if (count_ > 0)
       pools_[count_ - 1].shrinkToFit(allocator);
-    if (count_ != capacity_) {
+    if (pools_ != preallocatedPools_ && count_ != capacity_) {
       pools_ = static_cast<VariantPool*>(
           allocator->reallocate(pools_, count_ * sizeof(VariantPool)));
       ARDUINOJSON_ASSERT(pools_ != nullptr);  // realloc to smaller can't fail
@@ -95,10 +101,9 @@ class VariantPoolList {
   SlotWithId allocFromFreeList();
 
   SlotWithId allocFromLastPool() {
-    ARDUINOJSON_ASSERT(pools_ != nullptr);
+    ARDUINOJSON_ASSERT(count_ > 0);
     auto poolIndex = SlotId(count_ - 1);
-    auto lastPool = count_ ? &pools_[poolIndex] : nullptr;
-    auto slot = lastPool->allocSlot();
+    auto slot = pools_[poolIndex].allocSlot();
     if (!slot)
       return {};
     return {slot, SlotId(poolIndex * ARDUINOJSON_POOL_CAPACITY + slot.id())};
@@ -116,28 +121,32 @@ class VariantPoolList {
   }
 
   bool increaseCapacity(Allocator* allocator) {
-    if (count_ == maxPools)
+    if (capacity_ == maxPools)
       return false;
     void* newPools;
-    PoolCount newCapacity;
-    if (pools_) {
-      newCapacity = PoolCount(capacity_ * 2);
+    auto newCapacity = PoolCount(capacity_ * 2);
+
+    if (pools_ == preallocatedPools_) {
+      newPools = allocator->allocate(newCapacity * sizeof(VariantPool));
+      if (!newPools)
+        return false;
+      memcpy(newPools, preallocatedPools_, sizeof(preallocatedPools_));
+    } else {
       newPools =
           allocator->reallocate(pools_, newCapacity * sizeof(VariantPool));
-    } else {
-      newCapacity = ARDUINOJSON_INITIAL_POOL_COUNT;
-      newPools = allocator->allocate(newCapacity * sizeof(VariantPool));
+      if (!newPools)
+        return false;
     }
-    if (!newPools)
-      return false;
+
     pools_ = static_cast<VariantPool*>(newPools);
     capacity_ = newCapacity;
     return true;
   }
 
-  VariantPool* pools_ = nullptr;
+  VariantPool preallocatedPools_[ARDUINOJSON_INITIAL_POOL_COUNT];
+  VariantPool* pools_ = preallocatedPools_;
   PoolCount count_ = 0;
-  PoolCount capacity_ = 0;
+  PoolCount capacity_ = ARDUINOJSON_INITIAL_POOL_COUNT;
   SlotId freeList_ = NULL_SLOT;
 
  public:

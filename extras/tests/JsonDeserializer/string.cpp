@@ -111,14 +111,13 @@ TEST_CASE("Allocation of the key fails") {
   }
 
   SECTION("Quoted string, second member") {
-    timebombAllocator.setCountdown(4);
+    timebombAllocator.setCountdown(3);
     REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
             DeserializationError::NoMemory);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Reallocate(sizeofString(31),
                                                        sizeofString(5))
-                           << AllocatorLog::Allocate(sizeofPoolList())
                            << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::AllocateFail(sizeofString(31)));
   }
@@ -131,14 +130,13 @@ TEST_CASE("Allocation of the key fails") {
   }
 
   SECTION("Non-Quoted string, second member") {
-    timebombAllocator.setCountdown(4);
+    timebombAllocator.setCountdown(3);
     REQUIRE(deserializeJson(doc, "{hello:1,world}") ==
             DeserializationError::NoMemory);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::Reallocate(sizeofString(31),
                                                        sizeofString(5))
-                           << AllocatorLog::Allocate(sizeofPoolList())
                            << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::AllocateFail(sizeofString(31)));
   }

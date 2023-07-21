@@ -57,8 +57,7 @@ TEST_CASE("ResourceManager::allocSlot()") {
   }
 
   SECTION("Returns null if pool allocation fails") {
-    TimebombAllocator allocator(1);
-    ResourceManager resources(&allocator);
+    ResourceManager resources(FailingAllocator::instance());
 
     resources.allocSlot();
 

@@ -24,7 +24,6 @@ TEST_CASE("JsonDocument assignment") {
 
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
-                           << AllocatorLog::Allocate(sizeofPoolList())
                            << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );
@@ -40,8 +39,7 @@ TEST_CASE("JsonDocument assignment") {
 
     REQUIRE(doc2.as<std::string>() == "[{\"hello\":\"world\"}]");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                           << AllocatorLog::Allocate(sizeofPool())
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Allocate(sizeofString(5))  // hello
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );
@@ -58,7 +56,6 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
-                           << AllocatorLog::Allocate(sizeofPoolList())
                            << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Allocate(sizeofString(5))  // world
     );
@@ -78,13 +75,11 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(
         spyingAllocator.log() ==
         AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
-                       << AllocatorLog::Allocate(sizeofPoolList())
                        << AllocatorLog::Allocate(sizeofPool())
                        << AllocatorLog::Allocate(sizeofString(5))    // world
                        << AllocatorLog::Deallocate(sizeofString(5))  // hello
                        << AllocatorLog::Deallocate(sizeofString(5))  // world
-                       << AllocatorLog::Deallocate(sizeofPool())
-                       << AllocatorLog::Deallocate(sizeofPoolList()));
+                       << AllocatorLog::Deallocate(sizeofPool()));
   }
 
   SECTION("Assign from JsonObject") {

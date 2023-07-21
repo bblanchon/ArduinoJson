@@ -59,8 +59,7 @@ TEST_CASE("JsonDocument constructor") {
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                           << AllocatorLog::Allocate(sizeofPool()));
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("Construct from JsonArray") {
@@ -72,8 +71,7 @@ TEST_CASE("JsonDocument constructor") {
 
     REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                           << AllocatorLog::Allocate(sizeofPool()));
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("Construct from JsonVariant") {

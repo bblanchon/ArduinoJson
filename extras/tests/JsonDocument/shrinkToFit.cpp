@@ -105,13 +105,10 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     doc.shrinkToFit();
 
     REQUIRE(doc.as<std::string>() == "{\"key\":42}");
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Reallocate(sizeofPool(),
-                                                       sizeofObject(1))
-                           << AllocatorLog::Reallocate(sizeofPoolList(),
-                                                       sizeofPoolList(1)));
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(sizeofPool())
+                                         << AllocatorLog::Reallocate(
+                                                sizeofPool(), sizeofObject(1)));
   }
 
   SECTION("owned key") {
@@ -122,12 +119,9 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     REQUIRE(doc.as<std::string>() == "{\"abcdefg\":42}");
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(7))
-                           << AllocatorLog::Allocate(sizeofPoolList())
                            << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Reallocate(sizeofPool(),
-                                                       sizeofObject(1))
-                           << AllocatorLog::Reallocate(sizeofPoolList(),
-                                                       sizeofPoolList(1)));
+                                                       sizeofObject(1)));
   }
 
   SECTION("linked string in array") {
@@ -136,13 +130,10 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     doc.shrinkToFit();
 
     REQUIRE(doc.as<std::string>() == "[\"hello\"]");
-    REQUIRE(
-        spyingAllocator.log() ==
-        AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                       << AllocatorLog::Allocate(sizeofPool())
-                       << AllocatorLog::Reallocate(sizeofPool(), sizeofArray(1))
-                       << AllocatorLog::Reallocate(sizeofPoolList(),
-                                                   sizeofPoolList(1)));
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(sizeofPool())
+                                         << AllocatorLog::Reallocate(
+                                                sizeofPool(), sizeofArray(1)));
   }
 
   SECTION("owned string in array") {
@@ -151,14 +142,11 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     doc.shrinkToFit();
 
     REQUIRE(doc.as<std::string>() == "[\"abcdefg\"]");
-    REQUIRE(
-        spyingAllocator.log() ==
-        AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                       << AllocatorLog::Allocate(sizeofPool())
-                       << AllocatorLog::Allocate(sizeofString(7))
-                       << AllocatorLog::Reallocate(sizeofPool(), sizeofArray(1))
-                       << AllocatorLog::Reallocate(sizeofPoolList(),
-                                                   sizeofPoolList(1)));
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPool())
+                           << AllocatorLog::Allocate(sizeofString(7))
+                           << AllocatorLog::Reallocate(sizeofPool(),
+                                                       sizeofArray(1)));
   }
 
   SECTION("linked string in object") {
@@ -167,13 +155,10 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     doc.shrinkToFit();
 
     REQUIRE(doc.as<std::string>() == "{\"key\":\"hello\"}");
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Reallocate(sizeofPool(),
-                                                       sizeofObject(1))
-                           << AllocatorLog::Reallocate(sizeofPoolList(),
-                                                       sizeofPoolList(1)));
+    REQUIRE(spyingAllocator.log() == AllocatorLog()
+                                         << AllocatorLog::Allocate(sizeofPool())
+                                         << AllocatorLog::Reallocate(
+                                                sizeofPool(), sizeofObject(1)));
   }
 
   SECTION("owned string in object") {
@@ -182,13 +167,10 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     doc.shrinkToFit();
 
     REQUIRE(doc.as<std::string>() == "{\"key\":\"abcdefg\"}");
-    REQUIRE(
-        spyingAllocator.log() ==
-        AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                       << AllocatorLog::Allocate(sizeofPool())
-                       << AllocatorLog::Allocate(sizeofString(7))
-                       << AllocatorLog::Reallocate(sizeofPool(), sizeofPool(1))
-                       << AllocatorLog::Reallocate(sizeofPoolList(),
-                                                   sizeofPoolList(1)));
+    REQUIRE(spyingAllocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofPool())
+                           << AllocatorLog::Allocate(sizeofString(7))
+                           << AllocatorLog::Reallocate(sizeofPool(),
+                                                       sizeofPool(1)));
   }
 }

@@ -74,7 +74,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("copy fails in the middle of an object") {
-    TimebombAllocator allocator(3);
+    TimebombAllocator allocator(2);
     JsonDocument doc3(&allocator);
     JsonObject obj3 = doc3.to<JsonObject>();
 
@@ -88,7 +88,7 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("copy fails in the middle of an array") {
-    TimebombAllocator allocator(2);
+    TimebombAllocator allocator(1);
     JsonDocument doc3(&allocator);
     JsonObject obj3 = doc3.to<JsonObject>();
 

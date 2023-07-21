@@ -105,7 +105,7 @@
 #  endif
 #endif
 
-// Capacity of each variant pool (in slots)
+// Initial capacity of the pool list
 #ifndef ARDUINOJSON_INITIAL_POOL_COUNT
 #  define ARDUINOJSON_INITIAL_POOL_COUNT 4
 #endif

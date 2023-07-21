@@ -105,9 +105,7 @@ TEST_CASE("Removed elements are recycled") {
   // add one element; it should use the free slot
   array.add(42);
 
-  REQUIRE(
-      allocator.log() ==
-      AllocatorLog() << AllocatorLog::Allocate(sizeofPoolList())
-                     << AllocatorLog::Allocate(sizeofPool())  // only one pool
+  REQUIRE(allocator.log() == AllocatorLog() << AllocatorLog::Allocate(
+                                 sizeofPool())  // only one pool
   );
 }

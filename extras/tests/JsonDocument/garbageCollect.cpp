@@ -30,11 +30,9 @@ TEST_CASE("JsonDocument::garbageCollect()") {
     REQUIRE(doc.as<std::string>() == "{\"dancing\":2}");
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(7))
-                           << AllocatorLog::Allocate(sizeofPoolList())
                            << AllocatorLog::Allocate(sizeofPool())
                            << AllocatorLog::Deallocate(sizeofString(7))
-                           << AllocatorLog::Deallocate(sizeofPool())
-                           << AllocatorLog::Deallocate(sizeofPoolList()));
+                           << AllocatorLog::Deallocate(sizeofPool()));
   }
 
   SECTION("when allocation fails") {

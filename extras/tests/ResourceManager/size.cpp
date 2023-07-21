@@ -19,7 +19,7 @@ TEST_CASE("ResourceManager::size()") {
   }
 
   SECTION("Doesn't grow when allocation of second pool fails") {
-    allocator.setCountdown(2);
+    allocator.setCountdown(1);
     for (size_t i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
       resources.allocSlot();
     size_t size = resources.size();
