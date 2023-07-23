@@ -21,3 +21,4 @@ HEAD
 * Remove `JsonVariant::shallowCopy()`
 * `JsonDocument`'s capacity grows as needed, no need to pass it to the constructor anymore
 * `JsonDocument`'s allocator is not monotonic anymore, removed values get recycled
+* Show a link to the documentation when user passes an unsupported input type
