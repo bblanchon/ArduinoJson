@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.21.3 (2023-07-23)
+-------
 
 * Fix compatibility with the Blynk libary (issue #1914)
 * Fix double lookup in `to<JsonVariant>()`
