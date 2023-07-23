@@ -20,11 +20,6 @@ int main() {
   //
   // DynamicJsonDocument  doc(200);
 
-  // StaticJsonObject allocates memory on the stack, it can be
-  // replaced by DynamicJsonDocument which allocates in the heap.
-  //
-  // DynamicJsonDocument  doc(200);
-
   // Add values in the document
   //
   doc["sensor"] = "gps";
