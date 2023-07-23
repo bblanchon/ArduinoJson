@@ -73,7 +73,6 @@ push
 extras/scripts/build-arduino-package.sh . "../ArduinoJson-$TAG.zip"
 extras/scripts/build-single-header.sh "src/ArduinoJson.h" "../ArduinoJson-$TAG.h"
 extras/scripts/build-single-header.sh "src/ArduinoJson.hpp" "../ArduinoJson-$TAG.hpp"
-extras/scripts/wandbox/publish.sh "../ArduinoJson-$TAG.h" > "../ArduinoJson-$TAG-wandbox.txt" || echo "Wandbox failed!"
-extras/scripts/get-release-page.sh "$VERSION" "CHANGELOG.md" "../ArduinoJson-$TAG-wandbox.txt" > "../ArduinoJson-$TAG.md"
+extras/scripts/get-release-page.sh "$VERSION" "CHANGELOG.md" "../ArduinoJson-$TAG.h" > "../ArduinoJson-$TAG.md"
 
 echo "You can now copy ../ArduinoJson-$TAG.md into arduinojson.org/collections/_versions/$VERSION.md"
