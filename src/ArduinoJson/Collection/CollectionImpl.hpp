@@ -64,8 +64,14 @@ inline CollectionData::iterator CollectionData::addSlot(
 }
 
 inline void CollectionData::clear(ResourceManager* resources) {
-  for (auto it = createIterator(resources); !it.done(); it.next(resources))
-    releaseSlot(it, resources);
+  auto next = head_;
+  while (next != NULL_SLOT) {
+    auto currId = next;
+    auto slot = resources->getSlot(next);
+    next = slot->next();
+    releaseSlot(SlotWithId(slot, currId), resources);
+  }
+
   head_ = NULL_SLOT;
   tail_ = NULL_SLOT;
 }
@@ -96,7 +102,7 @@ inline void CollectionData::remove(iterator it, ResourceManager* resources) {
     head_ = next;
   if (next == NULL_SLOT)
     tail_ = prev.id();
-  releaseSlot(it, resources);
+  releaseSlot({it.slot_, it.currentId_}, resources);
 }
 
 inline size_t CollectionData::memoryUsage(
@@ -127,13 +133,12 @@ inline size_t CollectionData::size(const ResourceManager* resources) const {
   return count;
 }
 
-inline void CollectionData::releaseSlot(iterator it,
+inline void CollectionData::releaseSlot(SlotWithId slot,
                                         ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(!it.done());
-  if (it.ownsKey())
-    resources->dereferenceString(it.key());
-  it->setNull(resources);
-  resources->freeSlot(SlotWithId(it.slot_, it.currentId_));
+  if (slot->ownsKey())
+    resources->dereferenceString(slot->key());
+  slot->data()->setNull(resources);
+  resources->freeSlot(slot);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

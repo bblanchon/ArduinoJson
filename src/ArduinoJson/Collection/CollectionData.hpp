@@ -110,10 +110,10 @@ class CollectionData {
 
  protected:
   iterator addSlot(ResourceManager*);
-  void releaseSlot(iterator, ResourceManager*);
 
  private:
   SlotWithId getPreviousSlot(VariantSlot*, const ResourceManager*) const;
+  void releaseSlot(SlotWithId, ResourceManager*);
 };
 
 inline const VariantData* collectionToVariant(
