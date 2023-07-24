@@ -20,4 +20,14 @@ typename remove_reference<T>::type&& move(T&& t) {
   return static_cast<typename remove_reference<T>::type&&>(t);
 }
 
+// Polyfull for std::swap
+// Don't use the name "swap" because it makes calls ambiguous for types in the
+// detail namespace
+template <class T>
+void swap_(T& a, T& b) {
+  T tmp = move(a);
+  a = move(b);
+  b = move(tmp);
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

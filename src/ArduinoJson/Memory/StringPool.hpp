@@ -19,15 +19,14 @@ class StringPool {
  public:
   StringPool() = default;
   StringPool(const StringPool&) = delete;
+  void operator=(StringPool&& src) = delete;
 
   ~StringPool() {
     ARDUINOJSON_ASSERT(strings_ == nullptr);
   }
 
-  void operator=(StringPool&& src) {
-    ARDUINOJSON_ASSERT(strings_ == nullptr);
-    strings_ = src.strings_;
-    src.strings_ = nullptr;
+  friend void swap(StringPool& a, StringPool& b) {
+    swap_(a.strings_, b.strings_);
   }
 
   void clear(Allocator* allocator) {

@@ -30,9 +30,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   // Move-constructor
-  JsonDocument(JsonDocument&& src) : resources_(src.allocator()) {
-    // TODO: use the copy and swap idiom
-    moveAssignFrom(src);
+  JsonDocument(JsonDocument&& src) : JsonDocument() {
+    swap(*this, src);
   }
 
   // Construct from variant, array, or object
@@ -56,15 +55,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     set(src);
   }
 
-  JsonDocument& operator=(const JsonDocument& src) {
-    // TODO: use the copy and swap idiom
-    copyAssignFrom(src);
-    return *this;
-  }
-
-  JsonDocument& operator=(JsonDocument&& src) {
-    // TODO: use the copy and swap idiom
-    moveAssignFrom(src);
+  JsonDocument& operator=(JsonDocument src) {
+    swap(*this, src);
     return *this;
   }
 
@@ -87,11 +79,11 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Reclaims the memory leaked when removing and replacing values.
   // https://arduinojson.org/v6/api/jsondocument/garbagecollect/
   bool garbageCollect() {
-    // make a temporary clone and move assign
+    // make a temporary clone and swap
     JsonDocument tmp(*this);
     if (tmp.overflowed())
       return false;
-    moveAssignFrom(tmp);
+    swap(*this, tmp);
     return true;
   }
 
@@ -346,6 +338,11 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return getSlot();
   }
 
+  friend void swap(JsonDocument& a, JsonDocument& b) {
+    swap(a.resources_, b.resources_);
+    swap_(a.data_, b.data_);
+  }
+
  private:
   JsonVariant getSlot() {
     return JsonVariant(&data_, &resources_);
@@ -353,16 +350,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
   JsonVariantConst getSlot() const {
     return JsonVariantConst(&data_, &resources_);
-  }
-
-  void copyAssignFrom(const JsonDocument& src) {
-    set(src);
-  }
-
-  void moveAssignFrom(JsonDocument& src) {
-    data_ = src.data_;
-    src.data_.reset();
-    resources_ = move(src.resources_);
   }
 
   detail::ResourceManager* getResourceManager() {

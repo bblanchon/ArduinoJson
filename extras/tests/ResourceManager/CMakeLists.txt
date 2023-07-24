@@ -9,6 +9,7 @@ add_executable(ResourceManagerTests
 	shrinkToFit.cpp
 	size.cpp
 	StringBuilder.cpp
+	swap.cpp
 )
 
 add_compile_definitions(ResourceManagerTests

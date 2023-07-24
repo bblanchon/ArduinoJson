@@ -302,11 +302,6 @@ class VariantData {
     return var->nesting(resources);
   }
 
-  void operator=(const VariantData& src) {
-    content_ = src.content_;
-    flags_ = uint8_t((flags_ & OWNED_KEY_BIT) | (src.flags_ & ~OWNED_KEY_BIT));
-  }
-
   void removeElement(size_t index, ResourceManager* resources) {
     ArrayData::removeElement(asArray(), index, resources);
   }

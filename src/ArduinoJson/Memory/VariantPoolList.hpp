@@ -19,6 +19,37 @@ class VariantPoolList {
     ARDUINOJSON_ASSERT(count_ == 0);
   }
 
+  friend void swap(VariantPoolList& a, VariantPoolList& b) {
+    bool aUsedPreallocated = a.pools_ == a.preallocatedPools_;
+    bool bUsedPreallocated = b.pools_ == b.preallocatedPools_;
+
+    // Who is using preallocated pools?
+    if (aUsedPreallocated && bUsedPreallocated) {
+      // both of us => swap preallocated pools
+      for (PoolCount i = 0; i < ARDUINOJSON_INITIAL_POOL_COUNT; i++)
+        swap_(a.preallocatedPools_[i], b.preallocatedPools_[i]);
+    } else if (bUsedPreallocated) {
+      // only b => copy b's preallocated pools and give him a's pointer
+      for (PoolCount i = 0; i < b.count_; i++)
+        a.preallocatedPools_[i] = b.preallocatedPools_[i];
+      b.pools_ = a.pools_;
+      a.pools_ = a.preallocatedPools_;
+    } else if (aUsedPreallocated) {
+      // only a => copy a's preallocated pools and give him b's pointer
+      for (PoolCount i = 0; i < a.count_; i++)
+        b.preallocatedPools_[i] = a.preallocatedPools_[i];
+      a.pools_ = b.pools_;
+      b.pools_ = b.preallocatedPools_;
+    } else {
+      // neither => swap pointers
+      swap_(a.pools_, b.pools_);
+    }
+
+    swap_(a.count_, b.count_);
+    swap_(a.capacity_, b.capacity_);
+    swap_(a.freeList_, b.freeList_);
+  }
+
   VariantPoolList& operator=(VariantPoolList&& src) {
     ARDUINOJSON_ASSERT(count_ == 0);
     if (src.pools_ == src.preallocatedPools_) {

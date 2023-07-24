@@ -29,14 +29,11 @@ class ResourceManager {
   ResourceManager(const ResourceManager&) = delete;
   ResourceManager& operator=(const ResourceManager& src) = delete;
 
-  ResourceManager& operator=(ResourceManager&& src) {
-    stringPool_.clear(allocator_);
-    variantPools_.clear(allocator_);
-    allocator_ = src.allocator_;
-    variantPools_ = detail::move(src.variantPools_);
-    overflowed_ = src.overflowed_;
-    stringPool_ = detail::move(src.stringPool_);
-    return *this;
+  friend void swap(ResourceManager& a, ResourceManager& b) {
+    swap(a.stringPool_, b.stringPool_);
+    swap(a.variantPools_, b.variantPools_);
+    swap_(a.allocator_, b.allocator_);
+    swap_(a.overflowed_, b.overflowed_);
   }
 
   Allocator* allocator() const {
