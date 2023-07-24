@@ -11,7 +11,6 @@ add_executable(JsonArrayTests
 	equals.cpp
 	isNull.cpp
 	iterator.cpp
-	memoryUsage.cpp
 	nesting.cpp
 	remove.cpp
 	size.cpp

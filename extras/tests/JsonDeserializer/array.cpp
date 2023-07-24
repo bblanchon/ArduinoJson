@@ -11,7 +11,8 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON array") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
 
   SECTION("An empty array") {
     DeserializationError err = deserializeJson(doc, "[]");
@@ -253,16 +254,19 @@ TEST_CASE("deserialize JSON array") {
     JsonArray arr = doc.as<JsonArray>();
 
     REQUIRE(arr.size() == 0);
-    REQUIRE(doc.memoryUsage() == sizeofArray(0));
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Deallocate(sizeofPool()));
   }
 }
 
 TEST_CASE("deserialize JSON array under memory constraints") {
-  TimebombAllocator allocator(100);
+  TimebombAllocator timebomb(100);
+  SpyingAllocator allocator(&timebomb);
   JsonDocument doc(&allocator);
 
   SECTION("empty array requires no allocation") {
-    allocator.setCountdown(0);
+    timebomb.setCountdown(0);
     char input[] = "[]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -271,7 +275,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("allocation of pool list fails") {
-    allocator.setCountdown(0);
+    timebomb.setCountdown(0);
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -281,7 +285,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("allocation of pool fails") {
-    allocator.setCountdown(0);
+    timebomb.setCountdown(0);
     char input[] = "[1]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -291,7 +295,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   }
 
   SECTION("allocation of string fails in array") {
-    allocator.setCountdown(1);
+    timebomb.setCountdown(1);
     char input[] = "[0,\"hi!\"]";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -303,6 +307,10 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   SECTION("don't store space characters") {
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
-    REQUIRE(sizeofArray(1) + sizeofString(7) == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(31))
+                                   << AllocatorLog::Reallocate(
+                                          sizeofString(31), sizeofString(7)));
   }
 }

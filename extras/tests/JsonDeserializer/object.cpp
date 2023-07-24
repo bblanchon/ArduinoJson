@@ -11,7 +11,8 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON object") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
 
   SECTION("An empty object") {
     DeserializationError err = deserializeJson(doc, "{}");
@@ -282,8 +283,28 @@ TEST_CASE("deserialize JSON object") {
       DeserializationError err = deserializeJson(doc, "{a:{b:{c:1}},a:2}");
 
       REQUIRE(err == DeserializationError::Ok);
-      REQUIRE(doc["a"] == 2);
-      REQUIRE(doc.memoryUsage() == 3 * sizeofObject(1) + sizeofString(1));
+      REQUIRE(doc.as<std::string>() == "{\"a\":2}");
+      REQUIRE(allocator.log() ==
+              AllocatorLog()
+                  // a
+                  << AllocatorLog::Allocate(sizeofString(31))
+                  << AllocatorLog::Reallocate(sizeofString(31), sizeofString(1))
+                  // pool
+                  << AllocatorLog::Allocate(sizeofPool())
+                  // b
+                  << AllocatorLog::Allocate(sizeofString(31))
+                  << AllocatorLog::Reallocate(sizeofString(31), sizeofString(1))
+                  // c
+                  << AllocatorLog::Allocate(sizeofString(31))
+                  << AllocatorLog::Reallocate(sizeofString(31), sizeofString(1))
+                  // string builder
+                  << AllocatorLog::Allocate(sizeofString(31))
+                  // remove b & c
+                  << AllocatorLog::Deallocate(sizeofString(1)) * 2
+                  // string builder
+                  << AllocatorLog::Deallocate(sizeofString(31))
+
+      );
     }
 
     SECTION("Repeated key with zero copy mode") {  // issue #1697
@@ -310,7 +331,21 @@ TEST_CASE("deserialize JSON object") {
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(obj.size() == 0);
-    REQUIRE(doc.memoryUsage() == sizeofObject(0));
+    REQUIRE(allocator.log() ==
+            AllocatorLog()
+                // string "hello"
+                << AllocatorLog::Allocate(sizeofString(31))
+                << AllocatorLog::Reallocate(sizeofString(31), sizeofString(5))
+                // pool
+                << AllocatorLog::Allocate(sizeofPool())
+                // string "world"
+                << AllocatorLog::Allocate(sizeofString(31))
+                << AllocatorLog::Reallocate(sizeofString(31), sizeofString(5))
+                // free pool
+                << AllocatorLog::Deallocate(sizeofPool())
+                // free "hello" and "world"
+                << AllocatorLog::Deallocate(sizeofString(5))
+                << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("Issue #1335") {

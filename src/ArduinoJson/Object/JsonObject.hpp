@@ -53,12 +53,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
     return data_ != 0;
   }
 
-  // Returns the number of bytes occupied by the object.
-  // https://arduinojson.org/v6/api/jsonobject/memoryusage/
-  FORCE_INLINE size_t memoryUsage() const {
-    return data_ ? data_->memoryUsage(resources_) : 0;
-  }
-
   // Returns the depth (nesting level) of the object.
   // https://arduinojson.org/v6/api/jsonobject/nesting/
   FORCE_INLINE size_t nesting() const {

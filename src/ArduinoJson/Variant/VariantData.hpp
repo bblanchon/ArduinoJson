@@ -274,19 +274,6 @@ class VariantData {
     return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
   }
 
-  size_t memoryUsage(const ResourceManager* resources) const {
-    switch (type()) {
-      case VALUE_IS_OWNED_STRING:
-      case VALUE_IS_RAW_STRING:
-        return sizeofString(content_.asOwnedString->length);
-      case VALUE_IS_OBJECT:
-      case VALUE_IS_ARRAY:
-        return content_.asCollection.memoryUsage(resources);
-      default:
-        return 0;
-    }
-  }
-
   size_t nesting(const ResourceManager* resources) const {
     auto collection = asCollection();
     if (collection)

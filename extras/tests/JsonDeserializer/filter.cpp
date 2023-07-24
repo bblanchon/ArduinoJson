@@ -9,6 +9,8 @@
 #include <sstream>
 #include <string>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
@@ -689,8 +691,9 @@ TEST_CASE("Filtering") {
   for (size_t i = 0; i < sizeof(testCases) / sizeof(testCases[0]); i++) {
     CAPTURE(i);
 
+    SpyingAllocator allocator;
     JsonDocument filter;
-    JsonDocument doc;
+    JsonDocument doc(&allocator);
     TestCase& tc = testCases[i];
 
     CAPTURE(tc.filter);
@@ -703,7 +706,9 @@ TEST_CASE("Filtering") {
                               tc.nestingLimit)) == tc.error);
 
     CHECK(doc.as<std::string>() == tc.output);
-    CHECK(doc.memoryUsage() == tc.memoryUsage);
+
+    doc.shrinkToFit();
+    CHECK(allocator.allocatedBytes() == tc.memoryUsage);
   }
 }
 

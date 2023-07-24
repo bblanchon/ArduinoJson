@@ -105,17 +105,6 @@ inline void CollectionData::remove(iterator it, ResourceManager* resources) {
   releaseSlot({it.slot_, it.currentId_}, resources);
 }
 
-inline size_t CollectionData::memoryUsage(
-    const ResourceManager* resources) const {
-  size_t total = 0;
-  for (auto it = createIterator(resources); !it.done(); it.next(resources)) {
-    total += sizeof(VariantSlot) + it->memoryUsage(resources);
-    if (it.ownsKey())
-      total += sizeofString(strlen(it.key()));
-  }
-  return total;
-}
-
 inline size_t CollectionData::nesting(const ResourceManager* resources) const {
   size_t maxChildNesting = 0;
   for (auto it = createIterator(resources); !it.done(); it.next(resources)) {

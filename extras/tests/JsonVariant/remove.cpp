@@ -6,11 +6,14 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::remove(int)") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
 
   SECTION("release top level strings") {
     doc.add(std::string("hello"));
@@ -19,19 +22,23 @@ TEST_CASE("JsonVariant::remove(int)") {
 
     JsonVariant var = doc.as<JsonVariant>();
     REQUIRE(var.as<std::string>() == "[\"hello\",\"hello\",\"world\"]");
-    REQUIRE(doc.memoryUsage() == sizeofArray(3) + 2 * sizeofString(5));
 
+    allocator.clearLog();
     var.remove(1);
     REQUIRE(var.as<std::string>() == "[\"hello\",\"world\"]");
-    REQUIRE(doc.memoryUsage() == sizeofArray(3) + 2 * sizeofString(5));
+    REQUIRE(allocator.log() == AllocatorLog());
 
+    allocator.clearLog();
     var.remove(1);
     REQUIRE(var.as<std::string>() == "[\"hello\"]");
-    REQUIRE(doc.memoryUsage() == sizeofArray(3) + 1 * sizeofString(5));
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
 
+    allocator.clearLog();
     var.remove(0);
     REQUIRE(var.as<std::string>() == "[]");
-    REQUIRE(doc.memoryUsage() == sizeofArray(3));
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("release strings in nested array") {
@@ -39,11 +46,13 @@ TEST_CASE("JsonVariant::remove(int)") {
 
     JsonVariant var = doc.as<JsonVariant>();
     REQUIRE(var.as<std::string>() == "[[\"hello\"]]");
-    REQUIRE(doc.memoryUsage() == 2 * sizeofArray(1) + sizeofString(5));
 
+    allocator.clearLog();
     var.remove(0);
+
     REQUIRE(var.as<std::string>() == "[]");
-    REQUIRE(doc.memoryUsage() == 2 * sizeofArray(1));
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
   }
 }
 

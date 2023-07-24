@@ -130,13 +130,6 @@ class VariantRefBase : public VariantTag {
     return VariantData::size(getData(), getResourceManager());
   }
 
-  // Returns the number of bytes occupied by the value.
-  // https://arduinojson.org/v6/api/jsonvariant/memoryusage/
-  FORCE_INLINE size_t memoryUsage() const {
-    VariantData* data = getData();
-    return data ? data->memoryUsage(getResourceManager()) : 0;
-  }
-
   // Returns the depth (nesting level) of the value.
   // https://arduinojson.org/v6/api/jsonvariant/nesting/
   FORCE_INLINE size_t nesting() const {

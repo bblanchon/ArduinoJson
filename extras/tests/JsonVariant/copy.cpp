@@ -44,8 +44,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == 0);
-    REQUIRE(doc2.memoryUsage() == 0);
     REQUIRE(spyingAllocator.log() == AllocatorLog());
   }
 
@@ -56,8 +54,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == sizeofString(7));
-    REQUIRE(doc2.memoryUsage() == sizeofString(7));
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
   }
@@ -70,8 +66,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == sizeofString(7));
-    REQUIRE(doc2.memoryUsage() == 0);
     REQUIRE(doc2.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString((7))));
@@ -83,8 +77,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == sizeofString(7));
-    REQUIRE(doc2.memoryUsage() == sizeofString(7));
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
   }
@@ -95,8 +87,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == sizeofString(7));
-    REQUIRE(doc2.memoryUsage() == sizeofString(7));
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
   }
@@ -108,8 +98,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == sizeofString(7));
-    REQUIRE(doc2.memoryUsage() == sizeofString(7));
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
   }
@@ -120,8 +108,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == sizeofString(7));
-    REQUIRE(doc2.memoryUsage() == sizeofString(7));
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
   }
@@ -133,8 +119,6 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(doc1.memoryUsage() == sizeofString(7));
-    REQUIRE(doc2.memoryUsage() == 0);
     REQUIRE(doc2.overflowed() == true);
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString((7))));

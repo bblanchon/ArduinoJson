@@ -155,21 +155,42 @@ TEST_CASE("String allocation fails") {
 }
 
 TEST_CASE("Deduplicate values") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   deserializeJson(doc, "[\"example\",\"example\"]");
 
-  CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
   CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
+  REQUIRE(allocator.log() == AllocatorLog()
+                                 // pool
+                                 << AllocatorLog::Allocate(sizeofPool())
+                                 // string builder
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 // string "example"
+                                 << AllocatorLog::Reallocate(sizeofString(31),
+                                                             sizeofString(7))
+                                 // string builder
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 << AllocatorLog::Deallocate(sizeofString(31)));
 }
 
 TEST_CASE("Deduplicate keys") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   deserializeJson(doc, "[{\"example\":1},{\"example\":2}]");
-
-  CHECK(doc.memoryUsage() ==
-        2 * sizeofObject(1) + sizeofArray(2) + sizeofString(7));
 
   const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
   const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
   CHECK(key1 == key2);
+
+  REQUIRE(allocator.log() == AllocatorLog()
+                                 // pool
+                                 << AllocatorLog::Allocate(sizeofPool())
+                                 // string builder
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 // string "example"
+                                 << AllocatorLog::Reallocate(sizeofString(31),
+                                                             sizeofString(7))
+                                 // string builder
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 << AllocatorLog::Deallocate(sizeofString(31)));
 }

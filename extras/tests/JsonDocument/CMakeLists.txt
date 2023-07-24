@@ -15,7 +15,6 @@ add_executable(JsonDocumentTests
 	isNull.cpp
 	issue1120.cpp
 	MemberProxy.cpp
-	memoryUsage.cpp
 	nesting.cpp
 	overflowed.cpp
 	remove.cpp

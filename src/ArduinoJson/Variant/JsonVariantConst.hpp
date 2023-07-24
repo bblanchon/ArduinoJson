@@ -47,12 +47,6 @@ class JsonVariantConst : public detail::VariantTag,
     return !data_;
   }
 
-  // Returns the number of bytes occupied by the value.
-  // https://arduinojson.org/v6/api/jsonvariantconst/memoryusage/
-  FORCE_INLINE size_t memoryUsage() const {
-    return data_ ? data_->memoryUsage(resources_) : 0;
-  }
-
   // Returns the depth (nesting level) of the value.
   // https://arduinojson.org/v6/api/jsonvariantconst/nesting/
   FORCE_INLINE size_t nesting() const {

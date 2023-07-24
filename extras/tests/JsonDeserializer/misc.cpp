@@ -5,12 +5,15 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using namespace Catch::Matchers;
 
 using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("deserializeJson(JsonDocument&)") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
 
   SECTION("Edge cases") {
     SECTION("null char*") {
@@ -114,6 +117,8 @@ TEST_CASE("deserializeJson(JsonDocument&)") {
     deserializeJson(doc, "{}");
 
     REQUIRE(doc.is<JsonObject>());
-    REQUIRE(doc.memoryUsage() == sizeofObject(0));
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Deallocate(sizeofPool()));
   }
 }

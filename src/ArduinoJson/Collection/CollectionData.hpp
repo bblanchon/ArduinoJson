@@ -88,7 +88,6 @@ class CollectionData {
     return iterator(resources->getSlot(head_), head_);
   }
 
-  size_t memoryUsage(const ResourceManager*) const;
   size_t size(const ResourceManager*) const;
   size_t nesting(const ResourceManager*) const;
 

@@ -5,11 +5,14 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::add()") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("int") {
@@ -99,43 +102,49 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("should not duplicate const char*") {
     array.add("world");
-    const size_t expectedSize = sizeofArray(1);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should duplicate char*") {
     array.add(const_cast<char*>("world"));
-    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate std::string") {
     array.add(std::string("world"));
-    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate serialized(const char*)") {
     array.add(serialized("{}"));
-    const size_t expectedSize = sizeofArray(1) + sizeofString(2);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(2)));
   }
 
   SECTION("should duplicate serialized(char*)") {
     array.add(serialized(const_cast<char*>("{}")));
-    const size_t expectedSize = sizeofArray(1) + sizeofString(2);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(2)));
   }
 
   SECTION("should duplicate serialized(std::string)") {
     array.add(serialized(std::string("{}")));
-    const size_t expectedSize = sizeofArray(1) + sizeofString(2);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(2)));
   }
 
   SECTION("should duplicate serialized(std::string)") {
     array.add(serialized(std::string("\0XX", 3)));
-    const size_t expectedSize = sizeofArray(1) + sizeofString(3);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(3)));
   }
 }

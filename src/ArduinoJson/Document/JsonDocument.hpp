@@ -128,12 +128,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return getSlot().isNull();
   }
 
-  // Returns the number of used bytes in the memory pool.
-  // https://arduinojson.org/v6/api/jsondocument/memoryusage/
-  size_t memoryUsage() const {
-    return resources_.size();
-  }
-
   // Returns trues if the memory pool was too small.
   // https://arduinojson.org/v6/api/jsondocument/overflowed/
   bool overflowed() const {

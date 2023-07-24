@@ -83,28 +83,4 @@ TEST_CASE("std::string") {
     eraseString(value);
     REQUIRE(std::string("world") == obj["hello"]);
   }
-
-  SECTION("memoryUsage() increases when adding a new key") {
-    std::string key1("hello"), key2("world");
-    JsonObject obj = doc.to<JsonObject>();
-
-    obj[key1] = 1;
-    size_t sizeBefore = doc.memoryUsage();
-    obj[key2] = 2;
-    size_t sizeAfter = doc.memoryUsage();
-
-    REQUIRE(sizeAfter - sizeBefore >= key2.size());
-  }
-
-  SECTION("memoryUsage() remains when adding the same key") {
-    std::string key("hello");
-    JsonObject obj = doc.to<JsonObject>();
-
-    obj[key] = 1;
-    size_t sizeBefore = doc.memoryUsage();
-    obj[key] = 2;
-    size_t sizeAfter = doc.memoryUsage();
-
-    REQUIRE(sizeBefore == sizeAfter);
-  }
 }

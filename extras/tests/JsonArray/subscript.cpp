@@ -6,11 +6,14 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::operator[]") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("Pad with null") {
@@ -115,20 +118,22 @@ TEST_CASE("JsonArray::operator[]") {
 
   SECTION("should not duplicate const char*") {
     array[0] = "world";
-    const size_t expectedSize = sizeofArray(1);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should duplicate char*") {
     array[0] = const_cast<char*>("world");
-    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate std::string") {
     array[0] = std::string("world");
-    const size_t expectedSize = sizeofArray(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("array[0].to<JsonObject>()") {

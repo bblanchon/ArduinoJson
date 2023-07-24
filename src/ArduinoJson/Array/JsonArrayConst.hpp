@@ -66,12 +66,6 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
     return data_ != 0;
   }
 
-  // Returns the number of bytes occupied by the array.
-  // https://arduinojson.org/v6/api/jsonarrayconst/memoryusage/
-  FORCE_INLINE size_t memoryUsage() const {
-    return data_ ? data_->memoryUsage(resources_) : 0;
-  }
-
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v6/api/jsonarrayconst/nesting/
   FORCE_INLINE size_t nesting() const {

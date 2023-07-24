@@ -239,20 +239,6 @@ TEST_CASE("MemberProxy::size()") {
   }
 }
 
-TEST_CASE("MemberProxy::memoryUsage()") {
-  JsonDocument doc;
-  MemberProxy mp = doc["hello"];
-
-  SECTION("returns 0 when null") {
-    REQUIRE(mp.memoryUsage() == 0);
-  }
-
-  SECTION("return the size for a string") {
-    mp.set(std::string("hello"));
-    REQUIRE(mp.memoryUsage() == sizeofString(5));
-  }
-}
-
 TEST_CASE("MemberProxy::operator[]") {
   JsonDocument doc;
   MemberProxy mp = doc["hello"];
@@ -329,18 +315,20 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
 }
 
 TEST_CASE("Deduplicate keys") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
 
   SECTION("std::string") {
     doc[0][std::string("example")] = 1;
     doc[1][std::string("example")] = 2;
 
-    CHECK(doc.memoryUsage() ==
-          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
-
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
+
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("char*") {
@@ -348,42 +336,46 @@ TEST_CASE("Deduplicate keys") {
     doc[0][key] = 1;
     doc[1][key] = 2;
 
-    CHECK(doc.memoryUsage() ==
-          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
-
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
+
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("Arduino String") {
     doc[0][String("example")] = 1;
     doc[1][String("example")] = 2;
 
-    CHECK(doc.memoryUsage() ==
-          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
-
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
+
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("Flash string") {
     doc[0][F("example")] = 1;
     doc[1][F("example")] = 2;
 
-    CHECK(doc.memoryUsage() ==
-          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7));
-
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
+
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(7)));
   }
 }
 
 TEST_CASE("MemberProxy under memory constraints") {
   ControllableAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy(&allocator);
+  JsonDocument doc(&spy);
 
   SECTION("key allocation fails") {
     allocator.disable();
@@ -392,7 +384,8 @@ TEST_CASE("MemberProxy under memory constraints") {
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(doc.size() == 0);
-    REQUIRE(doc.memoryUsage() == 0);
     REQUIRE(doc.overflowed() == true);
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::AllocateFail(sizeofString(5)));
   }
 }

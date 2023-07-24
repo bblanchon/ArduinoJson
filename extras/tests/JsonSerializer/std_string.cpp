@@ -51,7 +51,6 @@ TEST_CASE("serialize JsonObject to std::string") {
 TEST_CASE("serialize an std::string containing a NUL") {
   JsonDocument doc;
   doc.set(std::string("hello\0world", 11));
-  CHECK(doc.memoryUsage() == sizeofString(11));
 
   std::string json;
   serializeJson(doc, json);

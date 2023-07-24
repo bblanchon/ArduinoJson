@@ -177,34 +177,41 @@ TEST_CASE("JsonVariant::set(JsonDocument)") {
 }
 
 TEST_CASE("JsonVariant::set() releases the previous value") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   doc["hello"] = std::string("world");
-  REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(5));
+  allocator.clearLog();
 
   JsonVariant v = doc["hello"];
 
   SECTION("int") {
     v.set(42);
-    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("bool") {
     v.set(false);
-    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("const char*") {
     v.set("hello");
-    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("float") {
     v.set(1.2);
-    REQUIRE(doc.memoryUsage() == sizeofObject(1));
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("Serialized<const char*>") {
     v.set(serialized("[]"));
-    REQUIRE(doc.memoryUsage() == sizeofObject(1) + sizeofString(2));
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Deallocate(sizeofString(5))
+                                   << AllocatorLog::Allocate(sizeofString(2)));
   }
 }

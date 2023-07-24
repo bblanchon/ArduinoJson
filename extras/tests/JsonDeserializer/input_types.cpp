@@ -7,20 +7,30 @@
 #include <catch.hpp>
 #include <sstream>
 
+#include "Allocators.hpp"
 #include "CustomReader.hpp"
 
 using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserializeJson(char*)") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
 
   char input[] = "{\"hello\":\"world\"}";
 
   DeserializationError err = deserializeJson(doc, input);
 
   REQUIRE(err == DeserializationError::Ok);
-  CHECK(doc.memoryUsage() == sizeofObject(1) + 2 * sizeofString(5));
+
+  REQUIRE(allocator.log() == AllocatorLog()
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 << AllocatorLog::Reallocate(sizeofString(31),
+                                                             sizeofString(5))
+                                 << AllocatorLog::Allocate(sizeofPool())
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 << AllocatorLog::Reallocate(sizeofString(31),
+                                                             sizeofString(5)));
 }
 
 TEST_CASE("deserializeJson(unsigned char*, unsigned int)") {  // issue #1897

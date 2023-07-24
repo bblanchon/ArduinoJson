@@ -53,7 +53,8 @@ struct PrintableString : public Printable {
 
 TEST_CASE("Printable") {
   SECTION("Doesn't overflow") {
-    JsonDocument doc;
+    SpyingAllocator allocator;
+    JsonDocument doc(&allocator);
     const char* value = "example";
 
     doc.set(666);  // to make sure we override the value
@@ -64,8 +65,10 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(doc.memoryUsage() == sizeofString(7));
-      CHECK(doc.as<JsonVariant>().memoryUsage() == sizeofString(7));
+      CHECK(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofString(31))
+                                   << AllocatorLog::Reallocate(
+                                          sizeofString(31), sizeofString(7)));
     }
 
     SECTION("Via Print::write(const char* size_t)") {
@@ -74,8 +77,10 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(doc.memoryUsage() == sizeofString(7));
-      CHECK(doc.as<JsonVariant>().memoryUsage() == sizeofString(7));
+      CHECK(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofString(31))
+                                   << AllocatorLog::Reallocate(
+                                          sizeofString(31), sizeofString(7)));
     }
   }
 
@@ -95,7 +100,6 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
       CHECK(doc.overflowed() == true);
-      CHECK(doc.memoryUsage() == 0);
       CHECK(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
     }
@@ -109,7 +113,6 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
       CHECK(doc.overflowed() == true);
-      CHECK(doc.memoryUsage() == 0);
       CHECK(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
     }
@@ -132,7 +135,6 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
-      CHECK(doc.memoryUsage() == 0);
       CHECK(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::ReallocateFail(sizeofString(31),
@@ -149,7 +151,6 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
-      CHECK(doc.memoryUsage() == 0);
       CHECK(spyingAllocator.log() ==
             AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
                            << AllocatorLog::ReallocateFail(sizeofString(31),
@@ -167,12 +168,19 @@ TEST_CASE("Printable") {
   }
 
   SECTION("String deduplication") {
-    JsonDocument doc;
+    SpyingAllocator allocator;
+    JsonDocument doc(&allocator);
     doc.add(PrintableString<PrintOneCharacterAtATime>("Hello World!"));
     doc.add(PrintableString<PrintAllAtOnce>("Hello World!"));
     REQUIRE(doc.size() == 2);
     CHECK(doc[0] == "Hello World!");
     CHECK(doc[1] == "Hello World!");
-    CHECK(doc.memoryUsage() == sizeofArray(2) + sizeofString(12));
+    CHECK(allocator.log() == AllocatorLog()
+                                 << AllocatorLog::Allocate(sizeofPool())
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 << AllocatorLog::Reallocate(sizeofString(31),
+                                                             sizeofString(12))
+                                 << AllocatorLog::Allocate(sizeofString(31))
+                                 << AllocatorLog::Deallocate(sizeofString(31)));
   }
 }

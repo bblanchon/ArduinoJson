@@ -6,10 +6,13 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::clear()") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("size goes back to zero") {
@@ -28,9 +31,10 @@ TEST_CASE("JsonVariant::clear()") {
 
   SECTION("releases owned string") {
     var.set(std::string("hello"));
-    REQUIRE(doc.memoryUsage() == sizeofString(5));
-
     var.clear();
-    REQUIRE(doc.memoryUsage() == 0);
+
+    REQUIRE(allocator.log() ==
+            AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))
+                           << AllocatorLog::Deallocate(sizeofString(5)));
   }
 }

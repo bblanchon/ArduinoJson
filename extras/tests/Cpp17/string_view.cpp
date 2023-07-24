@@ -3,6 +3,8 @@
 
 #include <string_view>
 
+#include "Allocators.hpp"
+
 #if !ARDUINOJSON_ENABLE_STRING_VIEW
 #  error ARDUINOJSON_ENABLE_STRING_VIEW must be set to 1
 #endif
@@ -11,7 +13,8 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("string_view") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("deserializeJson()") {
@@ -56,18 +59,14 @@ TEST_CASE("string_view") {
 
   SECTION("String deduplication") {
     doc.add(std::string_view("example one", 7));
-    REQUIRE(doc.memoryUsage() == sizeofArray(1) + sizeofString(7));
-
     doc.add(std::string_view("example two", 7));
-    REQUIRE(doc.memoryUsage() == sizeofArray(2) + sizeofString(7));
-
     doc.add(std::string_view("example\0tree", 12));
-    REQUIRE(doc.memoryUsage() ==
-            sizeofArray(3) + sizeofString(7) + sizeofString(12));
-
     doc.add(std::string_view("example\0tree and a half", 12));
-    REQUIRE(doc.memoryUsage() ==
-            sizeofArray(4) + sizeofString(7) + sizeofString(12));
+
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(7))
+                                   << AllocatorLog::Allocate(sizeofString(12)));
   }
 
   SECTION("as<std::string_view>()") {

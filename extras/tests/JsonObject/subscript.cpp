@@ -5,11 +5,14 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonObject::operator[]") {
-  JsonDocument doc;
+  SpyingAllocator allocator;
+  JsonDocument doc(&allocator);
   JsonObject obj = doc.to<JsonObject>();
 
   SECTION("int") {
@@ -103,56 +106,65 @@ TEST_CASE("JsonObject::operator[]") {
 
   SECTION("should not duplicate const char*") {
     obj["hello"] = "world";
-    const size_t expectedSize = sizeofObject(1);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should duplicate char* value") {
     obj["hello"] = const_cast<char*>("world");
-    const size_t expectedSize = sizeofObject(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate char* key") {
     obj[const_cast<char*>("hello")] = "world";
-    const size_t expectedSize = sizeofObject(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofString(5))
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should duplicate char* key&value") {
     obj[const_cast<char*>("hello")] = const_cast<char*>("world");
-    const size_t expectedSize = sizeofObject(1) + 2 * sizeofString(5);
-    REQUIRE(expectedSize <= doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofString(5))
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate std::string value") {
     obj["hello"] = std::string("world");
-    const size_t expectedSize = sizeofObject(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate std::string key") {
     obj[std::string("hello")] = "world";
-    const size_t expectedSize = sizeofObject(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofString(5))
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should duplicate std::string key&value") {
     obj[std::string("hello")] = std::string("world");
-    const size_t expectedSize = sizeofObject(1) + 2 * sizeofString(5);
-    REQUIRE(expectedSize <= doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofString(5))
+                                   << AllocatorLog::Allocate(sizeofPool())
+                                   << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate a non-static JsonString key") {
     obj[JsonString("hello", JsonString::Copied)] = "world";
-    const size_t expectedSize = sizeofObject(1) + sizeofString(5);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofString(5))
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should not duplicate a static JsonString key") {
     obj[JsonString("hello", JsonString::Linked)] = "world";
-    const size_t expectedSize = sizeofObject(1);
-    REQUIRE(expectedSize == doc.memoryUsage());
+    REQUIRE(allocator.log() == AllocatorLog()
+                                   << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should ignore null key") {
