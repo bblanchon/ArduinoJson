@@ -11,8 +11,8 @@
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::clear()") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   JsonVariant var = doc.to<JsonVariant>();
 
   SECTION("size goes back to zero") {
@@ -33,8 +33,8 @@ TEST_CASE("JsonVariant::clear()") {
     var.set(std::string("hello"));
     var.clear();
 
-    REQUIRE(allocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))
-                           << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofString(5))
+                             << AllocatorLog::Deallocate(sizeofString(5)));
   }
 }

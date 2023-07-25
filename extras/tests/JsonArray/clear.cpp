@@ -26,8 +26,8 @@ TEST_CASE("JsonArray::clear()") {
   }
 
   SECTION("Removed elements are recycled") {
-    SpyingAllocator allocator;
-    JsonDocument doc(&allocator);
+    SpyingAllocator spy;
+    JsonDocument doc(&spy);
     JsonArray array = doc.to<JsonArray>();
 
     // fill the pool entirely
@@ -39,7 +39,7 @@ TEST_CASE("JsonArray::clear()") {
     for (int i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
       array.add(i);
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool()));
   }
 }

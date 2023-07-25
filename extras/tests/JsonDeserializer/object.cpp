@@ -11,8 +11,8 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON object") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
 
   SECTION("An empty object") {
     DeserializationError err = deserializeJson(doc, "{}");
@@ -284,7 +284,7 @@ TEST_CASE("deserialize JSON object") {
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.as<std::string>() == "{\"a\":2}");
-      REQUIRE(allocator.log() ==
+      REQUIRE(spy.log() ==
               AllocatorLog()
                   // a
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -331,21 +331,22 @@ TEST_CASE("deserialize JSON object") {
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(obj.size() == 0);
-    REQUIRE(allocator.log() ==
-            AllocatorLog()
-                // string "hello"
-                << AllocatorLog::Allocate(sizeofString(31))
-                << AllocatorLog::Reallocate(sizeofString(31), sizeofString(5))
-                // pool
-                << AllocatorLog::Allocate(sizeofPool())
-                // string "world"
-                << AllocatorLog::Allocate(sizeofString(31))
-                << AllocatorLog::Reallocate(sizeofString(31), sizeofString(5))
-                // free pool
-                << AllocatorLog::Deallocate(sizeofPool())
-                // free "hello" and "world"
-                << AllocatorLog::Deallocate(sizeofString(5))
-                << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             // string "hello"
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(5))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string "world"
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(5))
+                             // free pool
+                             << AllocatorLog::Deallocate(sizeofPool())
+                             // free "hello" and "world"
+                             << AllocatorLog::Deallocate(sizeofString(5))
+                             << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("Issue #1335") {
@@ -356,11 +357,11 @@ TEST_CASE("deserialize JSON object") {
 }
 
 TEST_CASE("deserialize JSON object under memory constraints") {
-  TimebombAllocator allocator(1024);
-  JsonDocument doc(&allocator);
+  TimebombAllocator timebomb(1024);
+  JsonDocument doc(&timebomb);
 
   SECTION("empty object requires no allocation") {
-    allocator.setCountdown(0);
+    timebomb.setCountdown(0);
     char input[] = "{}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -370,7 +371,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("key allocation fails") {
-    allocator.setCountdown(0);
+    timebomb.setCountdown(0);
     char input[] = "{\"a\":1}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -380,7 +381,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("pool allocation fails") {
-    allocator.setCountdown(2);
+    timebomb.setCountdown(2);
     char input[] = "{\"a\":1}";
 
     DeserializationError err = deserializeJson(doc, input);
@@ -390,7 +391,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   }
 
   SECTION("string allocation fails") {
-    allocator.setCountdown(3);
+    timebomb.setCountdown(3);
     char input[] = "{\"a\":\"b\"}";
 
     DeserializationError err = deserializeJson(doc, input);

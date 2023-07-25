@@ -691,9 +691,9 @@ TEST_CASE("Filtering") {
   for (size_t i = 0; i < sizeof(testCases) / sizeof(testCases[0]); i++) {
     CAPTURE(i);
 
-    SpyingAllocator allocator;
+    SpyingAllocator spy;
     JsonDocument filter;
-    JsonDocument doc(&allocator);
+    JsonDocument doc(&spy);
     TestCase& tc = testCases[i];
 
     CAPTURE(tc.filter);
@@ -708,7 +708,7 @@ TEST_CASE("Filtering") {
     CHECK(doc.as<std::string>() == tc.output);
 
     doc.shrinkToFit();
-    CHECK(allocator.allocatedBytes() == tc.memoryUsage);
+    CHECK(spy.allocatedBytes() == tc.memoryUsage);
   }
 }
 

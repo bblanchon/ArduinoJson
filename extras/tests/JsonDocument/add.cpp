@@ -14,23 +14,23 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonDocument::add()") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
 
   SECTION("integer") {
     doc.add(42);
 
     REQUIRE(doc.as<std::string>() == "[42]");
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("const char*") {
     doc.add("hello");
 
     REQUIRE(doc.as<std::string>() == "[\"hello\"]");
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("std::string") {
@@ -38,9 +38,9 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(std::string("example"));
 
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("char*") {
@@ -49,9 +49,9 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(value);
 
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("Arduino String") {
@@ -59,9 +59,9 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(String("example"));
 
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("Flash string") {
@@ -69,8 +69,8 @@ TEST_CASE("JsonDocument::add()") {
     doc.add(F("example"));
 
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 }

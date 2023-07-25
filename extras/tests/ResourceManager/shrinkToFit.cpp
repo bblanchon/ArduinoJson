@@ -11,8 +11,7 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("ResourceManager::shrinkToFit()") {
-  TimebombAllocator allocator(100);
-  SpyingAllocator spyingAllocator(&allocator);
+  SpyingAllocator spyingAllocator;
   ResourceManager resources(&spyingAllocator);
 
   SECTION("empty") {

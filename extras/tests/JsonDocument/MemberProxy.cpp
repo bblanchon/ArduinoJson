@@ -315,8 +315,8 @@ TEST_CASE("MemberProxy::createNestedObject(key)") {
 }
 
 TEST_CASE("Deduplicate keys") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
 
   SECTION("std::string") {
     doc[0][std::string("example")] = 1;
@@ -326,9 +326,9 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("char*") {
@@ -340,9 +340,9 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("Arduino String") {
@@ -353,9 +353,9 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 
   SECTION("Flash string") {
@@ -366,9 +366,9 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(7)));
   }
 }
 

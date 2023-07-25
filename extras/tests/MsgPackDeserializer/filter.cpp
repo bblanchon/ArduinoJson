@@ -12,8 +12,8 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("deserializeMsgPack() filter") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   DeserializationError error;
 
   JsonDocument filter;
@@ -29,9 +29,9 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::IncompleteInput);
         CHECK(doc.as<std::string>() == "{}");
-        CHECK(allocator.log() ==
-              AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Deallocate(sizeofString(31)));
+        CHECK(spy.log() == AllocatorLog()
+                               << AllocatorLog::Allocate(sizeofString(31))
+                               << AllocatorLog::Deallocate(sizeofString(31)));
       }
 
       SECTION("input truncated after inside skipped uint 8") {
@@ -40,9 +40,9 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::IncompleteInput);
         CHECK(doc.as<std::string>() == "{}");
-        CHECK(allocator.log() ==
-              AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Deallocate(sizeofString(31)));
+        CHECK(spy.log() == AllocatorLog()
+                               << AllocatorLog::Allocate(sizeofString(31))
+                               << AllocatorLog::Deallocate(sizeofString(31)));
       }
 
       SECTION("input truncated after before skipped string size") {
@@ -50,9 +50,9 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::IncompleteInput);
         CHECK(doc.as<std::string>() == "{}");
-        CHECK(allocator.log() ==
-              AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Deallocate(sizeofString(31)));
+        CHECK(spy.log() == AllocatorLog()
+                               << AllocatorLog::Allocate(sizeofString(31))
+                               << AllocatorLog::Deallocate(sizeofString(31)));
       }
 
       SECTION("input truncated after before skipped ext size") {
@@ -60,9 +60,9 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::IncompleteInput);
         CHECK(doc.as<std::string>() == "{}");
-        CHECK(allocator.log() ==
-              AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Deallocate(sizeofString(31)));
+        CHECK(spy.log() == AllocatorLog()
+                               << AllocatorLog::Allocate(sizeofString(31))
+                               << AllocatorLog::Deallocate(sizeofString(31)));
       }
 
       SECTION("skip nil") {
@@ -71,7 +71,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -83,9 +83,9 @@ TEST_CASE("deserializeMsgPack() filter") {
                                    filterOpt);
 
         CHECK(error == DeserializationError::InvalidInput);
-        CHECK(allocator.log() ==
-              AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Deallocate(sizeofString(31)));
+        CHECK(spy.log() == AllocatorLog()
+                               << AllocatorLog::Allocate(sizeofString(31))
+                               << AllocatorLog::Deallocate(sizeofString(31)));
       }
 
       SECTION("skip false") {
@@ -94,7 +94,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -107,7 +107,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -120,7 +120,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -133,7 +133,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -146,7 +146,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -159,7 +159,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -172,7 +172,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -185,7 +185,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -199,7 +199,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -213,7 +213,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -228,7 +228,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -243,7 +243,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -257,7 +257,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -272,7 +272,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -285,7 +285,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -298,7 +298,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -311,7 +311,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -325,7 +325,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -338,7 +338,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -351,7 +351,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -365,7 +365,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -378,7 +378,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -392,7 +392,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -409,7 +409,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -423,7 +423,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -439,7 +439,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -457,7 +457,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -473,7 +473,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -489,7 +489,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -505,7 +505,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -521,7 +521,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -539,7 +539,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -555,7 +555,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -571,7 +571,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -587,7 +587,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   << AllocatorLog::Allocate(sizeofString(31))
                   << AllocatorLog::Reallocate(sizeofString(31), sizeofString(7))
@@ -612,7 +612,7 @@ TEST_CASE("deserializeMsgPack() filter") {
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() ==
               "{\"onlyarr\":[{\"measure\":2},{\"measure\":4}],\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -629,7 +629,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   // string "include"
                   << AllocatorLog::Reallocate(sizeofString(31),
                                               sizeofString(7)));
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -660,7 +660,7 @@ TEST_CASE("deserializeMsgPack() filter") {
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() ==
               "{\"onlyarr\":[{\"measure\":2},{\"measure\":4}],\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -691,7 +691,7 @@ TEST_CASE("deserializeMsgPack() filter") {
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() ==
               "{\"onlyarr\":[{\"measure\":2},{\"measure\":4}],\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -716,7 +716,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -729,7 +729,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   // string "include"
                   << AllocatorLog::Reallocate(sizeofString(31),
                                               sizeofString(7)));
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -750,7 +750,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -771,7 +771,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -792,7 +792,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -813,7 +813,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -834,7 +834,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -855,7 +855,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -877,7 +877,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -900,7 +900,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -921,7 +921,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -942,7 +942,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -964,7 +964,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -987,7 +987,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1009,7 +1009,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1032,7 +1032,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1053,7 +1053,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1087,7 +1087,7 @@ TEST_CASE("deserializeMsgPack() filter") {
             doc, "\x82\xA7onlyarr\xdb\x00\x00\x00\x05hello\xA7include\x2A",
             filterOpt);
 
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1109,7 +1109,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1133,7 +1133,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1159,7 +1159,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "{\"onlyarr\":null,\"include\":42}");
-        CHECK(allocator.log() ==
+        CHECK(spy.log() ==
               AllocatorLog()
                   // string builder's buffer
                   << AllocatorLog::Allocate(sizeofString(31))
@@ -1186,7 +1186,7 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "[]");
-        CHECK(allocator.log() == AllocatorLog());
+        CHECK(spy.log() == AllocatorLog());
       }
     }
 
@@ -1199,8 +1199,8 @@ TEST_CASE("deserializeMsgPack() filter") {
 
         CHECK(error == DeserializationError::Ok);
         CHECK(doc.as<std::string>() == "[1,2,3]");
-        CHECK(allocator.log() == AllocatorLog()
-                                     << AllocatorLog::Allocate(sizeofPool()));
+        CHECK(spy.log() == AllocatorLog()
+                               << AllocatorLog::Allocate(sizeofPool()));
       }
     }
   }
@@ -1221,7 +1221,7 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() ==
             "{\"onlyobj\":{\"measure\":2},\"include\":42}");
-      CHECK(allocator.log() ==
+      CHECK(spy.log() ==
             AllocatorLog()
                 // string builder's buffer
                 << AllocatorLog::Allocate(sizeofString(31))
@@ -1249,7 +1249,7 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() ==
             "{\"onlyobj\":{\"measure\":2},\"include\":42}");
-      CHECK(allocator.log() ==
+      CHECK(spy.log() ==
             AllocatorLog()
                 // string builder's buffer
                 << AllocatorLog::Allocate(sizeofString(31))
@@ -1278,7 +1278,7 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() ==
             "{\"onlyobj\":{\"measure\":2},\"include\":42}");
-      CHECK(allocator.log() ==
+      CHECK(spy.log() ==
             AllocatorLog()
                 // string builder's buffer
                 << AllocatorLog::Allocate(sizeofString(31))
@@ -1302,19 +1302,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip false") {
@@ -1323,19 +1323,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip true") {
@@ -1344,19 +1344,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip positive fixint") {
@@ -1365,19 +1365,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip negative fixint") {
@@ -1386,19 +1386,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip uint 8") {
@@ -1407,19 +1407,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip uint 16") {
@@ -1428,19 +1428,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip uint 32") {
@@ -1449,19 +1449,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip uint 64") {
@@ -1472,19 +1472,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip int 8") {
@@ -1493,19 +1493,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip int 16") {
@@ -1514,19 +1514,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip int 32") {
@@ -1535,19 +1535,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip int 64") {
@@ -1558,19 +1558,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip float 32") {
@@ -1579,19 +1579,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip float 64") {
@@ -1602,19 +1602,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip fixstr") {
@@ -1623,19 +1623,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip str 8") {
@@ -1657,19 +1657,19 @@ TEST_CASE("deserializeMsgPack() filter") {
           doc, "\x82\xA7onlyobj\xdb\x00\x00\x00\x05hello\xA7include\x2A",
           filterOpt);
 
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip fixarray") {
@@ -1678,19 +1678,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip array 16") {
@@ -1701,19 +1701,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("skip array 32") {
@@ -1725,19 +1725,19 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(error == DeserializationError::Ok);
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
-      CHECK(allocator.log() == AllocatorLog()
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "onlyarr"
-                                   << AllocatorLog::Reallocate(sizeofString(31),
-                                                               sizeofString(7))
-                                   // pool
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   // string builder's buffer
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   // string "include"
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "onlyarr"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7))
+                             // pool
+                             << AllocatorLog::Allocate(sizeofPool())
+                             // string builder's buffer
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             // string "include"
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
   }
 

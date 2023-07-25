@@ -11,15 +11,15 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("ResourceManager::size()") {
-  TimebombAllocator allocator(0);
-  ResourceManager resources(&allocator);
+  TimebombAllocator timebomb(0);
+  ResourceManager resources(&timebomb);
 
   SECTION("Initial size is 0") {
     REQUIRE(0 == resources.size());
   }
 
   SECTION("Doesn't grow when allocation of second pool fails") {
-    allocator.setCountdown(1);
+    timebomb.setCountdown(1);
     for (size_t i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
       resources.allocSlot();
     size_t size = resources.size();

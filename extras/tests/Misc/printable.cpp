@@ -53,8 +53,8 @@ struct PrintableString : public Printable {
 
 TEST_CASE("Printable") {
   SECTION("Doesn't overflow") {
-    SpyingAllocator allocator;
-    JsonDocument doc(&allocator);
+    SpyingAllocator spy;
+    JsonDocument doc(&spy);
     const char* value = "example";
 
     doc.set(666);  // to make sure we override the value
@@ -65,10 +65,10 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
 
     SECTION("Via Print::write(const char* size_t)") {
@@ -77,16 +77,16 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+      CHECK(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
     }
   }
 
   SECTION("First allocation fails") {
-    SpyingAllocator spyingAllocator(FailingAllocator::instance());
-    JsonDocument doc(&spyingAllocator);
+    SpyingAllocator spy(FailingAllocator::instance());
+    JsonDocument doc(&spy);
     const char* value = "hello world";
 
     doc.set(666);  // to make sure we override the value
@@ -100,8 +100,8 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
       CHECK(doc.overflowed() == true);
-      CHECK(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
+      CHECK(spy.log() == AllocatorLog()
+                             << AllocatorLog::AllocateFail(sizeofString(31)));
     }
 
     SECTION("Via Print::write(const char*, size_t)") {
@@ -113,15 +113,15 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
       CHECK(doc.overflowed() == true);
-      CHECK(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
+      CHECK(spy.log() == AllocatorLog()
+                             << AllocatorLog::AllocateFail(sizeofString(31)));
     }
   }
 
   SECTION("Reallocation fails") {
-    TimebombAllocator timebombAllocator(1);
-    SpyingAllocator spyingAllocator(&timebombAllocator);
-    JsonDocument doc(&spyingAllocator);
+    TimebombAllocator timebomb(1);
+    SpyingAllocator spy(&timebomb);
+    JsonDocument doc(&spy);
     const char* value = "Lorem ipsum dolor sit amet, cons";  // > 31 chars
 
     doc.set(666);  // to make sure we override the value
@@ -135,11 +135,11 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
-      CHECK(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::ReallocateFail(sizeofString(31),
-                                                           sizeofString(63))
-                           << AllocatorLog::Deallocate(sizeofString(31)));
+      CHECK(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::ReallocateFail(sizeofString(31),
+                                                             sizeofString(63))
+                             << AllocatorLog::Deallocate(sizeofString(31)));
     }
 
     SECTION("Via Print::write(const char*, size_t)") {
@@ -151,11 +151,11 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
-      CHECK(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::ReallocateFail(sizeofString(31),
-                                                           sizeofString(63))
-                           << AllocatorLog::Deallocate(sizeofString(31)));
+      CHECK(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::ReallocateFail(sizeofString(31),
+                                                             sizeofString(63))
+                             << AllocatorLog::Deallocate(sizeofString(31)));
     }
   }
 
@@ -168,19 +168,19 @@ TEST_CASE("Printable") {
   }
 
   SECTION("String deduplication") {
-    SpyingAllocator allocator;
-    JsonDocument doc(&allocator);
+    SpyingAllocator spy;
+    JsonDocument doc(&spy);
     doc.add(PrintableString<PrintOneCharacterAtATime>("Hello World!"));
     doc.add(PrintableString<PrintAllAtOnce>("Hello World!"));
     REQUIRE(doc.size() == 2);
     CHECK(doc[0] == "Hello World!");
     CHECK(doc[1] == "Hello World!");
-    CHECK(allocator.log() == AllocatorLog()
-                                 << AllocatorLog::Allocate(sizeofPool())
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 << AllocatorLog::Reallocate(sizeofString(31),
-                                                             sizeofString(12))
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 << AllocatorLog::Deallocate(sizeofString(31)));
+    CHECK(spy.log() == AllocatorLog()
+                           << AllocatorLog::Allocate(sizeofPool())
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(12))
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Deallocate(sizeofString(31)));
   }
 }

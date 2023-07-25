@@ -19,9 +19,9 @@ static void fullPreallocatedPools(ResourceManager& resources) {
 
 TEST_CASE("ResourceManager::swap()") {
   SECTION("Both using preallocated pool list") {
-    SpyingAllocator allocator;
-    ResourceManager a(&allocator);
-    ResourceManager b(&allocator);
+    SpyingAllocator spy;
+    ResourceManager a(&spy);
+    ResourceManager b(&spy);
 
     auto a1 = a.allocSlot();
     auto b1 = b.allocSlot();
@@ -31,14 +31,14 @@ TEST_CASE("ResourceManager::swap()") {
     REQUIRE(a1->data() == b.getSlot(a1.id())->data());
     REQUIRE(b1->data() == a.getSlot(b1.id())->data());
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool()) * 2);
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool()) * 2);
   }
 
   SECTION("Only left using preallocated pool list") {
-    SpyingAllocator allocator;
-    ResourceManager a(&allocator);
-    ResourceManager b(&allocator);
+    SpyingAllocator spy;
+    ResourceManager a(&spy);
+    ResourceManager b(&spy);
     fullPreallocatedPools(b);
 
     auto a1 = a.allocSlot();
@@ -48,19 +48,19 @@ TEST_CASE("ResourceManager::swap()") {
     REQUIRE(a1->data() == b.getSlot(a1.id())->data());
     REQUIRE(b1->data() == a.getSlot(b1.id())->data());
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool()) *
-                                          (ARDUINOJSON_INITIAL_POOL_COUNT + 1)
-                                   << AllocatorLog::Allocate(sizeofPoolList(
-                                          ARDUINOJSON_INITIAL_POOL_COUNT * 2))
-                                   << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool()) *
+                                    (ARDUINOJSON_INITIAL_POOL_COUNT + 1)
+                             << AllocatorLog::Allocate(sizeofPoolList(
+                                    ARDUINOJSON_INITIAL_POOL_COUNT * 2))
+                             << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("Only right using preallocated pool list") {
-    SpyingAllocator allocator;
-    ResourceManager a(&allocator);
+    SpyingAllocator spy;
+    ResourceManager a(&spy);
     fullPreallocatedPools(a);
-    ResourceManager b(&allocator);
+    ResourceManager b(&spy);
 
     auto a1 = a.allocSlot();
     auto b1 = b.allocSlot();
@@ -69,19 +69,19 @@ TEST_CASE("ResourceManager::swap()") {
     REQUIRE(a1->data() == b.getSlot(a1.id())->data());
     REQUIRE(b1->data() == a.getSlot(b1.id())->data());
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool()) *
-                                          ARDUINOJSON_INITIAL_POOL_COUNT
-                                   << AllocatorLog::Allocate(sizeofPoolList(
-                                          ARDUINOJSON_INITIAL_POOL_COUNT * 2))
-                                   << AllocatorLog::Allocate(sizeofPool()) * 2);
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool()) *
+                                    ARDUINOJSON_INITIAL_POOL_COUNT
+                             << AllocatorLog::Allocate(sizeofPoolList(
+                                    ARDUINOJSON_INITIAL_POOL_COUNT * 2))
+                             << AllocatorLog::Allocate(sizeofPool()) * 2);
   }
 
   SECTION("None is using preallocated pool list") {
-    SpyingAllocator allocator;
-    ResourceManager a(&allocator);
+    SpyingAllocator spy;
+    ResourceManager a(&spy);
     fullPreallocatedPools(a);
-    ResourceManager b(&allocator);
+    ResourceManager b(&spy);
     fullPreallocatedPools(b);
 
     auto a1 = a.allocSlot();

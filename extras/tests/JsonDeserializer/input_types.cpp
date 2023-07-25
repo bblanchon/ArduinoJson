@@ -14,8 +14,8 @@ using ArduinoJson::detail::sizeofObject;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserializeJson(char*)") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
 
   char input[] = "{\"hello\":\"world\"}";
 
@@ -23,14 +23,14 @@ TEST_CASE("deserializeJson(char*)") {
 
   REQUIRE(err == DeserializationError::Ok);
 
-  REQUIRE(allocator.log() == AllocatorLog()
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 << AllocatorLog::Reallocate(sizeofString(31),
-                                                             sizeofString(5))
-                                 << AllocatorLog::Allocate(sizeofPool())
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 << AllocatorLog::Reallocate(sizeofString(31),
-                                                             sizeofString(5)));
+  REQUIRE(spy.log() == AllocatorLog()
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(5))
+                           << AllocatorLog::Allocate(sizeofPool())
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(5)));
 }
 
 TEST_CASE("deserializeJson(unsigned char*, unsigned int)") {  // issue #1897

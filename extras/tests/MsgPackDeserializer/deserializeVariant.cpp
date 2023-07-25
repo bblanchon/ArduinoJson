@@ -20,8 +20,8 @@ static void checkValue(const char* input, T expected) {
 
 static void checkError(size_t timebombCountDown, const char* input,
                        DeserializationError expected) {
-  TimebombAllocator timebombAllocator(timebombCountDown);
-  JsonDocument doc(&timebombAllocator);
+  TimebombAllocator timebomb(timebombCountDown);
+  JsonDocument doc(&timebomb);
 
   DeserializationError error = deserializeMsgPack(doc, input);
 

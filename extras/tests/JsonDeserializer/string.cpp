@@ -99,98 +99,98 @@ TEST_CASE("Invalid JSON string") {
 }
 
 TEST_CASE("Allocation of the key fails") {
-  TimebombAllocator timebombAllocator(0);
-  SpyingAllocator spyingAllocator(&timebombAllocator);
-  JsonDocument doc(&spyingAllocator);
+  TimebombAllocator timebomb(0);
+  SpyingAllocator spy(&timebomb);
+  JsonDocument doc(&spy);
 
   SECTION("Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
             DeserializationError::NoMemory);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
   SECTION("Quoted string, second member") {
-    timebombAllocator.setCountdown(3);
+    timebomb.setCountdown(3);
     REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
             DeserializationError::NoMemory);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Reallocate(sizeofString(31),
-                                                       sizeofString(5))
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::AllocateFail(sizeofString(31)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(5))
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
   SECTION("Non-Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{example:1}") ==
             DeserializationError::NoMemory);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 
   SECTION("Non-Quoted string, second member") {
-    timebombAllocator.setCountdown(3);
+    timebomb.setCountdown(3);
     REQUIRE(deserializeJson(doc, "{hello:1,world}") ==
             DeserializationError::NoMemory);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Reallocate(sizeofString(31),
-                                                       sizeofString(5))
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::AllocateFail(sizeofString(31)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(5))
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 }
 
 TEST_CASE("String allocation fails") {
-  SpyingAllocator spyingAllocator(FailingAllocator::instance());
-  JsonDocument doc(&spyingAllocator);
+  SpyingAllocator spy(FailingAllocator::instance());
+  JsonDocument doc(&spy);
 
   SECTION("Input is const char*") {
     REQUIRE(deserializeJson(doc, "\"hello\"") ==
             DeserializationError::NoMemory);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::AllocateFail(sizeofString(31)));
   }
 }
 
 TEST_CASE("Deduplicate values") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   deserializeJson(doc, "[\"example\",\"example\"]");
 
   CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
-  REQUIRE(allocator.log() == AllocatorLog()
-                                 // pool
-                                 << AllocatorLog::Allocate(sizeofPool())
-                                 // string builder
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 // string "example"
-                                 << AllocatorLog::Reallocate(sizeofString(31),
-                                                             sizeofString(7))
-                                 // string builder
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 << AllocatorLog::Deallocate(sizeofString(31)));
+  REQUIRE(spy.log() == AllocatorLog()
+                           // pool
+                           << AllocatorLog::Allocate(sizeofPool())
+                           // string builder
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           // string "example"
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(7))
+                           // string builder
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Deallocate(sizeofString(31)));
 }
 
 TEST_CASE("Deduplicate keys") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   deserializeJson(doc, "[{\"example\":1},{\"example\":2}]");
 
   const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
   const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
   CHECK(key1 == key2);
 
-  REQUIRE(allocator.log() == AllocatorLog()
-                                 // pool
-                                 << AllocatorLog::Allocate(sizeofPool())
-                                 // string builder
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 // string "example"
-                                 << AllocatorLog::Reallocate(sizeofString(31),
-                                                             sizeofString(7))
-                                 // string builder
-                                 << AllocatorLog::Allocate(sizeofString(31))
-                                 << AllocatorLog::Deallocate(sizeofString(31)));
+  REQUIRE(spy.log() == AllocatorLog()
+                           // pool
+                           << AllocatorLog::Allocate(sizeofPool())
+                           // string builder
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           // string "example"
+                           << AllocatorLog::Reallocate(sizeofString(31),
+                                                       sizeofString(7))
+                           // string builder
+                           << AllocatorLog::Allocate(sizeofString(31))
+                           << AllocatorLog::Deallocate(sizeofString(31)));
 }

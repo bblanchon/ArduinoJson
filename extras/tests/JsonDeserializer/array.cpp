@@ -11,8 +11,8 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON array") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
 
   SECTION("An empty array") {
     DeserializationError err = deserializeJson(doc, "[]");
@@ -254,16 +254,16 @@ TEST_CASE("deserialize JSON array") {
     JsonArray arr = doc.as<JsonArray>();
 
     REQUIRE(arr.size() == 0);
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Deallocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Deallocate(sizeofPool()));
   }
 }
 
 TEST_CASE("deserialize JSON array under memory constraints") {
   TimebombAllocator timebomb(100);
-  SpyingAllocator allocator(&timebomb);
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy(&timebomb);
+  JsonDocument doc(&spy);
 
   SECTION("empty array requires no allocation") {
     timebomb.setCountdown(0);
@@ -307,10 +307,10 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   SECTION("don't store space characters") {
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(31))
-                                   << AllocatorLog::Reallocate(
-                                          sizeofString(31), sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(31))
+                             << AllocatorLog::Reallocate(sizeofString(31),
+                                                         sizeofString(7)));
   }
 }

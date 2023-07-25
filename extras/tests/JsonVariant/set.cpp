@@ -177,41 +177,41 @@ TEST_CASE("JsonVariant::set(JsonDocument)") {
 }
 
 TEST_CASE("JsonVariant::set() releases the previous value") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   doc["hello"] = std::string("world");
-  allocator.clearLog();
+  spy.clearLog();
 
   JsonVariant v = doc["hello"];
 
   SECTION("int") {
     v.set(42);
-    REQUIRE(allocator.log() ==
-            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("bool") {
     v.set(false);
-    REQUIRE(allocator.log() ==
-            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("const char*") {
     v.set("hello");
-    REQUIRE(allocator.log() ==
-            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("float") {
     v.set(1.2);
-    REQUIRE(allocator.log() ==
-            AllocatorLog() << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Deallocate(sizeofString(5)));
   }
 
   SECTION("Serialized<const char*>") {
     v.set(serialized("[]"));
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Deallocate(sizeofString(5))
-                                   << AllocatorLog::Allocate(sizeofString(2)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Deallocate(sizeofString(5))
+                             << AllocatorLog::Allocate(sizeofString(2)));
   }
 }

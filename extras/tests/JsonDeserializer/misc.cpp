@@ -12,8 +12,8 @@ using namespace Catch::Matchers;
 using ArduinoJson::detail::sizeofObject;
 
 TEST_CASE("deserializeJson(JsonDocument&)") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
 
   SECTION("Edge cases") {
     SECTION("null char*") {
@@ -117,8 +117,8 @@ TEST_CASE("deserializeJson(JsonDocument&)") {
     deserializeJson(doc, "{}");
 
     REQUIRE(doc.is<JsonObject>());
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Deallocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Deallocate(sizeofPool()));
   }
 }

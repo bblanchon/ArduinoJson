@@ -91,8 +91,8 @@ TEST_CASE("JsonArray::remove()") {
 }
 
 TEST_CASE("Removed elements are recycled") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   JsonArray array = doc.to<JsonArray>();
 
   // fill the pool entirely
@@ -105,7 +105,7 @@ TEST_CASE("Removed elements are recycled") {
   // add one element; it should use the free slot
   array.add(42);
 
-  REQUIRE(allocator.log() == AllocatorLog() << AllocatorLog::Allocate(
-                                 sizeofPool())  // only one pool
+  REQUIRE(spy.log() == AllocatorLog() << AllocatorLog::Allocate(
+                           sizeofPool())  // only one pool
   );
 }

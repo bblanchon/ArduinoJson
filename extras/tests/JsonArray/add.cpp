@@ -11,8 +11,8 @@ using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::add()") {
-  SpyingAllocator allocator;
-  JsonDocument doc(&allocator);
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   JsonArray array = doc.to<JsonArray>();
 
   SECTION("int") {
@@ -102,49 +102,49 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("should not duplicate const char*") {
     array.add("world");
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool()));
   }
 
   SECTION("should duplicate char*") {
     array.add(const_cast<char*>("world"));
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate std::string") {
     array.add(std::string("world"));
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(5)));
   }
 
   SECTION("should duplicate serialized(const char*)") {
     array.add(serialized("{}"));
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(2)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(2)));
   }
 
   SECTION("should duplicate serialized(char*)") {
     array.add(serialized(const_cast<char*>("{}")));
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(2)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(2)));
   }
 
   SECTION("should duplicate serialized(std::string)") {
     array.add(serialized(std::string("{}")));
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(2)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(2)));
   }
 
   SECTION("should duplicate serialized(std::string)") {
     array.add(serialized(std::string("\0XX", 3)));
-    REQUIRE(allocator.log() == AllocatorLog()
-                                   << AllocatorLog::Allocate(sizeofPool())
-                                   << AllocatorLog::Allocate(sizeofString(3)));
+    REQUIRE(spy.log() == AllocatorLog()
+                             << AllocatorLog::Allocate(sizeofPool())
+                             << AllocatorLog::Allocate(sizeofString(3)));
   }
 }
