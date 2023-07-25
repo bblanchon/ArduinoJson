@@ -76,17 +76,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     resources_.shrinkToFit();
   }
 
-  // Reclaims the memory leaked when removing and replacing values.
-  // https://arduinojson.org/v6/api/jsondocument/garbagecollect/
-  bool garbageCollect() {
-    // make a temporary clone and swap
-    JsonDocument tmp(*this);
-    if (tmp.overflowed())
-      return false;
-    swap(*this, tmp);
-    return true;
-  }
-
   // Casts the root to the specified type.
   // https://arduinojson.org/v6/api/jsondocument/as/
   template <typename T>

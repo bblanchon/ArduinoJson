@@ -11,7 +11,6 @@ add_executable(JsonDocumentTests
 	containsKey.cpp
 	createNested.cpp
 	ElementProxy.cpp
-	garbageCollect.cpp
 	isNull.cpp
 	issue1120.cpp
 	MemberProxy.cpp

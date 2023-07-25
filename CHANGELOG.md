@@ -23,3 +23,4 @@ HEAD
 * `JsonDocument`'s allocator is not monotonic anymore, removed values get recycled
 * Show a link to the documentation when user passes an unsupported input type
 * Remove `JsonDocument::memoryUsage()`
+* Remove `JsonDocument::garbageCollect()`

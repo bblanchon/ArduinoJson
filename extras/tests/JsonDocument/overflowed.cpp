@@ -80,11 +80,4 @@ TEST_CASE("JsonDocument::overflowed()") {
     doc.shrinkToFit();
     CHECK(doc.overflowed() == true);
   }
-
-  SECTION("return false after garbageCollect()") {
-    allocator.setCountdown(0);
-    doc.add(0);
-    doc.garbageCollect();
-    CHECK(doc.overflowed() == false);
-  }
 }
