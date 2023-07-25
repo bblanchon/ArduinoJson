@@ -9,8 +9,8 @@
 using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::set(JsonVariant)") {
-  ControllableAllocator allocator;
-  SpyingAllocator spyingAllocator(&allocator);
+  KillswitchAllocator killswitch;
+  SpyingAllocator spyingAllocator(&killswitch);
   JsonDocument doc1(&spyingAllocator);
   JsonDocument doc2(&spyingAllocator);
   JsonVariant var1 = doc1.to<JsonVariant>();
@@ -61,7 +61,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
   SECTION("fails gracefully if string allocation fails") {
     char str[] = "hello!!";
     var1.set(str);
-    allocator.disable();
+    killswitch.on();
     spyingAllocator.clearLog();
 
     var2.set(var1);
@@ -114,7 +114,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
   SECTION("fails gracefully if raw string allocation fails") {
     var1.set(serialized(std::string("hello!!")));
-    allocator.disable();
+    killswitch.on();
     spyingAllocator.clearLog();
 
     var2.set(var1);

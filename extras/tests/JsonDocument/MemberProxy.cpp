@@ -373,12 +373,12 @@ TEST_CASE("Deduplicate keys") {
 }
 
 TEST_CASE("MemberProxy under memory constraints") {
-  ControllableAllocator allocator;
-  SpyingAllocator spy(&allocator);
+  KillswitchAllocator killswitch;
+  SpyingAllocator spy(&killswitch);
   JsonDocument doc(&spy);
 
   SECTION("key allocation fails") {
-    allocator.disable();
+    killswitch.on();
 
     doc[std::string("hello")] = "world";
 

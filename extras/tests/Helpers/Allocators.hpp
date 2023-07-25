@@ -187,15 +187,15 @@ class SpyingAllocator : public ArduinoJson::Allocator {
   size_t allocatedBytes_ = 0;
 };
 
-class ControllableAllocator : public ArduinoJson::Allocator {
+class KillswitchAllocator : public ArduinoJson::Allocator {
  public:
-  ControllableAllocator(
+  KillswitchAllocator(
       Allocator* upstream = ArduinoJson::detail::DefaultAllocator::instance())
-      : enabled_(true), upstream_(upstream) {}
-  virtual ~ControllableAllocator() {}
+      : working_(true), upstream_(upstream) {}
+  virtual ~KillswitchAllocator() {}
 
   void* allocate(size_t n) override {
-    return enabled_ ? upstream_->allocate(n) : 0;
+    return working_ ? upstream_->allocate(n) : 0;
   }
 
   void deallocate(void* p) override {
@@ -203,15 +203,16 @@ class ControllableAllocator : public ArduinoJson::Allocator {
   }
 
   void* reallocate(void* ptr, size_t n) override {
-    return enabled_ ? upstream_->reallocate(ptr, n) : 0;
+    return working_ ? upstream_->reallocate(ptr, n) : 0;
   }
 
-  void disable() {
-    enabled_ = false;
+  // Turn the killswitch on, so all allocation fail
+  void on() {
+    working_ = false;
   }
 
  private:
-  bool enabled_;
+  bool working_;
   Allocator* upstream_;
 };
 

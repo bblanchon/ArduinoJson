@@ -10,8 +10,8 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("StringBuilder") {
-  ControllableAllocator controllableAllocator;
-  SpyingAllocator spyingAllocator(&controllableAllocator);
+  KillswitchAllocator killswitch;
+  SpyingAllocator spyingAllocator(&killswitch);
   ResourceManager resources(&spyingAllocator);
 
   SECTION("Empty string") {
@@ -66,7 +66,7 @@ TEST_CASE("StringBuilder") {
     StringBuilder str(&resources);
 
     str.startString();
-    controllableAllocator.disable();
+    killswitch.on();
     str.append(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
         "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
@@ -83,7 +83,7 @@ TEST_CASE("StringBuilder") {
   SECTION("Initial allocation fails") {
     StringBuilder str(&resources);
 
-    controllableAllocator.disable();
+    killswitch.on();
     str.startString();
 
     REQUIRE(str.isValid() == false);
