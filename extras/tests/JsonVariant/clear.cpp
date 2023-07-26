@@ -8,8 +8,6 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofString;
-
 TEST_CASE("JsonVariant::clear()") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
@@ -33,8 +31,9 @@ TEST_CASE("JsonVariant::clear()") {
     var.set(std::string("hello"));
     var.clear();
 
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Deallocate(sizeofString("hello")),
+                         });
   }
 }

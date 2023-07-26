@@ -8,7 +8,6 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::sizeofObject;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON object") {
   SpyingAllocator spy;
@@ -285,26 +284,19 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.as<std::string>() == "{\"a\":2}");
       REQUIRE(spy.log() ==
-              AllocatorLog()
-                  // a
-                  << AllocatorLog::Allocate(sizeofString(31))
-                  << AllocatorLog::Reallocate(sizeofString(31), sizeofString(1))
-                  // pool
-                  << AllocatorLog::Allocate(sizeofPool())
-                  // b
-                  << AllocatorLog::Allocate(sizeofString(31))
-                  << AllocatorLog::Reallocate(sizeofString(31), sizeofString(1))
-                  // c
-                  << AllocatorLog::Allocate(sizeofString(31))
-                  << AllocatorLog::Reallocate(sizeofString(31), sizeofString(1))
-                  // string builder
-                  << AllocatorLog::Allocate(sizeofString(31))
-                  // remove b & c
-                  << AllocatorLog::Deallocate(sizeofString(1)) * 2
-                  // string builder
-                  << AllocatorLog::Deallocate(sizeofString(31))
-
-      );
+              AllocatorLog{
+                  Allocate(sizeofStringBuffer()),
+                  Reallocate(sizeofStringBuffer(), sizeofString("a")),
+                  Allocate(sizeofPool()),
+                  Allocate(sizeofStringBuffer()),
+                  Reallocate(sizeofStringBuffer(), sizeofString("b")),
+                  Allocate(sizeofStringBuffer()),
+                  Reallocate(sizeofStringBuffer(), sizeofString("c")),
+                  Allocate(sizeofStringBuffer()),
+                  Deallocate(sizeofString("b")),
+                  Deallocate(sizeofString("c")),
+                  Deallocate(sizeofStringBuffer()),
+              });
     }
 
     SECTION("Repeated key with zero copy mode") {  // issue #1697
@@ -331,22 +323,17 @@ TEST_CASE("deserialize JSON object") {
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(obj.size() == 0);
-    REQUIRE(spy.log() == AllocatorLog()
-                             // string "hello"
-                             << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Reallocate(sizeofString(31),
-                                                         sizeofString(5))
-                             // pool
-                             << AllocatorLog::Allocate(sizeofPool())
-                             // string "world"
-                             << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Reallocate(sizeofString(31),
-                                                         sizeofString(5))
-                             // free pool
-                             << AllocatorLog::Deallocate(sizeofPool())
-                             // free "hello" and "world"
-                             << AllocatorLog::Deallocate(sizeofString(5))
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofStringBuffer()),
+                Reallocate(sizeofStringBuffer(), sizeofString("hello")),
+                Allocate(sizeofPool()),
+                Allocate(sizeofStringBuffer()),
+                Reallocate(sizeofStringBuffer(), sizeofString("world")),
+                Deallocate(sizeofPool()),
+                Deallocate(sizeofString("hello")),
+                Deallocate(sizeofString("world")),
+            });
   }
 
   SECTION("Issue #1335") {

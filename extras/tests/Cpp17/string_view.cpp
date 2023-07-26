@@ -10,7 +10,6 @@
 #endif
 
 using ArduinoJson::detail::sizeofArray;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("string_view") {
   SpyingAllocator spy;
@@ -63,10 +62,11 @@ TEST_CASE("string_view") {
     doc.add(std::string_view("example\0tree", 12));
     doc.add(std::string_view("example\0tree and a half", 12));
 
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(7))
-                             << AllocatorLog::Allocate(sizeofString(12)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("example")),
+                             Allocate(sizeofString("example tree")),
+                         });
   }
 
   SECTION("as<std::string_view>()") {

@@ -11,7 +11,6 @@
 #include "CustomReader.hpp"
 
 using ArduinoJson::detail::sizeofObject;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserializeJson(char*)") {
   SpyingAllocator spy;
@@ -23,14 +22,14 @@ TEST_CASE("deserializeJson(char*)") {
 
   REQUIRE(err == DeserializationError::Ok);
 
-  REQUIRE(spy.log() == AllocatorLog()
-                           << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Reallocate(sizeofString(31),
-                                                       sizeofString(5))
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Reallocate(sizeofString(31),
-                                                       sizeofString(5)));
+  REQUIRE(spy.log() ==
+          AllocatorLog{
+              Allocate(sizeofStringBuffer()),
+              Reallocate(sizeofStringBuffer(), sizeofString("hello")),
+              Allocate(sizeofPool()),
+              Allocate(sizeofStringBuffer()),
+              Reallocate(sizeofStringBuffer(), sizeofString("world")),
+          });
 }
 
 TEST_CASE("deserializeJson(unsigned char*, unsigned int)") {  // issue #1897

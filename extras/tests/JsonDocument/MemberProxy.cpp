@@ -12,7 +12,6 @@
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
-using ArduinoJson::detail::sizeofString;
 
 typedef ArduinoJson::detail::MemberProxy<JsonDocument&, const char*>
     MemberProxy;
@@ -326,9 +325,10 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("example")),
+                         });
   }
 
   SECTION("char*") {
@@ -340,9 +340,10 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("example")),
+                         });
   }
 
   SECTION("Arduino String") {
@@ -353,9 +354,10 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("example")),
+                         });
   }
 
   SECTION("Flash string") {
@@ -366,9 +368,10 @@ TEST_CASE("Deduplicate keys") {
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
     CHECK(key1 == key2);
 
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(7)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("example")),
+                         });
   }
 }
 
@@ -385,7 +388,8 @@ TEST_CASE("MemberProxy under memory constraints") {
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(doc.size() == 0);
     REQUIRE(doc.overflowed() == true);
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::AllocateFail(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             AllocateFail(sizeofString("hello")),
+                         });
   }
 }

@@ -6,8 +6,6 @@
 #include <catch.hpp>
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofString;
-
 TEST_CASE("JsonVariant::set(JsonVariant)") {
   KillswitchAllocator killswitch;
   SpyingAllocator spyingAllocator(&killswitch);
@@ -44,7 +42,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(spyingAllocator.log() == AllocatorLog());
+    REQUIRE(spyingAllocator.log() == AllocatorLog{});
   }
 
   SECTION("stores char* by copy") {
@@ -54,8 +52,9 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello!!")),
+                                     });
   }
 
   SECTION("fails gracefully if string allocation fails") {
@@ -67,8 +66,9 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     var2.set(var1);
 
     REQUIRE(doc2.overflowed() == true);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString((7))));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         AllocateFail(sizeofString("hello!!")),
+                                     });
   }
 
   SECTION("stores std::string by copy") {
@@ -77,8 +77,9 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello!!")),
+                                     });
   }
 
   SECTION("stores Serialized<const char*> by copy") {
@@ -87,8 +88,9 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello!!")),
+                                     });
   }
 
   SECTION("stores Serialized<char*> by copy") {
@@ -98,8 +100,9 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello!!")),
+                                     });
   }
 
   SECTION("stores Serialized<std::string> by copy") {
@@ -108,8 +111,9 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
     var2.set(var1);
 
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString((7))));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello!!")),
+                                     });
   }
 
   SECTION("fails gracefully if raw string allocation fails") {
@@ -120,8 +124,9 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     var2.set(var1);
 
     REQUIRE(doc2.overflowed() == true);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString((7))));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         AllocateFail(sizeofString("hello!!")),
+                                     });
   }
 
   SECTION("destination is unbound") {

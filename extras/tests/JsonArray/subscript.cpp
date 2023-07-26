@@ -9,7 +9,6 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::sizeofArray;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonArray::operator[]") {
   SpyingAllocator spy;
@@ -118,22 +117,25 @@ TEST_CASE("JsonArray::operator[]") {
 
   SECTION("should not duplicate const char*") {
     array[0] = "world";
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                         });
   }
 
   SECTION("should duplicate char*") {
     array[0] = const_cast<char*>("world");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("should duplicate std::string") {
     array[0] = std::string("world");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("array[0].to<JsonObject>()") {

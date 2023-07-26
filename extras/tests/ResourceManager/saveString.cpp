@@ -30,7 +30,7 @@ TEST_CASE("ResourceManager::saveString()") {
     REQUIRE(b->length == 5);
     REQUIRE(a->references == 1);
     REQUIRE(b->references == 1);
-    REQUIRE(resources.size() == 2 * sizeofString(5));
+    REQUIRE(resources.size() == sizeofString("hello") + sizeofString("world"));
   }
 
   SECTION("Deduplicates identical strings") {
@@ -39,7 +39,7 @@ TEST_CASE("ResourceManager::saveString()") {
     REQUIRE(a == b);
     REQUIRE(a->length == 5);
     REQUIRE(a->references == 2);
-    REQUIRE(resources.size() == sizeofString(5));
+    REQUIRE(resources.size() == sizeofString("hello"));
   }
 
   SECTION("Deduplicates identical strings that contain NUL") {
@@ -48,7 +48,7 @@ TEST_CASE("ResourceManager::saveString()") {
     REQUIRE(a == b);
     REQUIRE(a->length == 11);
     REQUIRE(a->references == 2);
-    REQUIRE(resources.size() == sizeofString(11));
+    REQUIRE(resources.size() == sizeofString("hello world"));
   }
 
   SECTION("Don't stop on first NUL") {
@@ -59,7 +59,8 @@ TEST_CASE("ResourceManager::saveString()") {
     REQUIRE(b->length == 11);
     REQUIRE(a->references == 1);
     REQUIRE(b->references == 1);
-    REQUIRE(resources.size() == sizeofString(5) + sizeofString(11));
+    REQUIRE(resources.size() ==
+            sizeofString("hello") + sizeofString("hello world"));
   }
 
   SECTION("Returns NULL when allocation fails") {

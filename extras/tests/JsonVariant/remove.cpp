@@ -9,7 +9,6 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::sizeofArray;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonVariant::remove(int)") {
   SpyingAllocator spy;
@@ -26,19 +25,21 @@ TEST_CASE("JsonVariant::remove(int)") {
     spy.clearLog();
     var.remove(1);
     REQUIRE(var.as<std::string>() == "[\"hello\",\"world\"]");
-    REQUIRE(spy.log() == AllocatorLog());
+    REQUIRE(spy.log() == AllocatorLog{});
 
     spy.clearLog();
     var.remove(1);
     REQUIRE(var.as<std::string>() == "[\"hello\"]");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("world")),
+                         });
 
     spy.clearLog();
     var.remove(0);
     REQUIRE(var.as<std::string>() == "[]");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("hello")),
+                         });
   }
 
   SECTION("release strings in nested array") {
@@ -51,8 +52,9 @@ TEST_CASE("JsonVariant::remove(int)") {
     var.remove(0);
 
     REQUIRE(var.as<std::string>() == "[]");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("hello")),
+                         });
   }
 }
 

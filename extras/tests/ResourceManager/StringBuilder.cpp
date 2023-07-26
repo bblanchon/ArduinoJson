@@ -20,12 +20,13 @@ TEST_CASE("StringBuilder") {
     str.startString();
     str.save();
 
-    REQUIRE(resources.size() == sizeofString(0));
+    REQUIRE(resources.size() == sizeofString(""));
     REQUIRE(resources.overflowed() == false);
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Reallocate(sizeofString(31),
-                                                       sizeofString(0)));
+            AllocatorLog{
+                Allocate(sizeofStringBuffer()),
+                Reallocate(sizeofStringBuffer(), sizeofString("")),
+            });
   }
 
   SECTION("Short string fits in first allocation") {
@@ -37,29 +38,29 @@ TEST_CASE("StringBuilder") {
     REQUIRE(str.isValid() == true);
     REQUIRE(str.str() == "hello");
     REQUIRE(resources.overflowed() == false);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31)));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofStringBuffer()),
+                                     });
   }
 
   SECTION("Long string needs reallocation") {
     StringBuilder str(&resources);
+    const char* lorem =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
+        "eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
     str.startString();
-    str.append(
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
-        "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+    str.append(lorem);
 
     REQUIRE(str.isValid() == true);
-    REQUIRE(str.str() ==
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
-            "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+    REQUIRE(str.str() == lorem);
     REQUIRE(resources.overflowed() == false);
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Reallocate(sizeofString(31),
-                                                       sizeofString(63))
-                           << AllocatorLog::Reallocate(sizeofString(63),
-                                                       sizeofString(127)));
+            AllocatorLog{
+                Allocate(sizeofStringBuffer(1)),
+                Reallocate(sizeofStringBuffer(1), sizeofStringBuffer(2)),
+                Reallocate(sizeofStringBuffer(2), sizeofStringBuffer(3)),
+            });
   }
 
   SECTION("Realloc fails") {
@@ -72,10 +73,11 @@ TEST_CASE("StringBuilder") {
         "eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::ReallocateFail(sizeofString(31),
-                                                           sizeofString(63))
-                           << AllocatorLog::Deallocate(sizeofString(31)));
+            AllocatorLog{
+                Allocate(sizeofStringBuffer()),
+                ReallocateFail(sizeofStringBuffer(), sizeofStringBuffer(2)),
+                Deallocate(sizeofStringBuffer()),
+            });
     REQUIRE(str.isValid() == false);
     REQUIRE(resources.overflowed() == true);
   }
@@ -88,8 +90,9 @@ TEST_CASE("StringBuilder") {
 
     REQUIRE(str.isValid() == false);
     REQUIRE(resources.overflowed() == true);
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::AllocateFail(sizeofString(31)));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         AllocateFail(sizeofStringBuffer()),
+                                     });
   }
 }
 
@@ -113,7 +116,7 @@ TEST_CASE("StringBuilder::save() deduplicates strings") {
     REQUIRE(s1->references == 2);
     REQUIRE(s2->references == 1);
     REQUIRE(s3->references == 2);
-    REQUIRE(resources.size() == 2 * sizeofString(5));
+    REQUIRE(resources.size() == sizeofString("hello") + sizeofString("world"));
   }
 
   SECTION("Requires terminator") {
@@ -123,7 +126,8 @@ TEST_CASE("StringBuilder::save() deduplicates strings") {
     REQUIRE(s2 != s1);
     REQUIRE(s1->references == 1);
     REQUIRE(s2->references == 1);
-    REQUIRE(resources.size() == sizeofString(11) + sizeofString(5));
+    REQUIRE(resources.size() ==
+            sizeofString("hello world") + sizeofString("hello"));
   }
 
   SECTION("Don't overrun") {
@@ -133,6 +137,7 @@ TEST_CASE("StringBuilder::save() deduplicates strings") {
     REQUIRE(s2 != s1);
     REQUIRE(s1->references == 1);
     REQUIRE(s2->references == 1);
-    REQUIRE(resources.size() == sizeofString(11) + sizeofString(3));
+    REQUIRE(resources.size() ==
+            sizeofString("hello world") + sizeofString("wor"));
   }
 }

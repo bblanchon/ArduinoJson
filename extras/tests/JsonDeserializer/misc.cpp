@@ -117,8 +117,9 @@ TEST_CASE("deserializeJson(JsonDocument&)") {
     deserializeJson(doc, "{}");
 
     REQUIRE(doc.is<JsonObject>());
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Deallocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Deallocate(sizeofPool()),
+                         });
   }
 }

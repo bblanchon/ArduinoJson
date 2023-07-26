@@ -17,7 +17,7 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
   SECTION("empty") {
     resources.shrinkToFit();
 
-    REQUIRE(spyingAllocator.log() == AllocatorLog());
+    REQUIRE(spyingAllocator.log() == AllocatorLog{});
   }
 
   SECTION("only one pool") {
@@ -26,9 +26,10 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
     resources.shrinkToFit();
 
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Reallocate(sizeofPool(),
-                                                       sizeof(VariantSlot)));
+            AllocatorLog{
+                Allocate(sizeofPool()),
+                Reallocate(sizeofPool(), sizeof(VariantSlot)),
+            });
   }
 
   SECTION("more pools than initial count") {
@@ -37,20 +38,20 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
          i++)
       resources.allocSlot();
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPool()) *
-                                  ARDUINOJSON_INITIAL_POOL_COUNT
-                           << AllocatorLog::Allocate(sizeofPoolList(
-                                  ARDUINOJSON_INITIAL_POOL_COUNT * 2))
-                           << AllocatorLog::Allocate(sizeofPool()));
+            AllocatorLog{
+                Allocate(sizeofPool()) * ARDUINOJSON_INITIAL_POOL_COUNT,
+                Allocate(sizeofPoolList(ARDUINOJSON_INITIAL_POOL_COUNT * 2)),
+                Allocate(sizeofPool()),
+            });
 
     spyingAllocator.clearLog();
     resources.shrinkToFit();
 
     REQUIRE(spyingAllocator.log() ==
-            AllocatorLog()
-                << AllocatorLog::Reallocate(sizeofPool(), sizeof(VariantSlot))
-                << AllocatorLog::Reallocate(
-                       sizeofPoolList(ARDUINOJSON_INITIAL_POOL_COUNT * 2),
-                       sizeofPoolList(ARDUINOJSON_INITIAL_POOL_COUNT + 1)));
+            AllocatorLog{
+                Reallocate(sizeofPool(), sizeof(VariantSlot)),
+                Reallocate(sizeofPoolList(ARDUINOJSON_INITIAL_POOL_COUNT * 2),
+                           sizeofPoolList(ARDUINOJSON_INITIAL_POOL_COUNT + 1)),
+            });
   }
 }

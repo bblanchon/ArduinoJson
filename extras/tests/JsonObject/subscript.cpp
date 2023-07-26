@@ -8,7 +8,6 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::sizeofObject;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("JsonObject::operator[]") {
   SpyingAllocator spy;
@@ -106,65 +105,72 @@ TEST_CASE("JsonObject::operator[]") {
 
   SECTION("should not duplicate const char*") {
     obj["hello"] = "world";
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{Allocate(sizeofPool())});
   }
 
   SECTION("should duplicate char* value") {
     obj["hello"] = const_cast<char*>("world");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("should duplicate char* key") {
     obj[const_cast<char*>("hello")] = "world";
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                         });
   }
 
   SECTION("should duplicate char* key&value") {
     obj[const_cast<char*>("hello")] = const_cast<char*>("world");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("should duplicate std::string value") {
     obj["hello"] = std::string("world");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("should duplicate std::string key") {
     obj[std::string("hello")] = "world";
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                         });
   }
 
   SECTION("should duplicate std::string key&value") {
     obj[std::string("hello")] = std::string("world");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("should duplicate a non-static JsonString key") {
     obj[JsonString("hello", JsonString::Copied)] = "world";
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                         });
   }
 
   SECTION("should not duplicate a static JsonString key") {
     obj[JsonString("hello", JsonString::Linked)] = "world";
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                         });
   }
 
   SECTION("should ignore null key") {

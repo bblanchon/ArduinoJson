@@ -6,7 +6,6 @@
 #include <catch.hpp>
 
 typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("ElementProxy::add()") {
   JsonDocument doc;

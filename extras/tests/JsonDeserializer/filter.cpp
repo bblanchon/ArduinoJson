@@ -13,7 +13,6 @@
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("Filtering") {
   struct TestCase {
@@ -49,7 +48,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"abcdefg\":\"hijklmn\"}",
-      sizeofObject(1) + 2*sizeofString(7)
+      sizeofObject(1) + sizeofString("abcdefg") + sizeofString("hijklmn")
     },
     {
       "{\"hello\":\"world\"}",
@@ -75,7 +74,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":null}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // Member is a number, but filter wants an array
@@ -84,7 +83,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":null}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // Input is an array, but filter wants an object
@@ -120,7 +119,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // skip a float
@@ -129,7 +128,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // skip false
@@ -138,7 +137,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // skip true
@@ -147,7 +146,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // skip null
@@ -156,7 +155,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip a double-quoted string
@@ -165,7 +164,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip a single-quoted string
@@ -174,7 +173,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip an empty array
@@ -183,7 +182,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip an empty array with spaces in it
@@ -192,7 +191,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip an array
@@ -201,7 +200,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip an array with spaces in it
@@ -210,7 +209,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip an empty object
@@ -219,7 +218,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip an empty object with spaces in it
@@ -228,7 +227,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // can skip an object
@@ -237,7 +236,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // skip an object with spaces in it
@@ -246,7 +245,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":42}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       "{\"an_integer\": 0,\"example\":{\"type\":\"int\",\"outcome\":42}}",
@@ -254,7 +253,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":{\"outcome\":42}}",
-      2 * sizeofObject(1) + 2*sizeofString(7)
+      2 * sizeofObject(1) + 2*sizeofString("example")
     },
     {
       // wildcard
@@ -263,7 +262,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":{\"outcome\":42}}",
-      2 * sizeofObject(1) + 2*sizeofString(7)
+      2 * sizeofObject(1) + 2*sizeofString("example")
     },
     {
       // exclusion filter (issue #1628)
@@ -272,7 +271,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "{\"example\":1}",
-      sizeofObject(1) + sizeofString(7)
+      sizeofObject(1) + sizeofString("example")
     },
     {
       // only the first element of array counts
@@ -299,7 +298,7 @@ TEST_CASE("Filtering") {
       10,
       DeserializationError::Ok,
       "[{\"example\":1},{\"example\":3}]",
-      sizeofArray(2) + 2 * sizeofObject(1) + sizeofString(7)
+      sizeofArray(2) + 2 * sizeofObject(1) + sizeofString("example")
     },
     {
       "[',2,3]",

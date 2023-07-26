@@ -5,8 +5,6 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-using ArduinoJson::detail::sizeofString;
-
 TEST_CASE("serialize JsonArray to std::string") {
   JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();

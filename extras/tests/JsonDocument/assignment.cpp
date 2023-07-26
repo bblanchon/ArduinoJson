@@ -7,8 +7,6 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofString;
-
 TEST_CASE("JsonDocument assignment") {
   SpyingAllocator spyingAllocator;
 
@@ -22,11 +20,11 @@ TEST_CASE("JsonDocument assignment") {
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
 
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Allocate(sizeofString(5))  // world
-    );
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello")),
+                                         Allocate(sizeofPool()),
+                                         Allocate(sizeofString("world")),
+                                     });
   }
 
   SECTION("Copy assignment reallocates when capacity is smaller") {
@@ -38,11 +36,11 @@ TEST_CASE("JsonDocument assignment") {
     doc2 = doc1;
 
     REQUIRE(doc2.as<std::string>() == "[{\"hello\":\"world\"}]");
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Allocate(sizeofString(5))  // hello
-                           << AllocatorLog::Allocate(sizeofString(5))  // world
-    );
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofPool()),
+                                         Allocate(sizeofString("hello")),
+                                         Allocate(sizeofString("world")),
+                                     });
   }
 
   SECTION("Copy assignment reallocates when capacity is larger") {
@@ -54,11 +52,11 @@ TEST_CASE("JsonDocument assignment") {
     doc2 = doc1;
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
-    REQUIRE(spyingAllocator.log() ==
-            AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Allocate(sizeofString(5))  // world
-    );
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello")),
+                                         Allocate(sizeofPool()),
+                                         Allocate(sizeofString("world")),
+                                     });
   }
 
   SECTION("Move assign") {
@@ -72,14 +70,14 @@ TEST_CASE("JsonDocument assignment") {
       REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
       REQUIRE(doc1.as<std::string>() == "null");
     }
-    REQUIRE(
-        spyingAllocator.log() ==
-        AllocatorLog() << AllocatorLog::Allocate(sizeofString(5))  // hello
-                       << AllocatorLog::Allocate(sizeofPool())
-                       << AllocatorLog::Allocate(sizeofString(5))    // world
-                       << AllocatorLog::Deallocate(sizeofString(5))  // hello
-                       << AllocatorLog::Deallocate(sizeofString(5))  // world
-                       << AllocatorLog::Deallocate(sizeofPool()));
+    REQUIRE(spyingAllocator.log() == AllocatorLog{
+                                         Allocate(sizeofString("hello")),
+                                         Allocate(sizeofPool()),
+                                         Allocate(sizeofString("world")),
+                                         Deallocate(sizeofString("hello")),
+                                         Deallocate(sizeofString("world")),
+                                         Deallocate(sizeofPool()),
+                                     });
   }
 
   SECTION("Assign from JsonObject") {

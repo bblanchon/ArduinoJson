@@ -8,7 +8,6 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::sizeofObject;
-using ArduinoJson::detail::sizeofString;
 
 enum ErrorCode { ERROR_01 = 1, ERROR_10 = 10 };
 
@@ -186,32 +185,37 @@ TEST_CASE("JsonVariant::set() releases the previous value") {
 
   SECTION("int") {
     v.set(42);
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("world")),
+                         });
   }
 
   SECTION("bool") {
     v.set(false);
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("world")),
+                         });
   }
 
   SECTION("const char*") {
     v.set("hello");
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("world")),
+                         });
   }
 
   SECTION("float") {
     v.set(1.2);
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("world")),
+                         });
   }
 
   SECTION("Serialized<const char*>") {
     v.set(serialized("[]"));
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Deallocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofString(2)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("world")),
+                             Allocate(sizeofString("[]")),
+                         });
   }
 }

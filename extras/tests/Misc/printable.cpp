@@ -11,7 +11,6 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::sizeofArray;
-using ArduinoJson::detail::sizeofString;
 
 struct PrintOneCharacterAtATime {
   static size_t printStringTo(const std::string& s, Print& p) {
@@ -65,10 +64,11 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Reallocate(sizeofString(31),
-                                                         sizeofString(7)));
+      CHECK(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofStringBuffer()),
+                Reallocate(sizeofStringBuffer(), sizeofString("example")),
+            });
     }
 
     SECTION("Via Print::write(const char* size_t)") {
@@ -77,10 +77,11 @@ TEST_CASE("Printable") {
       CHECK(doc.as<std::string>() == value);
       CHECK(printable.totalBytesWritten() == 7);
       CHECK(doc.overflowed() == false);
-      CHECK(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Reallocate(sizeofString(31),
-                                                         sizeofString(7)));
+      CHECK(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofStringBuffer()),
+                Reallocate(sizeofStringBuffer(), sizeofString("example")),
+            });
     }
   }
 
@@ -100,8 +101,9 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
       CHECK(doc.overflowed() == true);
-      CHECK(spy.log() == AllocatorLog()
-                             << AllocatorLog::AllocateFail(sizeofString(31)));
+      CHECK(spy.log() == AllocatorLog{
+                             AllocateFail(sizeofStringBuffer()),
+                         });
     }
 
     SECTION("Via Print::write(const char*, size_t)") {
@@ -113,8 +115,9 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 0);
       CHECK(doc.overflowed() == true);
-      CHECK(spy.log() == AllocatorLog()
-                             << AllocatorLog::AllocateFail(sizeofString(31)));
+      CHECK(spy.log() == AllocatorLog{
+                             AllocateFail(sizeofStringBuffer()),
+                         });
     }
   }
 
@@ -135,11 +138,12 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
-      CHECK(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::ReallocateFail(sizeofString(31),
-                                                             sizeofString(63))
-                             << AllocatorLog::Deallocate(sizeofString(31)));
+      CHECK(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofStringBuffer()),
+                ReallocateFail(sizeofStringBuffer(), sizeofStringBuffer(2)),
+                Deallocate(sizeofStringBuffer()),
+            });
     }
 
     SECTION("Via Print::write(const char*, size_t)") {
@@ -151,11 +155,12 @@ TEST_CASE("Printable") {
       CHECK(doc.isNull());
       CHECK(printable.totalBytesWritten() == 31);
       CHECK(doc.overflowed() == true);
-      CHECK(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::ReallocateFail(sizeofString(31),
-                                                             sizeofString(63))
-                             << AllocatorLog::Deallocate(sizeofString(31)));
+      CHECK(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofStringBuffer()),
+                ReallocateFail(sizeofStringBuffer(), sizeofStringBuffer(2)),
+                Deallocate(sizeofStringBuffer()),
+            });
     }
   }
 
@@ -175,12 +180,13 @@ TEST_CASE("Printable") {
     REQUIRE(doc.size() == 2);
     CHECK(doc[0] == "Hello World!");
     CHECK(doc[1] == "Hello World!");
-    CHECK(spy.log() == AllocatorLog()
-                           << AllocatorLog::Allocate(sizeofPool())
-                           << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Reallocate(sizeofString(31),
-                                                       sizeofString(12))
-                           << AllocatorLog::Allocate(sizeofString(31))
-                           << AllocatorLog::Deallocate(sizeofString(31)));
+    CHECK(spy.log() ==
+          AllocatorLog{
+              Allocate(sizeofPool()),
+              Allocate(sizeofStringBuffer()),
+              Reallocate(sizeofStringBuffer(), sizeofString("Hello World!")),
+              Allocate(sizeofStringBuffer()),
+              Deallocate(sizeofStringBuffer()),
+          });
   }
 }

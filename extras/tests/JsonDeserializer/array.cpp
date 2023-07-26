@@ -8,7 +8,6 @@
 #include "Allocators.hpp"
 
 using ArduinoJson::detail::sizeofArray;
-using ArduinoJson::detail::sizeofString;
 
 TEST_CASE("deserialize JSON array") {
   SpyingAllocator spy;
@@ -254,9 +253,10 @@ TEST_CASE("deserialize JSON array") {
     JsonArray arr = doc.as<JsonArray>();
 
     REQUIRE(arr.size() == 0);
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Deallocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Deallocate(sizeofPool()),
+                         });
   }
 }
 
@@ -307,10 +307,11 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   SECTION("don't store space characters") {
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(31))
-                             << AllocatorLog::Reallocate(sizeofString(31),
-                                                         sizeofString(7)));
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofPool()),
+                Allocate(sizeofStringBuffer()),
+                Reallocate(sizeofStringBuffer(), sizeofString("1234567")),
+            });
   }
 }

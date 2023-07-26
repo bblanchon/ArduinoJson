@@ -7,8 +7,6 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofString;
-
 TEST_CASE("JsonObject::set()") {
   SpyingAllocator spy;
   JsonDocument doc1(&spy);
@@ -25,8 +23,9 @@ TEST_CASE("JsonObject::set()") {
 
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == std::string("world"));
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                         });
   }
 
   SECTION("copy local string value") {
@@ -37,9 +36,10 @@ TEST_CASE("JsonObject::set()") {
 
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == std::string("world"));
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("copy local key") {
@@ -50,9 +50,10 @@ TEST_CASE("JsonObject::set()") {
 
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == std::string("world"));
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool()));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                         });
   }
 
   SECTION("copy string from deserializeJson()") {
@@ -63,10 +64,11 @@ TEST_CASE("JsonObject::set()") {
 
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == std::string("world"));
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("copy string from deserializeMsgPack()") {
@@ -77,10 +79,11 @@ TEST_CASE("JsonObject::set()") {
 
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == std::string("world"));
-    REQUIRE(spy.log() == AllocatorLog()
-                             << AllocatorLog::Allocate(sizeofString(5))
-                             << AllocatorLog::Allocate(sizeofPool())
-                             << AllocatorLog::Allocate(sizeofString(5)));
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("world")),
+                         });
   }
 
   SECTION("should work with JsonObjectConst") {

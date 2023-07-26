@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ArduinoJson/Memory/Allocator.hpp>
+#include <ArduinoJson/Memory/StringBuilder.hpp>
 #include <ArduinoJson/Memory/VariantPool.hpp>
 
 #include <sstream>
@@ -30,63 +31,68 @@ struct FailingAllocator : ArduinoJson::Allocator {
   }
 };
 
+class AllocatorLogEntry {
+ public:
+  AllocatorLogEntry(std::string s, size_t n = 1) : str_(s), count_(n) {}
+
+  const std::string& str() const {
+    return str_;
+  }
+
+  size_t count() const {
+    return count_;
+  }
+
+  AllocatorLogEntry operator*(size_t n) const {
+    return AllocatorLogEntry(str_, n);
+  }
+
+ private:
+  std::string str_;
+  size_t count_;
+};
+
+inline AllocatorLogEntry Allocate(size_t s) {
+  char buffer[32];
+  sprintf(buffer, "allocate(%zu)", s);
+  return AllocatorLogEntry(buffer);
+}
+
+inline AllocatorLogEntry AllocateFail(size_t s) {
+  char buffer[32];
+  sprintf(buffer, "allocate(%zu) -> nullptr", s);
+  return AllocatorLogEntry(buffer);
+}
+
+inline AllocatorLogEntry Reallocate(size_t s1, size_t s2) {
+  char buffer[32];
+  sprintf(buffer, "reallocate(%zu, %zu)", s1, s2);
+  return AllocatorLogEntry(buffer);
+}
+
+inline AllocatorLogEntry ReallocateFail(size_t s1, size_t s2) {
+  char buffer[32];
+  sprintf(buffer, "reallocate(%zu, %zu) -> nullptr", s1, s2);
+  return AllocatorLogEntry(buffer);
+}
+
+inline AllocatorLogEntry Deallocate(size_t s) {
+  char buffer[32];
+  sprintf(buffer, "deallocate(%zu)", s);
+  return AllocatorLogEntry(buffer);
+}
+
 class AllocatorLog {
  public:
-  class Entry {
-   public:
-    Entry(std::string s, size_t n = 1) : str_(s), count_(n) {}
-
-    const std::string& str() const {
-      return str_;
-    }
-
-    size_t count() const {
-      return count_;
-    }
-
-    Entry operator*(size_t n) const {
-      return Entry(str_, n);
-    }
-
-   private:
-    std::string str_;
-    size_t count_;
-  };
-
-  static Entry Allocate(size_t s) {
-    char buffer[32];
-    sprintf(buffer, "allocate(%zu)", s);
-    return Entry(buffer);
+  AllocatorLog() = default;
+  AllocatorLog(std::initializer_list<AllocatorLogEntry> list) {
+    for (auto& entry : list)
+      append(entry);
   }
 
-  static Entry AllocateFail(size_t s) {
-    char buffer[32];
-    sprintf(buffer, "allocate(%zu) -> nullptr", s);
-    return Entry(buffer);
-  }
-
-  static Entry Reallocate(size_t s1, size_t s2) {
-    char buffer[32];
-    sprintf(buffer, "reallocate(%zu, %zu)", s1, s2);
-    return Entry(buffer);
-  };
-
-  static Entry ReallocateFail(size_t s1, size_t s2) {
-    char buffer[32];
-    sprintf(buffer, "reallocate(%zu, %zu) -> nullptr", s1, s2);
-    return Entry(buffer);
-  };
-
-  static Entry Deallocate(size_t s) {
-    char buffer[32];
-    sprintf(buffer, "deallocate(%zu)", s);
-    return Entry(buffer);
-  };
-
-  AllocatorLog& operator<<(const Entry& entry) {
+  void append(const AllocatorLogEntry& entry) {
     for (size_t i = 0; i < entry.count(); i++)
       log_ << entry.str() << "\n";
-    return *this;
   }
 
   std::string str() const {
@@ -125,12 +131,12 @@ class SpyingAllocator : public ArduinoJson::Allocator {
     auto block = reinterpret_cast<AllocatedBlock*>(
         upstream_->allocate(sizeof(AllocatedBlock) + n - 1));
     if (block) {
-      log_ << AllocatorLog::Allocate(n);
+      log_.append(Allocate(n));
       allocatedBytes_ += n;
       block->size = n;
       return block->payload;
     } else {
-      log_ << AllocatorLog::AllocateFail(n);
+      log_.append(AllocateFail(n));
       return nullptr;
     }
   }
@@ -138,7 +144,7 @@ class SpyingAllocator : public ArduinoJson::Allocator {
   void deallocate(void* p) override {
     auto block = AllocatedBlock::fromPayload(p);
     allocatedBytes_ -= block->size;
-    log_ << AllocatorLog::Deallocate(block ? block->size : 0);
+    log_.append(Deallocate(block ? block->size : 0));
     upstream_->deallocate(block);
   }
 
@@ -148,12 +154,12 @@ class SpyingAllocator : public ArduinoJson::Allocator {
     block = reinterpret_cast<AllocatedBlock*>(
         upstream_->reallocate(block, sizeof(AllocatedBlock) + n - 1));
     if (block) {
-      log_ << AllocatorLog::Reallocate(oldSize, n);
+      log_.append(Reallocate(oldSize, n));
       block->size = n;
       allocatedBytes_ += n - oldSize;
       return block->payload;
     } else {
-      log_ << AllocatorLog::ReallocateFail(oldSize, n);
+      log_.append(ReallocateFail(oldSize, n));
       return nullptr;
     }
   }
@@ -258,4 +264,16 @@ inline size_t sizeofPoolList(size_t n = ARDUINOJSON_INITIAL_POOL_COUNT) {
 inline size_t sizeofPool(
     ArduinoJson::detail::SlotCount n = ARDUINOJSON_POOL_CAPACITY) {
   return ArduinoJson::detail::VariantPool::slotsToBytes(n);
+}
+
+inline size_t sizeofStringBuffer(size_t iteration = 1) {
+  // returns 31, 63, 127, 255, etc.
+  auto capacity = ArduinoJson::detail::StringBuilder::initialCapacity;
+  for (size_t i = 1; i < iteration; i++)
+    capacity = capacity * 2 + 1;
+  return ArduinoJson::detail::sizeofString(capacity);
+}
+
+inline size_t sizeofString(const char* s) {
+  return ArduinoJson::detail::sizeofString(strlen(s));
 }
