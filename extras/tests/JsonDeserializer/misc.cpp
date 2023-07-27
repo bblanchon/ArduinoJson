@@ -72,46 +72,6 @@ TEST_CASE("deserializeJson(JsonDocument&)") {
     }
   }
 
-  SECTION("Premature null-terminator") {
-    SECTION("In escape sequence") {
-      DeserializationError err = deserializeJson(doc, "\"\\");
-
-      REQUIRE(err == DeserializationError::IncompleteInput);
-    }
-
-    SECTION("In double quoted string") {
-      DeserializationError err = deserializeJson(doc, "\"hello");
-
-      REQUIRE(err == DeserializationError::IncompleteInput);
-    }
-
-    SECTION("In single quoted string") {
-      DeserializationError err = deserializeJson(doc, "'hello");
-
-      REQUIRE(err == DeserializationError::IncompleteInput);
-    }
-  }
-
-  SECTION("Premature end of input") {
-    SECTION("In escape sequence") {
-      DeserializationError err = deserializeJson(doc, "\"\\n\"", 2);
-
-      REQUIRE(err == DeserializationError::IncompleteInput);
-    }
-
-    SECTION("In double quoted string") {
-      DeserializationError err = deserializeJson(doc, "\"hello\"", 6);
-
-      REQUIRE(err == DeserializationError::IncompleteInput);
-    }
-
-    SECTION("In single quoted string") {
-      DeserializationError err = deserializeJson(doc, "'hello'", 6);
-
-      REQUIRE(err == DeserializationError::IncompleteInput);
-    }
-  }
-
   SECTION("Should clear the JsonVariant") {
     deserializeJson(doc, "[1,2,3]");
     deserializeJson(doc, "{}");

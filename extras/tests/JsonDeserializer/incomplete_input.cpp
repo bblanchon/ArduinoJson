@@ -7,15 +7,36 @@
 #include <catch.hpp>
 
 TEST_CASE("Truncated JSON input") {
-  const char* testCases[] = {"\"hello", "\'hello", "'\\u", "'\\u00", "'\\u000",
-                             // false
-                             "f", "fa", "fal", "fals",
-                             // true
-                             "t", "tr", "tru",
-                             // null
-                             "n", "nu", "nul",
-                             // object
-                             "{", "{a", "{a:", "{a:1", "{a:1,", "{a:1,"};
+  const char* testCases[] = {
+      // strings
+      "\"\\",
+      "\"hello",
+      "\'hello",
+      // unicode
+      "'\\u",
+      "'\\u00",
+      "'\\u000",
+      // false
+      "f",
+      "fa",
+      "fal",
+      "fals",
+      // true
+      "t",
+      "tr",
+      "tru",
+      // null
+      "n",
+      "nu",
+      "nul",
+      // object
+      "{",
+      "{a",
+      "{a:",
+      "{a:1",
+      "{a:1,",
+      "{a:1,",
+  };
   const size_t testCount = sizeof(testCases) / sizeof(testCases[0]);
 
   JsonDocument doc;
