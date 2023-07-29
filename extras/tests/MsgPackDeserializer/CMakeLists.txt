@@ -7,12 +7,10 @@ add_executable(MsgPackDeserializerTests
 	deserializeObject.cpp
 	deserializeVariant.cpp
 	doubleToFloat.cpp
+	errors.cpp
 	filter.cpp
-	incompleteInput.cpp
 	input_types.cpp
-	misc.cpp
 	nestingLimit.cpp
-	notSupported.cpp
 )
 
 add_test(MsgPackDeserializer MsgPackDeserializerTests)
