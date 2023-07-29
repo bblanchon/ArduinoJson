@@ -22,6 +22,18 @@ struct first_or_void<T, Rest...> {
   using type = T;
 };
 
+// A meta-function that returns true if T is a valid destination type for
+// deserialize()
+template <class T, class = void>
+struct is_deserialize_destination : false_type {};
+
+template <class T>
+struct is_deserialize_destination<
+    T, typename enable_if<is_same<decltype(VariantAttorney::getResourceManager(
+                                      detail::declval<T&>())),
+                                  ResourceManager*>::value>::type> : true_type {
+};
+
 template <template <typename> class TDeserializer, typename TDestination,
           typename TReader, typename TOptions>
 DeserializationError doDeserialize(TDestination&& dst, TReader reader,

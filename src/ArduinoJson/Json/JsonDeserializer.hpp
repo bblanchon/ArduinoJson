@@ -671,7 +671,10 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TDestination, typename... Args>
-DeserializationError deserializeJson(TDestination&& dst, Args&&... args) {
+typename detail::enable_if<
+    detail::is_deserialize_destination<TDestination>::value,
+    DeserializationError>::type
+deserializeJson(TDestination&& dst, Args&&... args) {
   using namespace detail;
   return deserialize<JsonDeserializer>(detail::forward<TDestination>(dst),
                                        detail::forward<Args>(args)...);
@@ -680,8 +683,10 @@ DeserializationError deserializeJson(TDestination&& dst, Args&&... args) {
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
 template <typename TDestination, typename TChar, typename... Args>
-DeserializationError deserializeJson(TDestination&& dst, TChar* input,
-                                     Args&&... args) {
+typename detail::enable_if<
+    detail::is_deserialize_destination<TDestination>::value,
+    DeserializationError>::type
+deserializeJson(TDestination&& dst, TChar* input, Args&&... args) {
   using namespace detail;
   return deserialize<JsonDeserializer>(detail::forward<TDestination>(dst),
                                        input, detail::forward<Args>(args)...);
