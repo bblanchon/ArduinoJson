@@ -670,20 +670,21 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
-template <typename... Args>
-DeserializationError deserializeJson(JsonDocument& doc, Args&&... args) {
+template <typename TDestination, typename... Args>
+DeserializationError deserializeJson(TDestination&& dst, Args&&... args) {
   using namespace detail;
-  return deserialize<JsonDeserializer>(doc, detail::forward<Args>(args)...);
+  return deserialize<JsonDeserializer>(detail::forward<TDestination>(dst),
+                                       detail::forward<Args>(args)...);
 }
 
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/json/deserializejson/
-template <typename TChar, typename... Args>
-DeserializationError deserializeJson(JsonDocument& doc, TChar* input,
+template <typename TDestination, typename TChar, typename... Args>
+DeserializationError deserializeJson(TDestination&& dst, TChar* input,
                                      Args&&... args) {
   using namespace detail;
-  return deserialize<JsonDeserializer>(doc, input,
-                                       detail::forward<Args>(args)...);
+  return deserialize<JsonDeserializer>(detail::forward<TDestination>(dst),
+                                       input, detail::forward<Args>(args)...);
 }
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

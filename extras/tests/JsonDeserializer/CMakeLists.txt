@@ -5,6 +5,7 @@
 add_executable(JsonDeserializerTests
 	array.cpp
 	DeserializationError.cpp
+	destination_types.cpp
 	errors.cpp
 	filter.cpp
 	input_types.cpp

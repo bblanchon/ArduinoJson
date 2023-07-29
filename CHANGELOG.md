@@ -24,3 +24,4 @@ HEAD
 * Show a link to the documentation when user passes an unsupported input type
 * Remove `JsonDocument::memoryUsage()`
 * Remove `JsonDocument::garbageCollect()`
+* Add `deserializeJson(JsonVariant, ...)` and `deserializeMsgPack(JsonVariant, ...)` (#1226)

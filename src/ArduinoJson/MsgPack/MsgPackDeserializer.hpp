@@ -560,19 +560,21 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Parses a MessagePack input and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename... Args>
-DeserializationError deserializeMsgPack(JsonDocument& doc, Args&&... args) {
+template <typename TDestination, typename... Args>
+DeserializationError deserializeMsgPack(TDestination&& dst, Args&&... args) {
   using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, detail::forward<Args>(args)...);
+  return deserialize<MsgPackDeserializer>(detail::forward<TDestination>(dst),
+                                          detail::forward<Args>(args)...);
 }
 
 // Parses a MessagePack input and puts the result in a JsonDocument.
 // https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
-template <typename TChar, typename... Args>
-DeserializationError deserializeMsgPack(JsonDocument& doc, TChar* input,
+template <typename TDestination, typename TChar, typename... Args>
+DeserializationError deserializeMsgPack(TDestination&& dst, TChar* input,
                                         Args&&... args) {
   using namespace detail;
-  return deserialize<MsgPackDeserializer>(doc, input,
+  return deserialize<MsgPackDeserializer>(detail::forward<TDestination>(dst),
+                                          input,
                                           detail::forward<Args>(args)...);
 }
 

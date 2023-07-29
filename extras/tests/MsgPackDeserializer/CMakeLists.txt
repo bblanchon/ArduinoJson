@@ -6,6 +6,7 @@ add_executable(MsgPackDeserializerTests
 	deserializeArray.cpp
 	deserializeObject.cpp
 	deserializeVariant.cpp
+	destination_types.cpp
 	doubleToFloat.cpp
 	errors.cpp
 	filter.cpp
