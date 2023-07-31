@@ -24,668 +24,667 @@ TEST_CASE("Filtering") {
     size_t memoryUsage;
   };
 
-  // clang-format off
   TestCase testCases[] = {
-    {
-      "{\"hello\":\"world\"}",   // 1. input
-      "null",                    // 2. filter
-      10,                        // 3. nestingLimit
-      DeserializationError::Ok,  // 4. error
-      "null",                    // 5. output
-      0                          // 6. memoryUsage
-    },
-    {
-      "{\"hello\":\"world\"}",
-      "false",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      "{\"abcdefg\":\"hijklmn\"}",
-      "true",
-      10,
-      DeserializationError::Ok,
-      "{\"abcdefg\":\"hijklmn\"}",
-      sizeofObject(1) + sizeofString("abcdefg") + sizeofString("hijklmn")
-    },
-    {
-      "{\"hello\":\"world\"}",
-      "{}",
-      10,
-      DeserializationError::Ok,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // Input in an object, but filter wants an array
-      "{\"hello\":\"world\"}",
-      "[]",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // Member is a string, but filter wants an array
-      "{\"example\":\"example\"}",
-      "{\"example\":[true]}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":null}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // Member is a number, but filter wants an array
-      "{\"example\":42}",
-      "{\"example\":[true]}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":null}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // Input is an array, but filter wants an object
-      "[\"hello\",\"world\"]",
-      "{}",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // Input is a bool, but filter wants an object
-      "true",
-      "{}",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // Input is a string, but filter wants an object
-      "\"hello\"",
-      "{}",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // skip an integer
-      "{\"an_integer\":666,example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // skip a float
-      "{\"a_float\":12.34e-6,example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // skip false
-      "{\"a_bool\":false,example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // skip true
-      "{\"a_bool\":true,example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // skip null
-      "{\"a_bool\":null,example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip a double-quoted string
-      "{\"a_double_quoted_string\":\"hello\",example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip a single-quoted string
-      "{\"a_single_quoted_string\":'hello',example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip an empty array
-      "{\"an_empty_array\":[],example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip an empty array with spaces in it
-      "{\"an_empty_array\":[\t],example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip an array
-      "{\"an_array\":[1,2,3],example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip an array with spaces in it
-      "{\"an_array\": [ 1 , 2 , 3 ] ,example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip an empty object
-      "{\"an_empty_object\":{},example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip an empty object with spaces in it
-      "{\"an_empty_object\":{    },example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // can skip an object
-      "{\"an_object\":{a:1,'b':2,\"c\":3},example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // skip an object with spaces in it
-      "{\"an_object\" : { a : 1 , 'b' : 2 , \"c\" : 3 } ,example:42}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":42}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      "{\"an_integer\": 0,\"example\":{\"type\":\"int\",\"outcome\":42}}",
-      "{\"example\":{\"outcome\":true}}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":{\"outcome\":42}}",
-      2 * sizeofObject(1) + 2*sizeofString("example")
-    },
-    {
-      // wildcard
-      "{\"example\":{\"type\":\"int\",\"outcome\":42}}",
-      "{\"*\":{\"outcome\":true}}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":{\"outcome\":42}}",
-      2 * sizeofObject(1) + 2*sizeofString("example")
-    },
-    {
-      // exclusion filter (issue #1628)
-      "{\"example\":1,\"ignored\":2}",
-      "{\"*\":true,\"ignored\":false}",
-      10,
-      DeserializationError::Ok,
-      "{\"example\":1}",
-      sizeofObject(1) + sizeofString("example")
-    },
-    {
-      // only the first element of array counts
-      "[1,2,3]",
-      "[true, false]",
-      10,
-      DeserializationError::Ok,
-      "[1,2,3]",
-      sizeofArray(3)
-    },
-    {
-      // only the first element of array counts
-      "[1,2,3]",
-      "[false, true]",
-      10,
-      DeserializationError::Ok,
-      "[]",
-      sizeofArray(0)
-    },
-    {
-      // filter members of object in array
-      "[{\"example\":1,\"ignore\":2},{\"example\":3,\"ignore\":4}]",
-      "[{\"example\":true}]",
-      10,
-      DeserializationError::Ok,
-      "[{\"example\":1},{\"example\":3}]",
-      sizeofArray(2) + 2 * sizeofObject(1) + sizeofString("example")
-    },
-    {
-      "[',2,3]",
-      "[false,true]",
-      10,
-      DeserializationError::IncompleteInput,
-      "[]",
-      sizeofArray(0)
-    },
-    {
-      "[\",2,3]",
-      "[false,true]",
-      10,
-      DeserializationError::IncompleteInput,
-      "[]",
-      sizeofArray(0)
-    },
-    {
-      // detect errors in skipped value
-      "[!,2,\\]",
-      "[false]",
-      10,
-      DeserializationError::InvalidInput,
-      "[]",
-      sizeofArray(0)
-    },
-    {
-      // detect incomplete string event if it's skipped
-      "\"ABC",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // detect incomplete string event if it's skipped
-      "'ABC",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // handle escaped quotes
-      "'A\\'BC'",
-      "false",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // handle escaped quotes
-      "\"A\\\"BC\"",
-      "false",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // detect incomplete string in presence of escaped quotes
-      "'A\\'BC",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // detect incomplete string in presence of escaped quotes
-      "\"A\\\"BC",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // skip empty array
-      "[]",
-      "false",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // skip empty array with spaces
-      " [ ] ",
-      "false",
-      10,
-      DeserializationError::Ok,
-      "null",
-      0
-    },
-    {
-      // bubble up element error even if array is skipped
-      "[1,'2,3]",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // bubble up member error even if object is skipped
-      "{'hello':'worl}",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // bubble up colon error even if object is skipped
-      "{'hello','world'}",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // bubble up key error even if object is skipped
-      "{'hello:1}",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // detect invalid value in skipped object
-      "{'hello':!}",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // ignore invalid value in skipped object
-      "{'hello':\\}",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // check nesting limit even for ignored objects
-      "{}",
-      "false",
-      0,
-      DeserializationError::TooDeep,
-      "null",
-      0
-    },
-    {
-      // check nesting limit even for ignored objects
-      "{'hello':{}}",
-      "false",
-      1,
-      DeserializationError::TooDeep,
-      "null",
-      0
-    },
-    {
-      // check nesting limit even for ignored values in objects
-      "{'hello':{}}",
-      "{}",
-      1,
-      DeserializationError::TooDeep,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // check nesting limit even for ignored arrays
-      "[]",
-      "false",
-      0,
-      DeserializationError::TooDeep,
-      "null",
-      0
-    },
-    {
-      // check nesting limit even for ignored arrays
-      "[[]]",
-      "false",
-      1,
-      DeserializationError::TooDeep,
-      "null",
-      0
-    },
-    {
-      // check nesting limit even for ignored values in arrays
-      "[[]]",
-      "[]",
-      1,
-      DeserializationError::TooDeep,
-      "[]",
-      sizeofArray(0)
-    },
-    {
-      // supports back-slash at the end of skipped string
-      "\"hell\\",
-      "false",
-      1,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // invalid comment at after an element in a skipped array
-      "[1/]",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // incomplete comment at after an element in a skipped array
-      "[1/*]",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // missing comma in a skipped array
-      "[1 2]",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // invalid comment at the beginning of array
-      "[/1]",
-      "[false]",
-      10,
-      DeserializationError::InvalidInput,
-      "[]",
-      sizeofArray(0)
-    },
-    {
-      // incomplete comment at the begining of an array
-      "[/*]",
-      "[false]",
-      10,
-      DeserializationError::IncompleteInput,
-      "[]",
-      sizeofArray(0)
-    },
-    {
-      // invalid comment before key
-      "{/1:2}",
-      "{}",
-      10,
-      DeserializationError::InvalidInput,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // incomplete comment before key
-      "{/*:2}",
-      "{}",
-      10,
-      DeserializationError::IncompleteInput,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // invalid comment after key
-      "{\"example\"/1:2}",
-      "{}",
-      10,
-      DeserializationError::InvalidInput,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // incomplete comment after key
-      "{\"example\"/*:2}",
-      "{}",
-      10,
-      DeserializationError::IncompleteInput,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // invalid comment after colon
-      "{\"example\":/12}",
-      "{}",
-      10,
-      DeserializationError::InvalidInput,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // incomplete comment after colon
-      "{\"example\":/*2}",
-      "{}",
-      10,
-      DeserializationError::IncompleteInput,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // comment next to an integer
-      "{\"ignore\":1//,\"example\":2\n}",
-      "{\"example\":true}",
-      10,
-      DeserializationError::Ok,
-      "{}",
-      sizeofObject(0)
-    },
-    {
-      // invalid comment after opening brace of a skipped object
-      "{/1:2}",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // incomplete after opening brace of a skipped object
-      "{/*:2}",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // invalid comment after key of a skipped object
-      "{\"example\"/:2}",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // incomplete comment after key of a skipped object
-      "{\"example\"/*:2}",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-    {
-      // invalid comment after value in a skipped object
-      "{\"example\":2/}",
-      "false",
-      10,
-      DeserializationError::InvalidInput,
-      "null",
-      0
-    },
-    {
-      // incomplete comment after value of a skipped object
-      "{\"example\":2/*}",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-     {
-      // incomplete comment after comma in skipped object
-      "{\"example\":2,/*}",
-      "false",
-      10,
-      DeserializationError::IncompleteInput,
-      "null",
-      0
-    },
-  };  // clang-format on
+      {
+          "{\"hello\":\"world\"}",   // 1. input
+          "null",                    // 2. filter
+          10,                        // 3. nestingLimit
+          DeserializationError::Ok,  // 4. error
+          "null",                    // 5. output
+          0,                         // 6. memoryUsage
+      },
+      {
+          "{\"hello\":\"world\"}",
+          "false",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          "{\"abcdefg\":\"hijklmn\"}",
+          "true",
+          10,
+          DeserializationError::Ok,
+          "{\"abcdefg\":\"hijklmn\"}",
+          sizeofObject(1) + sizeofString("abcdefg") + sizeofString("hijklmn"),
+      },
+      {
+          "{\"hello\":\"world\"}",
+          "{}",
+          10,
+          DeserializationError::Ok,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // Input in an object, but filter wants an array
+          "{\"hello\":\"world\"}",
+          "[]",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // Member is a string, but filter wants an array
+          "{\"example\":\"example\"}",
+          "{\"example\":[true]}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":null}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // Member is a number, but filter wants an array
+          "{\"example\":42}",
+          "{\"example\":[true]}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":null}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // Input is an array, but filter wants an object
+          "[\"hello\",\"world\"]",
+          "{}",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // Input is a bool, but filter wants an object
+          "true",
+          "{}",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // Input is a string, but filter wants an object
+          "\"hello\"",
+          "{}",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // skip an integer
+          "{\"an_integer\":666,example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // skip a float
+          "{\"a_float\":12.34e-6,example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // skip false
+          "{\"a_bool\":false,example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // skip true
+          "{\"a_bool\":true,example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // skip null
+          "{\"a_bool\":null,example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip a double-quoted string
+          "{\"a_double_quoted_string\":\"hello\",example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip a single-quoted string
+          "{\"a_single_quoted_string\":'hello',example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip an empty array
+          "{\"an_empty_array\":[],example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip an empty array with spaces in it
+          "{\"an_empty_array\":[\t],example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip an array
+          "{\"an_array\":[1,2,3],example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip an array with spaces in it
+          "{\"an_array\": [ 1 , 2 , 3 ] ,example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip an empty object
+          "{\"an_empty_object\":{},example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip an empty object with spaces in it
+          "{\"an_empty_object\":{    },example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // can skip an object
+          "{\"an_object\":{a:1,'b':2,\"c\":3},example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // skip an object with spaces in it
+          "{\"an_object\" : { a : 1 , 'b' : 2 , \"c\" : 3 } ,example:42}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":42}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          "{\"an_integer\": 0,\"example\":{\"type\":\"int\",\"outcome\":42}}",
+          "{\"example\":{\"outcome\":true}}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":{\"outcome\":42}}",
+          2 * sizeofObject(1) + 2 * sizeofString("example"),
+      },
+      {
+          // wildcard
+          "{\"example\":{\"type\":\"int\",\"outcome\":42}}",
+          "{\"*\":{\"outcome\":true}}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":{\"outcome\":42}}",
+          2 * sizeofObject(1) + 2 * sizeofString("example"),
+      },
+      {
+          // exclusion filter (issue #1628)
+          "{\"example\":1,\"ignored\":2}",
+          "{\"*\":true,\"ignored\":false}",
+          10,
+          DeserializationError::Ok,
+          "{\"example\":1}",
+          sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          // only the first element of array counts
+          "[1,2,3]",
+          "[true, false]",
+          10,
+          DeserializationError::Ok,
+          "[1,2,3]",
+          sizeofArray(3),
+      },
+      {
+          // only the first element of array counts
+          "[1,2,3]",
+          "[false, true]",
+          10,
+          DeserializationError::Ok,
+          "[]",
+          sizeofArray(0),
+      },
+      {
+          // filter members of object in array
+          "[{\"example\":1,\"ignore\":2},{\"example\":3,\"ignore\":4}]",
+          "[{\"example\":true}]",
+          10,
+          DeserializationError::Ok,
+          "[{\"example\":1},{\"example\":3}]",
+          sizeofArray(2) + 2 * sizeofObject(1) + sizeofString("example"),
+      },
+      {
+          "[',2,3]",
+          "[false,true]",
+          10,
+          DeserializationError::IncompleteInput,
+          "[]",
+          sizeofArray(0),
+      },
+      {
+          "[\",2,3]",
+          "[false,true]",
+          10,
+          DeserializationError::IncompleteInput,
+          "[]",
+          sizeofArray(0),
+      },
+      {
+          // detect errors in skipped value
+          "[!,2,\\]",
+          "[false]",
+          10,
+          DeserializationError::InvalidInput,
+          "[]",
+          sizeofArray(0),
+      },
+      {
+          // detect incomplete string event if it's skipped
+          "\"ABC",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // detect incomplete string event if it's skipped
+          "'ABC",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // handle escaped quotes
+          "'A\\'BC'",
+          "false",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // handle escaped quotes
+          "\"A\\\"BC\"",
+          "false",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // detect incomplete string in presence of escaped quotes
+          "'A\\'BC",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // detect incomplete string in presence of escaped quotes
+          "\"A\\\"BC",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // skip empty array
+          "[]",
+          "false",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // skip empty array with spaces
+          " [ ] ",
+          "false",
+          10,
+          DeserializationError::Ok,
+          "null",
+          0,
+      },
+      {
+          // bubble up element error even if array is skipped
+          "[1,'2,3]",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // bubble up member error even if object is skipped
+          "{'hello':'worl}",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // bubble up colon error even if object is skipped
+          "{'hello','world'}",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // bubble up key error even if object is skipped
+          "{'hello:1}",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // detect invalid value in skipped object
+          "{'hello':!}",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // ignore invalid value in skipped object
+          "{'hello':\\}",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // check nesting limit even for ignored objects
+          "{}",
+          "false",
+          0,
+          DeserializationError::TooDeep,
+          "null",
+          0,
+      },
+      {
+          // check nesting limit even for ignored objects
+          "{'hello':{}}",
+          "false",
+          1,
+          DeserializationError::TooDeep,
+          "null",
+          0,
+      },
+      {
+          // check nesting limit even for ignored values in objects
+          "{'hello':{}}",
+          "{}",
+          1,
+          DeserializationError::TooDeep,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // check nesting limit even for ignored arrays
+          "[]",
+          "false",
+          0,
+          DeserializationError::TooDeep,
+          "null",
+          0,
+      },
+      {
+          // check nesting limit even for ignored arrays
+          "[[]]",
+          "false",
+          1,
+          DeserializationError::TooDeep,
+          "null",
+          0,
+      },
+      {
+          // check nesting limit even for ignored values in arrays
+          "[[]]",
+          "[]",
+          1,
+          DeserializationError::TooDeep,
+          "[]",
+          sizeofArray(0),
+      },
+      {
+          // supports back-slash at the end of skipped string
+          "\"hell\\",
+          "false",
+          1,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // invalid comment at after an element in a skipped array
+          "[1/]",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // incomplete comment at after an element in a skipped array
+          "[1/*]",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // missing comma in a skipped array
+          "[1 2]",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // invalid comment at the beginning of array
+          "[/1]",
+          "[false]",
+          10,
+          DeserializationError::InvalidInput,
+          "[]",
+          sizeofArray(0),
+      },
+      {
+          // incomplete comment at the begining of an array
+          "[/*]",
+          "[false]",
+          10,
+          DeserializationError::IncompleteInput,
+          "[]",
+          sizeofArray(0),
+      },
+      {
+          // invalid comment before key
+          "{/1:2}",
+          "{}",
+          10,
+          DeserializationError::InvalidInput,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // incomplete comment before key
+          "{/*:2}",
+          "{}",
+          10,
+          DeserializationError::IncompleteInput,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // invalid comment after key
+          "{\"example\"/1:2}",
+          "{}",
+          10,
+          DeserializationError::InvalidInput,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // incomplete comment after key
+          "{\"example\"/*:2}",
+          "{}",
+          10,
+          DeserializationError::IncompleteInput,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // invalid comment after colon
+          "{\"example\":/12}",
+          "{}",
+          10,
+          DeserializationError::InvalidInput,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // incomplete comment after colon
+          "{\"example\":/*2}",
+          "{}",
+          10,
+          DeserializationError::IncompleteInput,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // comment next to an integer
+          "{\"ignore\":1//,\"example\":2\n}",
+          "{\"example\":true}",
+          10,
+          DeserializationError::Ok,
+          "{}",
+          sizeofObject(0),
+      },
+      {
+          // invalid comment after opening brace of a skipped object
+          "{/1:2}",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // incomplete after opening brace of a skipped object
+          "{/*:2}",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // invalid comment after key of a skipped object
+          "{\"example\"/:2}",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // incomplete comment after key of a skipped object
+          "{\"example\"/*:2}",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // invalid comment after value in a skipped object
+          "{\"example\":2/}",
+          "false",
+          10,
+          DeserializationError::InvalidInput,
+          "null",
+          0,
+      },
+      {
+          // incomplete comment after value of a skipped object
+          "{\"example\":2/*}",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+      {
+          // incomplete comment after comma in skipped object
+          "{\"example\":2,/*}",
+          "false",
+          10,
+          DeserializationError::IncompleteInput,
+          "null",
+          0,
+      },
+  };
 
   for (size_t i = 0; i < sizeof(testCases) / sizeof(testCases[0]); i++) {
     CAPTURE(i);
