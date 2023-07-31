@@ -26,3 +26,4 @@ HEAD
 * Remove `JsonDocument::garbageCollect()`
 * Add `deserializeJson(JsonVariant, ...)` and `deserializeMsgPack(JsonVariant, ...)` (#1226)
 * Call `shrinkToFit()` in `deserializeJson()` and `deserializeMsgPack()`
+* `serializeJson()` and `serializeMsgPack()` replace the content of `std::string` and `String` instead of appending to it

@@ -9,8 +9,11 @@
 // Reproduces Arduino's String class
 class String {
  public:
-  String() : maxCapacity_(1024) {}
-  explicit String(const char* s) : str_(s), maxCapacity_(1024) {}
+  String() = default;
+  String(const char* s) {
+    if (s)
+      str_.assign(s);
+  }
 
   void limitCapacityTo(size_t maxCapacity) {
     maxCapacity_ = maxCapacity;
@@ -33,7 +36,10 @@ class String {
   }
 
   String& operator=(const char* s) {
-    str_.assign(s);
+    if (s)
+      str_.assign(s);
+    else
+      str_.clear();
     return *this;
   }
 
@@ -59,7 +65,7 @@ class String {
 
  private:
   std::string str_;
-  size_t maxCapacity_;
+  size_t maxCapacity_ = 1024;
 };
 
 class StringSumHelper : public ::String {};

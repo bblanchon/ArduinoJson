@@ -141,7 +141,7 @@ TEST_CASE("Writer<custom_string>") {
 TEST_CASE("serializeJson(doc, String)") {
   JsonDocument doc;
   doc["hello"] = "world";
-  ::String output;
+  ::String output = "erase me";
 
   SECTION("sufficient capacity") {
     serializeJson(doc, output);
