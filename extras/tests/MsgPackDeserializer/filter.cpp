@@ -80,6 +80,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -105,6 +106,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -119,6 +121,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -133,6 +136,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -147,6 +151,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -161,6 +166,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -175,6 +181,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -189,6 +196,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -203,6 +211,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -218,6 +227,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -233,6 +243,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -249,6 +260,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -265,6 +277,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -280,6 +293,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -296,6 +310,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -310,6 +325,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -324,6 +340,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -338,6 +355,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -353,6 +371,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -367,6 +386,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -381,6 +401,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -396,6 +417,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -410,6 +432,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -425,6 +448,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -443,6 +467,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -458,6 +483,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -475,6 +501,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -494,6 +521,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -511,6 +539,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -528,6 +557,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -545,6 +575,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -562,6 +593,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -581,6 +613,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -598,6 +631,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -615,6 +649,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
 
@@ -632,6 +667,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
                   Allocate(sizeofPool()),
+                  Reallocate(sizeofPool(), sizeofObject(1)),
               });
       }
     }
@@ -662,6 +698,8 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Reallocate(sizeofStringBuffer(), sizeofString("measure")),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2) + sizeofArray(2) +
+                                               2 * sizeofObject(1)),
               });
       }
 
@@ -686,6 +724,8 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Reallocate(sizeofStringBuffer(), sizeofString("measure")),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2) + sizeofArray(2) +
+                                               2 * sizeofObject(1)),
               });
       }
 
@@ -710,6 +750,8 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Reallocate(sizeofStringBuffer(), sizeofString("measure")),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2) + sizeofArray(2) +
+                                               2 * sizeofObject(1)),
               });
       }
 
@@ -726,6 +768,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -742,6 +785,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -758,6 +802,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -774,6 +819,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -790,6 +836,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -806,6 +853,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -822,6 +870,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -839,6 +888,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -857,6 +907,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -873,6 +924,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -889,6 +941,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -906,6 +959,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -924,6 +978,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -941,6 +996,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -959,6 +1015,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -975,6 +1032,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -1004,6 +1062,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -1021,6 +1080,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -1040,6 +1100,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
 
@@ -1061,6 +1122,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                   Allocate(sizeofPool()),
                   Allocate(sizeofStringBuffer()),
                   Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                  Reallocate(sizeofPool(), sizeofObject(2)),
               });
       }
     }
@@ -1091,6 +1153,7 @@ TEST_CASE("deserializeMsgPack() filter") {
         CHECK(doc.as<std::string>() == "[1,2,3]");
         CHECK(spy.log() == AllocatorLog{
                                Allocate(sizeofPool()),
+                               Reallocate(sizeofPool(), sizeofArray(3)),
                            });
       }
     }
@@ -1121,6 +1184,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Reallocate(sizeofStringBuffer(), sizeofString("measure")),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2) + sizeofObject(1)),
             });
     }
 
@@ -1143,6 +1207,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Reallocate(sizeofStringBuffer(), sizeofString("measure")),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2) + sizeofObject(1)),
             });
     }
 
@@ -1166,6 +1231,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Reallocate(sizeofStringBuffer(), sizeofString("measure")),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2) + sizeofObject(1)),
             });
     }
 
@@ -1182,6 +1248,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1198,6 +1265,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1214,6 +1282,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1230,6 +1299,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1246,6 +1316,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1262,6 +1333,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1278,6 +1350,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1294,6 +1367,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1312,6 +1386,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1328,6 +1403,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1344,6 +1420,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1360,6 +1437,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1373,12 +1451,12 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
       CHECK(spy.log() ==
             AllocatorLog{
-                // string  builder's buffer
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("onlyarr")),
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1390,12 +1468,12 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
       CHECK(spy.log() ==
             AllocatorLog{
-                // string  builder's buffer
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("onlyarr")),
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1409,12 +1487,12 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
       CHECK(spy.log() ==
             AllocatorLog{
-                // string  builder's buffer
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("onlyarr")),
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1426,12 +1504,12 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
       CHECK(spy.log() ==
             AllocatorLog{
-                // string  builder's buffer
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("onlyarr")),
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1456,12 +1534,12 @@ TEST_CASE("deserializeMsgPack() filter") {
 
       CHECK(spy.log() ==
             AllocatorLog{
-                // string  builder's buffer
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("onlyarr")),
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1473,12 +1551,12 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
       CHECK(spy.log() ==
             AllocatorLog{
-                // string  builder's buffer
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("onlyarr")),
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1492,12 +1570,12 @@ TEST_CASE("deserializeMsgPack() filter") {
       CHECK(doc.as<std::string>() == "{\"onlyobj\":null,\"include\":42}");
       CHECK(spy.log() ==
             AllocatorLog{
-                // string  builder's buffer
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("onlyarr")),
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
 
@@ -1517,6 +1595,7 @@ TEST_CASE("deserializeMsgPack() filter") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("include")),
+                Reallocate(sizeofPool(), sizeofObject(2)),
             });
     }
   }

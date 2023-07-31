@@ -711,20 +711,6 @@ TEST_CASE("Filtering") {
   }
 }
 
-TEST_CASE("Zero-copy mode") {  // issue #1697
-  char input[] = "{\"include\":42,\"exclude\":666}";
-
-  JsonDocument filter;
-  filter["include"] = true;
-
-  JsonDocument doc;
-  DeserializationError err =
-      deserializeJson(doc, input, DeserializationOption::Filter(filter));
-
-  REQUIRE(err == DeserializationError::Ok);
-  CHECK(doc.as<std::string>() == "{\"include\":42}");
-}
-
 TEST_CASE("Overloads") {
   JsonDocument doc;
   JsonDocument filter;
@@ -814,4 +800,18 @@ TEST_CASE("Overloads") {
     deserializeJson(doc, vla, NestingLimit(5), Filter(filter));
   }
 #endif
+}
+
+TEST_CASE("shrink filter") {
+  JsonDocument doc;
+  SpyingAllocator spy;
+  JsonDocument filter(&spy);
+  filter["a"] = true;
+  spy.clearLog();
+
+  deserializeJson(doc, "{}", DeserializationOption::Filter(filter));
+
+  REQUIRE(spy.log() == AllocatorLog{
+                           Reallocate(sizeofPool(), sizeofObject(1)),
+                       });
 }

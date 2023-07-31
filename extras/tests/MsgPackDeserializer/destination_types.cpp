@@ -9,6 +9,9 @@
 
 #include "Allocators.hpp"
 
+using ArduinoJson::detail::sizeofArray;
+using ArduinoJson::detail::sizeofObject;
+
 TEST_CASE("deserializeMsgPack(JsonDocument&)") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
@@ -23,6 +26,7 @@ TEST_CASE("deserializeMsgPack(JsonDocument&)") {
                            Deallocate(sizeofPool()),
                            Deallocate(sizeofString("hello")),
                            Allocate(sizeofPool()),
+                           Reallocate(sizeofPool(), sizeofArray(1)),
                        });
 }
 
@@ -39,9 +43,11 @@ TEST_CASE("deserializeMsgPack(JsonVariant)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "[[42]]");
-    REQUIRE(spy.log() == AllocatorLog{
-                             Deallocate(sizeofString("hello")),
-                         });
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Deallocate(sizeofString("hello")),
+                Reallocate(sizeofPool(), sizeofArray(1) + sizeofArray(1)),
+            });
   }
 
   SECTION("variant is unbound") {
@@ -64,9 +70,11 @@ TEST_CASE("deserializeMsgPack(ElementProxy)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "[[42]]");
-    REQUIRE(spy.log() == AllocatorLog{
-                             Deallocate(sizeofString("hello")),
-                         });
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Deallocate(sizeofString("hello")),
+                Reallocate(sizeofPool(), sizeofArray(1) + sizeofArray(1)),
+            });
   }
 
   SECTION("element must be created exists") {
@@ -74,7 +82,10 @@ TEST_CASE("deserializeMsgPack(ElementProxy)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "[\"hello\",[42]]");
-    REQUIRE(spy.log() == AllocatorLog{});
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Reallocate(sizeofPool(), sizeofArray(2) + sizeofArray(1)),
+            });
   }
 }
 
@@ -91,14 +102,18 @@ TEST_CASE("deserializeMsgPack(MemberProxy)") {
     REQUIRE(doc.as<std::string>() == "{\"hello\":[42]}");
     REQUIRE(spy.log() == AllocatorLog{
                              Deallocate(sizeofString("world")),
+                             Reallocate(sizeofPool(), sizeofObject(2)),
                          });
   }
 
-  SECTION("member must be created exists") {
+  SECTION("member must be created") {
     auto err = deserializeMsgPack(doc["value"], "\x91\x2A");
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "{\"hello\":\"world\",\"value\":[42]}");
-    REQUIRE(spy.log() == AllocatorLog{});
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Reallocate(sizeofPool(), sizeofObject(2) + sizeofArray(1)),
+            });
   }
 }

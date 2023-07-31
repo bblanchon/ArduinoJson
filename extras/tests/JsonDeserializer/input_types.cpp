@@ -29,6 +29,7 @@ TEST_CASE("deserializeJson(char*)") {
               Allocate(sizeofPool()),
               Allocate(sizeofStringBuffer()),
               Reallocate(sizeofStringBuffer(), sizeofString("world")),
+              Reallocate(sizeofPool(), sizeofObject(1)),
           });
 }
 

@@ -7,6 +7,8 @@
 
 #include "Allocators.hpp"
 
+using ArduinoJson::detail::sizeofArray;
+
 TEST_CASE("deserializeJson() misc cases") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
@@ -35,12 +37,13 @@ TEST_CASE("deserializeJson() misc cases") {
 
   SECTION("Should clear the JsonVariant") {
     deserializeJson(doc, "[1,2,3]");
+    spy.clearLog();
+
     deserializeJson(doc, "{}");
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofPool()),
-                             Deallocate(sizeofPool()),
+                             Deallocate(sizeofArray(3)),
                          });
   }
 }

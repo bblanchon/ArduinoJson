@@ -25,3 +25,4 @@ HEAD
 * Remove `JsonDocument::memoryUsage()`
 * Remove `JsonDocument::garbageCollect()`
 * Add `deserializeJson(JsonVariant, ...)` and `deserializeMsgPack(JsonVariant, ...)` (#1226)
+* Call `shrinkToFit()` in `deserializeJson()` and `deserializeMsgPack()`

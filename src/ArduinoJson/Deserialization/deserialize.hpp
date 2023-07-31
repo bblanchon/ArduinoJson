@@ -43,8 +43,12 @@ DeserializationError doDeserialize(TDestination&& dst, TReader reader,
     return DeserializationError::NoMemory;
   auto resources = VariantAttorney::getResourceManager(dst);
   dst.clear();
-  return TDeserializer<TReader>(resources, reader)
-      .parse(*data, options.filter, options.nestingLimit);
+  auto err = TDeserializer<TReader>(resources, reader)
+                 .parse(*data, options.filter, options.nestingLimit);
+#if ARDUINOJSON_AUTO_SHRINK
+  resources->shrinkToFit();
+#endif
+  return err;
 }
 
 template <template <typename> class TDeserializer, typename TDestination,

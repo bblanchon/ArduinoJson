@@ -120,6 +120,7 @@ TEST_CASE("Allocation of the key fails") {
                 Reallocate(sizeofStringBuffer(), sizeofString("hello")),
                 Allocate(sizeofPool()),
                 AllocateFail(sizeofStringBuffer()),
+                ReallocateFail(sizeofPool(), sizeofObject(1)),
             });
   }
 
@@ -141,6 +142,7 @@ TEST_CASE("Allocation of the key fails") {
                 Reallocate(sizeofStringBuffer(), sizeofString("hello")),
                 Allocate(sizeofPool()),
                 AllocateFail(sizeofStringBuffer()),
+                ReallocateFail(sizeofPool(), sizeofObject(1)),
             });
   }
 }
@@ -171,6 +173,7 @@ TEST_CASE("Deduplicate values") {
               Reallocate(sizeofStringBuffer(), sizeofString("example")),
               Allocate(sizeofStringBuffer()),
               Deallocate(sizeofStringBuffer()),
+              Reallocate(sizeofPool(), sizeofArray(2)),
           });
 }
 
@@ -190,5 +193,6 @@ TEST_CASE("Deduplicate keys") {
               Reallocate(sizeofStringBuffer(), sizeofString("example")),
               Allocate(sizeofStringBuffer()),
               Deallocate(sizeofStringBuffer()),
+              Reallocate(sizeofPool(), sizeofArray(2) + 2 * sizeofObject(1)),
           });
 }

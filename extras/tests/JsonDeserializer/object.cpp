@@ -296,6 +296,7 @@ TEST_CASE("deserialize JSON object") {
                   Deallocate(sizeofString("b")),
                   Deallocate(sizeofString("c")),
                   Deallocate(sizeofStringBuffer()),
+                  Reallocate(sizeofPool(), sizeofObject(2) + sizeofObject(1)),
               });
     }
 
@@ -318,22 +319,17 @@ TEST_CASE("deserialize JSON object") {
 
   SECTION("Should clear the JsonObject") {
     deserializeJson(doc, "{\"hello\":\"world\"}");
+    spy.clearLog();
+
     deserializeJson(doc, "{}");
-    JsonObject obj = doc.as<JsonObject>();
 
     REQUIRE(doc.is<JsonObject>());
-    REQUIRE(obj.size() == 0);
-    REQUIRE(spy.log() ==
-            AllocatorLog{
-                Allocate(sizeofStringBuffer()),
-                Reallocate(sizeofStringBuffer(), sizeofString("hello")),
-                Allocate(sizeofPool()),
-                Allocate(sizeofStringBuffer()),
-                Reallocate(sizeofStringBuffer(), sizeofString("world")),
-                Deallocate(sizeofPool()),
-                Deallocate(sizeofString("hello")),
-                Deallocate(sizeofString("world")),
-            });
+    REQUIRE(doc.size() == 0);
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofObject(1)),
+                             Deallocate(sizeofString("hello")),
+                             Deallocate(sizeofString("world")),
+                         });
   }
 
   SECTION("Issue #1335") {

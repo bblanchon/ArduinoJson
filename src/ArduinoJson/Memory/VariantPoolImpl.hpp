@@ -26,9 +26,12 @@ inline void VariantPool::destroy(Allocator* allocator) {
 }
 
 inline void VariantPool::shrinkToFit(Allocator* allocator) {
-  slots_ = reinterpret_cast<VariantSlot*>(
+  auto newSlots = reinterpret_cast<VariantSlot*>(
       allocator->reallocate(slots_, slotsToBytes(usage_)));
-  capacity_ = usage_;
+  if (newSlots) {
+    slots_ = newSlots;
+    capacity_ = usage_;
+  }
 }
 
 inline SlotWithId VariantPool::allocSlot() {

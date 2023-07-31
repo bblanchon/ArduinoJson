@@ -249,13 +249,14 @@ TEST_CASE("deserialize JSON array") {
 
   SECTION("Should clear the JsonArray") {
     deserializeJson(doc, "[1,2,3,4]");
-    deserializeJson(doc, "[]");
-    JsonArray arr = doc.as<JsonArray>();
+    spy.clearLog();
 
+    deserializeJson(doc, "[]");
+
+    JsonArray arr = doc.as<JsonArray>();
     REQUIRE(arr.size() == 0);
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofPool()),
-                             Deallocate(sizeofPool()),
+                             Deallocate(sizeofArray(4)),
                          });
   }
 }
@@ -312,6 +313,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
                 Allocate(sizeofPool()),
                 Allocate(sizeofStringBuffer()),
                 Reallocate(sizeofStringBuffer(), sizeofString("1234567")),
+                Reallocate(sizeofPool(), sizeofArray(1)),
             });
   }
 }

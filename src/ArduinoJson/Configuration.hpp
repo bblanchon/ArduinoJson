@@ -110,6 +110,17 @@
 #  define ARDUINOJSON_INITIAL_POOL_COUNT 4
 #endif
 
+// Automatically call shrinkToFit() from deserializeXxx()
+// Disabled by default on 8-bit platforms because it's not worth the increase in
+// code size
+#ifndef ARDUINOJSON_AUTO_SHRINK
+#  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ <= 2
+#    define ARDUINOJSON_AUTO_SHRINK 0
+#  else
+#    define ARDUINOJSON_AUTO_SHRINK 1
+#  endif
+#endif
+
 #ifdef ARDUINO
 
 // Enable support for Arduino's String class
