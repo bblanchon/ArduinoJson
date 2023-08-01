@@ -34,6 +34,17 @@ struct is_deserialize_destination<
                                   ResourceManager*>::value>::type> : true_type {
 };
 
+template <typename TDestination>
+inline void shrinkJsonDocument(TDestination&) {
+  // no-op by default
+}
+
+#if ARDUINOJSON_AUTO_SHRINK
+inline void shrinkJsonDocument(JsonDocument& doc) {
+  doc.shrinkToFit();
+}
+#endif
+
 template <template <typename> class TDeserializer, typename TDestination,
           typename TReader, typename TOptions>
 DeserializationError doDeserialize(TDestination&& dst, TReader reader,
@@ -45,9 +56,7 @@ DeserializationError doDeserialize(TDestination&& dst, TReader reader,
   dst.clear();
   auto err = TDeserializer<TReader>(resources, reader)
                  .parse(*data, options.filter, options.nestingLimit);
-#if ARDUINOJSON_AUTO_SHRINK
-  resources->shrinkToFit();
-#endif
+  shrinkJsonDocument(dst);
   return err;
 }
 

@@ -43,11 +43,9 @@ TEST_CASE("deserializeJson(JsonVariant)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "[[42]]");
-    REQUIRE(spy.log() ==
-            AllocatorLog{
-                Deallocate(sizeofString("hello")),
-                Reallocate(sizeofPool(), sizeofArray(1) + sizeofArray(1)),
-            });
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("hello")),
+                         });
   }
 
   SECTION("variant is unbound") {
@@ -70,11 +68,9 @@ TEST_CASE("deserializeJson(ElementProxy)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "[[42]]");
-    REQUIRE(spy.log() ==
-            AllocatorLog{
-                Deallocate(sizeofString("hello")),
-                Reallocate(sizeofPool(), sizeofArray(1) + sizeofArray(1)),
-            });
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("hello")),
+                         });
   }
 
   SECTION("element must be created") {
@@ -82,10 +78,7 @@ TEST_CASE("deserializeJson(ElementProxy)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "[\"hello\",[42]]");
-    REQUIRE(spy.log() ==
-            AllocatorLog{
-                Reallocate(sizeofPool(), sizeofArray(2) + sizeofArray(1)),
-            });
+    REQUIRE(spy.log() == AllocatorLog{});
   }
 }
 
@@ -100,11 +93,9 @@ TEST_CASE("deserializeJson(MemberProxy)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "{\"hello\":[42]}");
-    REQUIRE(spy.log() ==
-            AllocatorLog{
-                Deallocate(sizeofString("world")),
-                Reallocate(sizeofPool(), sizeofObject(1) + sizeofArray(1)),
-            });
+    REQUIRE(spy.log() == AllocatorLog{
+                             Deallocate(sizeofString("world")),
+                         });
   }
 
   SECTION("member must be created exists") {
@@ -112,9 +103,6 @@ TEST_CASE("deserializeJson(MemberProxy)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<std::string>() == "{\"hello\":\"world\",\"value\":[42]}");
-    REQUIRE(spy.log() ==
-            AllocatorLog{
-                Reallocate(sizeofPool(), sizeofObject(2) + sizeofArray(1)),
-            });
+    REQUIRE(spy.log() == AllocatorLog{});
   }
 }
