@@ -49,12 +49,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     set(src);
   }
 
-  // disambiguate
-  // TODO: still needed?
-  JsonDocument(JsonVariant src) {
-    set(src);
-  }
-
   JsonDocument& operator=(JsonDocument src) {
     swap(*this, src);
     return *this;
