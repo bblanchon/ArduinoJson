@@ -58,7 +58,7 @@ class VariantRefBase : public VariantTag {
   template <typename T>
   FORCE_INLINE typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
   as() const {
-    return Converter<T>::fromJson(getSlot());
+    return Converter<T>::fromJson(getVariant());
   }
 
   template <typename T>
@@ -92,7 +92,7 @@ class VariantRefBase : public VariantTag {
   FORCE_INLINE
       typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
       is() const {
-    return Converter<T>::checkJson(getSlot());
+    return Converter<T>::checkJson(getVariant());
   }
 
   // Returns true if the value is of the specified type.
@@ -262,7 +262,7 @@ class VariantRefBase : public VariantTag {
   }
 
  private:
-  FORCE_INLINE ArduinoJson::JsonVariant getSlot() const;
+  FORCE_INLINE ArduinoJson::JsonVariant getVariant() const;
 
   FORCE_INLINE ArduinoJson::JsonVariantConst getVariantConst() const {
     return ArduinoJson::JsonVariantConst(getData(), getResourceManager());

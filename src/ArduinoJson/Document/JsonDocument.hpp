@@ -80,14 +80,14 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/as/
   template <typename T>
   T as() {
-    return getSlot().template as<T>();
+    return getVariant().template as<T>();
   }
 
   // Casts the root to the specified type.
   // https://arduinojson.org/v6/api/jsondocument/as/
   template <typename T>
   T as() const {
-    return getSlot().template as<T>();
+    return getVariant().template as<T>();
   }
 
   // Empties the document and resets the memory pool
@@ -101,20 +101,20 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/is/
   template <typename T>
   bool is() {
-    return getSlot().template is<T>();
+    return getVariant().template is<T>();
   }
 
   // Returns true if the root is of the specified type.
   // https://arduinojson.org/v6/api/jsondocument/is/
   template <typename T>
   bool is() const {
-    return getSlot().template is<T>();
+    return getVariant().template is<T>();
   }
 
   // Returns true if the root is null.
   // https://arduinojson.org/v6/api/jsondocument/isnull/
   bool isNull() const {
-    return getSlot().isNull();
+    return getVariant().isNull();
   }
 
   // Returns trues if the memory pool was too small.
@@ -155,7 +155,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   template <typename T>
   typename detail::VariantTo<T>::type to() {
     clear();
-    return getSlot().template to<T>();
+    return getVariant().template to<T>();
   }
 
   // Creates an array and appends it to the root array.
@@ -314,11 +314,11 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   FORCE_INLINE operator JsonVariant() {
-    return getSlot();
+    return getVariant();
   }
 
   FORCE_INLINE operator JsonVariantConst() const {
-    return getSlot();
+    return getVariant();
   }
 
   friend void swap(JsonDocument& a, JsonDocument& b) {
@@ -327,11 +327,11 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
  private:
-  JsonVariant getSlot() {
+  JsonVariant getVariant() {
     return JsonVariant(&data_, &resources_);
   }
 
-  JsonVariantConst getSlot() const {
+  JsonVariantConst getVariant() const {
     return JsonVariantConst(&data_, &resources_);
   }
 
