@@ -24,6 +24,26 @@
 
 #define ARDUINOJSON_NAMESPACE _Pragma ("GCC warning \"ARDUINOJSON_NAMESPACE is deprecated, use ArduinoJson instead\"") ArduinoJson
 
+// DEPRECATED: you don't need to compute the size anymore
+#define JSON_ARRAY_SIZE(N) _Pragma ("GCC warning \"JSON_ARRAY_SIZE is deprecated, you don't need to compute the size anymore\"") (ArduinoJson::detail::sizeofArray(N))
+
+// DEPRECATED: you don't need to compute the size anymore
+#define JSON_OBJECT_SIZE(N) _Pragma ("GCC warning \"JSON_OBJECT_SIZE is deprecated, you don't need to compute the size anymore\"") (ArduinoJson::detail::sizeofObject(N))
+
+// DEPRECATED: you don't need to compute the size anymore
+#define JSON_STRING_SIZE(N) _Pragma ("GCC warning \"JSON_STRING_SIZE is deprecated, you don't need to compute the size anymore\"") (ArduinoJson::detail::sizeofString(N))
+
+#else
+
+// DEPRECATED: you don't need to compute the size anymore
+#define JSON_ARRAY_SIZE(N) (ArduinoJson::detail::sizeofArray(N))
+
+// DEPRECATED: you don't need to compute the size anymore
+#define JSON_OBJECT_SIZE(N) (ArduinoJson::detail::sizeofObject(N))
+
+// DEPRECATED: you don't need to compute the size anymore
+#define JSON_STRING_SIZE(N) (ArduinoJson::detail::sizeofString(N))
+
 #endif
 
 // clang-format on

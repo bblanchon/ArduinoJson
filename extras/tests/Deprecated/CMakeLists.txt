@@ -4,7 +4,7 @@
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_compile_options(
-		-Wno-deprecated-declarations
+		-w
 	)
 endif()
 
@@ -20,6 +20,7 @@ add_executable(DeprecatedTests
 	createNestedObject.cpp
 	BasicJsonDocument.cpp
 	DynamicJsonDocument.cpp
+	macros.cpp
 	memoryUsage.cpp
 	shallowCopy.cpp
 	StaticJsonDocument.cpp
