@@ -42,6 +42,57 @@ class ARDUINOJSON_DEPRECATED("use JsonDocument instead") StaticJsonDocument
   }
 };
 
+namespace detail {
+template <typename TAllocator>
+class AllocatorAdapter : public Allocator {
+ public:
+  AllocatorAdapter(const AllocatorAdapter&) = delete;
+  AllocatorAdapter& operator=(const AllocatorAdapter&) = delete;
+
+  void* allocate(size_t size) override {
+    return _allocator.allocate(size);
+  }
+
+  void deallocate(void* ptr) override {
+    _allocator.deallocate(ptr);
+  }
+
+  void* reallocate(void* ptr, size_t new_size) override {
+    return _allocator.reallocate(ptr, new_size);
+  }
+
+  static Allocator* instance() {
+    static AllocatorAdapter instance;
+    return &instance;
+  }
+
+ private:
+  AllocatorAdapter() = default;
+  ~AllocatorAdapter() = default;
+
+  TAllocator _allocator;
+};
+}  // namespace detail
+
+// DEPRECATED: use JsonDocument instead
+template <typename TAllocator>
+class ARDUINOJSON_DEPRECATED("use JsonDocument instead") BasicJsonDocument
+    : public JsonDocument {
+ public:
+  BasicJsonDocument(size_t capacity)
+      : JsonDocument(detail::AllocatorAdapter<TAllocator>::instance()),
+        _capacity(capacity) {}
+
+  size_t capacity() const {
+    return _capacity;
+  }
+
+  void garbageCollect() {}
+
+ private:
+  size_t _capacity;
+};
+
 // DEPRECATED: use JsonDocument instead
 class ARDUINOJSON_DEPRECATED("use JsonDocument instead") DynamicJsonDocument
     : public JsonDocument {
