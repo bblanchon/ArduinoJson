@@ -105,6 +105,12 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
         detail::ObjectData::getMember(data_, detail::adaptString(key)));
   }
 
+  // DEPRECATED: always returns zero
+  ARDUINOJSON_DEPRECATED("always returns zero")
+  size_t memoryUsage() const {
+    return 0;
+  }
+
  private:
   const detail::VariantData* getData() const {
     return collectionToVariant(data_);

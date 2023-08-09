@@ -78,6 +78,12 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
     return data_ ? data_->size(resources_) : 0;
   }
 
+  // DEPRECATED: always returns zero
+  ARDUINOJSON_DEPRECATED("always returns zero")
+  size_t memoryUsage() const {
+    return 0;
+  }
+
  private:
   const detail::VariantData* getData() const {
     return collectionToVariant(data_);

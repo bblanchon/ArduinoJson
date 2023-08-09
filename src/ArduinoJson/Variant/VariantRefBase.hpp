@@ -221,6 +221,12 @@ class VariantRefBase : public VariantTag {
                                   MemberProxy<TDerived, TChar*>>::type
   operator[](TChar* key) const;
 
+  // DEPRECATED: always returns zero
+  ARDUINOJSON_DEPRECATED("always returns zero")
+  size_t memoryUsage() const {
+    return 0;
+  }
+
  private:
   TDerived& derived() {
     return static_cast<TDerived&>(*this);

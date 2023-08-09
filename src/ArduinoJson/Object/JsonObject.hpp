@@ -166,6 +166,12 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
                                          resources_) != 0;
   }
 
+  // DEPRECATED: always returns zero
+  ARDUINOJSON_DEPRECATED("always returns zero")
+  size_t memoryUsage() const {
+    return 0;
+  }
+
  private:
   detail::ResourceManager* getResourceManager() const {
     return resources_;

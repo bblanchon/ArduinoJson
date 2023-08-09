@@ -133,6 +133,12 @@ class JsonVariantConst : public detail::VariantTag,
                                           resources_) != 0;
   }
 
+  // DEPRECATED: always returns zero
+  ARDUINOJSON_DEPRECATED("always returns zero")
+  size_t memoryUsage() const {
+    return 0;
+  }
+
  protected:
   const detail::VariantData* getData() const {
     return data_;

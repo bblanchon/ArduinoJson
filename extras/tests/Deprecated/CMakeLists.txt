@@ -17,6 +17,7 @@ endif()
 add_executable(DeprecatedTests
 	BasicJsonDocument.cpp
 	DynamicJsonDocument.cpp
+	memoryUsage.cpp
 	StaticJsonDocument.cpp
 )
 
