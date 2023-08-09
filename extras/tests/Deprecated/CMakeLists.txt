@@ -15,6 +15,7 @@ if(MSVC)
 endif()
 
 add_executable(DeprecatedTests
+	DynamicJsonDocument.cpp
 	StaticJsonDocument.cpp
 )
 

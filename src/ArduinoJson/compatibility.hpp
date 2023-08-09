@@ -42,4 +42,20 @@ class ARDUINOJSON_DEPRECATED("use JsonDocument instead") StaticJsonDocument
   }
 };
 
+// DEPRECATED: use JsonDocument instead
+class ARDUINOJSON_DEPRECATED("use JsonDocument instead") DynamicJsonDocument
+    : public JsonDocument {
+ public:
+  DynamicJsonDocument(size_t capacity) : _capacity(capacity) {}
+
+  size_t capacity() const {
+    return _capacity;
+  }
+
+  void garbageCollect() {}
+
+ private:
+  size_t _capacity;
+};
+
 ARDUINOJSON_END_PUBLIC_NAMESPACE
