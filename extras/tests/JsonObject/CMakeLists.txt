@@ -8,7 +8,6 @@ add_executable(JsonObjectTests
 	containsKey.cpp
 	copy.cpp
 	equals.cpp
-	invalid.cpp
 	isNull.cpp
 	iterator.cpp
 	nesting.cpp
@@ -16,6 +15,7 @@ add_executable(JsonObjectTests
 	size.cpp
 	std_string.cpp
 	subscript.cpp
+	unbound.cpp
 )
 
 add_test(JsonObject JsonObjectTests)

@@ -7,19 +7,19 @@
 
 using namespace Catch::Matchers;
 
-TEST_CASE("JsonObject::invalid()") {
+TEST_CASE("Unbound JsonObject") {
   JsonObject obj;
 
-  SECTION("SubscriptFails") {
+  SECTION("retrieve member") {
     REQUIRE(obj["key"].isNull());
   }
 
-  SECTION("AddFails") {
+  SECTION("add member") {
     obj["hello"] = "world";
     REQUIRE(0 == obj.size());
   }
 
-  SECTION("serialize to 'null'") {
+  SECTION("serialize") {
     char buffer[32];
     serializeJson(obj, buffer, sizeof(buffer));
     REQUIRE_THAT(buffer, Equals("null"));
