@@ -184,16 +184,3 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE
-
-ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
-
-template <typename TDerived>
-template <typename T>
-typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
-VariantRefBase<TDerived>::to() const {
-  return JsonObject(
-      VariantData::toObject(getOrCreateData(), getResourceManager()),
-      getResourceManager());
-}
-
-ARDUINOJSON_END_PRIVATE_NAMESPACE

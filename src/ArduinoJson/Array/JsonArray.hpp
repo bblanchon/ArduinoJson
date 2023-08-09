@@ -176,16 +176,3 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
 };
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE
-
-ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
-
-template <typename TDerived>
-template <typename T>
-inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
-VariantRefBase<TDerived>::to() const {
-  return JsonArray(
-      VariantData::toArray(getOrCreateData(), getResourceManager()),
-      getResourceManager());
-}
-
-ARDUINOJSON_END_PRIVATE_NAMESPACE

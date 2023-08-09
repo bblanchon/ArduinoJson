@@ -34,16 +34,15 @@
 
 #include "ArduinoJson/Array/ArrayImpl.hpp"
 #include "ArduinoJson/Array/ElementProxy.hpp"
-#include "ArduinoJson/Array/JsonArrayImpl.hpp"
 #include "ArduinoJson/Array/Utilities.hpp"
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
 #include "ArduinoJson/Memory/VariantPoolImpl.hpp"
-#include "ArduinoJson/Object/JsonObjectImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Object/ObjectImpl.hpp"
 #include "ArduinoJson/Variant/ConverterImpl.hpp"
 #include "ArduinoJson/Variant/JsonVariantCopier.hpp"
 #include "ArduinoJson/Variant/VariantCompare.hpp"
+#include "ArduinoJson/Variant/VariantRefBaseImpl.hpp"
 
 #include "ArduinoJson/Json/JsonDeserializer.hpp"
 #include "ArduinoJson/Json/JsonSerializer.hpp"
