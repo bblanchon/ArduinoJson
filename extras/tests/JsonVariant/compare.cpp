@@ -10,7 +10,7 @@
 
 TEST_CASE("Compare JsonVariant with value") {
   JsonDocument doc;
-  JsonVariant a = doc.add();
+  JsonVariant a = doc.add<JsonVariant>();
 
   SECTION("null vs (char*)0") {
     char* b = 0;
@@ -38,8 +38,8 @@ TEST_CASE("Compare JsonVariant with value") {
 
 TEST_CASE("Compare JsonVariant with JsonVariant") {
   JsonDocument doc;
-  JsonVariant a = doc.add();
-  JsonVariant b = doc.add();
+  JsonVariant a = doc.add<JsonVariant>();
+  JsonVariant b = doc.add<JsonVariant>();
 
   SECTION("'abc' vs 'abc'") {
     a.set("abc");

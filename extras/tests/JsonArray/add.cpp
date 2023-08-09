@@ -9,7 +9,7 @@
 
 using ArduinoJson::detail::sizeofArray;
 
-TEST_CASE("JsonArray::add()") {
+TEST_CASE("JsonArray::add(T)") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
   JsonArray array = doc.to<JsonArray>();
@@ -152,5 +152,30 @@ TEST_CASE("JsonArray::add()") {
                              Allocate(sizeofPool()),
                              Allocate(sizeofString(" XX")),
                          });
+  }
+}
+
+TEST_CASE("JsonArray::add<T>()") {
+  JsonDocument doc;
+  JsonArray array = doc.to<JsonArray>();
+
+  SECTION("add<JsonArray>()") {
+    JsonArray nestedArray = array.add<JsonArray>();
+    nestedArray.add(1);
+    nestedArray.add(2);
+    REQUIRE(doc.as<std::string>() == "[[1,2]]");
+  }
+
+  SECTION("add<JsonObject>()") {
+    JsonObject nestedObject = array.add<JsonObject>();
+    nestedObject["a"] = 1;
+    nestedObject["b"] = 2;
+    REQUIRE(doc.as<std::string>() == "[{\"a\":1,\"b\":2}]");
+  }
+
+  SECTION("add<JsonVariant>()") {
+    JsonVariant nestedVariant = array.add<JsonVariant>();
+    nestedVariant.set(42);
+    REQUIRE(doc.as<std::string>() == "[42]");
   }
 }

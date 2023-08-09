@@ -9,7 +9,7 @@ typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
 
 TEST_CASE("ElementProxy::add()") {
   JsonDocument doc;
-  doc.add();
+  doc.add<JsonVariant>();
   ElementProxy ep = doc[0];
 
   SECTION("add(int)") {
@@ -35,7 +35,7 @@ TEST_CASE("ElementProxy::add()") {
 
 TEST_CASE("ElementProxy::clear()") {
   JsonDocument doc;
-  doc.add();
+  doc.add<JsonVariant>();
   ElementProxy ep = doc[0];
 
   SECTION("size goes back to zero") {
@@ -95,7 +95,7 @@ TEST_CASE("ElementProxy::operator==()") {
 
 TEST_CASE("ElementProxy::remove()") {
   JsonDocument doc;
-  doc.add();
+  doc.add<JsonVariant>();
   ElementProxy ep = doc[0];
 
   SECTION("remove(int)") {
@@ -168,7 +168,7 @@ TEST_CASE("ElementProxy::set()") {
 
 TEST_CASE("ElementProxy::size()") {
   JsonDocument doc;
-  doc.add();
+  doc.add<JsonVariant>();
   ElementProxy ep = doc[0];
 
   SECTION("returns 0") {

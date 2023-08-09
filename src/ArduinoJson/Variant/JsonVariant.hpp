@@ -87,7 +87,9 @@ ARDUINOJSON_END_PUBLIC_NAMESPACE
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDerived>
-inline JsonVariant VariantRefBase<TDerived>::add() const {
+template <typename T>
+inline typename enable_if<is_same<T, JsonVariant>::value, T>::type
+VariantRefBase<TDerived>::add() const {
   return JsonVariant(
       detail::VariantData::addElement(getOrCreateData(), getResourceManager()),
       getResourceManager());

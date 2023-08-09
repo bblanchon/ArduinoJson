@@ -136,23 +136,32 @@ class VariantRefBase : public VariantTag {
     return VariantData::nesting(getData(), getResourceManager());
   }
 
+  // Appends a new (empty) element to the array.
+  // Returns a reference to the new element.
+  // https://arduinojson.org/v6/api/jsonvariant/add/
+  template <typename T>
+  typename enable_if<!is_same<T, JsonVariant>::value, T>::type add() const {
+    return add<JsonVariant>().template to<T>();
+  }
+
   // Appends a new (null) element to the array.
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsonvariant/add/
-  FORCE_INLINE JsonVariant add() const;
+  template <typename T>
+  typename enable_if<is_same<T, JsonVariant>::value, T>::type add() const;
 
   // Appends a value to the array.
   // https://arduinojson.org/v6/api/jsonvariant/add/
   template <typename T>
   FORCE_INLINE bool add(const T& value) const {
-    return add().set(value);
+    return add<JsonVariant>().set(value);
   }
 
   // Appends a value to the array.
   // https://arduinojson.org/v6/api/jsonvariant/add/
   template <typename T>
   FORCE_INLINE bool add(T* value) const {
-    return add().set(value);
+    return add<JsonVariant>().set(value);
   }
 
   // Removes an element of the array.
@@ -261,7 +270,6 @@ class VariantRefBase : public VariantTag {
     return VariantAttorney::getOrCreateData(derived());
   }
 
- private:
   FORCE_INLINE ArduinoJson::JsonVariant getVariant() const;
 
   FORCE_INLINE ArduinoJson::JsonVariantConst getVariantConst() const {

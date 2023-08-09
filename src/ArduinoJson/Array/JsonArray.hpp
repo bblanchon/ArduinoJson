@@ -41,10 +41,21 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
     return JsonArrayConst(data_, resources_);
   }
 
+  // Appends a new (empty) element to the array.
+  // Returns a reference to the new element.
+  // https://arduinojson.org/v6/api/jsonarray/add/
+  template <typename T>
+  typename detail::enable_if<!detail::is_same<T, JsonVariant>::value, T>::type
+  add() const {
+    return add<JsonVariant>().to<T>();
+  }
+
   // Appends a new (null) element to the array.
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsonarray/add/
-  JsonVariant add() const {
+  template <typename T>
+  typename detail::enable_if<detail::is_same<T, JsonVariant>::value, T>::type
+  add() const {
     return JsonVariant(detail::ArrayData::addElement(data_, resources_),
                        resources_);
   }
@@ -53,14 +64,14 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // https://arduinojson.org/v6/api/jsonarray/add/
   template <typename T>
   FORCE_INLINE bool add(const T& value) const {
-    return add().set(value);
+    return add<JsonVariant>().set(value);
   }
 
   // Appends a value to the array.
   // https://arduinojson.org/v6/api/jsonarray/add/
   template <typename T>
   FORCE_INLINE bool add(T* value) const {
-    return add().set(value);
+    return add<JsonVariant>().set(value);
   }
 
   // Returns an iterator to the first element of the array.
@@ -126,7 +137,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Creates an array and appends it to the array.
   // https://arduinojson.org/v6/api/jsonarray/createnestedarray/
   FORCE_INLINE JsonArray createNestedArray() const {
-    return add().to<JsonArray>();
+    return add<JsonArray>();
   }
 
   operator JsonVariantConst() const {

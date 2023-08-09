@@ -34,7 +34,7 @@ inline typename detail::enable_if<
 copyArray(const T* src, size_t len, const TDestination& dst) {
   bool ok = true;
   for (size_t i = 0; i < len; i++) {
-    ok &= copyArray(src[i], dst.add());
+    ok &= copyArray(src[i], dst.template add<JsonVariant>());
   }
   return ok;
 }

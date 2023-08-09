@@ -161,7 +161,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Creates an array and appends it to the root array.
   // https://arduinojson.org/v6/api/jsondocument/createnestedarray/
   JsonArray createNestedArray() {
-    return add().to<JsonArray>();
+    return add<JsonArray>();
   }
 
   // Creates an array and adds it to the root object.
@@ -181,7 +181,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // Creates an object and appends it to the root array.
   // https://arduinojson.org/v6/api/jsondocument/createnestedobject/
   JsonObject createNestedObject() {
-    return add().to<JsonObject>();
+    return add<JsonObject>();
   }
 
   // Creates an object and adds it to the root object.
@@ -264,10 +264,21 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return JsonVariantConst(data_.getElement(index, &resources_), &resources_);
   }
 
+  // Appends a new (empty) element to the root array.
+  // Returns a reference to the new element.
+  // https://arduinojson.org/v6/api/jsondocument/add/
+  template <typename T>
+  typename detail::enable_if<!detail::is_same<T, JsonVariant>::value, T>::type
+  add() {
+    return add<JsonVariant>().to<T>();
+  }
+
   // Appends a new (null) element to the root array.
   // Returns a reference to the new element.
   // https://arduinojson.org/v6/api/jsondocument/add/
-  FORCE_INLINE JsonVariant add() {
+  template <typename T>
+  typename detail::enable_if<detail::is_same<T, JsonVariant>::value, T>::type
+  add() {
     return JsonVariant(data_.addElement(&resources_), &resources_);
   }
 
@@ -275,14 +286,14 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v6/api/jsondocument/add/
   template <typename TValue>
   FORCE_INLINE bool add(const TValue& value) {
-    return add().set(value);
+    return add<JsonVariant>().set(value);
   }
 
   // Appends a value to the root array.
   // https://arduinojson.org/v6/api/jsondocument/add/
   template <typename TChar>
   FORCE_INLINE bool add(TChar* value) {
-    return add().set(value);
+    return add<JsonVariant>().set(value);
   }
 
   // Removes an element of the root array.
