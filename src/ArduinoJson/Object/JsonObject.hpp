@@ -180,6 +180,20 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
     return operator[](key).template to<JsonArray>();
   }
 
+  // DEPRECATED: use obj[key].to<JsonObject>() instead
+  template <typename TChar>
+  ARDUINOJSON_DEPRECATED("use obj[key].to<JsonObject>() instead")
+  JsonObject createNestedObject(TChar* key) {
+    return operator[](key).template to<JsonObject>();
+  }
+
+  // DEPRECATED: use obj[key].to<JsonObject>() instead
+  template <typename TString>
+  ARDUINOJSON_DEPRECATED("use obj[key].to<JsonObject>() instead")
+  JsonObject createNestedObject(const TString& key) {
+    return operator[](key).template to<JsonObject>();
+  }
+
   // DEPRECATED: always returns zero
   ARDUINOJSON_DEPRECATED("always returns zero")
   size_t memoryUsage() const {

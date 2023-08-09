@@ -109,4 +109,8 @@ class ARDUINOJSON_DEPRECATED("use JsonDocument instead") DynamicJsonDocument
   size_t _capacity;
 };
 
+inline JsonObject JsonArray::createNestedObject() const {
+  return add<JsonObject>();
+}
+
 ARDUINOJSON_END_PUBLIC_NAMESPACE

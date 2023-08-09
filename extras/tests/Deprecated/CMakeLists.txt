@@ -17,6 +17,7 @@ endif()
 add_executable(DeprecatedTests
 	add.cpp
 	createNestedArray.cpp
+	createNestedObject.cpp
 	BasicJsonDocument.cpp
 	DynamicJsonDocument.cpp
 	memoryUsage.cpp
