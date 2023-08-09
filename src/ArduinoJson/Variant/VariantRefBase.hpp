@@ -227,6 +227,12 @@ class VariantRefBase : public VariantTag {
     return 0;
   }
 
+  // DEPRECATED: performs a deep copy
+  ARDUINOJSON_DEPRECATED("performs a deep copy")
+  void shallowCopy(JsonVariantConst src) const {
+    set(src);
+  }
+
  private:
   TDerived& derived() {
     return static_cast<TDerived&>(*this);

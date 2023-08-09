@@ -18,6 +18,7 @@ add_executable(DeprecatedTests
 	BasicJsonDocument.cpp
 	DynamicJsonDocument.cpp
 	memoryUsage.cpp
+	shallowCopy.cpp
 	StaticJsonDocument.cpp
 )
 
