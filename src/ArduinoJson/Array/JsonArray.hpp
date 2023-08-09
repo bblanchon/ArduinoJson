@@ -164,6 +164,12 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
     return add<JsonVariant>();
   }
 
+  // DEPRECATED: use add<JsonArray>() instead
+  ARDUINOJSON_DEPRECATED("use add<JsonArray>() instead")
+  JsonArray createNestedArray() const {
+    return add<JsonArray>();
+  }
+
   // DEPRECATED: always returns zero
   ARDUINOJSON_DEPRECATED("always returns zero")
   size_t memoryUsage() const {

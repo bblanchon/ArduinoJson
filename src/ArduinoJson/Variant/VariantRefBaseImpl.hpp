@@ -16,6 +16,24 @@ inline JsonVariant VariantRefBase<TDerived>::add() const {
 }
 
 template <typename TDerived>
+inline JsonArray VariantRefBase<TDerived>::createNestedArray() const {
+  return add<JsonArray>();
+}
+
+template <typename TDerived>
+template <typename TChar>
+inline JsonArray VariantRefBase<TDerived>::createNestedArray(TChar* key) const {
+  return operator[](key).template to<JsonArray>();
+}
+
+template <typename TDerived>
+template <typename TString>
+inline JsonArray VariantRefBase<TDerived>::createNestedArray(
+    const TString& key) const {
+  return operator[](key).template to<JsonArray>();
+}
+
+template <typename TDerived>
 inline void convertToJson(const VariantRefBase<TDerived>& src,
                           JsonVariant dst) {
   dst.set(src.template as<JsonVariantConst>());

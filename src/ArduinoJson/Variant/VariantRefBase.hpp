@@ -225,6 +225,20 @@ class VariantRefBase : public VariantTag {
   ARDUINOJSON_DEPRECATED("use add<JsonVariant>() instead")
   JsonVariant add() const;
 
+  // DEPRECATED: use add<JsonArray>() instead
+  ARDUINOJSON_DEPRECATED("use add<JsonArray>() instead")
+  JsonArray createNestedArray() const;
+
+  // DEPRECATED: use var[key].to<JsonArray>() instead
+  template <typename TChar>
+  ARDUINOJSON_DEPRECATED("use var[key].to<JsonArray>() instead")
+  JsonArray createNestedArray(TChar* key) const;
+
+  // DEPRECATED: use var[key].to<JsonArray>() instead
+  template <typename TString>
+  ARDUINOJSON_DEPRECATED("use var[key].to<JsonArray>() instead")
+  JsonArray createNestedArray(const TString& key) const;
+
   // DEPRECATED: always returns zero
   ARDUINOJSON_DEPRECATED("always returns zero")
   size_t memoryUsage() const {

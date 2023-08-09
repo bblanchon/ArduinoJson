@@ -297,6 +297,26 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return add<JsonVariant>();
   }
 
+  // DEPRECATED: use add<JsonArray>() instead
+  ARDUINOJSON_DEPRECATED("use add<JsonArray>() instead")
+  JsonArray createNestedArray() {
+    return add<JsonArray>();
+  }
+
+  // DEPRECATED: use doc[key].to<JsonArray>() instead
+  template <typename TChar>
+  ARDUINOJSON_DEPRECATED("use doc[key].to<JsonArray>() instead")
+  JsonArray createNestedArray(TChar* key) {
+    return operator[](key).template to<JsonArray>();
+  }
+
+  // DEPRECATED: use doc[key].to<JsonArray>() instead
+  template <typename TString>
+  ARDUINOJSON_DEPRECATED("use doc[key].to<JsonArray>() instead")
+  JsonArray createNestedArray(const TString& key) {
+    return operator[](key).template to<JsonArray>();
+  }
+
   // DEPRECATED: always returns zero
   ARDUINOJSON_DEPRECATED("always returns zero")
   size_t memoryUsage() const {
