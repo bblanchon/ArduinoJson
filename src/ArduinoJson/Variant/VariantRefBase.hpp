@@ -221,6 +221,10 @@ class VariantRefBase : public VariantTag {
                                   MemberProxy<TDerived, TChar*>>::type
   operator[](TChar* key) const;
 
+  // DEPRECATED: use add<JsonVariant>() instead
+  ARDUINOJSON_DEPRECATED("use add<JsonVariant>() instead")
+  JsonVariant add() const;
+
   // DEPRECATED: always returns zero
   ARDUINOJSON_DEPRECATED("always returns zero")
   size_t memoryUsage() const {

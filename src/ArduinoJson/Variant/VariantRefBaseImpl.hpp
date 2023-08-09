@@ -11,6 +11,11 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDerived>
+inline JsonVariant VariantRefBase<TDerived>::add() const {
+  return add<JsonVariant>();
+}
+
+template <typename TDerived>
 inline void convertToJson(const VariantRefBase<TDerived>& src,
                           JsonVariant dst) {
   dst.set(src.template as<JsonVariantConst>());

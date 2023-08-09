@@ -291,6 +291,12 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     swap_(a.data_, b.data_);
   }
 
+  // DEPRECATED: use add<JsonVariant>() instead
+  ARDUINOJSON_DEPRECATED("use add<JsonVariant>() instead")
+  JsonVariant add() {
+    return add<JsonVariant>();
+  }
+
   // DEPRECATED: always returns zero
   ARDUINOJSON_DEPRECATED("always returns zero")
   size_t memoryUsage() const {
