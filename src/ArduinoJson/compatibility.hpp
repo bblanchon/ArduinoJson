@@ -4,6 +4,8 @@
 //
 // clang-format off
 
+#include <ArduinoJson/Namespace.hpp>
+
 #ifdef __GNUC__
 
 #define ARDUINOJSON_PRAGMA(x) _Pragma(#x)
@@ -23,3 +25,21 @@
 #define ARDUINOJSON_NAMESPACE _Pragma ("GCC warning \"ARDUINOJSON_NAMESPACE is deprecated, use ArduinoJson instead\"") ArduinoJson
 
 #endif
+
+// clang-format on
+
+ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
+
+// DEPRECATED: use JsonDocument instead
+template <size_t N>
+class ARDUINOJSON_DEPRECATED("use JsonDocument instead") StaticJsonDocument
+    : public JsonDocument {
+ public:
+  using JsonDocument::JsonDocument;
+
+  size_t capacity() const {
+    return N;
+  }
+};
+
+ARDUINOJSON_END_PUBLIC_NAMESPACE
