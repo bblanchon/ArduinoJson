@@ -7,7 +7,6 @@ add_executable(JsonArrayTests
 	clear.cpp
 	compare.cpp
 	copyArray.cpp
-	createNested.cpp
 	equals.cpp
 	isNull.cpp
 	iterator.cpp

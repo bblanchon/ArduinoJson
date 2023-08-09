@@ -99,7 +99,7 @@ TEST_CASE("serializeJson(JsonObject)") {
     JsonDocument b;
     JsonDocument c;
 
-    obj.createNestedArray("a");
+    obj["a"].to<JsonArray>();
     obj["b"] = b.to<JsonArray>();
     obj["c"] = c.to<JsonArray>();
 
@@ -110,7 +110,7 @@ TEST_CASE("serializeJson(JsonObject)") {
     JsonDocument b;
     JsonDocument c;
 
-    obj.createNestedObject("a");
+    obj["a"].to<JsonObject>();
     obj["b"] = b.to<JsonObject>();
     obj["c"] = c.to<JsonObject>();
 

@@ -130,16 +130,6 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
     return {*this, index};
   }
 
-  // Creates an object and appends it to the array.
-  // https://arduinojson.org/v6/api/jsonarray/createnestedobject/
-  FORCE_INLINE JsonObject createNestedObject() const;
-
-  // Creates an array and appends it to the array.
-  // https://arduinojson.org/v6/api/jsonarray/createnestedarray/
-  FORCE_INLINE JsonArray createNestedArray() const {
-    return add<JsonArray>();
-  }
-
   operator JsonVariantConst() const {
     return JsonVariantConst(collectionToVariant(data_), resources_);
   }

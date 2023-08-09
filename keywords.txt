@@ -12,8 +12,6 @@ measureMsgPack	KEYWORD2
 # Methods
 add	KEYWORD2
 as	KEYWORD2
-createNestedArray	KEYWORD2
-createNestedObject	KEYWORD2
 get	KEYWORD2
 set	KEYWORD2
 to	KEYWORD2

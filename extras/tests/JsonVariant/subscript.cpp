@@ -50,7 +50,7 @@ TEST_CASE("JsonVariant::operator[]") {
     }
 
     SECTION("set value in a nested object") {
-      array.createNestedObject();
+      array.add<JsonObject>();
 
       var[0]["hello"] = "world";
 

@@ -245,7 +245,7 @@ TEST_CASE("JsonObject::operator[]") {
 #endif
 
   SECTION("chain") {
-    obj.createNestedObject("hello")["world"] = 123;
+    obj["hello"]["world"] = 123;
 
     REQUIRE(123 == obj["hello"]["world"].as<int>());
     REQUIRE(true == obj["hello"]["world"].is<int>());

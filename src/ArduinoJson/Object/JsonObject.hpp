@@ -166,30 +166,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
                                          resources_) != 0;
   }
 
-  // Creates an array and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonobject/createnestedarray/
-  template <typename TString>
-  FORCE_INLINE JsonArray createNestedArray(const TString& key) const;
-
-  // Creates an array and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonobject/createnestedarray/
-  template <typename TChar>
-  FORCE_INLINE JsonArray createNestedArray(TChar* key) const;
-
-  // Creates an object and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonobject/createnestedobject/
-  template <typename TString>
-  JsonObject createNestedObject(const TString& key) const {
-    return operator[](key).template to<JsonObject>();
-  }
-
-  // Creates an object and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonobject/createnestedobject/
-  template <typename TChar>
-  JsonObject createNestedObject(TChar* key) const {
-    return operator[](key).template to<JsonObject>();
-  }
-
  private:
   detail::ResourceManager* getResourceManager() const {
     return resources_;

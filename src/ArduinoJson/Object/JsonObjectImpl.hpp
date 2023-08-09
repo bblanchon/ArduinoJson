@@ -7,48 +7,7 @@
 #include <ArduinoJson/Array/JsonArray.hpp>
 #include <ArduinoJson/Object/JsonObject.hpp>
 
-ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
-
-template <typename TString>
-inline JsonArray JsonObject::createNestedArray(const TString& key) const {
-  return operator[](key).template to<JsonArray>();
-}
-
-template <typename TChar>
-inline JsonArray JsonObject::createNestedArray(TChar* key) const {
-  return operator[](key).template to<JsonArray>();
-}
-
-ARDUINOJSON_END_PUBLIC_NAMESPACE
-
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
-
-template <typename TDerived>
-template <typename TString>
-inline JsonArray VariantRefBase<TDerived>::createNestedArray(
-    const TString& key) const {
-  return operator[](key).template to<JsonArray>();
-}
-
-template <typename TDerived>
-template <typename TChar>
-inline JsonArray VariantRefBase<TDerived>::createNestedArray(TChar* key) const {
-  return operator[](key).template to<JsonArray>();
-}
-
-template <typename TDerived>
-template <typename TString>
-inline JsonObject VariantRefBase<TDerived>::createNestedObject(
-    const TString& key) const {
-  return operator[](key).template to<JsonObject>();
-}
-
-template <typename TDerived>
-template <typename TChar>
-inline JsonObject VariantRefBase<TDerived>::createNestedObject(
-    TChar* key) const {
-  return operator[](key).template to<JsonObject>();
-}
 
 template <typename TDerived>
 template <typename TString>

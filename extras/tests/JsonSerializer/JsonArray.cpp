@@ -92,13 +92,13 @@ TEST_CASE("serializeJson(JsonArray)") {
   }
 
   SECTION("OneEmptyNestedArray") {
-    array.createNestedArray();
+    array.add<JsonArray>();
 
     check(array, "[[]]");
   }
 
   SECTION("OneEmptyNestedHash") {
-    array.createNestedObject();
+    array.add<JsonObject>();
 
     check(array, "[{}]");
   }

@@ -19,14 +19,6 @@ TEST_CASE("Unbound JsonArray") {
     REQUIRE(0 == array.size());
   }
 
-  SECTION("CreateNestedArrayFails") {
-    REQUIRE(array.createNestedArray().isNull());
-  }
-
-  SECTION("CreateNestedObjectFails") {
-    REQUIRE(array.createNestedObject().isNull());
-  }
-
   SECTION("PrintToWritesBrackets") {
     char buffer[32];
     serializeJson(array, buffer, sizeof(buffer));

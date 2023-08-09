@@ -10,7 +10,6 @@ add_executable(JsonVariantTests
 	containsKey.cpp
 	converters.cpp
 	copy.cpp
-	createNested.cpp
 	is.cpp
 	isnull.cpp
 	misc.cpp

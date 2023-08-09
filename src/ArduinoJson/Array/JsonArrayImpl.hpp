@@ -7,25 +7,7 @@
 #include <ArduinoJson/Array/JsonArray.hpp>
 #include <ArduinoJson/Object/JsonObject.hpp>
 
-ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
-
-inline JsonObject JsonArray::createNestedObject() const {
-  return add<JsonObject>();
-}
-
-ARDUINOJSON_END_PUBLIC_NAMESPACE
-
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
-
-template <typename TDerived>
-inline JsonArray VariantRefBase<TDerived>::createNestedArray() const {
-  return add<JsonArray>();
-}
-
-template <typename TDerived>
-inline JsonObject VariantRefBase<TDerived>::createNestedObject() const {
-  return add<JsonObject>();
-}
 
 template <typename TDerived>
 inline ElementProxy<TDerived> VariantRefBase<TDerived>::operator[](

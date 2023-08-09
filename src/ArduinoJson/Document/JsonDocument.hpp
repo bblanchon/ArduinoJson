@@ -152,46 +152,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
     return getVariant().template to<T>();
   }
 
-  // Creates an array and appends it to the root array.
-  // https://arduinojson.org/v6/api/jsondocument/createnestedarray/
-  JsonArray createNestedArray() {
-    return add<JsonArray>();
-  }
-
-  // Creates an array and adds it to the root object.
-  // https://arduinojson.org/v6/api/jsondocument/createnestedarray/
-  template <typename TChar>
-  JsonArray createNestedArray(TChar* key) {
-    return operator[](key).template to<JsonArray>();
-  }
-
-  // Creates an array and adds it to the root object.
-  // https://arduinojson.org/v6/api/jsondocument/createnestedarray/
-  template <typename TString>
-  JsonArray createNestedArray(const TString& key) {
-    return operator[](key).template to<JsonArray>();
-  }
-
-  // Creates an object and appends it to the root array.
-  // https://arduinojson.org/v6/api/jsondocument/createnestedobject/
-  JsonObject createNestedObject() {
-    return add<JsonObject>();
-  }
-
-  // Creates an object and adds it to the root object.
-  // https://arduinojson.org/v6/api/jsondocument/createnestedobject/
-  template <typename TChar>
-  JsonObject createNestedObject(TChar* key) {
-    return operator[](key).template to<JsonObject>();
-  }
-
-  // Creates an object and adds it to the root object.
-  // https://arduinojson.org/v6/api/jsondocument/createnestedobject/
-  template <typename TString>
-  JsonObject createNestedObject(const TString& key) {
-    return operator[](key).template to<JsonObject>();
-  }
-
   // Returns true if the root object contains the specified key.
   // https://arduinojson.org/v6/api/jsondocument/containskey/
   template <typename TChar>

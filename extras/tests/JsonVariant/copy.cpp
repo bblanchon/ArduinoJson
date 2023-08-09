@@ -16,7 +16,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
   SECTION("stores JsonArray by copy") {
     JsonArray arr = doc2.to<JsonArray>();
-    JsonObject obj = arr.createNestedObject();
+    JsonObject obj = arr.add<JsonObject>();
     obj["hello"] = "world";
 
     var1.set(arr);
@@ -27,7 +27,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
 
   SECTION("stores JsonObject by copy") {
     JsonObject obj = doc2.to<JsonObject>();
-    JsonArray arr = obj.createNestedArray("value");
+    JsonArray arr = obj["value"].to<JsonArray>();
     arr.add(42);
 
     var1.set(obj);

@@ -28,3 +28,4 @@ HEAD
 * Call `shrinkToFit()` in `deserializeJson()` and `deserializeMsgPack()`
 * `serializeJson()` and `serializeMsgPack()` replace the content of `std::string` and `String` instead of appending to it
 * Replace `add()` with `add<T>()` (`add(T)` is still supported)
+* Remove `createNestedArray()` and `createNestedObject()` (use `to<JsonArray>()` and `to<JsonObject>()` instead)

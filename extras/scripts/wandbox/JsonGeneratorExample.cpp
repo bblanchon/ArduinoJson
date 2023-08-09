@@ -22,7 +22,7 @@ int main() {
 
   // Add an array.
   //
-  JsonArray data = doc.createNestedArray("data");
+  JsonArray data = doc["data"].to<JsonArray>();
   data.add(48.756080);
   data.add(2.302038);
 

@@ -32,26 +32,6 @@ TEST_CASE("std::string") {
     REQUIRE(std::string("value") == obj[std::string("key")]);
   }
 
-  SECTION("createNestedObject()") {
-    JsonObject obj = doc.to<JsonObject>();
-    std::string key = "key";
-    char json[64];
-    obj.createNestedObject(key);
-    eraseString(key);
-    serializeJson(doc, json, sizeof(json));
-    REQUIRE(std::string("{\"key\":{}}") == json);
-  }
-
-  SECTION("createNestedArray()") {
-    JsonObject obj = doc.to<JsonObject>();
-    std::string key = "key";
-    char json[64];
-    obj.createNestedArray(key);
-    eraseString(key);
-    serializeJson(doc, json, sizeof(json));
-    REQUIRE(std::string("{\"key\":[]}") == json);
-  }
-
   SECTION("containsKey()") {
     char json[] = "{\"key\":\"value\"}";
     deserializeJson(doc, json);

@@ -191,14 +191,6 @@ class VariantRefBase : public VariantTag {
                               getResourceManager());
   }
 
-  // Creates an array and appends it to the array.
-  // https://arduinojson.org/v6/api/jsonvariant/createnestedarray/
-  FORCE_INLINE JsonArray createNestedArray() const;
-
-  // Creates an object and appends it to the array.
-  // https://arduinojson.org/v6/api/jsonvariant/createnestedobject/
-  FORCE_INLINE JsonObject createNestedObject() const;
-
   // Gets or sets an array element.
   // https://arduinojson.org/v6/api/jsonvariant/subscript/
   FORCE_INLINE ElementProxy<TDerived> operator[](size_t index) const;
@@ -228,26 +220,6 @@ class VariantRefBase : public VariantTag {
   FORCE_INLINE typename enable_if<IsString<TChar*>::value,
                                   MemberProxy<TDerived, TChar*>>::type
   operator[](TChar* key) const;
-
-  // Creates an array and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonvariant/createnestedarray/
-  template <typename TString>
-  FORCE_INLINE JsonArray createNestedArray(const TString& key) const;
-
-  // Creates an array and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonvariant/createnestedarray/
-  template <typename TChar>
-  FORCE_INLINE JsonArray createNestedArray(TChar* key) const;
-
-  // Creates an object and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonvariant/createnestedobject/
-  template <typename TString>
-  JsonObject createNestedObject(const TString& key) const;
-
-  // Creates an object and adds it to the object.
-  // https://arduinojson.org/v6/api/jsonvariant/createnestedobject/
-  template <typename TChar>
-  JsonObject createNestedObject(TChar* key) const;
 
  private:
   TDerived& derived() {

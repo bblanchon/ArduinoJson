@@ -193,22 +193,6 @@ TEST_CASE("unsigned char[]") {
 
       REQUIRE(0 == obj.size());
     }
-
-    SECTION("createNestedArray()") {
-      unsigned char key[] = "hello";
-
-      JsonDocument doc;
-      JsonObject obj = doc.to<JsonObject>();
-      obj.createNestedArray(key);
-    }
-
-    SECTION("createNestedObject()") {
-      unsigned char key[] = "hello";
-
-      JsonDocument doc;
-      JsonObject obj = doc.to<JsonObject>();
-      obj.createNestedObject(key);
-    }
   }
 
   SECTION("MemberProxy") {

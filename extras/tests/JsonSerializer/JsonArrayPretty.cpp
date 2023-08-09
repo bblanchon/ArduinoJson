@@ -43,8 +43,8 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
   }
 
   SECTION("EmptyNestedArrays") {
-    array.createNestedArray();
-    array.createNestedArray();
+    array.add<JsonArray>();
+    array.add<JsonArray>();
 
     checkArray(array,
                "[\r\n"
@@ -54,11 +54,11 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
   }
 
   SECTION("NestedArrays") {
-    JsonArray nested1 = array.createNestedArray();
+    JsonArray nested1 = array.add<JsonArray>();
     nested1.add(1);
     nested1.add(2);
 
-    JsonObject nested2 = array.createNestedObject();
+    JsonObject nested2 = array.add<JsonObject>();
     nested2["key"] = 3;
 
     checkArray(array,

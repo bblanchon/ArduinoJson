@@ -47,8 +47,8 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
   }
 
   SECTION("EmptyNestedContainers") {
-    obj.createNestedObject("key1");
-    obj.createNestedArray("key2");
+    obj["key1"].to<JsonObject>();
+    obj["key2"].to<JsonArray>();
 
     checkObjectPretty(obj,
                       "{\r\n"
@@ -58,10 +58,10 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
   }
 
   SECTION("NestedContainers") {
-    JsonObject nested1 = obj.createNestedObject("key1");
+    JsonObject nested1 = obj["key1"].to<JsonObject>();
     nested1["a"] = 1;
 
-    JsonArray nested2 = obj.createNestedArray("key2");
+    JsonArray nested2 = obj["key2"].to<JsonArray>();
     nested2.add(2);
 
     checkObjectPretty(obj,

@@ -19,14 +19,6 @@ TEST_CASE("JsonObject::invalid()") {
     REQUIRE(0 == obj.size());
   }
 
-  SECTION("CreateNestedArrayFails") {
-    REQUIRE(obj.createNestedArray("hello").isNull());
-  }
-
-  SECTION("CreateNestedObjectFails") {
-    REQUIRE(obj.createNestedObject("world").isNull());
-  }
-
   SECTION("serialize to 'null'") {
     char buffer[32];
     serializeJson(obj, buffer, sizeof(buffer));

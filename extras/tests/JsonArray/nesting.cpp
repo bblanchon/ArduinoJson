@@ -24,12 +24,12 @@ TEST_CASE("JsonArray::nesting()") {
   }
 
   SECTION("returns 2 with nested array") {
-    arr.createNestedArray();
+    arr.add<JsonArray>();
     REQUIRE(arr.nesting() == 2);
   }
 
   SECTION("returns 2 with nested object") {
-    arr.createNestedObject();
+    arr.add<JsonObject>();
     REQUIRE(arr.nesting() == 2);
   }
 }

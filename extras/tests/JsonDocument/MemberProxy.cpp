@@ -281,38 +281,6 @@ TEST_CASE("MemberProxy cast to JsonVariant") {
   CHECK(doc.as<std::string>() == "{\"hello\":\"toto\"}");
 }
 
-TEST_CASE("MemberProxy::createNestedArray()") {
-  JsonDocument doc;
-  JsonArray arr = doc["items"].createNestedArray();
-  arr.add(42);
-
-  CHECK(doc["items"][0][0] == 42);
-}
-
-TEST_CASE("MemberProxy::createNestedArray(key)") {
-  JsonDocument doc;
-  JsonArray arr = doc["weather"].createNestedArray("temp");
-  arr.add(42);
-
-  CHECK(doc["weather"]["temp"][0] == 42);
-}
-
-TEST_CASE("MemberProxy::createNestedObject()") {
-  JsonDocument doc;
-  JsonObject obj = doc["items"].createNestedObject();
-  obj["value"] = 42;
-
-  CHECK(doc["items"][0]["value"] == 42);
-}
-
-TEST_CASE("MemberProxy::createNestedObject(key)") {
-  JsonDocument doc;
-  JsonObject obj = doc["status"].createNestedObject("weather");
-  obj["temp"] = 42;
-
-  CHECK(doc["status"]["weather"]["temp"] == 42);
-}
-
 TEST_CASE("Deduplicate keys") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);

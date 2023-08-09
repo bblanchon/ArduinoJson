@@ -60,7 +60,7 @@ void loop() {
   JsonDocument doc;
 
   // Create the "analog" array
-  JsonArray analogValues = doc.createNestedArray("analog");
+  JsonArray analogValues = doc["analog"].to<JsonArray>();
   for (int pin = 0; pin < 6; pin++) {
     // Read the analog input
     int value = analogRead(pin);
@@ -70,7 +70,7 @@ void loop() {
   }
 
   // Create the "digital" array
-  JsonArray digitalValues = doc.createNestedArray("digital");
+  JsonArray digitalValues = doc["digital"].to<JsonArray>();
   for (int pin = 0; pin < 14; pin++) {
     // Read the digital input
     int value = digitalRead(pin);

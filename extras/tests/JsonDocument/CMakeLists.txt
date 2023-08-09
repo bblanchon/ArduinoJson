@@ -9,7 +9,6 @@ add_executable(JsonDocumentTests
 	compare.cpp
 	constructor.cpp
 	containsKey.cpp
-	createNested.cpp
 	ElementProxy.cpp
 	isNull.cpp
 	issue1120.cpp
