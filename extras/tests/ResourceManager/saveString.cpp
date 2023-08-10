@@ -25,7 +25,7 @@ TEST_CASE("ResourceManager::saveString()") {
   SECTION("Duplicates different strings") {
     auto a = saveString(resources, "hello");
     auto b = saveString(resources, "world");
-    REQUIRE(a->data != b->data);
+    REQUIRE(+a->data != +b->data);
     REQUIRE(a->length == 5);
     REQUIRE(b->length == 5);
     REQUIRE(a->references == 1);

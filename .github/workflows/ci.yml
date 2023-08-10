@@ -44,6 +44,7 @@ jobs:
           - gcc: "10"
             cxxflags: -funsigned-char # Issue #1715
           - gcc: "11"
+          - gcc: "12"
     steps:
       - name: Install
         run: |
