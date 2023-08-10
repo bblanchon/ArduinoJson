@@ -74,29 +74,54 @@ jobs:
   clang:
     name: Clang
     needs: lint
-    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
         include:
           - clang: "3.9"
             cxxflags: "-stdlib=libc++"
+            runner: ubuntu-20.04
+            archive: bionic
           - clang: "4.0"
             cxxflags: "-stdlib=libc++"
+            runner: ubuntu-20.04
+            archive: bionic
           - clang: "5.0"
+            runner: ubuntu-20.04
+            archive: bionic
           - clang: "6.0"
+            runner: ubuntu-20.04
+            archive: bionic
           - clang: "7"
+            runner: ubuntu-20.04
           - clang: "8"
             cxxflags: -fsanitize=leak -fno-sanitize-recover=all
+            runner: ubuntu-20.04
           - clang: "9"
             cxxflags: -fsanitize=undefined -fno-sanitize-recover=all
+            runner: ubuntu-20.04
           - clang: "10"
             cxxflags: -fsanitize=address -fno-sanitize-recover=all
+            runner: ubuntu-20.04
+          - clang: "11"
+            runner: ubuntu-22.04
+          - clang: "12"
+            runner: ubuntu-22.04
+          - clang: "13"
+            runner: ubuntu-22.04
+          - clang: "14"
+            runner: ubuntu-22.04
+          - clang: "15"
+            runner: ubuntu-22.04
+    runs-on: ${{ matrix.runner }}
     steps:
+      - name: Add archive repositories
+        if: matrix.archive
+        run: |
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ ${{ matrix.archive }} main'
+          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ ${{ matrix.archive }} universe'
       - name: Install
         run: |
-          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic main'
-          sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ bionic universe'
           sudo apt-get update
           sudo apt-get install -y clang-${{ matrix.clang }}
       - name: Checkout
