@@ -10,6 +10,10 @@
 #error ARDUINOJSON_SLOT_OFFSET_SIZE has been removed, use ARDUINOJSON_SLOT_ID_SIZE instead
 #endif
 
+#ifdef ARDUINOJSON_ENABLE_STRING_DEDUPLICATION
+#warning "ARDUINOJSON_ENABLE_STRING_DEDUPLICATION has been removed, string deduplication is now always enabled"
+#endif
+
 #ifdef __GNUC__
 
 #define ARDUINOJSON_PRAGMA(x) _Pragma(#x)
