@@ -29,7 +29,7 @@ class JsonVariantConst : public detail::VariantTag,
 
  public:
   // Creates an unbound reference.
-  JsonVariantConst() : data_(0) {}
+  JsonVariantConst() : data_(nullptr), resources_(nullptr) {}
 
   // INTERNAL USE ONLY
   explicit JsonVariantConst(const detail::VariantData* data,
