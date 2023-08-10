@@ -6,6 +6,10 @@
 
 #include <ArduinoJson/Namespace.hpp>
 
+#ifdef ARDUINOJSON_SLOT_OFFSET_SIZE
+#error ARDUINOJSON_SLOT_OFFSET_SIZE has been removed, use ARDUINOJSON_SLOT_ID_SIZE instead
+#endif
+
 #ifdef __GNUC__
 
 #define ARDUINOJSON_PRAGMA(x) _Pragma(#x)
