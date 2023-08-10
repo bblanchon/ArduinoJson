@@ -51,7 +51,7 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("JsonDocument(JsonObject)") {
+  SECTION("JsonDocument(JsonObject, Allocator*)") {
     JsonDocument doc1;
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
@@ -64,7 +64,17 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("Construct from JsonArray") {
+  SECTION("JsonDocument(JsonObject)") {
+    JsonDocument doc1;
+    JsonObject obj = doc1.to<JsonObject>();
+    obj["hello"] = "world";
+
+    JsonDocument doc2(obj);
+
+    REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
+  }
+
+  SECTION("JsonDocument(JsonArray, Allocator*)") {
     JsonDocument doc1;
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
@@ -77,7 +87,17 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("Construct from JsonVariant") {
+  SECTION("JsonDocument(JsonArray)") {
+    JsonDocument doc1;
+    JsonArray arr = doc1.to<JsonArray>();
+    arr.add("hello");
+
+    JsonDocument doc2(arr);
+
+    REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
+  }
+
+  SECTION("JsonDocument(JsonVariant, Allocator*)") {
     JsonDocument doc1;
     deserializeJson(doc1, "\"hello\"");
 
@@ -87,5 +107,14 @@ TEST_CASE("JsonDocument constructor") {
     REQUIRE(spyingAllocator.log() == AllocatorLog{
                                          Allocate(sizeofString("hello")),
                                      });
+  }
+
+  SECTION("JsonDocument(JsonVariant)") {
+    JsonDocument doc1;
+    deserializeJson(doc1, "\"hello\"");
+
+    JsonDocument doc2(doc1.as<JsonVariant>());
+
+    REQUIRE(doc2.as<std::string>() == "hello");
   }
 }
