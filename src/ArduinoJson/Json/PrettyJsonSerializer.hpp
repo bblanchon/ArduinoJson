@@ -79,7 +79,7 @@ ARDUINOJSON_END_PRIVATE_NAMESPACE
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Produces JsonDocument to create a prettified JSON document.
-// https://arduinojson.org/v6/api/json/serializejsonpretty/
+// https://arduinojson.org/v7/api/json/serializejsonpretty/
 template <typename TDestination>
 size_t serializeJsonPretty(JsonVariantConst source, TDestination& destination) {
   using namespace ArduinoJson::detail;
@@ -87,7 +87,7 @@ size_t serializeJsonPretty(JsonVariantConst source, TDestination& destination) {
 }
 
 // Produces JsonDocument to create a prettified JSON document.
-// https://arduinojson.org/v6/api/json/serializejsonpretty/
+// https://arduinojson.org/v7/api/json/serializejsonpretty/
 inline size_t serializeJsonPretty(JsonVariantConst source, void* buffer,
                                   size_t bufferSize) {
   using namespace ArduinoJson::detail;
@@ -95,7 +95,7 @@ inline size_t serializeJsonPretty(JsonVariantConst source, void* buffer,
 }
 
 // Computes the length of the document that serializeJsonPretty() produces.
-// https://arduinojson.org/v6/api/json/measurejsonpretty/
+// https://arduinojson.org/v7/api/json/measurejsonpretty/
 inline size_t measureJsonPretty(JsonVariantConst source) {
   using namespace ArduinoJson::detail;
   return measure<PrettyJsonSerializer>(source);

@@ -8,7 +8,7 @@ ARDUINOJSON_H="$3"
 
 cat << END
 ---
-branch: v6
+branch: v7
 version: $VERSION
 date: '$(date +'%Y-%m-%d')'
 $(extras/scripts/wandbox/publish.sh "$ARDUINOJSON_H")

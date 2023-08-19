@@ -4,7 +4,7 @@
 //
 // This example shows how to generate a JSON document with ArduinoJson.
 //
-// https://arduinojson.org/v6/example/generator/
+// https://arduinojson.org/v7/example/generator/
 
 #include <ArduinoJson.h>
 
@@ -21,12 +21,12 @@ void setup() {
   doc["sensor"] = "gps";
   doc["time"] = 1351824120;
 
-  // Add an array.
+  // Add an array
   JsonArray data = doc["data"].to<JsonArray>();
   data.add(48.756080);
   data.add(2.302038);
 
-  // Generate the minified JSON and send it to the Serial port.
+  // Generate the minified JSON and send it to the Serial port
   serializeJson(doc, Serial);
   // The above line prints:
   // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
@@ -34,7 +34,7 @@ void setup() {
   // Start a new line
   Serial.println();
 
-  // Generate the prettified JSON and send it to the Serial port.
+  // Generate the prettified JSON and send it to the Serial port
   serializeJsonPretty(doc, Serial);
   // The above line prints:
   // {

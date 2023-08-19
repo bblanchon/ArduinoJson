@@ -15,14 +15,14 @@ template <typename T, typename Enable>
 struct Converter {
   static void toJson(const T& src, JsonVariant dst) {
     // clang-format off
-    convertToJson(src, dst); // Error here? See https://arduinojson.org/v6/unsupported-set/
+    convertToJson(src, dst); // Error here? See https://arduinojson.org/v7/unsupported-set/
     // clang-format on
   }
 
   static T fromJson(JsonVariantConst src) {
     // clang-format off
-    T result; // Error here? See https://arduinojson.org/v6/non-default-constructible/
-    convertFromJson(src, result);  // Error here? See https://arduinojson.org/v6/unsupported-as/
+    T result; // Error here? See https://arduinojson.org/v7/non-default-constructible/
+    convertFromJson(src, result);  // Error here? See https://arduinojson.org/v7/unsupported-as/
     // clang-format on
     return result;
   }
@@ -30,7 +30,7 @@ struct Converter {
   static bool checkJson(JsonVariantConst src) {
     T dummy = T();
     // clang-format off
-    return canConvertFromJson(src, dummy);  // Error here? See https://arduinojson.org/v6/unsupported-is/
+    return canConvertFromJson(src, dummy);  // Error here? See https://arduinojson.org/v7/unsupported-is/
     // clang-format on
   }
 };

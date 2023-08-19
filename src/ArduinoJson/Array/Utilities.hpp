@@ -18,7 +18,7 @@ copyArray(const T& src, JsonVariant dst) {
 }
 
 // Copies values from an array to a JsonArray or a JsonVariant.
-// https://arduinojson.org/v6/api/misc/copyarray/
+// https://arduinojson.org/v7/api/misc/copyarray/
 template <typename T, size_t N, typename TDestination>
 inline typename detail::enable_if<
     !detail::is_base_of<JsonDocument, TDestination>::value, bool>::type
@@ -27,7 +27,7 @@ copyArray(T (&src)[N], const TDestination& dst) {
 }
 
 // Copies values from an array to a JsonArray or a JsonVariant.
-// https://arduinojson.org/v6/api/misc/copyarray/
+// https://arduinojson.org/v7/api/misc/copyarray/
 template <typename T, typename TDestination>
 inline typename detail::enable_if<
     !detail::is_base_of<JsonDocument, TDestination>::value, bool>::type
@@ -47,14 +47,14 @@ inline bool copyArray(const char* src, size_t, const TDestination& dst) {
 }
 
 // Copies values from an array to a JsonDocument.
-// https://arduinojson.org/v6/api/misc/copyarray/
+// https://arduinojson.org/v7/api/misc/copyarray/
 template <typename T>
 inline bool copyArray(const T& src, JsonDocument& dst) {
   return copyArray(src, dst.to<JsonArray>());
 }
 
 // Copies an array to a JsonDocument.
-// https://arduinojson.org/v6/api/misc/copyarray/
+// https://arduinojson.org/v7/api/misc/copyarray/
 template <typename T>
 inline bool copyArray(const T* src, size_t len, JsonDocument& dst) {
   return copyArray(src, len, dst.to<JsonArray>());
@@ -70,14 +70,14 @@ copyArray(JsonVariantConst src, T& dst) {
 }
 
 // Copies values from a JsonArray or JsonVariant to an array.
-// https://arduinojson.org/v6/api/misc/copyarray/
+// https://arduinojson.org/v7/api/misc/copyarray/
 template <typename T, size_t N>
 inline size_t copyArray(JsonArrayConst src, T (&dst)[N]) {
   return copyArray(src, dst, N);
 }
 
 // Copies values from a JsonArray or JsonVariant to an array.
-// https://arduinojson.org/v6/api/misc/copyarray/
+// https://arduinojson.org/v7/api/misc/copyarray/
 template <typename T>
 inline size_t copyArray(JsonArrayConst src, T* dst, size_t len) {
   size_t i = 0;
@@ -101,7 +101,7 @@ inline size_t copyArray(JsonVariantConst src, char (&dst)[N]) {
 }
 
 // Copies values from a JsonDocument to an array.
-// https://arduinojson.org/v6/api/misc/copyarray/
+// https://arduinojson.org/v7/api/misc/copyarray/
 template <typename TSource, typename T>
 inline typename detail::enable_if<
     detail::is_array<T>::value &&

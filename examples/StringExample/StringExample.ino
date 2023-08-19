@@ -8,7 +8,7 @@
 // JsonDocument. Prefer plain old char[], as they are more efficient in term of
 // code size, speed, and memory usage.
 //
-// https://arduinojson.org/v6/example/string/
+// https://arduinojson.org/v7/example/string/
 
 #include <ArduinoJson.h>
 

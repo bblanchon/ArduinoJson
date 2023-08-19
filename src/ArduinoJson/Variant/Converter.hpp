@@ -17,7 +17,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // clang-format off
 template <typename T1, typename T2>
-class InvalidConversion;  // Error here? See https://arduinojson.org/v6/invalid-conversion/
+class InvalidConversion;  // Error here? See https://arduinojson.org/v7/invalid-conversion/
 // clang-format on
 
 template <typename T>

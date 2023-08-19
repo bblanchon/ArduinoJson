@@ -11,7 +11,7 @@
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A string.
-// https://arduinojson.org/v6/api/jsonstring/
+// https://arduinojson.org/v7/api/jsonstring/
 class JsonString {
  public:
   enum Ownership { Copied, Linked };

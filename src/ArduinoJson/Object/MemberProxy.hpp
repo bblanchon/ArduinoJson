@@ -9,7 +9,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // A proxy class to get or set a member of an object.
-// https://arduinojson.org/v6/api/jsonobject/subscript/
+// https://arduinojson.org/v7/api/jsonobject/subscript/
 template <typename TUpstream, typename TStringRef>
 class MemberProxy
     : public VariantRefBase<MemberProxy<TUpstream, TStringRef>>,

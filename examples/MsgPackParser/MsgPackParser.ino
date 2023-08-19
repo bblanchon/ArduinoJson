@@ -5,7 +5,7 @@
 // This example shows how to deserialize a MessagePack document with
 // ArduinoJson.
 //
-// https://arduinojson.org/v6/example/msgpack-parser/
+// https://arduinojson.org/v7/example/msgpack-parser/
 
 #include <ArduinoJson.h>
 
@@ -18,7 +18,7 @@ void setup() {
   // Allocate the JSON document
   JsonDocument doc;
 
-  // MessagePack input string.
+  // The MessagePack input string
   uint8_t input[] = {131, 166, 115, 101, 110, 115, 111, 114, 163, 103, 112, 115,
                      164, 116, 105, 109, 101, 206, 80,  147, 50,  248, 164, 100,
                      97,  116, 97,  146, 203, 64,  72,  96,  199, 58,  188, 148,
@@ -30,16 +30,17 @@ void setup() {
   //   "data": [48.75608, 2.302038]
   // }
 
+  // Parse the input
   DeserializationError error = deserializeMsgPack(doc, input);
 
-  // Test if parsing succeeded.
+  // Test if parsing succeeded
   if (error) {
     Serial.print("deserializeMsgPack() failed: ");
     Serial.println(error.f_str());
     return;
   }
 
-  // Fetch values.
+  // Fetch the values
   //
   // Most of the time, you can rely on the implicit casts.
   // In other case, you can do doc["time"].as<long>();
@@ -48,7 +49,7 @@ void setup() {
   double latitude = doc["data"][0];
   double longitude = doc["data"][1];
 
-  // Print values.
+  // Print the values
   Serial.println(sensor);
   Serial.println(time);
   Serial.println(latitude, 6);

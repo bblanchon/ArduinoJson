@@ -25,4 +25,4 @@ ARDUINOJSON_END_PUBLIC_NAMESPACE
   static_assert(sizeof(T) <= sizeof(ArduinoJson::JsonInteger),           \
                 "To use 64-bit integers with ArduinoJson, you must set " \
                 "ARDUINOJSON_USE_LONG_LONG to 1. See "                   \
-                "https://arduinojson.org/v6/api/config/use_long_long/");
+                "https://arduinojson.org/v7/api/config/use_long_long/");

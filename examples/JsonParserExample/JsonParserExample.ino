@@ -4,7 +4,7 @@
 //
 // This example shows how to deserialize a JSON document with ArduinoJson.
 //
-// https://arduinojson.org/v6/example/parser/
+// https://arduinojson.org/v7/example/parser/
 
 #include <ArduinoJson.h>
 
@@ -24,14 +24,14 @@ void setup() {
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, json);
 
-  // Test if parsing succeeds.
+  // Test if parsing succeeds
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
     return;
   }
 
-  // Fetch values.
+  // Fetch the values
   //
   // Most of the time, you can rely on the implicit casts.
   // In other case, you can do doc["time"].as<long>();
@@ -40,7 +40,7 @@ void setup() {
   double latitude = doc["data"][0];
   double longitude = doc["data"][1];
 
-  // Print values.
+  // Print the values
   Serial.println(sensor);
   Serial.println(time);
   Serial.println(latitude, 6);

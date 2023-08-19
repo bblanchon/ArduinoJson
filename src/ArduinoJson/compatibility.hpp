@@ -23,7 +23,7 @@
 #define ARDUINOJSON_STRINGIFY(S) #S
 
 #define ARDUINOJSON_DEPRECATION_ERROR(X, Y) \
-  ARDUINOJSON_COMPILE_ERROR(ARDUINOJSON_STRINGIFY(X is a Y from ArduinoJson 5. Please see https:/\/arduinojson.org/upgrade to learn how to upgrade your program to ArduinoJson version 6))
+  ARDUINOJSON_COMPILE_ERROR(ARDUINOJSON_STRINGIFY(X is a Y from ArduinoJson 5. Please see https:/\/arduinojson.org/v7/upgrade-from-v5/ to learn how to upgrade to ArduinoJson 7))
 
 #define StaticJsonBuffer ARDUINOJSON_DEPRECATION_ERROR(StaticJsonBuffer, class)
 #define DynamicJsonBuffer ARDUINOJSON_DEPRECATION_ERROR(DynamicJsonBuffer, class)

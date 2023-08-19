@@ -17,7 +17,7 @@
 // * CLK  <-> pin 13
 // * CS   <-> pin 4
 //
-// https://arduinojson.org/v6/example/config/
+// https://arduinojson.org/v7/example/config/
 
 #include <ArduinoJson.h>
 #include <SD.h>
@@ -136,7 +136,7 @@ void loop() {
 // ------------------
 //
 // File is an unbuffered stream, which is not optimal for ArduinoJson.
-// See: https://arduinojson.org/v6/how-to/improve-speed/
+// See: https://arduinojson.org/v7/how-to/improve-speed/
 
 // See also
 // --------

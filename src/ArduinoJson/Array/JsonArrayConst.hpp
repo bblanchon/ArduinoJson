@@ -13,7 +13,7 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 class JsonObject;
 
 // A read-only reference to an array in a JsonDocument
-// https://arduinojson.org/v6/api/jsonarrayconst/
+// https://arduinojson.org/v7/api/jsonarrayconst/
 class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   friend class JsonArray;
   friend class detail::VariantAttorney;
@@ -22,7 +22,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   typedef JsonArrayConstIterator iterator;
 
   // Returns an iterator to the first element of the array.
-  // https://arduinojson.org/v6/api/jsonarrayconst/begin/
+  // https://arduinojson.org/v7/api/jsonarrayconst/begin/
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
@@ -30,7 +30,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   }
 
   // Returns an iterator to the element following the last element of the array.
-  // https://arduinojson.org/v6/api/jsonarrayconst/end/
+  // https://arduinojson.org/v7/api/jsonarrayconst/end/
   FORCE_INLINE iterator end() const {
     return iterator();
   }
@@ -44,7 +44,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
       : data_(data), resources_(resources) {}
 
   // Returns the element at the specified index.
-  // https://arduinojson.org/v6/api/jsonarrayconst/subscript/
+  // https://arduinojson.org/v7/api/jsonarrayconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
     return JsonVariantConst(
         detail::ArrayData::getElement(data_, index, resources_), resources_);
@@ -55,25 +55,25 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   }
 
   // Returns true if the reference is unbound.
-  // https://arduinojson.org/v6/api/jsonarrayconst/isnull/
+  // https://arduinojson.org/v7/api/jsonarrayconst/isnull/
   FORCE_INLINE bool isNull() const {
     return data_ == 0;
   }
 
   // Returns true if the reference is bound.
-  // https://arduinojson.org/v6/api/jsonarrayconst/isnull/
+  // https://arduinojson.org/v7/api/jsonarrayconst/isnull/
   FORCE_INLINE operator bool() const {
     return data_ != 0;
   }
 
   // Returns the depth (nesting level) of the array.
-  // https://arduinojson.org/v6/api/jsonarrayconst/nesting/
+  // https://arduinojson.org/v7/api/jsonarrayconst/nesting/
   FORCE_INLINE size_t nesting() const {
     return detail::VariantData::nesting(collectionToVariant(data_), resources_);
   }
 
   // Returns the number of elements in the array.
-  // https://arduinojson.org/v6/api/jsonarrayconst/size/
+  // https://arduinojson.org/v7/api/jsonarrayconst/size/
   FORCE_INLINE size_t size() const {
     return data_ ? data_->size(resources_) : 0;
   }

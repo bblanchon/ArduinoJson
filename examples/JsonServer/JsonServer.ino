@@ -13,7 +13,7 @@
 //   "digital": [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]
 // }
 //
-// https://arduinojson.org/v6/example/http-server/
+// https://arduinojson.org/v7/example/http-server/
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
@@ -102,7 +102,7 @@ void loop() {
 // ------------------
 //
 // EthernetClient is an unbuffered stream, which is not optimal for ArduinoJson.
-// See: https://arduinojson.org/v6/how-to/improve-speed/
+// See: https://arduinojson.org/v7/how-to/improve-speed/
 
 // See also
 // --------

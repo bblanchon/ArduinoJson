@@ -17,7 +17,7 @@
 // $ ncat -ulp 8888
 // See https://nmap.org/ncat/
 //
-// https://arduinojson.org/v6/example/udp-beacon/
+// https://arduinojson.org/v7/example/udp-beacon/
 
 #include <ArduinoJson.h>
 #include <Ethernet.h>
@@ -90,7 +90,7 @@ void loop() {
 // ------------------
 //
 // EthernetUDP is an unbuffered stream, which is not optimal for ArduinoJson.
-// See: https://arduinojson.org/v6/how-to/improve-speed/
+// See: https://arduinojson.org/v7/how-to/improve-speed/
 
 // See also
 // --------

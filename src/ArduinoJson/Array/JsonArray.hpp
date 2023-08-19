@@ -12,7 +12,7 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 class JsonObject;
 
 // A reference to an array in a JsonDocument
-// https://arduinojson.org/v6/api/jsonarray/
+// https://arduinojson.org/v7/api/jsonarray/
 class JsonArray : public detail::VariantOperators<JsonArray> {
   friend class detail::VariantAttorney;
 
@@ -28,7 +28,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
       : data_(data), resources_(resources) {}
 
   // Returns a JsonVariant pointing to the array.
-  // https://arduinojson.org/v6/api/jsonvariant/
+  // https://arduinojson.org/v7/api/jsonvariant/
   operator JsonVariant() {
     void* data = data_;  // prevent warning cast-align
     return JsonVariant(reinterpret_cast<detail::VariantData*>(data),
@@ -36,14 +36,14 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
   // Returns a read-only reference to the array.
-  // https://arduinojson.org/v6/api/jsonarrayconst/
+  // https://arduinojson.org/v7/api/jsonarrayconst/
   operator JsonArrayConst() const {
     return JsonArrayConst(data_, resources_);
   }
 
   // Appends a new (empty) element to the array.
   // Returns a reference to the new element.
-  // https://arduinojson.org/v6/api/jsonarray/add/
+  // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
   typename detail::enable_if<!detail::is_same<T, JsonVariant>::value, T>::type
   add() const {
@@ -52,7 +52,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
 
   // Appends a new (null) element to the array.
   // Returns a reference to the new element.
-  // https://arduinojson.org/v6/api/jsonarray/add/
+  // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
   typename detail::enable_if<detail::is_same<T, JsonVariant>::value, T>::type
   add() const {
@@ -61,21 +61,21 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
   // Appends a value to the array.
-  // https://arduinojson.org/v6/api/jsonarray/add/
+  // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
   FORCE_INLINE bool add(const T& value) const {
     return add<JsonVariant>().set(value);
   }
 
   // Appends a value to the array.
-  // https://arduinojson.org/v6/api/jsonarray/add/
+  // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
   FORCE_INLINE bool add(T* value) const {
     return add<JsonVariant>().set(value);
   }
 
   // Returns an iterator to the first element of the array.
-  // https://arduinojson.org/v6/api/jsonarray/begin/
+  // https://arduinojson.org/v7/api/jsonarray/begin/
   FORCE_INLINE iterator begin() const {
     if (!data_)
       return iterator();
@@ -83,13 +83,13 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
   // Returns an iterator following the last element of the array.
-  // https://arduinojson.org/v6/api/jsonarray/end/
+  // https://arduinojson.org/v7/api/jsonarray/end/
   FORCE_INLINE iterator end() const {
     return iterator();
   }
 
   // Copies an array.
-  // https://arduinojson.org/v6/api/jsonarray/set/
+  // https://arduinojson.org/v7/api/jsonarray/set/
   FORCE_INLINE bool set(JsonArrayConst src) const {
     if (!data_)
       return false;
@@ -105,27 +105,27 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
 
   // Removes the element at the specified iterator.
   // ⚠️ Doesn't release the memory associated with the removed element.
-  // https://arduinojson.org/v6/api/jsonarray/remove/
+  // https://arduinojson.org/v7/api/jsonarray/remove/
   FORCE_INLINE void remove(iterator it) const {
     detail::ArrayData::remove(data_, it.iterator_, resources_);
   }
 
   // Removes the element at the specified index.
   // ⚠️ Doesn't release the memory associated with the removed element.
-  // https://arduinojson.org/v6/api/jsonarray/remove/
+  // https://arduinojson.org/v7/api/jsonarray/remove/
   FORCE_INLINE void remove(size_t index) const {
     detail::ArrayData::removeElement(data_, index, resources_);
   }
 
   // Removes all the elements of the array.
   // ⚠️ Doesn't release the memory associated with the removed elements.
-  // https://arduinojson.org/v6/api/jsonarray/clear/
+  // https://arduinojson.org/v7/api/jsonarray/clear/
   void clear() const {
     detail::ArrayData::clear(data_, resources_);
   }
 
   // Gets or sets the element at the specified index.
-  // https://arduinojson.org/v6/api/jsonarray/subscript/
+  // https://arduinojson.org/v7/api/jsonarray/subscript/
   FORCE_INLINE detail::ElementProxy<JsonArray> operator[](size_t index) const {
     return {*this, index};
   }
@@ -135,25 +135,25 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
   // Returns true if the reference is unbound.
-  // https://arduinojson.org/v6/api/jsonarray/isnull/
+  // https://arduinojson.org/v7/api/jsonarray/isnull/
   FORCE_INLINE bool isNull() const {
     return data_ == 0;
   }
 
   // Returns true if the reference is bound.
-  // https://arduinojson.org/v6/api/jsonarray/isnull/
+  // https://arduinojson.org/v7/api/jsonarray/isnull/
   FORCE_INLINE operator bool() const {
     return data_ != 0;
   }
 
   // Returns the depth (nesting level) of the array.
-  // https://arduinojson.org/v6/api/jsonarray/nesting/
+  // https://arduinojson.org/v7/api/jsonarray/nesting/
   FORCE_INLINE size_t nesting() const {
     return detail::VariantData::nesting(collectionToVariant(data_), resources_);
   }
 
   // Returns the number of elements in the array.
-  // https://arduinojson.org/v6/api/jsonarray/size/
+  // https://arduinojson.org/v7/api/jsonarray/size/
   FORCE_INLINE size_t size() const {
     return data_ ? data_->size(resources_) : 0;
   }

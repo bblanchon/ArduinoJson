@@ -22,7 +22,7 @@ class JsonArray;
 class JsonObject;
 
 // A read-only reference to a value in a JsonDocument
-// https://arduinojson.org/v6/api/jsonarrayconst/
+// https://arduinojson.org/v7/api/jsonarrayconst/
 class JsonVariantConst : public detail::VariantTag,
                          public detail::VariantOperators<JsonVariantConst> {
   friend class detail::VariantAttorney;
@@ -37,7 +37,7 @@ class JsonVariantConst : public detail::VariantTag,
       : data_(data), resources_(resources) {}
 
   // Returns true if the value is null or the reference is unbound.
-  // https://arduinojson.org/v6/api/jsonvariantconst/isnull/
+  // https://arduinojson.org/v7/api/jsonvariantconst/isnull/
   FORCE_INLINE bool isNull() const {
     return detail::VariantData::isNull(data_);
   }
@@ -48,19 +48,19 @@ class JsonVariantConst : public detail::VariantTag,
   }
 
   // Returns the depth (nesting level) of the value.
-  // https://arduinojson.org/v6/api/jsonvariantconst/nesting/
+  // https://arduinojson.org/v7/api/jsonvariantconst/nesting/
   FORCE_INLINE size_t nesting() const {
     return detail::VariantData::nesting(data_, resources_);
   }
 
   // Returns the size of the array or object.
-  // https://arduinojson.org/v6/api/jsonvariantconst/size/
+  // https://arduinojson.org/v7/api/jsonvariantconst/size/
   size_t size() const {
     return detail::VariantData::size(data_, resources_);
   }
 
   // Casts the value to the specified type.
-  // https://arduinojson.org/v6/api/jsonvariantconst/as/
+  // https://arduinojson.org/v7/api/jsonvariantconst/as/
   template <typename T>
   FORCE_INLINE typename detail::enable_if<!detail::is_same<T, char*>::value &&
                                               !detail::is_same<T, char>::value,
@@ -70,7 +70,7 @@ class JsonVariantConst : public detail::VariantTag,
   }
 
   // Returns true if the value is of the specified type.
-  // https://arduinojson.org/v6/api/jsonvariantconst/is/
+  // https://arduinojson.org/v7/api/jsonvariantconst/is/
   template <typename T>
   FORCE_INLINE typename detail::enable_if<!detail::is_same<T, char*>::value &&
                                               !detail::is_same<T, char>::value,
@@ -85,14 +85,14 @@ class JsonVariantConst : public detail::VariantTag,
   }
 
   // Gets array's element at specified index.
-  // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
+  // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
   FORCE_INLINE JsonVariantConst operator[](size_t index) const {
     return JsonVariantConst(
         detail::VariantData::getElement(data_, index, resources_), resources_);
   }
 
   // Gets object's member with specified key.
-  // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
+  // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
   template <typename TString>
   FORCE_INLINE typename detail::enable_if<detail::IsString<TString>::value,
                                           JsonVariantConst>::type
@@ -103,7 +103,7 @@ class JsonVariantConst : public detail::VariantTag,
   }
 
   // Gets object's member with specified key.
-  // https://arduinojson.org/v6/api/jsonvariantconst/subscript/
+  // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
   template <typename TChar>
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
@@ -114,7 +114,7 @@ class JsonVariantConst : public detail::VariantTag,
   }
 
   // Returns true if tge object contains the specified key.
-  // https://arduinojson.org/v6/api/jsonvariantconst/containskey/
+  // https://arduinojson.org/v7/api/jsonvariantconst/containskey/
   template <typename TString>
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TString>::value, bool>::type
@@ -124,7 +124,7 @@ class JsonVariantConst : public detail::VariantTag,
   }
 
   // Returns true if tge object contains the specified key.
-  // https://arduinojson.org/v6/api/jsonvariantconst/containskey/
+  // https://arduinojson.org/v7/api/jsonvariantconst/containskey/
   template <typename TChar>
   FORCE_INLINE
       typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type

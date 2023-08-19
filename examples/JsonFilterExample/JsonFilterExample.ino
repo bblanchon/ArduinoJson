@@ -4,7 +4,7 @@
 //
 // This example shows how to use DeserializationOption::Filter
 //
-// https://arduinojson.org/v6/example/filter/
+// https://arduinojson.org/v7/example/filter/
 
 #include <ArduinoJson.h>
 

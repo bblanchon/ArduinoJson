@@ -669,7 +669,7 @@ ARDUINOJSON_END_PRIVATE_NAMESPACE
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/json/deserializejson/
+// https://arduinojson.org/v7/api/json/deserializejson/
 template <typename TDestination, typename... Args>
 typename detail::enable_if<
     detail::is_deserialize_destination<TDestination>::value,
@@ -681,7 +681,7 @@ deserializeJson(TDestination&& dst, Args&&... args) {
 }
 
 // Parses a JSON input, filters, and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/json/deserializejson/
+// https://arduinojson.org/v7/api/json/deserializejson/
 template <typename TDestination, typename TChar, typename... Args>
 typename detail::enable_if<
     detail::is_deserialize_destination<TDestination>::value,

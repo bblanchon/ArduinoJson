@@ -559,7 +559,7 @@ ARDUINOJSON_END_PRIVATE_NAMESPACE
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // Parses a MessagePack input and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
+// https://arduinojson.org/v7/api/msgpack/deserializemsgpack/
 template <typename TDestination, typename... Args>
 typename detail::enable_if<
     detail::is_deserialize_destination<TDestination>::value,
@@ -571,7 +571,7 @@ deserializeMsgPack(TDestination&& dst, Args&&... args) {
 }
 
 // Parses a MessagePack input and puts the result in a JsonDocument.
-// https://arduinojson.org/v6/api/msgpack/deserializemsgpack/
+// https://arduinojson.org/v7/api/msgpack/deserializemsgpack/
 template <typename TDestination, typename TChar, typename... Args>
 typename detail::enable_if<
     detail::is_deserialize_destination<TDestination>::value,
