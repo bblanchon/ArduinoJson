@@ -9,25 +9,18 @@
 
 int main() {
   // Allocate the JSON document
-  //
-  // Inside the parentheses, 200 is the RAM allocated to this document.
-  // Don't forget to change this value to match your requirement.
-  // Use https://arduinojson.org/v6/assistant to compute the capacity.
   JsonDocument doc;
 
-  // Add values in the document
-  //
+  // Add values in the document.
   doc["sensor"] = "gps";
   doc["time"] = 1351824120;
 
-  // Add an array.
-  //
+  // Add an array
   JsonArray data = doc["data"].to<JsonArray>();
   data.add(48.756080);
   data.add(2.302038);
 
   // Generate the minified JSON and send it to STDOUT
-  //
   serializeJson(doc, std::cout);
   // The above line prints:
   // {"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}
@@ -36,7 +29,6 @@ int main() {
   std::cout << std::endl;
 
   // Generate the prettified JSON and send it to STDOUT
-  //
   serializeJsonPretty(doc, std::cout);
   // The above line prints:
   // {
