@@ -158,10 +158,21 @@ void convertToJson(char c, JsonVariant var) {
   char buf[] = {c, 0};
   var.set(buf);
 }
+
+void convertFromJson(JsonVariantConst src, char& dst) {
+  auto p = src.as<const char*>();
+  dst = p ? p[0] : 0;
+}
 }  // namespace ArduinoJson
 
 TEST_CASE("Convert char to string") {  // issue #1922
   StaticJsonDocument<64> doc;
   doc.set('a');
   REQUIRE(doc.as<std::string>() == "a");
+}
+
+TEST_CASE("Convert string to char") {  // issue #1963
+  StaticJsonDocument<64> doc;
+  doc.set("a");
+  REQUIRE(doc.as<char>() == 'a');
 }
