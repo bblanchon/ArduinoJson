@@ -8,6 +8,10 @@
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 #include <ArduinoJson/Variant/VariantFunctions.hpp>
 
+#if ARDUINOJSON_ENABLE_STD_STRING
+#  include <string>
+#endif
+
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 template <typename T, typename Enable>

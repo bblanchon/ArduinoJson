@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix error `'std::string' has not been declared` (issue #1967)
+
 v6.21.3 (2023-07-23)
 -------
 
