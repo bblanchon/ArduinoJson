@@ -12,6 +12,10 @@
 #  include <string>
 #endif
 
+#if ARDUINOJSON_ENABLE_STRING_VIEW
+#  include <string_view>
+#endif
+
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 template <typename T, typename Enable>

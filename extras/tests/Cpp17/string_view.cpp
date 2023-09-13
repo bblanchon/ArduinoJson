@@ -1,7 +1,15 @@
+// ArduinoJson - https://arduinojson.org
+// Copyright © 2014-2023, Benoit BLANCHON
+// MIT License
+
+// we expect ArduinoJson.h to include <string_view>
+// but we don't want it to included accidentally
+#undef ARDUINO
+#define ARDUINOJSON_ENABLE_STD_STREAM 0
+#define ARDUINOJSON_ENABLE_STD_STRING 0
+
 #include <ArduinoJson.h>
 #include <catch.hpp>
-
-#include <string_view>
 
 #if !ARDUINOJSON_ENABLE_STRING_VIEW
 #  error ARDUINOJSON_ENABLE_STRING_VIEW must be set to 1
@@ -19,7 +27,7 @@ TEST_CASE("string_view") {
 
   SECTION("JsonDocument::set()") {
     doc.set(std::string_view("123", 2));
-    REQUIRE(doc.as<std::string>() == "12");
+    REQUIRE(doc.as<std::string_view>() == "12");
   }
 
   SECTION("JsonDocument::operator[]() const") {
