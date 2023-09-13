@@ -9,6 +9,10 @@
 #include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Variant/JsonVariantConst.hpp>
 
+#if ARDUINOJSON_ENABLE_STD_STRING
+#  include <string>
+#endif
+
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 template <typename T, typename Enable>
