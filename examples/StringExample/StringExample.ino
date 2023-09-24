@@ -55,7 +55,6 @@ void setup() {
   }
 
   // Lastly, you can print the resulting JSON to a String
-  // WARNING: it doesn't replace the content but appends to it
   String output;
   serializeJson(doc, output);
 }
