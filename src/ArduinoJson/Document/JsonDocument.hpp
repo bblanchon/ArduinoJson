@@ -251,14 +251,12 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   // Removes an element of the root array.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsondocument/remove/
   FORCE_INLINE void remove(size_t index) {
     detail::VariantData::removeElement(getData(), index, getResourceManager());
   }
 
   // Removes a member of the root object.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsondocument/remove/
   template <typename TChar>
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value>::type
@@ -268,7 +266,6 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   // Removes a member of the root object.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsondocument/remove/
   template <typename TString>
   FORCE_INLINE

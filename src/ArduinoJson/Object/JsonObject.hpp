@@ -80,7 +80,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   }
 
   // Removes all the members of the object.
-  // ⚠️ Doesn't release the memory associated with the removed members.
   // https://arduinojson.org/v7/api/jsonobject/clear/
   void clear() const {
     detail::ObjectData::clear(data_, resources_);
@@ -122,14 +121,12 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   }
 
   // Removes the member at the specified iterator.
-  // ⚠️ Doesn't release the memory associated with the removed member.
   // https://arduinojson.org/v7/api/jsonobject/remove/
   FORCE_INLINE void remove(iterator it) const {
     detail::ObjectData::remove(data_, it.iterator_, resources_);
   }
 
   // Removes the member with the specified key.
-  // ⚠️ Doesn't release the memory associated with the removed member.
   // https://arduinojson.org/v7/api/jsonobject/remove/
   template <typename TString>
   FORCE_INLINE void remove(const TString& key) const {
@@ -138,7 +135,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   }
 
   // Removes the member with the specified key.
-  // ⚠️ Doesn't release the memory associated with the removed member.
   // https://arduinojson.org/v7/api/jsonobject/remove/
   template <typename TChar>
   FORCE_INLINE void remove(TChar* key) const {

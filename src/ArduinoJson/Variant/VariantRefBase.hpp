@@ -27,7 +27,6 @@ class VariantRefBase : public VariantTag {
 
  public:
   // Sets the value to null.
-  // ⚠️ Doesn't release the memory associated with the previous value.
   // https://arduinojson.org/v7/api/jsonvariant/clear/
   FORCE_INLINE void clear() const {
     VariantData::setNull(getOrCreateData(), getResourceManager());
@@ -67,20 +66,17 @@ class VariantRefBase : public VariantTag {
   }
 
   // Sets the value to an empty array.
-  // ⚠️ Doesn't release the memory associated with the previous value.
   // https://arduinojson.org/v7/api/jsonvariant/to/
   template <typename T>
   typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type to() const;
 
   // Sets the value to an empty object.
-  // ⚠️ Doesn't release the memory associated with the previous value.
   // https://arduinojson.org/v7/api/jsonvariant/to/
   template <typename T>
   typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type to()
       const;
 
   // Sets the value to null.
-  // ⚠️ Doesn't release the memory associated with the previous value.
   // https://arduinojson.org/v7/api/jsonvariant/to/
   template <typename T>
   typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type to()
@@ -165,14 +161,12 @@ class VariantRefBase : public VariantTag {
   }
 
   // Removes an element of the array.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsonvariant/remove/
   FORCE_INLINE void remove(size_t index) const {
     VariantData::removeElement(getData(), index, getResourceManager());
   }
 
   // Removes a member of the object.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsonvariant/remove/
   template <typename TChar>
   FORCE_INLINE typename enable_if<IsString<TChar*>::value>::type remove(
@@ -182,7 +176,6 @@ class VariantRefBase : public VariantTag {
   }
 
   // Removes a member of the object.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsonvariant/remove/
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(

@@ -104,21 +104,18 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   }
 
   // Removes the element at the specified iterator.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsonarray/remove/
   FORCE_INLINE void remove(iterator it) const {
     detail::ArrayData::remove(data_, it.iterator_, resources_);
   }
 
   // Removes the element at the specified index.
-  // ⚠️ Doesn't release the memory associated with the removed element.
   // https://arduinojson.org/v7/api/jsonarray/remove/
   FORCE_INLINE void remove(size_t index) const {
     detail::ArrayData::removeElement(data_, index, resources_);
   }
 
   // Removes all the elements of the array.
-  // ⚠️ Doesn't release the memory associated with the removed elements.
   // https://arduinojson.org/v7/api/jsonarray/clear/
   void clear() const {
     detail::ArrayData::clear(data_, resources_);
