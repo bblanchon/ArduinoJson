@@ -22,8 +22,8 @@ struct StringNode {
   using length_type = uint_t<ARDUINOJSON_STRING_LENGTH_SIZE * 8>::type;
 
   struct StringNode* next;
-  length_type length;
   references_type references;
+  length_type length;
   char data[1];
 
   static constexpr size_t maxLength = numeric_limits<length_type>::highest();
