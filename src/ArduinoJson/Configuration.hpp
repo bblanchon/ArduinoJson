@@ -59,15 +59,24 @@
 #  define ARDUINOJSON_USE_DOUBLE 1
 #endif
 
-// Store integral values with long (0) or long long (1)
-#ifndef ARDUINOJSON_USE_LONG_LONG
-#  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ >= 4 || \
-      defined(_MSC_VER)
-#    define ARDUINOJSON_USE_LONG_LONG 1
+// Pointer size: a heuristic to set sensible defaults
+#ifndef ARDUINOJSON_SIZEOF_POINTER
+#  if defined(__SIZEOF_POINTER__)
+#    define ARDUINOJSON_SIZEOF_POINTER __SIZEOF_POINTER__
+#  elif defined(_WIN64) && _WIN64
+#    define ARDUINOJSON_SIZEOF_POINTER 8  // 64 bits
+#  else
+#    define ARDUINOJSON_SIZEOF_POINTER 4  // assume 32 bits otherwise
 #  endif
 #endif
+
+// Store integral values with long (0) or long long (1)
 #ifndef ARDUINOJSON_USE_LONG_LONG
-#  define ARDUINOJSON_USE_LONG_LONG 0
+#  if ARDUINOJSON_SIZEOF_POINTER >= 4  // 32 & 64 bits systems
+#    define ARDUINOJSON_USE_LONG_LONG 1
+#  else
+#    define ARDUINOJSON_USE_LONG_LONG 0
+#  endif
 #endif
 
 // Limit nesting as the stack is likely to be small
@@ -75,33 +84,25 @@
 #  define ARDUINOJSON_DEFAULT_NESTING_LIMIT 10
 #endif
 
-// Number of bits to store the variant identifier
+// Number of bytes to store the variant identifier
 #ifndef ARDUINOJSON_SLOT_ID_SIZE
-#  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ <= 2
-// Address space == 16-bit => max 127 values
-#    define ARDUINOJSON_SLOT_ID_SIZE 1
-#  elif defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ >= 8 || \
-      defined(_WIN64) && _WIN64
-// Address space == 64-bit => max 2147483647 values
-#    define ARDUINOJSON_SLOT_ID_SIZE 4
+#  if ARDUINOJSON_SIZEOF_POINTER <= 2
+#    define ARDUINOJSON_SLOT_ID_SIZE 1  // up to 255 slots
+#  elif ARDUINOJSON_SIZEOF_POINTER == 4
+#    define ARDUINOJSON_SLOT_ID_SIZE 2  // up to 65535 slots
 #  else
-// Address space == 32-bit => max 32767 values
-#    define ARDUINOJSON_SLOT_ID_SIZE 2
+#    define ARDUINOJSON_SLOT_ID_SIZE 4  // up to 4294967295 slots
 #  endif
 #endif
 
 // Capacity of each variant pool (in slots)
 #ifndef ARDUINOJSON_POOL_CAPACITY
-#  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ <= 2
-// Address space == 16-bit
+#  if ARDUINOJSON_SIZEOF_POINTER <= 2
 #    define ARDUINOJSON_POOL_CAPACITY 16  // 128 bytes
-#  elif defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ >= 8 || \
-      defined(_WIN64) && _WIN64
-// Address space == 64-bit
-#    define ARDUINOJSON_POOL_CAPACITY 128  // 3072 bytes
-#  else
-// Address space == 32-bit
+#  elif ARDUINOJSON_SIZEOF_POINTER == 4
 #    define ARDUINOJSON_POOL_CAPACITY 64  // 1024 bytes
+#  else
+#    define ARDUINOJSON_POOL_CAPACITY 128  // 3072 bytes
 #  endif
 #endif
 
@@ -114,7 +115,7 @@
 // Disabled by default on 8-bit platforms because it's not worth the increase in
 // code size
 #ifndef ARDUINOJSON_AUTO_SHRINK
-#  if defined(__SIZEOF_POINTER__) && __SIZEOF_POINTER__ <= 2
+#  if ARDUINOJSON_SIZEOF_POINTER <= 2
 #    define ARDUINOJSON_AUTO_SHRINK 0
 #  else
 #    define ARDUINOJSON_AUTO_SHRINK 1
