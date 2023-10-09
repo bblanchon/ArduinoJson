@@ -122,6 +122,15 @@
 #  endif
 #endif
 
+// Number of bytes to store the length of a string
+#ifndef ARDUINOJSON_STRING_LENGTH_SIZE
+#  if ARDUINOJSON_SIZEOF_POINTER <= 2
+#    define ARDUINOJSON_STRING_LENGTH_SIZE 1  // up to 255 characters
+#  else
+#    define ARDUINOJSON_STRING_LENGTH_SIZE 2  // up to 65535 characters
+#  endif
+#endif
+
 #ifdef ARDUINO
 
 // Enable support for Arduino's String class

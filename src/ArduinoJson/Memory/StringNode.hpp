@@ -11,7 +11,6 @@
 #include <ArduinoJson/Polyfills/limits.hpp>
 
 #include <stddef.h>  // offsetof
-#include <stdint.h>  // uint16_t
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -20,12 +19,14 @@ struct StringNode {
   // (there can never be more references than slots)
   using references_type = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>::type;
 
+  using length_type = uint_t<ARDUINOJSON_STRING_LENGTH_SIZE * 8>::type;
+
   struct StringNode* next;
-  uint16_t length;
+  length_type length;
   references_type references;
   char data[1];
 
-  static constexpr size_t maxLength = numeric_limits<uint16_t>::highest();
+  static constexpr size_t maxLength = numeric_limits<length_type>::highest();
 
   static constexpr size_t sizeForLength(size_t n) {
     return n + 1 + offsetof(StringNode, data);
@@ -37,7 +38,7 @@ struct StringNode {
     auto node = reinterpret_cast<StringNode*>(
         allocator->allocate(sizeForLength(length)));
     if (node) {
-      node->length = uint16_t(length);
+      node->length = length_type(length);
       node->references = 1;
     }
     return node;
@@ -53,7 +54,7 @@ struct StringNode {
     else
       newNode = nullptr;
     if (newNode)
-      newNode->length = uint16_t(length);
+      newNode->length = length_type(length);
     else
       allocator->deallocate(node);
     return newNode;
