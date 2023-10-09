@@ -80,4 +80,16 @@ TEST_CASE("JsonDocument::overflowed()") {
     doc.shrinkToFit();
     CHECK(doc.overflowed() == true);
   }
+
+  SECTION("returns false when string length doesn't overflow") {
+    auto maxLength = ArduinoJson::detail::StringNode::maxLength;
+    CHECK(doc.set(std::string(maxLength, 'a')) == true);
+    CHECK(doc.overflowed() == false);
+  }
+
+  SECTION("returns true when string length overflows") {
+    auto maxLength = ArduinoJson::detail::StringNode::maxLength;
+    CHECK(doc.set(std::string(maxLength + 1, 'a')) == false);
+    CHECK(doc.overflowed() == true);
+  }
 }

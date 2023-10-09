@@ -101,3 +101,20 @@ TEST_CASE("deserializeJson() returns EmptyInput") {
     REQUIRE(err == DeserializationError::EmptyInput);
   }
 }
+
+TEST_CASE("deserializeJson() returns NoMemory if string length overflows") {
+  JsonDocument doc;
+  auto maxLength = ArduinoJson::detail::StringNode::maxLength;
+
+  SECTION("max length should succeed") {
+    auto err = deserializeJson(doc, "\"" + std::string(maxLength, 'a') + "\"");
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("one above max length should fail") {
+    auto err =
+        deserializeJson(doc, "\"" + std::string(maxLength + 1, 'a') + "\"");
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+}

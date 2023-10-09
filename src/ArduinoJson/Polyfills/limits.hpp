@@ -19,10 +19,10 @@ struct numeric_limits;
 
 template <typename T>
 struct numeric_limits<T, typename enable_if<is_unsigned<T>::value>::type> {
-  static T lowest() {
+  static constexpr T lowest() {
     return 0;
   }
-  static T highest() {
+  static constexpr T highest() {
     return T(-1);
   }
 };
@@ -30,10 +30,10 @@ struct numeric_limits<T, typename enable_if<is_unsigned<T>::value>::type> {
 template <typename T>
 struct numeric_limits<
     T, typename enable_if<is_integral<T>::value && is_signed<T>::value>::type> {
-  static T lowest() {
+  static constexpr T lowest() {
     return T(T(1) << (sizeof(T) * 8 - 1));
   }
-  static T highest() {
+  static constexpr T highest() {
     return T(~lowest());
   }
 };

@@ -7,6 +7,7 @@
 #include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
+#include <ArduinoJson/Polyfills/limits.hpp>
 
 #include <stddef.h>  // offsetof
 #include <stdint.h>  // uint16_t
@@ -19,11 +20,15 @@ struct StringNode {
   uint16_t references;
   char data[1];
 
+  static constexpr size_t maxLength = numeric_limits<uint16_t>::highest();
+
   static constexpr size_t sizeForLength(size_t n) {
     return n + 1 + offsetof(StringNode, data);
   }
 
   static StringNode* create(size_t length, Allocator* allocator) {
+    if (length > maxLength)
+      return nullptr;
     auto node = reinterpret_cast<StringNode*>(
         allocator->allocate(sizeForLength(length)));
     if (node) {
@@ -36,8 +41,12 @@ struct StringNode {
   static StringNode* resize(StringNode* node, size_t length,
                             Allocator* allocator) {
     ARDUINOJSON_ASSERT(node != nullptr);
-    auto newNode = reinterpret_cast<StringNode*>(
-        allocator->reallocate(node, sizeForLength(length)));
+    StringNode* newNode;
+    if (length <= maxLength)
+      newNode = reinterpret_cast<StringNode*>(
+          allocator->reallocate(node, sizeForLength(length)));
+    else
+      newNode = nullptr;
     if (newNode)
       newNode->length = uint16_t(length);
     else
