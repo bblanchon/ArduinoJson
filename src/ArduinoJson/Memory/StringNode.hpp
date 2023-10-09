@@ -7,6 +7,7 @@
 #include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
+#include <ArduinoJson/Polyfills/integer.hpp>
 #include <ArduinoJson/Polyfills/limits.hpp>
 
 #include <stddef.h>  // offsetof
@@ -15,9 +16,13 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 struct StringNode {
+  // Use the same type as SlotId to store the reference count
+  // (there can never be more references than slots)
+  using references_type = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>::type;
+
   struct StringNode* next;
   uint16_t length;
-  uint16_t references;
+  references_type references;
   char data[1];
 
   static constexpr size_t maxLength = numeric_limits<uint16_t>::highest();
