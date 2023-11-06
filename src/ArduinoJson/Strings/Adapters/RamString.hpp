@@ -8,6 +8,7 @@
 #include <string.h>  // strcmp
 
 #include <ArduinoJson/Polyfills/assert.hpp>
+#include <ArduinoJson/Polyfills/attributes.hpp>
 #include <ArduinoJson/Strings/StringAdapter.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
@@ -26,7 +27,7 @@ class ZeroTerminatedRamString {
     return !str_;
   }
 
-  size_t size() const {
+  FORCE_INLINE size_t size() const {
     return str_ ? ::strlen(str_) : 0;
   }
 
