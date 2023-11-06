@@ -64,6 +64,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	add_compile_options(-stdlib=libc++)
+	link_libraries(c++ m)
+
 	if((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.0) AND(NOT ${COVERAGE}))
 		add_compile_options(-g -Og)
 	else()

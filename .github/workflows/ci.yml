@@ -80,11 +80,9 @@ jobs:
       matrix:
         include:
           - clang: "3.9"
-            cxxflags: "-stdlib=libc++"
             runner: ubuntu-20.04
             archive: bionic
           - clang: "4.0"
-            cxxflags: "-stdlib=libc++"
             runner: ubuntu-20.04
             archive: bionic
           - clang: "5.0"
@@ -121,10 +119,16 @@ jobs:
         run: |
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ ${{ matrix.archive }} main'
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ ${{ matrix.archive }} universe'
-      - name: Install
+      - name: Install Clang ${{ matrix.clang }}
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-${{ matrix.clang }}
+      - name: Install libc++ ${{ matrix.clang }}
+        if: matrix.clang >= 11
+        run: sudo apt-get install -y libc++-${{ matrix.clang }}-dev libc++abi-${{ matrix.clang }}-dev
+      - name: Install libunwind ${{ matrix.clang }}
+        if: matrix.clang == 12  # dependency is missing in Ubuntu 22.04
+        run: sudo apt-get install -y libunwind-${{ matrix.clang }}-dev
       - name: Checkout
         uses: actions/checkout@v3
       - name: Configure
@@ -134,7 +138,7 @@ jobs:
           CXX: clang++-${{ matrix.clang }}
           CXXFLAGS: >-
             ${{ matrix.cxxflags }}
-            ${{ contains(matrix.cxxflags, 'libc++') && '-I/usr/lib/llvm-10/include/c++/v1/' || '' }}
+            ${{ matrix.clang < 11 && '-I/usr/lib/llvm-10/include/c++/v1/' || '' }}
       - name: Build
         run: cmake --build .
       - name: Test
