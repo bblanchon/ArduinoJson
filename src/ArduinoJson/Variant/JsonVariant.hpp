@@ -45,7 +45,7 @@ bool copyVariant(JsonVariant dst, JsonVariantConst src);
 
 template <>
 struct Converter<JsonVariant> : private detail::VariantAttorney {
-  static void toJson(JsonVariant src, JsonVariant dst) {
+  static void toJson(JsonVariantConst src, JsonVariant dst) {
     copyVariant(dst, src);
   }
 
