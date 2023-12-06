@@ -61,7 +61,8 @@ class VariantRefBase : public VariantTag {
     return Converter<T>::fromJson(getVariant());
   }
 
-  template <typename T>
+  template <typename T,
+            typename = typename enable_if<!is_same<T, TDerived>::value>::type>
   FORCE_INLINE operator T() const {
     return as<T>();
   }
