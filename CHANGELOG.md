@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix warning `function returns incomplete class type` on IAR (issue #2001)
+
 v6.21.4 (2023-12-07)
 -------
 

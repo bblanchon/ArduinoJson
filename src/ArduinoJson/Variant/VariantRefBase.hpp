@@ -57,9 +57,7 @@ class VariantRefBase : public VariantTag {
   // https://arduinojson.org/v6/api/jsonvariant/as/
   template <typename T>
   FORCE_INLINE typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
-  as() const {
-    return Converter<T>::fromJson(getVariant());
-  }
+  as() const;
 
   template <typename T,
             typename = typename enable_if<!is_same<T, TDerived>::value>::type>
@@ -92,9 +90,7 @@ class VariantRefBase : public VariantTag {
   template <typename T>
   FORCE_INLINE
       typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
-      is() const {
-    return Converter<T>::checkJson(getVariant());
-  }
+      is() const;
 
   // Returns true if the value is of the specified type.
   // https://arduinojson.org/v6/api/jsonvariant/is/
@@ -123,20 +119,12 @@ class VariantRefBase : public VariantTag {
   // Copies the specified value.
   // https://arduinojson.org/v6/api/jsonvariant/set/
   template <typename T>
-  FORCE_INLINE bool set(const T& value) const {
-    Converter<T>::toJson(value, getOrCreateVariant());
-    MemoryPool* pool = getPool();
-    return pool && !pool->overflowed();
-  }
+  FORCE_INLINE bool set(const T& value) const;
 
   // Copies the specified value.
   // https://arduinojson.org/v6/api/jsonvariant/set/
   template <typename T>
-  FORCE_INLINE bool set(T* value) const {
-    Converter<T*>::toJson(value, getOrCreateVariant());
-    MemoryPool* pool = getPool();
-    return pool && !pool->overflowed();
-  }
+  FORCE_INLINE bool set(T* value) const;
 
   // Returns the size of the array or object.
   // https://arduinojson.org/v6/api/jsonvariant/size/

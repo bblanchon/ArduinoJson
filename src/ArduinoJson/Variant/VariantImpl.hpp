@@ -111,6 +111,13 @@ inline JsonVariant VariantRefBase<TDerived>::add() const {
 }
 
 template <typename TDerived>
+template <typename T>
+inline typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
+VariantRefBase<TDerived>::as() const {
+  return Converter<T>::fromJson(getVariant());
+}
+
+template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
   return JsonVariant(getPool(), getData());
 }
@@ -118,6 +125,29 @@ inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
 template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::getOrCreateVariant() const {
   return JsonVariant(getPool(), getOrCreateData());
+}
+
+template <typename TDerived>
+template <typename T>
+inline typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
+VariantRefBase<TDerived>::is() const {
+  return Converter<T>::checkJson(getVariant());
+}
+
+template <typename TDerived>
+template <typename T>
+inline bool VariantRefBase<TDerived>::set(const T& value) const {
+  Converter<T>::toJson(value, getOrCreateVariant());
+  MemoryPool* pool = getPool();
+  return pool && !pool->overflowed();
+}
+
+template <typename TDerived>
+template <typename T>
+inline bool VariantRefBase<TDerived>::set(T* value) const {
+  Converter<T*>::toJson(value, getOrCreateVariant());
+  MemoryPool* pool = getPool();
+  return pool && !pool->overflowed();
 }
 
 template <typename TDerived>
