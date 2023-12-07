@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.21.4 (2023-12-07)
+-------
 
 * Fix error `'std::string' has not been declared` (issue #1967)
 * Fix error `'std::string_view' has not been declared` (issue #1967)

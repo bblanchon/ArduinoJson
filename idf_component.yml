@@ -1,4 +1,4 @@
-version: "6.21.3"
+version: "6.21.4"
 description: >-
   A simple and efficient JSON library for embedded C++.
   ArduinoJson supports ✔ serialization, ✔ deserialization, ✔ MessagePack, ✔ fixed allocation, ✔ zero-copy, ✔ streams, ✔ filtering, and more.
