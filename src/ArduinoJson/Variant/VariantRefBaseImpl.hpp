@@ -16,6 +16,13 @@ inline JsonVariant VariantRefBase<TDerived>::add() const {
 }
 
 template <typename TDerived>
+template <typename T>
+inline typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
+VariantRefBase<TDerived>::as() const {
+  return Converter<T>::fromJson(getVariant());
+}
+
+template <typename TDerived>
 inline JsonArray VariantRefBase<TDerived>::createNestedArray() const {
   return add<JsonArray>();
 }
@@ -94,6 +101,13 @@ inline JsonVariant VariantRefBase<TDerived>::getOrCreateVariant() const {
 }
 
 template <typename TDerived>
+template <typename T>
+inline typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
+VariantRefBase<TDerived>::is() const {
+  return Converter<T>::checkJson(getVariant());
+}
+
+template <typename TDerived>
 inline ElementProxy<TDerived> VariantRefBase<TDerived>::operator[](
     size_t index) const {
   return ElementProxy<TDerived>(derived(), index);
@@ -113,6 +127,22 @@ inline typename enable_if<IsString<TString>::value,
                           MemberProxy<TDerived, TString>>::type
 VariantRefBase<TDerived>::operator[](const TString& key) const {
   return MemberProxy<TDerived, TString>(derived(), key);
+}
+
+template <typename TDerived>
+template <typename T>
+inline bool VariantRefBase<TDerived>::set(const T& value) const {
+  Converter<T>::toJson(value, getOrCreateVariant());
+  auto resources = getResourceManager();
+  return resources && !resources->overflowed();
+}
+
+template <typename TDerived>
+template <typename T>
+inline bool VariantRefBase<TDerived>::set(T* value) const {
+  Converter<T*>::toJson(value, getOrCreateVariant());
+  auto resources = getResourceManager();
+  return resources && !resources->overflowed();
 }
 
 template <typename TDerived>
