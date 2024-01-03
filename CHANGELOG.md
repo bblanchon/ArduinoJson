@@ -90,22 +90,22 @@ HEAD
 >
 > ```c++
 > // ArduinoJson 6
-> doc.createNestedArray("array");
-> doc.createNestedObject("object");
+> arr.createNestedArray();
+> arr.createNestedObject();
 >
 > // ArduinoJson 7
-> doc.add<JsonArray>();
-> doc.add<JsonObject>();
+> arr.add<JsonArray>();
+> arr.add<JsonObject>();
 > ```
 >
 > And to create `{"array":[],"object":{}}`, you would write:
 >
 > ```c++
 > // ArduinoJson 6
-> doc.createNestedArray("array");
-> doc.createNestedObject("object");
+> obj.createNestedArray("array");
+> obj.createNestedObject("object");
 >
 > // ArduinoJson 7
-> doc["array"].to<JsonArray>();
-> doc["object"].to<JsonObject>();
+> obj["array"].to<JsonArray>();
+> obj["object"].to<JsonObject>();
 > ```
