@@ -1,5 +1,5 @@
 # ArduinoJson - https://arduinojson.org
-# Copyright © 2014-2023, Benoit BLANCHON
+# Copyright © 2014-2024, Benoit BLANCHON
 # MIT License
 
 # I have no idea what this is about, I simply followed the instructions from:
