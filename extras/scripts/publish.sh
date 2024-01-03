@@ -2,7 +2,7 @@
 
 set -eu
 
-which awk sed jq 7z curl perl >/dev/null
+which awk sed jq curl perl >/dev/null
 
 cd "$(dirname "$0")/../.."
 
@@ -70,7 +70,6 @@ commit_new_version
 add_tag
 push
 
-extras/scripts/build-arduino-package.sh . "../ArduinoJson-$TAG.zip"
 extras/scripts/build-single-header.sh "src/ArduinoJson.h" "../ArduinoJson-$TAG.h"
 extras/scripts/build-single-header.sh "src/ArduinoJson.hpp" "../ArduinoJson-$TAG.hpp"
 extras/scripts/get-release-page.sh "$VERSION" "CHANGELOG.md" "../ArduinoJson-$TAG.h" > "../ArduinoJson-$TAG.md"

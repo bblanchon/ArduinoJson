@@ -35,18 +35,12 @@ jobs:
           FILENAME=ArduinoJson-${{ steps.init.outputs.tag }}.hpp
           extras/scripts/build-single-header.sh src/ArduinoJson.hpp "$FILENAME"
           echo "filename=$FILENAME" >> $GITHUB_OUTPUT
-      - name: Create Arduino package
-        id: arduino
-        run: |
-          FILENAME=ArduinoJson-${{ steps.init.outputs.tag }}.zip
-          extras/scripts/build-arduino-package.sh . "$FILENAME"
-          echo "filename=$FILENAME" >> $GITHUB_OUTPUT
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
           bodyFile: ${{ steps.body.outputs.filename }}
           name: ArduinoJson ${{ steps.init.outputs.version }}
-          artifacts: ${{ steps.amalgamate_h.outputs.filename }},${{ steps.amalgamate_hpp.outputs.filename }},${{ steps.arduino.outputs.filename }}
+          artifacts: ${{ steps.amalgamate_h.outputs.filename }},${{ steps.amalgamate_hpp.outputs.filename }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
   idf:
