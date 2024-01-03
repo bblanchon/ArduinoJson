@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v7.0.0 (2024-01-03)
+------
 
 * Remove `BasicJsonDocument`
 * Remove `StaticJsonDocument`
