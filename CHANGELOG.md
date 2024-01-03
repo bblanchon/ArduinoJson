@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Fix "no matching function" with `JsonObjectConst::operator[]` (issue #2019)
+
 v7.0.0 (2024-01-03)
 ------
 

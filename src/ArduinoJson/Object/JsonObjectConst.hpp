@@ -101,8 +101,9 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   FORCE_INLINE typename detail::enable_if<detail::IsString<TChar*>::value,
                                           JsonVariantConst>::type
   operator[](TChar* key) const {
-    return JsonVariantConst(
-        detail::ObjectData::getMember(data_, detail::adaptString(key)));
+    return JsonVariantConst(detail::ObjectData::getMember(
+                                data_, detail::adaptString(key), resources_),
+                            resources_);
   }
 
   // DEPRECATED: always returns zero

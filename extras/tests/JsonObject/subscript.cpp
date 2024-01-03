@@ -252,3 +252,11 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == obj["hello"]["world"].is<bool>());
   }
 }
+
+TEST_CASE("JsonObjectConst::operator[]") {
+  JsonDocument doc;
+  doc["hello"] = "world";
+  JsonObjectConst obj = doc.as<JsonObjectConst>();
+
+  REQUIRE(obj["hello"] == "world");  // issue #2019
+}
