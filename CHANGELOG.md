@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Fix "no matching function" with `JsonObjectConst::operator[]` (issue #2019)
+* Remove unused files in the PlatformIO package
 
 v7.0.0 (2024-01-03)
 ------
