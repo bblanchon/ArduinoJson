@@ -6,6 +6,7 @@ HEAD
 
 * Fix warning `function returns incomplete class type` on IAR (issue #2001)
 * Fix `volatile bool` serialized as `1` or `0` instead of `true` or `false` (issue #2029)
+* Remove unused files in the PlatformIO package
 
 v6.21.4 (2023-12-07)
 -------
