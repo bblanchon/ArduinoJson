@@ -76,3 +76,20 @@ jobs:
       - name: Publish
         run: bash -eux extras/scripts/publish-particle-library.sh
         timeout-minutes: 5
+
+  platformio:
+    name: PlatformIO
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Publish
+        run: pio pkg publish --no-interactive --no-notify
+        env:
+          PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
