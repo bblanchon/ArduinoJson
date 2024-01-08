@@ -69,12 +69,4 @@ TEST_CASE("JsonVariant::isNull()") {
     variant.set(serialized(static_cast<const char*>(0)));
     REQUIRE(variant.isNull() == true);
   }
-
-  SECTION("works with JsonVariantConst") {
-    variant.set(42);
-
-    JsonVariantConst cvar = variant;
-
-    REQUIRE(cvar.isNull() == false);
-  }
 }

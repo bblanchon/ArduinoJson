@@ -6,21 +6,28 @@
 #include <stdint.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonVariant::containsKey()") {
+TEST_CASE("JsonVariantConst::containsKey()") {
   JsonDocument doc;
-  JsonVariant var = doc.to<JsonVariant>();
+  doc["hello"] = "world";
+  JsonVariantConst var = doc.as<JsonVariant>();
 
-  SECTION("containsKey(const char*)") {
-    var["hello"] = "world";
-
+  SECTION("support const char*") {
     REQUIRE(var.containsKey("hello") == true);
     REQUIRE(var.containsKey("world") == false);
   }
 
-  SECTION("containsKey(std::string)") {
-    var["hello"] = "world";
-
+  SECTION("support std::string") {
     REQUIRE(var.containsKey(std::string("hello")) == true);
     REQUIRE(var.containsKey(std::string("world")) == false);
   }
+
+#ifdef HAS_VARIABLE_LENGTH_ARRAY
+  SECTION("supports VLA") {
+    size_t i = 16;
+    char vla[i];
+    strcpy(vla, "hello");
+
+    REQUIRE(true == var.containsKey(vla));
+  }
+#endif
 }

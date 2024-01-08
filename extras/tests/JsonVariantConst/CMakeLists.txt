@@ -1,0 +1,20 @@
+# ArduinoJson - https://arduinojson.org
+# Copyright © 2014-2024, Benoit BLANCHON
+# MIT License
+
+add_executable(JsonVariantConstTests
+	as.cpp
+	containsKey.cpp
+	is.cpp
+	isnull.cpp
+	nesting.cpp
+	size.cpp
+	subscript.cpp
+)
+
+add_test(JsonVariantConst JsonVariantConstTests)
+
+set_tests_properties(JsonVariantConst
+	PROPERTIES
+		LABELS "Catch"
+)
