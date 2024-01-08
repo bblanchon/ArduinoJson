@@ -5,21 +5,24 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonObject::begin()/end()") {
+TEST_CASE("JsonObjectConst::begin()/end()") {
   JsonDocument doc;
-  JsonObject obj = doc.to<JsonObject>();
-  obj["ab"] = 12;
-  obj["cd"] = 34;
+  JsonObjectConst obj = doc.to<JsonObject>();
+  doc["ab"] = 12;
+  doc["cd"] = 34;
 
-  SECTION("NonConstIterator") {
-    JsonObject::iterator it = obj.begin();
+  SECTION("Iteration") {
+    JsonObjectConst::iterator it = obj.begin();
     REQUIRE(obj.end() != it);
     REQUIRE(it->key() == "ab");
     REQUIRE(12 == it->value());
+
     ++it;
     REQUIRE(obj.end() != it);
-    REQUIRE(it->key() == "cd");
-    REQUIRE(34 == it->value());
+    JsonPairConst pair = *it;
+    REQUIRE(pair.key() == "cd");
+    REQUIRE(34 == pair.value());
+
     ++it;
     REQUIRE(obj.end() == it);
   }
@@ -29,8 +32,8 @@ TEST_CASE("JsonObject::begin()/end()") {
     REQUIRE(obj.end()->value().isNull());
   }
 
-  SECTION("null JsonObject") {
-    JsonObject null;
+  SECTION("null JsonObjectConst") {
+    JsonObjectConst null;
     REQUIRE(null.begin() == null.end());
   }
 }

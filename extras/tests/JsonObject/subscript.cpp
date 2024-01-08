@@ -7,8 +7,6 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofObject;
-
 TEST_CASE("JsonObject::operator[]") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
@@ -251,12 +249,4 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(true == obj["hello"]["world"].is<int>());
     REQUIRE(false == obj["hello"]["world"].is<bool>());
   }
-}
-
-TEST_CASE("JsonObjectConst::operator[]") {
-  JsonDocument doc;
-  doc["hello"] = "world";
-  JsonObjectConst obj = doc.as<JsonObjectConst>();
-
-  REQUIRE(obj["hello"] == "world");  // issue #2019
 }

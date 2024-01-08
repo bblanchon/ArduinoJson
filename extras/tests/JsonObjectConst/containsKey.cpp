@@ -5,24 +5,23 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonObject::containsKey()") {
+TEST_CASE("JsonObjectConst::containsKey()") {
   JsonDocument doc;
-  JsonObject obj = doc.to<JsonObject>();
-  obj["hello"] = 42;
+  doc["hello"] = 42;
+  auto obj = doc.as<JsonObjectConst>();
 
-  SECTION("returns true only if key is present") {
+  SECTION("supports const char*") {
     REQUIRE(false == obj.containsKey("world"));
     REQUIRE(true == obj.containsKey("hello"));
   }
 
-  SECTION("returns false after remove()") {
-    obj.remove("hello");
-
-    REQUIRE(false == obj.containsKey("hello"));
+  SECTION("supports std::string") {
+    REQUIRE(false == obj.containsKey(std::string("world")));
+    REQUIRE(true == obj.containsKey(std::string("hello")));
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("key is a VLA") {
+  SECTION("supports VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
