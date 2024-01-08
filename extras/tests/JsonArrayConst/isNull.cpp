@@ -5,28 +5,28 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonArray::isNull()") {
+TEST_CASE("JsonArrayConst::isNull()") {
   SECTION("returns true") {
-    JsonArray arr;
+    JsonArrayConst arr;
     REQUIRE(arr.isNull() == true);
   }
 
   SECTION("returns false") {
     JsonDocument doc;
-    JsonArray arr = doc.to<JsonArray>();
+    JsonArrayConst arr = doc.to<JsonArray>();
     REQUIRE(arr.isNull() == false);
   }
 }
 
-TEST_CASE("JsonArray::operator bool()") {
+TEST_CASE("JsonArrayConst::operator bool()") {
   SECTION("returns false") {
-    JsonArray arr;
+    JsonArrayConst arr;
     REQUIRE(static_cast<bool>(arr) == false);
   }
 
   SECTION("returns true") {
     JsonDocument doc;
-    JsonArray arr = doc.to<JsonArray>();
+    JsonArrayConst arr = doc.to<JsonArray>();
     REQUIRE(static_cast<bool>(arr) == true);
   }
 }

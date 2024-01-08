@@ -8,8 +8,6 @@
 
 #include "Allocators.hpp"
 
-using ArduinoJson::detail::sizeofArray;
-
 TEST_CASE("JsonArray::operator[]") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
@@ -166,19 +164,4 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(std::string("world") == array[0]);
   }
 #endif
-}
-
-TEST_CASE("JsonArrayConst::operator[]") {
-  JsonDocument doc;
-  JsonArray array = doc.to<JsonArray>();
-  array.add(0);
-
-  SECTION("int") {
-    array[0] = 123;
-    JsonArrayConst carr = array;
-
-    REQUIRE(123 == carr[0].as<int>());
-    REQUIRE(true == carr[0].is<int>());
-    REQUIRE(false == carr[0].is<bool>());
-  }
 }

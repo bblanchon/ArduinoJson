@@ -5,12 +5,12 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
-TEST_CASE("JsonArray::begin()/end()") {
-  SECTION("Non null JsonArray") {
+TEST_CASE("JsonArrayConst::begin()/end()") {
+  SECTION("Non null JsonArrayConst") {
     JsonDocument doc;
-    JsonArray array = doc.to<JsonArray>();
-    array.add(12);
-    array.add(34);
+    JsonArrayConst array = doc.to<JsonArray>();
+    doc.add(12);
+    doc.add(34);
 
     auto it = array.begin();
     auto end = array.end();
@@ -26,8 +26,8 @@ TEST_CASE("JsonArray::begin()/end()") {
     REQUIRE(end == it);
   }
 
-  SECTION("Null JsonArray") {
-    JsonArray array;
+  SECTION("Null JsonArrayConst") {
+    JsonArrayConst array;
 
     REQUIRE(array.begin() == array.end());
   }

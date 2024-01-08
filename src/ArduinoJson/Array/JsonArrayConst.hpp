@@ -51,7 +51,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   }
 
   operator JsonVariantConst() const {
-    return JsonVariantConst(collectionToVariant(data_), resources_);
+    return JsonVariantConst(getData(), resources_);
   }
 
   // Returns true if the reference is unbound.
@@ -69,7 +69,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the depth (nesting level) of the array.
   // https://arduinojson.org/v7/api/jsonarrayconst/nesting/
   FORCE_INLINE size_t nesting() const {
-    return detail::VariantData::nesting(collectionToVariant(data_), resources_);
+    return detail::VariantData::nesting(getData(), resources_);
   }
 
   // Returns the number of elements in the array.
