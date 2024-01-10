@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v6.21.5 (2024-01-10)
+-------
 
 * Fix warning `function returns incomplete class type` on IAR (issue #2001)
 * Fix `volatile bool` serialized as `1` or `0` instead of `true` or `false` (issue #2029)
