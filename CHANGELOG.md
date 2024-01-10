@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v7.0.1 (2024-01-10)
+------
 
 * Fix "no matching function" with `JsonObjectConst::operator[]` (issue #2019)
 * Remove unused files in the PlatformIO package
