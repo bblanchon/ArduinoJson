@@ -132,7 +132,8 @@ VariantRefBase<TDerived>::operator[](const TString& key) const {
 template <typename TDerived>
 template <typename T>
 inline bool VariantRefBase<TDerived>::set(const T& value) const {
-  Converter<T>::toJson(value, getOrCreateVariant());
+  Converter<typename detail::remove_cv<T>::type>::toJson(value,
+                                                         getOrCreateVariant());
   auto resources = getResourceManager();
   return resources && !resources->overflowed();
 }
