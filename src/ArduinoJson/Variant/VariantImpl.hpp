@@ -137,7 +137,8 @@ VariantRefBase<TDerived>::is() const {
 template <typename TDerived>
 template <typename T>
 inline bool VariantRefBase<TDerived>::set(const T& value) const {
-  Converter<T>::toJson(value, getOrCreateVariant());
+  Converter<typename detail::remove_cv<T>::type>::toJson(value,
+                                                         getOrCreateVariant());
   MemoryPool* pool = getPool();
   return pool && !pool->overflowed();
 }
