@@ -65,7 +65,7 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   // Reduces the capacity of the memory pool to match the current usage.
-  // https://arduinojson.org/v7/api/JsonDocument/shrinktofit/
+  // https://arduinojson.org/v7/api/jsondocument/shrinktofit/
   void shrinkToFit() {
     resources_.shrinkToFit();
   }
