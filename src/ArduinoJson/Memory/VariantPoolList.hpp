@@ -103,6 +103,7 @@ class VariantPoolList {
     for (PoolCount i = 0; i < count_; i++)
       pools_[i].destroy(allocator);
     count_ = 0;
+    freeList_ = NULL_SLOT;
     if (pools_ != preallocatedPools_) {
       allocator->deallocate(pools_);
       pools_ = preallocatedPools_;
