@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v7.0.2 (2024-01-19)
+------
 
 * Fix assertion `poolIndex < count_` after `JsonDocument::clear()` (issue #2034)
 
