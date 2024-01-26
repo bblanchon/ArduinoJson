@@ -20,6 +20,10 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 template <typename T, typename Enable>
 struct Converter {
+  static_assert(!detail::is_same<T, char>::value,
+                "type 'char' is not supported, use 'signed char', 'unsigned "
+                "char' or another integer type instead");
+
   static void toJson(const T& src, JsonVariant dst) {
     // clang-format off
     convertToJson(src, dst); // Error here? See https://arduinojson.org/v6/unsupported-set/
@@ -27,6 +31,9 @@ struct Converter {
   }
 
   static T fromJson(JsonVariantConst src) {
+    static_assert(!detail::is_same<T, char*>::value,
+                  "type 'char*' is not supported, use 'const char*' instead");
+
     // clang-format off
     T result; // Error here? See https://arduinojson.org/v6/non-default-constructible/
     convertFromJson(src, result);  // Error here? See https://arduinojson.org/v6/unsupported-as/
@@ -35,6 +42,9 @@ struct Converter {
   }
 
   static bool checkJson(JsonVariantConst src) {
+    static_assert(!detail::is_same<T, char*>::value,
+                  "type 'char*' is not supported, use 'const char*' instead");
+
     T dummy = T();
     // clang-format off
     return canConvertFromJson(src, dummy);  // Error here? See https://arduinojson.org/v6/unsupported-is/
