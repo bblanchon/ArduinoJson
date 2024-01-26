@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Improve error messages when using `char` or `char*` (issue #2043)
+
 v7.0.2 (2024-01-19)
 ------
 

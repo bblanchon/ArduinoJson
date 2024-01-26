@@ -91,11 +91,9 @@ class VariantRefBase : public VariantTag {
   // Returns true if the value is of the specified type.
   // https://arduinojson.org/v7/api/jsonvariant/is/
   template <typename T>
-  FORCE_INLINE typename enable_if<!ConverterNeedsWriteableRef<T>::value &&
-                                      !is_same<T, char*>::value &&
-                                      !is_same<T, char>::value,
-                                  bool>::type
-  is() const {
+  FORCE_INLINE
+      typename enable_if<!ConverterNeedsWriteableRef<T>::value, bool>::type
+      is() const {
     return Converter<T>::checkJson(getVariantConst());
   }
 
