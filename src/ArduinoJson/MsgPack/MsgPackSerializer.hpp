@@ -59,10 +59,14 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
       writeByte(0xDD);
       writeInteger(uint32_t(n));
     }
-    for (auto it = array.createIterator(resources_); !it.done();
-         it.next(resources_)) {
-      it->accept(*this);
+
+    auto slotId = array.head();
+    while (slotId != NULL_SLOT) {
+      auto slot = resources_->getSlot(slotId);
+      slot->data()->accept(*this);
+      slotId = slot->next();
     }
+
     return bytesWritten();
   }
 
@@ -77,11 +81,15 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
       writeByte(0xDF);
       writeInteger(uint32_t(n));
     }
-    for (auto it = object.createIterator(resources_); !it.done();
-         it.next(resources_)) {
-      visit(it.key());
-      it->accept(*this);
+
+    auto slotId = object.head();
+    while (slotId != NULL_SLOT) {
+      auto slot = resources_->getSlot(slotId);
+      visit(slot->key());
+      slot->data()->accept(*this);
+      slotId = slot->next();
     }
+
     return bytesWritten();
   }
 
