@@ -107,6 +107,10 @@ class CollectionData {
       return collection->remove(it, resources);
   }
 
+  SlotId head() const {
+    return head_;
+  }
+
  protected:
   iterator addSlot(ResourceManager*);
 
