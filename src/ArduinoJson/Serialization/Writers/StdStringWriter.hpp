@@ -9,15 +9,13 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-template <class...>
-using void_t = void;
-
 template <class T, typename = void>
 struct is_std_string : false_type {};
 
 template <class T>
 struct is_std_string<
-    T, void_t<decltype(T().push_back('a')), decltype(T().append(""))>>
+    T, typename enable_if<is_same<void, decltype(T().push_back('a'))>::value &&
+                          is_same<T&, decltype(T().append(""))>::value>::type>
     : true_type {};
 
 template <typename TDestination>

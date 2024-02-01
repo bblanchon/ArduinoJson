@@ -90,6 +90,10 @@ class AllocatorLog {
       append(entry);
   }
 
+  void clear() {
+    log_.str("");
+  }
+
   void append(const AllocatorLogEntry& entry) {
     for (size_t i = 0; i < entry.count(); i++)
       log_ << entry.str() << "\n";
@@ -165,7 +169,7 @@ class SpyingAllocator : public ArduinoJson::Allocator {
   }
 
   void clearLog() {
-    log_ = AllocatorLog();
+    log_.clear();
   }
 
   const AllocatorLog& log() const {

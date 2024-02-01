@@ -212,3 +212,8 @@ TEST_CASE("Polyfills/type_traits") {
     CHECK(is_enum<double>::value == false);
   }
 }
+
+TEST_CASE("is_std_string") {
+  REQUIRE(is_std_string<std::string>::value == true);
+  REQUIRE(is_std_string<EmptyClass>::value == false);
+}

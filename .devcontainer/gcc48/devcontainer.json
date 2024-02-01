@@ -1,0 +1,20 @@
+{
+	"name": "GCC 4.8",
+	"image": "conanio/gcc48",
+	"runArgs": [
+		"--name=ArduinoJson-gcc48"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools",
+				"josetr.cmake-language-support-vscode",
+				"ms-vscode.cpptools"
+			],
+			"settings": {
+				"cmake.generator": "Unix Makefiles",
+				"cmake.buildDirectory": "/tmp/build"
+			}
+		}
+	}
+}

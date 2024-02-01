@@ -30,7 +30,8 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   }
 
   // Move-constructor
-  JsonDocument(JsonDocument&& src) : JsonDocument() {
+  JsonDocument(JsonDocument&& src)
+      : JsonDocument(detail::DefaultAllocator::instance()) {
     swap(*this, src);
   }
 

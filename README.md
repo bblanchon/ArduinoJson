@@ -79,7 +79,7 @@ ArduinoJson is a C++ JSON library for Arduino and IoT (Internet Of Things).
     * [Unit test coverage close to 100%](https://coveralls.io/github/bblanchon/ArduinoJson?branch=7.x)
     * Continuously tested on
         * [Visual Studio 2017, 2019, 2022](https://ci.appveyor.com/project/bblanchon/arduinojson/branch/7.x)
-        * [GCC 5, 6, 7, 8, 9, 10, 11, 12](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22)
+        * [GCC 4.8, 5, 6, 7, 8, 9, 10, 11, 12](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22)
         * [Clang 3.9, 4.0, 5.0, 6.0, 7, 8, 9, 10, 11, 12, 13, 14, 15](https://github.com/bblanchon/ArduinoJson/actions?query=workflow%3A%22Continuous+Integration%22)
     * [Continuously fuzzed with Google OSS Fuzz](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:arduinojson)
     * Passes all default checks of [clang-tidy](https://releases.llvm.org/10.0.0/tools/clang/tools/extra/docs/clang-tidy/)
