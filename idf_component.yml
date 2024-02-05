@@ -1,7 +1,7 @@
-version: "7.0.2"
+version: "7.0.3"
 description: >-
   A simple and efficient JSON library for embedded C++.
-  ⭐ 6444 stars on GitHub!
+  ⭐ 6463 stars on GitHub!
   Supports serialization, deserialization, MessagePack, streams, filtering, and more.
   Fully tested and documented.
 url: https://arduinojson.org/
