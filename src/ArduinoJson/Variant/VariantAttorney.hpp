@@ -16,19 +16,18 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 class VariantAttorney {
  public:
   template <typename TClient>
-  FORCE_INLINE static auto getResourceManager(TClient& client)
+  static auto getResourceManager(TClient& client)
       -> decltype(client.getResourceManager()) {
     return client.getResourceManager();
   }
 
   template <typename TClient>
-  FORCE_INLINE static auto getData(TClient& client)
-      -> decltype(client.getData()) {
+  static auto getData(TClient& client) -> decltype(client.getData()) {
     return client.getData();
   }
 
   template <typename TClient>
-  FORCE_INLINE static VariantData* getOrCreateData(TClient& client) {
+  static VariantData* getOrCreateData(TClient& client) {
     return client.getOrCreateData();
   }
 };

@@ -22,25 +22,25 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream>>,
   ElementProxy(const ElementProxy& src)
       : upstream_(src.upstream_), index_(src.index_) {}
 
-  FORCE_INLINE ElementProxy& operator=(const ElementProxy& src) {
+  ElementProxy& operator=(const ElementProxy& src) {
     this->set(src);
     return *this;
   }
 
   template <typename T>
-  FORCE_INLINE ElementProxy& operator=(const T& src) {
+  ElementProxy& operator=(const T& src) {
     this->set(src);
     return *this;
   }
 
   template <typename T>
-  FORCE_INLINE ElementProxy& operator=(T* src) {
+  ElementProxy& operator=(T* src) {
     this->set(src);
     return *this;
   }
 
  private:
-  FORCE_INLINE ResourceManager* getResourceManager() const {
+  ResourceManager* getResourceManager() const {
     return VariantAttorney::getResourceManager(upstream_);
   }
 
@@ -50,7 +50,7 @@ class ElementProxy : public VariantRefBase<ElementProxy<TUpstream>>,
         VariantAttorney::getResourceManager(upstream_));
   }
 
-  FORCE_INLINE VariantData* getOrCreateData() const {
+  VariantData* getOrCreateData() const {
     auto data = VariantAttorney::getOrCreateData(upstream_);
     if (!data)
       return nullptr;

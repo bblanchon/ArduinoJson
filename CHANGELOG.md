@@ -5,7 +5,7 @@ HEAD
 ----
 
 * Improve error messages when using `char` or `char*` (issue #2043)
-* Reduce `serializeJson()`'s size and stack usage (issue #2046)
+* Reduce stack consumption (issue #2046)
 * Fix compatibility with GCC 4.8 (issue #2045)
 
 v7.0.2 (2024-01-19)

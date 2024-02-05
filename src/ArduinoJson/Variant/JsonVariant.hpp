@@ -23,15 +23,15 @@ class JsonVariant : public detail::VariantRefBase<JsonVariant>,
       : data_(data), resources_(resources) {}
 
  private:
-  FORCE_INLINE detail::ResourceManager* getResourceManager() const {
+  detail::ResourceManager* getResourceManager() const {
     return resources_;
   }
 
-  FORCE_INLINE detail::VariantData* getData() const {
+  detail::VariantData* getData() const {
     return data_;
   }
 
-  FORCE_INLINE detail::VariantData* getOrCreateData() const {
+  detail::VariantData* getOrCreateData() const {
     return data_;
   }
 

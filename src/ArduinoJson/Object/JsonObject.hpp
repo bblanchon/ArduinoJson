@@ -20,11 +20,10 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   typedef JsonObjectIterator iterator;
 
   // Creates an unbound reference.
-  FORCE_INLINE JsonObject() : data_(0), resources_(0) {}
+  JsonObject() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
-  FORCE_INLINE JsonObject(detail::ObjectData* data,
-                          detail::ResourceManager* resource)
+  JsonObject(detail::ObjectData* data, detail::ResourceManager* resource)
       : data_(data), resources_(resource) {}
 
   operator JsonVariant() const {
@@ -43,31 +42,31 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   // Returns true if the reference is unbound.
   // https://arduinojson.org/v7/api/jsonobject/isnull/
-  FORCE_INLINE bool isNull() const {
+  bool isNull() const {
     return data_ == 0;
   }
 
   // Returns true if the reference is bound.
   // https://arduinojson.org/v7/api/jsonobject/isnull/
-  FORCE_INLINE operator bool() const {
+  operator bool() const {
     return data_ != 0;
   }
 
   // Returns the depth (nesting level) of the object.
   // https://arduinojson.org/v7/api/jsonobject/nesting/
-  FORCE_INLINE size_t nesting() const {
+  size_t nesting() const {
     return detail::VariantData::nesting(collectionToVariant(data_), resources_);
   }
 
   // Returns the number of members in the object.
   // https://arduinojson.org/v7/api/jsonobject/size/
-  FORCE_INLINE size_t size() const {
+  size_t size() const {
     return data_ ? data_->size(resources_) : 0;
   }
 
   // Returns an iterator to the first key-value pair of the object.
   // https://arduinojson.org/v7/api/jsonobject/begin/
-  FORCE_INLINE iterator begin() const {
+  iterator begin() const {
     if (!data_)
       return iterator();
     return iterator(data_->createIterator(resources_), resources_);
@@ -75,7 +74,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   // Returns an iterator following the last key-value pair of the object.
   // https://arduinojson.org/v7/api/jsonobject/end/
-  FORCE_INLINE iterator end() const {
+  iterator end() const {
     return iterator();
   }
 
@@ -87,7 +86,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
 
   // Copies an object.
   // https://arduinojson.org/v7/api/jsonobject/set/
-  FORCE_INLINE bool set(JsonObjectConst src) {
+  bool set(JsonObjectConst src) {
     if (!data_ || !src.data_)
       return false;
 
@@ -103,20 +102,20 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v7/api/jsonobject/subscript/
   template <typename TString>
-  FORCE_INLINE
-      typename detail::enable_if<detail::IsString<TString>::value,
-                                 detail::MemberProxy<JsonObject, TString>>::type
-      operator[](const TString& key) const {
+
+  typename detail::enable_if<detail::IsString<TString>::value,
+                             detail::MemberProxy<JsonObject, TString>>::type
+  operator[](const TString& key) const {
     return {*this, key};
   }
 
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v7/api/jsonobject/subscript/
   template <typename TChar>
-  FORCE_INLINE
-      typename detail::enable_if<detail::IsString<TChar*>::value,
-                                 detail::MemberProxy<JsonObject, TChar*>>::type
-      operator[](TChar* key) const {
+
+  typename detail::enable_if<detail::IsString<TChar*>::value,
+                             detail::MemberProxy<JsonObject, TChar*>>::type
+  operator[](TChar* key) const {
     return {*this, key};
   }
 
@@ -145,9 +144,9 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonobject/containskey/
   template <typename TString>
-  FORCE_INLINE
-      typename detail::enable_if<detail::IsString<TString>::value, bool>::type
-      containsKey(const TString& key) const {
+
+  typename detail::enable_if<detail::IsString<TString>::value, bool>::type
+  containsKey(const TString& key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
                                          resources_) != 0;
   }
@@ -155,9 +154,9 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonobject/containskey/
   template <typename TChar>
-  FORCE_INLINE
-      typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
-      containsKey(TChar* key) const {
+
+  typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
+  containsKey(TChar* key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
                                          resources_) != 0;
   }
