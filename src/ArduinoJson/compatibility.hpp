@@ -39,7 +39,7 @@
 #define JSON_OBJECT_SIZE(N) _Pragma ("GCC warning \"JSON_OBJECT_SIZE is deprecated, you don't need to compute the size anymore\"") (ArduinoJson::detail::sizeofObject(N))
 
 // DEPRECATED: you don't need to compute the size anymore
-#define JSON_STRING_SIZE(N) _Pragma ("GCC warning \"JSON_STRING_SIZE is deprecated, you don't need to compute the size anymore\"") (ArduinoJson::detail::sizeofString(N))
+#define JSON_STRING_SIZE(N) _Pragma ("GCC warning \"JSON_STRING_SIZE is deprecated, you don't need to compute the size anymore\"") (N+1)
 
 #else
 
@@ -50,7 +50,7 @@
 #define JSON_OBJECT_SIZE(N) (ArduinoJson::detail::sizeofObject(N))
 
 // DEPRECATED: you don't need to compute the size anymore
-#define JSON_STRING_SIZE(N) (ArduinoJson::detail::sizeofString(N))
+#define JSON_STRING_SIZE(N) (N+1)
 
 #endif
 

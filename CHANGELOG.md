@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Make `JSON_STRING_SIZE(N)` return `N+1` to fix third-party code (issue #2054)
+
 v7.0.3 (2024-02-05)
 ------
 

@@ -14,5 +14,5 @@ TEST_CASE("JSON_OBJECT_SIZE") {
 }
 
 TEST_CASE("JSON_STRING_SIZE") {
-  REQUIRE(JSON_STRING_SIZE(10) == ArduinoJson::detail::sizeofString(10));
+  REQUIRE(JSON_STRING_SIZE(10) == 11);  // issue #2054
 }
