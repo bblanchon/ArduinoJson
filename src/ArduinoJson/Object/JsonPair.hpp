@@ -12,7 +12,7 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A key-value pair.
 // https://arduinojson.org/v6/api/jsonobject/begin_end/
-class JsonPair final {
+class JsonPair {
  public:
   // INTERNAL USE ONLY
   JsonPair(detail::MemoryPool* pool, detail::VariantSlot* slot) {
@@ -40,7 +40,7 @@ class JsonPair final {
 
 // A read-only key-value pair.
 // https://arduinojson.org/v6/api/jsonobjectconst/begin_end/
-class JsonPairConst final {
+class JsonPairConst {
  public:
   JsonPairConst(const detail::VariantSlot* slot) {
     if (slot) {
