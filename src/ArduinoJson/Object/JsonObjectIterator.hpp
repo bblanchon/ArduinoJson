@@ -9,7 +9,7 @@
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
-class JsonPairPtr {
+class JsonPairPtr final {
  public:
   JsonPairPtr(detail::MemoryPool* pool, detail::VariantSlot* slot)
       : pair_(pool, slot) {}
@@ -26,7 +26,7 @@ class JsonPairPtr {
   JsonPair pair_;
 };
 
-class JsonObjectIterator {
+class JsonObjectIterator final {
   friend class JsonObject;
 
  public:
@@ -66,7 +66,7 @@ class JsonObjectIterator {
   detail::VariantSlot* slot_;
 };
 
-class JsonPairConstPtr {
+class JsonPairConstPtr final {
  public:
   JsonPairConstPtr(const detail::VariantSlot* slot) : pair_(slot) {}
 
@@ -82,7 +82,7 @@ class JsonPairConstPtr {
   JsonPairConst pair_;
 };
 
-class JsonObjectConstIterator {
+class JsonObjectConstIterator final {
   friend class JsonObject;
 
  public:

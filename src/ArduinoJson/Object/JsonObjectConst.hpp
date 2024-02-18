@@ -11,7 +11,7 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A read-only reference to an object in a JsonDocument.
 // https://arduinojson.org/v6/api/jsonobjectconst/
-class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
+class JsonObjectConst final : public detail::VariantOperators<JsonObjectConst> {
   friend class JsonObject;
   friend class detail::VariantAttorney;
 

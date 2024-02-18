@@ -13,7 +13,7 @@ class JsonObject;
 
 // A reference to an array in a JsonDocument
 // https://arduinojson.org/v6/api/jsonarray/
-class JsonArray : public detail::VariantOperators<JsonArray> {
+class JsonArray final : public detail::VariantOperators<JsonArray> {
   friend class detail::VariantAttorney;
 
  public:

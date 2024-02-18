@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Improve error messages when using `char` or `char*` (issue #2043)
+* Mark `JsonArray`, `JsonObject`, and `JsonVariant` as `final` (issue #2056)
 
 v6.21.5 (2024-01-10)
 -------
