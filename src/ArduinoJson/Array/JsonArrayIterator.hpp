@@ -25,7 +25,7 @@ class Ptr {
   T value_;
 };
 
-class JsonArrayIterator final {
+class JsonArrayIterator {
   friend class JsonArray;
 
  public:
@@ -59,7 +59,7 @@ class JsonArrayIterator final {
   detail::ResourceManager* resources_;
 };
 
-class JsonArrayConstIterator final {
+class JsonArrayConstIterator {
   friend class JsonArray;
 
  public:

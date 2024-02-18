@@ -10,8 +10,8 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A reference to a value in a JsonDocument.
 // https://arduinojson.org/v7/api/jsonvariant/
-class JsonVariant final : public detail::VariantRefBase<JsonVariant>,
-                          public detail::VariantOperators<JsonVariant> {
+class JsonVariant : public detail::VariantRefBase<JsonVariant>,
+                    public detail::VariantOperators<JsonVariant> {
   friend class detail::VariantAttorney;
 
  public:
