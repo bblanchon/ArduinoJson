@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Mark `JsonArray`, `JsonObject`, and `JsonVariant` as `final` (issue #2056)
+
 v7.0.3 (2024-02-05)
 ------
 

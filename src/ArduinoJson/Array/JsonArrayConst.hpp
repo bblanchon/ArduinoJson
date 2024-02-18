@@ -14,7 +14,7 @@ class JsonObject;
 
 // A read-only reference to an array in a JsonDocument
 // https://arduinojson.org/v7/api/jsonarrayconst/
-class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
+class JsonArrayConst final : public detail::VariantOperators<JsonArrayConst> {
   friend class JsonArray;
   friend class detail::VariantAttorney;
 

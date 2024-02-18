@@ -12,7 +12,7 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 // A key-value pair.
 // https://arduinojson.org/v7/api/jsonobject/begin_end/
-class JsonPair {
+class JsonPair final {
  public:
   // INTERNAL USE ONLY
   JsonPair(detail::ObjectData::iterator iterator,
@@ -41,7 +41,7 @@ class JsonPair {
 
 // A read-only key-value pair.
 // https://arduinojson.org/v7/api/jsonobjectconst/begin_end/
-class JsonPairConst {
+class JsonPairConst final {
  public:
   JsonPairConst(detail::ObjectData::iterator iterator,
                 const detail::ResourceManager* resources)

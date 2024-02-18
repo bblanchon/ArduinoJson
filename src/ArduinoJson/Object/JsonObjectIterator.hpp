@@ -8,7 +8,7 @@
 
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
-class JsonObjectIterator {
+class JsonObjectIterator final {
   friend class JsonObject;
 
  public:
@@ -43,7 +43,7 @@ class JsonObjectIterator {
   detail::ResourceManager* resources_;
 };
 
-class JsonObjectConstIterator {
+class JsonObjectConstIterator final {
   friend class JsonObject;
 
  public:
