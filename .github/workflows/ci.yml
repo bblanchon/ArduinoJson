@@ -55,16 +55,24 @@ jobs:
           sudo add-apt-repository -yn 'deb http://archive.ubuntu.com/ubuntu/ focal main universe'
           sudo apt-get update
           sudo apt-get install -y gcc-${{ matrix.gcc }} g++-${{ matrix.gcc }}
+        timeout-minutes: 5
+
       - name: Checkout
         uses: actions/checkout@v3
+        timeout-minutes: 1
+
       - name: Configure
         run: cmake -DCMAKE_BUILD_TYPE=Debug .
         env:
           CC: gcc-${{ matrix.gcc }}
           CXX: g++-${{ matrix.gcc }}
           CXXFLAGS: ${{ matrix.cxxflags }}
+        timeout-minutes: 1
+
       - name: Build
         run: cmake --build .
+        timeout-minutes: 10
+
       - name: Test
         run: |
           echo "## CTest output" >> $GITHUB_STEP_SUMMARY
@@ -73,6 +81,7 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
         env:
           UBSAN_OPTIONS: print_stacktrace=1
+        timeout-minutes: 2
 
   clang:
     name: Clang
