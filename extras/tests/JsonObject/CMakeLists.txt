@@ -6,12 +6,12 @@ add_executable(JsonObjectTests
 	clear.cpp
 	compare.cpp
 	containsKey.cpp
-	copy.cpp
 	equals.cpp
 	isNull.cpp
 	iterator.cpp
 	nesting.cpp
 	remove.cpp
+	set.cpp
 	size.cpp
 	std_string.cpp
 	subscript.cpp
