@@ -10,7 +10,7 @@ jobs:
       - name: Install
         run: sudo apt-get install -y clang-format
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Symlinks
         run: find * -type l -printf "::error::%p is a symlink. This is forbidden by the Arduino Library Specification." -exec false {} +
       - name: Clang-format
@@ -61,7 +61,7 @@ jobs:
         timeout-minutes: 5
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         timeout-minutes: 1
 
       - name: Configure
@@ -144,7 +144,7 @@ jobs:
         if: matrix.clang == 12  # dependency is missing in Ubuntu 22.04
         run: sudo apt-get install -y libunwind-${{ matrix.clang }}-dev
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Configure
         run: cmake -DCMAKE_BUILD_TYPE=Debug .
         env:
@@ -174,7 +174,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y g++-multilib gcc-avr avr-libc
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: AVR
         run: avr-g++ -std=c++11 -Isrc extras/conf_test/avr.cpp
       - name: GCC 32-bit
@@ -192,7 +192,7 @@ jobs:
     needs: [gcc, clang]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: 32-bit
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
@@ -217,7 +217,7 @@ jobs:
           - xcode: "13.2.1"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Select XCode version
         run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Configure
@@ -239,7 +239,7 @@ jobs:
   #   runs-on: ${{ matrix.os }}
   #   steps:
   #     - name: Checkout
-  #       uses: actions/checkout@v3
+  #       uses: actions/checkout@v4
   #     - name: Configure
   #       run: cmake -DCMAKE_BUILD_TYPE=Debug .
   #     - name: Build
@@ -261,7 +261,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install arduino-cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
       - name: Install core
@@ -334,9 +334,9 @@ jobs:
             conf_test: esp8266
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up cache for pip
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip
@@ -353,7 +353,7 @@ jobs:
         if: ${{ matrix.platform == 'nordicnrf52' }}
         run: find examples/ -name '*.ino' -exec sed -i 's/\(#include <ArduinoJson.h>\)/\1\n#include <Adafruit_TinyUSB.h>/' {} +
       - name: Set up cache for platformio
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.platformio
           key: ${{ runner.os }}-platformio-${{ matrix.platform }}
@@ -402,7 +402,7 @@ jobs:
           - board: argon
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install Particle CLI
         run: sudo npm install -g particle-cli particle-usb
       - name: Login to Particle
@@ -420,7 +420,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y g++-arm-linux-gnueabihf
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Configure
         run: cmake .
         env:
@@ -437,7 +437,7 @@ jobs:
       - name: Install
         run: sudo apt-get install -y lcov ninja-build
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Configure
         run: cmake -G Ninja -DCOVERAGE=true .
       - name: Build
@@ -451,7 +451,7 @@ jobs:
       - name: genhtml
         run: mkdir coverage && genhtml coverage_filtered.info -o coverage -t ArduinoJson
       - name: Upload HTML report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Coverage report
           path: coverage
@@ -471,7 +471,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y valgrind ninja-build
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Configure
         run: cmake -G Ninja -D MEMORYCHECK_COMMAND_OPTIONS="--error-exitcode=1 --leak-check=full"  .
       - name: Build
@@ -491,7 +491,7 @@ jobs:
       - name: Install
         run: sudo apt-get install -y clang-tidy cmake ninja-build
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Configure
         run: cmake -G Ninja -DCMAKE_CXX_CLANG_TIDY="clang-tidy-10;--warnings-as-errors=*" -DCMAKE_BUILD_TYPE=Debug .
         env:
@@ -506,7 +506,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Amalgamate
         id: amalgamate
         run: |
@@ -529,7 +529,7 @@ jobs:
           }
           END
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Single headers
           path: ${{ steps.amalgamate.outputs.filename }}
@@ -540,7 +540,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Amalgamate
         id: amalgamate
         run: |
@@ -563,7 +563,7 @@ jobs:
           }
           END
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Single headers
           path: ${{ steps.amalgamate.outputs.filename }}
@@ -574,14 +574,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.espressif
           key: ${{ runner.os }}-esp-idf
       - name: Checkout ArduinoJson
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Checkout ESP-IDF
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: espressif/esp-idf
           path: esp-idf
@@ -611,7 +611,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
