@@ -47,6 +47,9 @@ jobs:
           - gcc: "11"
           - gcc: "12"
     steps:
+      - name: Workaround for actions/runner-images#9491
+        run: sudo sysctl vm.mmap_rnd_bits=28
+
       - name: Install
         run: |
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5 3B4FE6ACC0B21F32
