@@ -500,73 +500,51 @@ jobs:
       - name: Check
         run: cmake --build . -- -k 0
 
-  amalgamate-h:
+  amalgamate:
     needs: gcc
     name: Amalgamate ArduinoJson.h
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Amalgamate
-        id: amalgamate
+      - name: Setup
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
           else
             VERSION=${GITHUB_SHA::7}
           fi
-          INPUT=src/ArduinoJson.h
-          OUTPUT=ArduinoJson-$VERSION.h
-          extras/scripts/build-single-header.sh "$INPUT" "$OUTPUT"
-          echo "filename=${OUTPUT}" >> $GITHUB_OUTPUT
-      - name: Smoke test
+          echo "ARDUINOJSON_H=ArduinoJson-$VERSION.h" >> $GITHUB_ENV
+          echo "ARDUINOJSON_HPP=ArduinoJson-$VERSION.hpp" >> $GITHUB_ENV
+      - name: Amalgamate ArduinoJson.h
+        run: extras/scripts/build-single-header.sh "src/ArduinoJson.h" "$ARDUINOJSON_H"
+      - name: Amalgamate ArduinoJson.hpp
+        run: extras/scripts/build-single-header.sh "src/ArduinoJson.hpp" "$ARDUINOJSON_HPP"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Single headers
+          path: |
+            ${{ env.ARDUINOJSON_H }}
+            ${{ env.ARDUINOJSON_HPP }}
+      - name: Smoke test ArduinoJson.h
         run: |
           g++ -x c++ - <<END
-          #include "${{ steps.amalgamate.outputs.filename }}"
+          #include "$ARDUINOJSON_H"
           int main() {
             JsonDocument doc;
             deserializeJson(doc, "{}");
           }
           END
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Single headers
-          path: ${{ steps.amalgamate.outputs.filename }}
-
-  amalgamate-hpp:
-    needs: gcc
-    name: Amalgamate ArduinoJson.hpp
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Amalgamate
-        id: amalgamate
-        run: |
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          else
-            VERSION=${GITHUB_SHA::7}
-          fi
-          INPUT=src/ArduinoJson.hpp
-          OUTPUT=ArduinoJson-$VERSION.hpp
-          extras/scripts/build-single-header.sh "$INPUT" "$OUTPUT"
-          echo "filename=${OUTPUT}" >> $GITHUB_OUTPUT
-      - name: Smoke test
+      - name: Smoke test ArduinoJson.hpp
         run: |
           g++ -x c++ - <<END
-          #include "${{ steps.amalgamate.outputs.filename }}"
+          #include "$ARDUINOJSON_HPP"
           int main() {
             ArduinoJson::JsonDocument doc;
             deserializeJson(doc, "{}");
           }
           END
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Single headers
-          path: ${{ steps.amalgamate.outputs.filename }}
 
   esp-idf:
     needs: gcc
