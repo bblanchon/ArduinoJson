@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Deserialization/deserialize.hpp>
 #include <ArduinoJson/Memory/MemoryPool.hpp>
-#include <ArduinoJson/MsgPack/endianess.hpp>
+#include <ArduinoJson/MsgPack/endianness.hpp>
 #include <ArduinoJson/MsgPack/ieee754.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
@@ -258,7 +258,7 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    fixEndianess(value);
+    fixEndianness(value);
 
     return DeserializationError::Ok;
   }
@@ -287,7 +287,7 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    fixEndianess(value);
+    fixEndianness(value);
     variant->setFloat(value);
 
     return DeserializationError::Ok;
@@ -303,7 +303,7 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    fixEndianess(value);
+    fixEndianness(value);
     variant->setFloat(value);
 
     return DeserializationError::Ok;
@@ -322,7 +322,7 @@ class MsgPackDeserializer {
       return err;
 
     doubleToFloat(i, o);
-    fixEndianess(value);
+    fixEndianness(value);
     variant->setFloat(value);
 
     return DeserializationError::Ok;
