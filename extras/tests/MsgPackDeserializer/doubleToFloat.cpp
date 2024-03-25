@@ -13,7 +13,7 @@ static void check(const char* input, T expected) {
   uint8_t* f = reinterpret_cast<uint8_t*>(&actual);
   const uint8_t* d = reinterpret_cast<const uint8_t*>(input);
   doubleToFloat(d, f);
-  fixEndianess(actual);
+  fixEndianness(actual);
   CHECK(actual == expected);
 }
 
