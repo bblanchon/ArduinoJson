@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Memory/StringNode.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
+#include <ArduinoJson/MsgPack/BinaryValue.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Strings/JsonString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
@@ -16,6 +17,10 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 T parseNumber(const char* s);
+
+struct OwnedBinary {
+  StringNode* ownedString;
+};
 
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant
@@ -47,6 +52,12 @@ class VariantData {
       case VALUE_IS_RAW_STRING:
         return visit.visit(RawString(content_.asOwnedString->data,
                                      content_.asOwnedString->length));
+
+      case VALUE_IS_BINARY | VALUE_IS_LINKED_STRING:
+        return visit.visit(LinkedBinaryValue(content_.asLinkedBinary.data, content_.asLinkedBinary.size));
+
+      case VALUE_IS_BINARY | VALUE_IS_OWNED_STRING:
+        return visit.visit(OwnedBinaryValue<detail::StringNode*>(content_.asOwnedString));
 
       case VALUE_IS_SIGNED_INTEGER:
         return visit.visit(content_.asSignedInteger);
@@ -185,6 +196,14 @@ class VariantData {
     }
   }
 
+  BinaryValue asBinary() const {
+    if (type() == (VALUE_IS_BINARY | VALUE_IS_LINKED_STRING))
+      return BinaryValue(content_.asLinkedBinary.data, content_.asLinkedBinary.size);
+    if (type() == (VALUE_IS_BINARY | VALUE_IS_OWNED_STRING))
+      return BinaryValue(content_.asOwnedString->data, content_.asOwnedString->length);
+    return BinaryValue(nullptr, 0);
+  }
+
   VariantData* getElement(size_t index,
                           const ResourceManager* resources) const {
     return ArrayData::getElement(asArray(), index, resources);
@@ -272,6 +291,10 @@ class VariantData {
 
   bool isString() const {
     return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
+  }
+
+  bool isBinary() const {
+    return (flags_ & VALUE_IS_BINARY) != 0;
   }
 
   size_t nesting(const ResourceManager* resources) const {
@@ -392,6 +415,73 @@ class VariantData {
     if (!var)
       return;
     var->setRawString(value, resources);
+  }
+
+  void setOwnedBinary(StringNode* s) {
+    ARDUINOJSON_ASSERT(s);
+    setType(VALUE_IS_BINARY | VALUE_IS_OWNED_STRING);
+    content_.asOwnedString = s;
+  }
+
+  void setLinkedBinary(const void* p, size_t n) {
+    ARDUINOJSON_ASSERT(p);
+    setType(VALUE_IS_BINARY | VALUE_IS_LINKED_STRING);
+    content_.asLinkedBinary = LinkedBinary{p, n};
+  }
+
+  template <typename T>
+  void setBinaryValue(OwnedBinaryValue<T> value, ResourceManager* resources) {
+    setNull();
+
+    StringNode* str = StringNode::create(value.size_bytes(), resources->allocator());
+
+    if (!str)
+      return;
+
+    size_t offset = 0;
+    for (const auto v : value) {
+      str->data[offset] = v;
+      offset += sizeof(v);
+    }
+
+    resources->saveString(str);
+    setOwnedBinary(str);
+  }
+
+  void setBinaryValue(OwnedBinaryValue<StringNode*> value, ResourceManager* resources) {
+    setNull();
+
+    StringNode* str = value.string_node();
+
+    if (!str)
+      return;
+
+    resources->saveString(str);
+    setOwnedBinary(str);
+  }
+
+  template <typename T>
+  static void setBinaryValue(VariantData* var, OwnedBinaryValue<T> value,
+                             ResourceManager* resources) {
+    if (!var)
+      return;
+    var->setBinaryValue(value, resources);
+  }
+
+  void setBinaryValue(LinkedBinaryValue value, ResourceManager* resources) {
+    setNull(resources);
+
+    if (value.data() == nullptr)
+      return;
+
+    setLinkedBinary(value.data(), value.size_bytes());
+  }
+
+  static void setBinaryValue(VariantData* var, LinkedBinaryValue value,
+                             ResourceManager* resources) {
+    if (!var)
+      return;
+    var->setBinaryValue(value, resources);
   }
 
   template <typename TAdaptedString>

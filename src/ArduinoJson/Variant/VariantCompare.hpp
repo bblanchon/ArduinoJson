@@ -164,6 +164,17 @@ struct VariantComparer : ComparerBase {
     return reverseResult(comparer);
   }
 
+  CompareResult visit(LinkedBinary value) {
+    RawComparer comparer(
+        RawString(reinterpret_cast<const char*>(value.data), value.size));
+    return reverseResult(comparer);
+  }
+
+  CompareResult visit(OwnedBinary value) {
+    return visit(
+        LinkedBinary{value.ownedString->data, value.ownedString->length});
+  }
+
   CompareResult visit(JsonInteger lhs) {
     Comparer<JsonInteger> comparer(lhs);
     return reverseResult(comparer);

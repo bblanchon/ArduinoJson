@@ -3,6 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <array>
 #include <catch.hpp>
 
 #include "Allocators.hpp"
@@ -139,6 +140,55 @@ TEST_CASE("deserialize MsgPack value") {
   SECTION("str 32") {
     checkValue<std::string>("\xdb\x00\x00\x00\x05hello", std::string("hello"));
   }
+
+  SECTION("bin 8") {
+    JsonDocument doc;
+
+    DeserializationError error = deserializeMsgPack(doc, "\xc4\x01\x05");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<BinaryValue>());
+    auto binary = doc.as<BinaryValue>();
+    REQUIRE(binary.size_bytes() == 1);
+    REQUIRE(binary.data() != nullptr);
+    REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);
+  }
+
+  SECTION("bin 16") {
+    JsonDocument doc;
+
+    auto array = std::array<char, 0x100>({5});
+    auto input = std::string("\xc5\x01\x00", 3) +
+                 std::string(array.data(), array.size());
+
+    DeserializationError error = deserializeMsgPack(doc, input);
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<BinaryValue>());
+    auto binary = doc.as<BinaryValue>();
+    REQUIRE(binary.size_bytes() == 0x100);
+    REQUIRE(binary.data() != nullptr);
+    REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);
+  }
+
+#if ARDUINOJSON_STRING_LENGTH_SIZE >= 4
+  SECTION("bin 32") {
+    JsonDocument doc;
+
+    auto array = std::array<char, 0x10000>({5});
+    auto input = std::string("\xc6\x00\x01\x00\x00", 5) +
+                 std::string(array.data(), array.size());
+
+    DeserializationError error = deserializeMsgPack(doc, input);
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<BinaryValue>());
+    auto binary = doc.as<BinaryValue>();
+    REQUIRE(binary.size_bytes() == 0x10000);
+    REQUIRE(binary.data() != nullptr);
+    REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);
+  }
+#endif
 }
 
 TEST_CASE("deserializeMsgPack() under memory constaints") {

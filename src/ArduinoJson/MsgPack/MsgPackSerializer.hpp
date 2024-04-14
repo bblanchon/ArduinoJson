@@ -123,6 +123,33 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
+  size_t visit(LinkedBinary value) {
+    if (value.size <= 0xFF) {
+      writeByte(0xC4);
+      writeInteger(uint8_t(value.size));
+    } else if (value.size <= 0xFFFF) {
+      writeByte(0xC5);
+      writeInteger(uint16_t(value.size));
+    } else {
+      writeByte(0xC6);
+      writeInteger(uint32_t(value.size));
+    }
+    writeBytes(reinterpret_cast<const uint8_t*>(value.data), value.size);
+    return bytesWritten();
+  }
+
+  size_t visit(OwnedBinary value) {
+    return visit(LinkedBinary{value.ownedString->data, value.ownedString->length});
+  }
+
+  size_t visit(LinkedBinaryValue value) {
+    return visit(LinkedBinary{value.data(), value.size_bytes()});
+  }
+
+  size_t visit(OwnedBinaryValue<StringNode*> value) {
+    return visit(OwnedBinary{value.string_node()});
+  }
+
   size_t visit(JsonInteger value) {
     if (value > 0) {
       visit(static_cast<JsonUInt>(value));

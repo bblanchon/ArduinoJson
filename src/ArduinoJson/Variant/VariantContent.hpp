@@ -31,11 +31,18 @@ enum {
   VALUE_IS_SIGNED_INTEGER = 0x0A,
   VALUE_IS_FLOAT = 0x0C,
 
-  COLLECTION_MASK = 0x60,
+  COLLECTION_MASK = 0x70,
+  VALUE_IS_BINARY = 0x10,
   VALUE_IS_OBJECT = 0x20,
   VALUE_IS_ARRAY = 0x40,
 
   OWNED_KEY_BIT = 0x80
+};
+
+// Where is a good place to put this?
+struct LinkedBinary {
+  const void* data;
+  size_t size;
 };
 
 union VariantContent {
@@ -50,6 +57,7 @@ union VariantContent {
   CollectionData asCollection;
   const char* asLinkedString;
   struct StringNode* asOwnedString;
+  LinkedBinary asLinkedBinary;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
