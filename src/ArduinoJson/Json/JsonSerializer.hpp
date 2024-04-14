@@ -81,7 +81,7 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visit(LinkedBinaryValue value) {
+  size_t visit(Binary value) {
     write('[');
     auto* data = (uint8_t*) value.data();
     for (int i = 0; i < value.size_bytes(); ++i) {
@@ -93,10 +93,6 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     }
     write(']');
     return bytesWritten();
-  }
-
-  size_t visit(OwnedBinaryValue<StringNode*> value) {
-    return visit(LinkedBinaryValue(value.string_node()->data, value.string_node()->length));
   }
 
   size_t visit(JsonInteger value) {

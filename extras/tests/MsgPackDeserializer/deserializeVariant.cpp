@@ -147,8 +147,8 @@ TEST_CASE("deserialize MsgPack value") {
     DeserializationError error = deserializeMsgPack(doc, "\xc4\x01\x05");
 
     REQUIRE(error == DeserializationError::Ok);
-    REQUIRE(doc.is<BinaryValue>());
-    auto binary = doc.as<BinaryValue>();
+    REQUIRE(doc.is<Binary>());
+    auto binary = doc.as<Binary>();
     REQUIRE(binary.size_bytes() == 1);
     REQUIRE(binary.data() != nullptr);
     REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);
@@ -164,8 +164,8 @@ TEST_CASE("deserialize MsgPack value") {
     DeserializationError error = deserializeMsgPack(doc, input);
 
     REQUIRE(error == DeserializationError::Ok);
-    REQUIRE(doc.is<BinaryValue>());
-    auto binary = doc.as<BinaryValue>();
+    REQUIRE(doc.is<Binary>());
+    auto binary = doc.as<Binary>();
     REQUIRE(binary.size_bytes() == 0x100);
     REQUIRE(binary.data() != nullptr);
     REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);
@@ -182,8 +182,8 @@ TEST_CASE("deserialize MsgPack value") {
     DeserializationError error = deserializeMsgPack(doc, input);
 
     REQUIRE(error == DeserializationError::Ok);
-    REQUIRE(doc.is<BinaryValue>());
-    auto binary = doc.as<BinaryValue>();
+    REQUIRE(doc.is<Binary>());
+    auto binary = doc.as<Binary>();
     REQUIRE(binary.size_bytes() == 0x10000);
     REQUIRE(binary.data() != nullptr);
     REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);

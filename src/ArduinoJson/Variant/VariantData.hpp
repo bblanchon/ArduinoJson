@@ -18,10 +18,6 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename T>
 T parseNumber(const char* s);
 
-struct OwnedBinary {
-  StringNode* ownedString;
-};
-
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant
   uint8_t flags_;
@@ -53,11 +49,8 @@ class VariantData {
         return visit.visit(RawString(content_.asOwnedString->data,
                                      content_.asOwnedString->length));
 
-      case VALUE_IS_BINARY | VALUE_IS_LINKED_STRING:
-        return visit.visit(LinkedBinaryValue(content_.asLinkedBinary.data, content_.asLinkedBinary.size));
-
-      case VALUE_IS_BINARY | VALUE_IS_OWNED_STRING:
-        return visit.visit(OwnedBinaryValue<detail::StringNode*>(content_.asOwnedString));
+      case VALUE_IS_BINARY:
+        return visit.visit(Binary(content_.asOwnedString));
 
       case VALUE_IS_SIGNED_INTEGER:
         return visit.visit(content_.asSignedInteger);
@@ -196,12 +189,13 @@ class VariantData {
     }
   }
 
-  BinaryValue asBinary() const {
-    if (type() == (VALUE_IS_BINARY | VALUE_IS_LINKED_STRING))
-      return BinaryValue(content_.asLinkedBinary.data, content_.asLinkedBinary.size);
-    if (type() == (VALUE_IS_BINARY | VALUE_IS_OWNED_STRING))
-      return BinaryValue(content_.asOwnedString->data, content_.asOwnedString->length);
-    return BinaryValue(nullptr, 0);
+  Binary asBinary() const {
+    switch (type()) {
+      case VALUE_IS_BINARY:
+        return Binary(content_.asOwnedString);
+      default:
+        return Binary(nullptr);
+    }
   }
 
   VariantData* getElement(size_t index,
@@ -417,23 +411,18 @@ class VariantData {
     var->setRawString(value, resources);
   }
 
-  void setOwnedBinary(StringNode* s) {
+  void setBinary(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_BINARY | VALUE_IS_OWNED_STRING);
+    setType(VALUE_IS_BINARY);
     content_.asOwnedString = s;
   }
 
-  void setLinkedBinary(const void* p, size_t n) {
-    ARDUINOJSON_ASSERT(p);
-    setType(VALUE_IS_BINARY | VALUE_IS_LINKED_STRING);
-    content_.asLinkedBinary = LinkedBinary{p, n};
-  }
-
   template <typename T>
-  void setBinaryValue(OwnedBinaryValue<T> value, ResourceManager* resources) {
+  void setBinaryValue(BinaryValue<T> value, ResourceManager* resources) {
     setNull();
 
-    StringNode* str = StringNode::create(value.size_bytes(), resources->allocator());
+    StringNode* str =
+        StringNode::create(value.size_bytes(), resources->allocator());
 
     if (!str)
       return;
@@ -445,10 +434,11 @@ class VariantData {
     }
 
     resources->saveString(str);
-    setOwnedBinary(str);
+    setBinary(str);
   }
 
-  void setBinaryValue(OwnedBinaryValue<StringNode*> value, ResourceManager* resources) {
+  void setBinaryValue(BinaryValue<StringNode*> value,
+                      ResourceManager* resources) {
     setNull();
 
     StringNode* str = value.string_node();
@@ -457,27 +447,11 @@ class VariantData {
       return;
 
     resources->saveString(str);
-    setOwnedBinary(str);
+    setBinary(str);
   }
 
   template <typename T>
-  static void setBinaryValue(VariantData* var, OwnedBinaryValue<T> value,
-                             ResourceManager* resources) {
-    if (!var)
-      return;
-    var->setBinaryValue(value, resources);
-  }
-
-  void setBinaryValue(LinkedBinaryValue value, ResourceManager* resources) {
-    setNull(resources);
-
-    if (value.data() == nullptr)
-      return;
-
-    setLinkedBinary(value.data(), value.size_bytes());
-  }
-
-  static void setBinaryValue(VariantData* var, LinkedBinaryValue value,
+  static void setBinaryValue(VariantData* var, BinaryValue<T> value,
                              ResourceManager* resources) {
     if (!var)
       return;

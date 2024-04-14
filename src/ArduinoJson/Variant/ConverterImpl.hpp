@@ -193,29 +193,21 @@ struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
 };
 
 template <typename T>
-struct Converter<OwnedBinaryValue<T>> : private detail::VariantAttorney {
-  static void toJson(OwnedBinaryValue<T> src, JsonVariant dst) {
+struct Converter<BinaryValue<T>> : private detail::VariantAttorney {
+  static void toJson(BinaryValue<T> src, JsonVariant dst) {
     detail::VariantData::setBinaryValue(getData(dst), src,
                                         getResourceManager(dst));
   }
 };
 
 template <>
-struct Converter<OwnedBinaryValue<detail::StringNode*>> : private detail::VariantAttorney {
-  static void toJson(OwnedBinaryValue<detail::StringNode*> src, JsonVariant dst) {
-    detail::VariantData::setBinaryValue(getData(dst), src,
-                                        getResourceManager(dst));
-  }
-};
-
-template <>
-struct Converter<LinkedBinaryValue> : private detail::VariantAttorney {
-  static void toJson(LinkedBinaryValue src, JsonVariant dst) {
+struct Converter<Binary> : private detail::VariantAttorney {
+  static void toJson(Binary src, JsonVariant dst) {
     detail::VariantData::setBinaryValue(getData(dst), src,
                                         getResourceManager(dst));
   }
 
-  static BinaryValue fromJson(JsonVariant src) {
+  static Binary fromJson(JsonVariant src) {
     auto data = getData(src);
     auto resources = getResourceManager(src);
     return data->asBinary();

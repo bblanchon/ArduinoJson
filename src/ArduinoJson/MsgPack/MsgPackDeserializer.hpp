@@ -422,7 +422,7 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    variant->setOwnedBinary(stringBuilder_.save());
+    variant->setBinary(stringBuilder_.save());
     return DeserializationError::Ok;
   }
 

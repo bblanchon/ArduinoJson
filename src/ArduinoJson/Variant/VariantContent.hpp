@@ -39,12 +39,6 @@ enum {
   OWNED_KEY_BIT = 0x80
 };
 
-// Where is a good place to put this?
-struct LinkedBinary {
-  const void* data;
-  size_t size;
-};
-
 union VariantContent {
   VariantContent() {}
 
@@ -57,7 +51,6 @@ union VariantContent {
   CollectionData asCollection;
   const char* asLinkedString;
   struct StringNode* asOwnedString;
-  LinkedBinary asLinkedBinary;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

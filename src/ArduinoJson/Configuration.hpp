@@ -137,7 +137,7 @@
 #  if ARDUINOJSON_SIZEOF_POINTER <= 2
 #    define ARDUINOJSON_STRING_LENGTH_SIZE 1  // up to 255 characters
 #  else
-#    define ARDUINOJSON_STRING_LENGTH_SIZE 2  // up to 65535 characters
+#    define ARDUINOJSON_STRING_LENGTH_SIZE 4  // up to 65535 characters
 #  endif
 #endif
 
