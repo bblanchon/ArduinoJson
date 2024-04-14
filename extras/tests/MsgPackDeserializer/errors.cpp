@@ -134,18 +134,6 @@ TEST_CASE("deserializeMsgPack() returns IncompleteInput") {
     testIncompleteInput("\xdb\x00\x00\x00\x05hello", 10);
   }
 
-  SECTION("bin 8") {
-    testIncompleteInput("\xc4\x01X", 3);
-  }
-
-  SECTION("bin 16") {
-    testIncompleteInput("\xc5\x00\x01X", 4);
-  }
-
-  SECTION("bin 32") {
-    testIncompleteInput("\xc6\x00\x00\x00\x01X", 6);
-  }
-
   SECTION("ext 8") {
     testIncompleteInput("\xc7\x01\x01\x01", 4);
   }
@@ -190,18 +178,6 @@ static std::string msgPackToJson(const char* input, size_t inputSize) {
 }
 
 TEST_CASE("deserializeMsgPack() replaces unsupported types by null") {
-  SECTION("bin 8") {
-    REQUIRE(msgPackToJson("\x92\xc4\x01X\x2A", 5) == "[null,42]");
-  }
-
-  SECTION("bin 16") {
-    REQUIRE(msgPackToJson("\x92\xc5\x00\x01X\x2A", 6) == "[null,42]");
-  }
-
-  SECTION("bin 32") {
-    REQUIRE(msgPackToJson("\x92\xc6\x00\x00\x00\x01X\x2A", 8) == "[null,42]");
-  }
-
   SECTION("ext 8") {
     REQUIRE(msgPackToJson("\x92\xc7\x01\x01\x01\x2A", 6) == "[null,42]");
   }

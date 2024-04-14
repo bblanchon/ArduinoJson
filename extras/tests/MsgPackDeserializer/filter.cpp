@@ -375,52 +375,6 @@ TEST_CASE("deserializeMsgPack() filter") {
               });
       }
 
-      SECTION("skip bin 8") {
-        error = deserializeMsgPack(
-            doc, "\x82\xA6ignore\xC4\x05hello\xA7include\x2A", filterOpt);
-
-        CHECK(error == DeserializationError::Ok);
-        CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(spy.log() ==
-              AllocatorLog{
-                  Allocate(sizeofStringBuffer()),
-                  Reallocate(sizeofStringBuffer(), sizeofString("include")),
-                  Allocate(sizeofPool()),
-                  Reallocate(sizeofPool(), sizeofObject(1)),
-              });
-      }
-
-      SECTION("skip bin 16") {
-        error = deserializeMsgPack(
-            doc, "\x82\xA6ignore\xC5\x00\x05hello\xA7include\x2A", filterOpt);
-
-        CHECK(error == DeserializationError::Ok);
-        CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(spy.log() ==
-              AllocatorLog{
-                  Allocate(sizeofStringBuffer()),
-                  Reallocate(sizeofStringBuffer(), sizeofString("include")),
-                  Allocate(sizeofPool()),
-                  Reallocate(sizeofPool(), sizeofObject(1)),
-              });
-      }
-
-      SECTION("skip bin 32") {
-        error = deserializeMsgPack(
-            doc, "\x82\xA6ignore\xC6\x00\x00\x00\x05hello\xA7include\x2A",
-            filterOpt);
-
-        CHECK(error == DeserializationError::Ok);
-        CHECK(doc.as<std::string>() == "{\"include\":42}");
-        CHECK(spy.log() ==
-              AllocatorLog{
-                  Allocate(sizeofStringBuffer()),
-                  Reallocate(sizeofStringBuffer(), sizeofString("include")),
-                  Allocate(sizeofPool()),
-                  Reallocate(sizeofPool(), sizeofObject(1)),
-              });
-      }
-
       SECTION("skip fixarray") {
         error = deserializeMsgPack(
             doc, "\x82\xA6ignore\x92\x01\x02\xA7include\x2A", filterOpt);

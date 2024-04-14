@@ -69,19 +69,19 @@ class MsgPackDeserializer {
           variant->setBoolean(true);
         return DeserializationError::Ok;
 
-      case 0xc4:  // bin 8 (not supported)
+      case 0xc4:
         if (allowValue)
           return readBinary<uint8_t>(variant);
         else
           return skipString<uint8_t>();
 
-      case 0xc5:  // bin 16 (not supported)
+      case 0xc5:
         if (allowValue)
           return readBinary<uint16_t>(variant);
         else
           return skipString<uint16_t>();
 
-      case 0xc6:  // bin 32 (not supported)
+      case 0xc6:
         if (allowValue)
           return readBinary<uint32_t>(variant);
         else
