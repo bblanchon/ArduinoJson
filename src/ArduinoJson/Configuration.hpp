@@ -93,11 +93,14 @@
 // https://arduinojson.org/v7/config/slot_id_size/
 #ifndef ARDUINOJSON_SLOT_ID_SIZE
 #  if ARDUINOJSON_SIZEOF_POINTER <= 2
-#    define ARDUINOJSON_SLOT_ID_SIZE 1  // up to 255 slots
+//   8-bit and 16-bit archs => up to 255 slots
+#    define ARDUINOJSON_SLOT_ID_SIZE 1
 #  elif ARDUINOJSON_SIZEOF_POINTER == 4
-#    define ARDUINOJSON_SLOT_ID_SIZE 2  // up to 65535 slots
+//   32-bit arch => up to 65535 slots
+#    define ARDUINOJSON_SLOT_ID_SIZE 2
 #  else
-#    define ARDUINOJSON_SLOT_ID_SIZE 4  // up to 4294967295 slots
+//   64-bit arch => up to 4294967295 slots
+#    define ARDUINOJSON_SLOT_ID_SIZE 4
 #  endif
 #endif
 
