@@ -1,6 +1,8 @@
 ArduinoJson: change log
 =======================
 
+* Add `ARDUINOJSON_STRING_LENGTH_SIZE` to the namespace name
+
 v7.0.4 (2024-03-12)
 ------
 
