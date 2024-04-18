@@ -82,8 +82,7 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
   }
 
   size_t visit(MsgPackBinary) {
-    formatter_.writeRaw("null");
-    return bytesWritten();
+    return visit(nullptr);
   }
 
   size_t visit(JsonInteger value) {

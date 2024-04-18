@@ -11,7 +11,6 @@
 #include <ArduinoJson/Polyfills/limits.hpp>
 
 #include <stddef.h>  // offsetof
-#include <stdio.h>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 

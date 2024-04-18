@@ -22,7 +22,7 @@ add_executable(MixedConfigurationTests
 	use_double_1.cpp
 	use_long_long_0.cpp
 	use_long_long_1.cpp
-	use_string_length_size_4.cpp
+	string_length_size_4.cpp
 )
 
 set_target_properties(MixedConfigurationTests PROPERTIES UNITY_BUILD OFF)
