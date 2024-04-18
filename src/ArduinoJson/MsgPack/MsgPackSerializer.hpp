@@ -123,19 +123,18 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visit(Binary value) {
-    if (value.size_bytes() <= 0xFF) {
+  size_t visit(MsgPackBinary value) {
+    if (value.size() <= 0xFF) {
       writeByte(0xC4);
-      writeInteger(uint8_t(value.size_bytes()));
-    } else if (value.size_bytes() <= 0xFFFF) {
+      writeInteger(uint8_t(value.size()));
+    } else if (value.size() <= 0xFFFF) {
       writeByte(0xC5);
-      writeInteger(uint16_t(value.size_bytes()));
+      writeInteger(uint16_t(value.size()));
     } else {
       writeByte(0xC6);
-      writeInteger(uint32_t(value.size_bytes()));
+      writeInteger(uint32_t(value.size()));
     }
-    writeBytes(reinterpret_cast<const uint8_t*>(value.data()),
-               value.size_bytes());
+    writeBytes(reinterpret_cast<const uint8_t*>(value.data()), value.size());
     return bytesWritten();
   }
 

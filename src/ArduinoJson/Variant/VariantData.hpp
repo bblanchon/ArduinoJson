@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Memory/StringNode.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
-#include <ArduinoJson/MsgPack/BinaryValue.hpp>
+#include <ArduinoJson/MsgPack/MsgPackBinary.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Strings/JsonString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
@@ -50,7 +50,8 @@ class VariantData {
                                      content_.asOwnedString->length));
 
       case VALUE_IS_BINARY:
-        return visit.visit(Binary(content_.asOwnedString));
+        return visit.visit(MsgPackBinary(content_.asOwnedString->data,
+                                         content_.asOwnedString->length));
 
       case VALUE_IS_SIGNED_INTEGER:
         return visit.visit(content_.asSignedInteger);
@@ -189,12 +190,13 @@ class VariantData {
     }
   }
 
-  Binary asBinary() const {
+  MsgPackBinary asBinary() const {
     switch (type()) {
       case VALUE_IS_BINARY:
-        return Binary(content_.asOwnedString);
+        return MsgPackBinary(content_.asOwnedString->data,
+                             content_.asOwnedString->length);
       default:
-        return Binary(nullptr);
+        return MsgPackBinary(nullptr, 0);
     }
   }
 
@@ -288,7 +290,7 @@ class VariantData {
   }
 
   bool isBinary() const {
-    return (flags_ & VALUE_IS_BINARY) != 0;
+    return type() == VALUE_IS_BINARY;
   }
 
   size_t nesting(const ResourceManager* resources) const {
@@ -417,45 +419,20 @@ class VariantData {
     content_.asOwnedString = s;
   }
 
-  template <typename T>
-  void setBinaryValue(BinaryValue<T> value, ResourceManager* resources) {
-    setNull();
-
-    StringNode* str =
-        StringNode::create(value.size_bytes(), resources->allocator());
-
-    if (!str)
-      return;
-
-    size_t offset = 0;
-    for (const auto v : value) {
-      str->data[offset] = v;
-      offset += sizeof(v);
-    }
-
-    resources->saveString(str);
-    setBinary(str);
+  void setBinary(MsgPackBinary value, ResourceManager* resources) {
+    auto dup = resources->saveString(
+        adaptString(reinterpret_cast<const char*>(value.data()), value.size()));
+    if (dup)
+      setBinary(dup);
+    else
+      setNull();
   }
 
-  void setBinaryValue(BinaryValue<StringNode*> value,
-                      ResourceManager* resources) {
-    setNull();
-
-    StringNode* str = value.string_node();
-
-    if (!str)
-      return;
-
-    resources->saveString(str);
-    setBinary(str);
-  }
-
-  template <typename T>
-  static void setBinaryValue(VariantData* var, BinaryValue<T> value,
-                             ResourceManager* resources) {
+  static void setBinary(VariantData* var, MsgPackBinary value,
+                        ResourceManager* resources) {
     if (!var)
       return;
-    var->setBinaryValue(value, resources);
+    var->setBinary(value, resources);
   }
 
   template <typename TAdaptedString>

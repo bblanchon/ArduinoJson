@@ -81,17 +81,8 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visit(Binary value) {
-    write('[');
-    auto* data = (uint8_t*) value.data();
-    for (int i = 0; i < value.size_bytes(); ++i) {
-      uint8_t c = data[i];
-      write("0x");
-      formatter_.writeHexadecimals(c, 2);
-      if (i != value.size_bytes() - 1)
-        write(',');
-    }
-    write(']');
+  size_t visit(MsgPackBinary) {
+    formatter_.writeRaw("null");
     return bytesWritten();
   }
 

@@ -106,9 +106,6 @@ TEST_CASE("serializeJson(JsonVariant)") {
     check(false, "false");
   }
 
-  SECTION("BinaryValue") {
-    check(binary(std::array<char, 2>({1, 2})), "[0x01,0x02]");
-  }
 #if ARDUINOJSON_USE_LONG_LONG
   SECTION("NegativeInt64") {
     check(-9223372036854775807 - 1, "-9223372036854775808");

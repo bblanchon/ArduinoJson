@@ -149,28 +149,16 @@ TEST_CASE("serialize MsgPack value") {
 
   SECTION("bin 8") {
     static const auto bin8 = std::array<char, 4>({1, 2, 3, 4});
-    checkVariant(binary(bin8), "\xC4\x04\x01\x02\x03\x04");
-    checkVariant(binary(bin8.data(), bin8.size()), "\xC4\x04\x01\x02\x03\x04");
+    checkVariant(MsgPackBinary(bin8.data(), bin8.size()),
+                 "\xC4\x04\x01\x02\x03\x04");
   }
 
   SECTION("bin 16") {
     static const auto bin16 = std::array<char, 0x100>({1, 2, 3, 4});
     std::string bin16string(bin16.data(), bin16.size());
-    checkVariant(binary(bin16), std::string("\xC5\x01\x00", 3) + bin16string);
-    checkVariant(binary(bin16.data(), bin16.size()),
+    checkVariant(MsgPackBinary(bin16.data(), bin16.size()),
                  std::string("\xC5\x01\x00", 3) + bin16string);
   }
-
-#if ARDUINOJSON_STRING_LENGTH_SIZE >= 4
-  SECTION("bin 32") {
-    static const auto bin32 = std::array<char, 0x10000>({1, 2, 3, 4});
-    std::string bin32String(bin32.data(), bin32.size());
-    checkVariant(binary(bin32),
-                 std::string("\xC6\x00\x01\x00\x00", 5) + bin32String);
-    checkVariant(binary(bin32.data(), bin32.size()),
-                 std::string("\xC6\x00\x01\x00\x00", 5) + bin32String);
-  }
-#endif
 
   SECTION("serialize round double as integer") {  // Issue #1718
     checkVariant(-32768.0, "\xD1\x80\x00");

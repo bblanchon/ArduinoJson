@@ -164,9 +164,9 @@ struct VariantComparer : ComparerBase {
     return reverseResult(comparer);
   }
 
-  CompareResult visit(Binary value) {
-    RawComparer comparer(RawString(reinterpret_cast<const char*>(value.data()),
-                                   value.size_bytes()));
+  CompareResult visit(MsgPackBinary value) {
+    RawComparer comparer(
+        RawString(reinterpret_cast<const char*>(value.data()), value.size()));
     return reverseResult(comparer);
   }
 

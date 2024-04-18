@@ -145,23 +145,6 @@ class TextFormatter {
     writeRaw(begin, end);
   }
 
-  void writeHexadecimals(uint32_t value, int8_t width) {
-    // buffer should be big enough for all digits and the dot
-    char buffer[16];
-    char* end = buffer + sizeof(buffer);
-    char* begin = end;
-
-    // write the string in reverse order
-    while (width--) {
-      uint8_t c = value % 16;
-      *--begin = char(c < 10 ? c + '0' : c - 10 + 'A');
-      value /= 16;
-    }
-
-    // and dump it in the right order
-    writeRaw(begin, end);
-  }
-
   void writeRaw(const char* s) {
     writer_.write(reinterpret_cast<const uint8_t*>(s), strlen(s));
   }
