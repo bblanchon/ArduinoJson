@@ -134,6 +134,25 @@ struct RawComparer : ComparerBase {
   using ComparerBase::visit;
 };
 
+struct MsgPackBinaryComparer : ComparerBase {
+  MsgPackBinary rhs_;
+
+  explicit MsgPackBinaryComparer(MsgPackBinary rhs) : rhs_(rhs) {}
+
+  CompareResult visit(MsgPackBinary lhs) {
+    size_t size = rhs_.size() < lhs.size() ? rhs_.size() : lhs.size();
+    int n = memcmp(lhs.data(), rhs_.data(), size);
+    if (n < 0)
+      return COMPARE_RESULT_LESS;
+    else if (n > 0)
+      return COMPARE_RESULT_GREATER;
+    else
+      return COMPARE_RESULT_EQUAL;
+  }
+
+  using ComparerBase::visit;
+};
+
 struct VariantComparer : ComparerBase {
   JsonVariantConst rhs;
 
@@ -165,8 +184,7 @@ struct VariantComparer : ComparerBase {
   }
 
   CompareResult visit(MsgPackBinary value) {
-    RawComparer comparer(
-        RawString(reinterpret_cast<const char*>(value.data()), value.size()));
+    MsgPackBinaryComparer comparer(value);
     return reverseResult(comparer);
   }
 

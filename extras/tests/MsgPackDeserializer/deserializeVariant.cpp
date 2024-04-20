@@ -144,22 +144,21 @@ TEST_CASE("deserialize MsgPack value") {
   SECTION("bin 8") {
     JsonDocument doc;
 
-    DeserializationError error = deserializeMsgPack(doc, "\xc4\x01\x05");
+    DeserializationError error = deserializeMsgPack(doc, "\xc4\x01?");
 
     REQUIRE(error == DeserializationError::Ok);
     REQUIRE(doc.is<MsgPackBinary>());
     auto binary = doc.as<MsgPackBinary>();
     REQUIRE(binary.size() == 1);
     REQUIRE(binary.data() != nullptr);
-    REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);
+    REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == '?');
   }
 
   SECTION("bin 16") {
     JsonDocument doc;
 
-    auto array = std::array<char, 0x100>({5});
-    auto input = std::string("\xc5\x01\x00", 3) +
-                 std::string(array.data(), array.size());
+    auto str = std::string(256, '?');
+    auto input = std::string("\xc5\x01\x00", 3) + str;
 
     DeserializationError error = deserializeMsgPack(doc, input);
 
@@ -168,7 +167,8 @@ TEST_CASE("deserialize MsgPack value") {
     auto binary = doc.as<MsgPackBinary>();
     REQUIRE(binary.size() == 0x100);
     REQUIRE(binary.data() != nullptr);
-    REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == 5);
+    REQUIRE(std::string(reinterpret_cast<const char*>(binary.data()),
+                        binary.size()) == str);
   }
 }
 

@@ -148,16 +148,14 @@ TEST_CASE("serialize MsgPack value") {
   }
 
   SECTION("bin 8") {
-    static const auto bin8 = std::array<char, 4>({1, 2, 3, 4});
-    checkVariant(MsgPackBinary(bin8.data(), bin8.size()),
-                 "\xC4\x04\x01\x02\x03\x04");
+    auto str = std::string(1, 1);
+    checkVariant(MsgPackBinary(str.data(), str.size()), "\xC4\x01\x01");
   }
 
   SECTION("bin 16") {
-    static const auto bin16 = std::array<char, 0x100>({1, 2, 3, 4});
-    std::string bin16string(bin16.data(), bin16.size());
-    checkVariant(MsgPackBinary(bin16.data(), bin16.size()),
-                 std::string("\xC5\x01\x00", 3) + bin16string);
+    auto str = std::string(256, 1);
+    checkVariant(MsgPackBinary(str.data(), str.size()),
+                 std::string("\xC5\x01\x00", 3) + str);
   }
 
   SECTION("serialize round double as integer") {  // Issue #1718

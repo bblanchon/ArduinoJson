@@ -113,6 +113,42 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
   }
 
+  SECTION("MsgPackBinary('abc') vs MsgPackBinary('abc')") {
+    a.set(MsgPackBinary("abc", 4));
+    b.set(MsgPackBinary("abc", 4));
+
+    CHECK(a == b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
+  }
+
+  SECTION("MsgPackBinary('abc') vs MsgPackBinary('bcd')") {
+    a.set(MsgPackBinary("abc", 4));
+    b.set(MsgPackBinary("bcd", 4));
+
+    CHECK(a != b);
+    CHECK(a < b);
+    CHECK(a <= b);
+    CHECK_FALSE(a == b);
+    CHECK_FALSE(a > b);
+    CHECK_FALSE(a >= b);
+  }
+
+  SECTION("MsgPackBinary('bcd') vs MsgPackBinary('abc')") {
+    a.set(MsgPackBinary("bcd", 4));
+    b.set(MsgPackBinary("abc", 4));
+
+    CHECK(a != b);
+    CHECK(a > b);
+    CHECK(a >= b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a <= b);
+    CHECK_FALSE(a == b);
+  }
+
   SECTION("false vs true") {
     a.set(false);
     b.set(true);
