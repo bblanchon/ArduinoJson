@@ -57,6 +57,7 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 4") {
     auto binary = doc.as<MsgPackBinary>();
     REQUIRE(binary.size() == 65536);
     REQUIRE(binary.data() != nullptr);
-    REQUIRE(std::string(reinterpret_cast<const char*>(binary.data()), binary.size()) == str);
+    REQUIRE(std::string(reinterpret_cast<const char*>(binary.data()),
+                        binary.size()) == str);
   }
 }
