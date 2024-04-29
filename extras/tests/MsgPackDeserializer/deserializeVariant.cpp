@@ -3,6 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <array>
 #include <catch.hpp>
 
 #include "Allocators.hpp"
@@ -138,6 +139,36 @@ TEST_CASE("deserialize MsgPack value") {
 
   SECTION("str 32") {
     checkValue<std::string>("\xdb\x00\x00\x00\x05hello", std::string("hello"));
+  }
+
+  SECTION("bin 8") {
+    JsonDocument doc;
+
+    DeserializationError error = deserializeMsgPack(doc, "\xc4\x01?");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackBinary>());
+    auto binary = doc.as<MsgPackBinary>();
+    REQUIRE(binary.size() == 1);
+    REQUIRE(binary.data() != nullptr);
+    REQUIRE(reinterpret_cast<const char*>(binary.data())[0] == '?');
+  }
+
+  SECTION("bin 16") {
+    JsonDocument doc;
+
+    auto str = std::string(256, '?');
+    auto input = std::string("\xc5\x01\x00", 3) + str;
+
+    DeserializationError error = deserializeMsgPack(doc, input);
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackBinary>());
+    auto binary = doc.as<MsgPackBinary>();
+    REQUIRE(binary.size() == 0x100);
+    REQUIRE(binary.data() != nullptr);
+    REQUIRE(std::string(reinterpret_cast<const char*>(binary.data()),
+                        binary.size()) == str);
   }
 }
 

@@ -193,6 +193,21 @@ struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
 };
 
 template <>
+struct Converter<MsgPackBinary> : private detail::VariantAttorney {
+  static void toJson(MsgPackBinary src, JsonVariant dst) {
+    detail::VariantData::setBinary(getData(dst), src, getResourceManager(dst));
+  }
+  static MsgPackBinary fromJson(JsonVariantConst src) {
+    auto data = getData(src);
+    return data ? data->asBinary() : MsgPackBinary();
+  }
+  static bool checkJson(JsonVariantConst src) {
+    auto data = getData(src);
+    return data && data->isBinary();
+  }
+};
+
+template <>
 struct Converter<detail::nullptr_t> : private detail::VariantAttorney {
   static void toJson(detail::nullptr_t, JsonVariant dst) {
     detail::VariantData::setNull(getData(dst), getResourceManager(dst));

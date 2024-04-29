@@ -69,14 +69,23 @@ class MsgPackDeserializer {
           variant->setBoolean(true);
         return DeserializationError::Ok;
 
-      case 0xc4:  // bin 8 (not supported)
-        return skipString<uint8_t>();
+      case 0xc4:
+        if (allowValue)
+          return readBinary<uint8_t>(variant);
+        else
+          return skipString<uint8_t>();
 
-      case 0xc5:  // bin 16 (not supported)
-        return skipString<uint16_t>();
+      case 0xc5:
+        if (allowValue)
+          return readBinary<uint16_t>(variant);
+        else
+          return skipString<uint16_t>();
 
-      case 0xc6:  // bin 32 (not supported)
-        return skipString<uint32_t>();
+      case 0xc6:
+        if (allowValue)
+          return readBinary<uint32_t>(variant);
+        else
+          return skipString<uint32_t>();
 
       case 0xc7:  // ext 8 (not supported)
         return skipExt<uint8_t>();
@@ -391,6 +400,29 @@ class MsgPackDeserializer {
     if (!stringBuilder_.isValid())
       return DeserializationError::NoMemory;
 
+    return DeserializationError::Ok;
+  }
+
+  template <typename T>
+  DeserializationError::Code readBinary(VariantData* variant) {
+    DeserializationError::Code err;
+    T size;
+
+    err = readInteger(size);
+    if (err)
+      return err;
+
+    return readBinary(variant, size);
+  }
+
+  DeserializationError::Code readBinary(VariantData* variant, size_t n) {
+    DeserializationError::Code err;
+
+    err = readString(n);
+    if (err)
+      return err;
+
+    variant->setBinary(stringBuilder_.save());
     return DeserializationError::Ok;
   }
 

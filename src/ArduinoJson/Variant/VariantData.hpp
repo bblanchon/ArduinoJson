@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Memory/StringNode.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
+#include <ArduinoJson/MsgPack/MsgPackBinary.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Strings/JsonString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
@@ -47,6 +48,10 @@ class VariantData {
       case VALUE_IS_RAW_STRING:
         return visit.visit(RawString(content_.asOwnedString->data,
                                      content_.asOwnedString->length));
+
+      case VALUE_IS_BINARY:
+        return visit.visit(MsgPackBinary(content_.asOwnedString->data,
+                                         content_.asOwnedString->length));
 
       case VALUE_IS_SIGNED_INTEGER:
         return visit.visit(content_.asSignedInteger);
@@ -185,6 +190,16 @@ class VariantData {
     }
   }
 
+  MsgPackBinary asBinary() const {
+    switch (type()) {
+      case VALUE_IS_BINARY:
+        return MsgPackBinary(content_.asOwnedString->data,
+                             content_.asOwnedString->length);
+      default:
+        return MsgPackBinary(nullptr, 0);
+    }
+  }
+
   VariantData* getElement(size_t index,
                           const ResourceManager* resources) const {
     return ArrayData::getElement(asArray(), index, resources);
@@ -272,6 +287,10 @@ class VariantData {
 
   bool isString() const {
     return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
+  }
+
+  bool isBinary() const {
+    return type() == VALUE_IS_BINARY;
   }
 
   size_t nesting(const ResourceManager* resources) const {
@@ -392,6 +411,28 @@ class VariantData {
     if (!var)
       return;
     var->setRawString(value, resources);
+  }
+
+  void setBinary(StringNode* s) {
+    ARDUINOJSON_ASSERT(s);
+    setType(VALUE_IS_BINARY);
+    content_.asOwnedString = s;
+  }
+
+  void setBinary(MsgPackBinary value, ResourceManager* resources) {
+    auto dup = resources->saveString(
+        adaptString(reinterpret_cast<const char*>(value.data()), value.size()));
+    if (dup)
+      setBinary(dup);
+    else
+      setNull();
+  }
+
+  static void setBinary(VariantData* var, MsgPackBinary value,
+                        ResourceManager* resources) {
+    if (!var)
+      return;
+    var->setBinary(value, resources);
   }
 
   template <typename TAdaptedString>

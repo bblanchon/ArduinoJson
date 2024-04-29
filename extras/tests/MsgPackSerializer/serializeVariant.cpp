@@ -3,6 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <array>
 #include <catch.hpp>
 
 template <typename T>
@@ -144,6 +145,17 @@ TEST_CASE("serialize MsgPack value") {
   SECTION("serialized(const char*)") {
     checkVariant(serialized("\xDA\xFF\xFF"), "\xDA\xFF\xFF");
     checkVariant(serialized("\xDB\x00\x01\x00\x00", 5), "\xDB\x00\x01\x00\x00");
+  }
+
+  SECTION("bin 8") {
+    auto str = std::string(1, 1);
+    checkVariant(MsgPackBinary(str.data(), str.size()), "\xC4\x01\x01");
+  }
+
+  SECTION("bin 16") {
+    auto str = std::string(256, 1);
+    checkVariant(MsgPackBinary(str.data(), str.size()),
+                 std::string("\xC5\x01\x00", 3) + str);
   }
 
   SECTION("serialize round double as integer") {  // Issue #1718
