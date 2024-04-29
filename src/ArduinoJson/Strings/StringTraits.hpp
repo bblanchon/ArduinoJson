@@ -54,8 +54,8 @@ struct has_length<
 template <class T>
 struct has_length<
     T, typename enable_if<
-           is_same<decltype(declval<const T>().length()), unsigned int>::value>::type>
-    : true_type {};
+           is_same<decltype(declval<const T>().length()),
+                   unsigned int>::value>::type> : true_type {};
 
 // size_t size() const
 // - std::string
