@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Install
         run: sudo apt-get install -y clang-format
