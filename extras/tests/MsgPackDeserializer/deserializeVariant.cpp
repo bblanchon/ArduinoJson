@@ -3,7 +3,6 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <array>
 #include <catch.hpp>
 
 #include "Allocators.hpp"
