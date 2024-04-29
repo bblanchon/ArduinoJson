@@ -45,16 +45,21 @@ struct has_data<T,
 template <class T, class = void>
 struct has_length : false_type {};
 
-template <class T>
-struct has_length<
-    T, typename enable_if<
-           is_same<decltype(declval<const T>().length()), size_t>::value>::type>
-    : true_type {};
+template <typename T, typename... Rest>
+struct is_any : std::false_type {};
+
+template <typename T, typename First>
+struct is_any<T, First> : std::is_same<T, First> {};
+
+template <typename T, typename First, typename... Rest>
+struct is_any<T, First, Rest...>
+    : std::integral_constant<bool, std::is_same<T, First>::value ||
+                                       is_any<T, Rest...>::value> {};
 
 template <class T>
 struct has_length<
-    T, typename enable_if<is_same<decltype(declval<const T>().length()),
-                                  unsigned int>::value>::type> : true_type {};
+    T, typename enable_if<is_any<decltype(declval<const T>().length()), size_t,
+                                 unsigned int>::value>::type> : true_type {};
 
 // size_t size() const
 // - std::string
