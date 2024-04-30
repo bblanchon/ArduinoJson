@@ -46,8 +46,8 @@ template <class T, class = void>
 struct has_length : false_type {};
 
 template <class T>
-struct has_length<T, typename enable_if<is_unsigned<
-                         decltype(declval<const T>().length())>::value>::type>
+struct has_length<T, typename enable_if<is_unsigned<decltype(
+                         declval<const T>().length())>::value>::type>
     : true_type {};
 
 // size_t size() const
