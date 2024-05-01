@@ -189,19 +189,7 @@ static std::string msgPackToJson(const char* input, size_t inputSize) {
   return doc.as<std::string>();
 }
 
-TEST_CASE("deserializeMsgPack() replaces unsupported types by null") {
-  SECTION("bin 8") {
-    REQUIRE(msgPackToJson("\x92\xc4\x01X\x2A", 5) == "[null,42]");
-  }
-
-  SECTION("bin 16") {
-    REQUIRE(msgPackToJson("\x92\xc5\x00\x01X\x2A", 6) == "[null,42]");
-  }
-
-  SECTION("bin 32") {
-    REQUIRE(msgPackToJson("\x92\xc6\x00\x00\x00\x01X\x2A", 8) == "[null,42]");
-  }
-
+TEST_CASE("deserializeMsgPack() replaces ext types by null") {
   SECTION("ext 8") {
     REQUIRE(msgPackToJson("\x92\xc7\x01\x01\x01\x2A", 6) == "[null,42]");
   }

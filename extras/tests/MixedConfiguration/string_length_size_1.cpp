@@ -21,16 +21,16 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 1") {
     REQUIRE(doc.overflowed() == true);
   }
 
-  SECTION("set() returns true if binary has 255 characters") {
-    auto str = std::string(255, '?');
+  SECTION("set() returns true if binary has 253 characters") {
+    auto str = std::string(253, '?');
     auto result = doc.set(MsgPackBinary(str.data(), str.size()));
 
     REQUIRE(result == true);
     REQUIRE(doc.overflowed() == false);
   }
 
-  SECTION("set() returns false if binary has 256 characters") {
-    auto str = std::string(256, '?');
+  SECTION("set() returns false if binary has 254 characters") {
+    auto str = std::string(254, '?');
     auto result = doc.set(MsgPackBinary(str.data(), str.size()));
 
     REQUIRE(result == false);
@@ -70,8 +70,8 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 1") {
     REQUIRE(err == DeserializationError::NoMemory);
   }
 
-  SECTION("deserializeMsgPack() returns Ok if binary has 255 characters") {
-    auto input = "\xc4\xff" + std::string(255, '?');
+  SECTION("deserializeMsgPack() returns Ok if binary has 253 characters") {
+    auto input = "\xc4\xfd" + std::string(253, '?');
 
     auto err = deserializeMsgPack(doc, input);
 
@@ -79,8 +79,8 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 1") {
   }
 
   SECTION(
-      "deserializeMsgPack() returns NoMemory if binary has 256 characters") {
-    auto input = std::string("\xc5\x01\x00", 3) + std::string(256, '?');
+      "deserializeMsgPack() returns NoMemory if binary has 254 characters") {
+    auto input = "\xc4\xfe" + std::string(254, '?');
 
     auto err = deserializeMsgPack(doc, input);
 

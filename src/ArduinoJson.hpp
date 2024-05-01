@@ -47,6 +47,7 @@
 #include "ArduinoJson/Json/JsonDeserializer.hpp"
 #include "ArduinoJson/Json/JsonSerializer.hpp"
 #include "ArduinoJson/Json/PrettyJsonSerializer.hpp"
+#include "ArduinoJson/MsgPack/MsgPackBinary.hpp"
 #include "ArduinoJson/MsgPack/MsgPackDeserializer.hpp"
 #include "ArduinoJson/MsgPack/MsgPackSerializer.hpp"
 

@@ -373,13 +373,50 @@ class MsgPackDeserializer {
   }
 
   DeserializationError::Code readBinary(VariantData* variant, size_t n) {
-    DeserializationError::Code err;
+    uint8_t headerSize;
 
-    err = readString(n);
+    if (n <= 0xFF) {
+      headerSize = 2;
+    }
+#if ARDUINOJSON_STRING_LENGTH_SIZE >= 2
+    else if (n <= 0xFFFF) {
+      headerSize = 3;
+    }
+#endif
+#if ARDUINOJSON_STRING_LENGTH_SIZE >= 4
+    else {
+      headerSize = 5;
+    }
+#else
+    else {
+      return DeserializationError::NoMemory;
+    }
+#endif
+
+    char* p = stringBuffer_.reserve(headerSize + n);
+    if (!p)
+      return DeserializationError::NoMemory;
+
+    if (n <= 0xFF) {
+      *p++ = '\xc4';
+      *p++ = char(n & 0xFF);
+    } else if (n <= 0xFFFF) {
+      *p++ = '\xc5';
+      *p++ = char(n >> 8 & 0xFF);
+      *p++ = char(n & 0xFF);
+    } else {
+      *p++ = '\xc6';
+      *p++ = char(n >> 24 & 0xFF);
+      *p++ = char(n >> 16 & 0xFF);
+      *p++ = char(n >> 8 & 0xFF);
+      *p++ = char(n & 0xFF);
+    }
+
+    auto err = readBytes(p, n);
     if (err)
       return err;
 
-    variant->setBinary(stringBuffer_.save());
+    variant->setRawString(stringBuffer_.save());
     return DeserializationError::Ok;
   }
 
