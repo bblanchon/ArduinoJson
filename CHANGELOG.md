@@ -3,6 +3,7 @@ ArduinoJson: change log
 
 * Add `ARDUINOJSON_STRING_LENGTH_SIZE` to the namespace name
 * Add MsgPack bin8/bin16/bin32 support (PR #2078 by @Sanae6)
+* Make string support even more generic (PR #2084 by @d-a-v)
 
 v7.0.4 (2024-03-12)
 ------
