@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Deserialization/deserialize.hpp>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
+#include <ArduinoJson/Memory/StringBuffer.hpp>
 #include <ArduinoJson/MsgPack/endianness.hpp>
 #include <ArduinoJson/MsgPack/ieee754.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
@@ -19,7 +20,7 @@ class MsgPackDeserializer {
   MsgPackDeserializer(ResourceManager* resources, TReader reader)
       : resources_(resources),
         reader_(reader),
-        stringBuilder_(resources),
+        stringBuffer_(resources),
         foundSomething_(false) {}
 
   template <typename TFilter>
@@ -239,7 +240,7 @@ class MsgPackDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError::Code readBytes(uint8_t* p, size_t n) {
+  DeserializationError::Code readBytes(void* p, size_t n) {
     if (reader_.readBytes(reinterpret_cast<char*>(p), n) == n)
       return DeserializationError::Ok;
     return DeserializationError::IncompleteInput;
@@ -247,7 +248,7 @@ class MsgPackDeserializer {
 
   template <typename T>
   DeserializationError::Code readBytes(T& value) {
-    return readBytes(reinterpret_cast<uint8_t*>(&value), sizeof(value));
+    return readBytes(&value, sizeof(value));
   }
 
   DeserializationError::Code skipBytes(size_t n) {
@@ -379,28 +380,16 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    variant->setOwnedString(stringBuilder_.save());
+    variant->setOwnedString(stringBuffer_.save());
     return DeserializationError::Ok;
   }
 
   DeserializationError::Code readString(size_t n) {
-    DeserializationError::Code err;
-
-    stringBuilder_.startString();
-    for (; n; --n) {
-      uint8_t c;
-
-      err = readBytes(c);
-      if (err)
-        return err;
-
-      stringBuilder_.append(static_cast<char>(c));
-    }
-
-    if (!stringBuilder_.isValid())
+    char* p = stringBuffer_.reserve(n);
+    if (!p)
       return DeserializationError::NoMemory;
 
-    return DeserializationError::Ok;
+    return readBytes(p, n);
   }
 
   template <typename T>
@@ -422,7 +411,7 @@ class MsgPackDeserializer {
     if (err)
       return err;
 
-    variant->setBinary(stringBuilder_.save());
+    variant->setBinary(stringBuffer_.save());
     return DeserializationError::Ok;
   }
 
@@ -517,7 +506,7 @@ class MsgPackDeserializer {
       if (err)
         return err;
 
-      JsonString key = stringBuilder_.str();
+      JsonString key = stringBuffer_.str();
       TFilter memberFilter = filter[key.c_str()];
       VariantData* member;
 
@@ -525,7 +514,7 @@ class MsgPackDeserializer {
         ARDUINOJSON_ASSERT(object != 0);
 
         // Save key in memory pool.
-        auto savedKey = stringBuilder_.save();
+        auto savedKey = stringBuffer_.save();
 
         member = object->addMember(savedKey, resources_);
         if (!member)
@@ -582,7 +571,7 @@ class MsgPackDeserializer {
 
   ResourceManager* resources_;
   TReader reader_;
-  StringBuilder stringBuilder_;
+  StringBuffer stringBuffer_;
   bool foundSomething_;
 };
 
