@@ -52,6 +52,82 @@ class MsgPackDeserializer {
       ARDUINOJSON_ASSERT(variant != 0);
     }
 
+    size_t size = 0;
+
+    switch (code) {
+      case 0xc4:  // bin 8
+      case 0xc7:  // ext 8
+      case 0xd9:  // str 8
+        uint8_t size8;
+        err = readInteger(size8);
+        size = size8;
+        break;
+
+      case 0xc5:  // bin 16
+      case 0xc8:  // ext 16
+      case 0xda:  // str 16
+      case 0xdc:  // array 16
+      case 0xde:  // map 16
+        uint16_t size16;
+        err = readInteger(size16);
+        size = size16;
+        break;
+
+      case 0xc6:  // bin 32
+      case 0xc9:  // ext 32
+      case 0xdb:  // str 32
+      case 0xdd:  // array 32
+      case 0xdf:  // map 32
+        uint32_t size32;
+        err = readInteger(size32);
+        size = size32;
+        break;
+    }
+
+    if (err)
+      return err;
+
+    switch (code & 0xf0) {
+      case 0x90:  // fixarray
+      case 0x80:  // fixmap
+        size = code & 0x0F;
+        break;
+    }
+
+    switch (code & 0xe0) {
+      case 0xa0:  // fixstr
+        size = code & 0x1f;
+        break;
+    }
+
+    // array 16, 32 and fixarray
+    if (code == 0xdc || code == 0xdd || (code & 0xf0) == 0x90)
+      return readArray(variant, size, filter, nestingLimit);
+
+    // map 16, 32 and fixmap
+    if (code == 0xde || code == 0xdf || (code & 0xf0) == 0x80)
+      return readObject(variant, size, filter, nestingLimit);
+
+    // str 8, 16, 32 and fixstr
+    if (code == 0xd9 || code == 0xda || code == 0xdb || (code & 0xe0) == 0xa0) {
+      if (allowValue)
+        return readString(variant, size);
+      else
+        return skipBytes(size);
+    }
+
+    // bin 8, 16, 32
+    if (code == 0xc4 || code == 0xc5 || code == 0xc6) {
+      if (allowValue)
+        return readBinary(variant, size);
+      else
+        return skipBytes(size);
+    }
+
+    // ext 8, 16, 32
+    if (code == 0xc7 || code == 0xc8 || code == 0xc9)
+      return skipBytes(size + 1);
+
     switch (code) {
       case 0xc0:
         // already null
@@ -69,33 +145,6 @@ class MsgPackDeserializer {
         if (allowValue)
           variant->setBoolean(true);
         return DeserializationError::Ok;
-
-      case 0xc4:
-        if (allowValue)
-          return readBinary<uint8_t>(variant);
-        else
-          return skipString<uint8_t>();
-
-      case 0xc5:
-        if (allowValue)
-          return readBinary<uint16_t>(variant);
-        else
-          return skipString<uint16_t>();
-
-      case 0xc6:
-        if (allowValue)
-          return readBinary<uint32_t>(variant);
-        else
-          return skipString<uint32_t>();
-
-      case 0xc7:  // ext 8 (not supported)
-        return skipExt<uint8_t>();
-
-      case 0xc8:  // ext 16 (not supported)
-        return skipExt<uint16_t>();
-
-      case 0xc9:  // ext 32 (not supported)
-        return skipExt<uint32_t>();
 
       case 0xca:
         if (allowValue)
@@ -180,56 +229,11 @@ class MsgPackDeserializer {
       case 0xd8:  // fixext 16 (not supported)
         return skipBytes(17);
 
-      case 0xd9:
+      default:  // fixint
         if (allowValue)
-          return readString<uint8_t>(variant);
-        else
-          return skipString<uint8_t>();
-
-      case 0xda:
-        if (allowValue)
-          return readString<uint16_t>(variant);
-        else
-          return skipString<uint16_t>();
-
-      case 0xdb:
-        if (allowValue)
-          return readString<uint32_t>(variant);
-        else
-          return skipString<uint32_t>();
-
-      case 0xdc:
-        return readArray<uint16_t>(variant, filter, nestingLimit);
-
-      case 0xdd:
-        return readArray<uint32_t>(variant, filter, nestingLimit);
-
-      case 0xde:
-        return readObject<uint16_t>(variant, filter, nestingLimit);
-
-      case 0xdf:
-        return readObject<uint32_t>(variant, filter, nestingLimit);
+          variant->setInteger(static_cast<int8_t>(code));
+        return DeserializationError::Ok;
     }
-
-    switch (code & 0xf0) {
-      case 0x80:
-        return readObject(variant, code & 0x0F, filter, nestingLimit);
-
-      case 0x90:
-        return readArray(variant, code & 0x0F, filter, nestingLimit);
-    }
-
-    if ((code & 0xe0) == 0xa0) {
-      if (allowValue)
-        return readString(variant, code & 0x1f);
-      else
-        return skipBytes(code & 0x1f);
-    }
-
-    if (allowValue)
-      variant->setInteger(static_cast<int8_t>(code));
-
-    return DeserializationError::Ok;
   }
 
   DeserializationError::Code readByte(uint8_t& value) {
@@ -338,18 +342,6 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  DeserializationError::Code readString(VariantData* variant) {
-    DeserializationError::Code err;
-    T size;
-
-    err = readInteger(size);
-    if (err)
-      return err;
-
-    return readString(variant, size);
-  }
-
-  template <typename T>
   DeserializationError::Code readString() {
     DeserializationError::Code err;
     T size;
@@ -359,18 +351,6 @@ class MsgPackDeserializer {
       return err;
 
     return readString(size);
-  }
-
-  template <typename T>
-  DeserializationError::Code skipString() {
-    DeserializationError::Code err;
-    T size;
-
-    err = readInteger(size);
-    if (err)
-      return err;
-
-    return skipBytes(size);
   }
 
   DeserializationError::Code readString(VariantData* variant, size_t n) {
@@ -392,18 +372,6 @@ class MsgPackDeserializer {
     return readBytes(p, n);
   }
 
-  template <typename T>
-  DeserializationError::Code readBinary(VariantData* variant) {
-    DeserializationError::Code err;
-    T size;
-
-    err = readInteger(size);
-    if (err)
-      return err;
-
-    return readBinary(variant, size);
-  }
-
   DeserializationError::Code readBinary(VariantData* variant, size_t n) {
     DeserializationError::Code err;
 
@@ -413,20 +381,6 @@ class MsgPackDeserializer {
 
     variant->setBinary(stringBuffer_.save());
     return DeserializationError::Ok;
-  }
-
-  template <typename TSize, typename TFilter>
-  DeserializationError::Code readArray(
-      VariantData* variant, TFilter filter,
-      DeserializationOption::NestingLimit nestingLimit) {
-    DeserializationError::Code err;
-    TSize size;
-
-    err = readInteger(size);
-    if (err)
-      return err;
-
-    return readArray(variant, size, filter, nestingLimit);
   }
 
   template <typename TFilter>
@@ -468,20 +422,6 @@ class MsgPackDeserializer {
     }
 
     return DeserializationError::Ok;
-  }
-
-  template <typename TSize, typename TFilter>
-  DeserializationError::Code readObject(
-      VariantData* variant, TFilter filter,
-      DeserializationOption::NestingLimit nestingLimit) {
-    DeserializationError::Code err;
-    TSize size;
-
-    err = readInteger(size);
-    if (err)
-      return err;
-
-    return readObject(variant, size, filter, nestingLimit);
   }
 
   template <typename TFilter>
@@ -555,18 +495,6 @@ class MsgPackDeserializer {
       default:
         return DeserializationError::InvalidInput;
     }
-  }
-
-  template <typename T>
-  DeserializationError::Code skipExt() {
-    DeserializationError::Code err;
-    T size;
-
-    err = readInteger(size);
-    if (err)
-      return err;
-
-    return skipBytes(size + 1U);
   }
 
   ResourceManager* resources_;
