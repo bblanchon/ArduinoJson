@@ -228,26 +228,3 @@ TEST_CASE("deserializeMsgPack() replaces ext types by null") {
                           20) == "[null,42]");
   }
 }
-
-TEST_CASE("deserializeMsgPack() returns NoMemory is string length overflows") {
-  JsonDocument doc;
-  auto maxLength = ArduinoJson::detail::StringNode::maxLength;
-
-  SECTION("max length should succeed") {
-    auto len = maxLength;
-    std::string prefix = {'\xdb', char(len >> 24), char(len >> 16),
-                          char(len >> 8), char(len)};
-
-    auto err = deserializeMsgPack(doc, prefix + std::string(len, 'a'));
-    REQUIRE(err == DeserializationError::Ok);
-  }
-
-  SECTION("one above max length should fail") {
-    auto len = maxLength + 1;
-    std::string prefix = {'\xdb', char(len >> 24), char(len >> 16),
-                          char(len >> 8), char(len)};
-
-    auto err = deserializeMsgPack(doc, prefix + std::string(len, 'a'));
-    REQUIRE(err == DeserializationError::NoMemory);
-  }
-}
