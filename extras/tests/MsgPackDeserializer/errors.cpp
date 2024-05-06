@@ -7,6 +7,8 @@
 
 #include <sstream>
 
+#include "Allocators.hpp"
+
 TEST_CASE("deserializeMsgPack() returns InvalidInput") {
   JsonDocument doc;
 
@@ -226,5 +228,21 @@ TEST_CASE("deserializeMsgPack() replaces ext types by null") {
                           "\x0B\x0C\x0D\x0E"
                           "\x0F\x10\x2A",
                           20) == "[null,42]");
+  }
+}
+
+TEST_CASE(
+    "deserializeMsgPack() returns NoMemory when string allocation fails") {
+  TimebombAllocator allocator(0);
+  JsonDocument doc(&allocator);
+
+  SECTION("fixstr") {
+    DeserializationError err = deserializeMsgPack(doc, "\xA5hello", 9);
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("bin 8") {
+    DeserializationError err = deserializeMsgPack(doc, "\xC4\x01X", 3);
+    REQUIRE(err == DeserializationError::NoMemory);
   }
 }
