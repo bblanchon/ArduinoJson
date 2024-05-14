@@ -71,7 +71,8 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonobjectconst/containskey/
   template <typename TString>
-  bool containsKey(const TString& key) const {
+  typename detail::enable_if<detail::IsString<TString>::value, bool>::type
+  containsKey(const TString& key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
                                          resources_) != 0;
   }
@@ -82,6 +83,14 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   bool containsKey(TChar* key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
                                          resources_) != 0;
+  }
+
+  // Returns true if the object contains the specified key.
+  // https://arduinojson.org/v7/api/jsonobjectconst/containskey/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value, bool>::type
+  containsKey(const TVariant& key) const {
+    return containsKey(key.template as<const char*>());
   }
 
   // Gets the member with specified key.
@@ -104,6 +113,18 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
     return JsonVariantConst(detail::ObjectData::getMember(
                                 data_, detail::adaptString(key), resources_),
                             resources_);
+  }
+
+  // Gets the member with specified key.
+  // https://arduinojson.org/v7/api/jsonobjectconst/subscript/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value,
+                             JsonVariantConst>::type
+  operator[](const TVariant& key) const {
+    if (key.template is<const char*>())
+      return operator[](key.template as<const char*>());
+    else
+      return JsonVariantConst();
   }
 
   // DEPRECATED: always returns zero

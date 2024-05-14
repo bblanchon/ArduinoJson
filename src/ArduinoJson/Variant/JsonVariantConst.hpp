@@ -86,9 +86,13 @@ class JsonVariantConst : public detail::VariantTag,
 
   // Gets array's element at specified index.
   // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
-  JsonVariantConst operator[](size_t index) const {
+  template <typename T>
+  typename detail::enable_if<detail::is_integral<T>::value,
+                             JsonVariantConst>::type
+  operator[](T index) const {
     return JsonVariantConst(
-        detail::VariantData::getElement(data_, index, resources_), resources_);
+        detail::VariantData::getElement(data_, size_t(index), resources_),
+        resources_);
   }
 
   // Gets object's member with specified key.
@@ -113,10 +117,22 @@ class JsonVariantConst : public detail::VariantTag,
                             resources_);
   }
 
+  // Gets object's member with specified key or the array's element at the
+  // specified index.
+  // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value,
+                             JsonVariantConst>::type
+  operator[](const TVariant& key) const {
+    if (key.template is<size_t>())
+      return operator[](key.template as<size_t>());
+    else
+      return operator[](key.template as<const char*>());
+  }
+
   // Returns true if tge object contains the specified key.
   // https://arduinojson.org/v7/api/jsonvariantconst/containskey/
   template <typename TString>
-
   typename detail::enable_if<detail::IsString<TString>::value, bool>::type
   containsKey(const TString& key) const {
     return detail::VariantData::getMember(getData(), detail::adaptString(key),
@@ -126,11 +142,16 @@ class JsonVariantConst : public detail::VariantTag,
   // Returns true if tge object contains the specified key.
   // https://arduinojson.org/v7/api/jsonvariantconst/containskey/
   template <typename TChar>
-
   typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
   containsKey(TChar* key) const {
     return detail::VariantData::getMember(getData(), detail::adaptString(key),
                                           resources_) != 0;
+  }
+
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value, bool>::type
+  containsKey(const TVariant& key) const {
+    return containsKey(key.template as<const char*>());
   }
 
   // DEPRECATED: always returns zero

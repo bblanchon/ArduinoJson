@@ -23,4 +23,12 @@ TEST_CASE("JsonVariant::containsKey()") {
     REQUIRE(var.containsKey(std::string("hello")) == true);
     REQUIRE(var.containsKey(std::string("world")) == false);
   }
+
+  SECTION("containsKey(JsonVariant)") {
+    var["hello"] = "world";
+    var["key"] = "hello";
+
+    REQUIRE(var.containsKey(doc["key"]) == true);
+    REQUIRE(var.containsKey(doc["foo"]) == false);
+  }
 }

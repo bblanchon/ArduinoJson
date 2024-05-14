@@ -81,3 +81,30 @@ TEST_CASE("JsonVariant::remove(std::string)") {
 
   REQUIRE(var.as<std::string>() == "{\"a\":1}");
 }
+
+TEST_CASE("JsonVariant::remove(JsonVariant) from object") {
+  JsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+
+  var["a"] = "a";
+  var["b"] = 2;
+  var["c"] = "b";
+
+  var.remove(var["c"]);
+
+  REQUIRE(var.as<std::string>() == "{\"a\":\"a\",\"c\":\"b\"}");
+}
+
+TEST_CASE("JsonVariant::remove(JsonVariant) from array") {
+  JsonDocument doc;
+  JsonVariant var = doc.to<JsonVariant>();
+
+  var[0] = 3;
+  var[1] = 2;
+  var[2] = 1;
+
+  var.remove(var[2]);
+  var.remove(var[3]);  // noop
+
+  REQUIRE(var.as<std::string>() == "[3,1]");
+}

@@ -91,6 +91,13 @@ VariantRefBase<TDerived>::containsKey(TChar* key) const {
 }
 
 template <typename TDerived>
+template <typename TVariant>
+inline typename enable_if<IsVariant<TVariant>::value, bool>::type
+VariantRefBase<TDerived>::containsKey(const TVariant& key) const {
+  return containsKey(key.template as<const char*>());
+}
+
+template <typename TDerived>
 inline JsonVariant VariantRefBase<TDerived>::getVariant() const {
   return JsonVariant(getData(), getResourceManager());
 }

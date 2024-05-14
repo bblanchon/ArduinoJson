@@ -5,6 +5,8 @@ ArduinoJson: change log
 * Add MsgPack bin8/bin16/bin32 support (PR #2078 by @Sanae6)
 * Make string support even more generic (PR #2084 by @d-a-v)
 * Optimize `deserializeMsgPack()`
+* Allow using a `JsonVariant` as a key or index (issue #2080)
+  Note: works only for reading, not for writing
 
 v7.0.4 (2024-03-12)
 ------

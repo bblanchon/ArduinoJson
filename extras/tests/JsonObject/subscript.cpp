@@ -249,4 +249,12 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(true == obj["hello"]["world"].is<int>());
     REQUIRE(false == obj["hello"]["world"].is<bool>());
   }
+
+  SECTION("JsonVariant") {
+    obj["hello"] = "world";
+    doc["key"] = "hello";
+
+    REQUIRE(obj[obj["key"]] == "world");
+    REQUIRE(obj[obj["foo"]] == nullptr);
+  }
 }

@@ -88,6 +88,15 @@ TEST_CASE("JsonArray::remove()") {
     JsonArray unboundArray;
     unboundArray.remove(unboundArray.begin());
   }
+
+  SECTION("use JsonVariant as index") {
+    array.remove(array[3]);  // no effect with null variant
+    array.remove(array[0]);  // remove element at index 1
+
+    REQUIRE(2 == array.size());
+    REQUIRE(array[0] == 1);
+    REQUIRE(array[1] == 3);
+  }
 }
 
 TEST_CASE("Removed elements are recycled") {

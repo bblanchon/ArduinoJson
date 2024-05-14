@@ -169,6 +169,17 @@ class VariantRefBase : public VariantTag {
                               getResourceManager());
   }
 
+  // Removes a member of the object or an element of the array.
+  // https://arduinojson.org/v7/api/jsonvariant/remove/
+  template <typename TVariant>
+  typename enable_if<IsVariant<TVariant>::value>::type remove(
+      const TVariant& key) const {
+    if (key.template is<size_t>())
+      remove(key.template as<size_t>());
+    else
+      remove(key.template as<const char*>());
+  }
+
   // Gets or sets an array element.
   // https://arduinojson.org/v7/api/jsonvariant/subscript/
   ElementProxy<TDerived> operator[](size_t index) const;
@@ -185,6 +196,12 @@ class VariantRefBase : public VariantTag {
   typename enable_if<IsString<TChar*>::value, bool>::type containsKey(
       TChar* key) const;
 
+  // Returns true if the object contains the specified key.
+  // https://arduinojson.org/v7/api/jsonvariant/containskey/
+  template <typename TVariant>
+  typename enable_if<IsVariant<TVariant>::value, bool>::type containsKey(
+      const TVariant& key) const;
+
   // Gets or sets an object member.
   // https://arduinojson.org/v7/api/jsonvariant/subscript/
   template <typename TString>
@@ -198,6 +215,17 @@ class VariantRefBase : public VariantTag {
   FORCE_INLINE typename enable_if<IsString<TChar*>::value,
                                   MemberProxy<TDerived, TChar*>>::type
   operator[](TChar* key) const;
+
+  // Gets an object member or an array element.
+  // https://arduinojson.org/v7/api/jsonvariant/subscript/
+  template <typename TVariant>
+  typename enable_if<IsVariant<TVariant>::value, JsonVariantConst>::type
+  operator[](const TVariant& key) const {
+    if (key.template is<size_t>())
+      return operator[](key.template as<size_t>());
+    else
+      return operator[](key.template as<const char*>());
+  }
 
   // DEPRECATED: use add<JsonVariant>() instead
   ARDUINOJSON_DEPRECATED("use add<JsonVariant>() instead")

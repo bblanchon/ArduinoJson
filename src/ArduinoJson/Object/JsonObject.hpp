@@ -102,7 +102,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v7/api/jsonobject/subscript/
   template <typename TString>
-
   typename detail::enable_if<detail::IsString<TString>::value,
                              detail::MemberProxy<JsonObject, TString>>::type
   operator[](const TString& key) const {
@@ -112,11 +111,22 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Gets or sets the member with specified key.
   // https://arduinojson.org/v7/api/jsonobject/subscript/
   template <typename TChar>
-
   typename detail::enable_if<detail::IsString<TChar*>::value,
                              detail::MemberProxy<JsonObject, TChar*>>::type
   operator[](TChar* key) const {
     return {*this, key};
+  }
+
+  // Gets or sets the member with specified key.
+  // https://arduinojson.org/v7/api/jsonobject/subscript/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value,
+                             detail::MemberProxy<JsonObject, const char*>>::type
+  operator[](const TVariant& key) const {
+    if (key.template is<const char*>())
+      return {*this, key.template as<const char*>()};
+    else
+      return {*this, nullptr};
   }
 
   // Removes the member at the specified iterator.
@@ -128,9 +138,19 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Removes the member with the specified key.
   // https://arduinojson.org/v7/api/jsonobject/remove/
   template <typename TString>
-  FORCE_INLINE void remove(const TString& key) const {
+  typename detail::enable_if<detail::IsString<TString>::value>::type remove(
+      const TString& key) const {
     detail::ObjectData::removeMember(data_, detail::adaptString(key),
                                      resources_);
+  }
+
+  // Removes the member with the specified key.
+  // https://arduinojson.org/v7/api/jsonobject/remove/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value>::type remove(
+      const TVariant& key) const {
+    if (key.template is<const char*>())
+      remove(key.template as<const char*>());
   }
 
   // Removes the member with the specified key.
@@ -144,7 +164,6 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonobject/containskey/
   template <typename TString>
-
   typename detail::enable_if<detail::IsString<TString>::value, bool>::type
   containsKey(const TString& key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
@@ -154,11 +173,18 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonobject/containskey/
   template <typename TChar>
-
   typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
   containsKey(TChar* key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
                                          resources_) != 0;
+  }
+
+  // Returns true if the object contains the specified key.
+  // https://arduinojson.org/v7/api/jsonobject/containskey/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value, bool>::type
+  containsKey(const TVariant& key) const {
+    return containsKey(key.template as<const char*>());
   }
 
   // DEPRECATED: use obj[key].to<JsonArray>() instead

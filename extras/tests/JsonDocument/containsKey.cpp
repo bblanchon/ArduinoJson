@@ -41,4 +41,12 @@ TEST_CASE("JsonDocument::containsKey()") {
   SECTION("returns false on null") {
     REQUIRE(doc.containsKey("hello") == false);
   }
+
+  SECTION("support JsonVariant") {
+    doc["hello"] = "world";
+    doc["key"] = "hello";
+
+    REQUIRE(doc.containsKey(doc["key"]) == true);
+    REQUIRE(doc.containsKey(doc["foo"]) == false);
+  }
 }

@@ -30,4 +30,10 @@ TEST_CASE("JsonObjectConst::operator[]") {
     REQUIRE(std::string("world") == obj[vla]);
   }
 #endif
+
+  SECTION("supports JsonVariant") {
+    doc["key"] = "hello";
+    REQUIRE(obj[obj["key"]] == "world");
+    REQUIRE(obj[obj["foo"]] == nullptr);
+  }
 }

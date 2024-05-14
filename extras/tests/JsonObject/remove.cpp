@@ -80,4 +80,10 @@ TEST_CASE("JsonObject::remove()") {
     JsonObject unboundObject;
     unboundObject.remove(unboundObject.begin());
   }
+
+  SECTION("remove(JsonVariant)") {
+    obj["key"] = "b";
+    obj.remove(obj["key"]);
+    REQUIRE("{\"a\":0,\"c\":2,\"key\":\"b\"}" == doc.as<std::string>());
+  }
 }

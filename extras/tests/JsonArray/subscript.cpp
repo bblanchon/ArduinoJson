@@ -164,4 +164,13 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(std::string("world") == array[0]);
   }
 #endif
+
+  SECTION("Use a JsonVariant as index") {
+    array[0] = 1;
+    array[1] = 2;
+    array[2] = 3;
+
+    REQUIRE(array[array[1]] == 3);
+    REQUIRE(array[array[3]] == nullptr);
+  }
 }

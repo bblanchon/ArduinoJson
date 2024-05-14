@@ -30,4 +30,10 @@ TEST_CASE("JsonObject::containsKey()") {
     REQUIRE(true == obj.containsKey(vla));
   }
 #endif
+
+  SECTION("key is a JsonVariant") {
+    doc["key"] = "hello";
+    REQUIRE(true == obj.containsKey(obj["key"]));
+    REQUIRE(false == obj.containsKey(obj["hello"]));
+  }
 }

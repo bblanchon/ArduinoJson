@@ -49,4 +49,25 @@ TEST_CASE("JsonDocument::remove()") {
     REQUIRE(doc.as<std::string>() == "{\"a\":1}");
   }
 #endif
+
+  SECTION("remove(JsonVariant) from object") {
+    doc["a"] = 1;
+    doc["b"] = 2;
+    doc["c"] = "b";
+
+    doc.remove(doc["c"]);
+
+    REQUIRE(doc.as<std::string>() == "{\"a\":1,\"c\":\"b\"}");
+  }
+
+  SECTION("remove(JsonVariant) from array") {
+    doc[0] = 3;
+    doc[1] = 2;
+    doc[2] = 1;
+
+    doc.remove(doc[2]);
+    doc.remove(doc[3]);  // noop
+
+    REQUIRE(doc.as<std::string>() == "[3,1]");
+  }
 }

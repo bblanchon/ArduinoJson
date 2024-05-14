@@ -13,8 +13,15 @@ TEST_CASE("JsonArrayConst::operator[]") {
   doc.add(2);
   doc.add(3);
 
-  REQUIRE(1 == arr[0].as<int>());
-  REQUIRE(2 == arr[1].as<int>());
-  REQUIRE(3 == arr[2].as<int>());
-  REQUIRE(0 == arr[3].as<int>());
+  SECTION("int") {
+    REQUIRE(1 == arr[0].as<int>());
+    REQUIRE(2 == arr[1].as<int>());
+    REQUIRE(3 == arr[2].as<int>());
+    REQUIRE(0 == arr[3].as<int>());
+  }
+
+  SECTION("JsonVariant") {
+    REQUIRE(2 == arr[arr[0]].as<int>());
+    REQUIRE(0 == arr[arr[3]].as<int>());
+  }
 }

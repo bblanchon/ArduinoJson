@@ -114,6 +114,15 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
     detail::ArrayData::removeElement(data_, index, resources_);
   }
 
+  // Removes the element at the specified index.
+  // https://arduinojson.org/v7/api/jsonarray/remove/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value>::type remove(
+      TVariant variant) const {
+    if (variant.template is<size_t>())
+      remove(variant.template as<size_t>());
+  }
+
   // Removes all the elements of the array.
   // https://arduinojson.org/v7/api/jsonarray/clear/
   void clear() const {
@@ -122,8 +131,23 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
 
   // Gets or sets the element at the specified index.
   // https://arduinojson.org/v7/api/jsonarray/subscript/
-  detail::ElementProxy<JsonArray> operator[](size_t index) const {
-    return {*this, index};
+  template <typename T>
+  typename detail::enable_if<detail::is_integral<T>::value,
+                             detail::ElementProxy<JsonArray>>::type
+  operator[](T index) const {
+    return {*this, size_t(index)};
+  }
+
+  // Gets or sets the element at the specified index.
+  // https://arduinojson.org/v7/api/jsonarray/subscript/
+  template <typename TVariant>
+  typename detail::enable_if<detail::IsVariant<TVariant>::value,
+                             detail::ElementProxy<JsonArray>>::type
+  operator[](const TVariant& variant) const {
+    if (variant.template is<size_t>())
+      return operator[](variant.template as<size_t>());
+    else
+      return {*this, size_t(-1)};
   }
 
   operator JsonVariantConst() const {

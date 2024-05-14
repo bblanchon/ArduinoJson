@@ -14,7 +14,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct is_enum {
-  static const bool value = is_convertible<T, int>::value &&
+  static const bool value = is_convertible<T, long long>::value &&
                             !is_class<T>::value && !is_integral<T>::value &&
                             !is_floating_point<T>::value;
 };

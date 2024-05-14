@@ -29,4 +29,10 @@ TEST_CASE("JsonObjectConst::containsKey()") {
     REQUIRE(true == obj.containsKey(vla));
   }
 #endif
+
+  SECTION("supports JsonVariant") {
+    doc["key"] = "hello";
+    REQUIRE(true == obj.containsKey(obj["key"]));
+    REQUIRE(false == obj.containsKey(obj["hello"]));
+  }
 }

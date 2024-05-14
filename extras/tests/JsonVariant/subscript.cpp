@@ -67,6 +67,15 @@ TEST_CASE("JsonVariant::operator[]") {
       REQUIRE(var.is<int>());
       REQUIRE(var.as<int>() == 123);
     }
+
+    SECTION("use JsonVariant as index") {
+      array.add("A");
+      array.add("B");
+      array.add(1);
+
+      REQUIRE(var[var[2]] == "B");
+      REQUIRE(var[var[3]].isNull());
+    }
   }
 
   SECTION("The JsonVariant is a JsonObject") {
@@ -102,6 +111,15 @@ TEST_CASE("JsonVariant::operator[]") {
     SECTION("var[key].to<JsonArray>()") {
       JsonArray arr = var["hello"].to<JsonArray>();
       REQUIRE(arr.isNull() == false);
+    }
+
+    SECTION("use JsonVariant as key") {
+      object["a"] = "a";
+      object["b"] = "b";
+      object["c"] = "b";
+
+      REQUIRE(var[var["c"]] == "b");
+      REQUIRE(var[var["d"]].isNull());
     }
   }
 

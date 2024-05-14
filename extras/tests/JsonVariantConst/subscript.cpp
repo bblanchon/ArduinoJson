@@ -27,13 +27,24 @@ TEST_CASE("JsonVariantConst::operator[]") {
     array.add("A");
     array.add("B");
 
-    REQUIRE(std::string("A") == var[0]);
-    REQUIRE(std::string("B") == var[1]);
-    REQUIRE(std::string("A") ==
-            var[static_cast<unsigned char>(0)]);  // issue #381
-    REQUIRE(var[666].isNull());
-    REQUIRE(var[3].isNull());
-    REQUIRE(var["0"].isNull());
+    SECTION("int") {
+      REQUIRE(std::string("A") == var[0]);
+      REQUIRE(std::string("B") == var[1]);
+      REQUIRE(std::string("A") ==
+              var[static_cast<unsigned char>(0)]);  // issue #381
+      REQUIRE(var[666].isNull());
+      REQUIRE(var[3].isNull());
+    }
+
+    SECTION("const char*") {
+      REQUIRE(var["0"].isNull());
+    }
+
+    SECTION("JsonVariant") {
+      array.add(1);
+      REQUIRE(var[var[2]] == std::string("B"));
+      REQUIRE(var[var[3]].isNull());
+    }
   }
 
   SECTION("object") {
@@ -64,5 +75,11 @@ TEST_CASE("JsonVariantConst::operator[]") {
       REQUIRE(std::string("A") == var[vla]);
     }
 #endif
+
+    SECTION("supports JsonVariant") {
+      object["c"] = "b";
+      REQUIRE(var[var["c"]] == "B");
+      REQUIRE(var[var["d"]].isNull());
+    }
   }
 }
