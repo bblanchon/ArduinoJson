@@ -117,4 +117,13 @@ TEST_CASE("JsonDocument constructor") {
 
     REQUIRE(doc2.as<std::string>() == "hello");
   }
+
+  SECTION("JsonDocument(JsonVariantConst)") {
+    JsonDocument doc1;
+    deserializeJson(doc1, "\"hello\"");
+
+    JsonDocument doc2(doc1.as<JsonVariantConst>());
+
+    REQUIRE(doc2.as<std::string>() == "hello");
+  }
 }
