@@ -126,4 +126,22 @@ TEST_CASE("JsonDocument constructor") {
 
     REQUIRE(doc2.as<std::string>() == "hello");
   }
+
+  SECTION("JsonDocument(ElementProxy)") {
+    JsonDocument doc1;
+    deserializeJson(doc1, "[\"hello\",\"world\"]");
+
+    JsonDocument doc2(doc1[1]);
+
+    REQUIRE(doc2.as<std::string>() == "world");
+  }
+
+  SECTION("JsonDocument(MemberProxy)") {
+    JsonDocument doc1;
+    deserializeJson(doc1, "{\"hello\":\"world\"}");
+
+    JsonDocument doc2(doc1["hello"]);
+
+    REQUIRE(doc2.as<std::string>() == "world");
+  }
 }

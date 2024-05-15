@@ -37,15 +37,13 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
   // Construct from variant, array, or object
   template <typename T>
-  JsonDocument(const T& src,
-               Allocator* alloc = detail::DefaultAllocator::instance(),
-               typename detail::enable_if<
-                   detail::is_same<T, JsonVariant>::value ||
-                   detail::is_same<T, JsonVariantConst>::value ||
-                   detail::is_same<T, JsonArray>::value ||
-                   detail::is_same<T, JsonArrayConst>::value ||
-                   detail::is_same<T, JsonObject>::value ||
-                   detail::is_same<T, JsonObjectConst>::value>::type* = 0)
+  JsonDocument(
+      const T& src, Allocator* alloc = detail::DefaultAllocator::instance(),
+      typename detail::enable_if<
+          detail::IsVariant<T>::value || detail::is_same<T, JsonArray>::value ||
+          detail::is_same<T, JsonArrayConst>::value ||
+          detail::is_same<T, JsonObject>::value ||
+          detail::is_same<T, JsonObjectConst>::value>::type* = 0)
       : JsonDocument(alloc) {
     set(src);
   }
