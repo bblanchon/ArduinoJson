@@ -1,3 +1,7 @@
+if(NOT DEFINED COVERAGE)
+	set(COVERAGE OFF)
+endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 	add_compile_options(
 		-pedantic
