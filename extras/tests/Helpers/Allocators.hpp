@@ -10,6 +10,8 @@
 
 #include <sstream>
 
+namespace {
+
 struct FailingAllocator : ArduinoJson::Allocator {
   static FailingAllocator* instance() {
     static FailingAllocator allocator;
@@ -260,6 +262,7 @@ class TimebombAllocator : public ArduinoJson::Allocator {
   size_t countdown_ = 0;
   Allocator* upstream_;
 };
+}  // namespace
 
 inline size_t sizeofPoolList(size_t n = ARDUINOJSON_INITIAL_POOL_COUNT) {
   return sizeof(ArduinoJson::detail::VariantPool) * n;
