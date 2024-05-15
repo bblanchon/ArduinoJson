@@ -472,7 +472,7 @@ jobs:
         run: ctest --output-on-failure -LE WillFail -T memcheck
         id: memcheck
       - name: MemoryChecker.*.log
-        run: cat Testing/Temporary/MemoryChecker.*.log
+        run: cat Testing/Temporary/MemoryChecker.*.log > $GITHUB_STEP_SUMMARY
         if: failure()
 
   clang-tidy:
