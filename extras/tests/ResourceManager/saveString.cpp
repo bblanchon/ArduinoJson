@@ -3,6 +3,7 @@
 // MIT License
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
+#include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <catch.hpp>
 
