@@ -19,7 +19,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   typedef JsonObjectConstIterator iterator;
 
   // Creates an unbound reference.
-  JsonObjectConst() : data_(0) {}
+  JsonObjectConst() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
   JsonObjectConst(const detail::ObjectData* data,

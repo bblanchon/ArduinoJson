@@ -36,7 +36,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   }
 
   // Creates an unbound reference.
-  JsonArrayConst() : data_(0) {}
+  JsonArrayConst() : data_(0), resources_(0) {}
 
   // INTERNAL USE ONLY
   JsonArrayConst(const detail::ArrayData* data,
