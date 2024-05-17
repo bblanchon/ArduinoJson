@@ -2,9 +2,7 @@
 // Copyright © 2014-2024, Benoit BLANCHON
 // MIT License
 
-#include <ArduinoJson/Memory/Alignment.hpp>
-#include <ArduinoJson/Memory/ResourceManager.hpp>
-#include <ArduinoJson/Memory/VariantPoolImpl.hpp>
+#include <ArduinoJson.hpp>
 #include <catch.hpp>
 
 #include "Allocators.hpp"

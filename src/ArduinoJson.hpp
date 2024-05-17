@@ -36,6 +36,7 @@
 #include "ArduinoJson/Array/ElementProxy.hpp"
 #include "ArduinoJson/Array/Utilities.hpp"
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
+#include "ArduinoJson/Memory/ResourceManagerImpl.hpp"
 #include "ArduinoJson/Memory/VariantPoolImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Object/ObjectImpl.hpp"
