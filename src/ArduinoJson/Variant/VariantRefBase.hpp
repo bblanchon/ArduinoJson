@@ -79,12 +79,16 @@ class VariantRefBase : public VariantTag {
   // Copies the specified value.
   // https://arduinojson.org/v7/api/jsonvariant/set/
   template <typename T>
-  bool set(const T& value) const;
+  bool set(const T& value) const {
+    return doSet<Converter<typename remove_cv<T>::type>>(value);
+  }
 
   // Copies the specified value.
   // https://arduinojson.org/v7/api/jsonvariant/set/
   template <typename T>
-  bool set(T* value) const;
+  bool set(T* value) const {
+    return doSet<Converter<T*>>(value);
+  }
 
   // Returns the size of the array or object.
   // https://arduinojson.org/v7/api/jsonvariant/size/
@@ -289,6 +293,21 @@ class VariantRefBase : public VariantTag {
   getVariant() const {
     return getVariant();
   }
+
+  template <typename TConverter, typename T>
+  bool doSet(T&& value) const {
+    return doSet<TConverter>(
+        detail::forward<T>(value),
+        is_same<typename function_traits<
+                    decltype(&TConverter::toJson)>::return_type,
+                bool>{});
+  }
+
+  template <typename TConverter, typename T>
+  bool doSet(T&& value, false_type) const;
+
+  template <typename TConverter, typename T>
+  bool doSet(T&& value, true_type) const;
 
   ArduinoJson::JsonVariant getOrCreateVariant() const;
 };

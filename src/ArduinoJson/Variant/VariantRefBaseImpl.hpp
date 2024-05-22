@@ -139,20 +139,17 @@ VariantRefBase<TDerived>::operator[](const TString& key) const {
 }
 
 template <typename TDerived>
-template <typename T>
-inline bool VariantRefBase<TDerived>::set(const T& value) const {
-  Converter<typename detail::remove_cv<T>::type>::toJson(value,
-                                                         getOrCreateVariant());
+template <typename TConverter, typename T>
+inline bool VariantRefBase<TDerived>::doSet(T&& value, false_type) const {
+  TConverter::toJson(value, getOrCreateVariant());
   auto resources = getResourceManager();
   return resources && !resources->overflowed();
 }
 
 template <typename TDerived>
-template <typename T>
-inline bool VariantRefBase<TDerived>::set(T* value) const {
-  Converter<T*>::toJson(value, getOrCreateVariant());
-  auto resources = getResourceManager();
-  return resources && !resources->overflowed();
+template <typename TConverter, typename T>
+inline bool VariantRefBase<TDerived>::doSet(T&& value, true_type) const {
+  return TConverter::toJson(value, getOrCreateVariant());
 }
 
 template <typename TDerived>

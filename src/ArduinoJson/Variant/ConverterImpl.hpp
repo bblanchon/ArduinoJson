@@ -59,11 +59,13 @@ struct Converter<
                                   !detail::is_same<bool, T>::value &&
                                   !detail::is_same<char, T>::value>::type>
     : private detail::VariantAttorney {
-  static void toJson(T src, JsonVariant dst) {
+  static bool toJson(T src, JsonVariant dst) {
     ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
     auto data = getData(dst);
-    if (data)
-      data->setInteger(src, getResourceManager(dst));
+    if (!data)
+      return false;
+    data->setInteger(src, getResourceManager(dst));
+    return true;
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -81,8 +83,8 @@ struct Converter<
 template <typename T>
 struct Converter<T, typename detail::enable_if<detail::is_enum<T>::value>::type>
     : private detail::VariantAttorney {
-  static void toJson(T src, JsonVariant dst) {
-    dst.set(static_cast<JsonInteger>(src));
+  static bool toJson(T src, JsonVariant dst) {
+    return dst.set(static_cast<JsonInteger>(src));
   }
 
   static T fromJson(JsonVariantConst src) {
@@ -98,10 +100,12 @@ struct Converter<T, typename detail::enable_if<detail::is_enum<T>::value>::type>
 
 template <>
 struct Converter<bool> : private detail::VariantAttorney {
-  static void toJson(bool src, JsonVariant dst) {
+  static bool toJson(bool src, JsonVariant dst) {
     auto data = getData(dst);
-    if (data)
-      data->setBoolean(src, getResourceManager(dst));
+    if (!data)
+      return false;
+    data->setBoolean(src, getResourceManager(dst));
+    return true;
   }
 
   static bool fromJson(JsonVariantConst src) {
@@ -119,10 +123,12 @@ template <typename T>
 struct Converter<
     T, typename detail::enable_if<detail::is_floating_point<T>::value>::type>
     : private detail::VariantAttorney {
-  static void toJson(T src, JsonVariant dst) {
+  static bool toJson(T src, JsonVariant dst) {
     auto data = getData(dst);
-    if (data)
-      data->setFloat(static_cast<JsonFloat>(src), getResourceManager(dst));
+    if (!data)
+      return false;
+    data->setFloat(static_cast<JsonFloat>(src), getResourceManager(dst));
+    return true;
   }
 
   static T fromJson(JsonVariantConst src) {
