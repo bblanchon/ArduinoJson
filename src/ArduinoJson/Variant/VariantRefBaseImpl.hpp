@@ -17,9 +17,10 @@ inline JsonVariant VariantRefBase<TDerived>::add() const {
 
 template <typename TDerived>
 template <typename T>
-inline typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
-VariantRefBase<TDerived>::as() const {
-  return Converter<T>::fromJson(getVariant());
+inline T VariantRefBase<TDerived>::as() const {
+  using variant_type =  // JsonVariantConst or JsonVariant?
+      typename function_traits<decltype(&Converter<T>::fromJson)>::arg1_type;
+  return Converter<T>::fromJson(getVariant<variant_type>());
 }
 
 template <typename TDerived>
@@ -109,9 +110,10 @@ inline JsonVariant VariantRefBase<TDerived>::getOrCreateVariant() const {
 
 template <typename TDerived>
 template <typename T>
-inline typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
-VariantRefBase<TDerived>::is() const {
-  return Converter<T>::checkJson(getVariant());
+inline bool VariantRefBase<TDerived>::is() const {
+  using variant_type =  // JsonVariantConst or JsonVariant?
+      typename function_traits<decltype(&Converter<T>::checkJson)>::arg1_type;
+  return Converter<T>::checkJson(getVariant<variant_type>());
 }
 
 template <typename TDerived>

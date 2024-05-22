@@ -46,16 +46,7 @@ class VariantRefBase : public VariantTag {
   // Casts the value to the specified type.
   // https://arduinojson.org/v7/api/jsonvariant/as/
   template <typename T>
-
-  typename enable_if<!ConverterNeedsWriteableRef<T>::value, T>::type as()
-      const {
-    return Converter<T>::fromJson(getVariantConst());
-  }
-
-  // Casts the value to the specified type.
-  // https://arduinojson.org/v7/api/jsonvariant/as/
-  template <typename T>
-  typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type as() const;
+  T as() const;
 
   template <typename T,
             typename = typename enable_if<!is_same<T, TDerived>::value>::type>
@@ -83,18 +74,7 @@ class VariantRefBase : public VariantTag {
   // Returns true if the value is of the specified type.
   // https://arduinojson.org/v7/api/jsonvariant/is/
   template <typename T>
-  FORCE_INLINE
-      typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
-      is() const;
-
-  // Returns true if the value is of the specified type.
-  // https://arduinojson.org/v7/api/jsonvariant/is/
-  template <typename T>
-  FORCE_INLINE
-      typename enable_if<!ConverterNeedsWriteableRef<T>::value, bool>::type
-      is() const {
-    return Converter<T>::checkJson(getVariantConst());
-  }
+  FORCE_INLINE bool is() const;
 
   // Copies the specified value.
   // https://arduinojson.org/v7/api/jsonvariant/set/
@@ -296,6 +276,18 @@ class VariantRefBase : public VariantTag {
 
   FORCE_INLINE ArduinoJson::JsonVariantConst getVariantConst() const {
     return ArduinoJson::JsonVariantConst(getData(), getResourceManager());
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, JsonVariantConst>::value, T>::type
+  getVariant() const {
+    return getVariantConst();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<is_same<T, JsonVariant>::value, T>::type
+  getVariant() const {
+    return getVariant();
   }
 
   ArduinoJson::JsonVariant getOrCreateVariant() const;

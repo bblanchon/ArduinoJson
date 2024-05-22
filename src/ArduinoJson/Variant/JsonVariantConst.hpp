@@ -27,6 +27,12 @@ class JsonVariantConst : public detail::VariantTag,
                          public detail::VariantOperators<JsonVariantConst> {
   friend class detail::VariantAttorney;
 
+  template <typename T>
+  using ConversionSupported =
+      detail::is_same<typename detail::function_traits<
+                          decltype(&Converter<T>::fromJson)>::arg1_type,
+                      JsonVariantConst>;
+
  public:
   // Creates an unbound reference.
   JsonVariantConst() : data_(nullptr), resources_(nullptr) {}
@@ -62,21 +68,33 @@ class JsonVariantConst : public detail::VariantTag,
   // Casts the value to the specified type.
   // https://arduinojson.org/v7/api/jsonvariantconst/as/
   template <typename T>
-  typename detail::enable_if<!detail::is_same<T, char*>::value &&
-                                 !detail::is_same<T, char>::value,
-                             T>::type
-  as() const {
+  typename detail::enable_if<ConversionSupported<T>::value, T>::type as()
+      const {
     return Converter<T>::fromJson(*this);
   }
+
+  // Casts the value to the specified type.
+  // https://arduinojson.org/v7/api/jsonvariantconst/as/
+  template <typename T>
+  typename detail::enable_if<
+      !ConversionSupported<T>::value,
+      detail::InvalidConversion<JsonVariantConst, T>>::type
+  as() const;
 
   // Returns true if the value is of the specified type.
   // https://arduinojson.org/v7/api/jsonvariantconst/is/
   template <typename T>
-  typename detail::enable_if<!detail::is_same<T, char*>::value &&
-                                 !detail::is_same<T, char>::value,
-                             bool>::type
-  is() const {
+  typename detail::enable_if<ConversionSupported<T>::value, bool>::type is()
+      const {
     return Converter<T>::checkJson(*this);
+  }
+
+  // Always returns false for the unsupported types.
+  // https://arduinojson.org/v7/api/jsonvariantconst/is/
+  template <typename T>
+  typename detail::enable_if<!ConversionSupported<T>::value, bool>::type is()
+      const {
+    return false;
   }
 
   template <typename T>

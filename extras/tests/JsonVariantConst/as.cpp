@@ -17,3 +17,24 @@ TEST_CASE("JsonVariantConst::as<T>()") {
   REQUIRE(var.as<const char*>() == std::string("hello"));
   REQUIRE(var.as<std::string>() == std::string("hello"));
 }
+
+TEST_CASE("Invalid conversions") {
+  using namespace ArduinoJson::detail;
+
+  JsonVariantConst variant;
+
+  CHECK(is_same<decltype(variant.as<int>()), int>::value);
+  CHECK(is_same<decltype(variant.as<float>()), float>::value);
+  CHECK(is_same<decltype(variant.as<JsonVariantConst>()),
+                JsonVariantConst>::value);
+  CHECK(
+      is_same<decltype(variant.as<JsonObjectConst>()), JsonObjectConst>::value);
+  CHECK(is_same<decltype(variant.as<JsonArrayConst>()), JsonArrayConst>::value);
+
+  CHECK(is_same<decltype(variant.as<JsonVariant>()),
+                InvalidConversion<JsonVariantConst, JsonVariant>>::value);
+  CHECK(is_same<decltype(variant.as<JsonObject>()),
+                InvalidConversion<JsonVariantConst, JsonObject>>::value);
+  CHECK(is_same<decltype(variant.as<JsonArray>()),
+                InvalidConversion<JsonVariantConst, JsonArray>>::value);
+}

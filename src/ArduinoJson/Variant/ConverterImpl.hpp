@@ -305,19 +305,6 @@ inline bool canConvertFromJson(JsonVariantConst src, const std::string_view&) {
 
 #endif
 
-namespace detail {
-template <typename T>
-struct ConverterNeedsWriteableRef {
- protected:  // <- to avoid GCC's "all member functions in class are private"
-  static int probe(T (*f)(ArduinoJson::JsonVariant));
-  static char probe(T (*f)(ArduinoJson::JsonVariantConst));
-
- public:
-  static const bool value =
-      sizeof(probe(Converter<T>::fromJson)) == sizeof(int);
-};
-}  // namespace detail
-
 template <>
 struct Converter<JsonArrayConst> : private detail::VariantAttorney {
   static void toJson(JsonArrayConst src, JsonVariant dst) {
@@ -352,13 +339,6 @@ struct Converter<JsonArray> : private detail::VariantAttorney {
     auto data = getData(src);
     auto resources = getResourceManager(src);
     return JsonArray(data != 0 ? data->asArray() : 0, resources);
-  }
-
-  static detail::InvalidConversion<JsonVariantConst, JsonArray> fromJson(
-      JsonVariantConst);
-
-  static bool checkJson(JsonVariantConst) {
-    return false;
   }
 
   static bool checkJson(JsonVariant src) {
@@ -401,13 +381,6 @@ struct Converter<JsonObject> : private detail::VariantAttorney {
     auto data = getData(src);
     auto resources = getResourceManager(src);
     return JsonObject(data != 0 ? data->asObject() : 0, resources);
-  }
-
-  static detail::InvalidConversion<JsonVariantConst, JsonObject> fromJson(
-      JsonVariantConst);
-
-  static bool checkJson(JsonVariantConst) {
-    return false;
   }
 
   static bool checkJson(JsonVariant src) {
