@@ -62,7 +62,7 @@ class ZeroTerminatedRamString {
 };
 
 template <typename TChar>
-struct StringAdapter<TChar*, typename enable_if<IsChar<TChar>::value>::type> {
+struct StringAdapter<TChar*, enable_if_t<IsChar<TChar>::value>> {
   typedef ZeroTerminatedRamString AdaptedString;
 
   static AdaptedString adapt(const TChar* p) {
@@ -71,7 +71,7 @@ struct StringAdapter<TChar*, typename enable_if<IsChar<TChar>::value>::type> {
 };
 
 template <typename TChar, size_t N>
-struct StringAdapter<TChar[N], typename enable_if<IsChar<TChar>::value>::type> {
+struct StringAdapter<TChar[N], enable_if_t<IsChar<TChar>::value>> {
   typedef ZeroTerminatedRamString AdaptedString;
 
   static AdaptedString adapt(const TChar* p) {
@@ -131,8 +131,7 @@ class SizedRamString {
 };
 
 template <typename TChar>
-struct SizedStringAdapter<TChar*,
-                          typename enable_if<IsChar<TChar>::value>::type> {
+struct SizedStringAdapter<TChar*, enable_if_t<IsChar<TChar>::value>> {
   typedef SizedRamString AdaptedString;
 
   static AdaptedString adapt(const TChar* p, size_t n) {

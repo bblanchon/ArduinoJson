@@ -25,4 +25,7 @@ struct remove_cv<const volatile T> {
   typedef T type;
 };
 
+template <typename T>
+using remove_cv_t = typename remove_cv<T>::type;
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

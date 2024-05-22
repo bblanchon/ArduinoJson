@@ -19,8 +19,7 @@ template <typename T, typename Enable = void>
 struct Comparer;
 
 template <typename T>
-struct Comparer<T, typename enable_if<IsString<T>::value>::type>
-    : ComparerBase {
+struct Comparer<T, enable_if_t<IsString<T>::value>> : ComparerBase {
   T rhs;  // TODO: store adapted string?
 
   explicit Comparer(T value) : rhs(value) {}
@@ -46,8 +45,8 @@ struct Comparer<T, typename enable_if<IsString<T>::value>::type>
 };
 
 template <typename T>
-struct Comparer<T, typename enable_if<is_integral<T>::value ||
-                                      is_floating_point<T>::value>::type>
+struct Comparer<
+    T, enable_if_t<is_integral<T>::value || is_floating_point<T>::value>>
     : ComparerBase {
   T rhs;
 
@@ -200,8 +199,8 @@ struct VariantComparer : ComparerBase {
 };
 
 template <typename T>
-struct Comparer<T, typename enable_if<is_convertible<
-                       T, ArduinoJson::JsonVariantConst>::value>::type>
+struct Comparer<
+    T, enable_if_t<is_convertible<T, ArduinoJson::JsonVariantConst>::value>>
     : VariantComparer {
   explicit Comparer(const T& value)
       : VariantComparer(static_cast<JsonVariantConst>(value)) {}

@@ -68,32 +68,28 @@ class JsonVariantConst : public detail::VariantTag,
   // Casts the value to the specified type.
   // https://arduinojson.org/v7/api/jsonvariantconst/as/
   template <typename T>
-  typename detail::enable_if<ConversionSupported<T>::value, T>::type as()
-      const {
+  detail::enable_if_t<ConversionSupported<T>::value, T> as() const {
     return Converter<T>::fromJson(*this);
   }
 
   // Casts the value to the specified type.
   // https://arduinojson.org/v7/api/jsonvariantconst/as/
   template <typename T>
-  typename detail::enable_if<
-      !ConversionSupported<T>::value,
-      detail::InvalidConversion<JsonVariantConst, T>>::type
+  detail::enable_if_t<!ConversionSupported<T>::value,
+                      detail::InvalidConversion<JsonVariantConst, T>>
   as() const;
 
   // Returns true if the value is of the specified type.
   // https://arduinojson.org/v7/api/jsonvariantconst/is/
   template <typename T>
-  typename detail::enable_if<ConversionSupported<T>::value, bool>::type is()
-      const {
+  detail::enable_if_t<ConversionSupported<T>::value, bool> is() const {
     return Converter<T>::checkJson(*this);
   }
 
   // Always returns false for the unsupported types.
   // https://arduinojson.org/v7/api/jsonvariantconst/is/
   template <typename T>
-  typename detail::enable_if<!ConversionSupported<T>::value, bool>::type is()
-      const {
+  detail::enable_if_t<!ConversionSupported<T>::value, bool> is() const {
     return false;
   }
 
@@ -105,8 +101,7 @@ class JsonVariantConst : public detail::VariantTag,
   // Gets array's element at specified index.
   // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
   template <typename T>
-  typename detail::enable_if<detail::is_integral<T>::value,
-                             JsonVariantConst>::type
+  detail::enable_if_t<detail::is_integral<T>::value, JsonVariantConst>
   operator[](T index) const {
     return JsonVariantConst(
         detail::VariantData::getElement(data_, size_t(index), resources_),
@@ -116,8 +111,7 @@ class JsonVariantConst : public detail::VariantTag,
   // Gets object's member with specified key.
   // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
   template <typename TString>
-  typename detail::enable_if<detail::IsString<TString>::value,
-                             JsonVariantConst>::type
+  detail::enable_if_t<detail::IsString<TString>::value, JsonVariantConst>
   operator[](const TString& key) const {
     return JsonVariantConst(detail::VariantData::getMember(
                                 data_, detail::adaptString(key), resources_),
@@ -127,8 +121,7 @@ class JsonVariantConst : public detail::VariantTag,
   // Gets object's member with specified key.
   // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
   template <typename TChar>
-  typename detail::enable_if<detail::IsString<TChar*>::value,
-                             JsonVariantConst>::type
+  detail::enable_if_t<detail::IsString<TChar*>::value, JsonVariantConst>
   operator[](TChar* key) const {
     return JsonVariantConst(detail::VariantData::getMember(
                                 data_, detail::adaptString(key), resources_),
@@ -139,8 +132,7 @@ class JsonVariantConst : public detail::VariantTag,
   // specified index.
   // https://arduinojson.org/v7/api/jsonvariantconst/subscript/
   template <typename TVariant>
-  typename detail::enable_if<detail::IsVariant<TVariant>::value,
-                             JsonVariantConst>::type
+  detail::enable_if_t<detail::IsVariant<TVariant>::value, JsonVariantConst>
   operator[](const TVariant& key) const {
     if (key.template is<size_t>())
       return operator[](key.template as<size_t>());
@@ -151,8 +143,8 @@ class JsonVariantConst : public detail::VariantTag,
   // Returns true if tge object contains the specified key.
   // https://arduinojson.org/v7/api/jsonvariantconst/containskey/
   template <typename TString>
-  typename detail::enable_if<detail::IsString<TString>::value, bool>::type
-  containsKey(const TString& key) const {
+  detail::enable_if_t<detail::IsString<TString>::value, bool> containsKey(
+      const TString& key) const {
     return detail::VariantData::getMember(getData(), detail::adaptString(key),
                                           resources_) != 0;
   }
@@ -160,15 +152,15 @@ class JsonVariantConst : public detail::VariantTag,
   // Returns true if tge object contains the specified key.
   // https://arduinojson.org/v7/api/jsonvariantconst/containskey/
   template <typename TChar>
-  typename detail::enable_if<detail::IsString<TChar*>::value, bool>::type
-  containsKey(TChar* key) const {
+  detail::enable_if_t<detail::IsString<TChar*>::value, bool> containsKey(
+      TChar* key) const {
     return detail::VariantData::getMember(getData(), detail::adaptString(key),
                                           resources_) != 0;
   }
 
   template <typename TVariant>
-  typename detail::enable_if<detail::IsVariant<TVariant>::value, bool>::type
-  containsKey(const TVariant& key) const {
+  detail::enable_if_t<detail::IsVariant<TVariant>::value, bool> containsKey(
+      const TVariant& key) const {
     return containsKey(key.template as<const char*>());
   }
 

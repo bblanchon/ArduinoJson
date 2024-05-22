@@ -48,8 +48,7 @@ class VariantRefBase : public VariantTag {
   template <typename T>
   T as() const;
 
-  template <typename T,
-            typename = typename enable_if<!is_same<T, TDerived>::value>::type>
+  template <typename T, typename = enable_if_t<!is_same<T, TDerived>::value>>
   operator T() const {
     return as<T>();
   }
@@ -57,19 +56,17 @@ class VariantRefBase : public VariantTag {
   // Sets the value to an empty array.
   // https://arduinojson.org/v7/api/jsonvariant/to/
   template <typename T>
-  typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type to() const;
+  enable_if_t<is_same<T, JsonArray>::value, JsonArray> to() const;
 
   // Sets the value to an empty object.
   // https://arduinojson.org/v7/api/jsonvariant/to/
   template <typename T>
-  typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type to()
-      const;
+  enable_if_t<is_same<T, JsonObject>::value, JsonObject> to() const;
 
   // Sets the value to null.
   // https://arduinojson.org/v7/api/jsonvariant/to/
   template <typename T>
-  typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type to()
-      const;
+  enable_if_t<is_same<T, JsonVariant>::value, JsonVariant> to() const;
 
   // Returns true if the value is of the specified type.
   // https://arduinojson.org/v7/api/jsonvariant/is/
@@ -80,7 +77,7 @@ class VariantRefBase : public VariantTag {
   // https://arduinojson.org/v7/api/jsonvariant/set/
   template <typename T>
   bool set(const T& value) const {
-    return doSet<Converter<typename remove_cv<T>::type>>(value);
+    return doSet<Converter<remove_cv_t<T>>>(value);
   }
 
   // Copies the specified value.
@@ -106,7 +103,7 @@ class VariantRefBase : public VariantTag {
   // Returns a reference to the new element.
   // https://arduinojson.org/v7/api/jsonvariant/add/
   template <typename T>
-  typename enable_if<!is_same<T, JsonVariant>::value, T>::type add() const {
+  enable_if_t<!is_same<T, JsonVariant>::value, T> add() const {
     return add<JsonVariant>().template to<T>();
   }
 
@@ -114,7 +111,7 @@ class VariantRefBase : public VariantTag {
   // Returns a reference to the new element.
   // https://arduinojson.org/v7/api/jsonvariant/add/
   template <typename T>
-  typename enable_if<is_same<T, JsonVariant>::value, T>::type add() const;
+  enable_if_t<is_same<T, JsonVariant>::value, T> add() const;
 
   // Appends a value to the array.
   // https://arduinojson.org/v7/api/jsonvariant/add/
@@ -139,7 +136,7 @@ class VariantRefBase : public VariantTag {
   // Removes a member of the object.
   // https://arduinojson.org/v7/api/jsonvariant/remove/
   template <typename TChar>
-  typename enable_if<IsString<TChar*>::value>::type remove(TChar* key) const {
+  enable_if_t<IsString<TChar*>::value> remove(TChar* key) const {
     VariantData::removeMember(getData(), adaptString(key),
                               getResourceManager());
   }
@@ -147,8 +144,7 @@ class VariantRefBase : public VariantTag {
   // Removes a member of the object.
   // https://arduinojson.org/v7/api/jsonvariant/remove/
   template <typename TString>
-  typename enable_if<IsString<TString>::value>::type remove(
-      const TString& key) const {
+  enable_if_t<IsString<TString>::value> remove(const TString& key) const {
     VariantData::removeMember(getData(), adaptString(key),
                               getResourceManager());
   }
@@ -156,8 +152,7 @@ class VariantRefBase : public VariantTag {
   // Removes a member of the object or an element of the array.
   // https://arduinojson.org/v7/api/jsonvariant/remove/
   template <typename TVariant>
-  typename enable_if<IsVariant<TVariant>::value>::type remove(
-      const TVariant& key) const {
+  enable_if_t<IsVariant<TVariant>::value> remove(const TVariant& key) const {
     if (key.template is<size_t>())
       remove(key.template as<size_t>());
     else
@@ -171,40 +166,39 @@ class VariantRefBase : public VariantTag {
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonvariant/containskey/
   template <typename TString>
-  typename enable_if<IsString<TString>::value, bool>::type containsKey(
+  enable_if_t<IsString<TString>::value, bool> containsKey(
       const TString& key) const;
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonvariant/containskey/
   template <typename TChar>
-  typename enable_if<IsString<TChar*>::value, bool>::type containsKey(
-      TChar* key) const;
+  enable_if_t<IsString<TChar*>::value, bool> containsKey(TChar* key) const;
 
   // Returns true if the object contains the specified key.
   // https://arduinojson.org/v7/api/jsonvariant/containskey/
   template <typename TVariant>
-  typename enable_if<IsVariant<TVariant>::value, bool>::type containsKey(
+  enable_if_t<IsVariant<TVariant>::value, bool> containsKey(
       const TVariant& key) const;
 
   // Gets or sets an object member.
   // https://arduinojson.org/v7/api/jsonvariant/subscript/
   template <typename TString>
-  FORCE_INLINE typename enable_if<IsString<TString>::value,
-                                  MemberProxy<TDerived, TString>>::type
-  operator[](const TString& key) const;
+  FORCE_INLINE
+      enable_if_t<IsString<TString>::value, MemberProxy<TDerived, TString>>
+      operator[](const TString& key) const;
 
   // Gets or sets an object member.
   // https://arduinojson.org/v7/api/jsonvariant/subscript/
   template <typename TChar>
-  FORCE_INLINE typename enable_if<IsString<TChar*>::value,
-                                  MemberProxy<TDerived, TChar*>>::type
-  operator[](TChar* key) const;
+  FORCE_INLINE
+      enable_if_t<IsString<TChar*>::value, MemberProxy<TDerived, TChar*>>
+      operator[](TChar* key) const;
 
   // Gets an object member or an array element.
   // https://arduinojson.org/v7/api/jsonvariant/subscript/
   template <typename TVariant>
-  typename enable_if<IsVariant<TVariant>::value, JsonVariantConst>::type
-  operator[](const TVariant& key) const {
+  enable_if_t<IsVariant<TVariant>::value, JsonVariantConst> operator[](
+      const TVariant& key) const {
     if (key.template is<size_t>())
       return operator[](key.template as<size_t>());
     else
@@ -283,14 +277,14 @@ class VariantRefBase : public VariantTag {
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, JsonVariantConst>::value, T>::type
-  getVariant() const {
+  FORCE_INLINE enable_if_t<is_same<T, JsonVariantConst>::value, T> getVariant()
+      const {
     return getVariantConst();
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<is_same<T, JsonVariant>::value, T>::type
-  getVariant() const {
+  FORCE_INLINE enable_if_t<is_same<T, JsonVariant>::value, T> getVariant()
+      const {
     return getVariant();
   }
 

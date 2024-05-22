@@ -32,34 +32,34 @@ CompareResult arithmeticCompare(const T& lhs, const T& rhs) {
 template <typename T1, typename T2>
 CompareResult arithmeticCompare(
     const T1& lhs, const T2& rhs,
-    typename enable_if<is_integral<T1>::value && is_integral<T2>::value &&
-                       sizeof(T1) < sizeof(T2)>::type* = 0) {
+    enable_if_t<is_integral<T1>::value && is_integral<T2>::value &&
+                sizeof(T1) < sizeof(T2)>* = 0) {
   return arithmeticCompare<T2>(static_cast<T2>(lhs), rhs);
 }
 
 template <typename T1, typename T2>
 CompareResult arithmeticCompare(
     const T1& lhs, const T2& rhs,
-    typename enable_if<is_integral<T1>::value && is_integral<T2>::value &&
-                       sizeof(T2) < sizeof(T1)>::type* = 0) {
+    enable_if_t<is_integral<T1>::value && is_integral<T2>::value &&
+                sizeof(T2) < sizeof(T1)>* = 0) {
   return arithmeticCompare<T1>(lhs, static_cast<T1>(rhs));
 }
 
 template <typename T1, typename T2>
 CompareResult arithmeticCompare(
     const T1& lhs, const T2& rhs,
-    typename enable_if<is_integral<T1>::value && is_integral<T2>::value &&
-                       is_signed<T1>::value == is_signed<T2>::value &&
-                       sizeof(T2) == sizeof(T1)>::type* = 0) {
+    enable_if_t<is_integral<T1>::value && is_integral<T2>::value &&
+                is_signed<T1>::value == is_signed<T2>::value &&
+                sizeof(T2) == sizeof(T1)>* = 0) {
   return arithmeticCompare<T1>(lhs, static_cast<T1>(rhs));
 }
 
 template <typename T1, typename T2>
 CompareResult arithmeticCompare(
     const T1& lhs, const T2& rhs,
-    typename enable_if<is_integral<T1>::value && is_integral<T2>::value &&
-                       is_unsigned<T1>::value && is_signed<T2>::value &&
-                       sizeof(T2) == sizeof(T1)>::type* = 0) {
+    enable_if_t<is_integral<T1>::value && is_integral<T2>::value &&
+                is_unsigned<T1>::value && is_signed<T2>::value &&
+                sizeof(T2) == sizeof(T1)>* = 0) {
   if (rhs < 0)
     return COMPARE_RESULT_GREATER;
   return arithmeticCompare<T1>(lhs, static_cast<T1>(rhs));
@@ -68,9 +68,9 @@ CompareResult arithmeticCompare(
 template <typename T1, typename T2>
 CompareResult arithmeticCompare(
     const T1& lhs, const T2& rhs,
-    typename enable_if<is_integral<T1>::value && is_integral<T2>::value &&
-                       is_signed<T1>::value && is_unsigned<T2>::value &&
-                       sizeof(T2) == sizeof(T1)>::type* = 0) {
+    enable_if_t<is_integral<T1>::value && is_integral<T2>::value &&
+                is_signed<T1>::value && is_unsigned<T2>::value &&
+                sizeof(T2) == sizeof(T1)>* = 0) {
   if (lhs < 0)
     return COMPARE_RESULT_LESS;
   return arithmeticCompare<T2>(static_cast<T2>(lhs), rhs);
@@ -79,23 +79,21 @@ CompareResult arithmeticCompare(
 template <typename T1, typename T2>
 CompareResult arithmeticCompare(
     const T1& lhs, const T2& rhs,
-    typename enable_if<is_floating_point<T1>::value ||
-                       is_floating_point<T2>::value>::type* = 0) {
+    enable_if_t<is_floating_point<T1>::value || is_floating_point<T2>::value>* =
+        0) {
   return arithmeticCompare<double>(static_cast<double>(lhs),
                                    static_cast<double>(rhs));
 }
 
 template <typename T2>
 CompareResult arithmeticCompareNegateLeft(
-    JsonUInt, const T2&,
-    typename enable_if<is_unsigned<T2>::value>::type* = 0) {
+    JsonUInt, const T2&, enable_if_t<is_unsigned<T2>::value>* = 0) {
   return COMPARE_RESULT_LESS;
 }
 
 template <typename T2>
 CompareResult arithmeticCompareNegateLeft(
-    JsonUInt lhs, const T2& rhs,
-    typename enable_if<is_signed<T2>::value>::type* = 0) {
+    JsonUInt lhs, const T2& rhs, enable_if_t<is_signed<T2>::value>* = 0) {
   if (rhs > 0)
     return COMPARE_RESULT_LESS;
   return arithmeticCompare(-rhs, static_cast<T2>(lhs));
@@ -103,15 +101,13 @@ CompareResult arithmeticCompareNegateLeft(
 
 template <typename T1>
 CompareResult arithmeticCompareNegateRight(
-    const T1&, JsonUInt,
-    typename enable_if<is_unsigned<T1>::value>::type* = 0) {
+    const T1&, JsonUInt, enable_if_t<is_unsigned<T1>::value>* = 0) {
   return COMPARE_RESULT_GREATER;
 }
 
 template <typename T1>
 CompareResult arithmeticCompareNegateRight(
-    const T1& lhs, JsonUInt rhs,
-    typename enable_if<is_signed<T1>::value>::type* = 0) {
+    const T1& lhs, JsonUInt rhs, enable_if_t<is_signed<T1>::value>* = 0) {
   if (lhs > 0)
     return COMPARE_RESULT_GREATER;
   return arithmeticCompare(static_cast<T1>(rhs), -lhs);

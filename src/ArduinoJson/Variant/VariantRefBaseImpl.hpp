@@ -68,7 +68,7 @@ inline void convertToJson(const VariantRefBase<TDerived>& src,
 
 template <typename TDerived>
 template <typename T>
-inline typename enable_if<is_same<T, JsonVariant>::value, T>::type
+inline enable_if_t<is_same<T, JsonVariant>::value, T>
 VariantRefBase<TDerived>::add() const {
   return JsonVariant(
       detail::VariantData::addElement(getOrCreateData(), getResourceManager()),
@@ -77,7 +77,7 @@ VariantRefBase<TDerived>::add() const {
 
 template <typename TDerived>
 template <typename TString>
-inline typename enable_if<IsString<TString>::value, bool>::type
+inline enable_if_t<IsString<TString>::value, bool>
 VariantRefBase<TDerived>::containsKey(const TString& key) const {
   return VariantData::getMember(getData(), adaptString(key),
                                 getResourceManager()) != 0;
@@ -85,7 +85,7 @@ VariantRefBase<TDerived>::containsKey(const TString& key) const {
 
 template <typename TDerived>
 template <typename TChar>
-inline typename enable_if<IsString<TChar*>::value, bool>::type
+inline enable_if_t<IsString<TChar*>::value, bool>
 VariantRefBase<TDerived>::containsKey(TChar* key) const {
   return VariantData::getMember(getData(), adaptString(key),
                                 getResourceManager()) != 0;
@@ -93,7 +93,7 @@ VariantRefBase<TDerived>::containsKey(TChar* key) const {
 
 template <typename TDerived>
 template <typename TVariant>
-inline typename enable_if<IsVariant<TVariant>::value, bool>::type
+inline enable_if_t<IsVariant<TVariant>::value, bool>
 VariantRefBase<TDerived>::containsKey(const TVariant& key) const {
   return containsKey(key.template as<const char*>());
 }
@@ -124,16 +124,14 @@ inline ElementProxy<TDerived> VariantRefBase<TDerived>::operator[](
 
 template <typename TDerived>
 template <typename TString>
-inline typename enable_if<IsString<TString*>::value,
-                          MemberProxy<TDerived, TString*>>::type
+inline enable_if_t<IsString<TString*>::value, MemberProxy<TDerived, TString*>>
 VariantRefBase<TDerived>::operator[](TString* key) const {
   return MemberProxy<TDerived, TString*>(derived(), key);
 }
 
 template <typename TDerived>
 template <typename TString>
-inline typename enable_if<IsString<TString>::value,
-                          MemberProxy<TDerived, TString>>::type
+inline enable_if_t<IsString<TString>::value, MemberProxy<TDerived, TString>>
 VariantRefBase<TDerived>::operator[](const TString& key) const {
   return MemberProxy<TDerived, TString>(derived(), key);
 }
@@ -154,7 +152,7 @@ inline bool VariantRefBase<TDerived>::doSet(T&& value, true_type) const {
 
 template <typename TDerived>
 template <typename T>
-inline typename enable_if<is_same<T, JsonArray>::value, JsonArray>::type
+inline enable_if_t<is_same<T, JsonArray>::value, JsonArray>
 VariantRefBase<TDerived>::to() const {
   return JsonArray(
       VariantData::toArray(getOrCreateData(), getResourceManager()),
@@ -163,7 +161,7 @@ VariantRefBase<TDerived>::to() const {
 
 template <typename TDerived>
 template <typename T>
-typename enable_if<is_same<T, JsonObject>::value, JsonObject>::type
+enable_if_t<is_same<T, JsonObject>::value, JsonObject>
 VariantRefBase<TDerived>::to() const {
   return JsonObject(
       VariantData::toObject(getOrCreateData(), getResourceManager()),
@@ -172,7 +170,7 @@ VariantRefBase<TDerived>::to() const {
 
 template <typename TDerived>
 template <typename T>
-typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
+enable_if_t<is_same<T, JsonVariant>::value, JsonVariant>
 VariantRefBase<TDerived>::to() const {
   auto data = getOrCreateData();
   auto resources = getResourceManager();

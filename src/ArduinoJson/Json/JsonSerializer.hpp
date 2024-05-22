@@ -150,8 +150,8 @@ inline size_t measureJson(JsonVariantConst source) {
 
 #if ARDUINOJSON_ENABLE_STD_STREAM
 template <typename T>
-inline typename detail::enable_if<
-    detail::is_convertible<T, JsonVariantConst>::value, std::ostream&>::type
+inline detail::enable_if_t<detail::is_convertible<T, JsonVariantConst>::value,
+                           std::ostream&>
 operator<<(std::ostream& os, const T& source) {
   serializeJson(source, os);
   return os;

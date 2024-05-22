@@ -9,9 +9,8 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TDestination>
-class Writer<
-    TDestination,
-    typename enable_if<is_base_of<::Print, TDestination>::value>::type> {
+class Writer<TDestination,
+             enable_if_t<is_base_of<::Print, TDestination>::value>> {
  public:
   explicit Writer(::Print& print) : print_(&print) {}
 

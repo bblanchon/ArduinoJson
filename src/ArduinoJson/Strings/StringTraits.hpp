@@ -19,10 +19,8 @@ template <class T, class = void>
 struct has_cstr : false_type {};
 
 template <class T>
-struct has_cstr<T,
-                typename enable_if<is_same<decltype(declval<const T>().c_str()),
-                                           const char*>::value>::type>
-    : true_type {};
+struct has_cstr<T, enable_if_t<is_same<decltype(declval<const T>().c_str()),
+                                       const char*>::value>> : true_type {};
 
 // const char* data() const
 // - std::string
@@ -33,10 +31,8 @@ template <class T, class = void>
 struct has_data : false_type {};
 
 template <class T>
-struct has_data<T,
-                typename enable_if<is_same<decltype(declval<const T>().data()),
-                                           const char*>::value>::type>
-    : true_type {};
+struct has_data<T, enable_if_t<is_same<decltype(declval<const T>().data()),
+                                       const char*>::value>> : true_type {};
 
 // unsigned int length() const
 // - String
@@ -45,8 +41,8 @@ template <class T, class = void>
 struct has_length : false_type {};
 
 template <class T>
-struct has_length<T, typename enable_if<is_unsigned<
-                         decltype(declval<const T>().length())>::value>::type>
+struct has_length<
+    T, enable_if_t<is_unsigned<decltype(declval<const T>().length())>::value>>
     : true_type {};
 
 // size_t size() const
@@ -59,8 +55,7 @@ struct has_size : false_type {};
 
 template <class T>
 struct has_size<
-    T, typename enable_if<
-           is_same<decltype(declval<const T>().size()), size_t>::value>::type>
+    T, enable_if_t<is_same<decltype(declval<const T>().size()), size_t>::value>>
     : true_type {};
 
 }  // namespace string_traits_impl

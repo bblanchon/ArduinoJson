@@ -10,7 +10,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TVariant>
-struct Reader<TVariant, typename enable_if<IsVariant<TVariant>::value>::type>
+struct Reader<TVariant, enable_if_t<IsVariant<TVariant>::value>>
     : Reader<char*, void> {
   explicit Reader(const TVariant& x)
       : Reader<char*, void>(x.template as<const char*>()) {}

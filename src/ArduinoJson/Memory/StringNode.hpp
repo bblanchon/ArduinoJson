@@ -17,9 +17,9 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 struct StringNode {
   // Use the same type as SlotId to store the reference count
   // (there can never be more references than slots)
-  using references_type = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>::type;
+  using references_type = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>;
 
-  using length_type = uint_t<ARDUINOJSON_STRING_LENGTH_SIZE * 8>::type;
+  using length_type = uint_t<ARDUINOJSON_STRING_LENGTH_SIZE * 8>;
 
   struct StringNode* next;
   references_type references;

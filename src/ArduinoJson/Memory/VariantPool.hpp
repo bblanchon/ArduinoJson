@@ -11,7 +11,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class VariantSlot;
-using SlotId = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>::type;
+using SlotId = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>;
 using SlotCount = SlotId;
 const SlotId NULL_SLOT = SlotId(-1);
 

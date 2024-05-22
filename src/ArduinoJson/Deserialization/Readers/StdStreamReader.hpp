@@ -9,8 +9,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TSource>
-struct Reader<TSource, typename enable_if<
-                           is_base_of<std::istream, TSource>::value>::type> {
+struct Reader<TSource, enable_if_t<is_base_of<std::istream, TSource>::value>> {
  public:
   explicit Reader(std::istream& stream) : stream_(&stream) {}
 

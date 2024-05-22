@@ -13,14 +13,14 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 // clang-format off
 template <typename T>
 struct is_signed : integral_constant<bool,
-    is_same<typename remove_cv<T>::type, char>::value ||
-    is_same<typename remove_cv<T>::type, signed char>::value ||
-    is_same<typename remove_cv<T>::type, signed short>::value ||
-    is_same<typename remove_cv<T>::type, signed int>::value ||
-    is_same<typename remove_cv<T>::type, signed long>::value ||
-    is_same<typename remove_cv<T>::type, signed long long>::value ||
-    is_same<typename remove_cv<T>::type, float>::value ||
-    is_same<typename remove_cv<T>::type, double>::value> {};
+    is_same<remove_cv_t<T>, char>::value ||
+    is_same<remove_cv_t<T>, signed char>::value ||
+    is_same<remove_cv_t<T>, signed short>::value ||
+    is_same<remove_cv_t<T>, signed int>::value ||
+    is_same<remove_cv_t<T>, signed long>::value ||
+    is_same<remove_cv_t<T>, signed long long>::value ||
+    is_same<remove_cv_t<T>, float>::value ||
+    is_same<remove_cv_t<T>, double>::value> {};
 // clang-format on
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

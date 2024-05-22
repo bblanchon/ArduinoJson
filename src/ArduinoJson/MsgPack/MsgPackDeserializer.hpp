@@ -291,8 +291,8 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 4, DeserializationError::Code>::type
-  readFloat(VariantData* variant) {
+  enable_if_t<sizeof(T) == 4, DeserializationError::Code> readFloat(
+      VariantData* variant) {
     DeserializationError::Code err;
     T value;
 
@@ -307,8 +307,8 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 8, DeserializationError::Code>::type
-  readDouble(VariantData* variant) {
+  enable_if_t<sizeof(T) == 8, DeserializationError::Code> readDouble(
+      VariantData* variant) {
     DeserializationError::Code err;
     T value;
 
@@ -323,8 +323,8 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 4, DeserializationError::Code>::type
-  readDouble(VariantData* variant) {
+  enable_if_t<sizeof(T) == 4, DeserializationError::Code> readDouble(
+      VariantData* variant) {
     DeserializationError::Code err;
     uint8_t i[8];  // input is 8 bytes
     T value;       // output is 4 bytes
@@ -547,9 +547,8 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 // Parses a MessagePack input and puts the result in a JsonDocument.
 // https://arduinojson.org/v7/api/msgpack/deserializemsgpack/
 template <typename TDestination, typename... Args>
-typename detail::enable_if<
-    detail::is_deserialize_destination<TDestination>::value,
-    DeserializationError>::type
+detail::enable_if_t<detail::is_deserialize_destination<TDestination>::value,
+                    DeserializationError>
 deserializeMsgPack(TDestination&& dst, Args&&... args) {
   using namespace detail;
   return deserialize<MsgPackDeserializer>(detail::forward<TDestination>(dst),
@@ -559,9 +558,8 @@ deserializeMsgPack(TDestination&& dst, Args&&... args) {
 // Parses a MessagePack input and puts the result in a JsonDocument.
 // https://arduinojson.org/v7/api/msgpack/deserializemsgpack/
 template <typename TDestination, typename TChar, typename... Args>
-typename detail::enable_if<
-    detail::is_deserialize_destination<TDestination>::value,
-    DeserializationError>::type
+detail::enable_if_t<detail::is_deserialize_destination<TDestination>::value,
+                    DeserializationError>
 deserializeMsgPack(TDestination&& dst, TChar* input, Args&&... args) {
   using namespace detail;
   return deserialize<MsgPackDeserializer>(detail::forward<TDestination>(dst),

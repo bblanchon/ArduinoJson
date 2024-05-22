@@ -338,13 +338,13 @@ class VariantData {
   }
 
   template <typename T>
-  typename enable_if<is_signed<T>::value>::type setInteger(T value) {
+  enable_if_t<is_signed<T>::value> setInteger(T value) {
     setType(VALUE_IS_SIGNED_INTEGER);
     content_.asSignedInteger = value;
   }
 
   template <typename T>
-  typename enable_if<is_unsigned<T>::value>::type setInteger(T value) {
+  enable_if_t<is_unsigned<T>::value> setInteger(T value) {
     setType(VALUE_IS_UNSIGNED_INTEGER);
     content_.asUnsignedInteger = static_cast<JsonUInt>(value);
   }

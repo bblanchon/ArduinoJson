@@ -11,13 +11,13 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 using nullptr_t = decltype(nullptr);
 
 template <class T>
-T&& forward(typename remove_reference<T>::type& t) noexcept {
+T&& forward(remove_reference_t<T>& t) noexcept {
   return static_cast<T&&>(t);
 }
 
 template <class T>
-typename remove_reference<T>::type&& move(T&& t) {
-  return static_cast<typename remove_reference<T>::type&&>(t);
+remove_reference_t<T>&& move(T&& t) {
+  return static_cast<remove_reference_t<T>&&>(t);
 }
 
 // Polyfull for std::swap

@@ -16,11 +16,11 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename A, typename B>
-struct choose_largest : conditional<(sizeof(A) > sizeof(B)), A, B> {};
+using largest_type = conditional_t<(sizeof(A) > sizeof(B)), A, B>;
 
 inline bool parseNumber(const char* s, VariantData& result) {
   typedef FloatTraits<JsonFloat> traits;
-  typedef choose_largest<traits::mantissa_type, JsonUInt>::type mantissa_t;
+  typedef largest_type<traits::mantissa_type, JsonUInt> mantissa_t;
   typedef traits::exponent_type exponent_t;
 
   ARDUINOJSON_ASSERT(s != 0);

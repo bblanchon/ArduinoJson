@@ -19,8 +19,7 @@ template <typename T>
 struct IsCharOrVoid<const T> : IsCharOrVoid<T> {};
 
 template <typename TSource>
-struct Reader<TSource*,
-              typename enable_if<IsCharOrVoid<TSource>::value>::type> {
+struct Reader<TSource*, enable_if_t<IsCharOrVoid<TSource>::value>> {
   const char* ptr_;
 
  public:
@@ -39,8 +38,7 @@ struct Reader<TSource*,
 };
 
 template <typename TSource>
-struct BoundedReader<TSource*,
-                     typename enable_if<IsCharOrVoid<TSource>::value>::type>
+struct BoundedReader<TSource*, enable_if_t<IsCharOrVoid<TSource>::value>>
     : public IteratorReader<const char*> {
  public:
   explicit BoundedReader(const void* ptr, size_t len)

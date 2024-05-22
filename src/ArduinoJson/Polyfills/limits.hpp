@@ -18,7 +18,7 @@ template <typename T, typename Enable = void>
 struct numeric_limits;
 
 template <typename T>
-struct numeric_limits<T, typename enable_if<is_unsigned<T>::value>::type> {
+struct numeric_limits<T, enable_if_t<is_unsigned<T>::value>> {
   static constexpr T lowest() {
     return 0;
   }
@@ -29,7 +29,7 @@ struct numeric_limits<T, typename enable_if<is_unsigned<T>::value>::type> {
 
 template <typename T>
 struct numeric_limits<
-    T, typename enable_if<is_integral<T>::value && is_signed<T>::value>::type> {
+    T, enable_if_t<is_integral<T>::value && is_signed<T>::value>> {
   static constexpr T lowest() {
     return T(T(1) << (sizeof(T) * 8 - 1));
   }

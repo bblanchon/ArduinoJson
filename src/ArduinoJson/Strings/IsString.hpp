@@ -13,8 +13,7 @@ template <typename T, typename Enable = void>
 struct IsString : false_type {};
 
 template <typename T>
-struct IsString<
-    T, typename make_void<typename StringAdapter<T>::AdaptedString>::type>
+struct IsString<T, void_t<typename StringAdapter<T>::AdaptedString>>
     : true_type {};
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

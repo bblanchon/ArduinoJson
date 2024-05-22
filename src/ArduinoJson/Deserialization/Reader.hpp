@@ -62,9 +62,8 @@ ARDUINOJSON_END_PRIVATE_NAMESPACE
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TInput>
-Reader<typename remove_reference<TInput>::type> makeReader(TInput&& input) {
-  return Reader<typename remove_reference<TInput>::type>{
-      detail::forward<TInput>(input)};
+Reader<remove_reference_t<TInput>> makeReader(TInput&& input) {
+  return Reader<remove_reference_t<TInput>>{detail::forward<TInput>(input)};
 }
 
 template <typename TChar>

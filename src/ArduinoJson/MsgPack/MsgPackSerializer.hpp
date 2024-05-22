@@ -23,9 +23,8 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
       : writer_(writer), resources_(resources) {}
 
   template <typename T>
-  typename enable_if<is_floating_point<T>::value && sizeof(T) == 4,
-                     size_t>::type
-  visit(T value32) {
+  enable_if_t<is_floating_point<T>::value && sizeof(T) == 4, size_t> visit(
+      T value32) {
     if (canConvertNumber<JsonInteger>(value32)) {
       JsonInteger truncatedValue = JsonInteger(value32);
       if (value32 == T(truncatedValue))
@@ -38,8 +37,8 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
 
   template <typename T>
   ARDUINOJSON_NO_SANITIZE("float-cast-overflow")
-  typename enable_if<is_floating_point<T>::value && sizeof(T) == 8,
-                     size_t>::type visit(T value64) {
+  enable_if_t<is_floating_point<T>::value && sizeof(T) == 8, size_t> visit(
+      T value64) {
     float value32 = float(value64);
     if (value32 == value64)
       return visit(value32);

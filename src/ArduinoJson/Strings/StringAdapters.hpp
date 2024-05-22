@@ -16,8 +16,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TAdaptedString1, typename TAdaptedString2>
-typename enable_if<TAdaptedString1::typeSortKey <= TAdaptedString2::typeSortKey,
-                   int>::type
+enable_if_t<TAdaptedString1::typeSortKey <= TAdaptedString2::typeSortKey, int>
 stringCompare(TAdaptedString1 s1, TAdaptedString2 s2) {
   ARDUINOJSON_ASSERT(!s1.isNull());
   ARDUINOJSON_ASSERT(!s2.isNull());
@@ -36,15 +35,13 @@ stringCompare(TAdaptedString1 s1, TAdaptedString2 s2) {
 }
 
 template <typename TAdaptedString1, typename TAdaptedString2>
-typename enable_if<
-    (TAdaptedString1::typeSortKey > TAdaptedString2::typeSortKey), int>::type
+enable_if_t<(TAdaptedString1::typeSortKey > TAdaptedString2::typeSortKey), int>
 stringCompare(TAdaptedString1 s1, TAdaptedString2 s2) {
   return -stringCompare(s2, s1);
 }
 
 template <typename TAdaptedString1, typename TAdaptedString2>
-typename enable_if<TAdaptedString1::typeSortKey <= TAdaptedString2::typeSortKey,
-                   bool>::type
+enable_if_t<TAdaptedString1::typeSortKey <= TAdaptedString2::typeSortKey, bool>
 stringEquals(TAdaptedString1 s1, TAdaptedString2 s2) {
   ARDUINOJSON_ASSERT(!s1.isNull());
   ARDUINOJSON_ASSERT(!s2.isNull());
@@ -60,8 +57,7 @@ stringEquals(TAdaptedString1 s1, TAdaptedString2 s2) {
 }
 
 template <typename TAdaptedString1, typename TAdaptedString2>
-typename enable_if<
-    (TAdaptedString1::typeSortKey > TAdaptedString2::typeSortKey), bool>::type
+enable_if_t<(TAdaptedString1::typeSortKey > TAdaptedString2::typeSortKey), bool>
 stringEquals(TAdaptedString1 s1, TAdaptedString2 s2) {
   return stringEquals(s2, s1);
 }

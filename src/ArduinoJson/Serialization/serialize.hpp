@@ -23,17 +23,15 @@ size_t serialize(ArduinoJson::JsonVariantConst source,
 }
 
 template <template <typename> class TSerializer>
-typename enable_if<!TSerializer<StaticStringWriter>::producesText, size_t>::type
-serialize(ArduinoJson::JsonVariantConst source, void* buffer,
-          size_t bufferSize) {
+enable_if_t<!TSerializer<StaticStringWriter>::producesText, size_t> serialize(
+    ArduinoJson::JsonVariantConst source, void* buffer, size_t bufferSize) {
   StaticStringWriter writer(reinterpret_cast<char*>(buffer), bufferSize);
   return doSerialize<TSerializer>(source, writer);
 }
 
 template <template <typename> class TSerializer>
-typename enable_if<TSerializer<StaticStringWriter>::producesText, size_t>::type
-serialize(ArduinoJson::JsonVariantConst source, void* buffer,
-          size_t bufferSize) {
+enable_if_t<TSerializer<StaticStringWriter>::producesText, size_t> serialize(
+    ArduinoJson::JsonVariantConst source, void* buffer, size_t bufferSize) {
   StaticStringWriter writer(reinterpret_cast<char*>(buffer), bufferSize);
   size_t n = doSerialize<TSerializer>(source, writer);
   // add null-terminator for text output (not counted in the size)
@@ -43,7 +41,7 @@ serialize(ArduinoJson::JsonVariantConst source, void* buffer,
 }
 
 template <template <typename> class TSerializer, typename TChar, size_t N>
-typename enable_if<IsChar<TChar>::value, size_t>::type serialize(
+enable_if_t<IsChar<TChar>::value, size_t> serialize(
     ArduinoJson::JsonVariantConst source, TChar (&buffer)[N]) {
   return serialize<TSerializer>(source, buffer, N);
 }

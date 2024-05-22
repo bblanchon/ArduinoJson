@@ -46,8 +46,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the element at the specified index.
   // https://arduinojson.org/v7/api/jsonarrayconst/subscript/
   template <typename T>
-  typename detail::enable_if<detail::is_integral<T>::value,
-                             JsonVariantConst>::type
+  detail::enable_if_t<detail::is_integral<T>::value, JsonVariantConst>
   operator[](T index) const {
     return JsonVariantConst(
         detail::ArrayData::getElement(data_, size_t(index), resources_),
@@ -57,8 +56,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   // Returns the element at the specified index.
   // https://arduinojson.org/v7/api/jsonarrayconst/subscript/
   template <typename TVariant>
-  typename detail::enable_if<detail::IsVariant<TVariant>::value,
-                             JsonVariantConst>::type
+  detail::enable_if_t<detail::IsVariant<TVariant>::value, JsonVariantConst>
   operator[](const TVariant& variant) const {
     if (variant.template is<size_t>())
       return operator[](variant.template as<size_t>());

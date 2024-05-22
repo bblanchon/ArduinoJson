@@ -14,13 +14,12 @@ struct is_std_string : false_type {};
 
 template <class T>
 struct is_std_string<
-    T, typename enable_if<is_same<void, decltype(T().push_back('a'))>::value &&
-                          is_same<T&, decltype(T().append(""))>::value>::type>
-    : true_type {};
+    T, enable_if_t<is_same<void, decltype(T().push_back('a'))>::value &&
+                   is_same<T&, decltype(T().append(""))>::value>> : true_type {
+};
 
 template <typename TDestination>
-class Writer<TDestination,
-             typename enable_if<is_std_string<TDestination>::value>::type> {
+class Writer<TDestination, enable_if_t<is_std_string<TDestination>::value>> {
  public:
   Writer(TDestination& str) : str_(&str) {
     str.clear();

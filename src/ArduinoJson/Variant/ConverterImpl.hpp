@@ -54,10 +54,9 @@ struct Converter {
 };
 
 template <typename T>
-struct Converter<
-    T, typename detail::enable_if<detail::is_integral<T>::value &&
-                                  !detail::is_same<bool, T>::value &&
-                                  !detail::is_same<char, T>::value>::type>
+struct Converter<T, detail::enable_if_t<detail::is_integral<T>::value &&
+                                        !detail::is_same<bool, T>::value &&
+                                        !detail::is_same<char, T>::value>>
     : private detail::VariantAttorney {
   static bool toJson(T src, JsonVariant dst) {
     ARDUINOJSON_ASSERT_INTEGER_TYPE_IS_SUPPORTED(T);
@@ -81,7 +80,7 @@ struct Converter<
 };
 
 template <typename T>
-struct Converter<T, typename detail::enable_if<detail::is_enum<T>::value>::type>
+struct Converter<T, detail::enable_if_t<detail::is_enum<T>::value>>
     : private detail::VariantAttorney {
   static bool toJson(T src, JsonVariant dst) {
     return dst.set(static_cast<JsonInteger>(src));
@@ -120,8 +119,7 @@ struct Converter<bool> : private detail::VariantAttorney {
 };
 
 template <typename T>
-struct Converter<
-    T, typename detail::enable_if<detail::is_floating_point<T>::value>::type>
+struct Converter<T, detail::enable_if_t<detail::is_floating_point<T>::value>>
     : private detail::VariantAttorney {
   static bool toJson(T src, JsonVariant dst) {
     auto data = getData(dst);
@@ -179,8 +177,8 @@ struct Converter<JsonString> : private detail::VariantAttorney {
 };
 
 template <typename T>
-inline typename detail::enable_if<detail::IsString<T>::value>::type
-convertToJson(const T& src, JsonVariant dst) {
+inline detail::enable_if_t<detail::IsString<T>::value> convertToJson(
+    const T& src, JsonVariant dst) {
   using namespace detail;
   auto data = VariantAttorney::getData(dst);
   auto resources = VariantAttorney::getResourceManager(dst);

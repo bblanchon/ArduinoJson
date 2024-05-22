@@ -21,6 +21,6 @@
 #include "type_traits/is_signed.hpp"
 #include "type_traits/is_unsigned.hpp"
 #include "type_traits/make_unsigned.hpp"
-#include "type_traits/make_void.hpp"
 #include "type_traits/remove_const.hpp"
 #include "type_traits/remove_reference.hpp"
+#include "type_traits/void_t.hpp"

@@ -44,8 +44,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
-  typename detail::enable_if<!detail::is_same<T, JsonVariant>::value, T>::type
-  add() const {
+  detail::enable_if_t<!detail::is_same<T, JsonVariant>::value, T> add() const {
     return add<JsonVariant>().to<T>();
   }
 
@@ -53,8 +52,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Returns a reference to the new element.
   // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
-  typename detail::enable_if<detail::is_same<T, JsonVariant>::value, T>::type
-  add() const {
+  detail::enable_if_t<detail::is_same<T, JsonVariant>::value, T> add() const {
     return JsonVariant(detail::ArrayData::addElement(data_, resources_),
                        resources_);
   }
@@ -117,7 +115,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Removes the element at the specified index.
   // https://arduinojson.org/v7/api/jsonarray/remove/
   template <typename TVariant>
-  typename detail::enable_if<detail::IsVariant<TVariant>::value>::type remove(
+  detail::enable_if_t<detail::IsVariant<TVariant>::value> remove(
       TVariant variant) const {
     if (variant.template is<size_t>())
       remove(variant.template as<size_t>());
@@ -132,8 +130,8 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Gets or sets the element at the specified index.
   // https://arduinojson.org/v7/api/jsonarray/subscript/
   template <typename T>
-  typename detail::enable_if<detail::is_integral<T>::value,
-                             detail::ElementProxy<JsonArray>>::type
+  detail::enable_if_t<detail::is_integral<T>::value,
+                      detail::ElementProxy<JsonArray>>
   operator[](T index) const {
     return {*this, size_t(index)};
   }
@@ -141,8 +139,8 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // Gets or sets the element at the specified index.
   // https://arduinojson.org/v7/api/jsonarray/subscript/
   template <typename TVariant>
-  typename detail::enable_if<detail::IsVariant<TVariant>::value,
-                             detail::ElementProxy<JsonArray>>::type
+  detail::enable_if_t<detail::IsVariant<TVariant>::value,
+                      detail::ElementProxy<JsonArray>>
   operator[](const TVariant& variant) const {
     if (variant.template is<size_t>())
       return operator[](variant.template as<size_t>());

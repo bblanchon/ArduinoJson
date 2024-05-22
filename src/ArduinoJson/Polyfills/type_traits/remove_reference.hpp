@@ -18,4 +18,7 @@ struct remove_reference<T&> {
   typedef T type;
 };
 
+template <typename T>
+using remove_reference_t = typename remove_reference<T>::type;
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -11,21 +11,24 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <int Bits>
-struct uint_t;
+struct uint_;
 
 template <>
-struct uint_t<8> {
+struct uint_<8> {
   typedef uint8_t type;
 };
 
 template <>
-struct uint_t<16> {
+struct uint_<16> {
   typedef uint16_t type;
 };
 
 template <>
-struct uint_t<32> {
+struct uint_<32> {
   typedef uint32_t type;
 };
+
+template <int Bits>
+using uint_t = typename uint_<Bits>::type;
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
