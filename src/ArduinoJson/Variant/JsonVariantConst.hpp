@@ -67,17 +67,16 @@ class JsonVariantConst : public detail::VariantTag,
 
   // Casts the value to the specified type.
   // https://arduinojson.org/v7/api/jsonvariantconst/as/
-  template <typename T>
-  detail::enable_if_t<ConversionSupported<T>::value, T> as() const {
+  template <typename T,
+            detail::enable_if_t<ConversionSupported<T>::value, bool> = true>
+  T as() const {
     return Converter<T>::fromJson(*this);
   }
 
-  // Casts the value to the specified type.
-  // https://arduinojson.org/v7/api/jsonvariantconst/as/
-  template <typename T>
-  detail::enable_if_t<!ConversionSupported<T>::value,
-                      detail::InvalidConversion<JsonVariantConst, T>>
-  as() const;
+  // Invalid conversion. Will not compile.
+  template <typename T,
+            detail::enable_if_t<!ConversionSupported<T>::value, bool> = true>
+  detail::InvalidConversion<JsonVariantConst, T> as() const;
 
   // Returns true if the value is of the specified type.
   // https://arduinojson.org/v7/api/jsonvariantconst/is/
