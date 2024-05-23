@@ -179,3 +179,52 @@ TEST_CASE("JsonArray::add<T>()") {
     REQUIRE(doc.as<std::string>() == "[42]");
   }
 }
+
+TEST_CASE("JsonObject::add(JsonObject) ") {
+  JsonDocument doc1;
+  doc1[std::string("key1")] = std::string("value1");
+
+  TimebombAllocator allocator(10);
+  SpyingAllocator spy(&allocator);
+  JsonDocument doc2(&spy);
+  JsonArray array = doc2.to<JsonArray>();
+
+  SECTION("success") {
+    bool result = array.add(doc1.as<JsonObject>());
+
+    REQUIRE(result == true);
+    REQUIRE(doc2.as<std::string>() == "[{\"key1\":\"value1\"}]");
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("key1")),
+                             Allocate(sizeofString("value1")),
+                         });
+  }
+
+  SECTION("partial failure") {  // issue #2081
+    allocator.setCountdown(2);
+
+    bool result = array.add(doc1.as<JsonObject>());
+
+    REQUIRE(result == false);
+    REQUIRE(doc2.as<std::string>() == "[]");
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                             Allocate(sizeofString("key1")),
+                             AllocateFail(sizeofString("value1")),
+                             Deallocate(sizeofString("key1")),
+                         });
+  }
+
+  SECTION("complete failure") {
+    allocator.setCountdown(0);
+
+    bool result = array.add(doc1.as<JsonObject>());
+
+    REQUIRE(result == false);
+    REQUIRE(doc2.as<std::string>() == "[]");
+    REQUIRE(spy.log() == AllocatorLog{
+                             AllocateFail(sizeofPool()),
+                         });
+  }
+}

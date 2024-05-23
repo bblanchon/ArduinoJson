@@ -63,6 +63,18 @@ inline CollectionData::iterator CollectionData::addSlot(
   return iterator(slot, slot.id());
 }
 
+inline void CollectionData::addSlot(SlotWithId slot,
+                                    ResourceManager* resources) {
+  if (tail_ != NULL_SLOT) {
+    auto tail = resources->getSlot(tail_);
+    tail->setNext(slot.id());
+    tail_ = slot.id();
+  } else {
+    head_ = slot.id();
+    tail_ = slot.id();
+  }
+}
+
 inline void CollectionData::clear(ResourceManager* resources) {
   auto next = head_;
   while (next != NULL_SLOT) {

@@ -82,6 +82,21 @@ class VariantData {
     return var->addElement(resources);
   }
 
+  template <typename T>
+  bool addValue(T&& value, ResourceManager* resources) {
+    auto array = isNull() ? &toArray() : asArray();
+    return detail::ArrayData::addValue(array, detail::forward<T>(value),
+                                       resources);
+  }
+
+  template <typename T>
+  static bool addValue(VariantData* var, T&& value,
+                       ResourceManager* resources) {
+    if (!var)
+      return false;
+    return var->addValue(value, resources);
+  }
+
   bool asBoolean() const {
     switch (type()) {
       case VALUE_IS_BOOLEAN:

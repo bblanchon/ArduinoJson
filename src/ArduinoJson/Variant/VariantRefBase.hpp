@@ -117,14 +117,16 @@ class VariantRefBase : public VariantTag {
   // https://arduinojson.org/v7/api/jsonvariant/add/
   template <typename T>
   bool add(const T& value) const {
-    return add<JsonVariant>().set(value);
+    return detail::VariantData::addValue(getOrCreateData(), value,
+                                         getResourceManager());
   }
 
   // Appends a value to the array.
   // https://arduinojson.org/v7/api/jsonvariant/add/
   template <typename T>
   bool add(T* value) const {
-    return add<JsonVariant>().set(value);
+    return detail::VariantData::addValue(getOrCreateData(), value,
+                                         getResourceManager());
   }
 
   // Removes an element of the array.

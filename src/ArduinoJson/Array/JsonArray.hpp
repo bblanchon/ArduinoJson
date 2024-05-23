@@ -61,14 +61,14 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
   bool add(const T& value) const {
-    return add<JsonVariant>().set(value);
+    return detail::ArrayData::addValue(data_, value, resources_);
   }
 
   // Appends a value to the array.
   // https://arduinojson.org/v7/api/jsonarray/add/
   template <typename T>
   bool add(T* value) const {
-    return add<JsonVariant>().set(value);
+    return detail::ArrayData::addValue(data_, value, resources_);
   }
 
   // Returns an iterator to the first element of the array.

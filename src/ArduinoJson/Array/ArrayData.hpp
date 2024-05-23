@@ -20,6 +20,17 @@ class ArrayData : public CollectionData {
     return array->addElement(resources);
   }
 
+  template <typename T>
+  bool addValue(T&& value, ResourceManager* resources);
+
+  template <typename T>
+  static bool addValue(ArrayData* array, T&& value,
+                       ResourceManager* resources) {
+    if (!array)
+      return false;
+    return array->addValue(value, resources);
+  }
+
   VariantData* getOrAddElement(size_t index, ResourceManager* resources);
 
   VariantData* getElement(size_t index, const ResourceManager* resources) const;

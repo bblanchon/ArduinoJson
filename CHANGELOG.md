@@ -11,6 +11,7 @@ HEAD
 * Allow using a `JsonVariant` as a key or index (issue #2080)
   Note: works only for reading, not for writing
 * Support `ElementProxy` and `MemberProxy` in `JsonDocument`'s constructor
+* Don't add partial objects when allocation fails (issue #2081)
 
 v7.0.4 (2024-03-12)
 ------

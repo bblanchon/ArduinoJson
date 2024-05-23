@@ -256,14 +256,14 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
   // https://arduinojson.org/v7/api/jsondocument/add/
   template <typename TValue>
   bool add(const TValue& value) {
-    return add<JsonVariant>().set(value);
+    return data_.addValue(value, &resources_);
   }
 
   // Appends a value to the root array.
   // https://arduinojson.org/v7/api/jsondocument/add/
   template <typename TChar>
   bool add(TChar* value) {
-    return add<JsonVariant>().set(value);
+    return data_.addValue(value, &resources_);
   }
 
   // Removes an element of the root array.

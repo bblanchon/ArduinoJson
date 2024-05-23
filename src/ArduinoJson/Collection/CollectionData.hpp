@@ -111,6 +111,8 @@ class CollectionData {
     return head_;
   }
 
+  void addSlot(SlotWithId slot, ResourceManager* resources);
+
  protected:
   iterator addSlot(ResourceManager*);
 

@@ -118,7 +118,7 @@ TEST_CASE("JsonObject::set()") {
     bool success = obj3.set(obj1);
 
     REQUIRE(success == false);
-    REQUIRE(doc3.as<std::string>() == "{\"hello\":[null]}");
+    REQUIRE(doc3.as<std::string>() == "{\"hello\":[]}");
   }
 
   SECTION("destination is null") {

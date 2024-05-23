@@ -47,4 +47,19 @@ inline void ArrayData::removeElement(size_t index, ResourceManager* resources) {
   remove(at(index, resources), resources);
 }
 
+template <typename T>
+inline bool ArrayData::addValue(T&& value, ResourceManager* resources) {
+  ARDUINOJSON_ASSERT(resources != nullptr);
+  auto slot = resources->allocSlot();
+  if (!slot)
+    return false;
+  JsonVariant variant(slot->data(), resources);
+  if (!variant.set(detail::forward<T>(value))) {
+    resources->freeSlot(slot);
+    return false;
+  }
+  addSlot(slot, resources);
+  return true;
+}
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE
