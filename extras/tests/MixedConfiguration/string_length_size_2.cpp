@@ -7,84 +7,90 @@
 TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 2") {
   JsonDocument doc;
 
-  SECTION("set() returns true if string has 65535 characters") {
-    auto result = doc.set(std::string(65535, '?'));
+  SECTION("set(std::string)") {
+    SECTION("returns true if len <= 65535") {
+      auto result = doc.set(std::string(65535, '?'));
 
-    REQUIRE(result == true);
-    REQUIRE(doc.overflowed() == false);
+      REQUIRE(result == true);
+      REQUIRE(doc.overflowed() == false);
+    }
+
+    SECTION("returns false if len >= 65536") {
+      auto result = doc.set(std::string(65536, '?'));
+
+      REQUIRE(result == false);
+      REQUIRE(doc.overflowed() == true);
+    }
   }
 
-  SECTION("set() returns false if string has 65536 characters") {
-    auto result = doc.set(std::string(65536, '?'));
+  SECTION("set(MsgPackBinary)") {
+    SECTION("returns true if size <= 65532") {
+      auto str = std::string(65532, '?');
+      auto result = doc.set(MsgPackBinary(str.data(), str.size()));
 
-    REQUIRE(result == false);
-    REQUIRE(doc.overflowed() == true);
+      REQUIRE(result == true);
+      REQUIRE(doc.overflowed() == false);
+    }
+
+    SECTION("returns false if size >= 65533") {
+      auto str = std::string(65533, '?');
+      auto result = doc.set(MsgPackBinary(str.data(), str.size()));
+
+      REQUIRE(result == false);
+      REQUIRE(doc.overflowed() == true);
+    }
   }
 
-  SECTION("set() returns true if string has 65532 characters") {
-    auto str = std::string(65532, '?');
-    auto result = doc.set(MsgPackBinary(str.data(), str.size()));
+  SECTION("deserializeJson()") {
+    SECTION("returns Ok if string length <= 65535") {
+      auto input = "\"" + std::string(65535, '?') + "\"";
 
-    REQUIRE(result == true);
-    REQUIRE(doc.overflowed() == false);
+      auto err = deserializeJson(doc, input);
+
+      REQUIRE(err == DeserializationError::Ok);
+    }
+
+    SECTION("returns NoMemory if string length >= 65536") {
+      auto input = "\"" + std::string(65536, '?') + "\"";
+
+      auto err = deserializeJson(doc, input);
+
+      REQUIRE(err == DeserializationError::NoMemory);
+    }
   }
 
-  SECTION("set() returns false if string has 65533 characters") {
-    auto str = std::string(65533, '?');
-    auto result = doc.set(MsgPackBinary(str.data(), str.size()));
+  SECTION("deserializeMsgPack()") {
+    SECTION("returns Ok if string length <= 65535") {
+      auto input = "\xda\xff\xff" + std::string(65535, '?');
 
-    REQUIRE(result == false);
-    REQUIRE(doc.overflowed() == true);
-  }
+      auto err = deserializeMsgPack(doc, input);
 
-  SECTION("deserializeJson() returns Ok if string has 65535 characters") {
-    auto input = "\"" + std::string(65535, '?') + "\"";
+      REQUIRE(err == DeserializationError::Ok);
+    }
 
-    auto err = deserializeJson(doc, input);
+    SECTION("returns NoMemory if string length >= 65536") {
+      auto input =
+          std::string("\xdb\x00\x01\x00\x00", 5) + std::string(65536, '?');
 
-    REQUIRE(err == DeserializationError::Ok);
-  }
+      auto err = deserializeMsgPack(doc, input);
 
-  SECTION("deserializeJson() returns NoMemory if string has 65536 characters") {
-    auto input = "\"" + std::string(65536, '?') + "\"";
+      REQUIRE(err == DeserializationError::NoMemory);
+    }
 
-    auto err = deserializeJson(doc, input);
+    SECTION("returns Ok if binary size <= 65532") {
+      auto input = "\xc5\xff\xfc" + std::string(65532, '?');
 
-    REQUIRE(err == DeserializationError::NoMemory);
-  }
+      auto err = deserializeMsgPack(doc, input);
 
-  SECTION("deserializeMsgPack() returns Ok if string has 65535 characters") {
-    auto input = "\xda\xff\xff" + std::string(65535, '?');
+      REQUIRE(err == DeserializationError::Ok);
+    }
 
-    auto err = deserializeMsgPack(doc, input);
+    SECTION("returns NoMemory if binary size >= 65534") {
+      auto input = "\xc5\xff\xfd" + std::string(65534, '?');
 
-    REQUIRE(err == DeserializationError::Ok);
-  }
+      auto err = deserializeMsgPack(doc, input);
 
-  SECTION(
-      "deserializeMsgPack() returns NoMemory if string has 65536 characters") {
-    auto input =
-        std::string("\xdb\x00\x01\x00\x00", 5) + std::string(65536, '?');
-
-    auto err = deserializeMsgPack(doc, input);
-
-    REQUIRE(err == DeserializationError::NoMemory);
-  }
-
-  SECTION("deserializeMsgPack() returns Ok if binary has 65532 characters") {
-    auto input = "\xc5\xff\xfc" + std::string(65532, '?');
-
-    auto err = deserializeMsgPack(doc, input);
-
-    REQUIRE(err == DeserializationError::Ok);
-  }
-
-  SECTION(
-      "deserializeMsgPack() returns NoMemory of binary has 65534 characters") {
-    auto input = "\xc5\xff\xfd" + std::string(65534, '?');
-
-    auto err = deserializeMsgPack(doc, input);
-
-    REQUIRE(err == DeserializationError::NoMemory);
+      REQUIRE(err == DeserializationError::NoMemory);
+    }
   }
 }
