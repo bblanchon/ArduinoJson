@@ -147,14 +147,54 @@ TEST_CASE("serialize MsgPack value") {
   }
 
   SECTION("bin 8") {
-    auto str = std::string(1, 1);
-    checkVariant(MsgPackBinary(str.data(), str.size()), "\xC4\x01\x01");
+    checkVariant(MsgPackBinary("?", 1), "\xC4\x01?");
   }
 
   SECTION("bin 16") {
-    auto str = std::string(256, 1);
+    auto str = std::string(256, '?');
     checkVariant(MsgPackBinary(str.data(), str.size()),
                  std::string("\xC5\x01\x00", 3) + str);
+  }
+
+  // bin 32 is tested in string_length_size_4.cpp
+
+  SECTION("fixext 1") {
+    checkVariant(MsgPackExtension(1, "\x02", 1), "\xD4\x01\x02");
+  }
+
+  SECTION("fixext 2") {
+    checkVariant(MsgPackExtension(1, "\x03\x04", 2), "\xD5\x01\x03\x04");
+  }
+
+  SECTION("fixext 4") {
+    checkVariant(MsgPackExtension(1, "\x05\x06\x07\x08", 4),
+                 "\xD6\x01\x05\x06\x07\x08");
+  }
+
+  SECTION("fixext 8") {
+    checkVariant(MsgPackExtension(1, "????????", 8), "\xD7\x01????????");
+  }
+
+  SECTION("fixext 16") {
+    checkVariant(MsgPackExtension(1, "????????????????", 16),
+                 "\xD8\x01????????????????");
+  }
+
+  SECTION("ext 8") {
+    checkVariant(MsgPackExtension(2, "???", 3), "\xC7\x03\x02???");
+    checkVariant(MsgPackExtension(2, "?????", 5), "\xC7\x05\x02?????");
+    checkVariant(MsgPackExtension(2, "???????", 7), "\xC7\x07\x02???????");
+    checkVariant(MsgPackExtension(2, "?????????", 9), "\xC7\x09\x02?????????");
+    checkVariant(MsgPackExtension(2, "???????????????", 15),
+                 "\xC7\x0F\x02???????????????");
+    checkVariant(MsgPackExtension(2, "?????????????????", 17),
+                 "\xC7\x11\x02?????????????????");
+  }
+
+  SECTION("ext 16") {
+    auto str = std::string(256, '?');
+    checkVariant(MsgPackExtension(2, str.data(), str.size()),
+                 std::string("\xC8\x01\x00\x02", 4) + str);
   }
 
   SECTION("serialize round double as integer") {  // Issue #1718

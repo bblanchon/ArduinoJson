@@ -184,53 +184,6 @@ TEST_CASE("deserializeMsgPack() returns IncompleteInput") {
   }
 }
 
-static std::string msgPackToJson(const char* input, size_t inputSize) {
-  JsonDocument doc;
-  auto err = deserializeMsgPack(doc, input, inputSize);
-  REQUIRE(err == DeserializationError::Ok);
-  return doc.as<std::string>();
-}
-
-TEST_CASE("deserializeMsgPack() replaces ext types by null") {
-  SECTION("ext 8") {
-    REQUIRE(msgPackToJson("\x92\xc7\x01\x01\x01\x2A", 6) == "[null,42]");
-  }
-
-  SECTION("ext 16") {
-    REQUIRE(msgPackToJson("\x92\xc8\x00\x01\x01\x01\x2A", 7) == "[null,42]");
-  }
-
-  SECTION("ext 32") {
-    REQUIRE(msgPackToJson("\x92\xc9\x00\x00\x00\x01\x01\x01\x2A", 9) ==
-            "[null,42]");
-  }
-
-  SECTION("fixext 1") {
-    REQUIRE(msgPackToJson("\x92\xd4\x01\x01\x2A", 5) == "[null,42]");
-  }
-
-  SECTION("fixext 2") {
-    REQUIRE(msgPackToJson("\x92\xd5\x01\x01\x02\x2A", 6) == "[null,42]");
-  }
-
-  SECTION("fixext 4") {
-    REQUIRE(msgPackToJson("\x92\xd6\x01\x01\x02\x03\x04\x2A", 8) ==
-            "[null,42]");
-  }
-
-  SECTION("fixext 8") {
-    REQUIRE(msgPackToJson("\x92\xd7\x01\x01\x02\x03\x04\x05\x06\x07\x08\x2A",
-                          12) == "[null,42]");
-  }
-
-  SECTION("fixext 16") {
-    REQUIRE(msgPackToJson("\x92\xd8\x01\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A"
-                          "\x0B\x0C\x0D\x0E"
-                          "\x0F\x10\x2A",
-                          20) == "[null,42]");
-  }
-}
-
 TEST_CASE(
     "deserializeMsgPack() returns NoMemory when string allocation fails") {
   TimebombAllocator allocator(0);

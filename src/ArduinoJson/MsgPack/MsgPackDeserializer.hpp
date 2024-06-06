@@ -38,10 +38,12 @@ class MsgPackDeserializer {
       DeserializationOption::NestingLimit nestingLimit) {
     DeserializationError::Code err;
 
-    uint8_t code = 0;  // TODO: why do we need to initialize this variable?
-    err = readByte(code);
+    uint8_t header[5];
+    err = readBytes(header, 1);
     if (err)
       return err;
+
+    const uint8_t& code = header[0];
 
     foundSomething_ = true;
 
@@ -51,82 +53,6 @@ class MsgPackDeserializer {
       // callers pass a null pointer only when value must be ignored
       ARDUINOJSON_ASSERT(variant != 0);
     }
-
-    size_t size = 0;
-
-    switch (code) {
-      case 0xc4:  // bin 8
-      case 0xc7:  // ext 8
-      case 0xd9:  // str 8
-        uint8_t size8;
-        err = readInteger(size8);
-        size = size8;
-        break;
-
-      case 0xc5:  // bin 16
-      case 0xc8:  // ext 16
-      case 0xda:  // str 16
-      case 0xdc:  // array 16
-      case 0xde:  // map 16
-        uint16_t size16;
-        err = readInteger(size16);
-        size = size16;
-        break;
-
-      case 0xc6:  // bin 32
-      case 0xc9:  // ext 32
-      case 0xdb:  // str 32
-      case 0xdd:  // array 32
-      case 0xdf:  // map 32
-        uint32_t size32;
-        err = readInteger(size32);
-        size = size32;
-        break;
-    }
-
-    if (err)
-      return err;
-
-    switch (code & 0xf0) {
-      case 0x90:  // fixarray
-      case 0x80:  // fixmap
-        size = code & 0x0F;
-        break;
-    }
-
-    switch (code & 0xe0) {
-      case 0xa0:  // fixstr
-        size = code & 0x1f;
-        break;
-    }
-
-    // array 16, 32 and fixarray
-    if (code == 0xdc || code == 0xdd || (code & 0xf0) == 0x90)
-      return readArray(variant, size, filter, nestingLimit);
-
-    // map 16, 32 and fixmap
-    if (code == 0xde || code == 0xdf || (code & 0xf0) == 0x80)
-      return readObject(variant, size, filter, nestingLimit);
-
-    // str 8, 16, 32 and fixstr
-    if (code == 0xd9 || code == 0xda || code == 0xdb || (code & 0xe0) == 0xa0) {
-      if (allowValue)
-        return readString(variant, size);
-      else
-        return skipBytes(size);
-    }
-
-    // bin 8, 16, 32
-    if (code == 0xc4 || code == 0xc5 || code == 0xc6) {
-      if (allowValue)
-        return readBinary(variant, size);
-      else
-        return skipBytes(size);
-    }
-
-    // ext 8, 16, 32
-    if (code == 0xc7 || code == 0xc8 || code == 0xc9)
-      return skipBytes(size + 1);
 
     switch (code) {
       case 0xc0:
@@ -209,31 +135,96 @@ class MsgPackDeserializer {
         if (allowValue)
           return readInteger<int64_t>(variant);
         else
-          return skipBytes(8);  // not supported
+          return skipBytes(8);
 #else
-        return skipBytes(8);
+        return skipBytes(8);  // not supported
 #endif
-
-      case 0xd4:  // fixext 1 (not supported)
-        return skipBytes(2);
-
-      case 0xd5:  // fixext 2 (not supported)
-        return skipBytes(3);
-
-      case 0xd6:  // fixext 4 (not supported)
-        return skipBytes(5);
-
-      case 0xd7:  // fixext 8 (not supported)
-        return skipBytes(9);
-
-      case 0xd8:  // fixext 16 (not supported)
-        return skipBytes(17);
-
-      default:  // fixint
-        if (allowValue)
-          variant->setInteger(static_cast<int8_t>(code));
-        return DeserializationError::Ok;
     }
+
+    if (code <= 0x7f || code >= 0xe0) {  // fixint
+      if (allowValue)
+        variant->setInteger(static_cast<int8_t>(code));
+      return DeserializationError::Ok;
+    }
+
+    uint8_t sizeBytes = 0;
+    size_t size = 0;
+    bool isExtension = code >= 0xc7 && code <= 0xc9;
+
+    switch (code) {
+      case 0xc4:  // bin 8
+      case 0xc7:  // ext 8
+      case 0xd9:  // str 8
+        sizeBytes = 1;
+        break;
+
+      case 0xc5:  // bin 16
+      case 0xc8:  // ext 16
+      case 0xda:  // str 16
+      case 0xdc:  // array 16
+      case 0xde:  // map 16
+        sizeBytes = 2;
+        break;
+
+      case 0xc6:  // bin 32
+      case 0xc9:  // ext 32
+      case 0xdb:  // str 32
+      case 0xdd:  // array 32
+      case 0xdf:  // map 32
+        sizeBytes = 4;
+        break;
+    }
+
+    if (code >= 0xd4 && code <= 0xd8) {  // fixext
+      size = size_t(1) << (code - 0xd4);
+      isExtension = true;
+    }
+
+    switch (code & 0xf0) {
+      case 0x90:  // fixarray
+      case 0x80:  // fixmap
+        size = code & 0x0F;
+        break;
+    }
+
+    switch (code & 0xe0) {
+      case 0xa0:  // fixstr
+        size = code & 0x1f;
+        break;
+    }
+
+    if (sizeBytes) {
+      err = readBytes(header + 1, sizeBytes);
+      if (err)
+        return err;
+
+      for (size_t i = 0; i < sizeBytes; i++)
+        size = (size << 8) | header[i + 1];
+    }
+
+    // array 16, 32 and fixarray
+    if (code == 0xdc || code == 0xdd || (code & 0xf0) == 0x90)
+      return readArray(variant, size, filter, nestingLimit);
+
+    // map 16, 32 and fixmap
+    if (code == 0xde || code == 0xdf || (code & 0xf0) == 0x80)
+      return readObject(variant, size, filter, nestingLimit);
+
+    // str 8, 16, 32 and fixstr
+    if (code == 0xd9 || code == 0xda || code == 0xdb || (code & 0xe0) == 0xa0) {
+      if (allowValue)
+        return readString(variant, size);
+      else
+        return skipBytes(size);
+    }
+
+    if (isExtension)
+      size++;  // to include the type
+
+    if (allowValue)
+      return readRawString(variant, header, uint8_t(1 + sizeBytes), size);
+    else
+      return skipBytes(size);
   }
 
   DeserializationError::Code readByte(uint8_t& value) {
@@ -372,47 +363,16 @@ class MsgPackDeserializer {
     return readBytes(p, n);
   }
 
-  DeserializationError::Code readBinary(VariantData* variant, size_t n) {
-    uint8_t headerSize;
-
-    if (n <= 0xFF) {
-      headerSize = 2;
-    }
-#if ARDUINOJSON_STRING_LENGTH_SIZE >= 2
-    else if (n <= 0xFFFF) {
-      headerSize = 3;
-    }
-#endif
-#if ARDUINOJSON_STRING_LENGTH_SIZE >= 4
-    else {
-      headerSize = 5;
-    }
-#else
-    else {
-      return DeserializationError::NoMemory;
-    }
-#endif
-
+  DeserializationError::Code readRawString(VariantData* variant,
+                                           const void* header,
+                                           uint8_t headerSize, size_t n) {
     char* p = stringBuffer_.reserve(headerSize + n);
     if (!p)
       return DeserializationError::NoMemory;
 
-    if (n <= 0xFF) {
-      *p++ = '\xc4';
-      *p++ = char(n & 0xFF);
-    } else if (n <= 0xFFFF) {
-      *p++ = '\xc5';
-      *p++ = char(n >> 8 & 0xFF);
-      *p++ = char(n & 0xFF);
-    } else {
-      *p++ = '\xc6';
-      *p++ = char(n >> 24 & 0xFF);
-      *p++ = char(n >> 16 & 0xFF);
-      *p++ = char(n >> 8 & 0xFF);
-      *p++ = char(n & 0xFF);
-    }
+    memcpy(p, header, headerSize);
 
-    auto err = readBytes(p, n);
+    auto err = readBytes(p + headerSize, n);
     if (err)
       return err;
 

@@ -26,6 +26,7 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE("null" == variant.as<std::string>());
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
   SECTION("set(4.2)") {
@@ -38,6 +39,7 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<unsigned>() == 4U);
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
   SECTION("set(0.0)") {
@@ -47,6 +49,7 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<long>() == 0L);
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
   SECTION("set(false)") {
@@ -58,6 +61,7 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<std::string>() == "false");
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
   SECTION("set(true)") {
@@ -69,6 +73,7 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<std::string>() == "true");
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
   SECTION("set(42)") {
@@ -81,6 +86,7 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<std::string>() == "42");
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
   SECTION("set(42L)") {
@@ -205,6 +211,13 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<JsonString>().isNull());
   }
 
+  SECTION("set(serialized(\"hello\"))") {
+    variant.set(serialized("hello"));
+
+    REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
+  }
+
   SECTION("to<JsonObject>()") {
     JsonObject obj = variant.to<JsonObject>();
     obj["key"] = "value";
@@ -261,11 +274,5 @@ TEST_CASE("JsonVariant::as()") {
     variant.set(1);
 
     REQUIRE(variant.as<MY_ENUM>() == ONE);
-  }
-
-  SECTION("SerializedValue as MsgPackBinary") {
-    variant.set(serialized("hello"));
-
-    REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
   }
 }

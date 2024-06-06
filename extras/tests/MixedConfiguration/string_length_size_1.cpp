@@ -41,6 +41,24 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 1") {
     }
   }
 
+  SECTION("set(MsgPackExtension)") {
+    SECTION("returns true if size <= 252") {
+      auto str = std::string(252, '?');
+      auto result = doc.set(MsgPackExtension(1, str.data(), str.size()));
+
+      REQUIRE(result == true);
+      REQUIRE(doc.overflowed() == false);
+    }
+
+    SECTION("returns false if size >= 253") {
+      auto str = std::string(253, '?');
+      auto result = doc.set(MsgPackExtension(1, str.data(), str.size()));
+
+      REQUIRE(result == false);
+      REQUIRE(doc.overflowed() == true);
+    }
+  }
+
   SECTION("deserializeJson()") {
     SECTION("returns Ok if string length <= 255") {
       auto input = "\"" + std::string(255, '?') + "\"";
@@ -86,6 +104,22 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 1") {
 
     SECTION("returns NoMemory if binary size >= 254") {
       auto input = "\xc4\xfe" + std::string(254, '?');
+
+      auto err = deserializeMsgPack(doc, input);
+
+      REQUIRE(err == DeserializationError::NoMemory);
+    }
+
+    SECTION("returns Ok if extension size <= 252") {
+      auto input = "\xc7\xfc\x01" + std::string(252, '?');
+
+      auto err = deserializeMsgPack(doc, input);
+
+      REQUIRE(err == DeserializationError::Ok);
+    }
+
+    SECTION("returns NoMemory if binary size >= 253") {
+      auto input = "\xc7\xfd\x01" + std::string(253, '?');
 
       auto err = deserializeMsgPack(doc, input);
 

@@ -5,7 +5,8 @@ HEAD
 ----
 
 * Add `ARDUINOJSON_STRING_LENGTH_SIZE` to the namespace name
-* Add MsgPack bin8/bin16/bin32 support (PR #2078 by @Sanae6)
+* Add support for MsgPack binary (PR #2078 by @Sanae6)
+* Add support for MsgPack extension
 * Make string support even more generic (PR #2084 by @d-a-v)
 * Optimize `deserializeMsgPack()`
 * Allow using a `JsonVariant` as a key or index (issue #2080)

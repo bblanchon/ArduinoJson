@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ArduinoJson/Variant/Converter.hpp>
+
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 class MsgPackBinary {

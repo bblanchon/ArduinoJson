@@ -155,7 +155,6 @@ TEST_CASE("deserialize MsgPack value") {
 
   SECTION("bin 16") {
     JsonDocument doc;
-
     auto str = std::string(256, '?');
     auto input = std::string("\xc5\x01\x00", 3) + str;
 
@@ -168,6 +167,127 @@ TEST_CASE("deserialize MsgPack value") {
     REQUIRE(binary.data() != nullptr);
     REQUIRE(std::string(reinterpret_cast<const char*>(binary.data()),
                         binary.size()) == str);
+  }
+
+  SECTION("fixext 1") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xd4\x01\x02");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 1);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == 2);
+  }
+
+  SECTION("fixext 2") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xd5\x01\x02\x03");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 2);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == 2);
+    REQUIRE(data[1] == 3);
+  }
+
+  SECTION("fixext 4") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xd6\x01\x02\x03\x04\x05");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 4);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == 2);
+    REQUIRE(data[1] == 3);
+    REQUIRE(data[2] == 4);
+    REQUIRE(data[3] == 5);
+  }
+
+  SECTION("fixext 8") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xd7\x01????????");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 8);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == '?');
+    REQUIRE(data[7] == '?');
+  }
+
+  SECTION("fixext 16") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xd8\x01?????????????????");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 16);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == '?');
+    REQUIRE(data[15] == '?');
+  }
+
+  SECTION("ext 8") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xc7\x02\x01\x03\x04");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 2);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == 3);
+    REQUIRE(data[1] == 4);
+  }
+
+  SECTION("ext 16") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xc8\x00\x02\x01\x03\x04");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 2);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == 3);
+    REQUIRE(data[1] == 4);
+  }
+
+  SECTION("ext 32") {
+    JsonDocument doc;
+
+    auto error = deserializeMsgPack(doc, "\xc9\x00\x00\x00\x02\x01\x03\x04");
+
+    REQUIRE(error == DeserializationError::Ok);
+    REQUIRE(doc.is<MsgPackExtension>());
+    auto ext = doc.as<MsgPackExtension>();
+    REQUIRE(ext.type() == 1);
+    REQUIRE(ext.size() == 2);
+    auto data = reinterpret_cast<const uint8_t*>(ext.data());
+    REQUIRE(data[0] == 3);
+    REQUIRE(data[1] == 4);
   }
 }
 

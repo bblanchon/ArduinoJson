@@ -50,6 +50,7 @@
 #include "ArduinoJson/Json/PrettyJsonSerializer.hpp"
 #include "ArduinoJson/MsgPack/MsgPackBinary.hpp"
 #include "ArduinoJson/MsgPack/MsgPackDeserializer.hpp"
+#include "ArduinoJson/MsgPack/MsgPackExtension.hpp"
 #include "ArduinoJson/MsgPack/MsgPackSerializer.hpp"
 
 #include "ArduinoJson/compatibility.hpp"

@@ -23,6 +23,8 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK(variant.as<JsonString>().isNull());
     CHECK(variant.as<MsgPackBinary>().data() == nullptr);
     CHECK(variant.as<MsgPackBinary>().size() == 0);
+    CHECK(variant.as<MsgPackExtension>().data() == nullptr);
+    CHECK(variant.as<MsgPackExtension>().size() == 0);
   }
 
   SECTION("is<T>()") {
@@ -49,6 +51,7 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant.set(serialized(std::string("42"))));
     CHECK_FALSE(variant.set(true));
     CHECK_FALSE(variant.set(MsgPackBinary("hello", 5)));
+    CHECK_FALSE(variant.set(MsgPackExtension(1, "hello", 5)));
   }
 
   SECTION("add()") {
