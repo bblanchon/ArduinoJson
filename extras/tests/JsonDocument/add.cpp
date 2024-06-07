@@ -9,6 +9,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofArray;
 
@@ -35,8 +36,8 @@ TEST_CASE("JsonDocument::add(T)") {
   }
 
   SECTION("std::string") {
-    doc.add(std::string("example"));
-    doc.add(std::string("example"));
+    doc.add("example"_s);
+    doc.add("example"_s);
 
     CHECK(doc[0].as<const char*>() == doc[1].as<const char*>());
     REQUIRE(spy.log() == AllocatorLog{
@@ -99,7 +100,7 @@ TEST_CASE("JsonDocument::add<T>()") {
 
 TEST_CASE("JsonObject::add(JsonObject) ") {
   JsonDocument doc1;
-  doc1[std::string("hello")] = std::string("world");
+  doc1["hello"_s] = "world"_s;
 
   TimebombAllocator allocator(10);
   SpyingAllocator spy(&allocator);

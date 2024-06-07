@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using namespace ArduinoJson::detail;
 
@@ -1552,7 +1553,7 @@ TEST_CASE("Overloads") {
   }
 
   SECTION("const std::string&, Filter") {
-    deserializeMsgPack(doc, std::string("{}"), Filter(filter));
+    deserializeMsgPack(doc, "{}"_s, Filter(filter));
   }
 
   SECTION("std::istream&, Filter") {
@@ -1580,7 +1581,7 @@ TEST_CASE("Overloads") {
   }
 
   SECTION("const std::string&, Filter, NestingLimit") {
-    deserializeMsgPack(doc, std::string("{}"), Filter(filter), NestingLimit(5));
+    deserializeMsgPack(doc, "{}"_s, Filter(filter), NestingLimit(5));
   }
 
   SECTION("std::istream&, Filter, NestingLimit") {
@@ -1608,7 +1609,7 @@ TEST_CASE("Overloads") {
   }
 
   SECTION("const std::string&, NestingLimit, Filter") {
-    deserializeMsgPack(doc, std::string("{}"), NestingLimit(5), Filter(filter));
+    deserializeMsgPack(doc, "{}"_s, NestingLimit(5), Filter(filter));
   }
 
   SECTION("std::istream&, NestingLimit, Filter") {

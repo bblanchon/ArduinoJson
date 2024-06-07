@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofArray;
 
@@ -51,7 +52,7 @@ TEST_CASE("JsonArray::add(T)") {
 
     array.add(vla);
 
-    REQUIRE(std::string("world") == array[0]);
+    REQUIRE("world"_s == array[0]);
   }
 #endif
 
@@ -115,7 +116,7 @@ TEST_CASE("JsonArray::add(T)") {
   }
 
   SECTION("should duplicate std::string") {
-    array.add(std::string("world"));
+    array.add("world"_s);
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofPool()),
                              Allocate(sizeofString("world")),
@@ -139,7 +140,7 @@ TEST_CASE("JsonArray::add(T)") {
   }
 
   SECTION("should duplicate serialized(std::string)") {
-    array.add(serialized(std::string("{}")));
+    array.add(serialized("{}"_s));
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofPool()),
                              Allocate(sizeofString("{}")),
@@ -147,7 +148,7 @@ TEST_CASE("JsonArray::add(T)") {
   }
 
   SECTION("should duplicate serialized(std::string)") {
-    array.add(serialized(std::string("\0XX", 3)));
+    array.add(serialized("\0XX"_s));
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofPool()),
                              Allocate(sizeofString(" XX")),
@@ -182,7 +183,7 @@ TEST_CASE("JsonArray::add<T>()") {
 
 TEST_CASE("JsonObject::add(JsonObject) ") {
   JsonDocument doc1;
-  doc1[std::string("key1")] = std::string("value1");
+  doc1["key1"_s] = "value1"_s;
 
   TimebombAllocator allocator(10);
   SpyingAllocator spy(&allocator);

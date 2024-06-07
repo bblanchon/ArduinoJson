@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonDocument::containsKey()") {
   JsonDocument doc;
 
@@ -23,7 +25,7 @@ TEST_CASE("JsonDocument::containsKey()") {
   SECTION("returns true when key is a std::string") {
     doc["hello"] = "world";
 
-    REQUIRE(doc.containsKey(std::string("hello")) == true);
+    REQUIRE(doc.containsKey("hello"_s) == true);
   }
 
   SECTION("returns false  on object") {

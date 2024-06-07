@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 TEST_CASE("copyArray()") {
   SECTION("int[] -> JsonArray") {
@@ -18,7 +19,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(array, json);
-    CHECK(std::string("[1,2,3]") == json);
+    CHECK("[1,2,3]"_s == json);
   }
 
   SECTION("std::string[] -> JsonArray") {
@@ -31,7 +32,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(array, json);
-    CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
+    CHECK("[\"a\",\"b\",\"c\"]"_s == json);
   }
 
   SECTION("const char*[] -> JsonArray") {
@@ -44,7 +45,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(array, json);
-    CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
+    CHECK("[\"a\",\"b\",\"c\"]"_s == json);
   }
 
   SECTION("const char[][] -> JsonArray") {
@@ -57,7 +58,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(array, json);
-    CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
+    CHECK("[\"a\",\"b\",\"c\"]"_s == json);
   }
 
   SECTION("const char[][] -> JsonDocument") {
@@ -69,7 +70,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(doc, json);
-    CHECK(std::string("[\"a\",\"b\",\"c\"]") == json);
+    CHECK("[\"a\",\"b\",\"c\"]"_s == json);
   }
 
   SECTION("const char[][] -> MemberProxy") {
@@ -81,7 +82,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(doc, json);
-    CHECK(std::string("{\"data\":[\"a\",\"b\",\"c\"]}") == json);
+    CHECK("{\"data\":[\"a\",\"b\",\"c\"]}"_s == json);
   }
 
   SECTION("int[] -> JsonDocument") {
@@ -93,7 +94,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(doc, json);
-    CHECK(std::string("[1,2,3]") == json);
+    CHECK("[1,2,3]"_s == json);
   }
 
   SECTION("int[] -> MemberProxy") {
@@ -105,7 +106,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(doc, json);
-    CHECK(std::string("{\"data\":[1,2,3]}") == json);
+    CHECK("{\"data\":[1,2,3]}"_s == json);
   }
 
   SECTION("int[] -> JsonArray, but not enough memory") {
@@ -127,7 +128,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(array, json);
-    CHECK(std::string("[[1,2,3],[4,5,6]]") == json);
+    CHECK("[[1,2,3],[4,5,6]]"_s == json);
   }
 
   SECTION("int[][] -> MemberProxy") {
@@ -139,7 +140,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(doc, json);
-    CHECK(std::string("{\"data\":[[1,2,3],[4,5,6]]}") == json);
+    CHECK("{\"data\":[[1,2,3],[4,5,6]]}"_s == json);
   }
 
   SECTION("int[][] -> JsonDocument") {
@@ -151,7 +152,7 @@ TEST_CASE("copyArray()") {
     CHECK(ok);
 
     serializeJson(doc, json);
-    CHECK(std::string("[[1,2,3],[4,5,6]]") == json);
+    CHECK("[[1,2,3],[4,5,6]]"_s == json);
   }
 
   SECTION("int[][] -> JsonArray, but not enough memory") {
@@ -223,9 +224,9 @@ TEST_CASE("copyArray()") {
     size_t result = copyArray(array, destination);
 
     CHECK(3 == result);
-    CHECK(std::string("a12345") == destination[0]);
-    CHECK(std::string("b123456") == destination[1]);
-    CHECK(std::string("c123456") == destination[2]);  // truncated
+    CHECK("a12345"_s == destination[0]);
+    CHECK("b123456"_s == destination[1]);
+    CHECK("c123456"_s == destination[2]);  // truncated
     CHECK(std::string("") == destination[3]);
   }
 

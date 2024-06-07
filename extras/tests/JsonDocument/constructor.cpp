@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::addPadding;
 
@@ -20,7 +21,7 @@ TEST_CASE("JsonDocument constructor") {
   SECTION("JsonDocument(const JsonDocument&)") {
     {
       JsonDocument doc1(&spyingAllocator);
-      doc1.set(std::string("The size of this string is 32!!"));
+      doc1.set("The size of this string is 32!!"_s);
 
       JsonDocument doc2(doc1);
 
@@ -38,7 +39,7 @@ TEST_CASE("JsonDocument constructor") {
   SECTION("JsonDocument(JsonDocument&&)") {
     {
       JsonDocument doc1(&spyingAllocator);
-      doc1.set(std::string("The size of this string is 32!!"));
+      doc1.set("The size of this string is 32!!"_s);
 
       JsonDocument doc2(std::move(doc1));
 

@@ -9,6 +9,7 @@
 #include <string>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
@@ -78,7 +79,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
   }
 
   SECTION("owned string") {
-    doc.set(std::string("abcdefg"));
+    doc.set("abcdefg"_s);
     REQUIRE(doc.as<std::string>() == "abcdefg");
 
     doc.shrinkToFit();
@@ -114,7 +115,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
   }
 
   SECTION("owned key") {
-    doc[std::string("abcdefg")] = 42;
+    doc["abcdefg"_s] = 42;
 
     doc.shrinkToFit();
 
@@ -141,7 +142,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
   }
 
   SECTION("owned string in array") {
-    doc.add(std::string("abcdefg"));
+    doc.add("abcdefg"_s);
 
     doc.shrinkToFit();
 
@@ -168,7 +169,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
   }
 
   SECTION("owned string in object") {
-    doc["key"] = std::string("abcdefg");
+    doc["key"] = "abcdefg"_s;
 
     doc.shrinkToFit();
 

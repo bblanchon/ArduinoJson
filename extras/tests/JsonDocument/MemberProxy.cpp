@@ -9,6 +9,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
@@ -106,8 +107,8 @@ TEST_CASE("MemberProxy::containsKey()") {
   SECTION("containsKey(std::string)") {
     mp["key"] = "value";
 
-    REQUIRE(mp.containsKey(std::string("key")) == true);
-    REQUIRE(mp.containsKey(std::string("key")) == true);
+    REQUIRE(mp.containsKey("key"_s) == true);
+    REQUIRE(mp.containsKey("key"_s) == true);
   }
 }
 
@@ -117,8 +118,8 @@ TEST_CASE("MemberProxy::operator|()") {
   SECTION("const char*") {
     doc["a"] = "hello";
 
-    REQUIRE((doc["a"] | "world") == std::string("hello"));
-    REQUIRE((doc["b"] | "world") == std::string("world"));
+    REQUIRE((doc["a"] | "world") == "hello"_s);
+    REQUIRE((doc["b"] | "world") == "world"_s);
   }
 
   SECTION("Issue #1411") {
@@ -128,7 +129,7 @@ TEST_CASE("MemberProxy::operator|()") {
                                 // to trigger the bug
     const char* sensor = doc["sensor"] | test;  // "gps"
 
-    REQUIRE(sensor == std::string("gps"));
+    REQUIRE(sensor == "gps"_s);
   }
 
   SECTION("Issue #1415") {
@@ -170,7 +171,7 @@ TEST_CASE("MemberProxy::remove()") {
     mp["a"] = 1;
     mp["b"] = 2;
 
-    mp.remove(std::string("b"));
+    mp.remove("b"_s);
 
     REQUIRE(mp.as<std::string>() == "{\"a\":1}");
   }
@@ -286,8 +287,8 @@ TEST_CASE("Deduplicate keys") {
   JsonDocument doc(&spy);
 
   SECTION("std::string") {
-    doc[0][std::string("example")] = 1;
-    doc[1][std::string("example")] = 2;
+    doc[0]["example"_s] = 1;
+    doc[1]["example"_s] = 2;
 
     const char* key1 = doc[0].as<JsonObject>().begin()->key().c_str();
     const char* key2 = doc[1].as<JsonObject>().begin()->key().c_str();
@@ -351,7 +352,7 @@ TEST_CASE("MemberProxy under memory constraints") {
   SECTION("key allocation fails") {
     killswitch.on();
 
-    doc[std::string("hello")] = "world";
+    doc["hello"_s] = "world";
 
     REQUIRE(doc.is<JsonObject>());
     REQUIRE(doc.size() == 0);

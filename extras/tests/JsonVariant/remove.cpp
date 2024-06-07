@@ -7,6 +7,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofArray;
 
@@ -15,9 +16,9 @@ TEST_CASE("JsonVariant::remove(int)") {
   JsonDocument doc(&spy);
 
   SECTION("release top level strings") {
-    doc.add(std::string("hello"));
-    doc.add(std::string("hello"));
-    doc.add(std::string("world"));
+    doc.add("hello"_s);
+    doc.add("hello"_s);
+    doc.add("world"_s);
 
     JsonVariant var = doc.as<JsonVariant>();
     REQUIRE(var.as<std::string>() == "[\"hello\",\"hello\",\"world\"]");
@@ -43,7 +44,7 @@ TEST_CASE("JsonVariant::remove(int)") {
   }
 
   SECTION("release strings in nested array") {
-    doc[0][0] = std::string("hello");
+    doc[0][0] = "hello"_s;
 
     JsonVariant var = doc.as<JsonVariant>();
     REQUIRE(var.as<std::string>() == "[[\"hello\"]]");
@@ -77,7 +78,7 @@ TEST_CASE("JsonVariant::remove(std::string)") {
   var["a"] = 1;
   var["b"] = 2;
 
-  var.remove(std::string("b"));
+  var.remove("b"_s);
 
   REQUIRE(var.as<std::string>() == "{\"a\":1}");
 }

@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonVariantConst::containsKey()") {
   JsonDocument doc;
   doc["hello"] = "world";
@@ -17,8 +19,8 @@ TEST_CASE("JsonVariantConst::containsKey()") {
   }
 
   SECTION("support std::string") {
-    REQUIRE(var.containsKey(std::string("hello")) == true);
-    REQUIRE(var.containsKey(std::string("world")) == false);
+    REQUIRE(var.containsKey("hello"_s) == true);
+    REQUIRE(var.containsKey("world"_s) == false);
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY

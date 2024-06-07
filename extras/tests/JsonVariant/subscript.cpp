@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonVariant::operator[]") {
   JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
@@ -31,9 +33,9 @@ TEST_CASE("JsonVariant::operator[]") {
 
       REQUIRE(2 == var.size());
       var[0].as<std::string>();
-      // REQUIRE(std::string("element at index 0") == );
-      REQUIRE(std::string("element at index 1") == var[1]);
-      REQUIRE(std::string("element at index 0") ==
+      // REQUIRE("element at index 0"_s == );
+      REQUIRE("element at index 1"_s == var[1]);
+      REQUIRE("element at index 0"_s ==
               var[static_cast<unsigned char>(0)]);  // issue #381
       REQUIRE(var[666].isNull());
       REQUIRE(var[3].isNull());
@@ -46,7 +48,7 @@ TEST_CASE("JsonVariant::operator[]") {
       var[1] = "world";
 
       REQUIRE(var.size() == 2);
-      REQUIRE(std::string("world") == var[1]);
+      REQUIRE("world"_s == var[1]);
     }
 
     SECTION("set value in a nested object") {
@@ -56,7 +58,7 @@ TEST_CASE("JsonVariant::operator[]") {
 
       REQUIRE(1 == var.size());
       REQUIRE(1 == var[0].size());
-      REQUIRE(std::string("world") == var[0]["hello"]);
+      REQUIRE("world"_s == var[0]["hello"]);
     }
 
     SECTION("variant[0] when variant contains an integer") {
@@ -86,8 +88,8 @@ TEST_CASE("JsonVariant::operator[]") {
       object["b"] = "element at key \"b\"";
 
       REQUIRE(2 == var.size());
-      REQUIRE(std::string("element at key \"a\"") == var["a"]);
-      REQUIRE(std::string("element at key \"b\"") == var["b"]);
+      REQUIRE("element at key \"a\""_s == var["a"]);
+      REQUIRE("element at key \"b\""_s == var["b"]);
       REQUIRE(var["c"].isNull());
       REQUIRE(var[0].isNull());
     }
@@ -96,7 +98,7 @@ TEST_CASE("JsonVariant::operator[]") {
       var["hello"] = "world";
 
       REQUIRE(1 == var.size());
-      REQUIRE(std::string("world") == var["hello"]);
+      REQUIRE("world"_s == var["hello"]);
     }
 
     SECTION("set value, key is a char[]") {
@@ -105,7 +107,7 @@ TEST_CASE("JsonVariant::operator[]") {
       key[0] = '!';  // make sure the key is duplicated
 
       REQUIRE(1 == var.size());
-      REQUIRE(std::string("world") == var["hello"]);
+      REQUIRE("world"_s == var["hello"]);
     }
 
     SECTION("var[key].to<JsonArray>()") {
@@ -133,7 +135,7 @@ TEST_CASE("JsonVariant::operator[]") {
     deserializeJson(doc, "{\"hello\":\"world\"}");
     JsonVariant variant = doc.as<JsonVariant>();
 
-    REQUIRE(std::string("world") == variant[vla]);
+    REQUIRE("world"_s == variant[vla]);
   }
 
   SECTION("key is a VLA, const JsonVariant") {
@@ -144,7 +146,7 @@ TEST_CASE("JsonVariant::operator[]") {
     deserializeJson(doc, "{\"hello\":\"world\"}");
     const JsonVariant variant = doc.as<JsonVariant>();
 
-    REQUIRE(std::string("world") == variant[vla]);
+    REQUIRE("world"_s == variant[vla]);
   }
 #endif
 }

@@ -9,6 +9,7 @@
 
 #include <catch.hpp>
 
+#include "Literals.hpp"
 #include "custom_string.hpp"
 
 using namespace ArduinoJson::detail;
@@ -36,13 +37,13 @@ void common_tests(StringWriter& writer, const String& output) {
 
   SECTION("OneString") {
     REQUIRE(4 == print(writer, "ABCD"));
-    REQUIRE(std::string("ABCD") == output);
+    REQUIRE("ABCD"_s == output);
   }
 
   SECTION("TwoStrings") {
     REQUIRE(4 == print(writer, "ABCD"));
     REQUIRE(4 == print(writer, "EFGH"));
-    REQUIRE(std::string("ABCDEFGH") == output);
+    REQUIRE("ABCDEFGH"_s == output);
   }
 }
 

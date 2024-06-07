@@ -7,6 +7,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 TEST_CASE("JsonVariant::add(T)") {
   JsonDocument doc;
@@ -25,7 +26,7 @@ TEST_CASE("JsonVariant::add(T)") {
   }
 
   SECTION("add std::string to new variant") {
-    var.add(std::string("hello"));
+    var.add("hello"_s);
 
     REQUIRE(var.as<std::string>() == "[\"hello\"]");
   }
@@ -67,7 +68,7 @@ TEST_CASE("JsonVariant::add<T>()") {
 
 TEST_CASE("JsonObject::add(JsonObject) ") {
   JsonDocument doc1;
-  doc1[std::string("hello")] = std::string("world");
+  doc1["hello"_s] = "world"_s;
 
   TimebombAllocator allocator(10);
   SpyingAllocator spy(&allocator);

@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonDocument::remove()") {
   JsonDocument doc;
 
@@ -31,7 +33,7 @@ TEST_CASE("JsonDocument::remove()") {
     doc["a"] = 1;
     doc["b"] = 2;
 
-    doc.remove(std::string("b"));
+    doc.remove("b"_s);
 
     REQUIRE(doc.as<std::string>() == "{\"a\":1}");
   }

@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonVariantConst::as<T>()") {
   JsonDocument doc;
   JsonVariantConst var = doc.to<JsonVariant>();
@@ -14,8 +16,8 @@ TEST_CASE("JsonVariantConst::as<T>()") {
 
   REQUIRE(var.as<bool>() == true);
   REQUIRE(var.as<long>() == 0L);
-  REQUIRE(var.as<const char*>() == std::string("hello"));
-  REQUIRE(var.as<std::string>() == std::string("hello"));
+  REQUIRE(var.as<const char*>() == "hello"_s);
+  REQUIRE(var.as<std::string>() == "hello"_s);
 }
 
 TEST_CASE("Invalid conversions") {

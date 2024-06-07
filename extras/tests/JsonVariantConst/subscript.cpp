@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonVariantConst::operator[]") {
   JsonDocument doc;
   JsonVariantConst var = doc.to<JsonVariant>();
@@ -28,10 +30,9 @@ TEST_CASE("JsonVariantConst::operator[]") {
     array.add("B");
 
     SECTION("int") {
-      REQUIRE(std::string("A") == var[0]);
-      REQUIRE(std::string("B") == var[1]);
-      REQUIRE(std::string("A") ==
-              var[static_cast<unsigned char>(0)]);  // issue #381
+      REQUIRE("A"_s == var[0]);
+      REQUIRE("B"_s == var[1]);
+      REQUIRE("A"_s == var[static_cast<unsigned char>(0)]);  // issue #381
       REQUIRE(var[666].isNull());
       REQUIRE(var[3].isNull());
     }
@@ -42,7 +43,7 @@ TEST_CASE("JsonVariantConst::operator[]") {
 
     SECTION("JsonVariant") {
       array.add(1);
-      REQUIRE(var[var[2]] == std::string("B"));
+      REQUIRE(var[var[2]] == "B"_s);
       REQUIRE(var[var[3]].isNull());
     }
   }
@@ -53,16 +54,16 @@ TEST_CASE("JsonVariantConst::operator[]") {
     object["b"] = "B";
 
     SECTION("supports const char*") {
-      REQUIRE(std::string("A") == var["a"]);
-      REQUIRE(std::string("B") == var["b"]);
+      REQUIRE("A"_s == var["a"]);
+      REQUIRE("B"_s == var["b"]);
       REQUIRE(var["c"].isNull());
       REQUIRE(var[0].isNull());
     }
 
     SECTION("supports std::string") {
-      REQUIRE(std::string("A") == var[std::string("a")]);
-      REQUIRE(std::string("B") == var[std::string("b")]);
-      REQUIRE(var[std::string("c")].isNull());
+      REQUIRE("A"_s == var["a"_s]);
+      REQUIRE("B"_s == var["b"_s]);
+      REQUIRE(var["c"_s].isNull());
     }
 
 #if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
@@ -72,7 +73,7 @@ TEST_CASE("JsonVariantConst::operator[]") {
       char vla[i];
       strcpy(vla, "a");
 
-      REQUIRE(std::string("A") == var[vla]);
+      REQUIRE("A"_s == var[vla]);
     }
 #endif
 

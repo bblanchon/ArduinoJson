@@ -9,6 +9,7 @@
 
 #include "Allocators.hpp"
 #include "CustomReader.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofObject;
 
@@ -69,7 +70,7 @@ TEST_CASE("deserializeJson(const std::string&)") {
   }
 
   SECTION("should accept temporary string") {
-    DeserializationError err = deserializeJson(doc, std::string("[42]"));
+    DeserializationError err = deserializeJson(doc, "[42]"_s);
 
     REQUIRE(err == DeserializationError::Ok);
   }
@@ -82,7 +83,7 @@ TEST_CASE("deserializeJson(const std::string&)") {
 
     JsonArray array = doc.as<JsonArray>();
     REQUIRE(err == DeserializationError::Ok);
-    REQUIRE(std::string("hello") == array[0]);
+    REQUIRE("hello"_s == array[0]);
   }
 }
 
@@ -108,7 +109,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(1 == obj.size());
-    REQUIRE(std::string("world") == obj["hello"]);
+    REQUIRE("world"_s == obj["hello"]);
   }
 
   SECTION("Should not read after the closing brace of an empty object") {

@@ -12,6 +12,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 #if !ARDUINOJSON_ENABLE_STRING_VIEW
 #  error ARDUINOJSON_ENABLE_STRING_VIEW must be set to 1
@@ -92,7 +93,7 @@ TEST_CASE("string_view") {
   }
 
   SECTION("String containing NUL") {
-    doc.set(std::string("hello\0world", 11));
+    doc.set("hello\0world"_s);
     REQUIRE(doc.as<std::string_view>().size() == 11);
     REQUIRE(doc.as<std::string_view>() == std::string_view("hello\0world", 11));
   }

@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 template <typename T>
 static void checkValue(const char* input, T expected) {
@@ -123,21 +124,21 @@ TEST_CASE("deserialize MsgPack value") {
 
   SECTION("fixstr") {
     checkValue<std::string>("\xA0", std::string(""));
-    checkValue<std::string>("\xABhello world", std::string("hello world"));
+    checkValue<std::string>("\xABhello world", "hello world"_s);
     checkValue<std::string>("\xBFhello world hello world hello !",
-                            std::string("hello world hello world hello !"));
+                            "hello world hello world hello !"_s);
   }
 
   SECTION("str 8") {
-    checkValue<std::string>("\xd9\x05hello", std::string("hello"));
+    checkValue<std::string>("\xd9\x05hello", "hello"_s);
   }
 
   SECTION("str 16") {
-    checkValue<std::string>("\xda\x00\x05hello", std::string("hello"));
+    checkValue<std::string>("\xda\x00\x05hello", "hello"_s);
   }
 
   SECTION("str 32") {
-    checkValue<std::string>("\xdb\x00\x00\x00\x05hello", std::string("hello"));
+    checkValue<std::string>("\xdb\x00\x00\x00\x05hello", "hello"_s);
   }
 
   SECTION("bin 8") {
@@ -156,7 +157,7 @@ TEST_CASE("deserialize MsgPack value") {
   SECTION("bin 16") {
     JsonDocument doc;
     auto str = std::string(256, '?');
-    auto input = std::string("\xc5\x01\x00", 3) + str;
+    auto input = "\xc5\x01\x00"_s + str;
 
     DeserializationError error = deserializeMsgPack(doc, input);
 

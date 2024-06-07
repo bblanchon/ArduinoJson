@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 TEST_CASE("JsonDocument assignment") {
   SpyingAllocator spyingAllocator;
@@ -62,7 +63,7 @@ TEST_CASE("JsonDocument assignment") {
   SECTION("Move assign") {
     {
       JsonDocument doc1(&spyingAllocator);
-      doc1[std::string("hello")] = std::string("world");
+      doc1["hello"_s] = "world"_s;
       JsonDocument doc2(&spyingAllocator);
 
       doc2 = std::move(doc1);

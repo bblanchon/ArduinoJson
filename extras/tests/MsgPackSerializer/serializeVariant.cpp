@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 template <typename T>
 static void checkVariant(T value, const char* expected_data,
                          size_t expected_len) {
@@ -129,16 +131,15 @@ TEST_CASE("serialize MsgPack value") {
 
   SECTION("str 16") {
     std::string shortest(256, '?');
-    checkVariant(shortest.c_str(), std::string("\xDA\x01\x00", 3) + shortest);
+    checkVariant(shortest.c_str(), "\xDA\x01\x00"_s + shortest);
 
     std::string longest(65535, '?');
-    checkVariant(longest.c_str(), std::string("\xDA\xFF\xFF", 3) + longest);
+    checkVariant(longest.c_str(), "\xDA\xFF\xFF"_s + longest);
   }
 
   SECTION("str 32") {
     std::string shortest(65536, '?');
-    checkVariant(shortest.c_str(),
-                 std::string("\xDB\x00\x01\x00\x00", 5) + shortest);
+    checkVariant(shortest.c_str(), "\xDB\x00\x01\x00\x00"_s + shortest);
   }
 
   SECTION("serialized(const char*)") {
@@ -152,8 +153,7 @@ TEST_CASE("serialize MsgPack value") {
 
   SECTION("bin 16") {
     auto str = std::string(256, '?');
-    checkVariant(MsgPackBinary(str.data(), str.size()),
-                 std::string("\xC5\x01\x00", 3) + str);
+    checkVariant(MsgPackBinary(str.data(), str.size()), "\xC5\x01\x00"_s + str);
   }
 
   // bin 32 is tested in string_length_size_4.cpp
@@ -194,7 +194,7 @@ TEST_CASE("serialize MsgPack value") {
   SECTION("ext 16") {
     auto str = std::string(256, '?');
     checkVariant(MsgPackExtension(2, str.data(), str.size()),
-                 std::string("\xC8\x01\x00\x02", 4) + str);
+                 "\xC8\x01\x00\x02"_s + str);
   }
 
   SECTION("serialize round double as integer") {  // Issue #1718

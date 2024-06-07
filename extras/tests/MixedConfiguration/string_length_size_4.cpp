@@ -4,6 +4,8 @@
 #include <catch.hpp>
 #include <string>
 
+#include "Literals.hpp"
+
 TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 4") {
   JsonDocument doc;
 
@@ -74,7 +76,7 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 4") {
 
   SECTION("bin 32 deserialization") {
     auto str = std::string(65536, '?');
-    auto input = std::string("\xc6\x00\x01\x00\x00", 5) + str;
+    auto input = "\xc6\x00\x01\x00\x00"_s + str;
 
     auto err = deserializeMsgPack(doc, input);
 
@@ -95,12 +97,12 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 4") {
     auto result = serializeMsgPack(doc, output);
 
     REQUIRE(result == 5 + str.size());
-    REQUIRE(output == std::string("\xc6\x00\x01\x00\x00", 5) + str);
+    REQUIRE(output == "\xc6\x00\x01\x00\x00"_s + str);
   }
 
   SECTION("ext 32 deserialization") {
     auto str = std::string(65536, '?');
-    auto input = std::string("\xc9\x00\x01\x00\x00\x2a", 6) + str;
+    auto input = "\xc9\x00\x01\x00\x00\x2a"_s + str;
 
     auto err = deserializeMsgPack(doc, input);
 
@@ -122,6 +124,6 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 4") {
     auto result = serializeMsgPack(doc, output);
 
     REQUIRE(result == 6 + str.size());
-    REQUIRE(output == std::string("\xc9\x00\x01\x00\x00\x2a", 6) + str);
+    REQUIRE(output == "\xc9\x00\x01\x00\x00\x2a"_s + str);
   }
 }

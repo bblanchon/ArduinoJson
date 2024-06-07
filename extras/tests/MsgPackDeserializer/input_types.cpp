@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "CustomReader.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofObject;
 
@@ -21,8 +22,7 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
   }
 
   SECTION("should accept temporary string") {
-    DeserializationError err =
-        deserializeMsgPack(doc, std::string("\x92\x01\x02"));
+    DeserializationError err = deserializeMsgPack(doc, "\x92\x01\x02"_s);
 
     REQUIRE(err == DeserializationError::Ok);
   }
@@ -35,12 +35,11 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
 
     JsonArray array = doc.as<JsonArray>();
     REQUIRE(err == DeserializationError::Ok);
-    REQUIRE(std::string("hello") == array[0]);
+    REQUIRE("hello"_s == array[0]);
   }
 
   SECTION("should accept a zero in input") {
-    DeserializationError err =
-        deserializeMsgPack(doc, std::string("\x92\x00\x02", 3));
+    DeserializationError err = deserializeMsgPack(doc, "\x92\x00\x02"_s);
 
     REQUIRE(err == DeserializationError::Ok);
     JsonArray arr = doc.as<JsonArray>();
@@ -53,7 +52,7 @@ TEST_CASE("deserializeMsgPack(std::istream&)") {
   JsonDocument doc;
 
   SECTION("should accept a zero in input") {
-    std::istringstream input(std::string("\x92\x00\x02", 3));
+    std::istringstream input("\x92\x00\x02"_s);
 
     DeserializationError err = deserializeMsgPack(doc, input);
 

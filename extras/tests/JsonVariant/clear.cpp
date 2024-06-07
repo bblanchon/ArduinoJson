@@ -7,6 +7,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 TEST_CASE("JsonVariant::clear()") {
   SpyingAllocator spy;
@@ -28,7 +29,7 @@ TEST_CASE("JsonVariant::clear()") {
   }
 
   SECTION("releases owned string") {
-    var.set(std::string("hello"));
+    var.set("hello"_s);
     var.clear();
 
     REQUIRE(spy.log() == AllocatorLog{

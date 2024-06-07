@@ -6,6 +6,8 @@
 #include <catch.hpp>
 #include <limits>
 
+#include "Literals.hpp"
+
 template <typename T>
 void check(T value, const std::string& expected) {
   JsonDocument doc;
@@ -30,42 +32,42 @@ TEST_CASE("serializeJson(JsonVariant)") {
   }
 
   SECTION("string") {
-    check(std::string("hello"), "\"hello\"");
+    check("hello"_s, "\"hello\"");
 
     SECTION("Escape quotation mark") {
-      check(std::string("hello \"world\""), "\"hello \\\"world\\\"\"");
+      check("hello \"world\""_s, "\"hello \\\"world\\\"\"");
     }
 
     SECTION("Escape reverse solidus") {
-      check(std::string("hello\\world"), "\"hello\\\\world\"");
+      check("hello\\world"_s, "\"hello\\\\world\"");
     }
 
     SECTION("Don't escape solidus") {
-      check(std::string("fifty/fifty"), "\"fifty/fifty\"");
+      check("fifty/fifty"_s, "\"fifty/fifty\"");
     }
 
     SECTION("Escape backspace") {
-      check(std::string("hello\bworld"), "\"hello\\bworld\"");
+      check("hello\bworld"_s, "\"hello\\bworld\"");
     }
 
     SECTION("Escape formfeed") {
-      check(std::string("hello\fworld"), "\"hello\\fworld\"");
+      check("hello\fworld"_s, "\"hello\\fworld\"");
     }
 
     SECTION("Escape linefeed") {
-      check(std::string("hello\nworld"), "\"hello\\nworld\"");
+      check("hello\nworld"_s, "\"hello\\nworld\"");
     }
 
     SECTION("Escape carriage return") {
-      check(std::string("hello\rworld"), "\"hello\\rworld\"");
+      check("hello\rworld"_s, "\"hello\\rworld\"");
     }
 
     SECTION("Escape tab") {
-      check(std::string("hello\tworld"), "\"hello\\tworld\"");
+      check("hello\tworld"_s, "\"hello\\tworld\"");
     }
 
     SECTION("NUL char") {
-      check(std::string("hello\0world", 11), "\"hello\\u0000world\"");
+      check("hello\0world"_s, "\"hello\\u0000world\"");
     }
   }
 
@@ -74,7 +76,7 @@ TEST_CASE("serializeJson(JsonVariant)") {
   }
 
   SECTION("SerializedValue<std::string>") {
-    check(serialized(std::string("[1,2]")), "[1,2]");
+    check(serialized("[1,2]"_s), "[1,2]");
   }
 
   SECTION("Double") {

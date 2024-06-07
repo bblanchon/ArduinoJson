@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonDocument::operator[]") {
   JsonDocument doc;
   const JsonDocument& cdoc = doc;
@@ -18,8 +20,8 @@ TEST_CASE("JsonDocument::operator[]") {
     }
 
     SECTION("std::string") {
-      REQUIRE(doc[std::string("hello")] == "world");
-      REQUIRE(cdoc[std::string("hello")] == "world");
+      REQUIRE(doc["hello"_s] == "world");
+      REQUIRE(cdoc["hello"_s] == "world");
     }
 
     SECTION("JsonVariant") {
@@ -29,8 +31,8 @@ TEST_CASE("JsonDocument::operator[]") {
     }
 
     SECTION("supports operator|") {
-      REQUIRE((doc["hello"] | "nope") == std::string("world"));
-      REQUIRE((doc["world"] | "nope") == std::string("nope"));
+      REQUIRE((doc["hello"] | "nope") == "world"_s);
+      REQUIRE((doc["world"] | "nope") == "nope"_s);
     }
   }
 

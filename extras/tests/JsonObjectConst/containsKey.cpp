@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonObjectConst::containsKey()") {
   JsonDocument doc;
   doc["hello"] = 42;
@@ -16,8 +18,8 @@ TEST_CASE("JsonObjectConst::containsKey()") {
   }
 
   SECTION("supports std::string") {
-    REQUIRE(false == obj.containsKey(std::string("world")));
-    REQUIRE(true == obj.containsKey(std::string("hello")));
+    REQUIRE(false == obj.containsKey("world"_s));
+    REQUIRE(true == obj.containsKey("hello"_s));
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY

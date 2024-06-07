@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 TEST_CASE("JsonVariant::containsKey()") {
   JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
@@ -20,8 +22,8 @@ TEST_CASE("JsonVariant::containsKey()") {
   SECTION("containsKey(std::string)") {
     var["hello"] = "world";
 
-    REQUIRE(var.containsKey(std::string("hello")) == true);
-    REQUIRE(var.containsKey(std::string("world")) == false);
+    REQUIRE(var.containsKey("hello"_s) == true);
+    REQUIRE(var.containsKey("world"_s) == false);
   }
 
   SECTION("containsKey(JsonVariant)") {

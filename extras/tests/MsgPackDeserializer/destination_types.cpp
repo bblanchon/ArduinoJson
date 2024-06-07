@@ -8,6 +8,7 @@
 #include <string>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
@@ -15,7 +16,7 @@ using ArduinoJson::detail::sizeofObject;
 TEST_CASE("deserializeMsgPack(JsonDocument&)") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
-  doc.add(std::string("hello"));
+  doc.add("hello"_s);
   spy.clearLog();
 
   auto err = deserializeMsgPack(doc, "\x91\x2A");
@@ -34,7 +35,7 @@ TEST_CASE("deserializeMsgPack(JsonVariant)") {
   SECTION("variant is bound") {
     SpyingAllocator spy;
     JsonDocument doc(&spy);
-    doc.add(std::string("hello"));
+    doc.add("hello"_s);
     spy.clearLog();
 
     JsonVariant variant = doc[0];
@@ -60,7 +61,7 @@ TEST_CASE("deserializeMsgPack(JsonVariant)") {
 TEST_CASE("deserializeMsgPack(ElementProxy)") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
-  doc.add(std::string("hello"));
+  doc.add("hello"_s);
   spy.clearLog();
 
   SECTION("element already exists") {
@@ -85,7 +86,7 @@ TEST_CASE("deserializeMsgPack(ElementProxy)") {
 TEST_CASE("deserializeMsgPack(MemberProxy)") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
-  doc[std::string("hello")] = std::string("world");
+  doc["hello"_s] = "world"_s;
   spy.clearLog();
 
   SECTION("member already exists") {

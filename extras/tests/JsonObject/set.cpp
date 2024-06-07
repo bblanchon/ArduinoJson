@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 TEST_CASE("JsonObject::set()") {
   SpyingAllocator spy;
@@ -22,20 +23,20 @@ TEST_CASE("JsonObject::set()") {
     bool success = obj2.set(obj1);
 
     REQUIRE(success == true);
-    REQUIRE(obj2["hello"] == std::string("world"));
+    REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofPool()),
                          });
   }
 
   SECTION("copy local string value") {
-    obj1["hello"] = std::string("world");
+    obj1["hello"] = "world"_s;
     spy.clearLog();
 
     bool success = obj2.set(obj1);
 
     REQUIRE(success == true);
-    REQUIRE(obj2["hello"] == std::string("world"));
+    REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofPool()),
                              Allocate(sizeofString("world")),
@@ -43,13 +44,13 @@ TEST_CASE("JsonObject::set()") {
   }
 
   SECTION("copy local key") {
-    obj1[std::string("hello")] = "world";
+    obj1["hello"_s] = "world";
     spy.clearLog();
 
     bool success = obj2.set(obj1);
 
     REQUIRE(success == true);
-    REQUIRE(obj2["hello"] == std::string("world"));
+    REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
@@ -63,7 +64,7 @@ TEST_CASE("JsonObject::set()") {
     bool success = obj2.set(obj1);
 
     REQUIRE(success == true);
-    REQUIRE(obj2["hello"] == std::string("world"));
+    REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
@@ -78,7 +79,7 @@ TEST_CASE("JsonObject::set()") {
     bool success = obj2.set(obj1);
 
     REQUIRE(success == true);
-    REQUIRE(obj2["hello"] == std::string("world"));
+    REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
@@ -91,7 +92,7 @@ TEST_CASE("JsonObject::set()") {
 
     obj2.set(static_cast<JsonObjectConst>(obj1));
 
-    REQUIRE(obj2["hello"] == std::string("world"));
+    REQUIRE(obj2["hello"] == "world"_s);
   }
 
   SECTION("copy fails in the middle of an object") {
@@ -99,8 +100,8 @@ TEST_CASE("JsonObject::set()") {
     JsonDocument doc3(&timebomb);
     JsonObject obj3 = doc3.to<JsonObject>();
 
-    obj1[std::string("a")] = 1;
-    obj1[std::string("b")] = 2;
+    obj1["a"_s] = 1;
+    obj1["b"_s] = 2;
 
     bool success = obj3.set(obj1);
 
@@ -113,7 +114,7 @@ TEST_CASE("JsonObject::set()") {
     JsonDocument doc3(&timebomb);
     JsonObject obj3 = doc3.to<JsonObject>();
 
-    obj1["hello"][0] = std::string("world");
+    obj1["hello"][0] = "world"_s;
 
     bool success = obj3.set(obj1);
 

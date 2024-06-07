@@ -7,6 +7,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 static void check(const JsonArray array, const char* expected_data,
                   size_t expected_len) {
   std::string expected(expected_data, expected_data + expected_len);
@@ -57,7 +59,6 @@ TEST_CASE("serialize MsgPack array") {
       array.add(nil);
     REQUIRE(array.size() == 65536);
 
-    check(array,
-          std::string("\xDD\x00\x01\x00\x00", 5) + std::string(65536, '\xc0'));
+    check(array, "\xDD\x00\x01\x00\x00"_s + std::string(65536, '\xc0'));
   }
 }

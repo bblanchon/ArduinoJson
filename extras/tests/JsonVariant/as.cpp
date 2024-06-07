@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 namespace my {
 using ArduinoJson::detail::isinf;
 }  // namespace my
@@ -156,20 +158,20 @@ TEST_CASE("JsonVariant::as()") {
 
     REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<long>() == 0L);
-    REQUIRE(variant.as<const char*>() == std::string("hello"));
-    REQUIRE(variant.as<const char*>() == std::string("hello"));
-    REQUIRE(variant.as<std::string>() == std::string("hello"));
+    REQUIRE(variant.as<const char*>() == "hello"_s);
+    REQUIRE(variant.as<const char*>() == "hello"_s);
+    REQUIRE(variant.as<std::string>() == "hello"_s);
     REQUIRE(variant.as<JsonString>() == "hello");
   }
 
   SECTION("set(std::string(\"4.2\"))") {
-    variant.set(std::string("4.2"));
+    variant.set("4.2"_s);
 
     REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<long>() == 4L);
     REQUIRE(variant.as<double>() == 4.2);
-    REQUIRE(variant.as<const char*>() == std::string("4.2"));
-    REQUIRE(variant.as<std::string>() == std::string("4.2"));
+    REQUIRE(variant.as<const char*>() == "4.2"_s);
+    REQUIRE(variant.as<std::string>() == "4.2"_s);
     REQUIRE(variant.as<JsonString>() == "4.2");
     REQUIRE(variant.as<JsonString>().isLinked() == false);
   }
@@ -227,13 +229,13 @@ TEST_CASE("JsonVariant::as()") {
     }
 
     SECTION("as<std::string>()") {
-      REQUIRE(variant.as<std::string>() == std::string("{\"key\":\"value\"}"));
+      REQUIRE(variant.as<std::string>() == "{\"key\":\"value\"}"_s);
     }
 
     SECTION("ObjectAsJsonObject") {
       JsonObject o = variant.as<JsonObject>();
       REQUIRE(o.size() == 1);
-      REQUIRE(o["key"] == std::string("value"));
+      REQUIRE(o["key"] == "value"_s);
     }
   }
 
@@ -247,7 +249,7 @@ TEST_CASE("JsonVariant::as()") {
     }
 
     SECTION("as<std::string>()") {
-      REQUIRE(variant.as<std::string>() == std::string("[4,2]"));
+      REQUIRE(variant.as<std::string>() == "[4,2]"_s);
     }
 
     SECTION("as<JsonArray>()") {

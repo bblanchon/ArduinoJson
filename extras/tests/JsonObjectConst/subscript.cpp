@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 TEST_CASE("JsonObjectConst::operator[]") {
   JsonDocument doc;
@@ -17,7 +18,7 @@ TEST_CASE("JsonObjectConst::operator[]") {
   }
 
   SECTION("supports std::string") {
-    REQUIRE(obj[std::string("hello")] == "world");  // issue #2019
+    REQUIRE(obj["hello"_s] == "world");  // issue #2019
   }
 
 #if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
@@ -27,7 +28,7 @@ TEST_CASE("JsonObjectConst::operator[]") {
     char vla[i];
     strcpy(vla, "hello");
 
-    REQUIRE(std::string("world") == obj[vla]);
+    REQUIRE("world"_s == obj[vla]);
   }
 #endif
 

@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Literals.hpp"
+
 typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
 
 TEST_CASE("ElementProxy::add()") {
@@ -121,7 +123,7 @@ TEST_CASE("ElementProxy::remove()") {
     ep["a"] = 1;
     ep["b"] = 2;
 
-    ep.remove(std::string("b"));
+    ep.remove("b"_s);
 
     REQUIRE(ep.as<std::string>() == "{\"a\":1}");
   }

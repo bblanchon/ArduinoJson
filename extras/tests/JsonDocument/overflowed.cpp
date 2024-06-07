@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 TEST_CASE("JsonDocument::overflowed()") {
   TimebombAllocator timebomb(10);
@@ -30,13 +31,13 @@ TEST_CASE("JsonDocument::overflowed()") {
 
   SECTION("returns true after a failed string copy") {
     timebomb.setCountdown(0);
-    doc.add(std::string("example"));
+    doc.add("example"_s);
     CHECK(doc.overflowed() == true);
   }
 
   SECTION("returns false after a successful string copy") {
     timebomb.setCountdown(3);
-    doc.add(std::string("example"));
+    doc.add("example"_s);
     CHECK(doc.overflowed() == false);
   }
 

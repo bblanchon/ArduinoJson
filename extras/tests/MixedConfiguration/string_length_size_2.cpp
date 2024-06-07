@@ -4,6 +4,8 @@
 #include <catch.hpp>
 #include <string>
 
+#include "Literals.hpp"
+
 TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 2") {
   JsonDocument doc;
 
@@ -87,8 +89,7 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 2") {
     }
 
     SECTION("returns NoMemory if string length >= 65536") {
-      auto input =
-          std::string("\xdb\x00\x01\x00\x00", 5) + std::string(65536, '?');
+      auto input = "\xdb\x00\x01\x00\x00"_s + std::string(65536, '?');
 
       auto err = deserializeMsgPack(doc, input);
 

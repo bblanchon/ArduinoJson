@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "Allocators.hpp"
+#include "Literals.hpp"
 
 using ArduinoJson::detail::sizeofObject;
 
@@ -137,14 +138,14 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
   JsonVariant v = doc.to<JsonVariant>();
 
   SECTION("std::string") {
-    bool result = v.set(std::string("hello world!!"));
+    bool result = v.set("hello world!!"_s);
 
     REQUIRE(result == false);
     REQUIRE(v.isNull());
   }
 
   SECTION("Serialized<std::string>") {
-    bool result = v.set(serialized(std::string("hello world!!")));
+    bool result = v.set(serialized("hello world!!"_s));
 
     REQUIRE(result == false);
     REQUIRE(v.isNull());
@@ -178,7 +179,7 @@ TEST_CASE("JsonVariant::set(JsonDocument)") {
 TEST_CASE("JsonVariant::set() releases the previous value") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
-  doc["hello"] = std::string("world");
+  doc["hello"] = "world"_s;
   spy.clearLog();
 
   JsonVariant v = doc["hello"];
