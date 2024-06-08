@@ -35,8 +35,10 @@ struct StringNode {
   static StringNode* create(size_t length, Allocator* allocator) {
     if (length > maxLength)
       return nullptr;
-    auto node = reinterpret_cast<StringNode*>(
-        allocator->allocate(sizeForLength(length)));
+    auto size = sizeForLength(length);
+    if (size < length)  // integer overflow
+      return nullptr;   // (not testable on 64-bit)
+    auto node = reinterpret_cast<StringNode*>(allocator->allocate(size));
     if (node) {
       node->length = length_type(length);
       node->references = 1;

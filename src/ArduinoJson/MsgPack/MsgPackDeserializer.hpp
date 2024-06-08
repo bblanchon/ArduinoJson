@@ -198,8 +198,13 @@ class MsgPackDeserializer {
       if (err)
         return err;
 
+      uint32_t size32 = 0;
       for (size_t i = 0; i < sizeBytes; i++)
-        size = (size << 8) | header[i + 1];
+        size32 = (size32 << 8) | header[i + 1];
+
+      size = size_t(size32);
+      if (size < size32)                        // integer overflow
+        return DeserializationError::NoMemory;  // (not testable on 32/64-bit)
     }
 
     // array 16, 32 and fixarray
@@ -366,7 +371,11 @@ class MsgPackDeserializer {
   DeserializationError::Code readRawString(VariantData* variant,
                                            const void* header,
                                            uint8_t headerSize, size_t n) {
-    char* p = stringBuffer_.reserve(headerSize + n);
+    auto totalSize = size_t(headerSize + n);
+    if (totalSize < n)                        // integer overflow
+      return DeserializationError::NoMemory;  // (not testable on 64-bit)
+
+    char* p = stringBuffer_.reserve(totalSize);
     if (!p)
       return DeserializationError::NoMemory;
 

@@ -112,6 +112,15 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 2") {
       REQUIRE(err == DeserializationError::NoMemory);
     }
 
+    // https://oss-fuzz.com/testcase?key=5354792971993088
+    SECTION("doesn't overflow if binary size == 0xFFFF") {
+      auto input = "\xc5\xff\xff"_s;
+
+      auto err = deserializeMsgPack(doc, input);
+
+      REQUIRE(err == DeserializationError::NoMemory);
+    }
+
     SECTION("returns Ok if extension size <= 65531") {
       auto input = "\xc8\xff\xfb\x01" + std::string(65531, '?');
 
@@ -120,7 +129,7 @@ TEST_CASE("ARDUINOJSON_STRING_LENGTH_SIZE == 2") {
       REQUIRE(err == DeserializationError::Ok);
     }
 
-    SECTION("returns NoMemory if binary size >= 65532") {
+    SECTION("returns NoMemory if extension size >= 65532") {
       auto input = "\xc8\xff\xfc\x01" + std::string(65532, '?');
 
       auto err = deserializeMsgPack(doc, input);
