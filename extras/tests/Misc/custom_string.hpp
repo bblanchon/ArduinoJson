@@ -7,6 +7,5 @@
 #include <string>
 
 struct custom_char_traits : std::char_traits<char> {};
-struct custom_allocator : std::allocator<char> {};
-typedef std::basic_string<char, custom_char_traits, custom_allocator>
-    custom_string;
+
+typedef std::basic_string<char, custom_char_traits> custom_string;
