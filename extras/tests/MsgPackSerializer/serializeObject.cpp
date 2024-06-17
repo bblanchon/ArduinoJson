@@ -46,7 +46,7 @@ TEST_CASE("serialize MsgPack object") {
   SECTION("map 16") {
     for (int i = 0; i < 16; ++i) {
       char key[16];
-      sprintf(key, "i%X", i);
+      snprintf(key, sizeof(key), "i%X", i);
       object[key] = i;
     }
 
@@ -62,7 +62,7 @@ TEST_CASE("serialize MsgPack object") {
   //
   //   for (int i = 0; i < 65536; ++i) {
   //     char kv[16];
-  //     sprintf(kv, "%04x", i);
+  //     snprintf(kv, sizeof(kv), "%04x", i);
   //     object[kv] = kv;
   //     expected += '\xA4';
   //     expected += kv;
