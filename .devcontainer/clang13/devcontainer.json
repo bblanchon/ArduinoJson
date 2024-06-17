@@ -1,0 +1,20 @@
+{
+	"name": "Clang 13",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [
+		"--name=ArduinoJson-clang13"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools"
+			],
+			"settings": {
+				"cmake.generator": "Unix Makefiles",
+				"cmake.buildDirectory": "/tmp/build"
+			}
+		}
+	}
+}
