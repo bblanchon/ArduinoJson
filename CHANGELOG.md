@@ -13,6 +13,8 @@ HEAD
   Note: works only for reading, not for writing
 * Support `ElementProxy` and `MemberProxy` in `JsonDocument`'s constructor
 * Don't add partial objects when allocation fails (issue #2081)
+* Read MsgPack's 64-bit integers even if `ARDUINOJSON_USE_LONG_LONG` is `0`
+  (they are set to `null` if they don't fit in a `long`)
 
 v7.0.4 (2024-03-12)
 ------

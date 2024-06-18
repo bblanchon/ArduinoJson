@@ -54,6 +54,14 @@ class MsgPackDeserializer {
       ARDUINOJSON_ASSERT(variant != 0);
     }
 
+    if (code >= 0xcc && code <= 0xd3) {
+      auto width = uint8_t(1U << ((code - 0xcc) % 4));
+      if (allowValue)
+        return readInteger(variant, width, code >= 0xd0);
+      else
+        return skipBytes(width);
+    }
+
     switch (code) {
       case 0xc0:
         // already null
@@ -83,62 +91,6 @@ class MsgPackDeserializer {
           return readDouble<double>(variant);
         else
           return skipBytes(8);
-
-      case 0xcc:
-        if (allowValue)
-          return readInteger<uint8_t>(variant);
-        else
-          return skipBytes(1);
-
-      case 0xcd:
-        if (allowValue)
-          return readInteger<uint16_t>(variant);
-        else
-          return skipBytes(2);
-
-      case 0xce:
-        if (allowValue)
-          return readInteger<uint32_t>(variant);
-        else
-          return skipBytes(4);
-
-      case 0xcf:
-#if ARDUINOJSON_USE_LONG_LONG
-        if (allowValue)
-          return readInteger<uint64_t>(variant);
-        else
-          return skipBytes(8);
-#else
-        return skipBytes(8);  // not supported
-#endif
-
-      case 0xd0:
-        if (allowValue)
-          return readInteger<int8_t>(variant);
-        else
-          return skipBytes(1);
-
-      case 0xd1:
-        if (allowValue)
-          return readInteger<int16_t>(variant);
-        else
-          return skipBytes(2);
-
-      case 0xd2:
-        if (allowValue)
-          return readInteger<int32_t>(variant);
-        else
-          return skipBytes(4);
-
-      case 0xd3:
-#if ARDUINOJSON_USE_LONG_LONG
-        if (allowValue)
-          return readInteger<int64_t>(variant);
-        else
-          return skipBytes(8);
-#else
-        return skipBytes(8);  // not supported
-#endif
     }
 
     if (code <= 0x7f || code >= 0xe0) {  // fixint
@@ -259,29 +211,38 @@ class MsgPackDeserializer {
     return DeserializationError::Ok;
   }
 
-  template <typename T>
-  DeserializationError::Code readInteger(T& value) {
-    DeserializationError::Code err;
+  DeserializationError::Code readInteger(VariantData* variant, uint8_t width,
+                                         bool isSigned) {
+    uint8_t buffer[8];
 
-    err = readBytes(value);
+    auto err = readBytes(buffer, width);
     if (err)
       return err;
 
-    fixEndianness(value);
+    union {
+      int64_t signedValue;
+      uint64_t unsignedValue;
+    };
 
-    return DeserializationError::Ok;
-  }
+    if (isSigned)
+      signedValue = static_cast<int8_t>(buffer[0]);  // propagate sign bit
+    else
+      unsignedValue = static_cast<uint8_t>(buffer[0]);
 
-  template <typename T>
-  DeserializationError::Code readInteger(VariantData* variant) {
-    DeserializationError::Code err;
-    T value;
+    for (uint8_t i = 1; i < width; i++)
+      unsignedValue = (unsignedValue << 8) | buffer[i];
 
-    err = readInteger(value);
-    if (err)
-      return err;
-
-    variant->setInteger(value);
+    if (isSigned) {
+      auto truncatedValue = static_cast<JsonInteger>(signedValue);
+      if (truncatedValue == signedValue)
+        variant->setInteger(truncatedValue);
+      // else set null on overflow
+    } else {
+      auto truncatedValue = static_cast<JsonUInt>(unsignedValue);
+      if (truncatedValue == unsignedValue)
+        variant->setInteger(truncatedValue);
+      // else set null on overflow
+    }
 
     return DeserializationError::Ok;
   }
