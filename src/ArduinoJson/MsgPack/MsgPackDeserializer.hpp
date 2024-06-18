@@ -71,13 +71,9 @@ class MsgPackDeserializer {
         return DeserializationError::InvalidInput;
 
       case 0xc2:
-        if (allowValue)
-          variant->setBoolean(false);
-        return DeserializationError::Ok;
-
       case 0xc3:
         if (allowValue)
-          variant->setBoolean(true);
+          variant->setBoolean(code == 0xc3);
         return DeserializationError::Ok;
 
       case 0xca:
@@ -151,7 +147,7 @@ class MsgPackDeserializer {
         return err;
 
       uint32_t size32 = 0;
-      for (size_t i = 0; i < sizeBytes; i++)
+      for (uint8_t i = 0; i < sizeBytes; i++)
         size32 = (size32 << 8) | header[i + 1];
 
       size = size_t(size32);
@@ -298,18 +294,6 @@ class MsgPackDeserializer {
     return DeserializationError::Ok;
   }
 
-  template <typename T>
-  DeserializationError::Code readString() {
-    DeserializationError::Code err;
-    T size;
-
-    err = readInteger(size);
-    if (err)
-      return err;
-
-    return readString(size);
-  }
-
   DeserializationError::Code readString(VariantData* variant, size_t n) {
     DeserializationError::Code err;
 
@@ -449,19 +433,19 @@ class MsgPackDeserializer {
     if ((code & 0xe0) == 0xa0)
       return readString(code & 0x1f);
 
-    switch (code) {
-      case 0xd9:
-        return readString<uint8_t>();
-
-      case 0xda:
-        return readString<uint16_t>();
-
-      case 0xdb:
-        return readString<uint32_t>();
-
-      default:
-        return DeserializationError::InvalidInput;
+    if (code >= 0xd9 && code <= 0xdb) {
+      uint8_t sizeBytes = uint8_t(1U << (code - 0xd9));
+      uint32_t size = 0;
+      for (uint8_t i = 0; i < sizeBytes; i++) {
+        err = readByte(code);
+        if (err)
+          return err;
+        size = (size << 8) | code;
+      }
+      return readString(size);
     }
+
+    return DeserializationError::InvalidInput;
   }
 
   ResourceManager* resources_;
