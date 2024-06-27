@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v7.1.0 (2024-06-27)
+------
 
 * Add `ARDUINOJSON_STRING_LENGTH_SIZE` to the namespace name
 * Add support for MsgPack binary (PR #2078 by @Sanae6)
