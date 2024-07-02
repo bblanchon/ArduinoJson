@@ -148,6 +148,9 @@ ArduinoJson is thankful to its sponsors. Please give them a visit; they deserve 
   <a href="https://github.com/1technophile" rel="sponsored">
     <img alt="1technophile" src="https://avatars.githubusercontent.com/u/12672732?s=40&v=4">
   </a>
+  <a href="https://github.com/LArkema" rel="sponsored">
+    <img alt="LArkema" src="https://avatars.githubusercontent.com/u/38381313?s=40&v=4">
+  </a>
 </p>
 
 If you run a commercial project that embeds ArduinoJson, think about [sponsoring the library's development](https://github.com/sponsors/bblanchon): it ensures the code that your products rely on stays actively maintained. It can also give your project some exposure to the makers' community.
