@@ -174,13 +174,13 @@ jobs:
       - name: AVR
         run: avr-g++ -std=c++11 -Isrc extras/conf_test/avr.cpp
       - name: GCC 32-bit
-        run: g++ -std=c++11 -m32 -Isrc extras/conf_test/x86.cpp
+        run: g++ -std=c++11 -m32 -Isrc extras/conf_test/linux32.cpp
       - name: GCC 64-bit
-        run: g++ -std=c++11 -m64 -Isrc extras/conf_test/x64.cpp
+        run: g++ -std=c++11 -m64 -Isrc extras/conf_test/linux64.cpp
       - name: Clang 32-bit
-        run: clang++ -std=c++11 -m32 -Isrc extras/conf_test/x86.cpp
+        run: clang++ -std=c++11 -m32 -Isrc extras/conf_test/linux32.cpp
       - name: Clang 64-bit
-        run: clang++ -std=c++11 -m64 -Isrc extras/conf_test/x64.cpp
+        run: clang++ -std=c++11 -m64 -Isrc extras/conf_test/linux64.cpp
 
   conf_test_windows:
     name: Test configuration on Windows
@@ -192,12 +192,12 @@ jobs:
       - name: 32-bit
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
-          cl /Isrc extras/conf_test/x86.cpp
+          cl /Isrc extras/conf_test/win32.cpp
         shell: cmd
       - name: 64-bit
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cl /Isrc extras/conf_test/x64.cpp
+          cl /Isrc extras/conf_test/win64.cpp
         shell: cmd
 
   xcode:
