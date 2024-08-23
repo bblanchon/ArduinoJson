@@ -178,7 +178,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
             AllocatorLog{
                 Allocate(sizeofPool()),
                 Allocate(sizeofString("abcdefg")),
-                Reallocate(sizeofPool(), sizeofPool(1)),
+                Reallocate(sizeofPool(), sizeofPool(2)),
             });
   }
 }

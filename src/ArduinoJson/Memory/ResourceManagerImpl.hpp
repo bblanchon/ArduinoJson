@@ -11,8 +11,6 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 inline void ResourceManager::freeSlot(SlotWithId slot) {
-  if (slot->ownsKey())
-    dereferenceString(slot->key());
   slot->data()->setNull(this);
   variantPools_.freeSlot(slot);
 }

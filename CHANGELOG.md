@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Store object members with two slots: one for the key and one for the value
+
 v7.1.0 (2024-06-27)
 ------
 

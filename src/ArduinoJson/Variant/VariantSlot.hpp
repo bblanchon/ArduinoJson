@@ -20,7 +20,6 @@ class VariantSlot {
   VariantContent content_;
   uint8_t flags_;
   SlotId next_;
-  const char* key_;
 
  public:
   // Placement new
@@ -30,7 +29,9 @@ class VariantSlot {
 
   static void operator delete(void*, void*) noexcept {}
 
-  VariantSlot() : flags_(0), next_(NULL_SLOT), key_(0) {}
+  VariantSlot() : flags_(0), next_(NULL_SLOT) {
+    (void)flags_;  // HACK: suppress Clang warning "private field is not used"
+  }
 
   VariantData* data() {
     return reinterpret_cast<VariantData*>(&content_);
@@ -47,26 +48,6 @@ class VariantSlot {
   void setNext(SlotId slot) {
     next_ = slot;
   }
-
-  void setKey(const char* k) {
-    ARDUINOJSON_ASSERT(k);
-    flags_ &= VALUE_MASK;
-    key_ = k;
-  }
-
-  void setKey(StringNode* k) {
-    ARDUINOJSON_ASSERT(k);
-    flags_ |= OWNED_KEY_BIT;
-    key_ = k->data;
-  }
-
-  const char* key() const {
-    return key_;
-  }
-
-  bool ownsKey() const {
-    return (flags_ & OWNED_KEY_BIT) != 0;
-  }
 };
 
 inline VariantData* slotData(VariantSlot* slot) {
@@ -80,7 +61,7 @@ constexpr size_t sizeofArray(size_t n) {
 
 // Returns the size (in bytes) of an object with n members.
 constexpr size_t sizeofObject(size_t n) {
-  return n * sizeof(VariantSlot);
+  return 2 * n * sizeof(VariantSlot);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

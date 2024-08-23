@@ -34,7 +34,8 @@ class JsonObjectIterator {
   }
 
   JsonObjectIterator& operator++() {
-    iterator_.next(resources_);
+    iterator_.next(resources_);  // key
+    iterator_.next(resources_);  // value
     return *this;
   }
 
@@ -69,7 +70,8 @@ class JsonObjectConstIterator {
   }
 
   JsonObjectConstIterator& operator++() {
-    iterator_.next(resources_);
+    iterator_.next(resources_);  // key
+    iterator_.next(resources_);  // value
     return *this;
   }
 

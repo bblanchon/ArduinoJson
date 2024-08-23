@@ -308,12 +308,12 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(doc["a"] == 2);
     }
 
-    SECTION("NUL in keys") {  // we don't support NULs in keys
+    SECTION("NUL in keys") {
       DeserializationError err =
           deserializeJson(doc, "{\"x\\u0000a\":1,\"x\\u0000b\":2}");
 
       REQUIRE(err == DeserializationError::Ok);
-      REQUIRE(doc.as<std::string>() == "{\"x\":2}");
+      REQUIRE(doc.as<std::string>() == "{\"x\\u0000a\":1,\"x\\u0000b\":2}");
     }
   }
 

@@ -68,6 +68,12 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 2);
   }
 
+  SECTION("remove end()") {
+    array.remove(array.end());
+
+    REQUIRE(3 == array.size());
+  }
+
   SECTION("In a loop") {
     for (JsonArray::iterator it = array.begin(); it != array.end(); ++it) {
       if (*it == 2)

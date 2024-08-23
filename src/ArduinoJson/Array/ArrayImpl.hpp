@@ -19,6 +19,14 @@ inline ArrayData::iterator ArrayData::at(
   return it;
 }
 
+inline VariantData* ArrayData::addElement(ResourceManager* resources) {
+  auto slot = resources->allocSlot();
+  if (!slot)
+    return nullptr;
+  CollectionData::appendOne(slot, resources);
+  return slot->data();
+}
+
 inline VariantData* ArrayData::getOrAddElement(size_t index,
                                                ResourceManager* resources) {
   auto it = createIterator(resources);
@@ -58,7 +66,7 @@ inline bool ArrayData::addValue(T&& value, ResourceManager* resources) {
     resources->freeSlot(slot);
     return false;
   }
-  addSlot(slot, resources);
+  CollectionData::appendOne(slot, resources);
   return true;
 }
 

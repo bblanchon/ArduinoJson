@@ -10,34 +10,8 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class ObjectData : public CollectionData {
  public:
-  VariantData* addMember(StringNode* key, ResourceManager* resources) {
-    ARDUINOJSON_ASSERT(key != nullptr);
-    auto it = addSlot(resources);
-    if (it.done())
-      return nullptr;
-
-    it.setKey(key);
-    return it.data();
-  }
-
-  template <typename TAdaptedString>
-  VariantData* addMember(TAdaptedString key, ResourceManager* resources) {
-    ARDUINOJSON_ASSERT(!key.isNull());
-    if (key.isLinked()) {
-      auto it = addSlot(resources);
-      if (!it.done())
-        it.setKey(key.data());
-      return it.data();
-    } else {
-      auto storedKey = resources->saveString(key);
-      if (!storedKey)
-        return nullptr;
-      auto it = addSlot(resources);
-      if (!it.done())
-        it.setKey(storedKey);
-      return it.data();
-    }
-  }
+  template <typename TAdaptedString>  // also works with StringNode*
+  VariantData* addMember(TAdaptedString key, ResourceManager* resources);
 
   template <typename TAdaptedString>
   VariantData* getOrAddMember(TAdaptedString key, ResourceManager* resources);
@@ -63,6 +37,27 @@ class ObjectData : public CollectionData {
     if (!obj)
       return;
     obj->removeMember(key, resources);
+  }
+
+  void remove(iterator it, ResourceManager* resources) {
+    CollectionData::removePair(it, resources);
+  }
+
+  static void remove(ObjectData* obj, ObjectData::iterator it,
+                     ResourceManager* resources) {
+    if (!obj)
+      return;
+    obj->remove(it, resources);
+  }
+
+  size_t size(const ResourceManager* resources) const {
+    return CollectionData::size(resources) / 2;
+  }
+
+  static size_t size(const ObjectData* obj, const ResourceManager* resources) {
+    if (!obj)
+      return 0;
+    return obj->size(resources);
   }
 
  private:

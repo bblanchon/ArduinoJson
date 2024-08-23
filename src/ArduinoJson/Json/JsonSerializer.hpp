@@ -44,17 +44,18 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
 
     auto slotId = object.head();
 
+    bool isKey = true;
+
     while (slotId != NULL_SLOT) {
       auto slot = resources_->getSlot(slotId);
-
-      formatter_.writeString(slot->key());
-      write(':');
       slot->data()->accept(*this);
 
       slotId = slot->next();
 
       if (slotId != NULL_SLOT)
-        write(',');
+        write(isKey ? ':' : ',');
+
+      isKey = !isKey;
     }
 
     write('}');

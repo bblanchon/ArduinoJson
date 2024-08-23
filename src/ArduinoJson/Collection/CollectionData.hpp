@@ -49,12 +49,6 @@ class CollectionIterator {
     return *data();
   }
 
-  const char* key() const;
-  bool ownsKey() const;
-
-  void setKey(StringNode*);
-  void setKey(const char*);
-
   VariantData* data() {
     return reinterpret_cast<VariantData*>(slot_);
   }
@@ -99,22 +93,17 @@ class CollectionData {
     collection->clear(resources);
   }
 
-  void remove(iterator it, ResourceManager* resources);
-
-  static void remove(CollectionData* collection, iterator it,
-                     ResourceManager* resources) {
-    if (collection)
-      return collection->remove(it, resources);
-  }
-
   SlotId head() const {
     return head_;
   }
 
-  void addSlot(SlotWithId slot, ResourceManager* resources);
-
  protected:
-  iterator addSlot(ResourceManager*);
+  void appendOne(SlotWithId slot, const ResourceManager* resources);
+  void appendPair(SlotWithId key, SlotWithId value,
+                  const ResourceManager* resources);
+
+  void removeOne(iterator it, ResourceManager* resources);
+  void removePair(iterator it, ResourceManager* resources);
 
  private:
   SlotWithId getPreviousSlot(VariantSlot*, const ResourceManager*) const;

@@ -10,9 +10,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class ArrayData : public CollectionData {
  public:
-  VariantData* addElement(ResourceManager* resources) {
-    return addSlot(resources).data();
-  }
+  VariantData* addElement(ResourceManager* resources);
 
   static VariantData* addElement(ArrayData* array, ResourceManager* resources) {
     if (!array)
@@ -49,6 +47,16 @@ class ArrayData : public CollectionData {
     if (!array)
       return;
     array->removeElement(index, resources);
+  }
+
+  void remove(iterator it, ResourceManager* resources) {
+    CollectionData::removeOne(it, resources);
+  }
+
+  static void remove(ArrayData* array, iterator it,
+                     ResourceManager* resources) {
+    if (array)
+      return array->remove(it, resources);
   }
 
  private:

@@ -410,20 +410,29 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  void setString(TAdaptedString value, ResourceManager* resources) {
+  bool setString(TAdaptedString value, ResourceManager* resources) {
     setNull(resources);
 
     if (value.isNull())
-      return;
+      return false;
 
     if (value.isLinked()) {
       setLinkedString(value.data());
-      return;
+      return true;
     }
 
     auto dup = resources->saveString(value);
-    if (dup)
+    if (dup) {
       setOwnedString(dup);
+      return true;
+    }
+
+    return false;
+  }
+
+  bool setString(StringNode* s, ResourceManager*) {
+    setOwnedString(s);
+    return true;
   }
 
   template <typename TAdaptedString>
@@ -447,7 +456,13 @@ class VariantData {
   }
 
   size_t size(const ResourceManager* resources) const {
-    return isCollection() ? content_.asCollection.size(resources) : 0;
+    if (isObject())
+      return content_.asObject.size(resources);
+
+    if (isArray())
+      return content_.asArray.size(resources);
+
+    return 0;
   }
 
   static size_t size(const VariantData* var, const ResourceManager* resources) {
@@ -489,7 +504,7 @@ class VariantData {
   }
 
   uint8_t type() const {
-    return flags_ & VALUE_MASK;
+    return flags_;
   }
 
  private:
@@ -503,8 +518,7 @@ class VariantData {
   }
 
   void setType(uint8_t t) {
-    flags_ &= OWNED_KEY_BIT;
-    flags_ |= t;
+    flags_ = t;
   }
 };
 
