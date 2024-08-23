@@ -118,16 +118,16 @@ TEST_CASE("JsonObject::operator[]") {
   SECTION("should duplicate char* key") {
     obj[const_cast<char*>("hello")] = "world";
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                          });
   }
 
   SECTION("should duplicate char* key&value") {
     obj[const_cast<char*>("hello")] = const_cast<char*>("world");
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                              Allocate(sizeofString("world")),
                          });
   }
@@ -143,16 +143,16 @@ TEST_CASE("JsonObject::operator[]") {
   SECTION("should duplicate std::string key") {
     obj["hello"_s] = "world";
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                          });
   }
 
   SECTION("should duplicate std::string key&value") {
     obj["hello"_s] = "world"_s;
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                              Allocate(sizeofString("world")),
                          });
   }
@@ -160,8 +160,8 @@ TEST_CASE("JsonObject::operator[]") {
   SECTION("should duplicate a non-static JsonString key") {
     obj[JsonString("hello", JsonString::Copied)] = "world";
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                          });
   }
 

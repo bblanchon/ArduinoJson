@@ -52,8 +52,8 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                          });
   }
 
@@ -66,8 +66,8 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                              Allocate(sizeofString("world")),
                          });
   }
@@ -81,8 +81,8 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(success == true);
     REQUIRE(obj2["hello"] == "world"_s);
     REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofString("hello")),
                              Allocate(sizeofPool()),
+                             Allocate(sizeofString("hello")),
                              Allocate(sizeofString("world")),
                          });
   }

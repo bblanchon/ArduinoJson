@@ -358,7 +358,7 @@ TEST_CASE("MemberProxy under memory constraints") {
     REQUIRE(doc.size() == 0);
     REQUIRE(doc.overflowed() == true);
     REQUIRE(spy.log() == AllocatorLog{
-                             AllocateFail(sizeofString("hello")),
+                             AllocateFail(sizeofPool()),
                          });
   }
 }

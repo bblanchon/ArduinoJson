@@ -22,8 +22,8 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
 
     REQUIRE(spyingAllocator.log() == AllocatorLog{
-                                         Allocate(sizeofString("hello")),
                                          Allocate(sizeofPool()),
+                                         Allocate(sizeofString("hello")),
                                          Allocate(sizeofString("world")),
                                      });
   }
@@ -54,8 +54,8 @@ TEST_CASE("JsonDocument assignment") {
 
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
     REQUIRE(spyingAllocator.log() == AllocatorLog{
-                                         Allocate(sizeofString("hello")),
                                          Allocate(sizeofPool()),
+                                         Allocate(sizeofString("hello")),
                                          Allocate(sizeofString("world")),
                                      });
   }
@@ -72,8 +72,8 @@ TEST_CASE("JsonDocument assignment") {
       REQUIRE(doc1.as<std::string>() == "null");
     }
     REQUIRE(spyingAllocator.log() == AllocatorLog{
-                                         Allocate(sizeofString("hello")),
                                          Allocate(sizeofPool()),
+                                         Allocate(sizeofString("hello")),
                                          Allocate(sizeofString("world")),
                                          Deallocate(sizeofString("hello")),
                                          Deallocate(sizeofString("world")),
