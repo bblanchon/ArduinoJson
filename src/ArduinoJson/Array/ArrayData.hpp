@@ -51,16 +51,6 @@ class ArrayData : public CollectionData {
     array->removeElement(index, resources);
   }
 
-  bool copyFrom(const ArrayData& src, ResourceManager* resources);
-
-  static bool copy(ArrayData* dst, const ArrayData* src,
-                   ResourceManager* resources) {
-    if (!dst || !src)
-      return false;
-
-    return dst->copyFrom(*src, resources);
-  }
-
  private:
   iterator at(size_t index, const ResourceManager* resources) const;
 };
