@@ -20,11 +20,11 @@ inline ArrayData::iterator ArrayData::at(
 }
 
 inline VariantData* ArrayData::addElement(ResourceManager* resources) {
-  auto slot = resources->allocSlot();
+  auto slot = resources->allocVariant();
   if (!slot)
     return nullptr;
   CollectionData::appendOne(slot, resources);
-  return slot->data();
+  return slot.data();
 }
 
 inline VariantData* ArrayData::getOrAddElement(size_t index,
@@ -58,12 +58,12 @@ inline void ArrayData::removeElement(size_t index, ResourceManager* resources) {
 template <typename T>
 inline bool ArrayData::addValue(T&& value, ResourceManager* resources) {
   ARDUINOJSON_ASSERT(resources != nullptr);
-  auto slot = resources->allocSlot();
+  auto slot = resources->allocVariant();
   if (!slot)
     return false;
-  JsonVariant variant(slot->data(), resources);
+  JsonVariant variant(slot.data(), resources);
   if (!variant.set(detail::forward<T>(value))) {
-    resources->freeSlot(slot);
+    resources->freeVariant(slot);
     return false;
   }
   CollectionData::appendOne(slot, resources);

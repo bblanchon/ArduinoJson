@@ -41,7 +41,7 @@ inline SlotWithId VariantPool::allocSlot() {
     return {};
   auto index = usage_++;
   auto slot = &slots_[index];
-  return {new (slot) VariantSlot, SlotId(index)};
+  return {slot, SlotId(index)};
 }
 
 inline VariantSlot* VariantPool::getSlot(SlotId id) const {
@@ -69,12 +69,12 @@ inline SlotWithId VariantPoolList::allocFromFreeList() {
   ARDUINOJSON_ASSERT(freeList_ != NULL_SLOT);
   auto id = freeList_;
   auto slot = getSlot(freeList_);
-  freeList_ = slot->next();
-  return {new (slot) VariantSlot, id};
+  freeList_ = slot->free.next;
+  return {slot, id};
 }
 
 inline void VariantPoolList::freeSlot(SlotWithId slot) {
-  slot->setNext(freeList_);
+  slot->free.next = freeList_;
   freeList_ = slot.id();
 }
 

@@ -5,12 +5,12 @@
 #pragma once
 
 #include <ArduinoJson/Memory/StringNode.hpp>
+#include <ArduinoJson/Memory/VariantPool.hpp>
 #include <ArduinoJson/Misc/SerializedValue.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Strings/JsonString.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <ArduinoJson/Variant/VariantContent.hpp>
-#include <ArduinoJson/Variant/VariantSlot.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -20,9 +20,25 @@ T parseNumber(const char* s);
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant
   uint8_t type_;
+  SlotId next_;
 
  public:
-  VariantData() : type_(VALUE_IS_NULL) {}
+  // Placement new
+  static void* operator new(size_t, void* p) noexcept {
+    return p;
+  }
+
+  static void operator delete(void*, void*) noexcept {}
+
+  VariantData() : type_(VALUE_IS_NULL), next_(NULL_SLOT) {}
+
+  SlotId next() const {
+    return next_;
+  }
+
+  void setNext(SlotId slot) {
+    next_ = slot;
+  }
 
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor& visit) const {
@@ -515,6 +531,22 @@ class VariantData {
     auto collection = asCollection();
     if (collection)
       collection->clear(resources);
+  }
+};
+
+class VariantWithId : public SlotWithId {
+ public:
+  VariantWithId() {}
+  VariantWithId(VariantData* data, SlotId id)
+      : SlotWithId(reinterpret_cast<VariantSlot*>(data), id) {}
+
+  VariantData* data() {
+    return reinterpret_cast<VariantData*>(slot());
+  }
+
+  VariantData* operator->() {
+    ARDUINOJSON_ASSERT(data() != nullptr);
+    return data();
   }
 };
 

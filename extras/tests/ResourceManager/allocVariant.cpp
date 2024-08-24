@@ -9,28 +9,28 @@
 
 using namespace ArduinoJson::detail;
 
-TEST_CASE("ResourceManager::allocSlot()") {
+TEST_CASE("ResourceManager::allocVariant()") {
   SECTION("Returns different pointer") {
     ResourceManager resources;
 
-    VariantSlot* s1 = resources.allocSlot();
-    REQUIRE(s1 != 0);
-    VariantSlot* s2 = resources.allocSlot();
-    REQUIRE(s2 != 0);
+    auto s1 = resources.allocVariant();
+    REQUIRE(s1.data() != nullptr);
+    auto s2 = resources.allocVariant();
+    REQUIRE(s2.data() != nullptr);
 
-    REQUIRE(s1 != s2);
+    REQUIRE(s1.data() != s2.data());
   }
 
-  SECTION("Returns the same slot after calling freeSlot()") {
+  SECTION("Returns the same slot after calling freeVariant()") {
     ResourceManager resources;
 
-    auto s1 = resources.allocSlot();
-    auto s2 = resources.allocSlot();
-    resources.freeSlot(s1);
-    resources.freeSlot(s2);
-    auto s3 = resources.allocSlot();
-    auto s4 = resources.allocSlot();
-    auto s5 = resources.allocSlot();
+    auto s1 = resources.allocVariant();
+    auto s2 = resources.allocVariant();
+    resources.freeVariant(s1);
+    resources.freeVariant(s2);
+    auto s3 = resources.allocVariant();
+    auto s4 = resources.allocVariant();
+    auto s5 = resources.allocVariant();
 
     REQUIRE(s2.id() != s1.id());
     REQUIRE(s3.id() == s2.id());
@@ -42,26 +42,26 @@ TEST_CASE("ResourceManager::allocSlot()") {
   SECTION("Returns aligned pointers") {
     ResourceManager resources;
 
-    REQUIRE(isAligned(resources.allocSlot().operator VariantSlot*()));
-    REQUIRE(isAligned(resources.allocSlot().operator VariantSlot*()));
+    REQUIRE(isAligned(resources.allocVariant().data()));
+    REQUIRE(isAligned(resources.allocVariant().data()));
   }
 
   SECTION("Returns null if pool list allocation fails") {
     ResourceManager resources(FailingAllocator::instance());
 
-    auto variant = resources.allocSlot();
+    auto variant = resources.allocVariant();
     REQUIRE(variant.id() == NULL_SLOT);
-    REQUIRE(static_cast<VariantSlot*>(variant) == nullptr);
+    REQUIRE(variant.data() == nullptr);
   }
 
   SECTION("Returns null if pool allocation fails") {
     ResourceManager resources(FailingAllocator::instance());
 
-    resources.allocSlot();
+    resources.allocVariant();
 
-    auto variant = resources.allocSlot();
+    auto variant = resources.allocVariant();
     REQUIRE(variant.id() == NULL_SLOT);
-    REQUIRE(static_cast<VariantSlot*>(variant) == nullptr);
+    REQUIRE(variant.data() == nullptr);
   }
 
   SECTION("Try overflow pool counter") {
@@ -73,18 +73,18 @@ TEST_CASE("ResourceManager::allocSlot()") {
 
     // fill all the pools
     for (SlotId i = 0; i < NULL_SLOT; i++) {
-      auto slot = resources.allocSlot();
+      auto slot = resources.allocVariant();
       REQUIRE(slot.id() == i);  // or != NULL_SLOT
-      REQUIRE(static_cast<VariantSlot*>(slot) != nullptr);
+      REQUIRE(slot.data() != nullptr);
     }
 
     REQUIRE(resources.overflowed() == false);
 
     // now all allocations should fail
     for (int i = 0; i < 10; i++) {
-      auto slot = resources.allocSlot();
+      auto slot = resources.allocVariant();
       REQUIRE(slot.id() == NULL_SLOT);
-      REQUIRE(static_cast<VariantSlot*>(slot) == nullptr);
+      REQUIRE(slot.data() == nullptr);
     }
 
     REQUIRE(resources.overflowed() == true);

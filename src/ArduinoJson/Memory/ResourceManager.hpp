@@ -13,8 +13,10 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class VariantSlot;
+union VariantSlot;
 class VariantPool;
+class VariantData;
+class VariantWithId;
 
 class ResourceManager {
  public:
@@ -49,18 +51,11 @@ class ResourceManager {
     return overflowed_;
   }
 
-  SlotWithId allocSlot() {
-    auto p = variantPools_.allocSlot(allocator_);
-    if (!p)
-      overflowed_ = true;
-    return p;
-  }
+  VariantWithId allocVariant();
 
-  void freeSlot(SlotWithId slot);
+  void freeVariant(VariantWithId slot);
 
-  VariantSlot* getSlot(SlotId id) const {
-    return variantPools_.getSlot(id);
-  }
+  VariantData* getVariant(SlotId id) const;
 
   template <typename TAdaptedString>
   StringNode* saveString(TAdaptedString str) {

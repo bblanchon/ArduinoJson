@@ -10,7 +10,7 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class VariantSlot;
+union VariantSlot;
 using SlotId = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>;
 using SlotCount = SlotId;
 const SlotId NULL_SLOT = SlotId(-1);
@@ -22,11 +22,15 @@ class SlotWithId {
     ARDUINOJSON_ASSERT((slot == nullptr) == (id == NULL_SLOT));
   }
 
+  explicit operator bool() const {
+    return slot_ != nullptr;
+  }
+
   SlotId id() const {
     return id_;
   }
 
-  operator VariantSlot*() {
+  VariantSlot* slot() const {
     return slot_;
   }
 

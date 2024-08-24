@@ -3,6 +3,7 @@
 // MIT License
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
+#include <ArduinoJson/Memory/ResourceManagerImpl.hpp>
 #include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <catch.hpp>
 
@@ -21,7 +22,7 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
   }
 
   SECTION("only one pool") {
-    resources.allocSlot();
+    resources.allocVariant();
 
     resources.shrinkToFit();
 
@@ -36,7 +37,7 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
     for (size_t i = 0;
          i < ARDUINOJSON_POOL_CAPACITY * ARDUINOJSON_INITIAL_POOL_COUNT + 1;
          i++)
-      resources.allocSlot();
+      resources.allocVariant();
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog{
                 Allocate(sizeofPool()) * ARDUINOJSON_INITIAL_POOL_COUNT,

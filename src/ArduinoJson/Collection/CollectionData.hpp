@@ -12,7 +12,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class VariantData;
-class VariantSlot;
+union VariantSlot;
 
 class CollectionIterator {
   friend class CollectionData;
@@ -58,9 +58,9 @@ class CollectionIterator {
   }
 
  private:
-  CollectionIterator(VariantSlot* slot, SlotId slotId);
+  CollectionIterator(VariantData* slot, SlotId slotId);
 
-  VariantSlot* slot_;
+  VariantData* slot_;
   SlotId currentId_, nextId_;
 };
 
@@ -79,7 +79,7 @@ class CollectionData {
   using iterator = CollectionIterator;
 
   iterator createIterator(const ResourceManager* resources) const {
-    return iterator(resources->getSlot(head_), head_);
+    return iterator(resources->getVariant(head_), head_);
   }
 
   size_t size(const ResourceManager*) const;
@@ -98,15 +98,15 @@ class CollectionData {
   }
 
  protected:
-  void appendOne(SlotWithId slot, const ResourceManager* resources);
-  void appendPair(SlotWithId key, SlotWithId value,
+  void appendOne(VariantWithId slot, const ResourceManager* resources);
+  void appendPair(VariantWithId key, VariantWithId value,
                   const ResourceManager* resources);
 
   void removeOne(iterator it, ResourceManager* resources);
   void removePair(iterator it, ResourceManager* resources);
 
  private:
-  SlotWithId getPreviousSlot(VariantSlot*, const ResourceManager*) const;
+  VariantWithId getPreviousSlot(VariantData*, const ResourceManager*) const;
 };
 
 inline const VariantData* collectionToVariant(

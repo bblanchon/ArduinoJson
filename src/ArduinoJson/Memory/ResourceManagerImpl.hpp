@@ -7,12 +7,26 @@
 #include <ArduinoJson/Collection/CollectionData.hpp>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
+#include <ArduinoJson/Variant/VariantSlot.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline void ResourceManager::freeSlot(SlotWithId slot) {
-  slot->data()->setNull(this);
-  variantPools_.freeSlot(slot);
+inline VariantWithId ResourceManager::allocVariant() {
+  auto p = variantPools_.allocSlot(allocator_);
+  if (!p) {
+    overflowed_ = true;
+    return {};
+  }
+  return {new (&p->variant) VariantData, p.id()};
+}
+
+inline void ResourceManager::freeVariant(VariantWithId variant) {
+  variant->setNull(this);
+  variantPools_.freeSlot(variant);
+}
+
+inline VariantData* ResourceManager::getVariant(SlotId id) const {
+  return reinterpret_cast<VariantData*>(variantPools_.getSlot(id));
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

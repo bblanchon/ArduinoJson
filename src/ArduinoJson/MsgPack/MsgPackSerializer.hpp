@@ -61,8 +61,8 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
 
     auto slotId = array.head();
     while (slotId != NULL_SLOT) {
-      auto slot = resources_->getSlot(slotId);
-      slot->data()->accept(*this);
+      auto slot = resources_->getVariant(slotId);
+      slot->accept(*this);
       slotId = slot->next();
     }
 
@@ -83,8 +83,8 @@ class MsgPackSerializer : public VariantDataVisitor<size_t> {
 
     auto slotId = object.head();
     while (slotId != NULL_SLOT) {
-      auto slot = resources_->getSlot(slotId);
-      slot->data()->accept(*this);
+      auto slot = resources_->getVariant(slotId);
+      slot->accept(*this);
       slotId = slot->next();
     }
 

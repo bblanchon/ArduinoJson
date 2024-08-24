@@ -3,6 +3,7 @@
 // MIT License
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
+#include <ArduinoJson/Memory/ResourceManagerImpl.hpp>
 #include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <catch.hpp>
@@ -13,7 +14,7 @@ TEST_CASE("ResourceManager::clear()") {
   ResourceManager resources;
 
   SECTION("Discards allocated variants") {
-    resources.allocSlot();
+    resources.allocVariant();
 
     resources.clear();
     REQUIRE(resources.size() == 0);

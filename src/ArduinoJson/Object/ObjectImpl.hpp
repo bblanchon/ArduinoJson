@@ -51,20 +51,20 @@ inline void ObjectData::removeMember(TAdaptedString key,
 template <typename TAdaptedString>
 inline VariantData* ObjectData::addMember(TAdaptedString key,
                                           ResourceManager* resources) {
-  auto keySlot = resources->allocSlot();
+  auto keySlot = resources->allocVariant();
   if (!keySlot)
     return nullptr;
 
-  auto valueSlot = resources->allocSlot();
+  auto valueSlot = resources->allocVariant();
   if (!valueSlot)
     return nullptr;
 
-  if (!keySlot->data()->setString(key, resources))
+  if (!keySlot->setString(key, resources))
     return nullptr;
 
   CollectionData::appendPair(keySlot, valueSlot, resources);
 
-  return valueSlot->data();
+  return valueSlot.data();
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

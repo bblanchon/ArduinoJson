@@ -138,7 +138,8 @@ class VariantPoolList {
     auto slot = pools_[poolIndex].allocSlot();
     if (!slot)
       return {};
-    return {slot, SlotId(poolIndex * ARDUINOJSON_POOL_CAPACITY + slot.id())};
+    return {slot.slot(),
+            SlotId(poolIndex * ARDUINOJSON_POOL_CAPACITY + slot.id())};
   }
 
   VariantPool* addPool(Allocator* allocator) {
