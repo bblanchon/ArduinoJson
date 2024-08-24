@@ -18,7 +18,7 @@ class VariantSlot {
   // we cannot use composition because it adds padding
   // (+20% on ESP8266 for example)
   VariantContent content_;
-  uint8_t flags_;
+  uint8_t type_;
   SlotId next_;
 
  public:
@@ -29,8 +29,8 @@ class VariantSlot {
 
   static void operator delete(void*, void*) noexcept {}
 
-  VariantSlot() : flags_(0), next_(NULL_SLOT) {
-    (void)flags_;  // HACK: suppress Clang warning "private field is not used"
+  VariantSlot() : type_(0), next_(NULL_SLOT) {
+    (void)type_;  // HACK: suppress Clang warning "private field is not used"
   }
 
   VariantData* data() {

@@ -19,14 +19,14 @@ T parseNumber(const char* s);
 
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant
-  uint8_t flags_;
+  uint8_t type_;
 
  public:
-  VariantData() : flags_(VALUE_IS_NULL) {}
+  VariantData() : type_(VALUE_IS_NULL) {}
 
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor& visit) const {
-    switch (type()) {
+    switch (type_) {
       case VALUE_IS_FLOAT:
         return visit.visit(content_.asFloat);
 
@@ -98,7 +98,7 @@ class VariantData {
   }
 
   bool asBoolean() const {
-    switch (type()) {
+    switch (type_) {
       case VALUE_IS_BOOLEAN:
         return content_.asBoolean;
       case VALUE_IS_SIGNED_INTEGER:
@@ -132,7 +132,7 @@ class VariantData {
   template <typename T>
   T asFloat() const {
     static_assert(is_floating_point<T>::value, "T must be a floating point");
-    switch (type()) {
+    switch (type_) {
       case VALUE_IS_BOOLEAN:
         return static_cast<T>(content_.asBoolean);
       case VALUE_IS_UNSIGNED_INTEGER:
@@ -152,7 +152,7 @@ class VariantData {
   template <typename T>
   T asIntegral() const {
     static_assert(is_integral<T>::value, "T must be an integral type");
-    switch (type()) {
+    switch (type_) {
       case VALUE_IS_BOOLEAN:
         return content_.asBoolean;
       case VALUE_IS_UNSIGNED_INTEGER:
@@ -179,7 +179,7 @@ class VariantData {
   }
 
   JsonString asRawString() const {
-    switch (type()) {
+    switch (type_) {
       case VALUE_IS_RAW_STRING:
         return JsonString(content_.asOwnedString->data,
                           content_.asOwnedString->length, JsonString::Copied);
@@ -189,7 +189,7 @@ class VariantData {
   }
 
   JsonString asString() const {
-    switch (type()) {
+    switch (type_) {
       case VALUE_IS_LINKED_STRING:
         return JsonString(content_.asLinkedString, JsonString::Linked);
       case VALUE_IS_OWNED_STRING:
@@ -242,24 +242,24 @@ class VariantData {
   }
 
   bool isArray() const {
-    return (flags_ & VALUE_IS_ARRAY) != 0;
+    return type_ == VALUE_IS_ARRAY;
   }
 
   bool isBoolean() const {
-    return type() == VALUE_IS_BOOLEAN;
+    return type_ == VALUE_IS_BOOLEAN;
   }
 
   bool isCollection() const {
-    return (flags_ & COLLECTION_MASK) != 0;
+    return (type_ & COLLECTION_MASK) != 0;
   }
 
   bool isFloat() const {
-    return (flags_ & NUMBER_BIT) != 0;
+    return (type_ & NUMBER_BIT) != 0;
   }
 
   template <typename T>
   bool isInteger() const {
-    switch (type()) {
+    switch (type_) {
       case VALUE_IS_UNSIGNED_INTEGER:
         return canConvertNumber<T>(content_.asUnsignedInteger);
 
@@ -272,7 +272,7 @@ class VariantData {
   }
 
   bool isNull() const {
-    return type() == VALUE_IS_NULL;
+    return type_ == VALUE_IS_NULL;
   }
 
   static bool isNull(const VariantData* var) {
@@ -282,11 +282,11 @@ class VariantData {
   }
 
   bool isObject() const {
-    return (flags_ & VALUE_IS_OBJECT) != 0;
+    return type_ == VALUE_IS_OBJECT;
   }
 
   bool isString() const {
-    return type() == VALUE_IS_LINKED_STRING || type() == VALUE_IS_OWNED_STRING;
+    return type_ == VALUE_IS_LINKED_STRING || type_ == VALUE_IS_OWNED_STRING;
   }
 
   size_t nesting(const ResourceManager* resources) const {
@@ -329,11 +329,11 @@ class VariantData {
   }
 
   void reset() {
-    flags_ = VALUE_IS_NULL;
+    type_ = VALUE_IS_NULL;
   }
 
   void setBoolean(bool value) {
-    setType(VALUE_IS_BOOLEAN);
+    type_ = VALUE_IS_BOOLEAN;
     content_.asBoolean = value;
   }
 
@@ -343,7 +343,7 @@ class VariantData {
   }
 
   void setFloat(JsonFloat value) {
-    setType(VALUE_IS_FLOAT);
+    type_ = VALUE_IS_FLOAT;
     content_.asFloat = value;
   }
 
@@ -354,13 +354,13 @@ class VariantData {
 
   template <typename T>
   enable_if_t<is_signed<T>::value> setInteger(T value) {
-    setType(VALUE_IS_SIGNED_INTEGER);
+    type_ = VALUE_IS_SIGNED_INTEGER;
     content_.asSignedInteger = value;
   }
 
   template <typename T>
   enable_if_t<is_unsigned<T>::value> setInteger(T value) {
-    setType(VALUE_IS_UNSIGNED_INTEGER);
+    type_ = VALUE_IS_UNSIGNED_INTEGER;
     content_.asUnsignedInteger = static_cast<JsonUInt>(value);
   }
 
@@ -371,7 +371,7 @@ class VariantData {
   }
 
   void setNull() {
-    setType(VALUE_IS_NULL);
+    type_ = VALUE_IS_NULL;
   }
 
   void setNull(ResourceManager* resources) {
@@ -387,7 +387,7 @@ class VariantData {
 
   void setRawString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_RAW_STRING);
+    type_ = VALUE_IS_RAW_STRING;
     content_.asOwnedString = s;
   }
 
@@ -445,13 +445,13 @@ class VariantData {
 
   void setLinkedString(const char* s) {
     ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_LINKED_STRING);
+    type_ = VALUE_IS_LINKED_STRING;
     content_.asLinkedString = s;
   }
 
   void setOwnedString(StringNode* s) {
     ARDUINOJSON_ASSERT(s);
-    setType(VALUE_IS_OWNED_STRING);
+    type_ = VALUE_IS_OWNED_STRING;
     content_.asOwnedString = s;
   }
 
@@ -470,7 +470,7 @@ class VariantData {
   }
 
   ArrayData& toArray() {
-    setType(VALUE_IS_ARRAY);
+    type_ = VALUE_IS_ARRAY;
     new (&content_.asArray) ArrayData();
     return content_.asArray;
   }
@@ -487,7 +487,7 @@ class VariantData {
   }
 
   ObjectData& toObject() {
-    setType(VALUE_IS_OBJECT);
+    type_ = VALUE_IS_OBJECT;
     new (&content_.asObject) ObjectData();
     return content_.asObject;
   }
@@ -504,21 +504,17 @@ class VariantData {
   }
 
   uint8_t type() const {
-    return flags_;
+    return type_;
   }
 
  private:
   void release(ResourceManager* resources) {
-    if (flags_ & OWNED_VALUE_BIT)
+    if (type_ & OWNED_VALUE_BIT)
       resources->dereferenceString(content_.asOwnedString->data);
 
     auto collection = asCollection();
     if (collection)
       collection->clear(resources);
-  }
-
-  void setType(uint8_t t) {
-    flags_ = t;
   }
 };
 
