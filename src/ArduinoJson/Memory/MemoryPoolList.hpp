@@ -145,7 +145,7 @@ class MemoryPoolList {
     auto slot = pools_[poolIndex].allocSlot();
     if (!slot)
       return {};
-    return {slot.slot(),
+    return {slot.ptr(),
             SlotId(poolIndex * ARDUINOJSON_POOL_CAPACITY + slot.id())};
   }
 

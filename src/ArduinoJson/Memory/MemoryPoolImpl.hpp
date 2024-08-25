@@ -74,7 +74,7 @@ inline SlotWithId MemoryPoolList::allocFromFreeList() {
 }
 
 inline void MemoryPoolList::freeSlot(SlotWithId slot) {
-  reinterpret_cast<FreeSlot*>(slot.slot())->next = freeList_;
+  reinterpret_cast<FreeSlot*>(slot.ptr())->next = freeList_;
   freeList_ = slot.id();
 }
 

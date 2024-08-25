@@ -16,7 +16,7 @@ inline VariantWithId ResourceManager::allocVariant() {
     overflowed_ = true;
     return {};
   }
-  return {new (p.slot()) VariantData, p.id()};
+  return {new (p.ptr()) VariantData, p.id()};
 }
 
 inline void ResourceManager::freeVariant(VariantWithId variant) {

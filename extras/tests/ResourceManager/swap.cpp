@@ -29,8 +29,8 @@ TEST_CASE("ResourceManager::swap()") {
 
     swap(a, b);
 
-    REQUIRE(a1.data() == b.getVariant(a1.id()));
-    REQUIRE(b1.data() == a.getVariant(b1.id()));
+    REQUIRE(a1.ptr() == b.getVariant(a1.id()));
+    REQUIRE(b1.ptr() == a.getVariant(b1.id()));
 
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofPool()) * 2,
@@ -47,8 +47,8 @@ TEST_CASE("ResourceManager::swap()") {
     auto b1 = b.allocVariant();
     swap(a, b);
 
-    REQUIRE(a1.data() == b.getVariant(a1.id()));
-    REQUIRE(b1.data() == a.getVariant(b1.id()));
+    REQUIRE(a1.ptr() == b.getVariant(a1.id()));
+    REQUIRE(b1.ptr() == a.getVariant(b1.id()));
 
     REQUIRE(spy.log() ==
             AllocatorLog{
@@ -68,8 +68,8 @@ TEST_CASE("ResourceManager::swap()") {
     auto b1 = b.allocVariant();
     swap(a, b);
 
-    REQUIRE(a1.data() == b.getVariant(a1.id()));
-    REQUIRE(b1.data() == a.getVariant(b1.id()));
+    REQUIRE(a1.ptr() == b.getVariant(a1.id()));
+    REQUIRE(b1.ptr() == a.getVariant(b1.id()));
 
     REQUIRE(spy.log() ==
             AllocatorLog{
@@ -91,7 +91,7 @@ TEST_CASE("ResourceManager::swap()") {
 
     swap(a, b);
 
-    REQUIRE(a1.data() == b.getVariant(a1.id()));
-    REQUIRE(b1.data() == a.getVariant(b1.id()));
+    REQUIRE(a1.ptr() == b.getVariant(a1.id()));
+    REQUIRE(b1.ptr() == a.getVariant(b1.id()));
   }
 }

@@ -540,13 +540,13 @@ class VariantWithId : public SlotWithId {
   VariantWithId(VariantData* data, SlotId id)
       : SlotWithId(reinterpret_cast<VariantData*>(data), id) {}
 
-  VariantData* data() {
-    return reinterpret_cast<VariantData*>(slot());
+  VariantData* ptr() {
+    return reinterpret_cast<VariantData*>(SlotWithId::ptr());
   }
 
   VariantData* operator->() {
-    ARDUINOJSON_ASSERT(data() != nullptr);
-    return data();
+    ARDUINOJSON_ASSERT(ptr() != nullptr);
+    return ptr();
   }
 };
 

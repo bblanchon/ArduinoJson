@@ -30,7 +30,7 @@ class SlotWithId {
     return id_;
   }
 
-  VariantData* slot() const {
+  VariantData* ptr() const {
     return slot_;
   }
 

@@ -25,7 +25,7 @@ inline VariantData* ArrayData::addElement(ResourceManager* resources) {
   if (!slot)
     return nullptr;
   CollectionData::appendOne(slot, resources);
-  return slot.data();
+  return slot.ptr();
 }
 
 inline VariantData* ArrayData::getOrAddElement(size_t index,
@@ -62,7 +62,7 @@ inline bool ArrayData::addValue(T&& value, ResourceManager* resources) {
   auto slot = resources->allocVariant();
   if (!slot)
     return false;
-  JsonVariant variant(slot.data(), resources);
+  JsonVariant variant(slot.ptr(), resources);
   if (!variant.set(detail::forward<T>(value))) {
     resources->freeVariant(slot);
     return false;

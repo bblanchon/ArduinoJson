@@ -14,11 +14,11 @@ TEST_CASE("ResourceManager::allocVariant()") {
     ResourceManager resources;
 
     auto s1 = resources.allocVariant();
-    REQUIRE(s1.data() != nullptr);
+    REQUIRE(s1.ptr() != nullptr);
     auto s2 = resources.allocVariant();
-    REQUIRE(s2.data() != nullptr);
+    REQUIRE(s2.ptr() != nullptr);
 
-    REQUIRE(s1.data() != s2.data());
+    REQUIRE(s1.ptr() != s2.ptr());
   }
 
   SECTION("Returns the same slot after calling freeVariant()") {
@@ -42,8 +42,8 @@ TEST_CASE("ResourceManager::allocVariant()") {
   SECTION("Returns aligned pointers") {
     ResourceManager resources;
 
-    REQUIRE(isAligned(resources.allocVariant().data()));
-    REQUIRE(isAligned(resources.allocVariant().data()));
+    REQUIRE(isAligned(resources.allocVariant().ptr()));
+    REQUIRE(isAligned(resources.allocVariant().ptr()));
   }
 
   SECTION("Returns null if pool list allocation fails") {
@@ -51,7 +51,7 @@ TEST_CASE("ResourceManager::allocVariant()") {
 
     auto variant = resources.allocVariant();
     REQUIRE(variant.id() == NULL_SLOT);
-    REQUIRE(variant.data() == nullptr);
+    REQUIRE(variant.ptr() == nullptr);
   }
 
   SECTION("Returns null if pool allocation fails") {
@@ -61,7 +61,7 @@ TEST_CASE("ResourceManager::allocVariant()") {
 
     auto variant = resources.allocVariant();
     REQUIRE(variant.id() == NULL_SLOT);
-    REQUIRE(variant.data() == nullptr);
+    REQUIRE(variant.ptr() == nullptr);
   }
 
   SECTION("Try overflow pool counter") {
@@ -75,7 +75,7 @@ TEST_CASE("ResourceManager::allocVariant()") {
     for (SlotId i = 0; i < NULL_SLOT; i++) {
       auto slot = resources.allocVariant();
       REQUIRE(slot.id() == i);  // or != NULL_SLOT
-      REQUIRE(slot.data() != nullptr);
+      REQUIRE(slot.ptr() != nullptr);
     }
 
     REQUIRE(resources.overflowed() == false);
@@ -84,7 +84,7 @@ TEST_CASE("ResourceManager::allocVariant()") {
     for (int i = 0; i < 10; i++) {
       auto slot = resources.allocVariant();
       REQUIRE(slot.id() == NULL_SLOT);
-      REQUIRE(slot.data() == nullptr);
+      REQUIRE(slot.ptr() == nullptr);
     }
 
     REQUIRE(resources.overflowed() == true);

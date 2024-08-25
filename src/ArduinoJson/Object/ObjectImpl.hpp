@@ -65,7 +65,7 @@ inline VariantData* ObjectData::addMember(TAdaptedString key,
 
   CollectionData::appendPair(keySlot, valueSlot, resources);
 
-  return valueSlot.data();
+  return valueSlot.ptr();
 }
 
 // Returns the size (in bytes) of an object with n members.
