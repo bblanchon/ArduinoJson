@@ -30,7 +30,7 @@ inline CollectionData::iterator CollectionData::createIterator(
   return iterator(resources->getVariant(head_), head_);
 }
 
-inline void CollectionData::appendOne(SlotWithId<VariantData> slot,
+inline void CollectionData::appendOne(Slot<VariantData> slot,
                                       const ResourceManager* resources) {
   if (tail_ != NULL_SLOT) {
     auto tail = resources->getVariant(tail_);
@@ -42,8 +42,8 @@ inline void CollectionData::appendOne(SlotWithId<VariantData> slot,
   }
 }
 
-inline void CollectionData::appendPair(SlotWithId<VariantData> key,
-                                       SlotWithId<VariantData> value,
+inline void CollectionData::appendPair(Slot<VariantData> key,
+                                       Slot<VariantData> value,
                                        const ResourceManager* resources) {
   key->setNext(value.id());
 
@@ -63,22 +63,22 @@ inline void CollectionData::clear(ResourceManager* resources) {
     auto currId = next;
     auto slot = resources->getVariant(next);
     next = slot->next();
-    resources->freeVariant(SlotWithId<VariantData>(slot, currId));
+    resources->freeVariant({slot, currId});
   }
 
   head_ = NULL_SLOT;
   tail_ = NULL_SLOT;
 }
 
-inline SlotWithId<VariantData> CollectionData::getPreviousSlot(
+inline Slot<VariantData> CollectionData::getPreviousSlot(
     VariantData* target, const ResourceManager* resources) const {
-  auto prev = SlotWithId<VariantData>();
+  auto prev = Slot<VariantData>();
   auto currentId = head_;
   while (currentId != NULL_SLOT) {
     auto currentSlot = resources->getVariant(currentId);
     if (currentSlot == target)
       break;
-    prev = SlotWithId<VariantData>(currentSlot, currentId);
+    prev = Slot<VariantData>(currentSlot, currentId);
     currentId = currentSlot->next();
   }
   return prev;

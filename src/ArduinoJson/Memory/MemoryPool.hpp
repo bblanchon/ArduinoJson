@@ -15,15 +15,15 @@ using SlotCount = SlotId;
 const SlotId NULL_SLOT = SlotId(-1);
 
 template <typename T>
-class SlotWithId {
+class Slot {
  public:
-  SlotWithId() : slot_(nullptr), id_(NULL_SLOT) {}
-  SlotWithId(T* slot, SlotId id) : slot_(slot), id_(id) {
-    ARDUINOJSON_ASSERT((slot == nullptr) == (id == NULL_SLOT));
+  Slot() : ptr_(nullptr), id_(NULL_SLOT) {}
+  Slot(T* p, SlotId id) : ptr_(p), id_(id) {
+    ARDUINOJSON_ASSERT((p == nullptr) == (id == NULL_SLOT));
   }
 
   explicit operator bool() const {
-    return slot_ != nullptr;
+    return ptr_ != nullptr;
   }
 
   SlotId id() const {
@@ -31,16 +31,16 @@ class SlotWithId {
   }
 
   T* ptr() const {
-    return slot_;
+    return ptr_;
   }
 
   T* operator->() const {
-    ARDUINOJSON_ASSERT(slot_ != nullptr);
-    return slot_;
+    ARDUINOJSON_ASSERT(ptr_ != nullptr);
+    return ptr_;
   }
 
  private:
-  T* slot_;
+  T* ptr_;
   SlotId id_;
 };
 
@@ -62,7 +62,7 @@ class MemoryPool {
     usage_ = 0;
   }
 
-  SlotWithId<T> allocSlot() {
+  Slot<T> allocSlot() {
     if (!slots_)
       return {};
     if (usage_ >= capacity_)

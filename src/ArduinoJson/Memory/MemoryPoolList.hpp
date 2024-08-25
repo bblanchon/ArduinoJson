@@ -79,7 +79,7 @@ class MemoryPoolList {
     return *this;
   }
 
-  SlotWithId<T> allocSlot(Allocator* allocator) {
+  Slot<T> allocSlot(Allocator* allocator) {
     // try to allocate from free list
     if (freeList_ != NULL_SLOT) {
       return allocFromFreeList();
@@ -100,7 +100,7 @@ class MemoryPoolList {
     return allocFromLastPool();
   }
 
-  void freeSlot(SlotWithId<T> slot) {
+  void freeSlot(Slot<T> slot) {
     reinterpret_cast<FreeSlot*>(slot.ptr())->next = freeList_;
     freeList_ = slot.id();
   }
@@ -149,7 +149,7 @@ class MemoryPoolList {
   }
 
  private:
-  SlotWithId<T> allocFromFreeList() {
+  Slot<T> allocFromFreeList() {
     ARDUINOJSON_ASSERT(freeList_ != NULL_SLOT);
     auto id = freeList_;
     auto slot = getSlot(freeList_);
@@ -157,7 +157,7 @@ class MemoryPoolList {
     return {slot, id};
   }
 
-  SlotWithId<T> allocFromLastPool() {
+  Slot<T> allocFromLastPool() {
     ARDUINOJSON_ASSERT(count_ > 0);
     auto poolIndex = SlotId(count_ - 1);
     auto slot = pools_[poolIndex].allocSlot();

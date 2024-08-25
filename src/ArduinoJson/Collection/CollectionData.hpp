@@ -97,17 +97,15 @@ class CollectionData {
   }
 
  protected:
-  void appendOne(SlotWithId<VariantData> slot,
-                 const ResourceManager* resources);
-  void appendPair(SlotWithId<VariantData> key, SlotWithId<VariantData> value,
+  void appendOne(Slot<VariantData> slot, const ResourceManager* resources);
+  void appendPair(Slot<VariantData> key, Slot<VariantData> value,
                   const ResourceManager* resources);
 
   void removeOne(iterator it, ResourceManager* resources);
   void removePair(iterator it, ResourceManager* resources);
 
  private:
-  SlotWithId<VariantData> getPreviousSlot(VariantData*,
-                                          const ResourceManager*) const;
+  Slot<VariantData> getPreviousSlot(VariantData*, const ResourceManager*) const;
 };
 
 inline const VariantData* collectionToVariant(

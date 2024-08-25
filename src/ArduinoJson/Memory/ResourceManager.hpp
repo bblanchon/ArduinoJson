@@ -49,9 +49,9 @@ class ResourceManager {
     return overflowed_;
   }
 
-  SlotWithId<VariantData> allocVariant();
+  Slot<VariantData> allocVariant();
 
-  void freeVariant(SlotWithId<VariantData> slot);
+  void freeVariant(Slot<VariantData> slot);
 
   VariantData* getVariant(SlotId id) const;
 
