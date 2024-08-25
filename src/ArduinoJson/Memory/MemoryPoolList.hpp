@@ -15,6 +15,10 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 using PoolCount = SlotId;
 
 class MemoryPoolList {
+  struct FreeSlot {
+    SlotId next;
+  };
+
  public:
   MemoryPoolList() = default;
 

@@ -13,15 +13,10 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 struct StringNode;
 
-struct FreeSlot {
-  SlotId next;
-};
-
 union VariantSlot {
   VariantSlot() {}
 
   VariantData variant;
-  FreeSlot free;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

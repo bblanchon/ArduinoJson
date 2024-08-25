@@ -69,12 +69,12 @@ inline SlotWithId MemoryPoolList::allocFromFreeList() {
   ARDUINOJSON_ASSERT(freeList_ != NULL_SLOT);
   auto id = freeList_;
   auto slot = getSlot(freeList_);
-  freeList_ = slot->free.next;
+  freeList_ = reinterpret_cast<FreeSlot*>(slot)->next;
   return {slot, id};
 }
 
 inline void MemoryPoolList::freeSlot(SlotWithId slot) {
-  slot->free.next = freeList_;
+  reinterpret_cast<FreeSlot*>(slot.slot())->next = freeList_;
   freeList_ = slot.id();
 }
 
