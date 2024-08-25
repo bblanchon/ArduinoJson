@@ -10,10 +10,10 @@
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
+#include <ArduinoJson/Variant/VariantData.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class MemoryPool;
 class VariantData;
 class VariantWithId;
 
@@ -42,16 +42,16 @@ class ResourceManager {
   }
 
   size_t size() const {
-    return MemoryPool::slotsToBytes(variantPools_.usage()) + stringPool_.size();
+    return variantPools_.size() + stringPool_.size();
   }
 
   bool overflowed() const {
     return overflowed_;
   }
 
-  VariantWithId allocVariant();
+  SlotWithId<VariantData> allocVariant();
 
-  void freeVariant(VariantWithId slot);
+  void freeVariant(SlotWithId<VariantData> slot);
 
   VariantData* getVariant(SlotId id) const;
 
@@ -112,7 +112,7 @@ class ResourceManager {
   Allocator* allocator_;
   bool overflowed_;
   StringPool stringPool_;
-  MemoryPoolList variantPools_;
+  MemoryPoolList<VariantData> variantPools_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

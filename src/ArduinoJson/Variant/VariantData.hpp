@@ -408,14 +408,7 @@ class VariantData {
   }
 
   template <typename T>
-  void setRawString(SerializedValue<T> value, ResourceManager* resources) {
-    release(resources);
-    auto dup = resources->saveString(adaptString(value.data(), value.size()));
-    if (dup)
-      setRawString(dup);
-    else
-      setNull();
-  }
+  void setRawString(SerializedValue<T> value, ResourceManager* resources);
 
   template <typename T>
   static void setRawString(VariantData* var, SerializedValue<T> value,
@@ -426,25 +419,7 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  bool setString(TAdaptedString value, ResourceManager* resources) {
-    setNull(resources);
-
-    if (value.isNull())
-      return false;
-
-    if (value.isLinked()) {
-      setLinkedString(value.data());
-      return true;
-    }
-
-    auto dup = resources->saveString(value);
-    if (dup) {
-      setOwnedString(dup);
-      return true;
-    }
-
-    return false;
-  }
+  bool setString(TAdaptedString value, ResourceManager* resources);
 
   bool setString(StringNode* s, ResourceManager*) {
     setOwnedString(s);
@@ -524,30 +499,7 @@ class VariantData {
   }
 
  private:
-  void release(ResourceManager* resources) {
-    if (type_ & OWNED_VALUE_BIT)
-      resources->dereferenceString(content_.asOwnedString->data);
-
-    auto collection = asCollection();
-    if (collection)
-      collection->clear(resources);
-  }
-};
-
-class VariantWithId : public SlotWithId {
- public:
-  VariantWithId() {}
-  VariantWithId(VariantData* data, SlotId id)
-      : SlotWithId(reinterpret_cast<VariantData*>(data), id) {}
-
-  VariantData* ptr() {
-    return reinterpret_cast<VariantData*>(SlotWithId::ptr());
-  }
-
-  VariantData* operator->() {
-    ARDUINOJSON_ASSERT(ptr() != nullptr);
-    return ptr();
-  }
+  void release(ResourceManager* resources);
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

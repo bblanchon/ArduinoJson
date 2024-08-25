@@ -10,7 +10,7 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline VariantWithId ResourceManager::allocVariant() {
+inline SlotWithId<VariantData> ResourceManager::allocVariant() {
   auto p = variantPools_.allocSlot(allocator_);
   if (!p) {
     overflowed_ = true;
@@ -19,7 +19,7 @@ inline VariantWithId ResourceManager::allocVariant() {
   return {new (p.ptr()) VariantData, p.id()};
 }
 
-inline void ResourceManager::freeVariant(VariantWithId variant) {
+inline void ResourceManager::freeVariant(SlotWithId<VariantData> variant) {
   variant->setNull(this);
   variantPools_.freeSlot(variant);
 }

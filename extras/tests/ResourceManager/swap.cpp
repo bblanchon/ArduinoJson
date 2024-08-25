@@ -3,7 +3,6 @@
 // MIT License
 
 #include <ArduinoJson/Memory/Alignment.hpp>
-#include <ArduinoJson/Memory/MemoryPoolImpl.hpp>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Memory/ResourceManagerImpl.hpp>
 #include <catch.hpp>

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/ResourceManager.hpp>
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 
@@ -13,6 +13,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class VariantData;
+class ResourceManager;
 
 class CollectionIterator {
   friend class CollectionData;
@@ -78,9 +79,7 @@ class CollectionData {
 
   using iterator = CollectionIterator;
 
-  iterator createIterator(const ResourceManager* resources) const {
-    return iterator(resources->getVariant(head_), head_);
-  }
+  iterator createIterator(const ResourceManager* resources) const;
 
   size_t size(const ResourceManager*) const;
   size_t nesting(const ResourceManager*) const;
@@ -98,15 +97,17 @@ class CollectionData {
   }
 
  protected:
-  void appendOne(VariantWithId slot, const ResourceManager* resources);
-  void appendPair(VariantWithId key, VariantWithId value,
+  void appendOne(SlotWithId<VariantData> slot,
+                 const ResourceManager* resources);
+  void appendPair(SlotWithId<VariantData> key, SlotWithId<VariantData> value,
                   const ResourceManager* resources);
 
   void removeOne(iterator it, ResourceManager* resources);
   void removePair(iterator it, ResourceManager* resources);
 
  private:
-  VariantWithId getPreviousSlot(VariantData*, const ResourceManager*) const;
+  SlotWithId<VariantData> getPreviousSlot(VariantData*,
+                                          const ResourceManager*) const;
 };
 
 inline const VariantData* collectionToVariant(

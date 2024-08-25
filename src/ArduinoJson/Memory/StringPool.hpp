@@ -12,8 +12,6 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-class MemoryPool;
-
 class StringPool {
  public:
   StringPool() = default;
