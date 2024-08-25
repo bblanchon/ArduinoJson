@@ -5,8 +5,8 @@
 #pragma once
 
 #include <ArduinoJson/Memory/Allocator.hpp>
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Memory/StringBuilder.hpp>
-#include <ArduinoJson/Memory/VariantPool.hpp>
 
 #include <sstream>
 
@@ -265,12 +265,12 @@ class TimebombAllocator : public ArduinoJson::Allocator {
 }  // namespace
 
 inline size_t sizeofPoolList(size_t n = ARDUINOJSON_INITIAL_POOL_COUNT) {
-  return sizeof(ArduinoJson::detail::VariantPool) * n;
+  return sizeof(ArduinoJson::detail::MemoryPool) * n;
 }
 
 inline size_t sizeofPool(
     ArduinoJson::detail::SlotCount n = ARDUINOJSON_POOL_CAPACITY) {
-  return ArduinoJson::detail::VariantPool::slotsToBytes(n);
+  return ArduinoJson::detail::MemoryPool::slotsToBytes(n);
 }
 
 inline size_t sizeofStringBuffer(size_t iteration = 1) {

@@ -13,7 +13,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 union VariantSlot;
-class VariantPool;
+class MemoryPool;
 
 class StringPool {
  public:

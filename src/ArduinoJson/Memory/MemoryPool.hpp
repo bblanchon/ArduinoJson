@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/ResourceManager.hpp>
+#include <ArduinoJson/Memory/Allocator.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/integer.hpp>
 
@@ -44,7 +44,7 @@ class SlotWithId {
   SlotId id_;
 };
 
-class VariantPool {
+class MemoryPool {
  public:
   void create(SlotCount cap, Allocator* allocator);
   void destroy(Allocator* allocator);

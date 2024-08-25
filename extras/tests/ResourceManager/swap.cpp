@@ -3,9 +3,9 @@
 // MIT License
 
 #include <ArduinoJson/Memory/Alignment.hpp>
+#include <ArduinoJson/Memory/MemoryPoolImpl.hpp>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Memory/ResourceManagerImpl.hpp>
-#include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <catch.hpp>
 
 #include "Allocators.hpp"

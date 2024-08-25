@@ -5,8 +5,8 @@
 #pragma once
 
 #include <ArduinoJson/Memory/Allocator.hpp>
+#include <ArduinoJson/Memory/MemoryPoolList.hpp>
 #include <ArduinoJson/Memory/StringPool.hpp>
-#include <ArduinoJson/Memory/VariantPoolList.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
@@ -14,7 +14,7 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 union VariantSlot;
-class VariantPool;
+class MemoryPool;
 class VariantData;
 class VariantWithId;
 
@@ -43,8 +43,7 @@ class ResourceManager {
   }
 
   size_t size() const {
-    return VariantPool::slotsToBytes(variantPools_.usage()) +
-           stringPool_.size();
+    return MemoryPool::slotsToBytes(variantPools_.usage()) + stringPool_.size();
   }
 
   bool overflowed() const {
@@ -114,7 +113,7 @@ class ResourceManager {
   Allocator* allocator_;
   bool overflowed_;
   StringPool stringPool_;
-  VariantPoolList variantPools_;
+  MemoryPoolList variantPools_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

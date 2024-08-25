@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include <ArduinoJson/Memory/VariantPool.hpp>
+#include <ArduinoJson/Memory/MemoryPool.hpp>
 #include <ArduinoJson/Variant/VariantSlot.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-inline void VariantPool::create(SlotCount cap, Allocator* allocator) {
+inline void MemoryPool::create(SlotCount cap, Allocator* allocator) {
   ARDUINOJSON_ASSERT(cap > 0);
   slots_ =
       reinterpret_cast<VariantSlot*>(allocator->allocate(slotsToBytes(cap)));
@@ -17,7 +17,7 @@ inline void VariantPool::create(SlotCount cap, Allocator* allocator) {
   usage_ = 0;
 }
 
-inline void VariantPool::destroy(Allocator* allocator) {
+inline void MemoryPool::destroy(Allocator* allocator) {
   if (slots_)
     allocator->deallocate(slots_);
   slots_ = nullptr;
@@ -25,7 +25,7 @@ inline void VariantPool::destroy(Allocator* allocator) {
   usage_ = 0;
 }
 
-inline void VariantPool::shrinkToFit(Allocator* allocator) {
+inline void MemoryPool::shrinkToFit(Allocator* allocator) {
   auto newSlots = reinterpret_cast<VariantSlot*>(
       allocator->reallocate(slots_, slotsToBytes(usage_)));
   if (newSlots) {
@@ -34,7 +34,7 @@ inline void VariantPool::shrinkToFit(Allocator* allocator) {
   }
 }
 
-inline SlotWithId VariantPool::allocSlot() {
+inline SlotWithId MemoryPool::allocSlot() {
   if (!slots_)
     return {};
   if (usage_ >= capacity_)
@@ -44,28 +44,28 @@ inline SlotWithId VariantPool::allocSlot() {
   return {slot, SlotId(index)};
 }
 
-inline VariantSlot* VariantPool::getSlot(SlotId id) const {
+inline VariantSlot* MemoryPool::getSlot(SlotId id) const {
   ARDUINOJSON_ASSERT(id < usage_);
   return &slots_[id];
 }
 
-inline SlotCount VariantPool::usage() const {
+inline SlotCount MemoryPool::usage() const {
   return usage_;
 }
 
-inline void VariantPool::clear() {
+inline void MemoryPool::clear() {
   usage_ = 0;
 }
 
-inline SlotCount VariantPool::bytesToSlots(size_t n) {
+inline SlotCount MemoryPool::bytesToSlots(size_t n) {
   return static_cast<SlotCount>(n / sizeof(VariantSlot));
 }
 
-inline size_t VariantPool::slotsToBytes(SlotCount n) {
+inline size_t MemoryPool::slotsToBytes(SlotCount n) {
   return n * sizeof(VariantSlot);
 }
 
-inline SlotWithId VariantPoolList::allocFromFreeList() {
+inline SlotWithId MemoryPoolList::allocFromFreeList() {
   ARDUINOJSON_ASSERT(freeList_ != NULL_SLOT);
   auto id = freeList_;
   auto slot = getSlot(freeList_);
@@ -73,7 +73,7 @@ inline SlotWithId VariantPoolList::allocFromFreeList() {
   return {slot, id};
 }
 
-inline void VariantPoolList::freeSlot(SlotWithId slot) {
+inline void MemoryPoolList::freeSlot(SlotWithId slot) {
   slot->free.next = freeList_;
   freeList_ = slot.id();
 }

@@ -2,8 +2,8 @@
 // Copyright © 2014-2024, Benoit BLANCHON
 // MIT License
 
+#include <ArduinoJson/Memory/MemoryPoolImpl.hpp>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
-#include <ArduinoJson/Memory/VariantPoolImpl.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 #include <catch.hpp>
 
