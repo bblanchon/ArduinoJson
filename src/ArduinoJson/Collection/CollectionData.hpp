@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Namespace.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 
@@ -12,7 +13,6 @@
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class VariantData;
-union VariantSlot;
 
 class CollectionIterator {
   friend class CollectionData;

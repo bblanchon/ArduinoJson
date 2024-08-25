@@ -7,7 +7,6 @@
 #include <ArduinoJson/Collection/CollectionData.hpp>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>
-#include <ArduinoJson/Variant/VariantSlot.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -17,7 +16,7 @@ inline VariantWithId ResourceManager::allocVariant() {
     overflowed_ = true;
     return {};
   }
-  return {new (&p->variant) VariantData, p.id()};
+  return {new (p.slot()) VariantData, p.id()};
 }
 
 inline void ResourceManager::freeVariant(VariantWithId variant) {

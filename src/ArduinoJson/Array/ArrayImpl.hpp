@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Array/ArrayData.hpp>
 #include <ArduinoJson/Variant/VariantCompare.hpp>
-#include <ArduinoJson/Variant/VariantSlot.hpp>
+#include <ArduinoJson/Variant/VariantData.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -73,7 +73,7 @@ inline bool ArrayData::addValue(T&& value, ResourceManager* resources) {
 
 // Returns the size (in bytes) of an array with n elements.
 constexpr size_t sizeofArray(size_t n) {
-  return n * sizeof(VariantSlot);
+  return n * sizeof(VariantData);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

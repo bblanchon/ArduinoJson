@@ -10,7 +10,7 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-union VariantSlot;
+class VariantData;
 using SlotId = uint_t<ARDUINOJSON_SLOT_ID_SIZE * 8>;
 using SlotCount = SlotId;
 const SlotId NULL_SLOT = SlotId(-1);
@@ -18,7 +18,7 @@ const SlotId NULL_SLOT = SlotId(-1);
 class SlotWithId {
  public:
   SlotWithId() : slot_(nullptr), id_(NULL_SLOT) {}
-  SlotWithId(VariantSlot* slot, SlotId id) : slot_(slot), id_(id) {
+  SlotWithId(VariantData* slot, SlotId id) : slot_(slot), id_(id) {
     ARDUINOJSON_ASSERT((slot == nullptr) == (id == NULL_SLOT));
   }
 
@@ -30,17 +30,17 @@ class SlotWithId {
     return id_;
   }
 
-  VariantSlot* slot() const {
+  VariantData* slot() const {
     return slot_;
   }
 
-  VariantSlot* operator->() {
+  VariantData* operator->() {
     ARDUINOJSON_ASSERT(slot_ != nullptr);
     return slot_;
   }
 
  private:
-  VariantSlot* slot_;
+  VariantData* slot_;
   SlotId id_;
 };
 
@@ -50,7 +50,7 @@ class MemoryPool {
   void destroy(Allocator* allocator);
 
   SlotWithId allocSlot();
-  VariantSlot* getSlot(SlotId id) const;
+  VariantData* getSlot(SlotId id) const;
   void clear();
   void shrinkToFit(Allocator*);
   SlotCount usage() const;
@@ -61,7 +61,7 @@ class MemoryPool {
  private:
   SlotCount capacity_;
   SlotCount usage_;
-  VariantSlot* slots_;
+  VariantData* slots_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

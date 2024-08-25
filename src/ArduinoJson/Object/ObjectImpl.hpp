@@ -6,7 +6,7 @@
 
 #include <ArduinoJson/Object/ObjectData.hpp>
 #include <ArduinoJson/Variant/VariantCompare.hpp>
-#include <ArduinoJson/Variant/VariantSlot.hpp>
+#include <ArduinoJson/Variant/VariantData.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -70,7 +70,7 @@ inline VariantData* ObjectData::addMember(TAdaptedString key,
 
 // Returns the size (in bytes) of an object with n members.
 constexpr size_t sizeofObject(size_t n) {
-  return 2 * n * sizeof(VariantSlot);
+  return 2 * n * sizeof(VariantData);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

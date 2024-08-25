@@ -97,7 +97,7 @@ class MemoryPoolList {
 
   void freeSlot(SlotWithId slot);
 
-  VariantSlot* getSlot(SlotId id) const {
+  VariantData* getSlot(SlotId id) const {
     if (id == NULL_SLOT)
       return nullptr;
     auto poolIndex = SlotId(id / ARDUINOJSON_POOL_CAPACITY);

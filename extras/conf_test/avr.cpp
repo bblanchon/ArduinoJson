@@ -10,8 +10,8 @@ static_assert(ARDUINOJSON_LITTLE_ENDIAN == 1, "ARDUINOJSON_LITTLE_ENDIAN");
 
 static_assert(ARDUINOJSON_USE_DOUBLE == 1, "ARDUINOJSON_USE_DOUBLE");
 
-static_assert(sizeof(ArduinoJson::detail::VariantSlot) == 6,
-              "sizeof(VariantSlot)");
+static_assert(sizeof(ArduinoJson::detail::VariantData) == 6,
+              "sizeof(VariantData)");
 
 void setup() {}
 void loop() {}

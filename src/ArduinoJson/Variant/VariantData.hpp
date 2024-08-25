@@ -538,7 +538,7 @@ class VariantWithId : public SlotWithId {
  public:
   VariantWithId() {}
   VariantWithId(VariantData* data, SlotId id)
-      : SlotWithId(reinterpret_cast<VariantSlot*>(data), id) {}
+      : SlotWithId(reinterpret_cast<VariantData*>(data), id) {}
 
   VariantData* data() {
     return reinterpret_cast<VariantData*>(slot());

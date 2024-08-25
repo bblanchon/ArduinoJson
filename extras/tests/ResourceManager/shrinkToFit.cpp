@@ -29,7 +29,7 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog{
                 Allocate(sizeofPool()),
-                Reallocate(sizeofPool(), sizeof(VariantSlot)),
+                Reallocate(sizeofPool(), sizeof(VariantData)),
             });
   }
 
@@ -50,7 +50,7 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
 
     REQUIRE(spyingAllocator.log() ==
             AllocatorLog{
-                Reallocate(sizeofPool(), sizeof(VariantSlot)),
+                Reallocate(sizeofPool(), sizeof(VariantData)),
                 Reallocate(sizeofPoolList(ARDUINOJSON_INITIAL_POOL_COUNT * 2),
                            sizeofPoolList(ARDUINOJSON_INITIAL_POOL_COUNT + 1)),
             });
