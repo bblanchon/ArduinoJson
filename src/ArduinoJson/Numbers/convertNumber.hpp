@@ -121,10 +121,21 @@ canConvertNumber(TIn value) {
          value <= FloatTraits<TIn>::template highest_for<TOut>();
 }
 
+// float32 -> float32
+// float64 -> float64
+// float64 -> float32
+template <typename TOut, typename TIn>
+enable_if_t<is_floating_point<TIn>::value && is_floating_point<TOut>::value,
+            bool>
+canConvertNumber(TIn) {
+  return true;
+}
+
 template <typename TOut, typename TIn>
 TOut convertNumber(TIn value) {
   return canConvertNumber<TOut>(value) ? TOut(value) : 0;
 }
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE
 
 #if defined(__clang__)

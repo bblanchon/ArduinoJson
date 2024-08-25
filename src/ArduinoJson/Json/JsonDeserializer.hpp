@@ -517,10 +517,23 @@ class JsonDeserializer {
     }
     buffer_[n] = 0;
 
-    if (!parseNumber(buffer_, result))
-      return DeserializationError::InvalidInput;
+    auto number = parseNumber(buffer_);
+    switch (number.type()) {
+      case NumberType::UnsignedInteger:
+        result.setInteger(number.asUnsignedInteger());
+        return DeserializationError::Ok;
 
-    return DeserializationError::Ok;
+      case NumberType::SignedInteger:
+        result.setInteger(number.asSignedInteger());
+        return DeserializationError::Ok;
+
+      case NumberType::Float:
+        result.setFloat(number.asFloat());
+        return DeserializationError::Ok;
+
+      default:
+        return DeserializationError::InvalidInput;
+    }
   }
 
   DeserializationError::Code skipNumericValue() {

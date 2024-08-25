@@ -9,45 +9,43 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::detail;
 
 TEST_CASE("Test unsigned integer overflow") {
-  VariantData first, second;
+  Number first, second;
 
   // Avoids MSVC warning C4127 (conditional expression is constant)
   size_t integerSize = sizeof(JsonInteger);
 
   if (integerSize == 8) {
-    parseNumber("18446744073709551615", first);
-    parseNumber("18446744073709551616", second);
+    first = parseNumber("18446744073709551615");
+    second = parseNumber("18446744073709551616");
   } else {
-    parseNumber("4294967295", first);
-    parseNumber("4294967296", second);
+    first = parseNumber("4294967295");
+    second = parseNumber("4294967296");
   }
 
-  REQUIRE(first.type() == uint8_t(VALUE_IS_UNSIGNED_INTEGER));
-  REQUIRE(second.type() == uint8_t(VALUE_IS_FLOAT));
+  REQUIRE(first.type() == NumberType::UnsignedInteger);
+  REQUIRE(second.type() == NumberType::Float);
 }
 
 TEST_CASE("Test signed integer overflow") {
-  VariantData first, second;
+  Number first, second;
 
   // Avoids MSVC warning C4127 (conditional expression is constant)
   size_t integerSize = sizeof(JsonInteger);
 
   if (integerSize == 8) {
-    parseNumber("-9223372036854775808", first);
-    parseNumber("-9223372036854775809", second);
+    first = parseNumber("-9223372036854775808");
+    second = parseNumber("-9223372036854775809");
   } else {
-    parseNumber("-2147483648", first);
-    parseNumber("-2147483649", second);
+    first = parseNumber("-2147483648");
+    second = parseNumber("-2147483649");
   }
 
-  REQUIRE(first.type() == uint8_t(VALUE_IS_SIGNED_INTEGER));
-  REQUIRE(second.type() == uint8_t(VALUE_IS_FLOAT));
+  REQUIRE(first.type() == NumberType::SignedInteger);
+  REQUIRE(second.type() == NumberType::Float);
 }
 
 TEST_CASE("Invalid value") {
-  VariantData result;
+  auto result = parseNumber("6a3");
 
-  parseNumber("6a3", result);
-
-  REQUIRE(result.type() == uint8_t(VALUE_IS_NULL));
+  REQUIRE(result.type() == NumberType::Invalid);
 }

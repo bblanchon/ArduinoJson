@@ -5,20 +5,81 @@
 #pragma once
 
 #include <ArduinoJson/Numbers/FloatTraits.hpp>
+#include <ArduinoJson/Numbers/JsonFloat.hpp>
 #include <ArduinoJson/Numbers/convertNumber.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/ctype.hpp>
 #include <ArduinoJson/Polyfills/math.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
-#include <ArduinoJson/Variant/Converter.hpp>
-#include <ArduinoJson/Variant/VariantData.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename A, typename B>
 using largest_type = conditional_t<(sizeof(A) > sizeof(B)), A, B>;
 
-inline bool parseNumber(const char* s, VariantData& result) {
+enum class NumberType : uint8_t {
+  Invalid,
+  Float,
+  SignedInteger,
+  UnsignedInteger
+};
+
+union NumberValue {
+  NumberValue() {}
+  NumberValue(JsonFloat x) : asFloat(x) {}
+  NumberValue(JsonInteger x) : asSignedInteger(x) {}
+  NumberValue(JsonUInt x) : asUnsignedInteger(x) {}
+
+  JsonInteger asSignedInteger;
+  JsonUInt asUnsignedInteger;
+  JsonFloat asFloat;
+};
+
+class Number {
+  NumberType type_;
+  NumberValue value_;
+
+ public:
+  Number() : type_(NumberType::Invalid) {}
+  Number(JsonFloat value) : type_(NumberType::Float), value_(value) {}
+  Number(JsonInteger value) : type_(NumberType::SignedInteger), value_(value) {}
+  Number(JsonUInt value) : type_(NumberType::UnsignedInteger), value_(value) {}
+
+  template <typename T>
+  T convertTo() const {
+    switch (type_) {
+      case NumberType::Float:
+        return convertNumber<T>(value_.asFloat);
+      case NumberType::SignedInteger:
+        return convertNumber<T>(value_.asSignedInteger);
+      case NumberType::UnsignedInteger:
+        return convertNumber<T>(value_.asUnsignedInteger);
+      default:
+        return T();
+    }
+  }
+
+  NumberType type() const {
+    return type_;
+  }
+
+  JsonInteger asSignedInteger() const {
+    ARDUINOJSON_ASSERT(type_ == NumberType::SignedInteger);
+    return value_.asSignedInteger;
+  }
+
+  JsonUInt asUnsignedInteger() const {
+    ARDUINOJSON_ASSERT(type_ == NumberType::UnsignedInteger);
+    return value_.asUnsignedInteger;
+  }
+
+  JsonFloat asFloat() const {
+    ARDUINOJSON_ASSERT(type_ == NumberType::Float);
+    return value_.asFloat;
+  }
+};
+
+inline Number parseNumber(const char* s) {
   typedef FloatTraits<JsonFloat> traits;
   typedef largest_type<traits::mantissa_type, JsonUInt> mantissa_t;
   typedef traits::exponent_type exponent_t;
@@ -38,20 +99,18 @@ inline bool parseNumber(const char* s, VariantData& result) {
 
 #if ARDUINOJSON_ENABLE_NAN
   if (*s == 'n' || *s == 'N') {
-    result.setFloat(traits::nan());
-    return true;
+    return Number(traits::nan());
   }
 #endif
 
 #if ARDUINOJSON_ENABLE_INFINITY
   if (*s == 'i' || *s == 'I') {
-    result.setFloat(is_negative ? -traits::inf() : traits::inf());
-    return true;
+    return Number(is_negative ? -traits::inf() : traits::inf());
   }
 #endif
 
   if (!isdigit(*s) && *s != '.')
-    return false;
+    return Number();
 
   mantissa_t mantissa = 0;
   exponent_t exponent_offset = 0;
@@ -73,12 +132,10 @@ inline bool parseNumber(const char* s, VariantData& result) {
       const mantissa_t sintMantissaMax = mantissa_t(1)
                                          << (sizeof(JsonInteger) * 8 - 1);
       if (mantissa <= sintMantissaMax) {
-        result.setInteger(JsonInteger(~mantissa + 1));
-        return true;
+        return Number(JsonInteger(~mantissa + 1));
       }
     } else {
-      result.setInteger(JsonUInt(mantissa));
-      return true;
+      return Number(JsonUInt(mantissa));
     }
   }
 
@@ -120,10 +177,9 @@ inline bool parseNumber(const char* s, VariantData& result) {
       exponent = exponent * 10 + (*s - '0');
       if (exponent + exponent_offset > traits::exponent_max) {
         if (negative_exponent)
-          result.setFloat(is_negative ? -0.0f : 0.0f);
+          return Number(is_negative ? -0.0f : 0.0f);
         else
-          result.setFloat(is_negative ? -traits::inf() : traits::inf());
-        return true;
+          return Number(is_negative ? -traits::inf() : traits::inf());
       }
       s++;
     }
@@ -134,19 +190,17 @@ inline bool parseNumber(const char* s, VariantData& result) {
 
   // we should be at the end of the string, otherwise it's an error
   if (*s != '\0')
-    return false;
+    return Number();
 
   JsonFloat final_result =
       make_float(static_cast<JsonFloat>(mantissa), exponent);
 
-  result.setFloat(is_negative ? -final_result : final_result);
-  return true;
+  return Number(is_negative ? -final_result : final_result);
 }
 
 template <typename T>
 inline T parseNumber(const char* s) {
-  VariantData value;
-  parseNumber(s, value);
-  return Converter<T>::fromJson(JsonVariantConst(&value, nullptr));
+  return parseNumber(s).convertTo<T>();
 }
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE
