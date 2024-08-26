@@ -174,7 +174,7 @@ enable_if_t<is_same<T, JsonVariant>::value, JsonVariant>
 VariantRefBase<TDerived>::to() const {
   auto data = getOrCreateData();
   auto resources = getResourceManager();
-  detail::VariantData::setNull(data, resources);
+  detail::VariantData::clear(data, resources);
   return JsonVariant(data, resources);
 }
 

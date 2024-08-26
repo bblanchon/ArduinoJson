@@ -29,7 +29,7 @@ class VariantRefBase : public VariantTag {
   // Sets the value to null.
   // https://arduinojson.org/v7/api/jsonvariant/clear/
   void clear() const {
-    VariantData::setNull(getOrCreateData(), getResourceManager());
+    VariantData::clear(getOrCreateData(), getResourceManager());
   }
 
   // Returns true if the value is null or the reference is unbound.

@@ -63,7 +63,9 @@ struct Converter<T, detail::enable_if_t<detail::is_integral<T>::value &&
     auto data = getData(dst);
     if (!data)
       return false;
-    data->setInteger(src, getResourceManager(dst));
+    auto resources = getResourceManager(dst);
+    data->clear(resources);
+    data->setInteger(src);
     return true;
   }
 
@@ -103,7 +105,9 @@ struct Converter<bool> : private detail::VariantAttorney {
     auto data = getData(dst);
     if (!data)
       return false;
-    data->setBoolean(src, getResourceManager(dst));
+    auto resources = getResourceManager(dst);
+    data->clear(resources);
+    data->setBoolean(src);
     return true;
   }
 
@@ -125,7 +129,9 @@ struct Converter<T, detail::enable_if_t<detail::is_floating_point<T>::value>>
     auto data = getData(dst);
     if (!data)
       return false;
-    data->setFloat(static_cast<JsonFloat>(src), getResourceManager(dst));
+    auto resources = getResourceManager(dst);
+    data->clear(resources);
+    data->setFloat(static_cast<JsonFloat>(src));
     return true;
   }
 
@@ -199,7 +205,7 @@ struct Converter<SerializedValue<T>> : private detail::VariantAttorney {
 template <>
 struct Converter<detail::nullptr_t> : private detail::VariantAttorney {
   static void toJson(detail::nullptr_t, JsonVariant dst) {
-    detail::VariantData::setNull(getData(dst), getResourceManager(dst));
+    detail::VariantData::clear(getData(dst), getResourceManager(dst));
   }
   static detail::nullptr_t fromJson(JsonVariantConst) {
     return nullptr;
@@ -252,12 +258,11 @@ inline void convertToJson(const ::Printable& src, JsonVariant dst) {
   auto data = detail::VariantAttorney::getData(dst);
   if (!resources || !data)
     return;
+  data->clear(resources);
   detail::StringBuilderPrint print(resources);
   src.printTo(print);
-  if (print.overflowed()) {
-    data->setNull();
+  if (print.overflowed())
     return;
-  }
   data->setOwnedString(print.save());
 }
 

@@ -29,6 +29,7 @@ struct Converter<MsgPackBinary> : private detail::VariantAttorney {
     if (!data)
       return;
     auto resources = getResourceManager(dst);
+    data->clear(resources);
     if (src.data()) {
       size_t headerSize = src.size() >= 0x10000 ? 5
                           : src.size() >= 0x100 ? 3
@@ -62,7 +63,6 @@ struct Converter<MsgPackBinary> : private detail::VariantAttorney {
         return;
       }
     }
-    data->setNull();
   }
 
   static MsgPackBinary fromJson(JsonVariantConst src) {

@@ -35,6 +35,7 @@ struct Converter<MsgPackExtension> : private detail::VariantAttorney {
     if (!data)
       return;
     auto resources = getResourceManager(dst);
+    data->clear(resources);
     if (src.data()) {
       uint8_t format, sizeBytes;
       if (src.size() >= 0x10000) {
@@ -76,7 +77,6 @@ struct Converter<MsgPackExtension> : private detail::VariantAttorney {
         return;
       }
     }
-    data->setNull();
   }
 
   static MsgPackExtension fromJson(JsonVariantConst src) {

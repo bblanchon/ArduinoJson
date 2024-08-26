@@ -344,64 +344,38 @@ class VariantData {
     var->removeMember(key, resources);
   }
 
-  void reset() {
+  void reset() {  // TODO: remove
     type_ = VALUE_IS_NULL;
   }
 
   void setBoolean(bool value) {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_BOOLEAN;
     content_.asBoolean = value;
   }
 
-  void setBoolean(bool value, ResourceManager* resources) {
-    release(resources);
-    setBoolean(value);
-  }
-
   void setFloat(JsonFloat value) {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_FLOAT;
     content_.asFloat = value;
   }
 
-  void setFloat(JsonFloat value, ResourceManager* resources) {
-    release(resources);
-    setFloat(value);
-  }
-
   template <typename T>
   enable_if_t<is_signed<T>::value> setInteger(T value) {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_SIGNED_INTEGER;
     content_.asSignedInteger = value;
   }
 
   template <typename T>
   enable_if_t<is_unsigned<T>::value> setInteger(T value) {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_UNSIGNED_INTEGER;
     content_.asUnsignedInteger = static_cast<JsonUInt>(value);
   }
 
-  template <typename T>
-  void setInteger(T value, ResourceManager* resources) {
-    release(resources);
-    setInteger(value);
-  }
-
-  void setNull() {
-    type_ = VALUE_IS_NULL;
-  }
-
-  void setNull(ResourceManager* resources) {
-    release(resources);
-    setNull();
-  }
-
-  static void setNull(VariantData* var, ResourceManager* resources) {
-    if (!var)
-      return;
-    var->setNull(resources);
-  }
-
   void setRawString(StringNode* s) {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     ARDUINOJSON_ASSERT(s);
     type_ = VALUE_IS_RAW_STRING;
     content_.asOwnedString = s;
@@ -415,6 +389,7 @@ class VariantData {
                            ResourceManager* resources) {
     if (!var)
       return;
+    var->clear(resources);
     var->setRawString(value, resources);
   }
 
@@ -431,16 +406,19 @@ class VariantData {
                         ResourceManager* resources) {
     if (!var)
       return;
+    var->clear(resources);
     var->setString(value, resources);
   }
 
   void setLinkedString(const char* s) {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     ARDUINOJSON_ASSERT(s);
     type_ = VALUE_IS_LINKED_STRING;
     content_.asLinkedString = s;
   }
 
   void setOwnedString(StringNode* s) {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     ARDUINOJSON_ASSERT(s);
     type_ = VALUE_IS_OWNED_STRING;
     content_.asOwnedString = s;
@@ -461,45 +439,45 @@ class VariantData {
   }
 
   ArrayData& toArray() {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_ARRAY;
     new (&content_.asArray) ArrayData();
     return content_.asArray;
   }
 
-  ArrayData& toArray(ResourceManager* resources) {
-    release(resources);
-    return toArray();
-  }
-
   static ArrayData* toArray(VariantData* var, ResourceManager* resources) {
     if (!var)
       return 0;
-    return &var->toArray(resources);
+    var->clear(resources);
+    return &var->toArray();
   }
 
   ObjectData& toObject() {
+    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_OBJECT;
     new (&content_.asObject) ObjectData();
     return content_.asObject;
   }
 
-  ObjectData& toObject(ResourceManager* resources) {
-    release(resources);
-    return toObject();
-  }
-
   static ObjectData* toObject(VariantData* var, ResourceManager* resources) {
     if (!var)
       return 0;
-    return &var->toObject(resources);
+    var->clear(resources);
+    return &var->toObject();
   }
 
   uint8_t type() const {
     return type_;
   }
 
- private:
-  void release(ResourceManager* resources);
+  // Release the resources used by this variant and set it to null.
+  void clear(ResourceManager* resources);
+
+  static void clear(VariantData* var, ResourceManager* resources) {
+    if (!var)
+      return;
+    var->clear(resources);
+  }
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

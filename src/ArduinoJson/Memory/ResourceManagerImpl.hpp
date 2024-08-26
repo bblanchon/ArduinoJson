@@ -20,7 +20,7 @@ inline Slot<VariantData> ResourceManager::allocVariant() {
 }
 
 inline void ResourceManager::freeVariant(Slot<VariantData> variant) {
-  variant->setNull(this);
+  variant->clear(this);
   variantPools_.freeSlot(variant);
 }
 

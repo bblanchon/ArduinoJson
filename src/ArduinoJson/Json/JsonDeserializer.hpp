@@ -283,7 +283,7 @@ class JsonDeserializer {
           if (!member)
             return DeserializationError::NoMemory;
         } else {
-          member->setNull(resources_);
+          member->clear(resources_);
         }
 
         // Parse value
