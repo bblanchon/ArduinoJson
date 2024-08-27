@@ -31,13 +31,28 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
-  SECTION("set(4.2)") {
+  SECTION("set(float)") {
+    variant.set(4.2f);
+
+    REQUIRE(variant.as<bool>());
+    REQUIRE(0 == variant.as<const char*>());
+    REQUIRE(variant.as<std::string>() == "4.199999809");  // TODO
+    REQUIRE(variant.as<long>() == 4L);
+    REQUIRE(variant.as<float>() == 4.2f);
+    REQUIRE(variant.as<unsigned>() == 4U);
+    REQUIRE(variant.as<JsonString>().isNull());
+    REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
+  }
+
+  SECTION("set(double)") {
     variant.set(4.2);
 
     REQUIRE(variant.as<bool>());
     REQUIRE(0 == variant.as<const char*>());
     REQUIRE(variant.as<std::string>() == "4.2");
     REQUIRE(variant.as<long>() == 4L);
+    REQUIRE(variant.as<double>() == 4.2);
     REQUIRE(variant.as<unsigned>() == 4U);
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
@@ -78,43 +93,62 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
-  SECTION("set(42)") {
-    variant.set(42);
+  SECTION("set(uint32_t)") {
+    variant.set(4294967295U);
 
     REQUIRE(variant.as<bool>() == true);
-    REQUIRE(variant.as<double>() == 42.0);
-    REQUIRE(variant.as<int>() == 42);
-    REQUIRE(variant.as<unsigned int>() == 42U);  // issue #1601
-    REQUIRE(variant.as<std::string>() == "42");
+    REQUIRE(variant.as<double>() == 4294967295.0);
+    REQUIRE(variant.as<int32_t>() == 0);
+    REQUIRE(variant.as<uint32_t>() == 4294967295U);
+    REQUIRE(variant.as<uint64_t>() == 4294967295U);
+    REQUIRE(variant.as<std::string>() == "4294967295");
     REQUIRE(variant.as<JsonString>().isNull());
     REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
     REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
-  SECTION("set(42L)") {
-    variant.set(42L);
+  SECTION("set(int32_t)") {
+    variant.set(-2147483648LL);
 
     REQUIRE(variant.as<bool>() == true);
-    REQUIRE(variant.as<double>() == 42.0);
-    REQUIRE(variant.as<std::string>() == "42");
+    REQUIRE(variant.as<double>() == -2147483648LL);
+    REQUIRE(variant.as<int32_t>() == -2147483648LL);
+    REQUIRE(variant.as<int64_t>() == -2147483648LL);
+    REQUIRE(variant.as<uint32_t>() == 0);
+    REQUIRE(variant.as<uint64_t>() == 0);
+    REQUIRE(variant.as<std::string>() == "-2147483648");
     REQUIRE(variant.as<JsonString>().isNull());
+    REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
-  SECTION("set(-42L)") {
-    variant.set(-42L);
-
-    REQUIRE(variant.as<double>() == -42.0);
-    REQUIRE(variant.as<std::string>() == "-42");
-    REQUIRE(variant.as<JsonString>().isNull());
-  }
-
-  SECTION("set(42UL)") {
-    variant.set(42UL);
+  SECTION("set(uint64_t)") {
+    variant.set(4294967296U);
 
     REQUIRE(variant.as<bool>() == true);
-    REQUIRE(variant.as<double>() == 42.0);
-    REQUIRE(variant.as<std::string>() == "42");
+    REQUIRE(variant.as<double>() == 4294967296.0);
+    REQUIRE(variant.as<int32_t>() == 0);
+    REQUIRE(variant.as<uint32_t>() == 0);
+    REQUIRE(variant.as<uint64_t>() == 4294967296U);
+    REQUIRE(variant.as<std::string>() == "4294967296");
     REQUIRE(variant.as<JsonString>().isNull());
+    REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
+  }
+
+  SECTION("set(int64_t)") {
+    variant.set(-2147483649LL);
+
+    REQUIRE(variant.as<bool>() == true);
+    REQUIRE(variant.as<double>() == -2147483649LL);
+    REQUIRE(variant.as<int32_t>() == 0);
+    REQUIRE(variant.as<int64_t>() == -2147483649LL);
+    REQUIRE(variant.as<uint32_t>() == 0);
+    REQUIRE(variant.as<uint64_t>() == 0);
+    REQUIRE(variant.as<std::string>() == "-2147483649");
+    REQUIRE(variant.as<JsonString>().isNull());
+    REQUIRE(variant.as<MsgPackBinary>().data() == nullptr);
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
   SECTION("set(0L)") {
