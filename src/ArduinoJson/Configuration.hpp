@@ -107,11 +107,11 @@
 // Capacity of each variant pool (in slots)
 #ifndef ARDUINOJSON_POOL_CAPACITY
 #  if ARDUINOJSON_SIZEOF_POINTER <= 2
-#    define ARDUINOJSON_POOL_CAPACITY 16  // 128 bytes
+#    define ARDUINOJSON_POOL_CAPACITY 16  // 96 bytes
 #  elif ARDUINOJSON_SIZEOF_POINTER == 4
-#    define ARDUINOJSON_POOL_CAPACITY 64  // 1024 bytes
+#    define ARDUINOJSON_POOL_CAPACITY 128  // 1024 bytes
 #  else
-#    define ARDUINOJSON_POOL_CAPACITY 128  // 3072 bytes
+#    define ARDUINOJSON_POOL_CAPACITY 256  // 4096 bytes
 #  endif
 #endif
 
@@ -267,6 +267,12 @@
 #  else
 #    define ARDUINOJSON_DEBUG 0
 #  endif
+#endif
+
+#if ARDUINOJSON_USE_LONG_LONG || ARDUINOJSON_USE_DOUBLE
+#  define ARDUINOJSON_USE_EXTENSIONS 1
+#else
+#  define ARDUINOJSON_USE_EXTENSIONS 0
 #endif
 
 #if defined(nullptr)

@@ -24,10 +24,21 @@ enum {
 
   VALUE_IS_BOOLEAN = 0x06,
 
-  NUMBER_BIT = 0x08,
-  VALUE_IS_UNSIGNED_INTEGER = 0x08,
-  VALUE_IS_SIGNED_INTEGER = 0x0A,
-  VALUE_IS_FLOAT = 0x0C,
+  NUMBER_BIT = 0x08,       // 0000 1000
+  VALUE_IS_UINT32 = 0x0A,  // 0000 1010
+  VALUE_IS_INT32 = 0x0C,   // 0000 1100
+  VALUE_IS_FLOAT = 0x0E,   // 0000 1110
+
+#if ARDUINOJSON_USE_EXTENSIONS
+  EXTENSION_BIT = 0x10,  // 0001 0000
+#endif
+#if ARDUINOJSON_USE_LONG_LONG
+  VALUE_IS_UINT64 = 0x1A,  // 0001 1010
+  VALUE_IS_INT64 = 0x1C,   // 0001 1100
+#endif
+#if ARDUINOJSON_USE_DOUBLE
+  VALUE_IS_DOUBLE = 0x1E,  // 0001 1110
+#endif
 
   COLLECTION_MASK = 0x60,
   VALUE_IS_OBJECT = 0x20,
@@ -37,15 +48,30 @@ enum {
 union VariantContent {
   VariantContent() {}
 
-  JsonFloat asFloat;
+  float asFloat;
   bool asBoolean;
-  JsonUInt asUnsignedInteger;
-  JsonInteger asSignedInteger;
+  uint32_t asUint32;
+  int32_t asInt32;
+#if ARDUINOJSON_USE_EXTENSIONS
+  SlotId asSlotId;
+#endif
   ArrayData asArray;
   ObjectData asObject;
   CollectionData asCollection;
   const char* asLinkedString;
   struct StringNode* asOwnedString;
 };
+
+#if ARDUINOJSON_USE_EXTENSIONS
+union VariantExtension {
+#  if ARDUINOJSON_USE_LONG_LONG
+  uint64_t asUint64;
+  int64_t asInt64;
+#  endif
+#  if ARDUINOJSON_USE_DOUBLE
+  double asDouble;
+#  endif
+};
+#endif
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

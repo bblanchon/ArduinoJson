@@ -5,6 +5,14 @@ HEAD
 ----
 
 * Store object members with two slots: one for the key and one for the value
+* Store 64-bit numbers (`double` and `long long`) in an additional slot
+* Reduce the slot size (see table below)
+
+| Architecture | before   | after    |
+|--------------|----------|----------|
+| 8-bit        | 8 bytes  | 6 bytes  |
+| 32-bit       | 16 bytes | 8 bytes  |
+| 64-bit       | 24 bytes | 16 bytes |
 
 v7.1.0 (2024-06-27)
 ------

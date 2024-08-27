@@ -41,10 +41,17 @@ class VariantData {
   }
 
   template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor& visit) const {
+  typename TVisitor::result_type accept(
+      TVisitor& visit, const ResourceManager* resources) const {
+    (void)resources;  // silence warning
     switch (type_) {
       case VALUE_IS_FLOAT:
-        return visit.visit(content_.asFloat);
+        return visit.visit(static_cast<JsonFloat>(content_.asFloat));
+
+#if ARDUINOJSON_USE_DOUBLE
+      case VALUE_IS_DOUBLE:
+        return visit.visit(getExtension(resources)->asDouble);
+#endif
 
       case VALUE_IS_ARRAY:
         return visit.visit(content_.asArray);
@@ -64,11 +71,19 @@ class VariantData {
         return visit.visit(RawString(content_.asOwnedString->data,
                                      content_.asOwnedString->length));
 
-      case VALUE_IS_SIGNED_INTEGER:
-        return visit.visit(content_.asSignedInteger);
+      case VALUE_IS_INT32:
+        return visit.visit(static_cast<JsonInteger>(content_.asInt32));
 
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return visit.visit(content_.asUnsignedInteger);
+      case VALUE_IS_UINT32:
+        return visit.visit(static_cast<JsonUInt>(content_.asUint32));
+
+#if ARDUINOJSON_USE_LONG_LONG
+      case VALUE_IS_INT64:
+        return visit.visit(getExtension(resources)->asInt64);
+
+      case VALUE_IS_UINT64:
+        return visit.visit(getExtension(resources)->asUint64);
+#endif
 
       case VALUE_IS_BOOLEAN:
         return visit.visit(content_.asBoolean != 0);
@@ -80,9 +95,10 @@ class VariantData {
 
   template <typename TVisitor>
   static typename TVisitor::result_type accept(const VariantData* var,
+                                               const ResourceManager* resources,
                                                TVisitor& visit) {
     if (var != 0)
-      return var->accept(visit);
+      return var->accept(visit, resources);
     else
       return visit.visit(nullptr);
   }
@@ -113,17 +129,27 @@ class VariantData {
     return var->addValue(value, resources);
   }
 
-  bool asBoolean() const {
+  bool asBoolean(const ResourceManager* resources) const {
+    (void)resources;  // silence warning
     switch (type_) {
       case VALUE_IS_BOOLEAN:
         return content_.asBoolean;
-      case VALUE_IS_SIGNED_INTEGER:
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return content_.asUnsignedInteger != 0;
+      case VALUE_IS_UINT32:
+      case VALUE_IS_INT32:
+        return content_.asUint32 != 0;
       case VALUE_IS_FLOAT:
         return content_.asFloat != 0;
+#if ARDUINOJSON_USE_DOUBLE
+      case VALUE_IS_DOUBLE:
+        return getExtension(resources)->asDouble != 0;
+#endif
       case VALUE_IS_NULL:
         return false;
+#if ARDUINOJSON_USE_LONG_LONG
+      case VALUE_IS_UINT64:
+      case VALUE_IS_INT64:
+        return getExtension(resources)->asUint64 != 0;
+#endif
       default:
         return true;
     }
@@ -146,41 +172,63 @@ class VariantData {
   }
 
   template <typename T>
-  T asFloat() const {
+  T asFloat(const ResourceManager* resources) const {
     static_assert(is_floating_point<T>::value, "T must be a floating point");
+    (void)resources;  // silence warning
     switch (type_) {
       case VALUE_IS_BOOLEAN:
         return static_cast<T>(content_.asBoolean);
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return static_cast<T>(content_.asUnsignedInteger);
-      case VALUE_IS_SIGNED_INTEGER:
-        return static_cast<T>(content_.asSignedInteger);
+      case VALUE_IS_UINT32:
+        return static_cast<T>(content_.asUint32);
+      case VALUE_IS_INT32:
+        return static_cast<T>(content_.asInt32);
+#if ARDUINOJSON_USE_LONG_LONG
+      case VALUE_IS_UINT64:
+        return static_cast<T>(getExtension(resources)->asUint64);
+      case VALUE_IS_INT64:
+        return static_cast<T>(getExtension(resources)->asInt64);
+#endif
       case VALUE_IS_LINKED_STRING:
       case VALUE_IS_OWNED_STRING:
         return parseNumber<T>(content_.asOwnedString->data);
       case VALUE_IS_FLOAT:
         return static_cast<T>(content_.asFloat);
+#if ARDUINOJSON_USE_DOUBLE
+      case VALUE_IS_DOUBLE:
+        return static_cast<T>(getExtension(resources)->asDouble);
+#endif
       default:
         return 0;
     }
   }
 
   template <typename T>
-  T asIntegral() const {
+  T asIntegral(const ResourceManager* resources) const {
     static_assert(is_integral<T>::value, "T must be an integral type");
+    (void)resources;  // silence warning
     switch (type_) {
       case VALUE_IS_BOOLEAN:
         return content_.asBoolean;
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return convertNumber<T>(content_.asUnsignedInteger);
-      case VALUE_IS_SIGNED_INTEGER:
-        return convertNumber<T>(content_.asSignedInteger);
+      case VALUE_IS_UINT32:
+        return convertNumber<T>(content_.asUint32);
+      case VALUE_IS_INT32:
+        return convertNumber<T>(content_.asInt32);
+#if ARDUINOJSON_USE_LONG_LONG
+      case VALUE_IS_UINT64:
+        return convertNumber<T>(getExtension(resources)->asUint64);
+      case VALUE_IS_INT64:
+        return convertNumber<T>(getExtension(resources)->asInt64);
+#endif
       case VALUE_IS_LINKED_STRING:
         return parseNumber<T>(content_.asLinkedString);
       case VALUE_IS_OWNED_STRING:
         return parseNumber<T>(content_.asOwnedString->data);
       case VALUE_IS_FLOAT:
         return convertNumber<T>(content_.asFloat);
+#if ARDUINOJSON_USE_DOUBLE
+      case VALUE_IS_DOUBLE:
+        return convertNumber<T>(getExtension(resources)->asDouble);
+#endif
       default:
         return 0;
     }
@@ -215,6 +263,10 @@ class VariantData {
         return JsonString();
     }
   }
+
+#if ARDUINOJSON_USE_EXTENSIONS
+  const VariantExtension* getExtension(const ResourceManager* resources) const;
+#endif
 
   VariantData* getElement(size_t index,
                           const ResourceManager* resources) const {
@@ -274,13 +326,22 @@ class VariantData {
   }
 
   template <typename T>
-  bool isInteger() const {
+  bool isInteger(const ResourceManager* resources) const {
+    (void)resources;  // silence warning
     switch (type_) {
-      case VALUE_IS_UNSIGNED_INTEGER:
-        return canConvertNumber<T>(content_.asUnsignedInteger);
+      case VALUE_IS_UINT32:
+        return canConvertNumber<T>(content_.asUint32);
 
-      case VALUE_IS_SIGNED_INTEGER:
-        return canConvertNumber<T>(content_.asSignedInteger);
+      case VALUE_IS_INT32:
+        return canConvertNumber<T>(content_.asInt32);
+
+#if ARDUINOJSON_USE_LONG_LONG
+      case VALUE_IS_UINT64:
+        return canConvertNumber<T>(getExtension(resources)->asUint64);
+
+      case VALUE_IS_INT64:
+        return canConvertNumber<T>(getExtension(resources)->asInt64);
+#endif
 
       default:
         return false;
@@ -354,25 +415,23 @@ class VariantData {
     content_.asBoolean = value;
   }
 
-  void setFloat(JsonFloat value) {
+  template <typename T>
+  typename enable_if<sizeof(T) == 4>::type setFloat(T value, ResourceManager*) {
     ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_FLOAT;
     content_.asFloat = value;
   }
 
   template <typename T>
-  enable_if_t<is_signed<T>::value> setInteger(T value) {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-    type_ = VALUE_IS_SIGNED_INTEGER;
-    content_.asSignedInteger = value;
-  }
+  typename enable_if<sizeof(T) == 8>::type setFloat(T value, ResourceManager*);
 
   template <typename T>
-  enable_if_t<is_unsigned<T>::value> setInteger(T value) {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-    type_ = VALUE_IS_UNSIGNED_INTEGER;
-    content_.asUnsignedInteger = static_cast<JsonUInt>(value);
-  }
+  enable_if_t<is_signed<T>::value> setInteger(T value,
+                                              ResourceManager* resources);
+
+  template <typename T>
+  enable_if_t<is_unsigned<T>::value> setInteger(T value,
+                                                ResourceManager* resources);
 
   void setRawString(StringNode* s) {
     ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first

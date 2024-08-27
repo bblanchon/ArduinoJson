@@ -520,15 +520,15 @@ class JsonDeserializer {
     auto number = parseNumber(buffer_);
     switch (number.type()) {
       case NumberType::UnsignedInteger:
-        result.setInteger(number.asUnsignedInteger());
+        result.setInteger(number.asUnsignedInteger(), resources_);
         return DeserializationError::Ok;
 
       case NumberType::SignedInteger:
-        result.setInteger(number.asSignedInteger());
+        result.setInteger(number.asSignedInteger(), resources_);
         return DeserializationError::Ok;
 
       case NumberType::Float:
-        result.setFloat(number.asFloat());
+        result.setFloat(number.asFloat(), resources_);
         return DeserializationError::Ok;
 
       default:

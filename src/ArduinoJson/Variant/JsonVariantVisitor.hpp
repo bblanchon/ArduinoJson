@@ -55,7 +55,7 @@ typename TVisitor::result_type accept(JsonVariantConst variant,
     return visit.visit(nullptr);
   auto resources = VariantAttorney::getResourceManager(variant);
   VisitorAdapter<TVisitor> adapter(visit, resources);
-  return data->accept(adapter);
+  return data->accept(adapter, resources);
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

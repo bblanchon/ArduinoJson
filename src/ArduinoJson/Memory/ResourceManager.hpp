@@ -18,6 +18,13 @@ class VariantData;
 class VariantWithId;
 
 class ResourceManager {
+  union SlotData {
+    VariantData variant;
+#if ARDUINOJSON_USE_EXTENSIONS
+    VariantExtension extension;
+#endif
+  };
+
  public:
   ResourceManager(Allocator* allocator = DefaultAllocator::instance())
       : allocator_(allocator), overflowed_(false) {}
@@ -50,10 +57,14 @@ class ResourceManager {
   }
 
   Slot<VariantData> allocVariant();
-
   void freeVariant(Slot<VariantData> slot);
-
   VariantData* getVariant(SlotId id) const;
+
+#if ARDUINOJSON_USE_EXTENSIONS
+  Slot<VariantExtension> allocExtension();
+  void freeExtension(SlotId slot);
+  VariantExtension* getExtension(SlotId id) const;
+#endif
 
   template <typename TAdaptedString>
   StringNode* saveString(TAdaptedString str) {
@@ -112,7 +123,7 @@ class ResourceManager {
   Allocator* allocator_;
   bool overflowed_;
   StringPool stringPool_;
-  MemoryPoolList<VariantData> variantPools_;
+  MemoryPoolList<SlotData> variantPools_;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

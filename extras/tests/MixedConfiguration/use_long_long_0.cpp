@@ -32,11 +32,7 @@ TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 0") {
           deserializeMsgPack(doc, "\xcf\x00\x00\x00\x01\x00\x00\x00\x00"_s);
 
       REQUIRE(err == DeserializationError::Ok);
-#if defined(__SIZEOF_LONG__) && __SIZEOF_LONG__ >= 8
-      REQUIRE(doc.as<JsonInteger>() == 0x100000000);
-#else
       REQUIRE(doc.isNull());
-#endif
     }
   }
 }
