@@ -219,7 +219,8 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 // Produces a MessagePack document.
 // https://arduinojson.org/v7/api/msgpack/serializemsgpack/
 template <typename TDestination>
-inline size_t serializeMsgPack(JsonVariantConst source, TDestination& output) {
+detail::enable_if_t<!detail::is_pointer<TDestination>::value, size_t>
+serializeMsgPack(JsonVariantConst source, TDestination& output) {
   using namespace ArduinoJson::detail;
   return serialize<MsgPackSerializer>(source, output);
 }

@@ -129,7 +129,8 @@ ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 // Produces a minified JSON document.
 // https://arduinojson.org/v7/api/json/serializejson/
 template <typename TDestination>
-size_t serializeJson(JsonVariantConst source, TDestination& destination) {
+detail::enable_if_t<!detail::is_pointer<TDestination>::value, size_t>
+serializeJson(JsonVariantConst source, TDestination& destination) {
   using namespace detail;
   return serialize<JsonSerializer>(source, destination);
 }

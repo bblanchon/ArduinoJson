@@ -7,6 +7,7 @@ HEAD
 * Store object members with two slots: one for the key and one for the value
 * Store 64-bit numbers (`double` and `long long`) in an additional slot
 * Reduce the slot size (see table below)
+* Improve message when user forgets third arg of `serializeJson()` et al.
 
 | Architecture | before   | after    |
 |--------------|----------|----------|
