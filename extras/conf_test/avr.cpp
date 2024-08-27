@@ -8,7 +8,7 @@ static_assert(ARDUINOJSON_SLOT_ID_SIZE == 1, "ARDUINOJSON_SLOT_ID_SIZE");
 
 static_assert(ARDUINOJSON_LITTLE_ENDIAN == 1, "ARDUINOJSON_LITTLE_ENDIAN");
 
-static_assert(ARDUINOJSON_USE_DOUBLE == 1, "ARDUINOJSON_USE_DOUBLE");
+static_assert(ARDUINOJSON_USE_DOUBLE == 0, "ARDUINOJSON_USE_DOUBLE");
 
 static_assert(sizeof(ArduinoJson::detail::VariantData) == 6,
               "sizeof(VariantData)");

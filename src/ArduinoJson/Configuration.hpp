@@ -56,12 +56,6 @@
 #  endif
 #endif
 
-// Store floating-point values with float (0) or double (1)
-// https://arduinojson.org/v7/config/use_double/
-#ifndef ARDUINOJSON_USE_DOUBLE
-#  define ARDUINOJSON_USE_DOUBLE 1
-#endif
-
 // Pointer size: a heuristic to set sensible defaults
 #ifndef ARDUINOJSON_SIZEOF_POINTER
 #  if defined(__SIZEOF_POINTER__)
@@ -70,6 +64,16 @@
 #    define ARDUINOJSON_SIZEOF_POINTER 8  // 64 bits
 #  else
 #    define ARDUINOJSON_SIZEOF_POINTER 4  // assume 32 bits otherwise
+#  endif
+#endif
+
+// Store floating-point values with float (0) or double (1)
+// https://arduinojson.org/v7/config/use_double/
+#ifndef ARDUINOJSON_USE_DOUBLE
+#  if ARDUINOJSON_SIZEOF_POINTER >= 4  // 32 & 64 bits systems
+#    define ARDUINOJSON_USE_DOUBLE 1
+#  else
+#    define ARDUINOJSON_USE_DOUBLE 0
 #  endif
 #endif
 

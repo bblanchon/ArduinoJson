@@ -8,6 +8,7 @@ HEAD
 * Store 64-bit numbers (`double` and `long long`) in an additional slot
 * Reduce the slot size (see table below)
 * Improve message when user forgets third arg of `serializeJson()` et al.
+* Set `ARDUINOJSON_USE_DOUBLE` to `0` by default on 8-bit architectures
 
 | Architecture | before   | after    |
 |--------------|----------|----------|
