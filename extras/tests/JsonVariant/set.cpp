@@ -13,7 +13,8 @@ using ArduinoJson::detail::sizeofObject;
 enum ErrorCode { ERROR_01 = 1, ERROR_10 = 10 };
 
 TEST_CASE("JsonVariant::set() when there is enough memory") {
-  JsonDocument doc;
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
   JsonVariant variant = doc.to<JsonVariant>();
 
   SECTION("const char*") {
@@ -25,6 +26,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "world");  // stores by pointer
+    REQUIRE(spy.log() == AllocatorLog{});
   }
 
   SECTION("(const char*)0") {
@@ -32,6 +34,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant.isNull());
+    REQUIRE(spy.log() == AllocatorLog{});
   }
 
   SECTION("char*") {
@@ -43,6 +46,9 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "hello");  // stores by copy
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                         });
   }
 
   SECTION("(char*)0") {
@@ -50,6 +56,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant.isNull());
+    REQUIRE(spy.log() == AllocatorLog{});
   }
 
   SECTION("unsigned char*") {
@@ -61,6 +68,9 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "hello");  // stores by copy
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                         });
   }
 
   SECTION("signed char*") {
@@ -72,6 +82,9 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "hello");  // stores by copy
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                         });
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
@@ -85,6 +98,9 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "hello");  // stores by copy
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                         });
   }
 #endif
 
@@ -97,6 +113,9 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "hello");  // stores by copy
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                         });
   }
 
   SECTION("static JsonString") {
@@ -108,6 +127,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "world");  // stores by pointer
+    REQUIRE(spy.log() == AllocatorLog{});
   }
 
   SECTION("non-static JsonString") {
@@ -119,6 +139,9 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
 
     REQUIRE(result == true);
     REQUIRE(variant == "hello");  // stores by copy
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofString("hello")),
+                         });
   }
 
   SECTION("enum") {
@@ -129,6 +152,89 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(result == true);
     REQUIRE(variant.is<int>() == true);
     REQUIRE(variant.as<int>() == 10);
+    REQUIRE(spy.log() == AllocatorLog{});
+  }
+
+  SECTION("float") {
+    bool result = variant.set(1.2f);
+
+    REQUIRE(result == true);
+    REQUIRE(variant.is<float>() == true);
+    REQUIRE(variant.as<float>() == 1.2f);
+    REQUIRE(spy.log() == AllocatorLog{});
+  }
+
+  SECTION("double") {
+    bool result = variant.set(1.2);
+    doc.shrinkToFit();
+
+    REQUIRE(result == true);
+    REQUIRE(variant.is<double>() == true);
+    REQUIRE(variant.as<double>() == 1.2);
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofPool()),
+                Reallocate(sizeofPool(), sizeofPool(1)),  // one extension slot
+            });
+  }
+
+  SECTION("int32_t") {
+    bool result = variant.set(int32_t(42));
+
+    REQUIRE(result == true);
+    REQUIRE(variant.is<int32_t>() == true);
+    REQUIRE(variant.as<int32_t>() == 42);
+    REQUIRE(spy.log() == AllocatorLog{});
+  }
+
+  SECTION("int64_t") {
+    bool result = variant.set(int64_t(-2147483649));
+    doc.shrinkToFit();
+
+    REQUIRE(result == true);
+    REQUIRE(variant.is<int64_t>() == true);
+    REQUIRE(variant.as<int64_t>() == -2147483649);
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofPool()),
+                Reallocate(sizeofPool(), sizeofPool(1)),  // one extension slot
+            });
+  }
+
+  SECTION("uint32_t") {
+    bool result = variant.set(uint32_t(42));
+
+    REQUIRE(result == true);
+    REQUIRE(variant.is<uint32_t>() == true);
+    REQUIRE(variant.as<uint32_t>() == 42);
+    REQUIRE(spy.log() == AllocatorLog{});
+  }
+
+  SECTION("uint64_t") {
+    bool result = variant.set(uint64_t(4294967296));
+    doc.shrinkToFit();
+
+    REQUIRE(result == true);
+    REQUIRE(variant.is<uint64_t>() == true);
+    REQUIRE(variant.as<uint64_t>() == 4294967296);
+    REQUIRE(spy.log() ==
+            AllocatorLog{
+                Allocate(sizeofPool()),
+                Reallocate(sizeofPool(), sizeofPool(1)),  // one extension slot
+            });
+  }
+
+  SECTION("JsonDocument") {
+    JsonDocument doc1;
+    doc1["hello"] = "world";
+
+    // Should copy the doc
+    variant.set(doc1);
+    doc1.clear();
+
+    std::string json;
+    serializeJson(doc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
   }
 }
 
@@ -158,22 +264,20 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
     REQUIRE(result == false);
     REQUIRE(v.isNull());
   }
-}
 
-TEST_CASE("JsonVariant::set(JsonDocument)") {
-  JsonDocument doc1;
-  doc1["hello"] = "world";
+  SECTION("float") {
+    bool result = v.set(1.2f);
 
-  JsonDocument doc2;
-  JsonVariant v = doc2.to<JsonVariant>();
+    REQUIRE(result == true);
+    REQUIRE(v.is<float>());
+  }
 
-  // Should copy the doc
-  v.set(doc1);
-  doc1.clear();
+  SECTION("double") {
+    bool result = v.set(1.2);
 
-  std::string json;
-  serializeJson(doc2, json);
-  REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(result == false);
+    REQUIRE(v.isNull());
+  }
 }
 
 TEST_CASE("JsonVariant::set() releases the previous value") {
@@ -217,6 +321,33 @@ TEST_CASE("JsonVariant::set() releases the previous value") {
     REQUIRE(spy.log() == AllocatorLog{
                              Deallocate(sizeofString("world")),
                              Allocate(sizeofString("[]")),
+                         });
+  }
+}
+
+TEST_CASE("Extension slots") {
+  SpyingAllocator spy;
+  JsonDocument doc(&spy);
+
+  SECTION("double requires two slot") {
+    int i = ARDUINOJSON_POOL_CAPACITY - 1;
+
+    // make sure the pool is full
+    doc[i] = 1;
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
+                         });
+
+    // replace with a float => no allocation
+    spy.clearLog();
+    doc[i] = 1.2f;
+    REQUIRE(spy.log() == AllocatorLog{});
+
+    // replace with a double => new pool needed
+    spy.clearLog();
+    doc[i] = 1.2;
+    REQUIRE(spy.log() == AllocatorLog{
+                             Allocate(sizeofPool()),
                          });
   }
 }

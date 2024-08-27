@@ -65,8 +65,8 @@ inline const VariantExtension* VariantData::getExtension(
 #endif
 
 template <typename T>
-enable_if_t<sizeof(T) == 8> VariantData::setFloat(T value,
-                                                  ResourceManager* resources) {
+enable_if_t<sizeof(T) == 8, bool> VariantData::setFloat(
+    T value, ResourceManager* resources) {
   ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
   (void)resources;                             // silence warning
 
@@ -78,16 +78,17 @@ enable_if_t<sizeof(T) == 8> VariantData::setFloat(T value,
     content_.asFloat = valueAsFloat;
   } else {
     auto extension = resources->allocExtension();
-    if (extension) {
-      type_ = VALUE_IS_DOUBLE;
-      content_.asSlotId = extension.id();
-      extension->asDouble = value;
-    }
+    if (!extension)
+      return false;
+    type_ = VALUE_IS_DOUBLE;
+    content_.asSlotId = extension.id();
+    extension->asDouble = value;
   }
 #else
   type_ = VALUE_IS_FLOAT;
   content_.asFloat = valueAsFloat;
 #endif
+  return true;
 }
 
 template <typename T>

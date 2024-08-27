@@ -137,8 +137,7 @@ struct Converter<T, detail::enable_if_t<detail::is_floating_point<T>::value>>
       return false;
     auto resources = getResourceManager(dst);
     data->clear(resources);
-    data->setFloat(src, resources);
-    return true;
+    return data->setFloat(src, resources);
   }
 
   static T fromJson(JsonVariantConst src) {
