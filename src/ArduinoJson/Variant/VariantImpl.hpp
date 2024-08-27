@@ -65,8 +65,8 @@ inline const VariantExtension* VariantData::getExtension(
 #endif
 
 template <typename T>
-typename enable_if<sizeof(T) == 8>::type VariantData::setFloat(
-    T value, ResourceManager* resources) {
+enable_if_t<sizeof(T) == 8> VariantData::setFloat(T value,
+                                                  ResourceManager* resources) {
   ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
   (void)resources;                             // silence warning
 

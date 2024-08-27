@@ -416,14 +416,14 @@ class VariantData {
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 4>::type setFloat(T value, ResourceManager*) {
+  enable_if_t<sizeof(T) == 4> setFloat(T value, ResourceManager*) {
     ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
     type_ = VALUE_IS_FLOAT;
     content_.asFloat = value;
   }
 
   template <typename T>
-  typename enable_if<sizeof(T) == 8>::type setFloat(T value, ResourceManager*);
+  enable_if_t<sizeof(T) == 8> setFloat(T value, ResourceManager*);
 
   template <typename T>
   enable_if_t<is_signed<T>::value> setInteger(T value,
