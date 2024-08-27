@@ -65,8 +65,7 @@ struct Converter<T, detail::enable_if_t<detail::is_integral<T>::value &&
       return false;
     auto resources = getResourceManager(dst);
     data->clear(resources);
-    data->setInteger(src, resources);
-    return true;
+    return data->setInteger(src, resources);
   }
 
   static T fromJson(JsonVariantConst src) {

@@ -92,7 +92,7 @@ enable_if_t<sizeof(T) == 8, bool> VariantData::setFloat(
 }
 
 template <typename T>
-enable_if_t<is_signed<T>::value> VariantData::setInteger(
+enable_if_t<is_signed<T>::value, bool> VariantData::setInteger(
     T value, ResourceManager* resources) {
   ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
   (void)resources;                             // silence warning
@@ -104,17 +104,18 @@ enable_if_t<is_signed<T>::value> VariantData::setInteger(
 #if ARDUINOJSON_USE_LONG_LONG
   else {
     auto extension = resources->allocExtension();
-    if (extension) {
-      type_ = VALUE_IS_INT64;
-      content_.asSlotId = extension.id();
-      extension->asInt64 = value;
-    }
+    if (!extension)
+      return false;
+    type_ = VALUE_IS_INT64;
+    content_.asSlotId = extension.id();
+    extension->asInt64 = value;
   }
 #endif
+  return true;
 }
 
 template <typename T>
-enable_if_t<is_unsigned<T>::value> VariantData::setInteger(
+enable_if_t<is_unsigned<T>::value, bool> VariantData::setInteger(
     T value, ResourceManager* resources) {
   ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
   (void)resources;                             // silence warning
@@ -126,13 +127,14 @@ enable_if_t<is_unsigned<T>::value> VariantData::setInteger(
 #if ARDUINOJSON_USE_LONG_LONG
   else {
     auto extension = resources->allocExtension();
-    if (extension) {
-      type_ = VALUE_IS_UINT64;
-      content_.asSlotId = extension.id();
-      extension->asUint64 = value;
-    }
+    if (!extension)
+      return false;
+    type_ = VALUE_IS_UINT64;
+    content_.asSlotId = extension.id();
+    extension->asUint64 = value;
   }
 #endif
+  return true;
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

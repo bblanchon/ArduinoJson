@@ -188,12 +188,12 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
   }
 
   SECTION("int64_t") {
-    bool result = variant.set(int64_t(-2147483649));
+    bool result = variant.set(int64_t(-2147483649LL));
     doc.shrinkToFit();
 
     REQUIRE(result == true);
     REQUIRE(variant.is<int64_t>() == true);
-    REQUIRE(variant.as<int64_t>() == -2147483649);
+    REQUIRE(variant.as<int64_t>() == -2147483649LL);
     REQUIRE(spy.log() ==
             AllocatorLog{
                 Allocate(sizeofPool()),
@@ -278,6 +278,34 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
     REQUIRE(result == false);
     REQUIRE(v.isNull());
   }
+
+  SECTION("int32_t") {
+    bool result = v.set(-42);
+
+    REQUIRE(result == true);
+    REQUIRE(v.is<int32_t>());
+  }
+
+  SECTION("int64_t") {
+    bool result = v.set(-2147483649LL);
+
+    REQUIRE(result == false);
+    REQUIRE(v.isNull());
+  }
+
+  SECTION("uint32_t") {
+    bool result = v.set(42);
+
+    REQUIRE(result == true);
+    REQUIRE(v.is<uint32_t>());
+  }
+
+  SECTION("uint64_t") {
+    bool result = v.set(4294967296U);
+
+    REQUIRE(result == false);
+    REQUIRE(v.isNull());
+  }
 }
 
 TEST_CASE("JsonVariant::set() releases the previous value") {
@@ -325,29 +353,33 @@ TEST_CASE("JsonVariant::set() releases the previous value") {
   }
 }
 
-TEST_CASE("Extension slots") {
+TEST_CASE("JsonVariant::set() reuses extension slot") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
+  JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("double requires two slot") {
-    int i = ARDUINOJSON_POOL_CAPACITY - 1;
+  variant.set(1.2);
+  doc.shrinkToFit();
+  spy.clearLog();
 
-    // make sure the pool is full
-    doc[i] = 1;
-    REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofPool()),
-                         });
+  SECTION("double") {
+    bool result = variant.set(3.4);
 
-    // replace with a float => no allocation
-    spy.clearLog();
-    doc[i] = 1.2f;
+    REQUIRE(result == true);
     REQUIRE(spy.log() == AllocatorLog{});
+  }
 
-    // replace with a double => new pool needed
-    spy.clearLog();
-    doc[i] = 1.2;
-    REQUIRE(spy.log() == AllocatorLog{
-                             Allocate(sizeofPool()),
-                         });
+  SECTION("int64_t") {
+    bool result = variant.set(-2147483649LL);
+
+    REQUIRE(result == true);
+    REQUIRE(spy.log() == AllocatorLog{});
+  }
+
+  SECTION("uint64_t") {
+    bool result = variant.set(4294967296U);
+
+    REQUIRE(result == true);
+    REQUIRE(spy.log() == AllocatorLog{});
   }
 }

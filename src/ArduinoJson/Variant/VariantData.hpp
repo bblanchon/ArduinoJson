@@ -427,12 +427,12 @@ class VariantData {
   enable_if_t<sizeof(T) == 8, bool> setFloat(T value, ResourceManager*);
 
   template <typename T>
-  enable_if_t<is_signed<T>::value> setInteger(T value,
-                                              ResourceManager* resources);
+  enable_if_t<is_signed<T>::value, bool> setInteger(T value,
+                                                    ResourceManager* resources);
 
   template <typename T>
-  enable_if_t<is_unsigned<T>::value> setInteger(T value,
-                                                ResourceManager* resources);
+  enable_if_t<is_unsigned<T>::value, bool> setInteger(
+      T value, ResourceManager* resources);
 
   void setRawString(StringNode* s) {
     ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
