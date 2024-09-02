@@ -12,7 +12,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 template <typename T>
 inline void VariantData::setRawString(SerializedValue<T> value,
                                       ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
+  ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
   auto dup = resources->saveString(adaptString(value.data(), value.size()));
   if (dup)
     setRawString(dup);
@@ -21,7 +21,7 @@ inline void VariantData::setRawString(SerializedValue<T> value,
 template <typename TAdaptedString>
 inline bool VariantData::setString(TAdaptedString value,
                                    ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
+  ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
 
   if (value.isNull())
     return false;
@@ -41,11 +41,11 @@ inline bool VariantData::setString(TAdaptedString value,
 }
 
 inline void VariantData::clear(ResourceManager* resources) {
-  if (type_ & OWNED_VALUE_BIT)
+  if (type_ & VariantTypeBits::OwnedStringBit)
     resources->dereferenceString(content_.asOwnedString->data);
 
 #if ARDUINOJSON_USE_EXTENSIONS
-  if (type_ & EXTENSION_BIT)
+  if (type_ & VariantTypeBits::ExtensionBit)
     resources->freeExtension(content_.asSlotId);
 #endif
 
@@ -53,13 +53,13 @@ inline void VariantData::clear(ResourceManager* resources) {
   if (collection)
     collection->clear(resources);
 
-  type_ = VALUE_IS_NULL;
+  type_ = VariantType::Null;
 }
 
 #if ARDUINOJSON_USE_EXTENSIONS
 inline const VariantExtension* VariantData::getExtension(
     const ResourceManager* resources) const {
-  ARDUINOJSON_ASSERT(type_ & EXTENSION_BIT);
+  ARDUINOJSON_ASSERT(type_ & VariantTypeBits::ExtensionBit);
   return resources->getExtension(content_.asSlotId);
 }
 #endif
@@ -67,25 +67,25 @@ inline const VariantExtension* VariantData::getExtension(
 template <typename T>
 enable_if_t<sizeof(T) == 8, bool> VariantData::setFloat(
     T value, ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-  (void)resources;                             // silence warning
+  ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
+  (void)resources;                                 // silence warning
 
   float valueAsFloat = static_cast<float>(value);
 
 #if ARDUINOJSON_USE_DOUBLE
   if (value == valueAsFloat) {
-    type_ = VALUE_IS_FLOAT;
+    type_ = VariantType::Float;
     content_.asFloat = valueAsFloat;
   } else {
     auto extension = resources->allocExtension();
     if (!extension)
       return false;
-    type_ = VALUE_IS_DOUBLE;
+    type_ = VariantType::Double;
     content_.asSlotId = extension.id();
     extension->asDouble = value;
   }
 #else
-  type_ = VALUE_IS_FLOAT;
+  type_ = VariantType::Float;
   content_.asFloat = valueAsFloat;
 #endif
   return true;
@@ -94,11 +94,11 @@ enable_if_t<sizeof(T) == 8, bool> VariantData::setFloat(
 template <typename T>
 enable_if_t<is_signed<T>::value, bool> VariantData::setInteger(
     T value, ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-  (void)resources;                             // silence warning
+  ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
+  (void)resources;                                 // silence warning
 
   if (canConvertNumber<int32_t>(value)) {
-    type_ = VALUE_IS_INT32;
+    type_ = VariantType::Int32;
     content_.asInt32 = static_cast<int32_t>(value);
   }
 #if ARDUINOJSON_USE_LONG_LONG
@@ -106,7 +106,7 @@ enable_if_t<is_signed<T>::value, bool> VariantData::setInteger(
     auto extension = resources->allocExtension();
     if (!extension)
       return false;
-    type_ = VALUE_IS_INT64;
+    type_ = VariantType::Int64;
     content_.asSlotId = extension.id();
     extension->asInt64 = value;
   }
@@ -117,11 +117,11 @@ enable_if_t<is_signed<T>::value, bool> VariantData::setInteger(
 template <typename T>
 enable_if_t<is_unsigned<T>::value, bool> VariantData::setInteger(
     T value, ResourceManager* resources) {
-  ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-  (void)resources;                             // silence warning
+  ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
+  (void)resources;                                 // silence warning
 
   if (canConvertNumber<uint32_t>(value)) {
-    type_ = VALUE_IS_UINT32;
+    type_ = VariantType::Uint32;
     content_.asUint32 = static_cast<uint32_t>(value);
   }
 #if ARDUINOJSON_USE_LONG_LONG
@@ -129,7 +129,7 @@ enable_if_t<is_unsigned<T>::value, bool> VariantData::setInteger(
     auto extension = resources->allocExtension();
     if (!extension)
       return false;
-    type_ = VALUE_IS_UINT64;
+    type_ = VariantType::Uint64;
     content_.asSlotId = extension.id();
     extension->asUint64 = value;
   }

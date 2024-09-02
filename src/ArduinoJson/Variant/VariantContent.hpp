@@ -13,37 +13,38 @@
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
-enum {
-  OWNED_VALUE_BIT = 0x01,
-  VALUE_IS_NULL = 0,
-  VALUE_IS_RAW_STRING = 0x03,
-  VALUE_IS_LINKED_STRING = 0x04,
-  VALUE_IS_OWNED_STRING = 0x05,
-
-  // CAUTION: no OWNED_VALUE_BIT below
-
-  VALUE_IS_BOOLEAN = 0x06,
-
-  NUMBER_BIT = 0x08,       // 0000 1000
-  VALUE_IS_UINT32 = 0x0A,  // 0000 1010
-  VALUE_IS_INT32 = 0x0C,   // 0000 1100
-  VALUE_IS_FLOAT = 0x0E,   // 0000 1110
-
+enum class VariantTypeBits : uint8_t {
+  OwnedStringBit = 0x01,  // 0000 0001
+  NumberBit = 0x08,       // 0000 1000
 #if ARDUINOJSON_USE_EXTENSIONS
-  EXTENSION_BIT = 0x10,  // 0001 0000
+  ExtensionBit = 0x10,  // 0001 0000
 #endif
+  CollectionMask = 0x60,
+};
+
+enum class VariantType : uint8_t {
+  Null = 0,             // 0000 0000
+  RawString = 0x03,     // 0000 0011
+  LinkedString = 0x04,  // 0000 0100
+  OwnedString = 0x05,   // 0000 0101
+  Boolean = 0x06,       // 0000 0110
+  Uint32 = 0x0A,        // 0000 1010
+  Int32 = 0x0C,         // 0000 1100
+  Float = 0x0E,         // 0000 1110
 #if ARDUINOJSON_USE_LONG_LONG
-  VALUE_IS_UINT64 = 0x1A,  // 0001 1010
-  VALUE_IS_INT64 = 0x1C,   // 0001 1100
+  Uint64 = 0x1A,  // 0001 1010
+  Int64 = 0x1C,   // 0001 1100
 #endif
 #if ARDUINOJSON_USE_DOUBLE
-  VALUE_IS_DOUBLE = 0x1E,  // 0001 1110
+  Double = 0x1E,  // 0001 1110
 #endif
-
-  COLLECTION_MASK = 0x60,
-  VALUE_IS_OBJECT = 0x20,
-  VALUE_IS_ARRAY = 0x40,
+  Object = 0x20,
+  Array = 0x40,
 };
+
+inline bool operator&(VariantType type, VariantTypeBits bit) {
+  return (uint8_t(type) & uint8_t(bit)) != 0;
+}
 
 union VariantContent {
   VariantContent() {}

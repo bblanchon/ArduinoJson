@@ -19,7 +19,7 @@ T parseNumber(const char* s);
 
 class VariantData {
   VariantContent content_;  // must be first to allow cast from array to variant
-  uint8_t type_;
+  VariantType type_;
   SlotId next_;
 
  public:
@@ -30,7 +30,7 @@ class VariantData {
 
   static void operator delete(void*, void*) noexcept {}
 
-  VariantData() : type_(VALUE_IS_NULL), next_(NULL_SLOT) {}
+  VariantData() : type_(VariantType::Null), next_(NULL_SLOT) {}
 
   SlotId next() const {
     return next_;
@@ -45,47 +45,47 @@ class VariantData {
       TVisitor& visit, const ResourceManager* resources) const {
     (void)resources;  // silence warning
     switch (type_) {
-      case VALUE_IS_FLOAT:
+      case VariantType::Float:
         return visit.visit(static_cast<JsonFloat>(content_.asFloat));
 
 #if ARDUINOJSON_USE_DOUBLE
-      case VALUE_IS_DOUBLE:
+      case VariantType::Double:
         return visit.visit(getExtension(resources)->asDouble);
 #endif
 
-      case VALUE_IS_ARRAY:
+      case VariantType::Array:
         return visit.visit(content_.asArray);
 
-      case VALUE_IS_OBJECT:
+      case VariantType::Object:
         return visit.visit(content_.asObject);
 
-      case VALUE_IS_LINKED_STRING:
+      case VariantType::LinkedString:
         return visit.visit(JsonString(content_.asLinkedString));
 
-      case VALUE_IS_OWNED_STRING:
+      case VariantType::OwnedString:
         return visit.visit(JsonString(content_.asOwnedString->data,
                                       content_.asOwnedString->length,
                                       JsonString::Copied));
 
-      case VALUE_IS_RAW_STRING:
+      case VariantType::RawString:
         return visit.visit(RawString(content_.asOwnedString->data,
                                      content_.asOwnedString->length));
 
-      case VALUE_IS_INT32:
+      case VariantType::Int32:
         return visit.visit(static_cast<JsonInteger>(content_.asInt32));
 
-      case VALUE_IS_UINT32:
+      case VariantType::Uint32:
         return visit.visit(static_cast<JsonUInt>(content_.asUint32));
 
 #if ARDUINOJSON_USE_LONG_LONG
-      case VALUE_IS_INT64:
+      case VariantType::Int64:
         return visit.visit(getExtension(resources)->asInt64);
 
-      case VALUE_IS_UINT64:
+      case VariantType::Uint64:
         return visit.visit(getExtension(resources)->asUint64);
 #endif
 
-      case VALUE_IS_BOOLEAN:
+      case VariantType::Boolean:
         return visit.visit(content_.asBoolean != 0);
 
       default:
@@ -132,22 +132,22 @@ class VariantData {
   bool asBoolean(const ResourceManager* resources) const {
     (void)resources;  // silence warning
     switch (type_) {
-      case VALUE_IS_BOOLEAN:
+      case VariantType::Boolean:
         return content_.asBoolean;
-      case VALUE_IS_UINT32:
-      case VALUE_IS_INT32:
+      case VariantType::Uint32:
+      case VariantType::Int32:
         return content_.asUint32 != 0;
-      case VALUE_IS_FLOAT:
+      case VariantType::Float:
         return content_.asFloat != 0;
 #if ARDUINOJSON_USE_DOUBLE
-      case VALUE_IS_DOUBLE:
+      case VariantType::Double:
         return getExtension(resources)->asDouble != 0;
 #endif
-      case VALUE_IS_NULL:
+      case VariantType::Null:
         return false;
 #if ARDUINOJSON_USE_LONG_LONG
-      case VALUE_IS_UINT64:
-      case VALUE_IS_INT64:
+      case VariantType::Uint64:
+      case VariantType::Int64:
         return getExtension(resources)->asUint64 != 0;
 #endif
       default:
@@ -176,25 +176,25 @@ class VariantData {
     static_assert(is_floating_point<T>::value, "T must be a floating point");
     (void)resources;  // silence warning
     switch (type_) {
-      case VALUE_IS_BOOLEAN:
+      case VariantType::Boolean:
         return static_cast<T>(content_.asBoolean);
-      case VALUE_IS_UINT32:
+      case VariantType::Uint32:
         return static_cast<T>(content_.asUint32);
-      case VALUE_IS_INT32:
+      case VariantType::Int32:
         return static_cast<T>(content_.asInt32);
 #if ARDUINOJSON_USE_LONG_LONG
-      case VALUE_IS_UINT64:
+      case VariantType::Uint64:
         return static_cast<T>(getExtension(resources)->asUint64);
-      case VALUE_IS_INT64:
+      case VariantType::Int64:
         return static_cast<T>(getExtension(resources)->asInt64);
 #endif
-      case VALUE_IS_LINKED_STRING:
-      case VALUE_IS_OWNED_STRING:
+      case VariantType::LinkedString:
+      case VariantType::OwnedString:
         return parseNumber<T>(content_.asOwnedString->data);
-      case VALUE_IS_FLOAT:
+      case VariantType::Float:
         return static_cast<T>(content_.asFloat);
 #if ARDUINOJSON_USE_DOUBLE
-      case VALUE_IS_DOUBLE:
+      case VariantType::Double:
         return static_cast<T>(getExtension(resources)->asDouble);
 #endif
       default:
@@ -207,26 +207,26 @@ class VariantData {
     static_assert(is_integral<T>::value, "T must be an integral type");
     (void)resources;  // silence warning
     switch (type_) {
-      case VALUE_IS_BOOLEAN:
+      case VariantType::Boolean:
         return content_.asBoolean;
-      case VALUE_IS_UINT32:
+      case VariantType::Uint32:
         return convertNumber<T>(content_.asUint32);
-      case VALUE_IS_INT32:
+      case VariantType::Int32:
         return convertNumber<T>(content_.asInt32);
 #if ARDUINOJSON_USE_LONG_LONG
-      case VALUE_IS_UINT64:
+      case VariantType::Uint64:
         return convertNumber<T>(getExtension(resources)->asUint64);
-      case VALUE_IS_INT64:
+      case VariantType::Int64:
         return convertNumber<T>(getExtension(resources)->asInt64);
 #endif
-      case VALUE_IS_LINKED_STRING:
+      case VariantType::LinkedString:
         return parseNumber<T>(content_.asLinkedString);
-      case VALUE_IS_OWNED_STRING:
+      case VariantType::OwnedString:
         return parseNumber<T>(content_.asOwnedString->data);
-      case VALUE_IS_FLOAT:
+      case VariantType::Float:
         return convertNumber<T>(content_.asFloat);
 #if ARDUINOJSON_USE_DOUBLE
-      case VALUE_IS_DOUBLE:
+      case VariantType::Double:
         return convertNumber<T>(getExtension(resources)->asDouble);
 #endif
       default:
@@ -244,7 +244,7 @@ class VariantData {
 
   JsonString asRawString() const {
     switch (type_) {
-      case VALUE_IS_RAW_STRING:
+      case VariantType::RawString:
         return JsonString(content_.asOwnedString->data,
                           content_.asOwnedString->length, JsonString::Copied);
       default:
@@ -254,9 +254,9 @@ class VariantData {
 
   JsonString asString() const {
     switch (type_) {
-      case VALUE_IS_LINKED_STRING:
+      case VariantType::LinkedString:
         return JsonString(content_.asLinkedString, JsonString::Linked);
-      case VALUE_IS_OWNED_STRING:
+      case VariantType::OwnedString:
         return JsonString(content_.asOwnedString->data,
                           content_.asOwnedString->length, JsonString::Copied);
       default:
@@ -310,36 +310,36 @@ class VariantData {
   }
 
   bool isArray() const {
-    return type_ == VALUE_IS_ARRAY;
+    return type_ == VariantType::Array;
   }
 
   bool isBoolean() const {
-    return type_ == VALUE_IS_BOOLEAN;
+    return type_ == VariantType::Boolean;
   }
 
   bool isCollection() const {
-    return (type_ & COLLECTION_MASK) != 0;
+    return type_ & VariantTypeBits::CollectionMask;
   }
 
   bool isFloat() const {
-    return (type_ & NUMBER_BIT) != 0;
+    return type_ & VariantTypeBits::NumberBit;
   }
 
   template <typename T>
   bool isInteger(const ResourceManager* resources) const {
     (void)resources;  // silence warning
     switch (type_) {
-      case VALUE_IS_UINT32:
+      case VariantType::Uint32:
         return canConvertNumber<T>(content_.asUint32);
 
-      case VALUE_IS_INT32:
+      case VariantType::Int32:
         return canConvertNumber<T>(content_.asInt32);
 
 #if ARDUINOJSON_USE_LONG_LONG
-      case VALUE_IS_UINT64:
+      case VariantType::Uint64:
         return canConvertNumber<T>(getExtension(resources)->asUint64);
 
-      case VALUE_IS_INT64:
+      case VariantType::Int64:
         return canConvertNumber<T>(getExtension(resources)->asInt64);
 #endif
 
@@ -349,7 +349,7 @@ class VariantData {
   }
 
   bool isNull() const {
-    return type_ == VALUE_IS_NULL;
+    return type_ == VariantType::Null;
   }
 
   static bool isNull(const VariantData* var) {
@@ -359,11 +359,12 @@ class VariantData {
   }
 
   bool isObject() const {
-    return type_ == VALUE_IS_OBJECT;
+    return type_ == VariantType::Object;
   }
 
   bool isString() const {
-    return type_ == VALUE_IS_LINKED_STRING || type_ == VALUE_IS_OWNED_STRING;
+    return type_ == VariantType::LinkedString ||
+           type_ == VariantType::OwnedString;
   }
 
   size_t nesting(const ResourceManager* resources) const {
@@ -406,19 +407,19 @@ class VariantData {
   }
 
   void reset() {  // TODO: remove
-    type_ = VALUE_IS_NULL;
+    type_ = VariantType::Null;
   }
 
   void setBoolean(bool value) {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-    type_ = VALUE_IS_BOOLEAN;
+    ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
+    type_ = VariantType::Boolean;
     content_.asBoolean = value;
   }
 
   template <typename T>
   enable_if_t<sizeof(T) == 4, bool> setFloat(T value, ResourceManager*) {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-    type_ = VALUE_IS_FLOAT;
+    ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
+    type_ = VariantType::Float;
     content_.asFloat = value;
     return true;
   }
@@ -435,9 +436,9 @@ class VariantData {
       T value, ResourceManager* resources);
 
   void setRawString(StringNode* s) {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
+    ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
     ARDUINOJSON_ASSERT(s);
-    type_ = VALUE_IS_RAW_STRING;
+    type_ = VariantType::RawString;
     content_.asOwnedString = s;
   }
 
@@ -471,16 +472,16 @@ class VariantData {
   }
 
   void setLinkedString(const char* s) {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
+    ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
     ARDUINOJSON_ASSERT(s);
-    type_ = VALUE_IS_LINKED_STRING;
+    type_ = VariantType::LinkedString;
     content_.asLinkedString = s;
   }
 
   void setOwnedString(StringNode* s) {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
+    ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
     ARDUINOJSON_ASSERT(s);
-    type_ = VALUE_IS_OWNED_STRING;
+    type_ = VariantType::OwnedString;
     content_.asOwnedString = s;
   }
 
@@ -499,8 +500,8 @@ class VariantData {
   }
 
   ArrayData& toArray() {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-    type_ = VALUE_IS_ARRAY;
+    ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
+    type_ = VariantType::Array;
     new (&content_.asArray) ArrayData();
     return content_.asArray;
   }
@@ -513,8 +514,8 @@ class VariantData {
   }
 
   ObjectData& toObject() {
-    ARDUINOJSON_ASSERT(type_ == VALUE_IS_NULL);  // must call clear() first
-    type_ = VALUE_IS_OBJECT;
+    ARDUINOJSON_ASSERT(type_ == VariantType::Null);  // must call clear() first
+    type_ = VariantType::Object;
     new (&content_.asObject) ObjectData();
     return content_.asObject;
   }
@@ -526,7 +527,7 @@ class VariantData {
     return &var->toObject();
   }
 
-  uint8_t type() const {
+  VariantType type() const {
     return type_;
   }
 
