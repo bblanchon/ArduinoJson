@@ -83,6 +83,11 @@ TEST_CASE("serializeJson(JsonVariant)") {
     check(3.1415927, "3.1415927");
   }
 
+  SECTION("Float") {
+    REQUIRE(sizeof(float) == 4);
+    check(3.1415927f, "3.141593");
+  }
+
   SECTION("Zero") {
     check(0, "0");
   }

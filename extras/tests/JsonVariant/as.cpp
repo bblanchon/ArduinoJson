@@ -36,7 +36,7 @@ TEST_CASE("JsonVariant::as()") {
 
     REQUIRE(variant.as<bool>());
     REQUIRE(0 == variant.as<const char*>());
-    REQUIRE(variant.as<std::string>() == "4.199999809");  // TODO
+    REQUIRE(variant.as<std::string>() == "4.2");
     REQUIRE(variant.as<long>() == 4L);
     REQUIRE(variant.as<float>() == 4.2f);
     REQUIRE(variant.as<unsigned>() == 4U);

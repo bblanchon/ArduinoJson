@@ -46,7 +46,7 @@ class VariantData {
     (void)resources;  // silence warning
     switch (type_) {
       case VariantType::Float:
-        return visit.visit(static_cast<JsonFloat>(content_.asFloat));
+        return visit.visit(content_.asFloat);
 
 #if ARDUINOJSON_USE_DOUBLE
       case VariantType::Double:

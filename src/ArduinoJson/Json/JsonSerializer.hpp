@@ -62,7 +62,8 @@ class JsonSerializer : public VariantDataVisitor<size_t> {
     return bytesWritten();
   }
 
-  size_t visit(JsonFloat value) {
+  template <typename T>
+  enable_if_t<is_floating_point<T>::value, size_t> visit(T value) {
     formatter_.writeFloat(value);
     return bytesWritten();
   }

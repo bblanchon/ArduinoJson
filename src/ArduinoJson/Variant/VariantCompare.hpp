@@ -52,23 +52,19 @@ struct Comparer<
 
   explicit Comparer(T value) : rhs(value) {}
 
-  CompareResult visit(JsonFloat lhs) {
+  template <typename U>
+  enable_if_t<is_floating_point<U>::value || is_integral<U>::value,
+              CompareResult>
+  visit(const U& lhs) {
     return arithmeticCompare(lhs, rhs);
   }
 
-  CompareResult visit(JsonInteger lhs) {
-    return arithmeticCompare(lhs, rhs);
+  template <typename U>
+  enable_if_t<!is_floating_point<U>::value && !is_integral<U>::value,
+              CompareResult>
+  visit(const U& lhs) {
+    return ComparerBase::visit(lhs);
   }
-
-  CompareResult visit(JsonUInt lhs) {
-    return arithmeticCompare(lhs, rhs);
-  }
-
-  CompareResult visit(bool lhs) {
-    return visit(static_cast<JsonUInt>(lhs));
-  }
-
-  using ComparerBase::visit;
 };
 
 struct NullComparer : ComparerBase {

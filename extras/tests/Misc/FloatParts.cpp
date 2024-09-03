@@ -7,9 +7,9 @@
 
 using namespace ArduinoJson::detail;
 
-TEST_CASE("FloatParts<double>") {
+TEST_CASE("decomposeFloat()") {
   SECTION("1.7976931348623157E+308") {
-    FloatParts<double> parts(1.7976931348623157E+308);
+    auto parts = decomposeFloat(1.7976931348623157E+308, 9);
     REQUIRE(parts.integral == 1);
     REQUIRE(parts.decimal == 797693135);
     REQUIRE(parts.decimalPlaces == 9);
@@ -17,17 +17,15 @@ TEST_CASE("FloatParts<double>") {
   }
 
   SECTION("4.94065645841247e-324") {
-    FloatParts<double> parts(4.94065645841247e-324);
+    auto parts = decomposeFloat(4.94065645841247e-324, 9);
     REQUIRE(parts.integral == 4);
     REQUIRE(parts.decimal == 940656458);
     REQUIRE(parts.decimalPlaces == 9);
     REQUIRE(parts.exponent == -324);
   }
-}
 
-TEST_CASE("FloatParts<float>") {
   SECTION("3.4E+38") {
-    FloatParts<float> parts(3.4E+38f);
+    auto parts = decomposeFloat(3.4E+38f, 6);
     REQUIRE(parts.integral == 3);
     REQUIRE(parts.decimal == 4);
     REQUIRE(parts.decimalPlaces == 1);
@@ -35,7 +33,7 @@ TEST_CASE("FloatParts<float>") {
   }
 
   SECTION("1.17549435e−38") {
-    FloatParts<float> parts(1.17549435e-38f);
+    auto parts = decomposeFloat(1.17549435e-38f, 6);
     REQUIRE(parts.integral == 1);
     REQUIRE(parts.decimal == 175494);
     REQUIRE(parts.decimalPlaces == 6);
