@@ -2,7 +2,6 @@
 // Copyright © 2014-2024, Benoit BLANCHON
 // MIT License
 
-#define ARDUINOJSON_USE_DOUBLE 0
 #define ARDUINOJSON_ENABLE_NAN 1
 #define ARDUINOJSON_ENABLE_INFINITY 1
 
@@ -13,7 +12,9 @@ using namespace ArduinoJson::detail;
 
 void checkFloat(const char* input, float expected) {
   CAPTURE(input);
-  REQUIRE(parseNumber<float>(input) == Approx(expected));
+  auto result = parseNumber(input);
+  REQUIRE(result.type() == NumberType::Float);
+  REQUIRE(result.asFloat() == Approx(expected));
 }
 
 void checkFloatNaN(const char* input) {
@@ -65,23 +66,6 @@ TEST_CASE("parseNumber<float>()") {
         1e+32f);
   }
 
-  SECTION("MantissaTooLongToFit") {
-    checkFloat("0.340282346638528861111111111111", 0.34028234663852886f);
-    checkFloat("34028234663852886.11111111111111", 34028234663852886.0f);
-    checkFloat("34028234.66385288611111111111111", 34028234.663852886f);
-
-    checkFloat("-0.340282346638528861111111111111", -0.34028234663852886f);
-    checkFloat("-34028234663852886.11111111111111", -34028234663852886.0f);
-    checkFloat("-34028234.66385288611111111111111", -34028234.663852886f);
-  }
-
-  SECTION("ExponentTooBig") {
-    checkFloatInf("1e39", false);
-    checkFloatInf("-1e39", true);
-    checkFloatInf("1e255", false);
-    checkFloat("1e-255", 0.0f);
-  }
-
   SECTION("NaN") {
     checkFloatNaN("NaN");
     checkFloatNaN("nan");
@@ -94,8 +78,5 @@ TEST_CASE("parseNumber<float>()") {
     checkFloatInf("inf", false);
     checkFloatInf("+inf", false);
     checkFloatInf("-inf", true);
-
-    checkFloatInf("1e300", false);
-    checkFloatInf("-1e300", true);
   }
 }
