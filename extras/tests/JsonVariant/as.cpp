@@ -203,7 +203,7 @@ TEST_CASE("JsonVariant::as()") {
 
     REQUIRE(variant.as<bool>() == true);
     REQUIRE(variant.as<long>() == 4L);
-    REQUIRE(variant.as<double>() == 4.2);
+    REQUIRE(variant.as<double>() == Approx(4.2));
     REQUIRE(variant.as<const char*>() == "4.2"_s);
     REQUIRE(variant.as<std::string>() == "4.2"_s);
     REQUIRE(variant.as<JsonString>() == "4.2");

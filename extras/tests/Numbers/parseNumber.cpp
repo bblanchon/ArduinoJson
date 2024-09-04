@@ -23,7 +23,7 @@ TEST_CASE("Test unsigned integer overflow") {
   }
 
   REQUIRE(first.type() == NumberType::UnsignedInteger);
-  REQUIRE(second.type() == NumberType::Float);
+  REQUIRE(second.type() == NumberType::Double);
 }
 
 TEST_CASE("Test signed integer overflow") {
@@ -41,11 +41,23 @@ TEST_CASE("Test signed integer overflow") {
   }
 
   REQUIRE(first.type() == NumberType::SignedInteger);
-  REQUIRE(second.type() == NumberType::Float);
+  REQUIRE(second.type() == NumberType::Double);
 }
 
 TEST_CASE("Invalid value") {
   auto result = parseNumber("6a3");
 
   REQUIRE(result.type() == NumberType::Invalid);
+}
+
+TEST_CASE("float") {
+  auto result = parseNumber("3.402823e38");
+
+  REQUIRE(result.type() == NumberType::Float);
+}
+
+TEST_CASE("double") {
+  auto result = parseNumber("1.7976931348623157e308");
+
+  REQUIRE(result.type() == NumberType::Double);
 }

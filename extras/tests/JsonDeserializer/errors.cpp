@@ -6,6 +6,8 @@
 #include <ArduinoJson.h>
 #include <catch.hpp>
 
+#include "Allocators.hpp"
+
 TEST_CASE("deserializeJson() returns IncompleteInput") {
   const char* testCases[] = {
       // strings
@@ -115,6 +117,46 @@ TEST_CASE("deserializeJson() returns NoMemory if string length overflows") {
   SECTION("one above max length should fail") {
     auto err =
         deserializeJson(doc, "\"" + std::string(maxLength + 1, 'a') + "\"");
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+}
+
+TEST_CASE("deserializeJson() returns NoMemory if extension allocation fails") {
+  JsonDocument doc(FailingAllocator::instance());
+
+  SECTION("uint32_t should pass") {
+    auto err = deserializeJson(doc, "4294967295");
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("uint64_t should fail") {
+    auto err = deserializeJson(doc, "18446744073709551615");
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("int32_t should pass") {
+    auto err = deserializeJson(doc, "-2147483648");
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("int64_t should fail") {
+    auto err = deserializeJson(doc, "-9223372036854775808");
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("float should pass") {
+    auto err = deserializeJson(doc, "3.402823e38");
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("double should fail") {
+    auto err = deserializeJson(doc, "1.7976931348623157e308");
+
     REQUIRE(err == DeserializationError::NoMemory);
   }
 }

@@ -155,15 +155,27 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key2"] == -42);
     }
 
-    SECTION("Double") {
+    SECTION("Float") {
       DeserializationError err =
-          deserializeJson(doc, "{\"key1\":12.345,\"key2\":-7E89}");
+          deserializeJson(doc, "{\"key1\":12.345,\"key2\":-7E3}");
       JsonObject obj = doc.as<JsonObject>();
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
-      REQUIRE(obj["key1"] == 12.345);
+      REQUIRE(obj["key1"].as<float>() == Approx(12.345f));
+      REQUIRE(obj["key2"] == -7E3f);
+    }
+
+    SECTION("Double") {
+      DeserializationError err =
+          deserializeJson(doc, "{\"key1\":12.3456789,\"key2\":-7E89}");
+      JsonObject obj = doc.as<JsonObject>();
+
+      REQUIRE(err == DeserializationError::Ok);
+      REQUIRE(doc.is<JsonObject>());
+      REQUIRE(obj.size() == 2);
+      REQUIRE(obj["key1"].as<double>() == Approx(12.3456789));
       REQUIRE(obj["key2"] == -7E89);
     }
 

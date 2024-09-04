@@ -520,16 +520,30 @@ class JsonDeserializer {
     auto number = parseNumber(buffer_);
     switch (number.type()) {
       case NumberType::UnsignedInteger:
-        result.setInteger(number.asUnsignedInteger(), resources_);
-        return DeserializationError::Ok;
+        if (result.setInteger(number.asUnsignedInteger(), resources_))
+          return DeserializationError::Ok;
+        else
+          return DeserializationError::NoMemory;
 
       case NumberType::SignedInteger:
-        result.setInteger(number.asSignedInteger(), resources_);
-        return DeserializationError::Ok;
+        if (result.setInteger(number.asSignedInteger(), resources_))
+          return DeserializationError::Ok;
+        else
+          return DeserializationError::NoMemory;
 
       case NumberType::Float:
-        result.setFloat(number.asFloat(), resources_);
-        return DeserializationError::Ok;
+        if (result.setFloat(number.asFloat(), resources_))
+          return DeserializationError::Ok;
+        else
+          return DeserializationError::NoMemory;
+
+#if ARDUINOJSON_USE_DOUBLE
+      case NumberType::Double:
+        if (result.setFloat(number.asDouble(), resources_))
+          return DeserializationError::Ok;
+        else
+          return DeserializationError::NoMemory;
+#endif
 
       default:
         return DeserializationError::InvalidInput;

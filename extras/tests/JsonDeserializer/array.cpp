@@ -69,14 +69,32 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[1] == 84);
     }
 
-    SECTION("Double") {
+    SECTION("Float") {
       DeserializationError err = deserializeJson(doc, "[4.2,1e2]");
       JsonArray arr = doc.as<JsonArray>();
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
-      REQUIRE(arr[0] == 4.2);
-      REQUIRE(arr[1] == 1e2);
+      REQUIRE(arr[0].as<float>() == Approx(4.2f));
+      REQUIRE(arr[1] == 1e2f);
+      REQUIRE(spy.log() == AllocatorLog{
+                               Allocate(sizeofPool()),
+                               Reallocate(sizeofPool(), sizeofPool(2)),
+                           });
+    }
+
+    SECTION("Double") {
+      DeserializationError err = deserializeJson(doc, "[4.2123456,-7E89]");
+      JsonArray arr = doc.as<JsonArray>();
+
+      REQUIRE(err == DeserializationError::Ok);
+      REQUIRE(2 == arr.size());
+      REQUIRE(arr[0].as<double>() == Approx(4.2123456));
+      REQUIRE(arr[1] == -7E89);
+      REQUIRE(spy.log() == AllocatorLog{
+                               Allocate(sizeofPool()),
+                               Reallocate(sizeofPool(), sizeofPool(4)),
+                           });
     }
 
     SECTION("Unsigned long") {
