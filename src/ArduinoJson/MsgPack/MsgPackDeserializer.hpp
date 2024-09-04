@@ -230,13 +230,16 @@ class MsgPackDeserializer {
 
     if (isSigned) {
       auto truncatedValue = static_cast<JsonInteger>(signedValue);
-      if (truncatedValue == signedValue)
-        variant->setInteger(truncatedValue, resources_);
+      if (truncatedValue == signedValue) {
+        if (!variant->setInteger(truncatedValue, resources_))
+          return DeserializationError::NoMemory;
+      }
       // else set null on overflow
     } else {
       auto truncatedValue = static_cast<JsonUInt>(unsignedValue);
       if (truncatedValue == unsignedValue)
-        variant->setInteger(truncatedValue, resources_);
+        if (!variant->setInteger(truncatedValue, resources_))
+          return DeserializationError::NoMemory;
       // else set null on overflow
     }
 
@@ -270,9 +273,10 @@ class MsgPackDeserializer {
       return err;
 
     fixEndianness(value);
-    variant->setFloat(value, resources_);
-
-    return DeserializationError::Ok;
+    if (variant->setFloat(value, resources_))
+      return DeserializationError::Ok;
+    else
+      return DeserializationError::NoMemory;
   }
 
   template <typename T>

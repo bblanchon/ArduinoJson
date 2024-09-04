@@ -199,3 +199,44 @@ TEST_CASE(
     REQUIRE(err == DeserializationError::NoMemory);
   }
 }
+
+TEST_CASE(
+    "deserializeMsgPack() returns NoMemory if extension allocation fails") {
+  JsonDocument doc(FailingAllocator::instance());
+
+  SECTION("uint32_t should pass") {
+    auto err = deserializeMsgPack(doc, "\xceXXXX");
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("uint64_t should fail") {
+    auto err = deserializeMsgPack(doc, "\xcfXXXXXXXX");
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("int32_t should pass") {
+    auto err = deserializeMsgPack(doc, "\xd2XXXX");
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("int64_t should fail") {
+    auto err = deserializeMsgPack(doc, "\xd3XXXXXXXX");
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+
+  SECTION("float should pass") {
+    auto err = deserializeMsgPack(doc, "\xcaXXXX");
+
+    REQUIRE(err == DeserializationError::Ok);
+  }
+
+  SECTION("double should fail") {
+    auto err = deserializeMsgPack(doc, "\xcbXXXXXXXX");
+
+    REQUIRE(err == DeserializationError::NoMemory);
+  }
+}
