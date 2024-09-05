@@ -43,14 +43,18 @@ class VariantData {
   template <typename TVisitor>
   typename TVisitor::result_type accept(
       TVisitor& visit, const ResourceManager* resources) const {
+#if ARDUINOJSON_USE_EXTENSIONS
+    auto extension = getExtension(resources);
+#else
     (void)resources;  // silence warning
+#endif
     switch (type_) {
       case VariantType::Float:
         return visit.visit(content_.asFloat);
 
 #if ARDUINOJSON_USE_DOUBLE
       case VariantType::Double:
-        return visit.visit(getExtension(resources)->asDouble);
+        return visit.visit(extension->asDouble);
 #endif
 
       case VariantType::Array:
@@ -79,10 +83,10 @@ class VariantData {
 
 #if ARDUINOJSON_USE_LONG_LONG
       case VariantType::Int64:
-        return visit.visit(getExtension(resources)->asInt64);
+        return visit.visit(extension->asInt64);
 
       case VariantType::Uint64:
-        return visit.visit(getExtension(resources)->asUint64);
+        return visit.visit(extension->asUint64);
 #endif
 
       case VariantType::Boolean:
@@ -130,7 +134,11 @@ class VariantData {
   }
 
   bool asBoolean(const ResourceManager* resources) const {
+#if ARDUINOJSON_USE_EXTENSIONS
+    auto extension = getExtension(resources);
+#else
     (void)resources;  // silence warning
+#endif
     switch (type_) {
       case VariantType::Boolean:
         return content_.asBoolean;
@@ -141,14 +149,14 @@ class VariantData {
         return content_.asFloat != 0;
 #if ARDUINOJSON_USE_DOUBLE
       case VariantType::Double:
-        return getExtension(resources)->asDouble != 0;
+        return extension->asDouble != 0;
 #endif
       case VariantType::Null:
         return false;
 #if ARDUINOJSON_USE_LONG_LONG
       case VariantType::Uint64:
       case VariantType::Int64:
-        return getExtension(resources)->asUint64 != 0;
+        return extension->asUint64 != 0;
 #endif
       default:
         return true;
@@ -174,7 +182,11 @@ class VariantData {
   template <typename T>
   T asFloat(const ResourceManager* resources) const {
     static_assert(is_floating_point<T>::value, "T must be a floating point");
+#if ARDUINOJSON_USE_EXTENSIONS
+    auto extension = getExtension(resources);
+#else
     (void)resources;  // silence warning
+#endif
     switch (type_) {
       case VariantType::Boolean:
         return static_cast<T>(content_.asBoolean);
@@ -184,9 +196,9 @@ class VariantData {
         return static_cast<T>(content_.asInt32);
 #if ARDUINOJSON_USE_LONG_LONG
       case VariantType::Uint64:
-        return static_cast<T>(getExtension(resources)->asUint64);
+        return static_cast<T>(extension->asUint64);
       case VariantType::Int64:
-        return static_cast<T>(getExtension(resources)->asInt64);
+        return static_cast<T>(extension->asInt64);
 #endif
       case VariantType::LinkedString:
       case VariantType::OwnedString:
@@ -195,7 +207,7 @@ class VariantData {
         return static_cast<T>(content_.asFloat);
 #if ARDUINOJSON_USE_DOUBLE
       case VariantType::Double:
-        return static_cast<T>(getExtension(resources)->asDouble);
+        return static_cast<T>(extension->asDouble);
 #endif
       default:
         return 0;
@@ -205,7 +217,11 @@ class VariantData {
   template <typename T>
   T asIntegral(const ResourceManager* resources) const {
     static_assert(is_integral<T>::value, "T must be an integral type");
+#if ARDUINOJSON_USE_EXTENSIONS
+    auto extension = getExtension(resources);
+#else
     (void)resources;  // silence warning
+#endif
     switch (type_) {
       case VariantType::Boolean:
         return content_.asBoolean;
@@ -215,9 +231,9 @@ class VariantData {
         return convertNumber<T>(content_.asInt32);
 #if ARDUINOJSON_USE_LONG_LONG
       case VariantType::Uint64:
-        return convertNumber<T>(getExtension(resources)->asUint64);
+        return convertNumber<T>(extension->asUint64);
       case VariantType::Int64:
-        return convertNumber<T>(getExtension(resources)->asInt64);
+        return convertNumber<T>(extension->asInt64);
 #endif
       case VariantType::LinkedString:
         return parseNumber<T>(content_.asLinkedString);
@@ -227,7 +243,7 @@ class VariantData {
         return convertNumber<T>(content_.asFloat);
 #if ARDUINOJSON_USE_DOUBLE
       case VariantType::Double:
-        return convertNumber<T>(getExtension(resources)->asDouble);
+        return convertNumber<T>(extension->asDouble);
 #endif
       default:
         return 0;
@@ -327,7 +343,11 @@ class VariantData {
 
   template <typename T>
   bool isInteger(const ResourceManager* resources) const {
+#if ARDUINOJSON_USE_LONG_LONG
+    auto extension = getExtension(resources);
+#else
     (void)resources;  // silence warning
+#endif
     switch (type_) {
       case VariantType::Uint32:
         return canConvertNumber<T>(content_.asUint32);
@@ -337,10 +357,10 @@ class VariantData {
 
 #if ARDUINOJSON_USE_LONG_LONG
       case VariantType::Uint64:
-        return canConvertNumber<T>(getExtension(resources)->asUint64);
+        return canConvertNumber<T>(extension->asUint64);
 
       case VariantType::Int64:
-        return canConvertNumber<T>(getExtension(resources)->asInt64);
+        return canConvertNumber<T>(extension->asInt64);
 #endif
 
       default:

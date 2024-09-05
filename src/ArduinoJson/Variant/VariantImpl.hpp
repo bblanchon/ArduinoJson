@@ -59,8 +59,9 @@ inline void VariantData::clear(ResourceManager* resources) {
 #if ARDUINOJSON_USE_EXTENSIONS
 inline const VariantExtension* VariantData::getExtension(
     const ResourceManager* resources) const {
-  ARDUINOJSON_ASSERT(type_ & VariantTypeBits::ExtensionBit);
-  return resources->getExtension(content_.asSlotId);
+  return type_ & VariantTypeBits::ExtensionBit
+             ? resources->getExtension(content_.asSlotId)
+             : nullptr;
 }
 #endif
 
