@@ -176,15 +176,6 @@ TEST_CASE("unsigned char[]") {
     }
 #endif
 
-    SECTION("containsKey()") {
-      unsigned char key[] = "hello";
-
-      JsonDocument doc;
-      deserializeJson(doc, "{\"hello\":\"world\"}");
-      JsonObject obj = doc.as<JsonObject>();
-      REQUIRE(true == obj.containsKey(key));
-    }
-
     SECTION("remove()") {
       unsigned char key[] = "hello";
 

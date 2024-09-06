@@ -161,27 +161,30 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
                                      resources_);
   }
 
-  // Returns true if the object contains the specified key.
+  // DEPRECATED: use obj[key].is<T>() instead
   // https://arduinojson.org/v7/api/jsonobject/containskey/
   template <typename TString>
+  ARDUINOJSON_DEPRECATED("use obj[key].is<T>() instead")
   detail::enable_if_t<detail::IsString<TString>::value, bool> containsKey(
       const TString& key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
                                          resources_) != 0;
   }
 
-  // Returns true if the object contains the specified key.
+  // DEPRECATED: use obj["key"].is<T>() instead
   // https://arduinojson.org/v7/api/jsonobject/containskey/
   template <typename TChar>
+  ARDUINOJSON_DEPRECATED("use obj[\"key\"].is<T>() instead")
   detail::enable_if_t<detail::IsString<TChar*>::value, bool> containsKey(
       TChar* key) const {
     return detail::ObjectData::getMember(data_, detail::adaptString(key),
                                          resources_) != 0;
   }
 
-  // Returns true if the object contains the specified key.
+  // DEPRECATED: use obj[key].is<T>() instead
   // https://arduinojson.org/v7/api/jsonobject/containskey/
   template <typename TVariant>
+  ARDUINOJSON_DEPRECATED("use obj[key].is<T>() instead")
   detail::enable_if_t<detail::IsVariant<TVariant>::value, bool> containsKey(
       const TVariant& key) const {
     return containsKey(key.template as<const char*>());

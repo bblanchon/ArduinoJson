@@ -73,10 +73,6 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant["key"_s].set(1));
   }
 
-  SECTION("containsKey()") {
-    CHECK_FALSE(variant.containsKey("hello"));
-  }
-
   SECTION("remove()") {
     variant.remove(0);
     variant.remove("hello");

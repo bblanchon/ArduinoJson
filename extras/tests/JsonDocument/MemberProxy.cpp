@@ -93,25 +93,6 @@ TEST_CASE("MemberProxy::operator==()") {
   }
 }
 
-TEST_CASE("MemberProxy::containsKey()") {
-  JsonDocument doc;
-  MemberProxy mp = doc["hello"];
-
-  SECTION("containsKey(const char*)") {
-    mp["key"] = "value";
-
-    REQUIRE(mp.containsKey("key") == true);
-    REQUIRE(mp.containsKey("key") == true);
-  }
-
-  SECTION("containsKey(std::string)") {
-    mp["key"] = "value";
-
-    REQUIRE(mp.containsKey("key"_s) == true);
-    REQUIRE(mp.containsKey("key"_s) == true);
-  }
-}
-
 TEST_CASE("MemberProxy::operator|()") {
   JsonDocument doc;
 

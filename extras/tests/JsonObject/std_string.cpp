@@ -34,13 +34,6 @@ TEST_CASE("std::string") {
     REQUIRE("value"_s == obj["key"_s]);
   }
 
-  SECTION("containsKey()") {
-    char json[] = "{\"key\":\"value\"}";
-    deserializeJson(doc, json);
-    JsonObject obj = doc.as<JsonObject>();
-    REQUIRE(true == obj.containsKey("key"_s));
-  }
-
   SECTION("remove()") {
     JsonObject obj = doc.to<JsonObject>();
     obj["key"] = "value";

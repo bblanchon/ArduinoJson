@@ -9,12 +9,32 @@ HEAD
 * Reduce the slot size (see table below)
 * Improve message when user forgets third arg of `serializeJson()` et al.
 * Set `ARDUINOJSON_USE_DOUBLE` to `0` by default on 8-bit architectures
+* Deprecate `containsKey()` in favor of `doc["key"].is<T>()`
 
 | Architecture | before   | after    |
 |--------------|----------|----------|
 | 8-bit        | 8 bytes  | 6 bytes  |
 | 32-bit       | 16 bytes | 8 bytes  |
 | 64-bit       | 24 bytes | 16 bytes |
+
+> ### BREAKING CHANGES
+>
+> After being on the death row for years, the `containsKey()` method has finally been deprecated.
+> You should replace `doc.containsKey("key")` with `doc["key"].is<T>()`, which not only checks that the key exists but also that the value is of the expected type.
+>
+> ```cpp
+> // Before
+> if (doc.containsKey("value")) {
+>   int value = doc["value"];
+>   // ...
+> }
+>
+> // After
+> if (doc["value"].is<int>()) {
+>   int value = doc["value"];
+>   // ...
+> }
+> ```
 
 v7.1.0 (2024-06-27)
 ------

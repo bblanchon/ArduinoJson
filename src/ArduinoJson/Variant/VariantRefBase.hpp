@@ -165,20 +165,23 @@ class VariantRefBase : public VariantTag {
   // https://arduinojson.org/v7/api/jsonvariant/subscript/
   ElementProxy<TDerived> operator[](size_t index) const;
 
-  // Returns true if the object contains the specified key.
+  // DEPRECATED: use obj[key].is<T>() instead
   // https://arduinojson.org/v7/api/jsonvariant/containskey/
   template <typename TString>
+  ARDUINOJSON_DEPRECATED("use obj[key].is<T>() instead")
   enable_if_t<IsString<TString>::value, bool> containsKey(
       const TString& key) const;
 
-  // Returns true if the object contains the specified key.
+  // DEPRECATED: use obj["key"].is<T>() instead
   // https://arduinojson.org/v7/api/jsonvariant/containskey/
   template <typename TChar>
+  ARDUINOJSON_DEPRECATED("use obj[\"key\"].is<T>() instead")
   enable_if_t<IsString<TChar*>::value, bool> containsKey(TChar* key) const;
 
-  // Returns true if the object contains the specified key.
+  // DEPRECATED: use obj[key].is<T>() instead
   // https://arduinojson.org/v7/api/jsonvariant/containskey/
   template <typename TVariant>
+  ARDUINOJSON_DEPRECATED("use obj[key].is<T>() instead")
   enable_if_t<IsVariant<TVariant>::value, bool> containsKey(
       const TVariant& key) const;
 
