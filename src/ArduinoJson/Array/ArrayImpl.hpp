@@ -73,7 +73,7 @@ inline bool ArrayData::addValue(T&& value, ResourceManager* resources) {
 
 // Returns the size (in bytes) of an array with n elements.
 constexpr size_t sizeofArray(size_t n) {
-  return n * sizeof(VariantData);
+  return n * ResourceManager::slotSize;
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

@@ -26,6 +26,8 @@ class ResourceManager {
   };
 
  public:
+  constexpr static size_t slotSize = sizeof(SlotData);
+
   ResourceManager(Allocator* allocator = DefaultAllocator::instance())
       : allocator_(allocator), overflowed_(false) {}
 

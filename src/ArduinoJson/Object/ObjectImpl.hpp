@@ -70,7 +70,7 @@ inline VariantData* ObjectData::addMember(TAdaptedString key,
 
 // Returns the size (in bytes) of an object with n members.
 constexpr size_t sizeofObject(size_t n) {
-  return 2 * n * sizeof(VariantData);
+  return 2 * n * ResourceManager::slotSize;
 }
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
