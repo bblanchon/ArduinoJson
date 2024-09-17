@@ -46,6 +46,10 @@ TEST_CASE("serializeJson(JsonVariant)") {
       check("fifty/fifty"_s, "\"fifty/fifty\"");
     }
 
+    SECTION("Don't escape single quote") {
+      check("hello'world"_s, "\"hello'world\"");
+    }
+
     SECTION("Escape backspace") {
       check("hello\bworld"_s, "\"hello\\bworld\"");
     }

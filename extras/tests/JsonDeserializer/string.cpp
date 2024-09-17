@@ -83,6 +83,22 @@ TEST_CASE("Truncated JSON string") {
   }
 }
 
+TEST_CASE("Escape single quote in single quoted string") {
+  JsonDocument doc;
+
+  DeserializationError err = deserializeJson(doc, "'ab\\\'cd'");
+  REQUIRE(err == DeserializationError::Ok);
+  CHECK(doc.as<std::string>() == "ab\'cd");
+}
+
+TEST_CASE("Escape double quote in double quoted string") {
+  JsonDocument doc;
+
+  DeserializationError err = deserializeJson(doc, "'ab\\\"cd'");
+  REQUIRE(err == DeserializationError::Ok);
+  CHECK(doc.as<std::string>() == "ab\"cd");
+}
+
 TEST_CASE("Invalid JSON string") {
   const char* testCases[] = {"'\\u'",     "'\\u000g'", "'\\u000'",
                              "'\\u000G'", "'\\u000/'", "'\\x1234'"};

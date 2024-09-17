@@ -10,6 +10,7 @@ HEAD
 * Improve message when user forgets third arg of `serializeJson()` et al.
 * Set `ARDUINOJSON_USE_DOUBLE` to `0` by default on 8-bit architectures
 * Deprecate `containsKey()` in favor of `doc["key"].is<T>()`
+* Add support for escape sequence `\'` (issue #2124)
 
 | Architecture | before   | after    |
 |--------------|----------|----------|
