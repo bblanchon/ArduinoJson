@@ -1,13 +1,13 @@
 {
   "name": "ArduinoJson",
   "keywords": "json, rest, http, web",
-  "description": "A simple and efficient JSON library for embedded C++. ⭐ 6624 stars on GitHub! Supports serialization, deserialization, MessagePack, streams, filtering, and more. Fully tested and documented.",
+  "description": "A simple and efficient JSON library for embedded C++. ⭐ 6690 stars on GitHub! Supports serialization, deserialization, MessagePack, streams, filtering, and more. Fully tested and documented.",
   "homepage": "https://arduinojson.org/?utm_source=meta&utm_medium=library.json",
   "repository": {
     "type": "git",
     "url": "https://github.com/bblanchon/ArduinoJson.git"
   },
-  "version": "7.1.0",
+  "version": "7.2.0",
   "authors": {
     "name": "Benoit Blanchon",
     "url": "https://blog.benoitblanchon.fr"

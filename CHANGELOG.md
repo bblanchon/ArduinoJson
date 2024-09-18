@@ -1,8 +1,8 @@
 ArduinoJson: change log
 =======================
 
-HEAD
-----
+v7.2.0 (2024-09-18)
+------
 
 * Store object members with two slots: one for the key and one for the value
 * Store 64-bit numbers (`double` and `long long`) in an additional slot
