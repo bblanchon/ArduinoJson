@@ -27,7 +27,7 @@ struct is_convertible {
   static int probe(To);
   static char probe(...);
 
-  static From& from_;
+  static const From& from_;
 
  public:
   static const bool value = sizeof(probe(from_)) == sizeof(int);
