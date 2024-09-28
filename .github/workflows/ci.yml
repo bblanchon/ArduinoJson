@@ -403,7 +403,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Particle CLI
-        run: sudo npm install -g particle-cli particle-usb
+        run: sudo npm install -g particle-cli
       - name: Login to Particle
         run: particle login -t "${{ secrets.PARTICLE_TOKEN }}"
       - name: Compile

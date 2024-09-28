@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install
-        run: npm install -g particle-cli particle-usb
+        run: npm install -g particle-cli
       - name: Checkout
         uses: actions/checkout@v4
       - name: Login
