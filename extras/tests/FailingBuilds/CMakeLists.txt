@@ -2,7 +2,11 @@
 # Copyright © 2014-2024, Benoit BLANCHON
 # MIT License
 
-macro(build_should_fail target)
+macro(add_failing_build source_file)
+	get_filename_component(target ${source_file} NAME_WE)
+
+	add_executable(${target} ${source_file})
+
 	set_target_properties(${target}
 		PROPERTIES
 			EXCLUDE_FROM_ALL TRUE
@@ -20,20 +24,9 @@ macro(build_should_fail target)
 	)
 endmacro()
 
-add_executable(Issue978 Issue978.cpp)
-build_should_fail(Issue978)
-
-add_executable(read_long_long read_long_long.cpp)
-build_should_fail(read_long_long)
-
-add_executable(write_long_long write_long_long.cpp)
-build_should_fail(write_long_long)
-
-add_executable(variant_as_char variant_as_char.cpp)
-build_should_fail(variant_as_char)
-
-add_executable(assign_char assign_char.cpp)
-build_should_fail(assign_char)
-
-add_executable(deserialize_object deserialize_object.cpp)
-build_should_fail(deserialize_object)
+add_failing_build(Issue978.cpp)
+add_failing_build(read_long_long.cpp)
+add_failing_build(write_long_long.cpp)
+add_failing_build(variant_as_char.cpp)
+add_failing_build(assign_char.cpp)
+add_failing_build(deserialize_object.cpp)
