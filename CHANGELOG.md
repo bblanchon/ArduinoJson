@@ -1,6 +1,11 @@
 ArduinoJson: change log
 =======================
 
+HEAD
+----
+
+* Forbid `deserializeJson(JsonArray|JsonObject, ...)` (issue #2135)
+
 v7.2.0 (2024-09-18)
 ------
 

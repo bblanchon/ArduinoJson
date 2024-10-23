@@ -34,3 +34,6 @@ build_should_fail(variant_as_char)
 
 add_executable(assign_char assign_char.cpp)
 build_should_fail(assign_char)
+
+add_executable(deserialize_object deserialize_object.cpp)
+build_should_fail(deserialize_object)

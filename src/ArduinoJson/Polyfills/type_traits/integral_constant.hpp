@@ -13,7 +13,10 @@ struct integral_constant {
   static const T value = v;
 };
 
-typedef integral_constant<bool, true> true_type;
-typedef integral_constant<bool, false> false_type;
+template <bool B>
+using bool_constant = integral_constant<bool, B>;
+
+using true_type = bool_constant<true>;
+using false_type = bool_constant<false>;
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE
