@@ -17,7 +17,7 @@ class JsonObject : public detail::VariantOperators<JsonObject> {
   friend class detail::VariantAttorney;
 
  public:
-  typedef JsonObjectIterator iterator;
+  using iterator = JsonObjectIterator;
 
   // Creates an unbound reference.
   JsonObject() : data_(0), resources_(0) {}

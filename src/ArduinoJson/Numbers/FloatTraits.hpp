@@ -21,12 +21,12 @@ struct FloatTraits {};
 
 template <typename T>
 struct FloatTraits<T, 8 /*64bits*/> {
-  typedef uint64_t mantissa_type;
+  using mantissa_type = uint64_t;
   static const short mantissa_bits = 52;
   static const mantissa_type mantissa_max =
       (mantissa_type(1) << mantissa_bits) - 1;
 
-  typedef int16_t exponent_type;
+  using exponent_type = int16_t;
   static const exponent_type exponent_max = 308;
 
   static pgm_ptr<T> positiveBinaryPowersOfTen() {
@@ -105,12 +105,12 @@ struct FloatTraits<T, 8 /*64bits*/> {
 
 template <typename T>
 struct FloatTraits<T, 4 /*32bits*/> {
-  typedef uint32_t mantissa_type;
+  using mantissa_type = uint32_t;
   static const short mantissa_bits = 23;
   static const mantissa_type mantissa_max =
       (mantissa_type(1) << mantissa_bits) - 1;
 
-  typedef int8_t exponent_type;
+  using exponent_type = int8_t;
   static const exponent_type exponent_max = 38;
 
   static pgm_ptr<T> positiveBinaryPowersOfTen() {

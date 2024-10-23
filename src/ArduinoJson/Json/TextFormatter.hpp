@@ -105,7 +105,7 @@ class TextFormatter {
 
   template <typename T>
   enable_if_t<is_signed<T>::value> writeInteger(T value) {
-    typedef make_unsigned_t<T> unsigned_type;
+    using unsigned_type = make_unsigned_t<T>;
     unsigned_type unsigned_value;
     if (value < 0) {
       writeRaw('-');

@@ -25,7 +25,7 @@ class JsonStringAdapter : public SizedRamString {
 
 template <>
 struct StringAdapter<JsonString> {
-  typedef JsonStringAdapter AdaptedString;
+  using AdaptedString = JsonStringAdapter;
 
   static AdaptedString adapt(const JsonString& s) {
     return AdaptedString(s);

@@ -17,7 +17,7 @@ class JsonArray : public detail::VariantOperators<JsonArray> {
   friend class detail::VariantAttorney;
 
  public:
-  typedef JsonArrayIterator iterator;
+  using iterator = JsonArrayIterator;
 
   // Constructs an unbound reference.
   JsonArray() : data_(0), resources_(0) {}

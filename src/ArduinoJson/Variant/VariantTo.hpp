@@ -20,15 +20,15 @@ struct VariantTo {};
 
 template <>
 struct VariantTo<JsonArray> {
-  typedef JsonArray type;
+  using type = JsonArray;
 };
 template <>
 struct VariantTo<JsonObject> {
-  typedef JsonObject type;
+  using type = JsonObject;
 };
 template <>
 struct VariantTo<JsonVariant> {
-  typedef JsonVariant type;
+  using type = JsonVariant;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

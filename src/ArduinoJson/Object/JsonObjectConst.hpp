@@ -16,7 +16,7 @@ class JsonObjectConst : public detail::VariantOperators<JsonObjectConst> {
   friend class detail::VariantAttorney;
 
  public:
-  typedef JsonObjectConstIterator iterator;
+  using iterator = JsonObjectConstIterator;
 
   // Creates an unbound reference.
   JsonObjectConst() : data_(0), resources_(0) {}

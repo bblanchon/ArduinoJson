@@ -13,7 +13,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename TWriter>
 class PrettyJsonSerializer : public JsonSerializer<TWriter> {
-  typedef JsonSerializer<TWriter> base;
+  using base = JsonSerializer<TWriter>;
 
  public:
   PrettyJsonSerializer(TWriter writer, const ResourceManager* resources)

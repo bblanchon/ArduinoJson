@@ -10,12 +10,12 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <bool Condition, class TrueType, class FalseType>
 struct conditional {
-  typedef TrueType type;
+  using type = TrueType;
 };
 
 template <class TrueType, class FalseType>
 struct conditional<false, TrueType, FalseType> {
-  typedef FalseType type;
+  using type = FalseType;
 };
 
 template <bool Condition, class TrueType, class FalseType>

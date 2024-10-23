@@ -7,7 +7,7 @@
 
 #include "Literals.hpp"
 
-typedef ArduinoJson::detail::ElementProxy<JsonDocument&> ElementProxy;
+using ElementProxy = ArduinoJson::detail::ElementProxy<JsonDocument&>;
 
 TEST_CASE("ElementProxy::add()") {
   JsonDocument doc;

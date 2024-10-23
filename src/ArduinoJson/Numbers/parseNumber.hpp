@@ -103,9 +103,9 @@ class Number {
 };
 
 inline Number parseNumber(const char* s) {
-  typedef FloatTraits<JsonFloat> traits;
-  typedef largest_type<traits::mantissa_type, JsonUInt> mantissa_t;
-  typedef traits::exponent_type exponent_t;
+  using traits = FloatTraits<JsonFloat>;
+  using mantissa_t = largest_type<traits::mantissa_type, JsonUInt>;
+  using exponent_t = traits::exponent_type;
 
   ARDUINOJSON_ASSERT(s != 0);
 

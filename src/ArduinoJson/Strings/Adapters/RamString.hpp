@@ -63,7 +63,7 @@ class ZeroTerminatedRamString {
 
 template <typename TChar>
 struct StringAdapter<TChar*, enable_if_t<IsChar<TChar>::value>> {
-  typedef ZeroTerminatedRamString AdaptedString;
+  using AdaptedString = ZeroTerminatedRamString;
 
   static AdaptedString adapt(const TChar* p) {
     return AdaptedString(reinterpret_cast<const char*>(p));
@@ -72,7 +72,7 @@ struct StringAdapter<TChar*, enable_if_t<IsChar<TChar>::value>> {
 
 template <typename TChar, size_t N>
 struct StringAdapter<TChar[N], enable_if_t<IsChar<TChar>::value>> {
-  typedef ZeroTerminatedRamString AdaptedString;
+  using AdaptedString = ZeroTerminatedRamString;
 
   static AdaptedString adapt(const TChar* p) {
     return AdaptedString(reinterpret_cast<const char*>(p));
@@ -90,7 +90,7 @@ class StaticStringAdapter : public ZeroTerminatedRamString {
 
 template <>
 struct StringAdapter<const char*, void> {
-  typedef StaticStringAdapter AdaptedString;
+  using AdaptedString = StaticStringAdapter;
 
   static AdaptedString adapt(const char* p) {
     return AdaptedString(p);
@@ -132,7 +132,7 @@ class SizedRamString {
 
 template <typename TChar>
 struct SizedStringAdapter<TChar*, enable_if_t<IsChar<TChar>::value>> {
-  typedef SizedRamString AdaptedString;
+  using AdaptedString = SizedRamString;
 
   static AdaptedString adapt(const TChar* p, size_t n) {
     return AdaptedString(reinterpret_cast<const char*>(p), n);

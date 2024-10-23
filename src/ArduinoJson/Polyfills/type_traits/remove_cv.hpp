@@ -10,19 +10,19 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct remove_cv {
-  typedef T type;
+  using type = T;
 };
 template <typename T>
 struct remove_cv<const T> {
-  typedef T type;
+  using type = T;
 };
 template <typename T>
 struct remove_cv<volatile T> {
-  typedef T type;
+  using type = T;
 };
 template <typename T>
 struct remove_cv<const volatile T> {
-  typedef T type;
+  using type = T;
 };
 
 template <typename T>

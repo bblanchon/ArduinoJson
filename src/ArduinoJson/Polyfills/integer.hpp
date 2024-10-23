@@ -15,17 +15,17 @@ struct uint_;
 
 template <>
 struct uint_<8> {
-  typedef uint8_t type;
+  using type = uint8_t;
 };
 
 template <>
 struct uint_<16> {
-  typedef uint16_t type;
+  using type = uint16_t;
 };
 
 template <>
 struct uint_<32> {
-  typedef uint32_t type;
+  using type = uint32_t;
 };
 
 template <int Bits>

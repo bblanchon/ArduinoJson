@@ -14,8 +14,8 @@
 using ArduinoJson::detail::sizeofArray;
 using ArduinoJson::detail::sizeofObject;
 
-typedef ArduinoJson::detail::MemberProxy<JsonDocument&, const char*>
-    MemberProxy;
+using MemberProxy =
+    ArduinoJson::detail::MemberProxy<JsonDocument&, const char*>;
 
 TEST_CASE("MemberProxy::add()") {
   JsonDocument doc;

@@ -10,7 +10,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename T>
 struct type_identity {
-  typedef T type;
+  using type = T;
 };
 
 ARDUINOJSON_END_PRIVATE_NAMESPACE

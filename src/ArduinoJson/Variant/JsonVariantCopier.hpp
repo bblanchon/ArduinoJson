@@ -11,7 +11,7 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 class JsonVariantCopier {
  public:
-  typedef bool result_type;
+  using result_type = bool;
 
   JsonVariantCopier(JsonVariant dst) : dst_(dst) {}
 

@@ -19,7 +19,7 @@ class JsonArrayConst : public detail::VariantOperators<JsonArrayConst> {
   friend class detail::VariantAttorney;
 
  public:
-  typedef JsonArrayConstIterator iterator;
+  using iterator = JsonArrayConstIterator;
 
   // Returns an iterator to the first element of the array.
   // https://arduinojson.org/v7/api/jsonarrayconst/begin/

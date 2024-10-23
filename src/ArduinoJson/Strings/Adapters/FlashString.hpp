@@ -74,7 +74,7 @@ class FlashString {
 
 template <>
 struct StringAdapter<const __FlashStringHelper*, void> {
-  typedef FlashString AdaptedString;
+  using AdaptedString = FlashString;
 
   static AdaptedString adapt(const __FlashStringHelper* s) {
     return AdaptedString(s, s ? strlen_P(reinterpret_cast<const char*>(s)) : 0);
@@ -83,7 +83,7 @@ struct StringAdapter<const __FlashStringHelper*, void> {
 
 template <>
 struct SizedStringAdapter<const __FlashStringHelper*, void> {
-  typedef FlashString AdaptedString;
+  using AdaptedString = FlashString;
 
   static AdaptedString adapt(const __FlashStringHelper* s, size_t n) {
     return AdaptedString(s, n);

@@ -10,9 +10,9 @@
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 #if ARDUINOJSON_USE_DOUBLE
-typedef double JsonFloat;
+using JsonFloat = double;
 #else
-typedef float JsonFloat;
+using JsonFloat = float;
 #endif
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE

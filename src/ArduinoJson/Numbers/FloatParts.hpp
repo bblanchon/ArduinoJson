@@ -20,7 +20,7 @@ struct FloatParts {
 
 template <typename TFloat>
 inline int16_t normalize(TFloat& value) {
-  typedef FloatTraits<TFloat> traits;
+  using traits = FloatTraits<TFloat>;
   int16_t powersOf10 = 0;
 
   int8_t index = sizeof(TFloat) == 8 ? 8 : 5;

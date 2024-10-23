@@ -12,11 +12,11 @@
 ARDUINOJSON_BEGIN_PUBLIC_NAMESPACE
 
 #if ARDUINOJSON_USE_LONG_LONG
-typedef int64_t JsonInteger;
-typedef uint64_t JsonUInt;
+using JsonInteger = int64_t;
+using JsonUInt = uint64_t;
 #else
-typedef long JsonInteger;
-typedef unsigned long JsonUInt;
+using JsonInteger = long;
+using JsonUInt = unsigned long;
 #endif
 
 ARDUINOJSON_END_PUBLIC_NAMESPACE
