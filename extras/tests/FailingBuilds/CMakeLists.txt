@@ -16,7 +16,7 @@ macro(build_should_fail target)
 	set_tests_properties(${target}
 		PROPERTIES
 			WILL_FAIL TRUE
-			LABELS "WillFail;Catch"
+			LABELS "WillFail"
 	)
 endmacro()
 

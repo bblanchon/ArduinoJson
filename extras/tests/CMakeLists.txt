@@ -5,15 +5,18 @@
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(catch)
+link_libraries(ArduinoJson)
 
-link_libraries(ArduinoJson catch)
+# Failing builds should only link with ArduinoJson, not catch
+add_subdirectory(FailingBuilds)
+
+add_subdirectory(catch)
+link_libraries(catch)
 
 include_directories(Helpers)
 add_subdirectory(Cpp17)
 add_subdirectory(Cpp20)
 add_subdirectory(Deprecated)
-add_subdirectory(FailingBuilds)
 add_subdirectory(IntegrationTests)
 add_subdirectory(JsonArray)
 add_subdirectory(JsonArrayConst)
