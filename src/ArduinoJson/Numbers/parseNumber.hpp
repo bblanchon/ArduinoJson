@@ -196,14 +196,19 @@ inline Number parseNumber(const char* s) {
       s++;
     }
 
+    // Largest power of ten the binary table can apply to the mantissa; beyond
+    // this the result saturates to infinity or zero.
+    const int exponent_limit =
+        (1 << traits::positiveBinaryPowersOfTen().size()) - 1;
+
     while (isdigit(*s)) {
       exponent = exponent * 10 + (*s - '0');
-      if (exponent + exponent_offset > traits::exponent_max) {
-        if (negative_exponent)
-          return Number(is_negative ? -0.0f : 0.0f);
-        else
-          return Number(is_negative ? -traits::inf() : traits::inf());
-      }
+      int effective_exponent =
+          exponent_offset + (negative_exponent ? -exponent : exponent);
+      if (effective_exponent > exponent_limit)
+        return Number(is_negative ? -traits::inf() : traits::inf());
+      if (effective_exponent < -exponent_limit)
+        return Number(is_negative ? -0.0f : 0.0f);
       s++;
     }
     if (negative_exponent)

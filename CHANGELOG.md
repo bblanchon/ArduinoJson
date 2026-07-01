@@ -8,6 +8,8 @@ HEAD
   Version 7.3 introduced a new way to detect string literals, but it fails in some edge cases.
   I could not find a way to fix it, so I chose to remove the optimization rather than keep it broken.
 * Replace the "extension slots" mechanism with a memory pool dedicated to 8-byte values.
+* Fix `parseNumber()` returning zero for a finite value written with many
+  digits and a negative exponent (e.g. `1` followed by 300 zeros and `e-30`)
 
 > ### BREAKING CHANGES
 >

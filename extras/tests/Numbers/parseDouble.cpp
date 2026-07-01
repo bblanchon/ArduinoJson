@@ -9,6 +9,8 @@
 #include <ArduinoJson.hpp>
 #include <catch.hpp>
 
+#include <string>
+
 using namespace ArduinoJson::detail;
 
 void checkDouble(const char* input, double expected) {
@@ -92,6 +94,15 @@ TEST_CASE("parseNumber<double>()") {
   SECTION("NaN") {
     checkDoubleNaN("NaN");
     checkDoubleNaN("nan");
+  }
+
+  SECTION("Large magnitude reduced by a negative exponent") {
+    // "1" followed by 300 zeros is 1e300; "e-30" scales it down to 1e270,
+    // which is a finite double and must not collapse to zero.
+    checkDouble((std::string("1") + std::string(300, '0') + "e-30").c_str(),
+                1e270);
+    checkDouble((std::string("-1") + std::string(300, '0') + "e-30").c_str(),
+                -1e270);
   }
 
   SECTION("Overflow exponent with decimal part") {  // Issue #2220
