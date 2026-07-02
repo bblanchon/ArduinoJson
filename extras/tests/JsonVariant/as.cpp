@@ -264,6 +264,18 @@ TEST_CASE("JsonVariant::as()") {
     REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
   }
 
+  SECTION("as<MsgPackExtension>() with truncated ext header") {
+    // ext 8/16/32 headers whose size bytes run past the buffer
+    REQUIRE(variant.set(serialized("\xc7"_s)));
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
+
+    REQUIRE(variant.set(serialized("\xc8"_s)));
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
+
+    REQUIRE(variant.set(serialized("\xc9"_s)));
+    REQUIRE(variant.as<MsgPackExtension>().data() == nullptr);
+  }
+
   SECTION("to<JsonObject>()") {
     JsonObject obj = variant.to<JsonObject>();
     obj["key"] = "value";

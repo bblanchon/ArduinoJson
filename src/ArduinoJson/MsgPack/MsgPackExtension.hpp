@@ -104,6 +104,8 @@ struct Converter<MsgPackExtension> : private detail::VariantAttorney {
 
     if (code >= 0xc7 && code <= 0xc9) {
       uint8_t sizeBytes = uint8_t(1 << (code - 0xc7));
+      if (rawstr.size() < size_t(1) + sizeBytes)
+        return {};
       for (uint8_t i = 0; i < sizeBytes; i++)
         payloadSize = (payloadSize << 8) | p[1 + i];
       headerSize = uint8_t(2 + sizeBytes);
