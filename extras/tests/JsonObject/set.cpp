@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -16,7 +16,7 @@ TEST_CASE("JsonObject::set()") {
   JsonObject obj1 = doc1.to<JsonObject>();
   JsonObject obj2 = doc2.to<JsonObject>();
 
-  SECTION("copy key and string value") {
+  SUBCASE("copy key and string value") {
     obj1["hello"] = "world";
     spy.clearLog();
 
@@ -31,7 +31,7 @@ TEST_CASE("JsonObject::set()") {
                          });
   }
 
-  SECTION("copy string from deserializeJson()") {
+  SUBCASE("copy string from deserializeJson()") {
     deserializeJson(doc1, "{'hello':'world'}");
     spy.clearLog();
 
@@ -46,7 +46,7 @@ TEST_CASE("JsonObject::set()") {
                          });
   }
 
-  SECTION("copy string from deserializeMsgPack()") {
+  SUBCASE("copy string from deserializeMsgPack()") {
     deserializeMsgPack(doc1, "\x81\xA5hello\xA5world");
     spy.clearLog();
 
@@ -61,7 +61,7 @@ TEST_CASE("JsonObject::set()") {
                          });
   }
 
-  SECTION("should work with JsonObjectConst") {
+  SUBCASE("should work with JsonObjectConst") {
     obj1["hello"] = "world";
 
     obj2.set(static_cast<JsonObjectConst>(obj1));
@@ -69,7 +69,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(obj2["hello"] == "world"_s);
   }
 
-  SECTION("copy fails in the middle of an object") {
+  SUBCASE("copy fails in the middle of an object") {
     TimebombAllocator timebomb(2);
     JsonDocument doc3(&timebomb);
     JsonObject obj3 = doc3.to<JsonObject>();
@@ -83,7 +83,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(doc3.as<std::string>() == "{\"alpha\":1}");
   }
 
-  SECTION("copy fails in the middle of an array") {
+  SUBCASE("copy fails in the middle of an array") {
     TimebombAllocator timebomb(2);
     JsonDocument doc3(&timebomb);
     JsonObject obj3 = doc3.to<JsonObject>();
@@ -96,7 +96,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(doc3.as<std::string>() == "{\"hello\":[]}");
   }
 
-  SECTION("destination is null") {
+  SUBCASE("destination is null") {
     JsonObject null;
     obj1["hello"] = "world";
 
@@ -105,7 +105,7 @@ TEST_CASE("JsonObject::set()") {
     REQUIRE(success == false);
   }
 
-  SECTION("source is null") {
+  SUBCASE("source is null") {
     JsonObject null;
     obj1["hello"] = "world";
 

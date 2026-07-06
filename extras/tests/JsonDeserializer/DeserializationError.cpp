@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <sstream>
 
@@ -30,7 +30,7 @@ void testBoolification(DeserializationError error, bool expected) {
   testBoolification(DeserializationError::symbol, expected)
 
 TEST_CASE("DeserializationError") {
-  SECTION("c_str()") {
+  SUBCASE("c_str()") {
     TEST_STRINGIFICATION(Ok);
     TEST_STRINGIFICATION(EmptyInput);
     TEST_STRINGIFICATION(IncompleteInput);
@@ -39,7 +39,7 @@ TEST_CASE("DeserializationError") {
     TEST_STRINGIFICATION(TooDeep);
   }
 
-  SECTION("as boolean") {
+  SUBCASE("as boolean") {
     TEST_BOOLIFICATION(Ok, false);
     TEST_BOOLIFICATION(EmptyInput, true);
     TEST_BOOLIFICATION(IncompleteInput, true);
@@ -48,74 +48,74 @@ TEST_CASE("DeserializationError") {
     TEST_BOOLIFICATION(TooDeep, true);
   }
 
-  SECTION("ostream DeserializationError") {
+  SUBCASE("ostream DeserializationError") {
     std::stringstream s;
     s << DeserializationError(DeserializationError::InvalidInput);
     REQUIRE(s.str() == "InvalidInput");
   }
 
-  SECTION("ostream DeserializationError::Code") {
+  SUBCASE("ostream DeserializationError::Code") {
     std::stringstream s;
     s << DeserializationError::InvalidInput;
     REQUIRE(s.str() == "InvalidInput");
   }
 
-  SECTION("switch") {
+  SUBCASE("switch") {
     DeserializationError err = DeserializationError::InvalidInput;
     switch (err.code()) {
       case DeserializationError::InvalidInput:
-        SUCCEED();
+        // SUCCEED();
         break;
       default:
-        FAIL();
+        FAIL("Wrong case");
         break;
     }
   }
 
-  SECTION("Use in a condition") {
+  SUBCASE("Use in a condition") {
     DeserializationError invalidInput(DeserializationError::InvalidInput);
     DeserializationError ok(DeserializationError::Ok);
 
-    SECTION("if (!err)") {
+    SUBCASE("if (!err)") {
       if (!invalidInput)
-        FAIL();
+        FAIL("Error should evaluate to true");
     }
 
-    SECTION("if (err)") {
+    SUBCASE("if (err)") {
       if (ok)
-        FAIL();
+        FAIL("Ok should evaluate to false");
     }
   }
 
-  SECTION("Comparisons") {
+  SUBCASE("Comparisons") {
     DeserializationError invalidInput(DeserializationError::InvalidInput);
     DeserializationError ok(DeserializationError::Ok);
 
-    SECTION("DeserializationError == Code") {
+    SUBCASE("DeserializationError == Code") {
       REQUIRE(invalidInput == DeserializationError::InvalidInput);
       REQUIRE(ok == DeserializationError::Ok);
     }
 
-    SECTION("Code == DeserializationError") {
+    SUBCASE("Code == DeserializationError") {
       REQUIRE(DeserializationError::InvalidInput == invalidInput);
       REQUIRE(DeserializationError::Ok == ok);
     }
 
-    SECTION("DeserializationError != Code") {
+    SUBCASE("DeserializationError != Code") {
       REQUIRE(invalidInput != DeserializationError::Ok);
       REQUIRE(ok != DeserializationError::InvalidInput);
     }
 
-    SECTION("Code != DeserializationError") {
+    SUBCASE("Code != DeserializationError") {
       REQUIRE(DeserializationError::Ok != invalidInput);
       REQUIRE(DeserializationError::InvalidInput != ok);
     }
 
-    SECTION("DeserializationError == DeserializationError") {
+    SUBCASE("DeserializationError == DeserializationError") {
       REQUIRE_FALSE(invalidInput == ok);
     }
 
-    SECTION("DeserializationError != DeserializationError") {
+    SUBCASE("DeserializationError != DeserializationError") {
       REQUIRE(invalidInput != ok);
     }
   }

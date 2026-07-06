@@ -4,7 +4,7 @@
 
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 #include <string>
 
 #include "Allocators.hpp"
@@ -32,7 +32,7 @@ TEST_CASE("deserializeJson(JsonDocument&)") {
 }
 
 TEST_CASE("deserializeJson(JsonVariant)") {
-  SECTION("variant is bound") {
+  SUBCASE("variant is bound") {
     SpyingAllocator spy;
     JsonDocument doc(&spy);
     doc.add("hello"_s);
@@ -49,7 +49,7 @@ TEST_CASE("deserializeJson(JsonVariant)") {
                          });
   }
 
-  SECTION("variant is unbound") {
+  SUBCASE("variant is unbound") {
     JsonVariant variant;
 
     auto err = deserializeJson(variant, "[42]");
@@ -64,7 +64,7 @@ TEST_CASE("deserializeJson(ElementProxy)") {
   doc.add("hello"_s);
   spy.clearLog();
 
-  SECTION("element already exists") {
+  SUBCASE("element already exists") {
     auto err = deserializeJson(doc[0], "[42]");
 
     REQUIRE(err == DeserializationError::Ok);
@@ -74,7 +74,7 @@ TEST_CASE("deserializeJson(ElementProxy)") {
                          });
   }
 
-  SECTION("element must be created") {
+  SUBCASE("element must be created") {
     auto err = deserializeJson(doc[1], "[42]");
 
     REQUIRE(err == DeserializationError::Ok);
@@ -89,7 +89,7 @@ TEST_CASE("deserializeJson(MemberProxy)") {
   doc["hello"_s] = "world"_s;
   spy.clearLog();
 
-  SECTION("member already exists") {
+  SUBCASE("member already exists") {
     auto err = deserializeJson(doc["hello"], "[42]");
 
     REQUIRE(err == DeserializationError::Ok);
@@ -99,7 +99,7 @@ TEST_CASE("deserializeJson(MemberProxy)") {
                          });
   }
 
-  SECTION("member must be created exists") {
+  SUBCASE("member must be created exists") {
     auto err = deserializeJson(doc["value"], "[42]");
 
     REQUIRE(err == DeserializationError::Ok);

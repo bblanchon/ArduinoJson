@@ -2,7 +2,9 @@
 // Copyright © 2014-2025, Benoit BLANCHON
 // MIT License
 
-#include <catch.hpp>
+#include <doctest.h>
+
+#include <string>
 
 #include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/Writers/StaticStringWriter.hpp>
@@ -19,39 +21,39 @@ void check(const char* input, std::string expected) {
 }
 
 TEST_CASE("TextFormatter::writeString()") {
-  SECTION("EmptyString") {
+  SUBCASE("EmptyString") {
     check("", "\"\"");
   }
 
-  SECTION("QuotationMark") {
+  SUBCASE("QuotationMark") {
     check("\"", "\"\\\"\"");
   }
 
-  SECTION("ReverseSolidus") {
+  SUBCASE("ReverseSolidus") {
     check("\\", "\"\\\\\"");
   }
 
-  SECTION("Solidus") {
+  SUBCASE("Solidus") {
     check("/", "\"/\"");  // but the JSON format allows \/
   }
 
-  SECTION("Backspace") {
+  SUBCASE("Backspace") {
     check("\b", "\"\\b\"");
   }
 
-  SECTION("Formfeed") {
+  SUBCASE("Formfeed") {
     check("\f", "\"\\f\"");
   }
 
-  SECTION("Newline") {
+  SUBCASE("Newline") {
     check("\n", "\"\\n\"");
   }
 
-  SECTION("CarriageReturn") {
+  SUBCASE("CarriageReturn") {
     check("\r", "\"\\r\"");
   }
 
-  SECTION("HorizontalTab") {
+  SUBCASE("HorizontalTab") {
     check("\t", "\"\\t\"");
   }
 }

@@ -7,7 +7,7 @@
 
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Issue1707") {
   JsonDocument doc;

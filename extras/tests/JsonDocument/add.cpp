@@ -6,7 +6,7 @@
 #define ARDUINOJSON_ENABLE_PROGMEM 1
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -17,7 +17,7 @@ TEST_CASE("JsonDocument::add(T)") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
 
-  SECTION("integer") {
+  SUBCASE("integer") {
     doc.add(42);
 
     REQUIRE(doc.as<std::string>() == "[42]");
@@ -26,7 +26,7 @@ TEST_CASE("JsonDocument::add(T)") {
                          });
   }
 
-  SECTION("string literal") {
+  SUBCASE("string literal") {
     doc.add("hello");
 
     REQUIRE(doc.as<std::string>() == "[\"hello\"]");
@@ -36,7 +36,7 @@ TEST_CASE("JsonDocument::add(T)") {
                          });
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     const char* value = "hello";
     doc.add(value);
 
@@ -47,7 +47,7 @@ TEST_CASE("JsonDocument::add(T)") {
                          });
   }
 
-  SECTION("std::string") {
+  SUBCASE("std::string") {
     doc.add("example"_s);
     doc.add("example"_s);
 
@@ -58,7 +58,7 @@ TEST_CASE("JsonDocument::add(T)") {
                          });
   }
 
-  SECTION("char*") {
+  SUBCASE("char*") {
     char value[] = "example";
     doc.add(value);
     doc.add(value);
@@ -70,7 +70,7 @@ TEST_CASE("JsonDocument::add(T)") {
                          });
   }
 
-  SECTION("Arduino String") {
+  SUBCASE("Arduino String") {
     doc.add(String("example"));
     doc.add(String("example"));
 
@@ -81,7 +81,7 @@ TEST_CASE("JsonDocument::add(T)") {
                          });
   }
 
-  SECTION("Flash string") {
+  SUBCASE("Flash string") {
     doc.add(F("example"));
     doc.add(F("example"));
 
@@ -93,7 +93,7 @@ TEST_CASE("JsonDocument::add(T)") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("VLA") {
+  SUBCASE("VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "example");
@@ -114,14 +114,14 @@ TEST_CASE("JsonDocument::add(T)") {
 TEST_CASE("JsonDocument::add<T>()") {
   JsonDocument doc;
 
-  SECTION("JsonArray") {
+  SUBCASE("JsonArray") {
     JsonArray array = doc.add<JsonArray>();
     array.add(1);
     array.add(2);
     REQUIRE(doc.as<std::string>() == "[[1,2]]");
   }
 
-  SECTION("JsonVariant") {
+  SUBCASE("JsonVariant") {
     JsonVariant variant = doc.add<JsonVariant>();
     variant.set(42);
     REQUIRE(doc.as<std::string>() == "[42]");
@@ -136,7 +136,7 @@ TEST_CASE("JsonObject::add(JsonObject) ") {
   SpyingAllocator spy(&allocator);
   JsonDocument doc2(&spy);
 
-  SECTION("success") {
+  SUBCASE("success") {
     bool result = doc2.add(doc1.as<JsonObject>());
 
     REQUIRE(result == true);
@@ -148,7 +148,7 @@ TEST_CASE("JsonObject::add(JsonObject) ") {
                          });
   }
 
-  SECTION("partial failure") {  // issue #2081
+  SUBCASE("partial failure") {  // issue #2081
     allocator.setCountdown(2);
 
     bool result = doc2.add(doc1.as<JsonObject>());
@@ -163,7 +163,7 @@ TEST_CASE("JsonObject::add(JsonObject) ") {
                          });
   }
 
-  SECTION("complete failure") {
+  SUBCASE("complete failure") {
     allocator.setCountdown(0);
 
     bool result = doc2.add(doc1.as<JsonObject>());

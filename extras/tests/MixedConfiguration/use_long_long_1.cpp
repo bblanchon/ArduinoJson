@@ -1,7 +1,7 @@
 #define ARDUINOJSON_USE_LONG_LONG 1
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 1") {
   JsonDocument doc;

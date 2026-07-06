@@ -1,6 +1,6 @@
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 #include <string>
 
 TEST_CASE("C++20 smoke test") {

@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <string>
 
@@ -12,26 +12,26 @@
 TEST_CASE("JsonDocument::createNestedArray()") {
   JsonDocument doc;
 
-  SECTION("createNestedArray()") {
+  SUBCASE("createNestedArray()") {
     JsonArray array = doc.createNestedArray();
     array.add(42);
     REQUIRE(doc.as<std::string>() == "[[42]]");
   }
 
-  SECTION("createNestedArray(const char*)") {
+  SUBCASE("createNestedArray(const char*)") {
     JsonArray array = doc.createNestedArray("key");
     array.add(42);
     REQUIRE(doc.as<std::string>() == "{\"key\":[42]}");
   }
 
-  SECTION("createNestedArray(std::string)") {
+  SUBCASE("createNestedArray(std::string)") {
     JsonArray array = doc.createNestedArray("key"_s);
     array.add(42);
     REQUIRE(doc.as<std::string>() == "{\"key\":[42]}");
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("createNestedArray(VLA)") {
+  SUBCASE("createNestedArray(VLA)") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "key");
@@ -54,20 +54,20 @@ TEST_CASE("JsonObject::createNestedArray()") {
   JsonDocument doc;
   JsonObject object = doc.to<JsonObject>();
 
-  SECTION("createNestedArray(const char*)") {
+  SUBCASE("createNestedArray(const char*)") {
     JsonArray array = object.createNestedArray("key");
     array.add(42);
     REQUIRE(doc.as<std::string>() == "{\"key\":[42]}");
   }
 
-  SECTION("createNestedArray(std::string)") {
+  SUBCASE("createNestedArray(std::string)") {
     JsonArray array = object.createNestedArray("key"_s);
     array.add(42);
     REQUIRE(doc.as<std::string>() == "{\"key\":[42]}");
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("createNestedArray(VLA)") {
+  SUBCASE("createNestedArray(VLA)") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "key");
@@ -82,26 +82,26 @@ TEST_CASE("JsonVariant::createNestedArray()") {
   JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("createNestedArray()") {
+  SUBCASE("createNestedArray()") {
     JsonArray array = variant.createNestedArray();
     array.add(42);
     REQUIRE(doc.as<std::string>() == "[[42]]");
   }
 
-  SECTION("createNestedArray(const char*)") {
+  SUBCASE("createNestedArray(const char*)") {
     JsonArray array = variant.createNestedArray("key");
     array.add(42);
     REQUIRE(doc.as<std::string>() == "{\"key\":[42]}");
   }
 
-  SECTION("createNestedArray(std::string)") {
+  SUBCASE("createNestedArray(std::string)") {
     JsonArray array = variant.createNestedArray("key"_s);
     array.add(42);
     REQUIRE(doc.as<std::string>() == "{\"key\":[42]}");
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("createNestedArray(VLA)") {
+  SUBCASE("createNestedArray(VLA)") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "key");

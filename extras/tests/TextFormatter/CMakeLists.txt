@@ -14,5 +14,5 @@ add_test(TextFormatter TextFormatterTests)
 
 set_tests_properties(TextFormatter
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

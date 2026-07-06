@@ -3,12 +3,12 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Compare JsonArray with JsonArray") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -29,7 +29,7 @@ TEST_CASE("Compare JsonArray with JsonArray") {
     CHECK_FALSE(unbound < array);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -42,7 +42,7 @@ TEST_CASE("Compare JsonArray with JsonArray") {
     CHECK_FALSE(array < array);
   }
 
-  SECTION("Compare with identical array") {
+  SUBCASE("Compare with identical array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello");
@@ -61,7 +61,7 @@ TEST_CASE("Compare JsonArray with JsonArray") {
     CHECK_FALSE(array1 < array2);
   }
 
-  SECTION("Compare with different array") {
+  SUBCASE("Compare with different array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello1");
@@ -84,7 +84,7 @@ TEST_CASE("Compare JsonArray with JsonArray") {
 TEST_CASE("Compare JsonArray with JsonVariant") {
   JsonDocument doc;
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -106,7 +106,7 @@ TEST_CASE("Compare JsonArray with JsonVariant") {
     CHECK_FALSE(variant < array);
   }
 
-  SECTION("Compare with identical array") {
+  SUBCASE("Compare with identical array") {
     JsonArray array = doc.add<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -132,7 +132,7 @@ TEST_CASE("Compare JsonArray with JsonVariant") {
     CHECK_FALSE(variant < array);
   }
 
-  SECTION("Compare with different array") {
+  SUBCASE("Compare with different array") {
     JsonArray array = doc.add<JsonArray>();
     array.add(1);
     array.add("hello1");
@@ -155,7 +155,7 @@ TEST_CASE("Compare JsonArray with JsonVariant") {
 TEST_CASE("Compare JsonArray with JsonVariantConst") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -176,7 +176,7 @@ TEST_CASE("Compare JsonArray with JsonVariantConst") {
     CHECK_FALSE(unbound < array);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -198,7 +198,7 @@ TEST_CASE("Compare JsonArray with JsonVariantConst") {
     CHECK_FALSE(variant < array);
   }
 
-  SECTION("Compare with identical array") {
+  SUBCASE("Compare with identical array") {
     JsonArray array = doc.add<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -225,7 +225,7 @@ TEST_CASE("Compare JsonArray with JsonVariantConst") {
     CHECK_FALSE(variant < array);
   }
 
-  SECTION("Compare with different array") {
+  SUBCASE("Compare with different array") {
     JsonArray array = doc.add<JsonArray>();
     array.add(1);
     array.add("hello1");
@@ -249,7 +249,7 @@ TEST_CASE("Compare JsonArray with JsonVariantConst") {
 TEST_CASE("Compare JsonArray with JsonArrayConst") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -270,7 +270,7 @@ TEST_CASE("Compare JsonArray with JsonArrayConst") {
     CHECK_FALSE(unbound < array);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -291,7 +291,7 @@ TEST_CASE("Compare JsonArray with JsonArrayConst") {
     CHECK_FALSE(carray < array);
   }
 
-  SECTION("Compare with identical array") {
+  SUBCASE("Compare with identical array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello");
@@ -318,7 +318,7 @@ TEST_CASE("Compare JsonArray with JsonArrayConst") {
     CHECK_FALSE(carray2 < array1);
   }
 
-  SECTION("Compare with different array") {
+  SUBCASE("Compare with different array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello1");
@@ -349,7 +349,7 @@ TEST_CASE("Compare JsonArray with JsonArrayConst") {
 TEST_CASE("Compare JsonArrayConst with JsonArrayConst") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -372,7 +372,7 @@ TEST_CASE("Compare JsonArrayConst with JsonArrayConst") {
     CHECK_FALSE(unbound < carray);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -386,7 +386,7 @@ TEST_CASE("Compare JsonArrayConst with JsonArrayConst") {
     CHECK_FALSE(carray < carray);
   }
 
-  SECTION("Compare with identical array") {
+  SUBCASE("Compare with identical array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello");
@@ -407,7 +407,7 @@ TEST_CASE("Compare JsonArrayConst with JsonArrayConst") {
     CHECK_FALSE(carray1 < carray2);
   }
 
-  SECTION("Compare with different array") {
+  SUBCASE("Compare with different array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello1");
@@ -432,7 +432,7 @@ TEST_CASE("Compare JsonArrayConst with JsonArrayConst") {
 TEST_CASE("Compare JsonArrayConst with JsonVariant") {
   JsonDocument doc;
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
     array.add("hello");
@@ -454,7 +454,7 @@ TEST_CASE("Compare JsonArrayConst with JsonVariant") {
     CHECK_FALSE(variant < carray);
   }
 
-  SECTION("Compare with identical array") {
+  SUBCASE("Compare with identical array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello");
@@ -482,7 +482,7 @@ TEST_CASE("Compare JsonArrayConst with JsonVariant") {
     CHECK_FALSE(variant2 < carray1);
   }
 
-  SECTION("Compare with different array") {
+  SUBCASE("Compare with different array") {
     JsonArray array1 = doc.add<JsonArray>();
     array1.add(1);
     array1.add("hello1");

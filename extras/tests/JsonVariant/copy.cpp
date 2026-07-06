@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 #include "Allocators.hpp"
 
 #include "Literals.hpp"
@@ -16,7 +16,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
   JsonVariant var1 = doc1.to<JsonVariant>();
   JsonVariant var2 = doc2.to<JsonVariant>();
 
-  SECTION("stores JsonArray by copy") {
+  SUBCASE("stores JsonArray by copy") {
     JsonArray arr = doc2.to<JsonArray>();
     JsonObject obj = arr.add<JsonObject>();
     obj["hello"] = "world";
@@ -27,7 +27,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     REQUIRE(var1.as<std::string>() == "[{\"hello\":\"world\"}]");
   }
 
-  SECTION("stores JsonObject by copy") {
+  SUBCASE("stores JsonObject by copy") {
     JsonObject obj = doc2.to<JsonObject>();
     JsonArray arr = obj["value"].to<JsonArray>();
     arr.add(42);
@@ -38,7 +38,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
     REQUIRE(var1.as<std::string>() == "{\"value\":[42]}");
   }
 
-  SECTION("stores string literals by copy") {
+  SUBCASE("stores string literals by copy") {
     var1.set("hello!!");
     spyingAllocator.clearLog();
 
@@ -49,7 +49,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("stores char* by copy") {
+  SUBCASE("stores char* by copy") {
     char str[] = "hello!!";
     var1.set(str);
     spyingAllocator.clearLog();
@@ -61,7 +61,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("fails gracefully if string allocation fails") {
+  SUBCASE("fails gracefully if string allocation fails") {
     char str[] = "hello!!";
     var1.set(str);
     killswitch.on();
@@ -75,7 +75,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("stores std::string by copy") {
+  SUBCASE("stores std::string by copy") {
     var1.set("hello!!"_s);
     spyingAllocator.clearLog();
 
@@ -86,7 +86,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("stores Serialized<const char*> by copy") {
+  SUBCASE("stores Serialized<const char*> by copy") {
     var1.set(serialized("hello!!", 7));
     spyingAllocator.clearLog();
 
@@ -97,7 +97,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("stores Serialized<char*> by copy") {
+  SUBCASE("stores Serialized<char*> by copy") {
     char str[] = "hello!!";
     var1.set(serialized(str, 7));
     spyingAllocator.clearLog();
@@ -109,7 +109,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("stores Serialized<std::string> by copy") {
+  SUBCASE("stores Serialized<std::string> by copy") {
     var1.set(serialized("hello!!"_s));
     spyingAllocator.clearLog();
 
@@ -120,7 +120,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("fails gracefully if raw string allocation fails") {
+  SUBCASE("fails gracefully if raw string allocation fails") {
     var1.set(serialized("hello!!"_s));
     killswitch.on();
     spyingAllocator.clearLog();
@@ -133,7 +133,7 @@ TEST_CASE("JsonVariant::set(JsonVariant)") {
                                      });
   }
 
-  SECTION("destination is unbound") {
+  SUBCASE("destination is unbound") {
     JsonVariant unboundVariant;
 
     unboundVariant.set(var1);

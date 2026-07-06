@@ -3,14 +3,14 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
 TEST_CASE("JsonDocument::remove()") {
   JsonDocument doc;
 
-  SECTION("remove(int)") {
+  SUBCASE("remove(int)") {
     doc.add(1);
     doc.add(2);
     doc.add(3);
@@ -20,7 +20,7 @@ TEST_CASE("JsonDocument::remove()") {
     REQUIRE(doc.as<std::string>() == "[1,3]");
   }
 
-  SECTION("string literal") {
+  SUBCASE("string literal") {
     doc["a"] = 1;
     doc["ab"_s] = 2;
     doc["b"] = 3;
@@ -30,7 +30,7 @@ TEST_CASE("JsonDocument::remove()") {
     REQUIRE(doc.as<std::string>() == "{\"a\":1,\"b\":3}");
   }
 
-  SECTION("remove(const char *)") {
+  SUBCASE("remove(const char *)") {
     doc["a"] = 1;
     doc["b"] = 2;
 
@@ -39,7 +39,7 @@ TEST_CASE("JsonDocument::remove()") {
     REQUIRE(doc.as<std::string>() == "{\"b\":2}");
   }
 
-  SECTION("remove(std::string)") {
+  SUBCASE("remove(std::string)") {
     doc["a"] = 1;
     doc["b"] = 2;
 
@@ -49,7 +49,7 @@ TEST_CASE("JsonDocument::remove()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("remove(vla)") {
+  SUBCASE("remove(vla)") {
     doc["a"] = 1;
     doc["b"] = 2;
 
@@ -62,7 +62,7 @@ TEST_CASE("JsonDocument::remove()") {
   }
 #endif
 
-  SECTION("remove(JsonVariant) from object") {
+  SUBCASE("remove(JsonVariant) from object") {
     doc["a"] = 1;
     doc["b"] = 2;
     doc["c"] = "b";
@@ -72,7 +72,7 @@ TEST_CASE("JsonDocument::remove()") {
     REQUIRE(doc.as<std::string>() == "{\"a\":1,\"c\":\"b\"}");
   }
 
-  SECTION("remove(JsonVariant) from array") {
+  SUBCASE("remove(JsonVariant) from array") {
     doc[0] = 3;
     doc[1] = 2;
     doc[2] = 1;

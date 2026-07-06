@@ -29,5 +29,5 @@ add_test(JsonVariant JsonVariantTests)
 
 set_tests_properties(JsonVariant
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
@@ -16,7 +16,7 @@ static void eraseString(std::string& str) {
 TEST_CASE("std::string") {
   JsonDocument doc;
 
-  SECTION("operator[]") {
+  SUBCASE("operator[]") {
     char json[] = "{\"key\":\"value\"}";
 
     deserializeJson(doc, json);
@@ -25,7 +25,7 @@ TEST_CASE("std::string") {
     REQUIRE("value"_s == obj["key"_s]);
   }
 
-  SECTION("operator[] const") {
+  SUBCASE("operator[] const") {
     char json[] = "{\"key\":\"value\"}";
 
     deserializeJson(doc, json);
@@ -34,7 +34,7 @@ TEST_CASE("std::string") {
     REQUIRE("value"_s == obj["key"_s]);
   }
 
-  SECTION("remove()") {
+  SUBCASE("remove()") {
     JsonObject obj = doc.to<JsonObject>();
     obj["key"] = "value";
 
@@ -43,7 +43,7 @@ TEST_CASE("std::string") {
     REQUIRE(0 == obj.size());
   }
 
-  SECTION("operator[], set key") {
+  SUBCASE("operator[], set key") {
     std::string key("hello");
     JsonObject obj = doc.to<JsonObject>();
     obj[key] = "world";
@@ -51,7 +51,7 @@ TEST_CASE("std::string") {
     REQUIRE("world"_s == obj["hello"]);
   }
 
-  SECTION("operator[], set value") {
+  SUBCASE("operator[], set value") {
     std::string value("world");
     JsonObject obj = doc.to<JsonObject>();
     obj["hello"] = value;

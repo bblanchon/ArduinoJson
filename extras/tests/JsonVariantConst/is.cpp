@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 enum MYENUM2 { ONE = 1, TWO = 2 };
 
@@ -11,7 +11,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
   JsonDocument doc;
   JsonVariantConst var = doc.to<JsonVariant>();
 
-  SECTION("unbound") {
+  SUBCASE("unbound") {
     var = JsonVariantConst();
 
     CHECK(var.is<JsonArray>() == false);
@@ -29,7 +29,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<MYENUM2>() == false);
   }
 
-  SECTION("null") {
+  SUBCASE("null") {
     CHECK(var.is<JsonVariantConst>() == true);
     CHECK(var.is<JsonObject>() == false);
     CHECK(var.is<JsonArray>() == false);
@@ -43,7 +43,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<MYENUM2>() == false);
   }
 
-  SECTION("true") {
+  SUBCASE("true") {
     doc.set(true);
 
     CHECK(var.is<bool>() == true);
@@ -59,7 +59,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<MYENUM2>() == false);
   }
 
-  SECTION("false") {
+  SUBCASE("false") {
     doc.set(false);
 
     CHECK(var.is<bool>() == true);
@@ -75,7 +75,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<MYENUM2>() == false);
   }
 
-  SECTION("int") {
+  SUBCASE("int") {
     doc.set(42);
 
     CHECK(var.is<int>() == true);
@@ -94,7 +94,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<JsonString>() == false);
   }
 
-  SECTION("double") {
+  SUBCASE("double") {
     doc.set(4.2);
 
     CHECK(var.is<double>() == true);
@@ -111,7 +111,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<MYENUM2>() == false);
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     doc.set("4.2");
 
     CHECK(var.is<const char*>() == true);
@@ -128,7 +128,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<MYENUM2>() == false);
   }
 
-  SECTION("JsonArray") {
+  SUBCASE("JsonArray") {
     doc.to<JsonArray>();
 
     CHECK(var.is<JsonArrayConst>() == true);
@@ -144,7 +144,7 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(var.is<MYENUM2>() == false);
   }
 
-  SECTION("JsonObject") {
+  SUBCASE("JsonObject") {
     doc.to<JsonObject>();
 
     CHECK(var.is<JsonObjectConst>() == true);

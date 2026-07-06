@@ -31,5 +31,5 @@ add_test(Deprecated DeprecatedTests)
 
 set_tests_properties(Deprecated
 	PROPERTIES
-	LABELS "Catch"
+	LABELS "doctest"
 )

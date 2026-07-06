@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -14,7 +14,7 @@ TEST_CASE("deserialize JSON object") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
 
-  SECTION("An empty object") {
+  SUBCASE("An empty object") {
     DeserializationError err = deserializeJson(doc, "{}");
     JsonObject obj = doc.as<JsonObject>();
 
@@ -23,8 +23,8 @@ TEST_CASE("deserialize JSON object") {
     REQUIRE(obj.size() == 0);
   }
 
-  SECTION("Quotes") {
-    SECTION("Double quotes") {
+  SUBCASE("Quotes") {
+    SUBCASE("Double quotes") {
       DeserializationError err = deserializeJson(doc, "{\"key\":\"value\"}");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -34,7 +34,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("Single quotes") {
+    SUBCASE("Single quotes") {
       DeserializationError err = deserializeJson(doc, "{'key':'value'}");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -44,7 +44,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("No quotes") {
+    SUBCASE("No quotes") {
       DeserializationError err = deserializeJson(doc, "{key:'value'}");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -54,7 +54,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("No quotes, allow underscore in key") {
+    SUBCASE("No quotes, allow underscore in key") {
       DeserializationError err = deserializeJson(doc, "{_k_e_y_:42}");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -65,8 +65,8 @@ TEST_CASE("deserialize JSON object") {
     }
   }
 
-  SECTION("Spaces") {
-    SECTION("Before the key") {
+  SUBCASE("Spaces") {
+    SUBCASE("Before the key") {
       DeserializationError err = deserializeJson(doc, "{ \"key\":\"value\"}");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -76,7 +76,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("After the key") {
+    SUBCASE("After the key") {
       DeserializationError err = deserializeJson(doc, "{\"key\" :\"value\"}");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -86,7 +86,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("Before the value") {
+    SUBCASE("Before the value") {
       DeserializationError err = deserializeJson(doc, "{\"key\": \"value\"}");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -96,7 +96,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("After the value") {
+    SUBCASE("After the value") {
       DeserializationError err = deserializeJson(doc, "{\"key\":\"value\" }");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -106,7 +106,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key"] == "value");
     }
 
-    SECTION("Before the comma") {
+    SUBCASE("Before the comma") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":\"value1\" ,\"key2\":\"value2\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -118,7 +118,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key2"] == "value2");
     }
 
-    SECTION("After the comma") {
+    SUBCASE("After the comma") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":\"value1\", \"key2\":\"value2\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -131,8 +131,8 @@ TEST_CASE("deserialize JSON object") {
     }
   }
 
-  SECTION("Values types") {
-    SECTION("String") {
+  SUBCASE("Values types") {
+    SUBCASE("String") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":\"value1\",\"key2\":\"value2\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -144,7 +144,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key2"] == "value2");
     }
 
-    SECTION("Integer") {
+    SUBCASE("Integer") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":42,\"key2\":-42}");
       JsonObject obj = doc.as<JsonObject>();
@@ -156,7 +156,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key2"] == -42);
     }
 
-    SECTION("Float") {
+    SUBCASE("Float") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":12.345,\"key2\":-7E3}");
       JsonObject obj = doc.as<JsonObject>();
@@ -164,11 +164,11 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
-      REQUIRE(obj["key1"].as<float>() == Approx(12.345f));
+      REQUIRE(obj["key1"].as<float>() == doctest::Approx(12.345f));
       REQUIRE(obj["key2"] == -7E3f);
     }
 
-    SECTION("Double") {
+    SUBCASE("Double") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":12.3456789,\"key2\":-7E89}");
       JsonObject obj = doc.as<JsonObject>();
@@ -176,11 +176,11 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
-      REQUIRE(obj["key1"].as<double>() == Approx(12.3456789));
+      REQUIRE(obj["key1"].as<double>() == doctest::Approx(12.3456789));
       REQUIRE(obj["key2"] == -7E89);
     }
 
-    SECTION("Booleans") {
+    SUBCASE("Booleans") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":true,\"key2\":false}");
       JsonObject obj = doc.as<JsonObject>();
@@ -192,7 +192,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(obj["key2"] == false);
     }
 
-    SECTION("Null") {
+    SUBCASE("Null") {
       DeserializationError err =
           deserializeJson(doc, "{\"key1\":null,\"key2\":null}");
       JsonObject obj = doc.as<JsonObject>();
@@ -200,11 +200,11 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
-      REQUIRE(obj["key1"].as<const char*>() == 0);
-      REQUIRE(obj["key2"].as<const char*>() == 0);
+      REQUIRE(obj["key1"].as<const char*>() == nullptr);
+      REQUIRE(obj["key2"].as<const char*>() == nullptr);
     }
 
-    SECTION("Array") {
+    SUBCASE("Array") {
       char jsonString[] = " { \"ab\" : [ 1 , 2 ] , \"cd\" : [ 3 , 4 ] } ";
 
       DeserializationError err = deserializeJson(doc, jsonString);
@@ -234,64 +234,64 @@ TEST_CASE("deserialize JSON object") {
     }
   }
 
-  SECTION("Premature null terminator") {
-    SECTION("After opening brace") {
+  SUBCASE("Premature null terminator") {
+    SUBCASE("After opening brace") {
       DeserializationError err = deserializeJson(doc, "{");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After key") {
+    SUBCASE("After key") {
       DeserializationError err = deserializeJson(doc, "{\"hello\"");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After colon") {
+    SUBCASE("After colon") {
       DeserializationError err = deserializeJson(doc, "{\"hello\":");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After value") {
+    SUBCASE("After value") {
       DeserializationError err = deserializeJson(doc, "{\"hello\":\"world\"");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err = deserializeJson(doc, "{\"hello\":\"world\",");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
-  SECTION("Misc") {
-    SECTION("A quoted key without value") {
+  SUBCASE("Misc") {
+    SUBCASE("A quoted key without value") {
       DeserializationError err = deserializeJson(doc, "{\"key\"}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("A non-quoted key without value") {
+    SUBCASE("A non-quoted key without value") {
       DeserializationError err = deserializeJson(doc, "{key}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("A dangling comma") {
+    SUBCASE("A dangling comma") {
       DeserializationError err = deserializeJson(doc, "{\"key1\":\"value1\",}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("null as a key") {
+    SUBCASE("null as a key") {
       DeserializationError err = deserializeJson(doc, "{null:\"value\"}");
 
       REQUIRE(err == DeserializationError::Ok);
     }
 
-    SECTION("Repeated key") {
+    SUBCASE("Repeated key") {
       DeserializationError err =
           deserializeJson(doc, "{alfa:{bravo:{charlie:1}},alfa:2}");
 
@@ -314,7 +314,7 @@ TEST_CASE("deserialize JSON object") {
               });
     }
 
-    SECTION("Repeated key with zero copy mode") {  // issue #1697
+    SUBCASE("Repeated key with zero copy mode") {  // issue #1697
       char input[] = "{a:{b:{c:1}},a:2}";
       DeserializationError err = deserializeJson(doc, input);
 
@@ -322,7 +322,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(doc["a"] == 2);
     }
 
-    SECTION("NUL in keys") {
+    SUBCASE("NUL in keys") {
       DeserializationError err =
           deserializeJson(doc, "{\"x\":0,\"x\\u0000a\":1,\"x\\u0000b\":2}");
 
@@ -332,7 +332,7 @@ TEST_CASE("deserialize JSON object") {
     }
   }
 
-  SECTION("Should clear the JsonObject") {
+  SUBCASE("Should clear the JsonObject") {
     deserializeJson(doc, "{\"hello\":\"world\"}");
     spy.clearLog();
 
@@ -347,7 +347,7 @@ TEST_CASE("deserialize JSON object") {
                          });
   }
 
-  SECTION("Issue #1335") {
+  SUBCASE("Issue #1335") {
     std::string json("{\"a\":{},\"b\":{}}");
     deserializeJson(doc, json);
     CHECK(doc.as<std::string>() == json);
@@ -358,7 +358,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
   TimebombAllocator timebomb(1024);
   JsonDocument doc(&timebomb);
 
-  SECTION("empty object requires no allocation") {
+  SUBCASE("empty object requires no allocation") {
     timebomb.setCountdown(0);
     char input[] = "{}";
 
@@ -368,7 +368,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
     REQUIRE(doc.as<std::string>() == "{}");
   }
 
-  SECTION("key allocation fails") {
+  SUBCASE("key allocation fails") {
     timebomb.setCountdown(0);
     char input[] = "{\"a\":1}";
 
@@ -378,7 +378,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
     REQUIRE(doc.as<std::string>() == "{}");
   }
 
-  SECTION("pool allocation fails") {
+  SUBCASE("pool allocation fails") {
     timebomb.setCountdown(1);
     char input[] = "{\"a\":1}";
 
@@ -388,7 +388,7 @@ TEST_CASE("deserialize JSON object under memory constraints") {
     REQUIRE(doc.as<std::string>() == "{}");
   }
 
-  SECTION("string allocation fails") {
+  SUBCASE("string allocation fails") {
     timebomb.setCountdown(3);
     char input[] = "{\"alfa\":\"bravo\"}";
 

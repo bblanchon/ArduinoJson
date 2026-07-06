@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 #include <string>
 
 static void checkObject(const JsonObject obj, const std::string& expected) {
@@ -23,18 +23,18 @@ TEST_CASE("serializeJson(JsonObject)") {
   JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
 
-  SECTION("EmptyObject") {
+  SUBCASE("EmptyObject") {
     checkObject(obj, "{}");
   }
 
-  SECTION("TwoStrings") {
+  SUBCASE("TwoStrings") {
     obj["key1"] = "value1";
     obj["key2"] = "value2";
 
     checkObject(obj, "{\"key1\":\"value1\",\"key2\":\"value2\"}");
   }
 
-  SECTION("RemoveFirst") {
+  SUBCASE("RemoveFirst") {
     obj["key1"] = "value1";
     obj["key2"] = "value2";
     obj.remove("key1");
@@ -42,7 +42,7 @@ TEST_CASE("serializeJson(JsonObject)") {
     checkObject(obj, "{\"key2\":\"value2\"}");
   }
 
-  SECTION("RemoveLast") {
+  SUBCASE("RemoveLast") {
     obj["key1"] = "value1";
     obj["key2"] = "value2";
     obj.remove("key2");
@@ -50,7 +50,7 @@ TEST_CASE("serializeJson(JsonObject)") {
     checkObject(obj, "{\"key1\":\"value1\"}");
   }
 
-  SECTION("RemoveUnexistingKey") {
+  SUBCASE("RemoveUnexistingKey") {
     obj["key1"] = "value1";
     obj["key2"] = "value2";
     obj.remove("key3");
@@ -58,44 +58,44 @@ TEST_CASE("serializeJson(JsonObject)") {
     checkObject(obj, "{\"key1\":\"value1\",\"key2\":\"value2\"}");
   }
 
-  SECTION("ReplaceExistingKey") {
+  SUBCASE("ReplaceExistingKey") {
     obj["key"] = "value1";
     obj["key"] = "value2";
 
     checkObject(obj, "{\"key\":\"value2\"}");
   }
 
-  SECTION("TwoIntegers") {
+  SUBCASE("TwoIntegers") {
     obj["a"] = 1;
     obj["b"] = 2;
     checkObject(obj, "{\"a\":1,\"b\":2}");
   }
 
-  SECTION("serialized(const char*)") {
+  SUBCASE("serialized(const char*)") {
     obj["a"] = serialized("[1,2]");
     obj["b"] = serialized("[4,5]");
     checkObject(obj, "{\"a\":[1,2],\"b\":[4,5]}");
   }
 
-  SECTION("Two doubles") {
+  SUBCASE("Two doubles") {
     obj["a"] = 12.34;
     obj["b"] = 56.78;
     checkObject(obj, "{\"a\":12.34,\"b\":56.78}");
   }
 
-  SECTION("TwoNull") {
+  SUBCASE("TwoNull") {
     obj["a"] = static_cast<char*>(0);
     obj["b"] = static_cast<char*>(0);
     checkObject(obj, "{\"a\":null,\"b\":null}");
   }
 
-  SECTION("TwoBooleans") {
+  SUBCASE("TwoBooleans") {
     obj["a"] = true;
     obj["b"] = false;
     checkObject(obj, "{\"a\":true,\"b\":false}");
   }
 
-  SECTION("ThreeNestedArrays") {
+  SUBCASE("ThreeNestedArrays") {
     JsonDocument b;
     JsonDocument c;
 
@@ -106,7 +106,7 @@ TEST_CASE("serializeJson(JsonObject)") {
     checkObject(obj, "{\"a\":[],\"b\":[],\"c\":[]}");
   }
 
-  SECTION("ThreeNestedObjects") {
+  SUBCASE("ThreeNestedObjects") {
     JsonDocument b;
     JsonDocument c;
 

@@ -4,14 +4,14 @@
 
 #include <ArduinoJson/Memory/Alignment.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("ARDUINOJSON_ENABLE_ALIGNMENT == 0") {
   using namespace ArduinoJson::detail;
 
   const size_t N = sizeof(void*);
 
-  SECTION("isAligned()") {
+  SUBCASE("isAligned()") {
     CHECK(isAligned(0) == true);
     CHECK(isAligned(1) == true);
     CHECK(isAligned(N) == true);
@@ -20,14 +20,14 @@ TEST_CASE("ARDUINOJSON_ENABLE_ALIGNMENT == 0") {
     CHECK(isAligned(2 * N + 1) == true);
   }
 
-  SECTION("addPadding()") {
+  SUBCASE("addPadding()") {
     CHECK(addPadding(0) == 0);
     CHECK(addPadding(1) == 1);
     CHECK(addPadding(N) == N);
     CHECK(addPadding(N + 1) == N + 1);
   }
 
-  SECTION("AddPadding<>") {
+  SUBCASE("AddPadding<>") {
     const size_t a = AddPadding<0>::value;
     CHECK(a == 0);
 

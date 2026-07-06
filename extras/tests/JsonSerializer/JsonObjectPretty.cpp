@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 #include <string>
 
 static void checkObjectPretty(const JsonObject obj,
@@ -22,11 +22,11 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
   JsonDocument doc;
   JsonObject obj = doc.to<JsonObject>();
 
-  SECTION("EmptyObject") {
+  SUBCASE("EmptyObject") {
     checkObjectPretty(obj, "{}");
   }
 
-  SECTION("OneMember") {
+  SUBCASE("OneMember") {
     obj["key"] = "value";
 
     checkObjectPretty(obj,
@@ -35,7 +35,7 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
                       "}");
   }
 
-  SECTION("TwoMembers") {
+  SUBCASE("TwoMembers") {
     obj["key1"] = "value1";
     obj["key2"] = "value2";
 
@@ -46,7 +46,7 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
                       "}");
   }
 
-  SECTION("EmptyNestedContainers") {
+  SUBCASE("EmptyNestedContainers") {
     obj["key1"].to<JsonObject>();
     obj["key2"].to<JsonArray>();
 
@@ -57,7 +57,7 @@ TEST_CASE("serializeJsonPretty(JsonObject)") {
                       "}");
   }
 
-  SECTION("NestedContainers") {
+  SUBCASE("NestedContainers") {
     JsonObject nested1 = obj["key1"].to<JsonObject>();
     nested1["a"] = 1;
 

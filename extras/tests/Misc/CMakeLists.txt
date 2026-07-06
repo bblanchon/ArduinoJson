@@ -27,7 +27,7 @@ add_test(Misc MiscTests)
 
 set_tests_properties(Misc
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )
 
 add_executable(Issue2181
@@ -40,7 +40,7 @@ add_test(Issue2181 Issue2181)
 
 set_tests_properties(Issue2181
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

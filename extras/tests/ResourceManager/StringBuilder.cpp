@@ -2,9 +2,9 @@
 // Copyright © 2014-2025, Benoit BLANCHON
 // MIT License
 
+#include <doctest.h>
 #include <ArduinoJson/Memory/StringBuilder.hpp>
 #include <ArduinoJson/Variant/VariantImpl.hpp>
-#include <catch.hpp>
 
 #include "Allocators.hpp"
 
@@ -16,7 +16,7 @@ TEST_CASE("StringBuilder") {
   SpyingAllocator spyingAllocator(&killswitch);
   ResourceManager resources(&spyingAllocator);
 
-  SECTION("Empty string") {
+  SUBCASE("Empty string") {
     StringBuilder str(&resources);
     VariantData data;
 
@@ -30,7 +30,7 @@ TEST_CASE("StringBuilder") {
     REQUIRE(data.type == VariantType::TinyString);
   }
 
-  SECTION("Tiny string") {
+  SUBCASE("Tiny string") {
     StringBuilder str(&resources);
 
     str.startString();
@@ -50,7 +50,7 @@ TEST_CASE("StringBuilder") {
     REQUIRE(data.asString() == "url");
   }
 
-  SECTION("Short string fits in first allocation") {
+  SUBCASE("Short string fits in first allocation") {
     StringBuilder str(&resources);
 
     str.startString();
@@ -64,7 +64,7 @@ TEST_CASE("StringBuilder") {
                                      });
   }
 
-  SECTION("Long string needs reallocation") {
+  SUBCASE("Long string needs reallocation") {
     StringBuilder str(&resources);
     const char* lorem =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
@@ -84,7 +84,7 @@ TEST_CASE("StringBuilder") {
             });
   }
 
-  SECTION("Realloc fails") {
+  SUBCASE("Realloc fails") {
     StringBuilder str(&resources);
 
     str.startString();
@@ -103,7 +103,7 @@ TEST_CASE("StringBuilder") {
     REQUIRE(resources.overflowed() == true);
   }
 
-  SECTION("Initial allocation fails") {
+  SUBCASE("Initial allocation fails") {
     StringBuilder str(&resources);
 
     killswitch.on();
@@ -130,7 +130,7 @@ TEST_CASE("StringBuilder::save() deduplicates strings") {
   ResourceManager resources(&spy);
   StringBuilder builder(&resources);
 
-  SECTION("Basic") {
+  SUBCASE("Basic") {
     auto s1 = saveString(builder, "hello");
     auto s2 = saveString(builder, "world");
     auto s3 = saveString(builder, "hello");
@@ -149,7 +149,7 @@ TEST_CASE("StringBuilder::save() deduplicates strings") {
             });
   }
 
-  SECTION("Requires terminator") {
+  SUBCASE("Requires terminator") {
     auto s1 = saveString(builder, "hello world");
     auto s2 = saveString(builder, "hello");
 
@@ -167,7 +167,7 @@ TEST_CASE("StringBuilder::save() deduplicates strings") {
             });
   }
 
-  SECTION("Don't overrun") {
+  SUBCASE("Don't overrun") {
     auto s1 = saveString(builder, "hello world");
     auto s2 = saveString(builder, "worl");
 

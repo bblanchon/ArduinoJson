@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdio.h>
-#include <catch.hpp>
 
 #include "Literals.hpp"
 
@@ -33,17 +33,17 @@ TEST_CASE("serialize MsgPack object") {
   JsonDocument doc;
   JsonObject object = doc.to<JsonObject>();
 
-  SECTION("empty") {
+  SUBCASE("empty") {
     check(object, "\x80");
   }
 
-  SECTION("fixmap") {
+  SUBCASE("fixmap") {
     object["hello"] = "world";
 
     check(object, "\x81\xA5hello\xA5world");
   }
 
-  SECTION("map 16") {
+  SUBCASE("map 16") {
     for (int i = 0; i < 16; ++i) {
       char key[16];
       snprintf(key, sizeof(key), "i%X", i);
@@ -57,7 +57,7 @@ TEST_CASE("serialize MsgPack object") {
   }
 
   // TODO: improve performance and uncomment
-  // SECTION("map 32") {
+  // SUBCASE("map 32") {
   //   std::string expected("\xDF\x00\x01\x00\x00", 5);
   //
   //   for (int i = 0; i < 65536; ++i) {
@@ -73,12 +73,12 @@ TEST_CASE("serialize MsgPack object") {
   //   check(object, expected);
   // }
 
-  SECTION("serialized(const char*)") {
+  SUBCASE("serialized(const char*)") {
     object["hello"] = serialized("\xDB\x00\x01\x00\x00", 5);
     check(object, "\x81\xA5hello\xDB\x00\x01\x00\x00");
   }
 
-  SECTION("serialized(std::string)") {
+  SUBCASE("serialized(std::string)") {
     object["hello"] = serialized("\xDB\x00\x01\x00\x00"_s);
     check(object, "\x81\xA5hello\xDB\x00\x01\x00\x00");
   }

@@ -5,21 +5,21 @@
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 using namespace ArduinoJson::detail;
 
 TEST_CASE("ResourceManager::clear()") {
   ResourceManager resources;
 
-  SECTION("Discards allocated variants") {
+  SUBCASE("Discards allocated variants") {
     resources.allocVariant();
 
     resources.clear();
     REQUIRE(resources.size() == 0);
   }
 
-  SECTION("Discards allocated strings") {
+  SUBCASE("Discards allocated strings") {
     resources.saveString(adaptString("123456789"));
     REQUIRE(resources.size() == sizeofString(9));
 

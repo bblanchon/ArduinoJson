@@ -3,7 +3,7 @@
 // MIT License
 
 #include <Arduino.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
 #include <ArduinoJson.h>
@@ -51,14 +51,14 @@ struct PrintableString : public Printable {
 };
 
 TEST_CASE("Printable") {
-  SECTION("Doesn't overflow") {
+  SUBCASE("Doesn't overflow") {
     SpyingAllocator spy;
     JsonDocument doc(&spy);
     const char* value = "example";
 
     doc.set(666);  // to make sure we override the value
 
-    SECTION("Via Print::write(char)") {
+    SUBCASE("Via Print::write(char)") {
       PrintableString<PrintOneCharacterAtATime> printable(value);
       CHECK(doc.set(printable) == true);
       CHECK(doc.as<std::string>() == value);
@@ -71,7 +71,7 @@ TEST_CASE("Printable") {
             });
     }
 
-    SECTION("Via Print::write(const char* size_t)") {
+    SUBCASE("Via Print::write(const char* size_t)") {
       PrintableString<PrintAllAtOnce> printable(value);
       CHECK(doc.set(printable) == true);
       CHECK(doc.as<std::string>() == value);
@@ -85,14 +85,14 @@ TEST_CASE("Printable") {
     }
   }
 
-  SECTION("First allocation fails") {
+  SUBCASE("First allocation fails") {
     SpyingAllocator spy(FailingAllocator::instance());
     JsonDocument doc(&spy);
     const char* value = "hello world";
 
     doc.set(666);  // to make sure we override the value
 
-    SECTION("Via Print::write(char)") {
+    SUBCASE("Via Print::write(char)") {
       PrintableString<PrintOneCharacterAtATime> printable(value);
 
       bool success = doc.set(printable);
@@ -106,7 +106,7 @@ TEST_CASE("Printable") {
                          });
     }
 
-    SECTION("Via Print::write(const char*, size_t)") {
+    SUBCASE("Via Print::write(const char*, size_t)") {
       PrintableString<PrintAllAtOnce> printable(value);
 
       bool success = doc.set(printable);
@@ -121,7 +121,7 @@ TEST_CASE("Printable") {
     }
   }
 
-  SECTION("Reallocation fails") {
+  SUBCASE("Reallocation fails") {
     TimebombAllocator timebomb(1);
     SpyingAllocator spy(&timebomb);
     JsonDocument doc(&spy);
@@ -129,7 +129,7 @@ TEST_CASE("Printable") {
 
     doc.set(666);  // to make sure we override the value
 
-    SECTION("Via Print::write(char)") {
+    SUBCASE("Via Print::write(char)") {
       PrintableString<PrintOneCharacterAtATime> printable(value);
 
       bool success = doc.set(printable);
@@ -146,7 +146,7 @@ TEST_CASE("Printable") {
             });
     }
 
-    SECTION("Via Print::write(const char*, size_t)") {
+    SUBCASE("Via Print::write(const char*, size_t)") {
       PrintableString<PrintAllAtOnce> printable(value);
 
       bool success = doc.set(printable);
@@ -164,7 +164,7 @@ TEST_CASE("Printable") {
     }
   }
 
-  SECTION("Null variant") {
+  SUBCASE("Null variant") {
     JsonVariant var;
     PrintableString<PrintOneCharacterAtATime> printable = "Hello World!";
     CHECK(var.set(printable) == false);
@@ -172,7 +172,7 @@ TEST_CASE("Printable") {
     CHECK(printable.totalBytesWritten() == 0);
   }
 
-  SECTION("String deduplication") {
+  SUBCASE("String deduplication") {
     SpyingAllocator spy;
     JsonDocument doc(&spy);
     doc.add(PrintableString<PrintOneCharacterAtATime>("Hello World!"));

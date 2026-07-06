@@ -2,7 +2,7 @@
 #define ARDUINOJSON_ENABLE_PROGMEM 1
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -11,14 +11,14 @@ TEST_CASE("JsonDocument::set()") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
 
-  SECTION("nullptr") {
+  SUBCASE("nullptr") {
     doc.set(nullptr);
 
     REQUIRE(doc.isNull());
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("integer&") {
+  SUBCASE("integer&") {
     int toto = 42;
     doc.set(toto);
 
@@ -26,14 +26,14 @@ TEST_CASE("JsonDocument::set()") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("integer") {
+  SUBCASE("integer") {
     doc.set(42);
 
     REQUIRE(doc.as<std::string>() == "42");
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("string literal") {
+  SUBCASE("string literal") {
     doc.set("example");
 
     REQUIRE(doc.as<const char*>() == "example"_s);
@@ -42,7 +42,7 @@ TEST_CASE("JsonDocument::set()") {
                          });
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     const char* value = "example";
     doc.set(value);
 
@@ -52,7 +52,7 @@ TEST_CASE("JsonDocument::set()") {
                          });
   }
 
-  SECTION("std::string") {
+  SUBCASE("std::string") {
     doc.set("example"_s);
 
     REQUIRE(doc.as<const char*>() == "example"_s);
@@ -61,7 +61,7 @@ TEST_CASE("JsonDocument::set()") {
                          });
   }
 
-  SECTION("char*") {
+  SUBCASE("char*") {
     char value[] = "example";
     doc.set(value);
 
@@ -71,7 +71,7 @@ TEST_CASE("JsonDocument::set()") {
                          });
   }
 
-  SECTION("Arduino String") {
+  SUBCASE("Arduino String") {
     doc.set(String("example"));
 
     REQUIRE(doc.as<const char*>() == "example"_s);
@@ -80,7 +80,7 @@ TEST_CASE("JsonDocument::set()") {
                          });
   }
 
-  SECTION("Flash string") {
+  SUBCASE("Flash string") {
     doc.set(F("example"));
 
     REQUIRE(doc.as<const char*>() == "example"_s);
@@ -89,7 +89,7 @@ TEST_CASE("JsonDocument::set()") {
                          });
   }
 
-  SECTION("Flash tiny string") {  // issue #2170
+  SUBCASE("Flash tiny string") {  // issue #2170
     doc.set(F("abc"));
 
     REQUIRE(doc.as<const char*>() == "abc"_s);
@@ -97,7 +97,7 @@ TEST_CASE("JsonDocument::set()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("VLA") {
+  SUBCASE("VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "example");

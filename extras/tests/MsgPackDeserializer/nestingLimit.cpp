@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <sstream>
 
@@ -14,15 +14,15 @@
 TEST_CASE("JsonDeserializer nesting") {
   JsonDocument doc;
 
-  SECTION("Input = const char*") {
-    SECTION("limit = 0") {
+  SUBCASE("Input = const char*") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       SHOULD_WORK(deserializeMsgPack(doc, "\xA1H", nesting));  // "H"
       SHOULD_FAIL(deserializeMsgPack(doc, "\x90", nesting));   // []
       SHOULD_FAIL(deserializeMsgPack(doc, "\x80", nesting));   // {}
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       SHOULD_WORK(deserializeMsgPack(doc, "\x90", nesting));           // {}
       SHOULD_WORK(deserializeMsgPack(doc, "\x80", nesting));           // []
@@ -31,15 +31,15 @@ TEST_CASE("JsonDeserializer nesting") {
     }
   }
 
-  SECTION("char* and size_t") {
-    SECTION("limit = 0") {
+  SUBCASE("char* and size_t") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       SHOULD_WORK(deserializeMsgPack(doc, "\xA1H", 2, nesting));
       SHOULD_FAIL(deserializeMsgPack(doc, "\x90", 1, nesting));
       SHOULD_FAIL(deserializeMsgPack(doc, "\x80", 1, nesting));
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       SHOULD_WORK(deserializeMsgPack(doc, "\x90", 1, nesting));
       SHOULD_WORK(deserializeMsgPack(doc, "\x80", 1, nesting));
@@ -48,17 +48,17 @@ TEST_CASE("JsonDeserializer nesting") {
     }
   }
 
-  SECTION("Input = std::string") {
+  SUBCASE("Input = std::string") {
     using std::string;
 
-    SECTION("limit = 0") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       SHOULD_WORK(deserializeMsgPack(doc, string("\xA1H"), nesting));
       SHOULD_FAIL(deserializeMsgPack(doc, string("\x90"), nesting));
       SHOULD_FAIL(deserializeMsgPack(doc, string("\x80"), nesting));
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       SHOULD_WORK(deserializeMsgPack(doc, string("\x90"), nesting));
       SHOULD_WORK(deserializeMsgPack(doc, string("\x80"), nesting));
@@ -67,8 +67,8 @@ TEST_CASE("JsonDeserializer nesting") {
     }
   }
 
-  SECTION("Input = std::istream") {
-    SECTION("limit = 0") {
+  SUBCASE("Input = std::istream") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       std::istringstream good("\xA1H");  // "H"
       std::istringstream bad("\x90");    // []
@@ -76,7 +76,7 @@ TEST_CASE("JsonDeserializer nesting") {
       SHOULD_FAIL(deserializeMsgPack(doc, bad, nesting));
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       std::istringstream good("\x90");     // []
       std::istringstream bad("\x91\x90");  // [[]]

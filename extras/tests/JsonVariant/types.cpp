@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdint.h>
-#include <catch.hpp>
 #include <limits>
 
 #include "Allocators.hpp"
@@ -38,7 +38,7 @@ TEST_CASE("JsonVariant set()/get()") {
   JsonVariant variant = doc.to<JsonVariant>();
 
 #if ARDUINOJSON_USE_LONG_LONG
-  SECTION("SizeOfJsonInteger") {
+  SUBCASE("SizeOfJsonInteger") {
     REQUIRE(8 == sizeof(JsonInteger));
   }
 #endif
@@ -46,85 +46,85 @@ TEST_CASE("JsonVariant set()/get()") {
   // /!\ Most test were moved to `JsonVariant/set.cpp`
   // TODO: move the remaining tests too
 
-  SECTION("False") {
+  SUBCASE("False") {
     variant.set(false);
     REQUIRE(variant.as<bool>() == false);
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("True") {
+  SUBCASE("True") {
     variant.set(true);
     REQUIRE(variant.as<bool>() == true);
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("Double") {
+  SUBCASE("Double") {
     checkNumericType<double>();
   }
-  SECTION("Float") {
+  SUBCASE("Float") {
     checkNumericType<float>();
   }
-  SECTION("SChar") {
+  SUBCASE("SChar") {
     checkNumericType<signed char>();
   }
-  SECTION("SInt") {
+  SUBCASE("SInt") {
     checkNumericType<signed int>();
   }
-  SECTION("SLong") {
+  SUBCASE("SLong") {
     checkNumericType<signed long>();
   }
-  SECTION("SShort") {
+  SUBCASE("SShort") {
     checkNumericType<signed short>();
   }
-  SECTION("UChar") {
+  SUBCASE("UChar") {
     checkNumericType<unsigned char>();
   }
-  SECTION("UInt") {
+  SUBCASE("UInt") {
     checkNumericType<unsigned int>();
   }
-  SECTION("ULong") {
+  SUBCASE("ULong") {
     checkNumericType<unsigned long>();
   }
-  SECTION("UShort") {
+  SUBCASE("UShort") {
     checkNumericType<unsigned short>();
   }
 #if ARDUINOJSON_USE_LONG_LONG
-  SECTION("LongLong") {
+  SUBCASE("LongLong") {
     checkNumericType<unsigned long long>();
   }
-  SECTION("ULongLong") {
+  SUBCASE("ULongLong") {
     checkNumericType<unsigned long long>();
   }
 #endif
 
-  SECTION("Int8") {
+  SUBCASE("Int8") {
     checkNumericType<int8_t>();
   }
-  SECTION("Uint8") {
+  SUBCASE("Uint8") {
     checkNumericType<uint8_t>();
   }
-  SECTION("Int16") {
+  SUBCASE("Int16") {
     checkNumericType<int16_t>();
   }
-  SECTION("Uint16") {
+  SUBCASE("Uint16") {
     checkNumericType<uint16_t>();
   }
-  SECTION("Int32") {
+  SUBCASE("Int32") {
     checkNumericType<int32_t>();
   }
-  SECTION("Uint32") {
+  SUBCASE("Uint32") {
     checkNumericType<uint32_t>();
   }
 #if ARDUINOJSON_USE_LONG_LONG
-  SECTION("Int64") {
+  SUBCASE("Int64") {
     checkNumericType<int64_t>();
   }
-  SECTION("Uint64") {
+  SUBCASE("Uint64") {
     checkNumericType<uint64_t>();
   }
 #endif
 
-  SECTION("CanStoreObject") {
+  SUBCASE("CanStoreObject") {
     JsonDocument doc2;
     JsonObject object = doc2.to<JsonObject>();
 
@@ -138,28 +138,28 @@ TEST_CASE("volatile") {
   JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("volatile bool") {  // issue #2029
+  SUBCASE("volatile bool") {  // issue #2029
     volatile bool f = true;
     variant.set(f);
     CHECK(variant.is<bool>() == true);
     CHECK(variant.as<bool>() == true);
   }
 
-  SECTION("volatile int") {
+  SUBCASE("volatile int") {
     volatile int f = 42;
     variant.set(f);
     CHECK(variant.is<int>() == true);
     CHECK(variant.as<int>() == 42);
   }
 
-  SECTION("volatile float") {  // issue #1557
+  SUBCASE("volatile float") {  // issue #1557
     volatile float f = 3.14f;
     variant.set(f);
     CHECK(variant.is<float>() == true);
     CHECK(variant.as<float>() == 3.14f);
   }
 
-  SECTION("volatile double") {
+  SUBCASE("volatile double") {
     volatile double f = 3.14;
     variant.set(f);
     CHECK(variant.is<double>() == true);

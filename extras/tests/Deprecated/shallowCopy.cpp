@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("shallowCopy()") {
   JsonDocument doc1, doc2;

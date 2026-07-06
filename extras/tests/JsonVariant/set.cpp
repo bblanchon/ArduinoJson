@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -17,7 +17,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
   JsonDocument doc(&spy);
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("string literal") {
+  SUBCASE("string literal") {
     bool result = variant.set("hello world");
 
     REQUIRE(result == true);
@@ -27,7 +27,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     char str[16];
 
     strcpy(str, "hello");
@@ -41,7 +41,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("(const char*)0") {
+  SUBCASE("(const char*)0") {
     bool result = variant.set(static_cast<const char*>(0));
 
     REQUIRE(result == true);
@@ -50,7 +50,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("char*") {
+  SUBCASE("char*") {
     char str[16];
 
     strcpy(str, "hello");
@@ -64,7 +64,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("char* (tiny string optimization)") {
+  SUBCASE("char* (tiny string optimization)") {
     char str[16];
 
     strcpy(str, "abc");
@@ -76,7 +76,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("(char*)0") {
+  SUBCASE("(char*)0") {
     bool result = variant.set(static_cast<char*>(0));
 
     REQUIRE(result == true);
@@ -84,7 +84,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("unsigned char*") {
+  SUBCASE("unsigned char*") {
     char str[16];
 
     strcpy(str, "hello");
@@ -98,7 +98,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("signed char*") {
+  SUBCASE("signed char*") {
     char str[16];
 
     strcpy(str, "hello");
@@ -113,7 +113,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("VLA") {
+  SUBCASE("VLA") {
     size_t n = 16;
     char str[n];
 
@@ -129,7 +129,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
   }
 #endif
 
-  SECTION("std::string") {
+  SUBCASE("std::string") {
     std::string str = "hello\0world"_s;
     bool result = variant.set(str);
     str.replace(0, 5, "world");
@@ -141,7 +141,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("JsonString") {
+  SUBCASE("JsonString") {
     char str[16];
 
     strcpy(str, "hello");
@@ -155,7 +155,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("enum") {
+  SUBCASE("enum") {
     ErrorCode code = ERROR_10;
 
     bool result = variant.set(code);
@@ -166,7 +166,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("float") {
+  SUBCASE("float") {
     bool result = variant.set(1.2f);
 
     REQUIRE(result == true);
@@ -175,7 +175,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("double") {
+  SUBCASE("double") {
     bool result = variant.set(1.2);
     doc.shrinkToFit();
 
@@ -189,7 +189,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("int32_t") {
+  SUBCASE("int32_t") {
     bool result = variant.set(int32_t(42));
 
     REQUIRE(result == true);
@@ -198,7 +198,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("int64_t") {
+  SUBCASE("int64_t") {
     bool result = variant.set(int64_t(-2147483649LL));
     doc.shrinkToFit();
 
@@ -212,7 +212,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("uint32_t") {
+  SUBCASE("uint32_t") {
     bool result = variant.set(uint32_t(42));
 
     REQUIRE(result == true);
@@ -221,7 +221,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("uint64_t") {
+  SUBCASE("uint64_t") {
     bool result = variant.set(uint64_t(4294967296));
     doc.shrinkToFit();
 
@@ -235,7 +235,7 @@ TEST_CASE("JsonVariant::set() when there is enough memory") {
                          });
   }
 
-  SECTION("JsonDocument") {
+  SUBCASE("JsonDocument") {
     JsonDocument doc1;
     doc1["hello"] = "world";
 
@@ -254,21 +254,21 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
 
   JsonVariant v = doc.to<JsonVariant>();
 
-  SECTION("std::string") {
+  SUBCASE("std::string") {
     bool result = v.set("hello world!!"_s);
 
     REQUIRE(result == false);
     REQUIRE(v.isNull());
   }
 
-  SECTION("Serialized<std::string>") {
+  SUBCASE("Serialized<std::string>") {
     bool result = v.set(serialized("hello world!!"_s));
 
     REQUIRE(result == false);
     REQUIRE(v.isNull());
   }
 
-  SECTION("char*") {
+  SUBCASE("char*") {
     char s[] = "hello world!!";
     bool result = v.set(s);
 
@@ -276,42 +276,42 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
     REQUIRE(v.isNull());
   }
 
-  SECTION("float") {
+  SUBCASE("float") {
     bool result = v.set(1.2f);
 
     REQUIRE(result == true);
     REQUIRE(v.is<float>());
   }
 
-  SECTION("double") {
+  SUBCASE("double") {
     bool result = v.set(1.2);
 
     REQUIRE(result == false);
     REQUIRE(v.isNull());
   }
 
-  SECTION("int32_t") {
+  SUBCASE("int32_t") {
     bool result = v.set(-42);
 
     REQUIRE(result == true);
     REQUIRE(v.is<int32_t>());
   }
 
-  SECTION("int64_t") {
+  SUBCASE("int64_t") {
     bool result = v.set(-2147483649LL);
 
     REQUIRE(result == false);
     REQUIRE(v.isNull());
   }
 
-  SECTION("uint32_t") {
+  SUBCASE("uint32_t") {
     bool result = v.set(42);
 
     REQUIRE(result == true);
     REQUIRE(v.is<uint32_t>());
   }
 
-  SECTION("uint64_t") {
+  SUBCASE("uint64_t") {
     bool result = v.set(4294967296U);
 
     REQUIRE(result == false);
@@ -327,35 +327,35 @@ TEST_CASE("JsonVariant::set() releases the previous value") {
 
   JsonVariant v = doc["hello"];
 
-  SECTION("int") {
+  SUBCASE("int") {
     v.set(42);
     REQUIRE(spy.log() == AllocatorLog{
                              Deallocate(sizeofString("world")),
                          });
   }
 
-  SECTION("bool") {
+  SUBCASE("bool") {
     v.set(false);
     REQUIRE(spy.log() == AllocatorLog{
                              Deallocate(sizeofString("world")),
                          });
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     v.set("hello");
     REQUIRE(spy.log() == AllocatorLog{
                              Deallocate(sizeofString("world")),
                          });
   }
 
-  SECTION("float") {
+  SUBCASE("float") {
     v.set(1.2f);
     REQUIRE(spy.log() == AllocatorLog{
                              Deallocate(sizeofString("world")),
                          });
   }
 
-  SECTION("Serialized<const char*>") {
+  SUBCASE("Serialized<const char*>") {
     v.set(serialized("[]"));
     REQUIRE(spy.log() == AllocatorLog{
                              Deallocate(sizeofString("world")),
@@ -373,21 +373,21 @@ TEST_CASE("JsonVariant::set() reuses 8-bit slot") {
   doc.shrinkToFit();
   spy.clearLog();
 
-  SECTION("double") {
+  SUBCASE("double") {
     bool result = variant.set(3.4);
 
     REQUIRE(result == true);
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("int64_t") {
+  SUBCASE("int64_t") {
     bool result = variant.set(-2147483649LL);
 
     REQUIRE(result == true);
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("uint64_t") {
+  SUBCASE("uint64_t") {
     bool result = variant.set(4294967296U);
 
     REQUIRE(result == true);

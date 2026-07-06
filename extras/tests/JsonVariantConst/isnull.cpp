@@ -3,17 +3,17 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonVariantConst::isNull()") {
   JsonDocument doc;
   JsonVariantConst variant = doc.to<JsonVariant>();
 
-  SECTION("returns true when undefined") {
+  SUBCASE("returns true when undefined") {
     REQUIRE(variant.isNull() == true);
   }
 
-  SECTION("returns false if value is integer") {
+  SUBCASE("returns false if value is integer") {
     doc.set(42);
 
     REQUIRE(variant.isNull() == false);

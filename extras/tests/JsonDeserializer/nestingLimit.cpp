@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <sstream>
 
@@ -16,8 +16,8 @@
 TEST_CASE("JsonDeserializer nesting") {
   JsonDocument doc;
 
-  SECTION("Input = const char*") {
-    SECTION("limit = 0") {
+  SUBCASE("Input = const char*") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       SHOULD_WORK(deserializeJson(doc, "\"toto\"", nesting));
       SHOULD_WORK(deserializeJson(doc, "123", nesting));
@@ -28,7 +28,7 @@ TEST_CASE("JsonDeserializer nesting") {
       SHOULD_FAIL(deserializeJson(doc, "{\"toto\":1}", nesting));
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       SHOULD_WORK(deserializeJson(doc, "[\"toto\"]", nesting));
       SHOULD_WORK(deserializeJson(doc, "{\"toto\":1}", nesting));
@@ -39,8 +39,8 @@ TEST_CASE("JsonDeserializer nesting") {
     }
   }
 
-  SECTION("char* and size_t") {
-    SECTION("limit = 0") {
+  SUBCASE("char* and size_t") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       SHOULD_WORK(deserializeJson(doc, "\"toto\"", 6, nesting));
       SHOULD_WORK(deserializeJson(doc, "123", 3, nesting));
@@ -51,7 +51,7 @@ TEST_CASE("JsonDeserializer nesting") {
       SHOULD_FAIL(deserializeJson(doc, "{\"toto\":1}", 10, nesting));
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       SHOULD_WORK(deserializeJson(doc, "[\"toto\"]", 8, nesting));
       SHOULD_WORK(deserializeJson(doc, "{\"toto\":1}", 10, nesting));
@@ -62,8 +62,8 @@ TEST_CASE("JsonDeserializer nesting") {
     }
   }
 
-  SECTION("Input = std::string") {
-    SECTION("limit = 0") {
+  SUBCASE("Input = std::string") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       SHOULD_WORK(deserializeJson(doc, "\"toto\""_s, nesting));
       SHOULD_WORK(deserializeJson(doc, "123"_s, nesting));
@@ -74,7 +74,7 @@ TEST_CASE("JsonDeserializer nesting") {
       SHOULD_FAIL(deserializeJson(doc, "{\"toto\":1}"_s, nesting));
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       SHOULD_WORK(deserializeJson(doc, "[\"toto\"]"_s, nesting));
       SHOULD_WORK(deserializeJson(doc, "{\"toto\":1}"_s, nesting));
@@ -85,8 +85,8 @@ TEST_CASE("JsonDeserializer nesting") {
     }
   }
 
-  SECTION("Input = std::istream") {
-    SECTION("limit = 0") {
+  SUBCASE("Input = std::istream") {
+    SUBCASE("limit = 0") {
       DeserializationOption::NestingLimit nesting(0);
       std::istringstream good("true");
       std::istringstream bad("[]");
@@ -94,7 +94,7 @@ TEST_CASE("JsonDeserializer nesting") {
       SHOULD_FAIL(deserializeJson(doc, bad, nesting));
     }
 
-    SECTION("limit = 1") {
+    SUBCASE("limit = 1") {
       DeserializationOption::NestingLimit nesting(1);
       std::istringstream good("[\"toto\"]");
       std::istringstream bad("{\"toto\":{}}");

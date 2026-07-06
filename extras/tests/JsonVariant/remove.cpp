@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdint.h>
-#include <catch.hpp>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -15,7 +15,7 @@ TEST_CASE("JsonVariant::remove(int)") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
 
-  SECTION("release top level strings") {
+  SUBCASE("release top level strings") {
     doc.add("hello"_s);
     doc.add("hello"_s);
     doc.add("world"_s);
@@ -43,7 +43,7 @@ TEST_CASE("JsonVariant::remove(int)") {
                          });
   }
 
-  SECTION("release strings in nested array") {
+  SUBCASE("release strings in nested array") {
     doc[0][0] = "hello"_s;
 
     JsonVariant var = doc.as<JsonVariant>();

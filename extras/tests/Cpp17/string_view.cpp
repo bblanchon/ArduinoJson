@@ -9,7 +9,7 @@
 #define ARDUINOJSON_ENABLE_STD_STRING 0
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -25,47 +25,47 @@ TEST_CASE("string_view") {
   JsonDocument doc(&spy);
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("deserializeJson()") {
+  SUBCASE("deserializeJson()") {
     auto err = deserializeJson(doc, std::string_view("123", 2));
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.as<int>() == 12);
   }
 
-  SECTION("JsonDocument::set()") {
+  SUBCASE("JsonDocument::set()") {
     doc.set(std::string_view("123", 2));
     REQUIRE(doc.as<std::string_view>() == "12");
   }
 
-  SECTION("JsonDocument::operator[]() const") {
+  SUBCASE("JsonDocument::operator[]() const") {
     doc["ab"] = "Yes";
     doc["abc"] = "No";
     REQUIRE(doc[std::string_view("abc", 2)] == "Yes");
   }
 
-  SECTION("JsonDocument::operator[]()") {
+  SUBCASE("JsonDocument::operator[]()") {
     doc[std::string_view("abc", 2)] = "Yes";
     REQUIRE(doc["ab"] == "Yes");
   }
 
-  SECTION("JsonVariant::operator==()") {
+  SUBCASE("JsonVariant::operator==()") {
     variant.set("A");
     REQUIRE(variant == std::string_view("AX", 1));
     REQUIRE_FALSE(variant == std::string_view("BX", 1));
   }
 
-  SECTION("JsonVariant::operator>()") {
+  SUBCASE("JsonVariant::operator>()") {
     variant.set("B");
     REQUIRE(variant > std::string_view("AX", 1));
     REQUIRE_FALSE(variant > std::string_view("CX", 1));
   }
 
-  SECTION("JsonVariant::operator<()") {
+  SUBCASE("JsonVariant::operator<()") {
     variant.set("B");
     REQUIRE(variant < std::string_view("CX", 1));
     REQUIRE_FALSE(variant < std::string_view("AX", 1));
   }
 
-  SECTION("String deduplication") {
+  SUBCASE("String deduplication") {
     doc.add(std::string_view("example one", 7));
     doc.add(std::string_view("example two", 7));
     doc.add(std::string_view("example\0tree", 12));
@@ -78,21 +78,21 @@ TEST_CASE("string_view") {
                          });
   }
 
-  SECTION("as<std::string_view>()") {
+  SUBCASE("as<std::string_view>()") {
     doc["s"] = "Hello World";
     doc["i"] = 42;
     REQUIRE(doc["s"].as<std::string_view>() == std::string_view("Hello World"));
     REQUIRE(doc["i"].as<std::string_view>() == std::string_view());
   }
 
-  SECTION("is<std::string_view>()") {
+  SUBCASE("is<std::string_view>()") {
     doc["s"] = "Hello World";
     doc["i"] = 42;
     REQUIRE(doc["s"].is<std::string_view>() == true);
     REQUIRE(doc["i"].is<std::string_view>() == false);
   }
 
-  SECTION("String containing NUL") {
+  SUBCASE("String containing NUL") {
     doc.set("hello\0world"_s);
     REQUIRE(doc.as<std::string_view>().size() == 11);
     REQUIRE(doc.as<std::string_view>() == std::string_view("hello\0world", 11));

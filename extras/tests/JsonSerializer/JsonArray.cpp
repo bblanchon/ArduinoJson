@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 static void check(JsonArray array, std::string expected) {
   std::string actual;
@@ -18,86 +18,86 @@ TEST_CASE("serializeJson(JsonArray)") {
   JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
-  SECTION("Empty") {
+  SUBCASE("Empty") {
     check(array, "[]");
   }
 
-  SECTION("Null") {
+  SUBCASE("Null") {
     array.add(static_cast<char*>(0));
 
     check(array, "[null]");
   }
 
-  SECTION("OneString") {
+  SUBCASE("OneString") {
     array.add("hello");
 
     check(array, "[\"hello\"]");
   }
 
-  SECTION("TwoStrings") {
+  SUBCASE("TwoStrings") {
     array.add("hello");
     array.add("world");
 
     check(array, "[\"hello\",\"world\"]");
   }
 
-  SECTION("One double") {
+  SUBCASE("One double") {
     array.add(3.1415927);
     check(array, "[3.1415927]");
   }
 
-  SECTION("OneInteger") {
+  SUBCASE("OneInteger") {
     array.add(1);
 
     check(array, "[1]");
   }
 
-  SECTION("TwoIntegers") {
+  SUBCASE("TwoIntegers") {
     array.add(1);
     array.add(2);
 
     check(array, "[1,2]");
   }
 
-  SECTION("serialized(const char*)") {
+  SUBCASE("serialized(const char*)") {
     array.add(serialized("{\"key\":\"value\"}"));
 
     check(array, "[{\"key\":\"value\"}]");
   }
 
-  SECTION("serialized(char*)") {
+  SUBCASE("serialized(char*)") {
     char tmp[] = "{\"key\":\"value\"}";
     array.add(serialized(tmp));
 
     check(array, "[{\"key\":\"value\"}]");
   }
 
-  SECTION("OneTrue") {
+  SUBCASE("OneTrue") {
     array.add(true);
 
     check(array, "[true]");
   }
 
-  SECTION("OneFalse") {
+  SUBCASE("OneFalse") {
     array.add(false);
 
     check(array, "[false]");
   }
 
-  SECTION("TwoBooleans") {
+  SUBCASE("TwoBooleans") {
     array.add(false);
     array.add(true);
 
     check(array, "[false,true]");
   }
 
-  SECTION("OneEmptyNestedArray") {
+  SUBCASE("OneEmptyNestedArray") {
     array.add<JsonArray>();
 
     check(array, "[[]]");
   }
 
-  SECTION("OneEmptyNestedHash") {
+  SUBCASE("OneEmptyNestedHash") {
     array.add<JsonObject>();
 
     check(array, "[{}]");

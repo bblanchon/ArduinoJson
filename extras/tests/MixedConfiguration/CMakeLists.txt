@@ -30,5 +30,5 @@ add_test(MixedConfiguration MixedConfigurationTests)
 
 set_tests_properties(MixedConfiguration
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

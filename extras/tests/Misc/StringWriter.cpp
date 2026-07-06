@@ -7,7 +7,7 @@
 #define ARDUINOJSON_STRING_BUFFER_SIZE 5
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 #include "custom_string.hpp"
@@ -26,21 +26,21 @@ static size_t print(StringWriter& writer, char c) {
 
 template <typename StringWriter, typename String>
 void common_tests(StringWriter& writer, const String& output) {
-  SECTION("InitialState") {
+  SUBCASE("InitialState") {
     REQUIRE(std::string("") == output);
   }
 
-  SECTION("EmptyString") {
+  SUBCASE("EmptyString") {
     REQUIRE(0 == print(writer, ""));
     REQUIRE(std::string("") == output);
   }
 
-  SECTION("OneString") {
+  SUBCASE("OneString") {
     REQUIRE(4 == print(writer, "ABCD"));
     REQUIRE("ABCD"_s == output);
   }
 
-  SECTION("TwoStrings") {
+  SUBCASE("TwoStrings") {
     REQUIRE(4 == print(writer, "ABCD"));
     REQUIRE(4 == print(writer, "EFGH"));
     REQUIRE("ABCDEFGH"_s == output);
@@ -53,7 +53,7 @@ TEST_CASE("StaticStringWriter") {
 
   common_tests(writer, static_cast<const char*>(output));
 
-  SECTION("OverCapacity") {
+  SUBCASE("OverCapacity") {
     REQUIRE(20 == print(writer, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
     REQUIRE(0 == print(writer, "ABC"));
     REQUIRE(0 == print(writer, 'D'));
@@ -71,8 +71,8 @@ TEST_CASE("Writer<String>") {
   ::String output;
   Writer<::String> writer(output);
 
-  SECTION("write(char)") {
-    SECTION("writes to temporary buffer") {
+  SUBCASE("write(char)") {
+    SUBCASE("writes to temporary buffer") {
       // accumulate in buffer
       writer.write('a');
       writer.write('b');
@@ -90,13 +90,13 @@ TEST_CASE("Writer<String>") {
       REQUIRE(output == "abcdef");
     }
 
-    SECTION("returns 1 on success") {
+    SUBCASE("returns 1 on success") {
       for (int i = 0; i < ARDUINOJSON_STRING_BUFFER_SIZE; i++) {
         REQUIRE(writer.write('x') == 1);
       }
     }
 
-    SECTION("returns 0 on error") {
+    SUBCASE("returns 0 on error") {
       output.limitCapacityTo(1);
 
       REQUIRE(writer.write('a') == 1);
@@ -108,14 +108,14 @@ TEST_CASE("Writer<String>") {
     }
   }
 
-  SECTION("write(char*, size_t)") {
-    SECTION("empty string") {
+  SUBCASE("write(char*, size_t)") {
+    SUBCASE("empty string") {
       REQUIRE(0 == print(writer, ""));
       writer.flush();
       REQUIRE(output == "");
     }
 
-    SECTION("writes to temporary buffer") {
+    SUBCASE("writes to temporary buffer") {
       // accumulate in buffer
       print(writer, "abc");
       REQUIRE(output == "");
@@ -144,12 +144,12 @@ TEST_CASE("serializeJson(doc, String)") {
   doc["hello"] = "world";
   ::String output = "erase me";
 
-  SECTION("sufficient capacity") {
+  SUBCASE("sufficient capacity") {
     serializeJson(doc, output);
     REQUIRE(output == "{\"hello\":\"world\"}");
   }
 
-  SECTION("unsufficient capacity") {  // issue #1561
+  SUBCASE("unsufficient capacity") {  // issue #1561
     output.limitCapacityTo(10);
     serializeJson(doc, output);
     REQUIRE(output == "{\"hello\"");

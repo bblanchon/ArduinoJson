@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 enum MYENUM2 { ONE = 1, TWO = 2 };
 
@@ -11,7 +11,7 @@ TEST_CASE("JsonVariant::is<T>()") {
   JsonDocument doc;
   JsonVariant variant = doc.to<JsonVariant>();
 
-  SECTION("unbound") {
+  SUBCASE("unbound") {
     variant = JsonVariant();
 
     CHECK(variant.is<JsonObject>() == false);
@@ -28,7 +28,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<JsonString>() == false);
   }
 
-  SECTION("null") {
+  SUBCASE("null") {
     CHECK(variant.is<JsonVariant>() == true);
     CHECK(variant.is<JsonVariantConst>() == true);
     CHECK(variant.is<JsonObject>() == false);
@@ -42,7 +42,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("true") {
+  SUBCASE("true") {
     variant.set(true);
 
     CHECK(variant.is<bool>() == true);
@@ -58,7 +58,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("false") {
+  SUBCASE("false") {
     variant.set(false);
 
     CHECK(variant.is<bool>() == true);
@@ -74,7 +74,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("int") {
+  SUBCASE("int") {
     variant.set(42);
 
     CHECK(variant.is<int>() == true);
@@ -93,7 +93,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<JsonString>() == false);
   }
 
-  SECTION("double") {
+  SUBCASE("double") {
     variant.set(4.2);
 
     CHECK(variant.is<double>() == true);
@@ -110,7 +110,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     variant.set("4.2");
 
     CHECK(variant.is<const char*>() == true);
@@ -128,7 +128,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("JsonArray") {
+  SUBCASE("JsonArray") {
     variant.to<JsonArray>();
 
     CHECK(variant.is<JsonArray>() == true);
@@ -144,7 +144,7 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<MYENUM2>() == false);
   }
 
-  SECTION("JsonObject") {
+  SUBCASE("JsonObject") {
     variant.to<JsonObject>();
 
     CHECK(variant.is<JsonObject>() == true);

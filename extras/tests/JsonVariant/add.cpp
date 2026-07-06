@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdint.h>
-#include <catch.hpp>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -13,25 +13,25 @@ TEST_CASE("JsonVariant::add(T)") {
   JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
-  SECTION("add integer to new variant") {
+  SUBCASE("add integer to new variant") {
     var.add(42);
 
     REQUIRE(var.as<std::string>() == "[42]");
   }
 
-  SECTION("add const char* to new variant") {
+  SUBCASE("add const char* to new variant") {
     var.add("hello");
 
     REQUIRE(var.as<std::string>() == "[\"hello\"]");
   }
 
-  SECTION("add std::string to new variant") {
+  SUBCASE("add std::string to new variant") {
     var.add("hello"_s);
 
     REQUIRE(var.as<std::string>() == "[\"hello\"]");
   }
 
-  SECTION("add integer to integer") {
+  SUBCASE("add integer to integer") {
     var.set(123);
 
     var.add(456);  // no-op
@@ -39,7 +39,7 @@ TEST_CASE("JsonVariant::add(T)") {
     REQUIRE(var.as<std::string>() == "123");
   }
 
-  SECTION("add integer to object") {
+  SUBCASE("add integer to object") {
     var["val"] = 123;
 
     var.add(456);  // no-op
@@ -48,7 +48,7 @@ TEST_CASE("JsonVariant::add(T)") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("supports VLAs") {
+  SUBCASE("supports VLAs") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -64,14 +64,14 @@ TEST_CASE("JsonVariant::add<T>()") {
   JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
-  SECTION("JsonArray") {
+  SUBCASE("JsonArray") {
     JsonArray array = var.add<JsonArray>();
     array.add(1);
     array.add(2);
     REQUIRE(doc.as<std::string>() == "[[1,2]]");
   }
 
-  SECTION("JsonVariant") {
+  SUBCASE("JsonVariant") {
     JsonVariant variant = var.add<JsonVariant>();
     variant.set(42);
     REQUIRE(doc.as<std::string>() == "[42]");
@@ -87,7 +87,7 @@ TEST_CASE("JsonObject::add(JsonObject) ") {
   JsonDocument doc2(&spy);
   JsonVariant variant = doc2.to<JsonVariant>();
 
-  SECTION("success") {
+  SUBCASE("success") {
     bool result = variant.add(doc1.as<JsonObject>());
 
     REQUIRE(result == true);
@@ -99,7 +99,7 @@ TEST_CASE("JsonObject::add(JsonObject) ") {
                          });
   }
 
-  SECTION("partial failure") {  // issue #2081
+  SUBCASE("partial failure") {  // issue #2081
     allocator.setCountdown(2);
 
     bool result = variant.add(doc1.as<JsonObject>());
@@ -114,7 +114,7 @@ TEST_CASE("JsonObject::add(JsonObject) ") {
                          });
   }
 
-  SECTION("complete failure") {
+  SUBCASE("complete failure") {
     allocator.setCountdown(0);
 
     bool result = variant.add(doc1.as<JsonObject>());

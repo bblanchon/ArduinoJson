@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <stdlib.h>  // malloc, free
 #include <string>
@@ -44,14 +44,14 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
   SpyingAllocator spyingAllocator(&armoredAllocator);
   JsonDocument doc(&spyingAllocator);
 
-  SECTION("null") {
+  SUBCASE("null") {
     doc.shrinkToFit();
 
     REQUIRE(doc.as<std::string>() == "null");
     REQUIRE(spyingAllocator.log() == AllocatorLog{});
   }
 
-  SECTION("empty object") {
+  SUBCASE("empty object") {
     deserializeJson(doc, "{}");
 
     doc.shrinkToFit();
@@ -60,7 +60,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     REQUIRE(spyingAllocator.log() == AllocatorLog{});
   }
 
-  SECTION("empty array") {
+  SUBCASE("empty array") {
     deserializeJson(doc, "[]");
 
     doc.shrinkToFit();
@@ -69,7 +69,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
     REQUIRE(spyingAllocator.log() == AllocatorLog{});
   }
 
-  SECTION("string") {
+  SUBCASE("string") {
     doc.set("abcdefg");
     REQUIRE(doc.as<std::string>() == "abcdefg");
 
@@ -81,7 +81,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
                                      });
   }
 
-  SECTION("raw string") {
+  SUBCASE("raw string") {
     doc.set(serialized("[{},12]"));
 
     doc.shrinkToFit();
@@ -92,7 +92,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
                                      });
   }
 
-  SECTION("object key") {
+  SUBCASE("object key") {
     doc["abcdefg"_s] = 42;
 
     doc.shrinkToFit();
@@ -106,7 +106,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
             });
   }
 
-  SECTION("string in array") {
+  SUBCASE("string in array") {
     doc.add("abcdefg"_s);
 
     doc.shrinkToFit();
@@ -120,7 +120,7 @@ TEST_CASE("JsonDocument::shrinkToFit()") {
             });
   }
 
-  SECTION("string in object") {
+  SUBCASE("string in object") {
     doc["key"] = "abcdefg"_s;
 
     doc.shrinkToFit();

@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <stdlib.h>  // malloc, free
 #include <string>
@@ -15,14 +15,14 @@ TEST_CASE("JsonDocument::clear()") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
 
-  SECTION("null") {
+  SUBCASE("null") {
     doc.clear();
 
     REQUIRE(doc.isNull());
     REQUIRE(spy.log() == AllocatorLog{});
   }
 
-  SECTION("releases resources") {
+  SUBCASE("releases resources") {
     doc["hello"_s] = "world"_s;
     spy.clearLog();
 
@@ -36,7 +36,7 @@ TEST_CASE("JsonDocument::clear()") {
                          });
   }
 
-  SECTION("clear free list") {  // issue #2034
+  SUBCASE("clear free list") {  // issue #2034
     JsonObject obj = doc.to<JsonObject>();
     obj["a"] = 1;
     obj.clear();  // puts the slot in the free list

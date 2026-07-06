@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
@@ -11,25 +11,25 @@ TEST_CASE("JsonVariantConst::operator[]") {
   JsonDocument doc;
   JsonVariantConst var = doc.to<JsonVariant>();
 
-  SECTION("null") {
+  SUBCASE("null") {
     REQUIRE(0 == var.size());
     REQUIRE(var["0"].isNull());
     REQUIRE(var[0].isNull());
   }
 
-  SECTION("string") {
+  SUBCASE("string") {
     doc.set("hello world");
     REQUIRE(0 == var.size());
     REQUIRE(var["0"].isNull());
     REQUIRE(var[0].isNull());
   }
 
-  SECTION("array") {
+  SUBCASE("array") {
     JsonArray array = doc.to<JsonArray>();
     array.add("A");
     array.add("B");
 
-    SECTION("int") {
+    SUBCASE("int") {
       REQUIRE("A"_s == var[0]);
       REQUIRE("B"_s == var[1]);
       REQUIRE("A"_s == var[static_cast<unsigned char>(0)]);  // issue #381
@@ -37,24 +37,24 @@ TEST_CASE("JsonVariantConst::operator[]") {
       REQUIRE(var[3].isNull());
     }
 
-    SECTION("const char*") {
+    SUBCASE("const char*") {
       REQUIRE(var["0"].isNull());
     }
 
-    SECTION("JsonVariant") {
+    SUBCASE("JsonVariant") {
       array.add(1);
       REQUIRE(var[var[2]] == "B"_s);
       REQUIRE(var[var[3]].isNull());
     }
   }
 
-  SECTION("object") {
+  SUBCASE("object") {
     JsonObject object = doc.to<JsonObject>();
     object["ab"_s] = "AB";
     object["abc"_s] = "ABC";
     object["abcd"_s] = "ABCD";
 
-    SECTION("string literal") {
+    SUBCASE("string literal") {
       REQUIRE(var["ab"] == "AB"_s);
       REQUIRE(var["abc"] == "ABC"_s);
       REQUIRE(var["abcd"] == "ABCD"_s);
@@ -62,7 +62,7 @@ TEST_CASE("JsonVariantConst::operator[]") {
       REQUIRE(var[0].isNull());
     }
 
-    SECTION("const char*") {
+    SUBCASE("const char*") {
       REQUIRE(var[static_cast<const char*>("ab")] == "AB"_s);
       REQUIRE(var[static_cast<const char*>("abc")] == "ABC"_s);
       REQUIRE(var[static_cast<const char*>("abc\0d")] == "ABC"_s);
@@ -70,7 +70,7 @@ TEST_CASE("JsonVariantConst::operator[]") {
       REQUIRE(var[static_cast<const char*>(0)].isNull());
     }
 
-    SECTION("supports std::string") {
+    SUBCASE("supports std::string") {
       REQUIRE(var["ab"_s] == "AB"_s);
       REQUIRE(var["abc"_s] == "ABC"_s);
       REQUIRE(var["abcd"_s] == "ABCD"_s);
@@ -79,7 +79,7 @@ TEST_CASE("JsonVariantConst::operator[]") {
 
 #if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
     !defined(SUBSCRIPT_CONFLICTS_WITH_BUILTIN_OPERATOR)
-    SECTION("supports VLA") {
+    SUBCASE("supports VLA") {
       size_t i = 16;
       char vla[i];
       strcpy(vla, "abc");
@@ -88,7 +88,7 @@ TEST_CASE("JsonVariantConst::operator[]") {
     }
 #endif
 
-    SECTION("supports JsonVariant") {
+    SUBCASE("supports JsonVariant") {
       object["key1"] = "ab";
       object["key2"] = "abc";
       object["key3"] = "abcd"_s;

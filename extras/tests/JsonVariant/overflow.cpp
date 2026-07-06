@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 template <typename TOut, typename TIn>
 void shouldBeOk(TIn value) {
@@ -23,7 +23,7 @@ void shouldOverflow(TIn value) {
 }
 
 TEST_CASE("Handle integer overflow in stored integer") {
-  SECTION("int8_t") {
+  SUBCASE("int8_t") {
     // ok
     shouldBeOk<int8_t>(-128);
     shouldBeOk<int8_t>(42.0);
@@ -38,7 +38,7 @@ TEST_CASE("Handle integer overflow in stored integer") {
     shouldOverflow<int8_t>(127.1);
   }
 
-  SECTION("int16_t") {
+  SUBCASE("int16_t") {
     // ok
     shouldBeOk<int16_t>(-32768);
     shouldBeOk<int16_t>(-32767.9);
@@ -54,7 +54,7 @@ TEST_CASE("Handle integer overflow in stored integer") {
     shouldOverflow<int16_t>(32768);
   }
 
-  SECTION("uint8_t") {
+  SUBCASE("uint8_t") {
     // ok
     shouldBeOk<uint8_t>(1);
     shouldBeOk<uint8_t>(42.0);

@@ -1,14 +1,14 @@
 #define ARDUINOJSON_ENABLE_NAN 0
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 #include <limits>
 
 TEST_CASE("ARDUINOJSON_ENABLE_NAN == 0") {
   JsonDocument doc;
   JsonObject root = doc.to<JsonObject>();
 
-  SECTION("serializeJson()") {
+  SUBCASE("serializeJson()") {
     root["X"] = std::numeric_limits<double>::signaling_NaN();
 
     std::string json;
@@ -17,7 +17,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_NAN == 0") {
     REQUIRE(json == "{\"X\":null}");
   }
 
-  SECTION("deserializeJson()") {
+  SUBCASE("deserializeJson()") {
     DeserializationError err = deserializeJson(doc, "{\"X\":NaN}");
 
     REQUIRE(err == DeserializationError::InvalidInput);

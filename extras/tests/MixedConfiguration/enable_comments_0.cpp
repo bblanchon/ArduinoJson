@@ -5,7 +5,7 @@
 #define ARDUINOJSON_ENABLE_COMMENTS 0
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Comments should produce InvalidInput") {
   JsonDocument doc;

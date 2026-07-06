@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Gbathree") {
   JsonDocument doc;
@@ -22,63 +22,63 @@ TEST_CASE("Gbathree") {
       "[15,15,15,15]],\"altc\":[2,2,2,2],\"altd\":[2,2,2,2]}");
   JsonObject root = doc.as<JsonObject>();
 
-  SECTION("Success") {
+  SUBCASE("Success") {
     REQUIRE(error == DeserializationError::Ok);
   }
 
-  SECTION("ProtocolName") {
+  SUBCASE("ProtocolName") {
     REQUIRE("fluorescence" == root["protocol_name"]);
   }
 
-  SECTION("Repeats") {
+  SUBCASE("Repeats") {
     REQUIRE(1 == root["repeats"]);
   }
 
-  SECTION("Wait") {
+  SUBCASE("Wait") {
     REQUIRE(0 == root["wait"]);
   }
 
-  SECTION("Measurements") {
+  SUBCASE("Measurements") {
     REQUIRE(3 == root["measurements"]);
   }
 
-  SECTION("Meas2_Light") {
+  SUBCASE("Meas2_Light") {
     REQUIRE(15 == root["meas2_light"]);
   }
 
-  SECTION("Meas1_Baseline") {
+  SUBCASE("Meas1_Baseline") {
     REQUIRE(0 == root["meas1_baseline"]);
   }
 
-  SECTION("Act_Light") {
+  SUBCASE("Act_Light") {
     REQUIRE(20 == root["act_light"]);
   }
 
-  SECTION("Pulsesize") {
+  SUBCASE("Pulsesize") {
     REQUIRE(25 == root["pulsesize"]);
   }
 
-  SECTION("Pulsedistance") {
+  SUBCASE("Pulsedistance") {
     REQUIRE(10000 == root["pulsedistance"]);
   }
 
-  SECTION("Actintensity1") {
+  SUBCASE("Actintensity1") {
     REQUIRE(50 == root["actintensity1"]);
   }
 
-  SECTION("Actintensity2") {
+  SUBCASE("Actintensity2") {
     REQUIRE(255 == root["actintensity2"]);
   }
 
-  SECTION("Measintensity") {
+  SUBCASE("Measintensity") {
     REQUIRE(255 == root["measintensity"]);
   }
 
-  SECTION("Calintensity") {
+  SUBCASE("Calintensity") {
     REQUIRE(255 == root["calintensity"]);
   }
 
-  SECTION("Pulses") {
+  SUBCASE("Pulses") {
     // "pulses":[50,50,50]
 
     JsonArray array = root["pulses"];
@@ -91,7 +91,7 @@ TEST_CASE("Gbathree") {
     }
   }
 
-  SECTION("Act") {
+  SUBCASE("Act") {
     // "act":[2,1,2,2]
 
     JsonArray array = root["act"];
@@ -104,7 +104,7 @@ TEST_CASE("Gbathree") {
     REQUIRE(2 == array[3]);
   }
 
-  SECTION("Detectors") {
+  SUBCASE("Detectors") {
     // "detectors":[[34,34,34,34],[34,34,34,34],[34,34,34,34],[34,34,34,34]]
 
     JsonArray array = root["detectors"];
@@ -121,7 +121,7 @@ TEST_CASE("Gbathree") {
     }
   }
 
-  SECTION("Alta") {
+  SUBCASE("Alta") {
     // alta:[2,2,2,2]
 
     JsonArray array = root["alta"];
@@ -134,7 +134,7 @@ TEST_CASE("Gbathree") {
     }
   }
 
-  SECTION("Altb") {
+  SUBCASE("Altb") {
     // altb:[2,2,2,2]
 
     JsonArray array = root["altb"];
@@ -147,7 +147,7 @@ TEST_CASE("Gbathree") {
     }
   }
 
-  SECTION("Measlights") {
+  SUBCASE("Measlights") {
     // "measlights":[[15,15,15,15],[15,15,15,15],[15,15,15,15],[15,15,15,15]]
 
     JsonArray array = root["measlights"];
@@ -165,7 +165,7 @@ TEST_CASE("Gbathree") {
     }
   }
 
-  SECTION("Measlights2") {
+  SUBCASE("Measlights2") {
     // "measlights2":[[15,15,15,15],[15,15,15,15],[15,15,15,15],[15,15,15,15]]
 
     JsonArray array = root["measlights2"];
@@ -182,7 +182,7 @@ TEST_CASE("Gbathree") {
     }
   }
 
-  SECTION("Altc") {
+  SUBCASE("Altc") {
     // altc:[2,2,2,2]
 
     JsonArray array = root["altc"];
@@ -195,7 +195,7 @@ TEST_CASE("Gbathree") {
     }
   }
 
-  SECTION("Altd") {
+  SUBCASE("Altd") {
     // altd:[2,2,2,2]
 
     JsonArray array = root["altd"];

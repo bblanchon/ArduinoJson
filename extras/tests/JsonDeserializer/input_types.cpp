@@ -4,7 +4,7 @@
 
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 #include <sstream>
 
 #include "Allocators.hpp"
@@ -61,7 +61,7 @@ TEST_CASE("deserializeJson(uint8_t*, size_t)") {  // issue #1898
 TEST_CASE("deserializeJson(const std::string&)") {
   JsonDocument doc;
 
-  SECTION("should accept const string") {
+  SUBCASE("should accept const string") {
     const std::string input("[42]");
 
     DeserializationError err = deserializeJson(doc, input);
@@ -69,13 +69,13 @@ TEST_CASE("deserializeJson(const std::string&)") {
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("should accept temporary string") {
+  SUBCASE("should accept temporary string") {
     DeserializationError err = deserializeJson(doc, "[42]"_s);
 
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("should duplicate content") {
+  SUBCASE("should duplicate content") {
     std::string input("[\"hello\"]");
 
     DeserializationError err = deserializeJson(doc, input);
@@ -90,7 +90,7 @@ TEST_CASE("deserializeJson(const std::string&)") {
 TEST_CASE("deserializeJson(std::istream&)") {
   JsonDocument doc;
 
-  SECTION("array") {
+  SUBCASE("array") {
     std::istringstream json(" [ 42 ] ");
 
     DeserializationError err = deserializeJson(doc, json);
@@ -101,7 +101,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
     REQUIRE(42 == arr[0]);
   }
 
-  SECTION("object") {
+  SUBCASE("object") {
     std::istringstream json(" { hello : 'world' }");
 
     DeserializationError err = deserializeJson(doc, json);
@@ -112,7 +112,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
     REQUIRE("world"_s == obj["hello"]);
   }
 
-  SECTION("Should not read after the closing brace of an empty object") {
+  SUBCASE("Should not read after the closing brace of an empty object") {
     std::istringstream json("{}123");
 
     deserializeJson(doc, json);
@@ -120,7 +120,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
     REQUIRE('1' == char(json.get()));
   }
 
-  SECTION("Should not read after the closing brace") {
+  SUBCASE("Should not read after the closing brace") {
     std::istringstream json("{\"hello\":\"world\"}123");
 
     deserializeJson(doc, json);
@@ -128,7 +128,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
     REQUIRE('1' == char(json.get()));
   }
 
-  SECTION("Should not read after the closing bracket of an empty array") {
+  SUBCASE("Should not read after the closing bracket of an empty array") {
     std::istringstream json("[]123");
 
     deserializeJson(doc, json);
@@ -136,7 +136,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
     REQUIRE('1' == char(json.get()));
   }
 
-  SECTION("Should not read after the closing bracket") {
+  SUBCASE("Should not read after the closing bracket") {
     std::istringstream json("[\"hello\",\"world\"]123");
 
     deserializeJson(doc, json);
@@ -144,7 +144,7 @@ TEST_CASE("deserializeJson(std::istream&)") {
     REQUIRE('1' == char(json.get()));
   }
 
-  SECTION("Should not read after the closing quote") {
+  SUBCASE("Should not read after the closing quote") {
     std::istringstream json("\"hello\"123");
 
     deserializeJson(doc, json);

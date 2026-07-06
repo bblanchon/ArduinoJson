@@ -2,9 +2,9 @@
 // Copyright © 2014-2025, Benoit BLANCHON
 // MIT License
 
+#include <doctest.h>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Strings/StringAdapters.hpp>
-#include <catch.hpp>
 
 #include "Allocators.hpp"
 
@@ -22,7 +22,7 @@ static StringNode* saveString(ResourceManager& resources, const char* s,
 TEST_CASE("ResourceManager::saveString()") {
   ResourceManager resources;
 
-  SECTION("Duplicates different strings") {
+  SUBCASE("Duplicates different strings") {
     auto a = saveString(resources, "hello");
     auto b = saveString(resources, "world");
     REQUIRE(+a->data != +b->data);
@@ -33,7 +33,7 @@ TEST_CASE("ResourceManager::saveString()") {
     REQUIRE(resources.size() == sizeofString("hello") + sizeofString("world"));
   }
 
-  SECTION("Deduplicates identical strings") {
+  SUBCASE("Deduplicates identical strings") {
     auto a = saveString(resources, "hello");
     auto b = saveString(resources, "hello");
     REQUIRE(a == b);
@@ -42,7 +42,7 @@ TEST_CASE("ResourceManager::saveString()") {
     REQUIRE(resources.size() == sizeofString("hello"));
   }
 
-  SECTION("Deduplicates identical strings that contain NUL") {
+  SUBCASE("Deduplicates identical strings that contain NUL") {
     auto a = saveString(resources, "hello\0world", 11);
     auto b = saveString(resources, "hello\0world", 11);
     REQUIRE(a == b);
@@ -51,7 +51,7 @@ TEST_CASE("ResourceManager::saveString()") {
     REQUIRE(resources.size() == sizeofString("hello world"));
   }
 
-  SECTION("Don't stop on first NUL") {
+  SUBCASE("Don't stop on first NUL") {
     auto a = saveString(resources, "hello");
     auto b = saveString(resources, "hello\0world", 11);
     REQUIRE(a != b);
@@ -63,7 +63,7 @@ TEST_CASE("ResourceManager::saveString()") {
             sizeofString("hello") + sizeofString("hello world"));
   }
 
-  SECTION("Returns NULL when allocation fails") {
+  SUBCASE("Returns NULL when allocation fails") {
     ResourceManager pool2(FailingAllocator::instance());
     REQUIRE(saveString(pool2, "a") == nullptr);
   }

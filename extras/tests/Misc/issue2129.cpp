@@ -3,7 +3,9 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
+
+#include <limits>
 
 template <typename T>
 class Nullable {
@@ -51,5 +53,5 @@ TEST_CASE("Issue #2129") {
 
   doc["value"] = nullable_value;
 
-  REQUIRE(doc["value"].as<float>() == Approx(123.4f));
+  REQUIRE(doc["value"].as<float>() == doctest::Approx(123.4f));
 }

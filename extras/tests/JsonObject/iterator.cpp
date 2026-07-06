@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonObject::begin()/end()") {
   JsonDocument doc;
@@ -11,7 +11,7 @@ TEST_CASE("JsonObject::begin()/end()") {
   obj["ab"] = 12;
   obj["cd"] = 34;
 
-  SECTION("NonConstIterator") {
+  SUBCASE("NonConstIterator") {
     JsonObject::iterator it = obj.begin();
     REQUIRE(obj.end() != it);
     REQUIRE(it->key() == "ab");
@@ -24,12 +24,12 @@ TEST_CASE("JsonObject::begin()/end()") {
     REQUIRE(obj.end() == it);
   }
 
-  SECTION("Dereferencing end() is safe") {
+  SUBCASE("Dereferencing end() is safe") {
     REQUIRE(obj.end()->key().isNull());
     REQUIRE(obj.end()->value().isNull());
   }
 
-  SECTION("null JsonObject") {
+  SUBCASE("null JsonObject") {
     JsonObject null;
     REQUIRE(null.begin() == null.end());
   }

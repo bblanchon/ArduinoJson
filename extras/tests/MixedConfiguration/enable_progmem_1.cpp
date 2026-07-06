@@ -5,31 +5,31 @@
 #define ARDUINOJSON_ENABLE_PROGMEM 1
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Flash strings") {
   JsonDocument doc;
 
-  SECTION("deserializeJson()") {
+  SUBCASE("deserializeJson()") {
     DeserializationError err = deserializeJson(doc, F("{'hello':'world'}"));
 
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc["hello"] == "world");
   }
 
-  SECTION("JsonDocument::operator[]") {
+  SUBCASE("JsonDocument::operator[]") {
     doc[F("hello")] = F("world");
 
     REQUIRE(doc["hello"] == "world");
   }
 
-  SECTION("JsonDocument::add()") {
+  SUBCASE("JsonDocument::add()") {
     doc.add(F("world"));
 
     REQUIRE(doc[0] == "world");
   }
 
-  SECTION("JsonVariant::set()") {
+  SUBCASE("JsonVariant::set()") {
     JsonVariant var = doc.to<JsonVariant>();
 
     var.set(F("world"));
@@ -37,13 +37,13 @@ TEST_CASE("Flash strings") {
     REQUIRE(var == "world");
   }
 
-  SECTION("MemberProxy::operator==") {
+  SUBCASE("MemberProxy::operator==") {
     doc["hello"] = "world";
 
     REQUIRE(doc["hello"] == F("world"));
   }
 
-  SECTION("ElementProxy::operator==") {
+  SUBCASE("ElementProxy::operator==") {
     doc.add("world");
 
     REQUIRE(doc[0] == F("world"));
@@ -95,7 +95,7 @@ TEST_CASE("memcpy_P") {
 TEST_CASE("BoundedReader<const __FlashStringHelper*>") {
   using namespace ArduinoJson::detail;
 
-  SECTION("read") {
+  SUBCASE("read") {
     BoundedReader<const __FlashStringHelper*> reader(F("\x01\xFF"), 2);
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
@@ -103,7 +103,7 @@ TEST_CASE("BoundedReader<const __FlashStringHelper*>") {
     REQUIRE(reader.read() == -1);
   }
 
-  SECTION("readBytes() all at once") {
+  SUBCASE("readBytes() all at once") {
     BoundedReader<const __FlashStringHelper*> reader(F("ABCD"), 3);
 
     char buffer[8] = "abcd";
@@ -115,7 +115,7 @@ TEST_CASE("BoundedReader<const __FlashStringHelper*>") {
     REQUIRE(buffer[3] == 'd');
   }
 
-  SECTION("readBytes() in two parts") {
+  SUBCASE("readBytes() in two parts") {
     BoundedReader<const __FlashStringHelper*> reader(F("ABCDEF"), 6);
 
     char buffer[8] = "abcdefg";
@@ -135,7 +135,7 @@ TEST_CASE("BoundedReader<const __FlashStringHelper*>") {
 TEST_CASE("Reader<const __FlashStringHelper*>") {
   using namespace ArduinoJson::detail;
 
-  SECTION("read()") {
+  SUBCASE("read()") {
     Reader<const __FlashStringHelper*> reader(F("\x01\xFF\x00\x12"));
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
@@ -143,7 +143,7 @@ TEST_CASE("Reader<const __FlashStringHelper*>") {
     REQUIRE(reader.read() == 0x12);
   }
 
-  SECTION("readBytes() all at once") {
+  SUBCASE("readBytes() all at once") {
     Reader<const __FlashStringHelper*> reader(F("ABCD"));
 
     char buffer[8] = "abcd";
@@ -155,7 +155,7 @@ TEST_CASE("Reader<const __FlashStringHelper*>") {
     REQUIRE(buffer[3] == 'd');
   }
 
-  SECTION("readBytes() in two parts") {
+  SUBCASE("readBytes() in two parts") {
     Reader<const __FlashStringHelper*> reader(F("ABCDEF"));
 
     char buffer[8] = "abcdefg";

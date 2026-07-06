@@ -5,8 +5,8 @@
 #define ARDUINOJSON_ENABLE_NAN 1
 #define ARDUINOJSON_ENABLE_INFINITY 1
 
+#include <doctest.h>
 #include <ArduinoJson.hpp>
-#include <catch.hpp>
 
 using namespace ArduinoJson::detail;
 
@@ -14,7 +14,7 @@ void checkFloat(const char* input, float expected) {
   CAPTURE(input);
   auto result = parseNumber(input);
   REQUIRE(result.type() == NumberType::Float);
-  REQUIRE(result.asFloat() == Approx(expected));
+  REQUIRE(result.asFloat() == doctest::Approx(expected));
 }
 
 void checkFloatNaN(const char* input) {
@@ -27,21 +27,21 @@ void checkFloatInf(const char* input, bool negative) {
   CAPTURE(input);
   float x = parseNumber<float>(input);
   if (negative)
-    REQUIRE(x < 0);
+    REQUIRE(x < 0.0f);
   else
-    REQUIRE(x > 0);
+    REQUIRE(x > 0.0f);
   REQUIRE(x == x);      // not a NaN
   REQUIRE(x * 2 == x);  // a property of infinity
 }
 
 TEST_CASE("parseNumber<float>()") {
-  SECTION("Float_Short_NoExponent") {
+  SUBCASE("Float_Short_NoExponent") {
     checkFloat("3.14", 3.14f);
     checkFloat("-3.14", -3.14f);
     checkFloat("+3.14", +3.14f);
   }
 
-  SECTION("Short_NoDot") {
+  SUBCASE("Short_NoDot") {
     checkFloat("1E+38", 1E+38f);
     checkFloat("-1E+38", -1E+38f);
     checkFloat("+1E-38", +1E-38f);
@@ -49,7 +49,7 @@ TEST_CASE("parseNumber<float>()") {
     checkFloat("-1e-38", -1e-38f);
   }
 
-  SECTION("Max") {
+  SUBCASE("Max") {
     checkFloat("340.2823e+36", 3.402823e+38f);
     checkFloat("34.02823e+37", 3.402823e+38f);
     checkFloat("3.402823e+38", 3.402823e+38f);
@@ -58,7 +58,7 @@ TEST_CASE("parseNumber<float>()") {
     checkFloat("0.003402823e+41", 3.402823e+38f);
   }
 
-  SECTION("VeryLong") {
+  SUBCASE("VeryLong") {
     checkFloat("0.00000000000000000000000000000001", 1e-32f);
 
     // The following don't work because they have many digits so parseNumber()
@@ -71,12 +71,12 @@ TEST_CASE("parseNumber<float>()") {
     //     1e+32f);
   }
 
-  SECTION("NaN") {
+  SUBCASE("NaN") {
     checkFloatNaN("NaN");
     checkFloatNaN("nan");
   }
 
-  SECTION("Infinity") {
+  SUBCASE("Infinity") {
     checkFloatInf("Infinity", false);
     checkFloatInf("+Infinity", false);
     checkFloatInf("-Infinity", true);

@@ -1,7 +1,7 @@
 #define ARDUINOJSON_ENABLE_INFINITY 0
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 #include <limits>
 
 static void assertParseFails(const char* json) {
@@ -19,7 +19,7 @@ static void assertJsonEquals(const JsonDocument& doc,
 }
 
 TEST_CASE("ARDUINOJSON_ENABLE_INFINITY == 0") {
-  SECTION("serializeJson()") {
+  SUBCASE("serializeJson()") {
     JsonDocument doc;
     doc.add(std::numeric_limits<double>::infinity());
     doc.add(-std::numeric_limits<double>::infinity());
@@ -27,7 +27,7 @@ TEST_CASE("ARDUINOJSON_ENABLE_INFINITY == 0") {
     assertJsonEquals(doc, "[null,null]");
   }
 
-  SECTION("deserializeJson()") {
+  SUBCASE("deserializeJson()") {
     assertParseFails("{\"X\":Infinity}");
     assertParseFails("{\"X\":-Infinity}");
     assertParseFails("{\"X\":+Infinity}");

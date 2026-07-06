@@ -4,7 +4,7 @@
 
 #define ARDUINOJSON_DECODE_UNICODE 1
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
@@ -118,7 +118,7 @@ TEST_CASE("Allocation of the key fails") {
   SpyingAllocator spy(&timebomb);
   JsonDocument doc(&spy);
 
-  SECTION("Quoted string, first member") {
+  SUBCASE("Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{\"example\":1}") ==
             DeserializationError::NoMemory);
     REQUIRE(spy.log() == AllocatorLog{
@@ -126,7 +126,7 @@ TEST_CASE("Allocation of the key fails") {
                          });
   }
 
-  SECTION("Quoted string, second member") {
+  SUBCASE("Quoted string, second member") {
     timebomb.setCountdown(3);
     REQUIRE(deserializeJson(doc, "{\"hello\":1,\"world\"}") ==
             DeserializationError::NoMemory);
@@ -140,7 +140,7 @@ TEST_CASE("Allocation of the key fails") {
             });
   }
 
-  SECTION("Non-Quoted string, first member") {
+  SUBCASE("Non-Quoted string, first member") {
     REQUIRE(deserializeJson(doc, "{example:1}") ==
             DeserializationError::NoMemory);
     REQUIRE(spy.log() == AllocatorLog{
@@ -148,7 +148,7 @@ TEST_CASE("Allocation of the key fails") {
                          });
   }
 
-  SECTION("Non-Quoted string, second member") {
+  SUBCASE("Non-Quoted string, second member") {
     timebomb.setCountdown(3);
     REQUIRE(deserializeJson(doc, "{hello:1,world}") ==
             DeserializationError::NoMemory);
@@ -167,7 +167,7 @@ TEST_CASE("String allocation fails") {
   SpyingAllocator spy(FailingAllocator::instance());
   JsonDocument doc(&spy);
 
-  SECTION("Input is const char*") {
+  SUBCASE("Input is const char*") {
     REQUIRE(deserializeJson(doc, "\"hello\"") ==
             DeserializationError::NoMemory);
     REQUIRE(spy.log() == AllocatorLog{

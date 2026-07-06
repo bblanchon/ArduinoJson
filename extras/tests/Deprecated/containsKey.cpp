@@ -3,48 +3,48 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
 TEST_CASE("JsonDocument::containsKey()") {
   JsonDocument doc;
 
-  SECTION("returns true on object") {
+  SUBCASE("returns true on object") {
     doc["hello"] = "world";
 
     REQUIRE(doc.containsKey("hello") == true);
   }
 
-  SECTION("returns true when value is null") {
+  SUBCASE("returns true when value is null") {
     doc["hello"] = static_cast<const char*>(0);
 
     REQUIRE(doc.containsKey("hello") == true);
   }
 
-  SECTION("returns true when key is a std::string") {
+  SUBCASE("returns true when key is a std::string") {
     doc["hello"] = "world";
 
     REQUIRE(doc.containsKey("hello"_s) == true);
   }
 
-  SECTION("returns false  on object") {
+  SUBCASE("returns false  on object") {
     doc["world"] = "hello";
 
     REQUIRE(doc.containsKey("hello") == false);
   }
 
-  SECTION("returns false on array") {
+  SUBCASE("returns false on array") {
     doc.add("hello");
 
     REQUIRE(doc.containsKey("hello") == false);
   }
 
-  SECTION("returns false on null") {
+  SUBCASE("returns false on null") {
     REQUIRE(doc.containsKey("hello") == false);
   }
 
-  SECTION("supports JsonVariant") {
+  SUBCASE("supports JsonVariant") {
     doc["hello"] = "world";
     doc["key"] = "hello";
 
@@ -53,7 +53,7 @@ TEST_CASE("JsonDocument::containsKey()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("supports VLAs") {
+  SUBCASE("supports VLAs") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -69,14 +69,14 @@ TEST_CASE("MemberProxy::containsKey()") {
   JsonDocument doc;
   const auto& mp = doc["hello"];
 
-  SECTION("containsKey(const char*)") {
+  SUBCASE("containsKey(const char*)") {
     mp["key"] = "value";
 
     REQUIRE(mp.containsKey("key") == true);
     REQUIRE(mp.containsKey("key") == true);
   }
 
-  SECTION("containsKey(std::string)") {
+  SUBCASE("containsKey(std::string)") {
     mp["key"] = "value";
 
     REQUIRE(mp.containsKey("key"_s) == true);
@@ -84,7 +84,7 @@ TEST_CASE("MemberProxy::containsKey()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("supports VLAs") {
+  SUBCASE("supports VLAs") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -101,19 +101,19 @@ TEST_CASE("JsonObject::containsKey()") {
   JsonObject obj = doc.to<JsonObject>();
   obj["hello"] = 42;
 
-  SECTION("returns true only if key is present") {
+  SUBCASE("returns true only if key is present") {
     REQUIRE(false == obj.containsKey("world"));
     REQUIRE(true == obj.containsKey("hello"));
   }
 
-  SECTION("returns false after remove()") {
+  SUBCASE("returns false after remove()") {
     obj.remove("hello");
 
     REQUIRE(false == obj.containsKey("hello"));
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("key is a VLA") {
+  SUBCASE("key is a VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -122,17 +122,17 @@ TEST_CASE("JsonObject::containsKey()") {
   }
 #endif
 
-  SECTION("key is a JsonVariant") {
+  SUBCASE("key is a JsonVariant") {
     doc["key"] = "hello";
     REQUIRE(true == obj.containsKey(obj["key"]));
     REQUIRE(false == obj.containsKey(obj["hello"]));
   }
 
-  SECTION("std::string") {
+  SUBCASE("std::string") {
     REQUIRE(true == obj.containsKey("hello"_s));
   }
 
-  SECTION("unsigned char[]") {
+  SUBCASE("unsigned char[]") {
     unsigned char key[] = "hello";
     REQUIRE(true == obj.containsKey(key));
   }
@@ -143,18 +143,18 @@ TEST_CASE("JsonObjectConst::containsKey()") {
   doc["hello"] = 42;
   auto obj = doc.as<JsonObjectConst>();
 
-  SECTION("supports const char*") {
+  SUBCASE("supports const char*") {
     REQUIRE(false == obj.containsKey("world"));
     REQUIRE(true == obj.containsKey("hello"));
   }
 
-  SECTION("supports std::string") {
+  SUBCASE("supports std::string") {
     REQUIRE(false == obj.containsKey("world"_s));
     REQUIRE(true == obj.containsKey("hello"_s));
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("supports VLA") {
+  SUBCASE("supports VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -163,7 +163,7 @@ TEST_CASE("JsonObjectConst::containsKey()") {
   }
 #endif
 
-  SECTION("supports JsonVariant") {
+  SUBCASE("supports JsonVariant") {
     doc["key"] = "hello";
     REQUIRE(true == obj.containsKey(obj["key"]));
     REQUIRE(false == obj.containsKey(obj["hello"]));
@@ -174,25 +174,25 @@ TEST_CASE("JsonVariant::containsKey()") {
   JsonDocument doc;
   JsonVariant var = doc.to<JsonVariant>();
 
-  SECTION("returns false is unbound") {
+  SUBCASE("returns false is unbound") {
     CHECK_FALSE(JsonVariant().containsKey("hello"));
   }
 
-  SECTION("containsKey(const char*)") {
+  SUBCASE("containsKey(const char*)") {
     var["hello"] = "world";
 
     REQUIRE(var.containsKey("hello") == true);
     REQUIRE(var.containsKey("world") == false);
   }
 
-  SECTION("containsKey(std::string)") {
+  SUBCASE("containsKey(std::string)") {
     var["hello"] = "world";
 
     REQUIRE(var.containsKey("hello"_s) == true);
     REQUIRE(var.containsKey("world"_s) == false);
   }
 
-  SECTION("containsKey(JsonVariant)") {
+  SUBCASE("containsKey(JsonVariant)") {
     var["hello"] = "world";
     var["key"] = "hello";
 
@@ -201,7 +201,7 @@ TEST_CASE("JsonVariant::containsKey()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("supports VLAs") {
+  SUBCASE("supports VLAs") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -218,18 +218,18 @@ TEST_CASE("JsonVariantConst::containsKey()") {
   doc["hello"] = "world";
   JsonVariantConst var = doc.as<JsonVariant>();
 
-  SECTION("support const char*") {
+  SUBCASE("support const char*") {
     REQUIRE(var.containsKey("hello") == true);
     REQUIRE(var.containsKey("world") == false);
   }
 
-  SECTION("support std::string") {
+  SUBCASE("support std::string") {
     REQUIRE(var.containsKey("hello"_s) == true);
     REQUIRE(var.containsKey("world"_s) == false);
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("supports VLA") {
+  SUBCASE("supports VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -238,7 +238,7 @@ TEST_CASE("JsonVariantConst::containsKey()") {
   }
 #endif
 
-  SECTION("support JsonVariant") {
+  SUBCASE("support JsonVariant") {
     doc["key"] = "hello";
     REQUIRE(var.containsKey(var["key"]) == true);
     REQUIRE(var.containsKey(var["foo"]) == false);

@@ -6,14 +6,14 @@
 #define ARDUINOJSON_ENABLE_NAN 1
 #define ARDUINOJSON_ENABLE_INFINITY 1
 
+#include <doctest.h>
 #include <ArduinoJson.hpp>
-#include <catch.hpp>
 
 using namespace ArduinoJson::detail;
 
 void checkDouble(const char* input, double expected) {
   CAPTURE(input);
-  REQUIRE(parseNumber<double>(input) == Approx(expected));
+  REQUIRE(parseNumber<double>(input) == doctest::Approx(expected));
 }
 
 void checkDoubleNaN(const char* input) {
@@ -34,13 +34,13 @@ void checkDoubleInf(const char* input, bool negative) {
 }
 
 TEST_CASE("parseNumber<double>()") {
-  SECTION("Short_NoExponent") {
+  SUBCASE("Short_NoExponent") {
     checkDouble("3.14", 3.14);
     checkDouble("-3.14", -3.14);
     checkDouble("+3.14", +3.14);
   }
 
-  SECTION("Short_NoDot") {
+  SUBCASE("Short_NoDot") {
     checkDouble("1E+308", 1E+308);
     checkDouble("-1E+308", -1E+308);
     checkDouble("+1E-308", +1E-308);
@@ -48,7 +48,7 @@ TEST_CASE("parseNumber<double>()") {
     checkDouble("-1e-308", -1e-308);
   }
 
-  SECTION("Max") {
+  SUBCASE("Max") {
     checkDouble(".017976931348623147e+310", 1.7976931348623147e+308);
     checkDouble(".17976931348623147e+309", 1.7976931348623147e+308);
     checkDouble("1.7976931348623147e+308", 1.7976931348623147e+308);
@@ -56,7 +56,7 @@ TEST_CASE("parseNumber<double>()") {
     checkDouble("179.76931348623147e+306", 1.7976931348623147e+308);
   }
 
-  SECTION("Min") {
+  SUBCASE("Min") {
     checkDouble(".022250738585072014e-306", 2.2250738585072014e-308);
     checkDouble(".22250738585072014e-307", 2.2250738585072014e-308);
     checkDouble("2.2250738585072014e-308", 2.2250738585072014e-308);
@@ -64,7 +64,7 @@ TEST_CASE("parseNumber<double>()") {
     checkDouble("222.50738585072014e-310", 2.2250738585072014e-308);
   }
 
-  SECTION("VeryLong") {
+  SUBCASE("VeryLong") {
     checkDouble("0.00000000000000000000000000000001", 1e-32);
     checkDouble("100000000000000000000000000000000.0", 1e+32);
     checkDouble(
@@ -72,7 +72,7 @@ TEST_CASE("parseNumber<double>()") {
         1e+32);
   }
 
-  SECTION("MantissaTooLongToFit") {
+  SUBCASE("MantissaTooLongToFit") {
     checkDouble("0.179769313486231571111111111111", 0.17976931348623157);
     checkDouble("17976931348623157.11111111111111", 17976931348623157.0);
     checkDouble("1797693.134862315711111111111111", 1797693.1348623157);
@@ -82,19 +82,19 @@ TEST_CASE("parseNumber<double>()") {
     checkDouble("-1797693.134862315711111111111111", -1797693.1348623157);
   }
 
-  SECTION("ExponentTooBig") {
+  SUBCASE("ExponentTooBig") {
     checkDoubleInf("1e309", false);
     checkDoubleInf("-1e309", true);
     checkDoubleInf("1e65535", false);
     checkDouble("1e-65535", 0.0);
   }
 
-  SECTION("NaN") {
+  SUBCASE("NaN") {
     checkDoubleNaN("NaN");
     checkDoubleNaN("nan");
   }
 
-  SECTION("Overflow exponent with decimal part") {  // Issue #2220
+  SUBCASE("Overflow exponent with decimal part") {  // Issue #2220
     checkDoubleNaN(
         "0.000000000000000000000000000000000000000000000000"
         "00000000000000000000000000000000000000000000000000"
@@ -109,7 +109,7 @@ TEST_CASE("parseNumber<double>()") {
         "00000000000000000000000000000000000000000000000001");
   }
 
-  SECTION("Overflow exponent with integral part") {
+  SUBCASE("Overflow exponent with integral part") {
     checkDoubleNaN(
         "10000000000000000000000000000000000000000000000000"
         "00000000000000000000000000000000000000000000000000"

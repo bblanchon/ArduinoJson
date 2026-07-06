@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 static void checkArray(JsonArray array, std::string expected) {
   std::string actual;
@@ -18,11 +18,11 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
   JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
-  SECTION("Empty") {
+  SUBCASE("Empty") {
     checkArray(array, "[]");
   }
 
-  SECTION("OneElement") {
+  SUBCASE("OneElement") {
     array.add(1);
 
     checkArray(array,
@@ -31,7 +31,7 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
                "]");
   }
 
-  SECTION("TwoElements") {
+  SUBCASE("TwoElements") {
     array.add(1);
     array.add(2);
 
@@ -42,7 +42,7 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
                "]");
   }
 
-  SECTION("EmptyNestedArrays") {
+  SUBCASE("EmptyNestedArrays") {
     array.add<JsonArray>();
     array.add<JsonArray>();
 
@@ -53,7 +53,7 @@ TEST_CASE("serializeJsonPretty(JsonArray)") {
                "]");
   }
 
-  SECTION("NestedArrays") {
+  SUBCASE("NestedArrays") {
     JsonArray nested1 = array.add<JsonArray>();
     nested1.add(1);
     nested1.add(2);

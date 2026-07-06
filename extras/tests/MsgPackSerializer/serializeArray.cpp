@@ -5,7 +5,7 @@
 #define ARDUINOJSON_SLOT_ID_SIZE 4  // required to reach 65536 elements
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
@@ -33,18 +33,18 @@ TEST_CASE("serialize MsgPack array") {
   JsonDocument doc;
   JsonArray array = doc.to<JsonArray>();
 
-  SECTION("empty") {
+  SUBCASE("empty") {
     check(array, "\x90");
   }
 
-  SECTION("fixarray") {
+  SUBCASE("fixarray") {
     array.add("hello");
     array.add("world");
 
     check(array, "\x92\xA5hello\xA5world");
   }
 
-  SECTION("array 16") {
+  SUBCASE("array 16") {
     for (int i = 0; i < 16; i++)
       array.add(i);
 
@@ -53,7 +53,7 @@ TEST_CASE("serialize MsgPack array") {
           "\x0E\x0F");
   }
 
-  SECTION("array 32") {
+  SUBCASE("array 32") {
     const char* nil = 0;
     for (int i = 0; i < 65536; i++)
       array.add(nil);

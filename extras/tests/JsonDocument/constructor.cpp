@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -11,12 +11,12 @@
 TEST_CASE("JsonDocument constructor") {
   SpyingAllocator spyingAllocator;
 
-  SECTION("JsonDocument(size_t)") {
+  SUBCASE("JsonDocument(size_t)") {
     { JsonDocument doc(&spyingAllocator); }
     REQUIRE(spyingAllocator.log() == AllocatorLog{});
   }
 
-  SECTION("JsonDocument(const JsonDocument&)") {
+  SUBCASE("JsonDocument(const JsonDocument&)") {
     {
       JsonDocument doc1(&spyingAllocator);
       doc1.set("The size of this string is 32!!"_s);
@@ -34,7 +34,7 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("JsonDocument(JsonDocument&&)") {
+  SUBCASE("JsonDocument(JsonDocument&&)") {
     {
       JsonDocument doc1(&spyingAllocator);
       doc1.set("The size of this string is 32!!"_s);
@@ -52,7 +52,7 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("JsonDocument(JsonObject, Allocator*)") {
+  SUBCASE("JsonDocument(JsonObject, Allocator*)") {
     JsonDocument doc1;
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
@@ -67,7 +67,7 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("JsonDocument(JsonObject)") {
+  SUBCASE("JsonDocument(JsonObject)") {
     JsonDocument doc1;
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
@@ -77,7 +77,7 @@ TEST_CASE("JsonDocument constructor") {
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
   }
 
-  SECTION("JsonDocument(JsonArray, Allocator*)") {
+  SUBCASE("JsonDocument(JsonArray, Allocator*)") {
     JsonDocument doc1;
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
@@ -91,7 +91,7 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("JsonDocument(JsonArray)") {
+  SUBCASE("JsonDocument(JsonArray)") {
     JsonDocument doc1;
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
@@ -101,7 +101,7 @@ TEST_CASE("JsonDocument constructor") {
     REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
   }
 
-  SECTION("JsonDocument(JsonVariant, Allocator*)") {
+  SUBCASE("JsonDocument(JsonVariant, Allocator*)") {
     JsonDocument doc1;
     deserializeJson(doc1, "\"hello\"");
 
@@ -113,7 +113,7 @@ TEST_CASE("JsonDocument constructor") {
                                      });
   }
 
-  SECTION("JsonDocument(JsonVariant)") {
+  SUBCASE("JsonDocument(JsonVariant)") {
     JsonDocument doc1;
     deserializeJson(doc1, "\"hello\"");
 
@@ -122,7 +122,7 @@ TEST_CASE("JsonDocument constructor") {
     REQUIRE(doc2.as<std::string>() == "hello");
   }
 
-  SECTION("JsonDocument(JsonVariantConst)") {
+  SUBCASE("JsonDocument(JsonVariantConst)") {
     JsonDocument doc1;
     deserializeJson(doc1, "\"hello\"");
 
@@ -131,7 +131,7 @@ TEST_CASE("JsonDocument constructor") {
     REQUIRE(doc2.as<std::string>() == "hello");
   }
 
-  SECTION("JsonDocument(ElementProxy)") {
+  SUBCASE("JsonDocument(ElementProxy)") {
     JsonDocument doc1;
     deserializeJson(doc1, "[\"hello\",\"world\"]");
 
@@ -140,7 +140,7 @@ TEST_CASE("JsonDocument constructor") {
     REQUIRE(doc2.as<std::string>() == "world");
   }
 
-  SECTION("JsonDocument(MemberProxy)") {
+  SUBCASE("JsonDocument(MemberProxy)") {
     JsonDocument doc1;
     deserializeJson(doc1, "{\"hello\":\"world\"}");
 

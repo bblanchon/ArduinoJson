@@ -1,18 +1,18 @@
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 #include <string>
 #include <utility>
 
 using namespace std;
 
 TEST_CASE("std::swap") {
-  SECTION("JsonDocument*") {
+  SUBCASE("JsonDocument*") {
     JsonDocument *p1, *p2;
     swap(p1, p2);  // issue #1678
   }
 
-  SECTION("JsonDocument") {
+  SUBCASE("JsonDocument") {
     JsonDocument doc1, doc2;
     doc1.set("hello");
     doc2.set("world");

@@ -5,7 +5,7 @@
 #include <ArduinoJson/Memory/Alignment.hpp>
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
@@ -18,7 +18,7 @@ static void fullPreallocatedPools(ResourceManager& resources) {
 }
 
 TEST_CASE("ResourceManager::swap()") {
-  SECTION("Both using preallocated pool list") {
+  SUBCASE("Both using preallocated pool list") {
     SpyingAllocator spy;
     ResourceManager a(&spy);
     ResourceManager b(&spy);
@@ -36,7 +36,7 @@ TEST_CASE("ResourceManager::swap()") {
                          });
   }
 
-  SECTION("Only left using preallocated pool list") {
+  SUBCASE("Only left using preallocated pool list") {
     SpyingAllocator spy;
     ResourceManager a(&spy);
     ResourceManager b(&spy);
@@ -57,7 +57,7 @@ TEST_CASE("ResourceManager::swap()") {
             });
   }
 
-  SECTION("Only right using preallocated pool list") {
+  SUBCASE("Only right using preallocated pool list") {
     SpyingAllocator spy;
     ResourceManager a(&spy);
     fullPreallocatedPools(a);
@@ -78,7 +78,7 @@ TEST_CASE("ResourceManager::swap()") {
             });
   }
 
-  SECTION("None is using preallocated pool list") {
+  SUBCASE("None is using preallocated pool list") {
     SpyingAllocator spy;
     ResourceManager a(&spy);
     fullPreallocatedPools(a);

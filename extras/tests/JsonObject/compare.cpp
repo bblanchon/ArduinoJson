@@ -3,12 +3,12 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Compare JsonObject with JsonObject") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -29,7 +29,7 @@ TEST_CASE("Compare JsonObject with JsonObject") {
     CHECK_FALSE(unbound < object);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -42,7 +42,7 @@ TEST_CASE("Compare JsonObject with JsonObject") {
     CHECK_FALSE(object < object);
   }
 
-  SECTION("Compare with identical object") {
+  SUBCASE("Compare with identical object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello";
@@ -61,7 +61,7 @@ TEST_CASE("Compare JsonObject with JsonObject") {
     CHECK_FALSE(object1 < object2);
   }
 
-  SECTION("Compare with different object") {
+  SUBCASE("Compare with different object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello1";
@@ -84,7 +84,7 @@ TEST_CASE("Compare JsonObject with JsonObject") {
 TEST_CASE("Compare JsonObject with JsonVariant") {
   JsonDocument doc;
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -106,7 +106,7 @@ TEST_CASE("Compare JsonObject with JsonVariant") {
     CHECK_FALSE(variant < object);
   }
 
-  SECTION("Compare with identical object") {
+  SUBCASE("Compare with identical object") {
     JsonObject object = doc.add<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -132,7 +132,7 @@ TEST_CASE("Compare JsonObject with JsonVariant") {
     CHECK_FALSE(variant < object);
   }
 
-  SECTION("Compare with different object") {
+  SUBCASE("Compare with different object") {
     JsonObject object = doc.add<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello1";
@@ -155,7 +155,7 @@ TEST_CASE("Compare JsonObject with JsonVariant") {
 TEST_CASE("Compare JsonObject with JsonVariantConst") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -176,7 +176,7 @@ TEST_CASE("Compare JsonObject with JsonVariantConst") {
     CHECK_FALSE(unbound < object);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -198,7 +198,7 @@ TEST_CASE("Compare JsonObject with JsonVariantConst") {
     CHECK_FALSE(variant < object);
   }
 
-  SECTION("Compare with identical object") {
+  SUBCASE("Compare with identical object") {
     JsonObject object = doc.add<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -225,7 +225,7 @@ TEST_CASE("Compare JsonObject with JsonVariantConst") {
     CHECK_FALSE(variant < object);
   }
 
-  SECTION("Compare with different object") {
+  SUBCASE("Compare with different object") {
     JsonObject object = doc.add<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello1";
@@ -249,7 +249,7 @@ TEST_CASE("Compare JsonObject with JsonVariantConst") {
 TEST_CASE("Compare JsonObject with JsonObjectConst") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -270,7 +270,7 @@ TEST_CASE("Compare JsonObject with JsonObjectConst") {
     CHECK_FALSE(unbound < object);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -291,7 +291,7 @@ TEST_CASE("Compare JsonObject with JsonObjectConst") {
     CHECK_FALSE(cobject < object);
   }
 
-  SECTION("Compare with identical object") {
+  SUBCASE("Compare with identical object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello";
@@ -318,7 +318,7 @@ TEST_CASE("Compare JsonObject with JsonObjectConst") {
     CHECK_FALSE(carray2 < object1);
   }
 
-  SECTION("Compare with different object") {
+  SUBCASE("Compare with different object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello1";
@@ -349,7 +349,7 @@ TEST_CASE("Compare JsonObject with JsonObjectConst") {
 TEST_CASE("Compare JsonObjectConst with JsonObjectConst") {
   JsonDocument doc;
 
-  SECTION("Compare with unbound") {
+  SUBCASE("Compare with unbound") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -372,7 +372,7 @@ TEST_CASE("Compare JsonObjectConst with JsonObjectConst") {
     CHECK_FALSE(unbound < cobject);
   }
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -386,7 +386,7 @@ TEST_CASE("Compare JsonObjectConst with JsonObjectConst") {
     CHECK_FALSE(cobject < cobject);
   }
 
-  SECTION("Compare with identical object") {
+  SUBCASE("Compare with identical object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello";
@@ -407,7 +407,7 @@ TEST_CASE("Compare JsonObjectConst with JsonObjectConst") {
     CHECK_FALSE(carray1 < carray2);
   }
 
-  SECTION("Compare with different object") {
+  SUBCASE("Compare with different object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello1";
@@ -432,7 +432,7 @@ TEST_CASE("Compare JsonObjectConst with JsonObjectConst") {
 TEST_CASE("Compare JsonObjectConst with JsonVariant") {
   JsonDocument doc;
 
-  SECTION("Compare with self") {
+  SUBCASE("Compare with self") {
     JsonObject object = doc.to<JsonObject>();
     object["a"] = 1;
     object["b"] = "hello";
@@ -454,7 +454,7 @@ TEST_CASE("Compare JsonObjectConst with JsonVariant") {
     CHECK_FALSE(variant < cobject);
   }
 
-  SECTION("Compare with identical object") {
+  SUBCASE("Compare with identical object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello";
@@ -482,7 +482,7 @@ TEST_CASE("Compare JsonObjectConst with JsonVariant") {
     CHECK_FALSE(variant2 < carray1);
   }
 
-  SECTION("Compare with different object") {
+  SUBCASE("Compare with different object") {
     JsonObject object1 = doc.add<JsonObject>();
     object1["a"] = 1;
     object1["b"] = "hello1";

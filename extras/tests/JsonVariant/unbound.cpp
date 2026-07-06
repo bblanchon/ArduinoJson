@@ -3,18 +3,18 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
 TEST_CASE("Unbound JsonVariant") {
   JsonVariant variant;
 
-  SECTION("as<T>()") {
+  SUBCASE("as<T>()") {
     CHECK(variant.as<bool>() == false);
     CHECK(variant.as<int>() == 0);
     CHECK(variant.as<float>() == 0.0f);
-    CHECK(variant.as<const char*>() == 0);
+    CHECK(variant.as<const char*>() == nullptr);
     CHECK(variant.as<std::string>() == "null");
     CHECK(variant.as<JsonVariant>().isNull());
     CHECK(variant.as<JsonVariantConst>().isNull());
@@ -29,7 +29,7 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK(variant.as<MsgPackExtension>().size() == 0);
   }
 
-  SECTION("is<T>()") {
+  SUBCASE("is<T>()") {
     CHECK_FALSE(variant.is<bool>());
     CHECK_FALSE(variant.is<int>());
     CHECK_FALSE(variant.is<float>());
@@ -44,7 +44,7 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant.is<JsonString>());
   }
 
-  SECTION("set()") {
+  SUBCASE("set()") {
     CHECK_FALSE(variant.set("42"));
     CHECK_FALSE(variant.set(42.0));
     CHECK_FALSE(variant.set(42L));
@@ -56,7 +56,7 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant.set(MsgPackExtension(1, "hello", 5)));
   }
 
-  SECTION("add()") {
+  SUBCASE("add()") {
     CHECK_FALSE(variant.add("42"));
     CHECK_FALSE(variant.add(42.0));
     CHECK_FALSE(variant.add(42L));
@@ -65,7 +65,7 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant.add(true));
   }
 
-  SECTION("operator[]") {
+  SUBCASE("operator[]") {
     CHECK(variant[0].isNull());
     CHECK(variant["key"].isNull());
     CHECK_FALSE(variant[0].set(1));
@@ -73,7 +73,7 @@ TEST_CASE("Unbound JsonVariant") {
     CHECK_FALSE(variant["key"_s].set(1));
   }
 
-  SECTION("remove()") {
+  SUBCASE("remove()") {
     variant.remove(0);
     variant.remove("hello");
   }

@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdint.h>
-#include <catch.hpp>
 
 #include <array>
 #include <string>
@@ -66,7 +66,7 @@ struct Converter<std::array<T, N>> {
 }  // namespace ArduinoJson
 
 TEST_CASE("vector<int>") {
-  SECTION("toJson") {
+  SUBCASE("toJson") {
     std::vector<int> v = {1, 2};
 
     JsonDocument doc;
@@ -74,7 +74,7 @@ TEST_CASE("vector<int>") {
     REQUIRE(doc.as<std::string>() == "[1,2]");
   }
 
-  SECTION("fromJson") {
+  SUBCASE("fromJson") {
     JsonDocument doc;
     doc.add(1);
     doc.add(2);
@@ -85,7 +85,7 @@ TEST_CASE("vector<int>") {
     CHECK(v[1] == 2);
   }
 
-  SECTION("checkJson") {
+  SUBCASE("checkJson") {
     JsonDocument doc;
     CHECK(doc.is<std::vector<int>>() == false);
 
@@ -101,7 +101,7 @@ TEST_CASE("vector<int>") {
 TEST_CASE("array<int, 2>") {
   using array_type = std::array<int, 2>;
 
-  SECTION("toJson") {
+  SUBCASE("toJson") {
     array_type v;
     v[0] = 1;
     v[1] = 2;
@@ -111,7 +111,7 @@ TEST_CASE("array<int, 2>") {
     REQUIRE(doc.as<std::string>() == "[1,2]");
   }
 
-  SECTION("fromJson") {
+  SUBCASE("fromJson") {
     JsonDocument doc;
     doc.add(1);
     doc.add(2);
@@ -122,7 +122,7 @@ TEST_CASE("array<int, 2>") {
     CHECK(v[1] == 2);
   }
 
-  SECTION("checkJson") {
+  SUBCASE("checkJson") {
     JsonDocument doc;
     CHECK(doc.is<array_type>() == false);
 

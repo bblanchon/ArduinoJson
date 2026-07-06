@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonArrayConst::operator==()") {
   JsonDocument doc1;
@@ -12,14 +12,14 @@ TEST_CASE("JsonArrayConst::operator==()") {
   JsonDocument doc2;
   JsonArrayConst array2 = doc2.to<JsonArray>();
 
-  SECTION("should return false when arrays differ") {
+  SUBCASE("should return false when arrays differ") {
     doc1.add("coucou");
     doc2.add(1);
 
     REQUIRE_FALSE(array1 == array2);
   }
 
-  SECTION("should return false when LHS has more elements") {
+  SUBCASE("should return false when LHS has more elements") {
     doc1.add(1);
     doc1.add(2);
     doc2.add(1);
@@ -27,7 +27,7 @@ TEST_CASE("JsonArrayConst::operator==()") {
     REQUIRE_FALSE(array1 == array2);
   }
 
-  SECTION("should return false when RHS has more elements") {
+  SUBCASE("should return false when RHS has more elements") {
     doc1.add(1);
     doc2.add(1);
     doc2.add(2);
@@ -35,26 +35,26 @@ TEST_CASE("JsonArrayConst::operator==()") {
     REQUIRE_FALSE(array1 == array2);
   }
 
-  SECTION("should return true when arrays equal") {
+  SUBCASE("should return true when arrays equal") {
     doc1.add("coucou");
     doc2.add("coucou");
 
     REQUIRE(array1 == array2);
   }
 
-  SECTION("should return false when RHS is null") {
+  SUBCASE("should return false when RHS is null") {
     JsonArrayConst null;
 
     REQUIRE_FALSE(array1 == null);
   }
 
-  SECTION("should return false when LHS is null") {
+  SUBCASE("should return false when LHS is null") {
     JsonArrayConst null;
 
     REQUIRE_FALSE(null == array1);
   }
 
-  SECTION("should return true when both are null") {
+  SUBCASE("should return true when both are null") {
     JsonArrayConst null1;
     JsonArrayConst null2;
 

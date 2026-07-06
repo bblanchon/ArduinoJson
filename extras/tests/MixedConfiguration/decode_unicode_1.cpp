@@ -1,7 +1,7 @@
 #define ARDUINOJSON_DECODE_UNICODE 1
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("ARDUINOJSON_DECODE_UNICODE == 1") {
   JsonDocument doc;

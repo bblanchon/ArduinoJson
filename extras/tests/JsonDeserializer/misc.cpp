@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
@@ -13,13 +13,13 @@ TEST_CASE("deserializeJson() misc cases") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
 
-  SECTION("null") {
+  SUBCASE("null") {
     DeserializationError err = deserializeJson(doc, "null");
     REQUIRE(err == DeserializationError::Ok);
     REQUIRE(doc.is<float>() == false);
   }
 
-  SECTION("true") {
+  SUBCASE("true") {
     DeserializationError err = deserializeJson(doc, "true");
 
     REQUIRE(err == DeserializationError::Ok);
@@ -27,7 +27,7 @@ TEST_CASE("deserializeJson() misc cases") {
     REQUIRE(doc.as<bool>() == true);
   }
 
-  SECTION("false") {
+  SUBCASE("false") {
     DeserializationError err = deserializeJson(doc, "false");
 
     REQUIRE(err == DeserializationError::Ok);
@@ -35,7 +35,7 @@ TEST_CASE("deserializeJson() misc cases") {
     REQUIRE(doc.as<bool>() == false);
   }
 
-  SECTION("Should clear the JsonVariant") {
+  SUBCASE("Should clear the JsonVariant") {
     deserializeJson(doc, "[1,2,3]");
     spy.clearLog();
 

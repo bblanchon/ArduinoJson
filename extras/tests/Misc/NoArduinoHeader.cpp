@@ -9,7 +9,7 @@
 #define ARDUINOJSON_ENABLE_ARDUINO_PRINT 0
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Arduino.h") {
 #ifdef ARDUINO_H_INCLUDED

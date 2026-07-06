@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
@@ -14,7 +14,7 @@ TEST_CASE("JsonArray::remove()") {
   array.add(2);
   array.add(3);
 
-  SECTION("remove first by index") {
+  SUBCASE("remove first by index") {
     array.remove(0);
 
     REQUIRE(2 == array.size());
@@ -22,7 +22,7 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 3);
   }
 
-  SECTION("remove middle by index") {
+  SUBCASE("remove middle by index") {
     array.remove(1);
 
     REQUIRE(2 == array.size());
@@ -30,7 +30,7 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 3);
   }
 
-  SECTION("remove last by index") {
+  SUBCASE("remove last by index") {
     array.remove(2);
 
     REQUIRE(2 == array.size());
@@ -38,7 +38,7 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 2);
   }
 
-  SECTION("remove first by iterator") {
+  SUBCASE("remove first by iterator") {
     JsonArray::iterator it = array.begin();
     array.remove(it);
 
@@ -47,7 +47,7 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 3);
   }
 
-  SECTION("remove middle by iterator") {
+  SUBCASE("remove middle by iterator") {
     JsonArray::iterator it = array.begin();
     ++it;
     array.remove(it);
@@ -57,7 +57,7 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 3);
   }
 
-  SECTION("remove last bty iterator") {
+  SUBCASE("remove last bty iterator") {
     JsonArray::iterator it = array.begin();
     ++it;
     ++it;
@@ -68,13 +68,13 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 2);
   }
 
-  SECTION("remove end()") {
+  SUBCASE("remove end()") {
     array.remove(array.end());
 
     REQUIRE(3 == array.size());
   }
 
-  SECTION("In a loop") {
+  SUBCASE("In a loop") {
     for (JsonArray::iterator it = array.begin(); it != array.end(); ++it) {
       if (*it == 2)
         array.remove(it);
@@ -85,17 +85,17 @@ TEST_CASE("JsonArray::remove()") {
     REQUIRE(array[1] == 3);
   }
 
-  SECTION("remove by index on unbound reference") {
+  SUBCASE("remove by index on unbound reference") {
     JsonArray unboundArray;
     unboundArray.remove(20);
   }
 
-  SECTION("remove by iterator on unbound reference") {
+  SUBCASE("remove by iterator on unbound reference") {
     JsonArray unboundArray;
     unboundArray.remove(unboundArray.begin());
   }
 
-  SECTION("use JsonVariant as index") {
+  SUBCASE("use JsonVariant as index") {
     array.remove(array[3]);  // no effect with null variant
     array.remove(array[0]);  // remove element at index 1
 

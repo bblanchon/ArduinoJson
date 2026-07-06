@@ -1,5 +1,5 @@
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 #include <limits>
 
 template <typename T>

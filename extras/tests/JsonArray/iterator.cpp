@@ -3,10 +3,10 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonArray::begin()/end()") {
-  SECTION("Non null JsonArray") {
+  SUBCASE("Non null JsonArray") {
     JsonDocument doc;
     JsonArray array = doc.to<JsonArray>();
     array.add(12);
@@ -26,7 +26,7 @@ TEST_CASE("JsonArray::begin()/end()") {
     REQUIRE(end == it);
   }
 
-  SECTION("Null JsonArray") {
+  SUBCASE("Null JsonArray") {
     JsonArray array;
 
     REQUIRE(array.begin() == array.end());

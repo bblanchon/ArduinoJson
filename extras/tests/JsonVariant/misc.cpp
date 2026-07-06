@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("VariantData") {
   REQUIRE(std::is_standard_layout<ArduinoJson::detail::VariantData>::value ==
@@ -16,13 +16,13 @@ TEST_CASE("StringNode") {
 }
 
 TEST_CASE("JsonVariant from JsonArray") {
-  SECTION("JsonArray is null") {
+  SUBCASE("JsonArray is null") {
     JsonArray arr;
     JsonVariant v = arr;
     REQUIRE(v.isNull() == true);
   }
 
-  SECTION("JsonArray is not null") {
+  SUBCASE("JsonArray is not null") {
     JsonDocument doc;
     JsonArray arr = doc.to<JsonArray>();
     arr.add(12);
@@ -38,13 +38,13 @@ TEST_CASE("JsonVariant from JsonArray") {
 }
 
 TEST_CASE("JsonVariant from JsonObject") {
-  SECTION("JsonObject is null") {
+  SUBCASE("JsonObject is null") {
     JsonObject obj;
     JsonVariant v = obj;
     REQUIRE(v.isNull() == true);
   }
 
-  SECTION("JsonObject is not null") {
+  SUBCASE("JsonObject is not null") {
     JsonDocument doc;
     JsonObject obj = doc.to<JsonObject>();
     obj["a"] = 12;

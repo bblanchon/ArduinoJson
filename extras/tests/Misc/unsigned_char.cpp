@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
@@ -12,7 +12,7 @@
 #endif
 
 TEST_CASE("unsigned char[]") {
-  SECTION("deserializeJson()") {
+  SUBCASE("deserializeJson()") {
     unsigned char input[] = "{\"a\":42}";
 
     JsonDocument doc;
@@ -21,7 +21,7 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("deserializeMsgPack()") {
+  SUBCASE("deserializeMsgPack()") {
     unsigned char input[] = "\xDE\x00\x01\xA5Hello\xA5world";
 
     JsonDocument doc;
@@ -30,7 +30,7 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("serializeMsgPack(unsigned char[])") {
+  SUBCASE("serializeMsgPack(unsigned char[])") {
     unsigned char buffer[32];
     JsonDocument doc;
     doc["hello"] = "world";
@@ -41,7 +41,7 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(memcmp(buffer, "\x81\xA5hello\xA5world", 13) == 0);
   }
 
-  SECTION("serializeMsgPack(unsigned char*)") {
+  SUBCASE("serializeMsgPack(unsigned char*)") {
     unsigned char buffer[32];
     JsonDocument doc;
     doc["hello"] = "world";
@@ -52,7 +52,7 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(memcmp(buffer, "\x81\xA5hello\xA5world", 13) == 0);
   }
 
-  SECTION("serializeJson(unsigned char[])") {
+  SUBCASE("serializeJson(unsigned char[])") {
     unsigned char buffer[32];
     JsonDocument doc;
     doc["hello"] = "world";
@@ -63,7 +63,7 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(memcmp(buffer, "{\"hello\":\"world\"}", n) == 0);
   }
 
-  SECTION("serializeJson(unsigned char*)") {
+  SUBCASE("serializeJson(unsigned char*)") {
     unsigned char buffer[32];
     JsonDocument doc;
     doc["hello"] = "world";
@@ -74,7 +74,7 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(memcmp(buffer, "{\"hello\":\"world\"}", n) == 0);
   }
 
-  SECTION("serializeJsonPretty(unsigned char[])") {
+  SUBCASE("serializeJsonPretty(unsigned char[])") {
     unsigned char buffer[32];
     JsonDocument doc;
     doc["hello"] = "world";
@@ -84,7 +84,7 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(n == 24);
   }
 
-  SECTION("serializeJsonPretty(unsigned char*)") {
+  SUBCASE("serializeJsonPretty(unsigned char*)") {
     unsigned char buffer[32];
     JsonDocument doc;
     doc["hello"] = "world";
@@ -94,10 +94,10 @@ TEST_CASE("unsigned char[]") {
     REQUIRE(n == 24);
   }
 
-  SECTION("JsonVariant") {
+  SUBCASE("JsonVariant") {
     JsonDocument doc;
 
-    SECTION("set") {
+    SUBCASE("set") {
       unsigned char value[] = "42";
 
       JsonVariant variant = doc.to<JsonVariant>();
@@ -107,7 +107,7 @@ TEST_CASE("unsigned char[]") {
     }
 
 #ifndef CONFLICTS_WITH_BUILTIN_OPERATOR
-    SECTION("operator[]") {
+    SUBCASE("operator[]") {
       unsigned char key[] = "hello";
 
       deserializeJson(doc, "{\"hello\":\"world\"}");
@@ -118,7 +118,7 @@ TEST_CASE("unsigned char[]") {
 #endif
 
 #ifndef CONFLICTS_WITH_BUILTIN_OPERATOR
-    SECTION("operator[] const") {
+    SUBCASE("operator[] const") {
       unsigned char key[] = "hello";
 
       deserializeJson(doc, "{\"hello\":\"world\"}");
@@ -128,7 +128,7 @@ TEST_CASE("unsigned char[]") {
     }
 #endif
 
-    SECTION("operator==") {
+    SUBCASE("operator==") {
       unsigned char comparand[] = "hello";
 
       JsonVariant variant = doc.to<JsonVariant>();
@@ -140,7 +140,7 @@ TEST_CASE("unsigned char[]") {
       REQUIRE_FALSE(variant != comparand);
     }
 
-    SECTION("operator!=") {
+    SUBCASE("operator!=") {
       unsigned char comparand[] = "hello";
 
       JsonVariant variant = doc.to<JsonVariant>();
@@ -153,9 +153,9 @@ TEST_CASE("unsigned char[]") {
     }
   }
 
-  SECTION("JsonObject") {
+  SUBCASE("JsonObject") {
 #ifndef CONFLICTS_WITH_BUILTIN_OPERATOR
-    SECTION("operator[]") {
+    SUBCASE("operator[]") {
       unsigned char key[] = "hello";
 
       JsonDocument doc;
@@ -165,7 +165,7 @@ TEST_CASE("unsigned char[]") {
       REQUIRE("world"_s == obj["hello"]);
     }
 
-    SECTION("JsonObject::operator[] const") {
+    SUBCASE("JsonObject::operator[] const") {
       unsigned char key[] = "hello";
 
       JsonDocument doc;
@@ -176,7 +176,7 @@ TEST_CASE("unsigned char[]") {
     }
 #endif
 
-    SECTION("remove()") {
+    SUBCASE("remove()") {
       unsigned char key[] = "hello";
 
       JsonDocument doc;
@@ -188,8 +188,8 @@ TEST_CASE("unsigned char[]") {
     }
   }
 
-  SECTION("MemberProxy") {
-    SECTION("operator=") {  // issue #416
+  SUBCASE("MemberProxy") {
+    SUBCASE("operator=") {  // issue #416
       unsigned char value[] = "world";
 
       JsonDocument doc;
@@ -199,7 +199,7 @@ TEST_CASE("unsigned char[]") {
       REQUIRE("world"_s == obj["hello"]);
     }
 
-    SECTION("set()") {
+    SUBCASE("set()") {
       unsigned char value[] = "world";
 
       JsonDocument doc;
@@ -210,8 +210,8 @@ TEST_CASE("unsigned char[]") {
     }
   }
 
-  SECTION("JsonArray") {
-    SECTION("add()") {
+  SUBCASE("JsonArray") {
+    SUBCASE("add()") {
       unsigned char value[] = "world";
 
       JsonDocument doc;
@@ -222,8 +222,8 @@ TEST_CASE("unsigned char[]") {
     }
   }
 
-  SECTION("ElementProxy") {
-    SECTION("set()") {
+  SUBCASE("ElementProxy") {
+    SUBCASE("set()") {
       unsigned char value[] = "world";
 
       JsonDocument doc;
@@ -234,7 +234,7 @@ TEST_CASE("unsigned char[]") {
       REQUIRE("world"_s == arr[0]);
     }
 
-    SECTION("operator=") {
+    SUBCASE("operator=") {
       unsigned char value[] = "world";
 
       JsonDocument doc;

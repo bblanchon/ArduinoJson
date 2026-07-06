@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -16,7 +16,7 @@ TEST_CASE("ElementProxy::add()") {
   doc.add<JsonVariant>();
   const ElementProxy& ep = doc[0];
 
-  SECTION("integer") {
+  SUBCASE("integer") {
     ep.add(42);
 
     REQUIRE(doc.as<std::string>() == "[[42]]");
@@ -25,7 +25,7 @@ TEST_CASE("ElementProxy::add()") {
                          });
   }
 
-  SECTION("string literal") {
+  SUBCASE("string literal") {
     ep.add("world");
 
     REQUIRE(doc.as<std::string>() == "[[\"world\"]]");
@@ -35,7 +35,7 @@ TEST_CASE("ElementProxy::add()") {
                          });
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     const char* s = "world";
     ep.add(s);
 
@@ -46,7 +46,7 @@ TEST_CASE("ElementProxy::add()") {
                          });
   }
 
-  SECTION("char[]") {
+  SUBCASE("char[]") {
     char s[] = "world";
     ep.add(s);
     strcpy(s, "!!!!!");
@@ -59,7 +59,7 @@ TEST_CASE("ElementProxy::add()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("VLA") {
+  SUBCASE("VLA") {
     size_t i = 8;
     char vla[i];
     strcpy(vla, "world");
@@ -80,14 +80,14 @@ TEST_CASE("ElementProxy::clear()") {
   doc.add<JsonVariant>();
   const ElementProxy& ep = doc[0];
 
-  SECTION("size goes back to zero") {
+  SUBCASE("size goes back to zero") {
     ep.add(42);
     ep.clear();
 
     REQUIRE(ep.size() == 0);
   }
 
-  SECTION("isNull() return true") {
+  SUBCASE("isNull() return true") {
     ep.add("hello");
     ep.clear();
 
@@ -98,7 +98,7 @@ TEST_CASE("ElementProxy::clear()") {
 TEST_CASE("ElementProxy::operator==()") {
   JsonDocument doc;
 
-  SECTION("1 vs 1") {
+  SUBCASE("1 vs 1") {
     doc.add(1);
     doc.add(1);
 
@@ -110,7 +110,7 @@ TEST_CASE("ElementProxy::operator==()") {
     REQUIRE_FALSE(doc[0] > doc[1]);
   }
 
-  SECTION("1 vs 2") {
+  SUBCASE("1 vs 2") {
     doc.add(1);
     doc.add(2);
 
@@ -122,7 +122,7 @@ TEST_CASE("ElementProxy::operator==()") {
     REQUIRE_FALSE(doc[0] >= doc[1]);
   }
 
-  SECTION("'abc' vs 'bcd'") {
+  SUBCASE("'abc' vs 'bcd'") {
     doc.add("abc");
     doc.add("bcd");
 
@@ -140,7 +140,7 @@ TEST_CASE("ElementProxy::remove()") {
   doc.add<JsonVariant>();
   const ElementProxy& ep = doc[0];
 
-  SECTION("remove(int)") {
+  SUBCASE("remove(int)") {
     ep.add(1);
     ep.add(2);
     ep.add(3);
@@ -150,7 +150,7 @@ TEST_CASE("ElementProxy::remove()") {
     REQUIRE(ep.as<std::string>() == "[1,3]");
   }
 
-  SECTION("remove(const char *)") {
+  SUBCASE("remove(const char *)") {
     ep["a"] = 1;
     ep["b"] = 2;
 
@@ -159,7 +159,7 @@ TEST_CASE("ElementProxy::remove()") {
     REQUIRE(ep.as<std::string>() == "{\"b\":2}");
   }
 
-  SECTION("remove(std::string)") {
+  SUBCASE("remove(std::string)") {
     ep["a"] = 1;
     ep["b"] = 2;
 
@@ -169,7 +169,7 @@ TEST_CASE("ElementProxy::remove()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("remove(vla)") {
+  SUBCASE("remove(vla)") {
     ep["a"] = 1;
     ep["b"] = 2;
 
@@ -187,19 +187,19 @@ TEST_CASE("ElementProxy::set()") {
   JsonDocument doc;
   const ElementProxy& ep = doc[0];
 
-  SECTION("set(int)") {
+  SUBCASE("set(int)") {
     ep.set(42);
 
     REQUIRE(doc.as<std::string>() == "[42]");
   }
 
-  SECTION("set(const char*)") {
+  SUBCASE("set(const char*)") {
     ep.set("world");
 
     REQUIRE(doc.as<std::string>() == "[\"world\"]");
   }
 
-  SECTION("set(char[])") {
+  SUBCASE("set(char[])") {
     char s[] = "world";
     ep.set(s);
     strcpy(s, "!!!!!");
@@ -208,7 +208,7 @@ TEST_CASE("ElementProxy::set()") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("set(VLA)") {
+  SUBCASE("set(VLA)") {
     size_t i = 8;
     char vla[i];
     strcpy(vla, "world");
@@ -225,17 +225,17 @@ TEST_CASE("ElementProxy::size()") {
   doc.add<JsonVariant>();
   const ElementProxy& ep = doc[0];
 
-  SECTION("returns 0") {
+  SUBCASE("returns 0") {
     REQUIRE(ep.size() == 0);
   }
 
-  SECTION("as an array, returns 2") {
+  SUBCASE("as an array, returns 2") {
     ep.add(1);
     ep.add(2);
     REQUIRE(ep.size() == 2);
   }
 
-  SECTION("as an object, returns 2") {
+  SUBCASE("as an object, returns 2") {
     ep["a"] = 1;
     ep["b"] = 2;
     REQUIRE(ep.size() == 2);
@@ -246,20 +246,20 @@ TEST_CASE("ElementProxy::operator[]") {
   JsonDocument doc;
   const ElementProxy& ep = doc[1];
 
-  SECTION("set member") {
+  SUBCASE("set member") {
     ep["world"] = 42;
 
     REQUIRE(doc.as<std::string>() == "[null,{\"world\":42}]");
   }
 
-  SECTION("set element") {
+  SUBCASE("set element") {
     ep[2] = 42;
 
     REQUIRE(doc.as<std::string>() == "[null,[null,null,42]]");
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("set VLA") {
+  SUBCASE("set VLA") {
     size_t i = 8;
     char vla[i];
     strcpy(vla, "world");

@@ -3,31 +3,31 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonVariantConst::size()") {
   JsonDocument doc;
   JsonVariantConst variant = doc.to<JsonVariant>();
 
-  SECTION("unbound reference") {
+  SUBCASE("unbound reference") {
     JsonVariantConst unbound;
 
     CHECK(unbound.size() == 0);
   }
 
-  SECTION("int") {
+  SUBCASE("int") {
     doc.set(42);
 
     CHECK(variant.size() == 0);
   }
 
-  SECTION("string") {
+  SUBCASE("string") {
     doc.set("hello");
 
     CHECK(variant.size() == 0);
   }
 
-  SECTION("object") {
+  SUBCASE("object") {
     doc["a"] = 1;
     doc["b"] = 2;
 

@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Literals.hpp"
 
@@ -13,14 +13,14 @@ TEST_CASE("serialize JsonArray to std::string") {
   array.add(4);
   array.add(2);
 
-  SECTION("serializeJson()") {
+  SUBCASE("serializeJson()") {
     std::string json = "erase me";
     serializeJson(array, json);
 
     REQUIRE("[4,2]" == json);
   }
 
-  SECTION("serializeJsonPretty") {
+  SUBCASE("serializeJsonPretty") {
     std::string json = "erase me";
     serializeJsonPretty(array, json);
 
@@ -33,14 +33,14 @@ TEST_CASE("serialize JsonObject to std::string") {
   JsonObject obj = doc.to<JsonObject>();
   obj["key"] = "value";
 
-  SECTION("object") {
+  SUBCASE("object") {
     std::string json = "erase me";
     serializeJson(doc, json);
 
     REQUIRE("{\"key\":\"value\"}" == json);
   }
 
-  SECTION("serializeJsonPretty") {
+  SUBCASE("serializeJsonPretty") {
     std::string json = "erase me";
     serializeJsonPretty(doc, json);
 

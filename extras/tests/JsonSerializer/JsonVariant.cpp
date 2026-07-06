@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 #include <limits>
 
 #include "Literals.hpp"
@@ -19,113 +19,113 @@ void check(T value, const std::string& expected) {
 }
 
 TEST_CASE("serializeJson(JsonVariant)") {
-  SECTION("Undefined") {
+  SUBCASE("Undefined") {
     check(JsonVariant(), "null");
   }
 
-  SECTION("Null string") {
+  SUBCASE("Null string") {
     check(static_cast<char*>(0), "null");
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     check("hello", "\"hello\"");
   }
 
-  SECTION("string") {
+  SUBCASE("string") {
     check("hello"_s, "\"hello\"");
 
-    SECTION("Escape quotation mark") {
+    SUBCASE("Escape quotation mark") {
       check("hello \"world\""_s, "\"hello \\\"world\\\"\"");
     }
 
-    SECTION("Escape reverse solidus") {
+    SUBCASE("Escape reverse solidus") {
       check("hello\\world"_s, "\"hello\\\\world\"");
     }
 
-    SECTION("Don't escape solidus") {
+    SUBCASE("Don't escape solidus") {
       check("fifty/fifty"_s, "\"fifty/fifty\"");
     }
 
-    SECTION("Don't escape single quote") {
+    SUBCASE("Don't escape single quote") {
       check("hello'world"_s, "\"hello'world\"");
     }
 
-    SECTION("Escape backspace") {
+    SUBCASE("Escape backspace") {
       check("hello\bworld"_s, "\"hello\\bworld\"");
     }
 
-    SECTION("Escape formfeed") {
+    SUBCASE("Escape formfeed") {
       check("hello\fworld"_s, "\"hello\\fworld\"");
     }
 
-    SECTION("Escape linefeed") {
+    SUBCASE("Escape linefeed") {
       check("hello\nworld"_s, "\"hello\\nworld\"");
     }
 
-    SECTION("Escape carriage return") {
+    SUBCASE("Escape carriage return") {
       check("hello\rworld"_s, "\"hello\\rworld\"");
     }
 
-    SECTION("Escape tab") {
+    SUBCASE("Escape tab") {
       check("hello\tworld"_s, "\"hello\\tworld\"");
     }
 
-    SECTION("NUL char") {
+    SUBCASE("NUL char") {
       check("hello\0world"_s, "\"hello\\u0000world\"");
     }
   }
 
-  SECTION("SerializedValue<const char*>") {
+  SUBCASE("SerializedValue<const char*>") {
     check(serialized("[1,2]"), "[1,2]");
   }
 
-  SECTION("SerializedValue<std::string>") {
+  SUBCASE("SerializedValue<std::string>") {
     check(serialized("[1,2]"_s), "[1,2]");
   }
 
-  SECTION("Double") {
+  SUBCASE("Double") {
     check(3.1415927, "3.1415927");
   }
 
-  SECTION("Float") {
+  SUBCASE("Float") {
     REQUIRE(sizeof(float) == 4);
     check(3.1415927f, "3.141593");
   }
 
-  SECTION("Zero") {
+  SUBCASE("Zero") {
     check(0, "0");
   }
 
-  SECTION("Integer") {
+  SUBCASE("Integer") {
     check(42, "42");
   }
 
-  SECTION("NegativeLong") {
+  SUBCASE("NegativeLong") {
     check(-42, "-42");
   }
 
-  SECTION("UnsignedLong") {
+  SUBCASE("UnsignedLong") {
     check(4294967295UL, "4294967295");
   }
 
-  SECTION("True") {
+  SUBCASE("True") {
     check(true, "true");
   }
 
-  SECTION("OneFalse") {
+  SUBCASE("OneFalse") {
     check(false, "false");
   }
 
 #if ARDUINOJSON_USE_LONG_LONG
-  SECTION("NegativeInt64") {
+  SUBCASE("NegativeInt64") {
     check(-9223372036854775807 - 1, "-9223372036854775808");
   }
 
-  SECTION("PositiveInt64") {
+  SUBCASE("PositiveInt64") {
     check(9223372036854775807, "9223372036854775807");
   }
 
-  SECTION("UInt64") {
+  SUBCASE("UInt64") {
     check(18446744073709551615U, "18446744073709551615");
   }
 #endif

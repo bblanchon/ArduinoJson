@@ -3,14 +3,14 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 #include <sstream>
 
 TEST_CASE("operator<<(std::ostream)") {
   JsonDocument doc;
   std::ostringstream os;
 
-  SECTION("JsonVariant containing false") {
+  SUBCASE("JsonVariant containing false") {
     JsonVariant variant = doc.to<JsonVariant>();
 
     variant.set(false);
@@ -19,7 +19,7 @@ TEST_CASE("operator<<(std::ostream)") {
     REQUIRE("false" == os.str());
   }
 
-  SECTION("JsonVariant containing string") {
+  SUBCASE("JsonVariant containing string") {
     JsonVariant variant = doc.to<JsonVariant>();
 
     variant.set("coucou");
@@ -28,7 +28,7 @@ TEST_CASE("operator<<(std::ostream)") {
     REQUIRE("\"coucou\"" == os.str());
   }
 
-  SECTION("JsonObject") {
+  SUBCASE("JsonObject") {
     JsonObject object = doc.to<JsonObject>();
     object["key"] = "value";
 
@@ -37,7 +37,7 @@ TEST_CASE("operator<<(std::ostream)") {
     REQUIRE("{\"key\":\"value\"}" == os.str());
   }
 
-  SECTION("MemberProxy") {
+  SUBCASE("MemberProxy") {
     JsonObject object = doc.to<JsonObject>();
     object["key"] = "value";
 
@@ -46,7 +46,7 @@ TEST_CASE("operator<<(std::ostream)") {
     REQUIRE("\"value\"" == os.str());
   }
 
-  SECTION("JsonArray") {
+  SUBCASE("JsonArray") {
     JsonArray array = doc.to<JsonArray>();
     array.add("value");
 
@@ -55,7 +55,7 @@ TEST_CASE("operator<<(std::ostream)") {
     REQUIRE("[\"value\"]" == os.str());
   }
 
-  SECTION("ElementProxy") {
+  SUBCASE("ElementProxy") {
     JsonArray array = doc.to<JsonArray>();
     array.add("value");
 

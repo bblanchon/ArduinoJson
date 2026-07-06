@@ -4,7 +4,7 @@
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
@@ -14,11 +14,11 @@ TEST_CASE("ResourceManager::size()") {
   TimebombAllocator timebomb(0);
   ResourceManager resources(&timebomb);
 
-  SECTION("Initial size is 0") {
+  SUBCASE("Initial size is 0") {
     REQUIRE(0 == resources.size());
   }
 
-  SECTION("Doesn't grow when allocation of second pool fails") {
+  SUBCASE("Doesn't grow when allocation of second pool fails") {
     timebomb.setCountdown(1);
     for (size_t i = 0; i < ARDUINOJSON_POOL_CAPACITY; i++)
       resources.allocVariant();

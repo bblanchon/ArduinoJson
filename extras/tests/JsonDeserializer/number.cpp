@@ -7,8 +7,8 @@
 #define ARDUINOJSON_ENABLE_INFINITY 1
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <limits.h>
-#include <catch.hpp>
 
 namespace my {
 using ArduinoJson::detail::isinf;
@@ -18,8 +18,8 @@ using ArduinoJson::detail::isnan;
 TEST_CASE("deserialize an integer") {
   JsonDocument doc;
 
-  SECTION("Integer") {
-    SECTION("0") {
+  SUBCASE("Integer") {
+    SUBCASE("0") {
       DeserializationError err = deserializeJson(doc, "0");
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<int>() == true);
@@ -27,7 +27,7 @@ TEST_CASE("deserialize an integer") {
       REQUIRE(doc.as<std::string>() == "0");  // issue #808
     }
 
-    SECTION("Negative") {
+    SUBCASE("Negative") {
       DeserializationError err = deserializeJson(doc, "-42");
 
       REQUIRE(err == DeserializationError::Ok);
@@ -37,7 +37,7 @@ TEST_CASE("deserialize an integer") {
     }
 
 #if LONG_MAX == 2147483647
-    SECTION("LONG_MAX") {
+    SUBCASE("LONG_MAX") {
       DeserializationError err = deserializeJson(doc, "2147483647");
 
       REQUIRE(err == DeserializationError::Ok);
@@ -45,7 +45,7 @@ TEST_CASE("deserialize an integer") {
       REQUIRE(doc.as<long>() == LONG_MAX);
     }
 
-    SECTION("LONG_MAX + 1") {
+    SUBCASE("LONG_MAX + 1") {
       DeserializationError err = deserializeJson(doc, "2147483648");
 
       CAPTURE(LONG_MIN);
@@ -56,14 +56,14 @@ TEST_CASE("deserialize an integer") {
 #endif
 
 #if LONG_MIN == -2147483648
-    SECTION("LONG_MIN") {
+    SUBCASE("LONG_MIN") {
       DeserializationError err = deserializeJson(doc, "-2147483648");
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<long>() == true);
       REQUIRE(doc.as<long>() == LONG_MIN);
     }
 
-    SECTION("LONG_MIN - 1") {
+    SUBCASE("LONG_MIN - 1") {
       DeserializationError err = deserializeJson(doc, "-2147483649");
 
       REQUIRE(err == DeserializationError::Ok);
@@ -73,7 +73,7 @@ TEST_CASE("deserialize an integer") {
 #endif
 
 #if ULONG_MAX == 4294967295
-    SECTION("ULONG_MAX") {
+    SUBCASE("ULONG_MAX") {
       DeserializationError err = deserializeJson(doc, "4294967295");
 
       REQUIRE(err == DeserializationError::Ok);
@@ -82,7 +82,7 @@ TEST_CASE("deserialize an integer") {
       REQUIRE(doc.is<long>() == false);
     }
 
-    SECTION("ULONG_MAX + 1") {
+    SUBCASE("ULONG_MAX + 1") {
       DeserializationError err = deserializeJson(doc, "4294967296");
 
       REQUIRE(err == DeserializationError::Ok);
@@ -92,38 +92,38 @@ TEST_CASE("deserialize an integer") {
 #endif
   }
 
-  SECTION("Floats") {
-    SECTION("Double") {
+  SUBCASE("Floats") {
+    SUBCASE("Double") {
       DeserializationError err = deserializeJson(doc, "-1.23e+4");
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE_FALSE(doc.is<int>());
       REQUIRE(doc.is<double>());
-      REQUIRE(doc.as<double>() == Approx(-1.23e+4));
+      REQUIRE(doc.as<double>() == doctest::Approx(-1.23e+4));
     }
 
-    SECTION("NaN") {
+    SUBCASE("NaN") {
       DeserializationError err = deserializeJson(doc, "NaN");
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<float>() == true);
       REQUIRE(my::isnan(doc.as<float>()));
     }
 
-    SECTION("Infinity") {
+    SUBCASE("Infinity") {
       DeserializationError err = deserializeJson(doc, "Infinity");
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<float>() == true);
       REQUIRE(my::isinf(doc.as<float>()));
     }
 
-    SECTION("+Infinity") {
+    SUBCASE("+Infinity") {
       DeserializationError err = deserializeJson(doc, "+Infinity");
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<float>() == true);
       REQUIRE(my::isinf(doc.as<float>()));
     }
 
-    SECTION("-Infinity") {
+    SUBCASE("-Infinity") {
       DeserializationError err = deserializeJson(doc, "-Infinity");
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<float>() == true);

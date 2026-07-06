@@ -63,5 +63,4 @@
 #define A1 17
 #define A2 18
 
-// catch.hpp mutes several warnings, this file also allows to detect them
 #include "ArduinoJson.h"

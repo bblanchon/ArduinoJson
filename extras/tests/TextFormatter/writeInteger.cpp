@@ -2,7 +2,7 @@
 // Copyright © 2014-2025, Benoit BLANCHON
 // MIT License
 
-#include <catch.hpp>
+#include <doctest.h>
 #include <limits>
 #include <string>
 

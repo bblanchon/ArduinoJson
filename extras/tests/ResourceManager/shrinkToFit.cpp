@@ -4,7 +4,7 @@
 
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
@@ -14,13 +14,13 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
   SpyingAllocator spyingAllocator;
   ResourceManager resources(&spyingAllocator);
 
-  SECTION("empty") {
+  SUBCASE("empty") {
     resources.shrinkToFit();
 
     REQUIRE(spyingAllocator.log() == AllocatorLog{});
   }
 
-  SECTION("only one pool") {
+  SUBCASE("only one pool") {
     resources.allocVariant();
 
     resources.shrinkToFit();
@@ -32,7 +32,7 @@ TEST_CASE("ResourceManager::shrinkToFit()") {
             });
   }
 
-  SECTION("more pools than initial count") {
+  SUBCASE("more pools than initial count") {
     for (size_t i = 0;
          i < ARDUINOJSON_POOL_CAPACITY * ARDUINOJSON_INITIAL_POOL_COUNT + 1;
          i++)

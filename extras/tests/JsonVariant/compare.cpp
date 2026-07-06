@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 // Most code is already covered by arithmeticCompare.cpp.
 // Here, we're just filling the holes
@@ -12,7 +12,7 @@ TEST_CASE("Compare JsonVariant with value") {
   JsonDocument doc;
   JsonVariant a = doc.add<JsonVariant>();
 
-  SECTION("null vs (char*)0") {
+  SUBCASE("null vs (char*)0") {
     char* b = 0;
 
     CHECK(a == b);
@@ -23,7 +23,7 @@ TEST_CASE("Compare JsonVariant with value") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("42 vs 42") {
+  SUBCASE("42 vs 42") {
     a.set(42);
     int b = 42;
 
@@ -41,7 +41,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
   JsonVariant a = doc.add<JsonVariant>();
   JsonVariant b = doc.add<JsonVariant>();
 
-  SECTION("'abc' vs 'abc'") {
+  SUBCASE("'abc' vs 'abc'") {
     a.set("abc");
     b.set("abc");
 
@@ -53,7 +53,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("'abc' vs 'bcd'") {
+  SUBCASE("'abc' vs 'bcd'") {
     a.set("abc");
     b.set("bcd");
 
@@ -65,7 +65,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a >= b);
   }
 
-  SECTION("'bcd' vs 'abc'") {
+  SUBCASE("'bcd' vs 'abc'") {
     a.set("bcd");
     b.set("abc");
 
@@ -77,7 +77,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
   }
 
-  SECTION("serialized('abc') vs serialized('abc')") {
+  SUBCASE("serialized('abc') vs serialized('abc')") {
     a.set(serialized("abc"));
     b.set(serialized("abc"));
 
@@ -89,7 +89,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("serialized('abc') vs serialized('bcd')") {
+  SUBCASE("serialized('abc') vs serialized('bcd')") {
     a.set(serialized("abc"));
     b.set(serialized("bcd"));
 
@@ -101,7 +101,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a >= b);
   }
 
-  SECTION("serialized('bcd') vs serialized('abc')") {
+  SUBCASE("serialized('bcd') vs serialized('abc')") {
     a.set(serialized("bcd"));
     b.set(serialized("abc"));
 
@@ -113,7 +113,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
   }
 
-  SECTION("MsgPackBinary('abc') vs MsgPackBinary('abc')") {
+  SUBCASE("MsgPackBinary('abc') vs MsgPackBinary('abc')") {
     a.set(MsgPackBinary("abc", 4));
     b.set(MsgPackBinary("abc", 4));
 
@@ -125,7 +125,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("MsgPackBinary('abc') vs MsgPackBinary('bcd')") {
+  SUBCASE("MsgPackBinary('abc') vs MsgPackBinary('bcd')") {
     a.set(MsgPackBinary("abc", 4));
     b.set(MsgPackBinary("bcd", 4));
 
@@ -137,7 +137,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a >= b);
   }
 
-  SECTION("MsgPackBinary('bcd') vs MsgPackBinary('abc')") {
+  SUBCASE("MsgPackBinary('bcd') vs MsgPackBinary('abc')") {
     a.set(MsgPackBinary("bcd", 4));
     b.set(MsgPackBinary("abc", 4));
 
@@ -149,7 +149,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
   }
 
-  SECTION("false vs true") {
+  SUBCASE("false vs true") {
     a.set(false);
     b.set(true);
 
@@ -161,7 +161,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a >= b);
   }
 
-  SECTION("false vs -1") {
+  SUBCASE("false vs -1") {
     a.set(false);
     b.set(-1);
 
@@ -173,7 +173,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
   }
 
-  SECTION("null vs null") {
+  SUBCASE("null vs null") {
     CHECK(a == b);
     CHECK(a <= b);
     CHECK(a >= b);
@@ -182,7 +182,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("42 vs 42") {
+  SUBCASE("42 vs 42") {
     a.set(42);
     b.set(42);
 
@@ -194,7 +194,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("42 vs 42U") {
+  SUBCASE("42 vs 42U") {
     a.set(42);
     b.set(42U);
 
@@ -206,7 +206,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("42 vs 42.0") {
+  SUBCASE("42 vs 42.0") {
     a.set(42);
     b.set(42.0);
 
@@ -218,7 +218,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("42.0 vs 42") {
+  SUBCASE("42.0 vs 42") {
     a.set(42.0);
     b.set(42);
 
@@ -230,7 +230,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("-42 vs -42") {
+  SUBCASE("-42 vs -42") {
     a.set(-42);
     b.set(-42);
 
@@ -242,7 +242,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("-42 vs 42") {
+  SUBCASE("-42 vs 42") {
     a.set(-42);
     b.set(42);
 
@@ -254,7 +254,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a >= b);
   }
 
-  SECTION("42 vs -42") {
+  SUBCASE("42 vs -42") {
     a.set(42);
     b.set(-42);
 
@@ -266,7 +266,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
   }
 
-  SECTION("42.0 vs -42") {
+  SUBCASE("42.0 vs -42") {
     a.set(42.0);
     b.set(-42);
 
@@ -278,7 +278,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a == b);
   }
 
-  SECTION("42U vs 42U") {
+  SUBCASE("42U vs 42U") {
     a.set(42U);
     b.set(42U);
 
@@ -290,7 +290,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("42U vs 42") {
+  SUBCASE("42U vs 42") {
     a.set(42U);
     b.set(42);
 
@@ -302,7 +302,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("[1] vs [1]") {
+  SUBCASE("[1] vs [1]") {
     a.add(1);
     b.add(1);
 
@@ -314,7 +314,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("[1] vs [2]") {
+  SUBCASE("[1] vs [2]") {
     a.add(1);
     b.add(2);
 
@@ -326,7 +326,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a >= b);
   }
 
-  SECTION("{x:1} vs {x:1}") {
+  SUBCASE("{x:1} vs {x:1}") {
     a["x"] = 1;
     b["x"] = 1;
 
@@ -338,7 +338,7 @@ TEST_CASE("Compare JsonVariant with JsonVariant") {
     CHECK_FALSE(a > b);
   }
 
-  SECTION("{x:1} vs {x:2}") {
+  SUBCASE("{x:1} vs {x:2}") {
     a["x"] = 1;
     b["x"] = 2;
 

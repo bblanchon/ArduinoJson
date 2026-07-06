@@ -3,19 +3,19 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
 TEST_CASE("JsonArray::clear()") {
-  SECTION("No-op on null JsonArray") {
+  SUBCASE("No-op on null JsonArray") {
     JsonArray array;
     array.clear();
     REQUIRE(array.isNull() == true);
     REQUIRE(array.size() == 0);
   }
 
-  SECTION("Removes all elements") {
+  SUBCASE("Removes all elements") {
     JsonDocument doc;
     JsonArray array = doc.to<JsonArray>();
     array.add(1);
@@ -25,7 +25,7 @@ TEST_CASE("JsonArray::clear()") {
     REQUIRE(array.isNull() == false);
   }
 
-  SECTION("Removed elements are recycled") {
+  SUBCASE("Removed elements are recycled") {
     SpyingAllocator spy;
     JsonDocument doc(&spy);
     JsonArray array = doc.to<JsonArray>();

@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 class CustomWriter {
  public:
@@ -35,14 +35,14 @@ TEST_CASE("CustomWriter") {
   array.add(4);
   array.add(2);
 
-  SECTION("serializeJson()") {
+  SUBCASE("serializeJson()") {
     CustomWriter writer;
     serializeJson(array, writer);
 
     REQUIRE("[4,2]" == writer.str());
   }
 
-  SECTION("serializeJsonPretty") {
+  SUBCASE("serializeJsonPretty") {
     CustomWriter writer;
     serializeJsonPretty(array, writer);
 

@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdint.h>
-#include <catch.hpp>
 
 #include "Literals.hpp"
 
@@ -25,18 +25,23 @@ TEST_CASE("Invalid conversions") {
 
   JsonVariantConst variant;
 
-  CHECK(is_same<decltype(variant.as<int>()), int>::value);
-  CHECK(is_same<decltype(variant.as<float>()), float>::value);
-  CHECK(is_same<decltype(variant.as<JsonVariantConst>()),
-                JsonVariantConst>::value);
+  CHECK((is_same<decltype(variant.as<int>()), int>::value == true));
+  CHECK((is_same<decltype(variant.as<float>()), float>::value == true));
+  CHECK((is_same<decltype(variant.as<JsonVariantConst>()),
+                 JsonVariantConst>::value == true));
+  CHECK((is_same<decltype(variant.as<JsonObjectConst>()),
+                 JsonObjectConst>::value == true));
   CHECK(
-      is_same<decltype(variant.as<JsonObjectConst>()), JsonObjectConst>::value);
-  CHECK(is_same<decltype(variant.as<JsonArrayConst>()), JsonArrayConst>::value);
+      (is_same<decltype(variant.as<JsonArrayConst>()), JsonArrayConst>::value ==
+       true));
 
-  CHECK(is_same<decltype(variant.as<JsonVariant>()),
-                InvalidConversion<JsonVariantConst, JsonVariant>>::value);
-  CHECK(is_same<decltype(variant.as<JsonObject>()),
-                InvalidConversion<JsonVariantConst, JsonObject>>::value);
-  CHECK(is_same<decltype(variant.as<JsonArray>()),
-                InvalidConversion<JsonVariantConst, JsonArray>>::value);
+  CHECK((is_same<decltype(variant.as<JsonVariant>()),
+                 InvalidConversion<JsonVariantConst, JsonVariant>>::value ==
+         true));
+  CHECK((is_same<decltype(variant.as<JsonObject>()),
+                 InvalidConversion<JsonVariantConst, JsonObject>>::value ==
+         true));
+  CHECK(
+      (is_same<decltype(variant.as<JsonArray>()),
+               InvalidConversion<JsonVariantConst, JsonArray>>::value == true));
 }

@@ -3,15 +3,15 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonObjectConst::isNull()") {
-  SECTION("returns true") {
+  SUBCASE("returns true") {
     JsonObjectConst obj;
     REQUIRE(obj.isNull() == true);
   }
 
-  SECTION("returns false") {
+  SUBCASE("returns false") {
     JsonDocument doc;
     JsonObjectConst obj = doc.to<JsonObject>();
     REQUIRE(obj.isNull() == false);
@@ -19,12 +19,12 @@ TEST_CASE("JsonObjectConst::isNull()") {
 }
 
 TEST_CASE("JsonObjectConst::operator bool()") {
-  SECTION("returns false") {
+  SUBCASE("returns false") {
     JsonObjectConst obj;
     REQUIRE(static_cast<bool>(obj) == false);
   }
 
-  SECTION("returns true") {
+  SUBCASE("returns true") {
     JsonDocument doc;
     JsonObjectConst obj = doc.to<JsonObject>();
     REQUIRE(static_cast<bool>(obj) == true);

@@ -2,9 +2,9 @@
 // Copyright © 2014-2025, Benoit BLANCHON
 // MIT License
 
+#include <doctest.h>
 #include <ArduinoJson/Memory/StringBuffer.hpp>
 #include <ArduinoJson/Variant/VariantImpl.hpp>
-#include <catch.hpp>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -17,7 +17,7 @@ TEST_CASE("StringBuffer") {
   StringBuffer sb(&resources);
   VariantData variant;
 
-  SECTION("Tiny string") {
+  SUBCASE("Tiny string") {
     auto ptr = sb.reserve(3);
     strcpy(ptr, "hi!");
     sb.save(&variant);
@@ -26,7 +26,7 @@ TEST_CASE("StringBuffer") {
     REQUIRE(variant.asString() == "hi!");
   }
 
-  SECTION("Tiny string can't contain NUL") {
+  SUBCASE("Tiny string can't contain NUL") {
     auto ptr = sb.reserve(3);
     memcpy(ptr, "a\0b", 3);
     sb.save(&variant);
@@ -40,7 +40,7 @@ TEST_CASE("StringBuffer") {
     REQUIRE(str.c_str()[2] == 'b');
   }
 
-  SECTION("Tiny string can't have 4 characters") {
+  SUBCASE("Tiny string can't have 4 characters") {
     auto ptr = sb.reserve(4);
     strcpy(ptr, "alfa");
     sb.save(&variant);

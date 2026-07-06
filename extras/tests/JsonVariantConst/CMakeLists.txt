@@ -15,5 +15,5 @@ add_test(JsonVariantConst JsonVariantConstTests)
 
 set_tests_properties(JsonVariantConst
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

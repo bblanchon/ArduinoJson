@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdint.h>
-#include <catch.hpp>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -14,7 +14,7 @@ TEST_CASE("JsonArray::operator[]") {
   JsonDocument doc(&spy);
   JsonArray array = doc.to<JsonArray>();
 
-  SECTION("Pad with null") {
+  SUBCASE("Pad with null") {
     array[2] = 2;
     array[5] = 5;
     REQUIRE(array.size() == 6);
@@ -28,7 +28,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(array[5] == 5);
   }
 
-  SECTION("int") {
+  SUBCASE("int") {
     array[0] = 123;
     REQUIRE(123 == array[0].as<int>());
     REQUIRE(true == array[0].is<int>());
@@ -36,7 +36,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
 #if ARDUINOJSON_USE_LONG_LONG
-  SECTION("long long") {
+  SUBCASE("long long") {
     array[0] = 9223372036854775807;
     REQUIRE(9223372036854775807 == array[0].as<int64_t>());
     REQUIRE(true == array[0].is<int64_t>());
@@ -45,21 +45,21 @@ TEST_CASE("JsonArray::operator[]") {
   }
 #endif
 
-  SECTION("double") {
+  SUBCASE("double") {
     array[0] = 123.45;
     REQUIRE(123.45 == array[0].as<double>());
     REQUIRE(true == array[0].is<double>());
     REQUIRE(false == array[0].is<int>());
   }
 
-  SECTION("bool") {
+  SUBCASE("bool") {
     array[0] = true;
     REQUIRE(true == array[0].as<bool>());
     REQUIRE(true == array[0].is<bool>());
     REQUIRE(false == array[0].is<int>());
   }
 
-  SECTION("string literal") {
+  SUBCASE("string literal") {
     array[0] = "hello";
 
     REQUIRE(array[0].as<std::string>() == "hello");
@@ -71,7 +71,7 @@ TEST_CASE("JsonArray::operator[]") {
                          });
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     const char* str = "hello";
     array[0] = str;
 
@@ -84,7 +84,7 @@ TEST_CASE("JsonArray::operator[]") {
                          });
   }
 
-  SECTION("std::string") {
+  SUBCASE("std::string") {
     array[0] = "hello"_s;
 
     REQUIRE(array[0].as<std::string>() == "hello");
@@ -97,7 +97,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("VLA") {
+  SUBCASE("VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "world");
@@ -109,7 +109,7 @@ TEST_CASE("JsonArray::operator[]") {
   }
 #endif
 
-  SECTION("nested array") {
+  SUBCASE("nested array") {
     JsonDocument doc2;
     JsonArray arr2 = doc2.to<JsonArray>();
 
@@ -120,7 +120,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(false == array[0].is<int>());
   }
 
-  SECTION("nested object") {
+  SUBCASE("nested object") {
     JsonDocument doc2;
     JsonObject obj = doc2.to<JsonObject>();
 
@@ -131,7 +131,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(false == array[0].is<int>());
   }
 
-  SECTION("array subscript") {
+  SUBCASE("array subscript") {
     JsonDocument doc2;
     JsonArray arr2 = doc2.to<JsonArray>();
     const char* str = "hello";
@@ -143,7 +143,7 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(str == array[0]);
   }
 
-  SECTION("object subscript") {
+  SUBCASE("object subscript") {
     const char* str = "hello";
     JsonDocument doc2;
     JsonObject obj = doc2.to<JsonObject>();
@@ -155,12 +155,12 @@ TEST_CASE("JsonArray::operator[]") {
     REQUIRE(str == array[0]);
   }
 
-  SECTION("array[0].to<JsonObject>()") {
+  SUBCASE("array[0].to<JsonObject>()") {
     JsonObject obj = array[0].to<JsonObject>();
     REQUIRE(obj.isNull() == false);
   }
 
-  SECTION("Use a JsonVariant as index") {
+  SUBCASE("Use a JsonVariant as index") {
     array[0] = 1;
     array[1] = 2;
     array[2] = 3;

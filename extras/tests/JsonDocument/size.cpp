@@ -3,23 +3,23 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonDocument::size()") {
   JsonDocument doc;
 
-  SECTION("returns 0") {
+  SUBCASE("returns 0") {
     REQUIRE(doc.size() == 0);
   }
 
-  SECTION("as an array, return 2") {
+  SUBCASE("as an array, return 2") {
     doc.add(1);
     doc.add(2);
 
     REQUIRE(doc.size() == 2);
   }
 
-  SECTION("as an object, return 2") {
+  SUBCASE("as an object, return 2") {
     doc["a"] = 1;
     doc["b"] = 2;
 

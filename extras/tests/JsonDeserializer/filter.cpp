@@ -4,7 +4,7 @@
 
 #define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <sstream>
 #include <string>
@@ -705,7 +705,7 @@ TEST_CASE("Filtering") {
   };
 
   for (auto& tc : testCases) {
-    SECTION(tc.description) {
+    SUBCASE(tc.description) {
       SpyingAllocator spy;
       JsonDocument filter;
       JsonDocument doc(&spy);
@@ -733,25 +733,25 @@ TEST_CASE("Overloads") {
 
   // deserializeJson(..., Filter)
 
-  SECTION("const char*, Filter") {
+  SUBCASE("const char*, Filter") {
     deserializeJson(doc, "{}", Filter(filter));
   }
 
-  SECTION("const char*, size_t, Filter") {
+  SUBCASE("const char*, size_t, Filter") {
     deserializeJson(doc, "{}", 2, Filter(filter));
   }
 
-  SECTION("const std::string&, Filter") {
+  SUBCASE("const std::string&, Filter") {
     deserializeJson(doc, "{}"_s, Filter(filter));
   }
 
-  SECTION("std::istream&, Filter") {
+  SUBCASE("std::istream&, Filter") {
     std::stringstream s("{}");
     deserializeJson(doc, s, Filter(filter));
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("char[n], Filter") {
+  SUBCASE("char[n], Filter") {
     size_t i = 4;
     char vla[i];
     strcpy(vla, "{}");
@@ -761,25 +761,25 @@ TEST_CASE("Overloads") {
 
   // deserializeJson(..., Filter, NestingLimit)
 
-  SECTION("const char*, Filter, NestingLimit") {
+  SUBCASE("const char*, Filter, NestingLimit") {
     deserializeJson(doc, "{}", Filter(filter), NestingLimit(5));
   }
 
-  SECTION("const char*, size_t, Filter, NestingLimit") {
+  SUBCASE("const char*, size_t, Filter, NestingLimit") {
     deserializeJson(doc, "{}", 2, Filter(filter), NestingLimit(5));
   }
 
-  SECTION("const std::string&, Filter, NestingLimit") {
+  SUBCASE("const std::string&, Filter, NestingLimit") {
     deserializeJson(doc, "{}"_s, Filter(filter), NestingLimit(5));
   }
 
-  SECTION("std::istream&, Filter, NestingLimit") {
+  SUBCASE("std::istream&, Filter, NestingLimit") {
     std::stringstream s("{}");
     deserializeJson(doc, s, Filter(filter), NestingLimit(5));
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("char[n], Filter, NestingLimit") {
+  SUBCASE("char[n], Filter, NestingLimit") {
     size_t i = 4;
     char vla[i];
     strcpy(vla, "{}");
@@ -789,25 +789,25 @@ TEST_CASE("Overloads") {
 
   // deserializeJson(..., NestingLimit, Filter)
 
-  SECTION("const char*, NestingLimit, Filter") {
+  SUBCASE("const char*, NestingLimit, Filter") {
     deserializeJson(doc, "{}", NestingLimit(5), Filter(filter));
   }
 
-  SECTION("const char*, size_t, NestingLimit, Filter") {
+  SUBCASE("const char*, size_t, NestingLimit, Filter") {
     deserializeJson(doc, "{}", 2, NestingLimit(5), Filter(filter));
   }
 
-  SECTION("const std::string&, NestingLimit, Filter") {
+  SUBCASE("const std::string&, NestingLimit, Filter") {
     deserializeJson(doc, "{}"_s, NestingLimit(5), Filter(filter));
   }
 
-  SECTION("std::istream&, NestingLimit, Filter") {
+  SUBCASE("std::istream&, NestingLimit, Filter") {
     std::stringstream s("{}");
     deserializeJson(doc, s, NestingLimit(5), Filter(filter));
   }
 
 #ifdef HAS_VARIABLE_LENGTH_ARRAY
-  SECTION("char[n], NestingLimit, Filter") {
+  SUBCASE("char[n], NestingLimit, Filter") {
     size_t i = 4;
     char vla[i];
     strcpy(vla, "{}");

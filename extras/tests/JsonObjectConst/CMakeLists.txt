@@ -15,5 +15,5 @@ add_test(JsonObjectConst JsonObjectConstTests)
 
 set_tests_properties(JsonObjectConst
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

@@ -6,7 +6,7 @@
 #define false 0x0
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Issue #2181") {
   JsonDocument doc;

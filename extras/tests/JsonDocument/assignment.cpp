@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -11,7 +11,7 @@
 TEST_CASE("JsonDocument assignment") {
   SpyingAllocator spyingAllocator;
 
-  SECTION("Copy assignment same capacity") {
+  SUBCASE("Copy assignment same capacity") {
     JsonDocument doc1(&spyingAllocator);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
     JsonDocument doc2(&spyingAllocator);
@@ -28,7 +28,7 @@ TEST_CASE("JsonDocument assignment") {
                                      });
   }
 
-  SECTION("Copy assignment reallocates when capacity is smaller") {
+  SUBCASE("Copy assignment reallocates when capacity is smaller") {
     JsonDocument doc1(&spyingAllocator);
     deserializeJson(doc1, "[{\"hello\":\"world\"}]");
     JsonDocument doc2(&spyingAllocator);
@@ -44,7 +44,7 @@ TEST_CASE("JsonDocument assignment") {
                                      });
   }
 
-  SECTION("Copy assignment reallocates when capacity is larger") {
+  SUBCASE("Copy assignment reallocates when capacity is larger") {
     JsonDocument doc1(&spyingAllocator);
     deserializeJson(doc1, "{\"hello\":\"world\"}");
     JsonDocument doc2(&spyingAllocator);
@@ -60,7 +60,7 @@ TEST_CASE("JsonDocument assignment") {
                                      });
   }
 
-  SECTION("Move assign") {
+  SUBCASE("Move assign") {
     {
       JsonDocument doc1(&spyingAllocator);
       doc1["hello"_s] = "world"_s;
@@ -83,7 +83,7 @@ TEST_CASE("JsonDocument assignment") {
                                      });
   }
 
-  SECTION("Assign from JsonObject") {
+  SUBCASE("Assign from JsonObject") {
     JsonDocument doc1;
     JsonObject obj = doc1.to<JsonObject>();
     obj["hello"] = "world";
@@ -94,7 +94,7 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "{\"hello\":\"world\"}");
   }
 
-  SECTION("Assign from JsonArray") {
+  SUBCASE("Assign from JsonArray") {
     JsonDocument doc1;
     JsonArray arr = doc1.to<JsonArray>();
     arr.add("hello");
@@ -105,7 +105,7 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "[\"hello\"]");
   }
 
-  SECTION("Assign from JsonVariant") {
+  SUBCASE("Assign from JsonVariant") {
     JsonDocument doc1;
     deserializeJson(doc1, "42");
 
@@ -115,7 +115,7 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "42");
   }
 
-  SECTION("Assign from MemberProxy") {
+  SUBCASE("Assign from MemberProxy") {
     JsonDocument doc1;
     doc1["value"] = 42;
 
@@ -125,7 +125,7 @@ TEST_CASE("JsonDocument assignment") {
     REQUIRE(doc2.as<std::string>() == "42");
   }
 
-  SECTION("Assign from ElementProxy") {
+  SUBCASE("Assign from ElementProxy") {
     JsonDocument doc1;
     doc1[0] = 42;
 

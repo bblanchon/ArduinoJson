@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JSON_ARRAY_SIZE") {
   REQUIRE(JSON_ARRAY_SIZE(10) == ArduinoJson::detail::sizeofArray(10));

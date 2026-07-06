@@ -22,5 +22,5 @@ add_test(ResourceManager ResourceManagerTests)
 
 set_tests_properties(ResourceManager
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -14,18 +14,18 @@ TEST_CASE("JsonObjectConst::operator[]") {
   doc["a\0b"_s] = "ABC";
   JsonObjectConst obj = doc.as<JsonObjectConst>();
 
-  SECTION("supports const char*") {
+  SUBCASE("supports const char*") {
     REQUIRE(obj["hello"] == "world");  // issue #2019
   }
 
-  SECTION("supports std::string") {
+  SUBCASE("supports std::string") {
     REQUIRE(obj["hello"_s] == "world");  // issue #2019
     REQUIRE(obj["a\0b"_s] == "ABC");
   }
 
 #if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
     !defined(SUBSCRIPT_CONFLICTS_WITH_BUILTIN_OPERATOR)
-  SECTION("supports VLA") {
+  SUBCASE("supports VLA") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -34,7 +34,7 @@ TEST_CASE("JsonObjectConst::operator[]") {
   }
 #endif
 
-  SECTION("supports JsonVariant") {
+  SUBCASE("supports JsonVariant") {
     doc["key1"] = "hello";
     doc["key2"] = "a\0b"_s;
     doc["key3"] = "foo";

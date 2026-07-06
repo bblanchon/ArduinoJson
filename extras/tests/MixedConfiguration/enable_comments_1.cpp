@@ -5,13 +5,13 @@
 #define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("Comments in arrays") {
   JsonDocument doc;
 
-  SECTION("Block comments") {
-    SECTION("Before opening bracket") {
+  SUBCASE("Block comments") {
+    SUBCASE("Before opening bracket") {
       DeserializationError err =
           deserializeJson(doc, "/*COMMENT*/  [\"hello\"]");
       JsonArray arr = doc.as<JsonArray>();
@@ -21,7 +21,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("After opening bracket") {
+    SUBCASE("After opening bracket") {
       DeserializationError err =
           deserializeJson(doc, "[/*COMMENT*/ \"hello\"]");
       JsonArray arr = doc.as<JsonArray>();
@@ -31,7 +31,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("Before closing bracket") {
+    SUBCASE("Before closing bracket") {
       DeserializationError err = deserializeJson(doc, "[\"hello\"/*COMMENT*/]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -40,7 +40,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("After closing bracket") {
+    SUBCASE("After closing bracket") {
       DeserializationError err = deserializeJson(doc, "[\"hello\"]/*COMMENT*/");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -49,7 +49,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("Before comma") {
+    SUBCASE("Before comma") {
       DeserializationError err =
           deserializeJson(doc, "[\"hello\"/*COMMENT*/,\"world\"]");
       JsonArray arr = doc.as<JsonArray>();
@@ -60,7 +60,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[1] == "world");
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err =
           deserializeJson(doc, "[\"hello\",/*COMMENT*/ \"world\"]");
       JsonArray arr = doc.as<JsonArray>();
@@ -71,24 +71,24 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[1] == "world");
     }
 
-    SECTION("/*/") {
+    SUBCASE("/*/") {
       DeserializationError err = deserializeJson(doc, "[/*/\n]");
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("Unfinished comment") {
+    SUBCASE("Unfinished comment") {
       DeserializationError err = deserializeJson(doc, "[/*COMMENT]");
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("Final slash missing") {
+    SUBCASE("Final slash missing") {
       DeserializationError err = deserializeJson(doc, "[/*COMMENT*]");
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
-  SECTION("Trailing comments") {
-    SECTION("Before opening bracket") {
+  SUBCASE("Trailing comments") {
+    SUBCASE("Before opening bracket") {
       DeserializationError err =
           deserializeJson(doc, "//COMMENT\n\t[\"hello\"]");
       JsonArray arr = doc.as<JsonArray>();
@@ -98,7 +98,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("After opening bracket") {
+    SUBCASE("After opening bracket") {
       DeserializationError err = deserializeJson(doc, "[//COMMENT\n\"hello\"]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -107,7 +107,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("Before closing bracket") {
+    SUBCASE("Before closing bracket") {
       DeserializationError err =
           deserializeJson(doc, "[\"hello\"//COMMENT\r\n]");
       JsonArray arr = doc.as<JsonArray>();
@@ -117,7 +117,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("After closing bracket") {
+    SUBCASE("After closing bracket") {
       DeserializationError err = deserializeJson(doc, "[\"hello\"]//COMMENT\n");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -126,7 +126,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[0] == "hello");
     }
 
-    SECTION("Before comma") {
+    SUBCASE("Before comma") {
       DeserializationError err =
           deserializeJson(doc, "[\"hello\"//COMMENT\n,\"world\"]");
       JsonArray arr = doc.as<JsonArray>();
@@ -137,7 +137,7 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[1] == "world");
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err =
           deserializeJson(doc, "[\"hello\",//COMMENT\n\"world\"]");
       JsonArray arr = doc.as<JsonArray>();
@@ -148,12 +148,12 @@ TEST_CASE("Comments in arrays") {
       REQUIRE(arr[1] == "world");
     }
 
-    SECTION("Invalid comment") {
+    SUBCASE("Invalid comment") {
       DeserializationError err = deserializeJson(doc, "[/COMMENT\n]");
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("End document with comment") {
+    SUBCASE("End document with comment") {
       DeserializationError err = deserializeJson(doc, "[//COMMENT");
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
@@ -163,8 +163,8 @@ TEST_CASE("Comments in arrays") {
 TEST_CASE("Comments in objects") {
   JsonDocument doc;
 
-  SECTION("Block comments") {
-    SECTION("Before opening brace") {
+  SUBCASE("Block comments") {
+    SUBCASE("Before opening brace") {
       DeserializationError err =
           deserializeJson(doc, "/*COMMENT*/ {\"hello\":\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -173,7 +173,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("After opening brace") {
+    SUBCASE("After opening brace") {
       DeserializationError err =
           deserializeJson(doc, "{/*COMMENT*/\"hello\":\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -182,7 +182,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("Before colon") {
+    SUBCASE("Before colon") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\"/*COMMENT*/:\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -191,7 +191,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("After colon") {
+    SUBCASE("After colon") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\":/*COMMENT*/\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -200,7 +200,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("Before closing brace") {
+    SUBCASE("Before closing brace") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\":\"world\"/*COMMENT*/}");
       JsonObject obj = doc.as<JsonObject>();
@@ -209,7 +209,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("After closing brace") {
+    SUBCASE("After closing brace") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\":\"world\"}/*COMMENT*/");
       JsonObject obj = doc.as<JsonObject>();
@@ -218,7 +218,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("Before comma") {
+    SUBCASE("Before comma") {
       DeserializationError err = deserializeJson(
           doc, "{\"hello\":\"world\"/*COMMENT*/,\"answer\":42}");
       JsonObject obj = doc.as<JsonObject>();
@@ -228,7 +228,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["answer"] == 42);
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err = deserializeJson(
           doc, "{\"hello\":\"world\",/*COMMENT*/\"answer\":42}");
       JsonObject obj = doc.as<JsonObject>();
@@ -239,8 +239,8 @@ TEST_CASE("Comments in objects") {
     }
   }
 
-  SECTION("Trailing comments") {
-    SECTION("Before opening brace") {
+  SUBCASE("Trailing comments") {
+    SUBCASE("Before opening brace") {
       DeserializationError err =
           deserializeJson(doc, "//COMMENT\n {\"hello\":\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -249,7 +249,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("After opening brace") {
+    SUBCASE("After opening brace") {
       DeserializationError err =
           deserializeJson(doc, "{//COMMENT\n\"hello\":\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -258,7 +258,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("Before colon") {
+    SUBCASE("Before colon") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\"//COMMENT\n:\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -267,7 +267,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("After colon") {
+    SUBCASE("After colon") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\"://COMMENT\n\"world\"}");
       JsonObject obj = doc.as<JsonObject>();
@@ -276,7 +276,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("Before closing brace") {
+    SUBCASE("Before closing brace") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\":\"world\"//COMMENT\n}");
       JsonObject obj = doc.as<JsonObject>();
@@ -285,7 +285,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("After closing brace") {
+    SUBCASE("After closing brace") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\":\"world\"}//COMMENT\n");
       JsonObject obj = doc.as<JsonObject>();
@@ -294,7 +294,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("Before comma") {
+    SUBCASE("Before comma") {
       DeserializationError err = deserializeJson(
           doc, "{\"hello\":\"world\"//COMMENT\n,\"answer\":42}");
       JsonObject obj = doc.as<JsonObject>();
@@ -304,7 +304,7 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["answer"] == 42);
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err = deserializeJson(
           doc, "{\"hello\":\"world\",//COMMENT\n\"answer\":42}");
       JsonObject obj = doc.as<JsonObject>();
@@ -315,38 +315,38 @@ TEST_CASE("Comments in objects") {
     }
   }
 
-  SECTION("Dangling slash") {
-    SECTION("Before opening brace") {
+  SUBCASE("Dangling slash") {
+    SUBCASE("Before opening brace") {
       DeserializationError err = deserializeJson(doc, "/{\"hello\":\"world\"}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("After opening brace") {
+    SUBCASE("After opening brace") {
       DeserializationError err = deserializeJson(doc, "{/\"hello\":\"world\"}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("Before colon") {
+    SUBCASE("Before colon") {
       DeserializationError err = deserializeJson(doc, "{\"hello\"/:\"world\"}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("After colon") {
+    SUBCASE("After colon") {
       DeserializationError err = deserializeJson(doc, "{\"hello\":/\"world\"}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("Before closing brace") {
+    SUBCASE("Before closing brace") {
       DeserializationError err = deserializeJson(doc, "{\"hello\":\"world\"/}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("After closing brace") {
+    SUBCASE("After closing brace") {
       DeserializationError err = deserializeJson(doc, "{\"hello\":\"world\"}/");
       JsonObject obj = doc.as<JsonObject>();
 
@@ -354,14 +354,14 @@ TEST_CASE("Comments in objects") {
       REQUIRE(obj["hello"] == "world");
     }
 
-    SECTION("Before comma") {
+    SUBCASE("Before comma") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\":\"world\"/,\"answer\":42}");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err =
           deserializeJson(doc, "{\"hello\":\"world\",/\"answer\":42}");
 
@@ -373,37 +373,37 @@ TEST_CASE("Comments in objects") {
 TEST_CASE("Comments alone") {
   JsonDocument doc;
 
-  SECTION("Just a trailing comment with no line break") {
+  SUBCASE("Just a trailing comment with no line break") {
     DeserializationError err = deserializeJson(doc, "// comment");
 
     REQUIRE(err == DeserializationError::IncompleteInput);
   }
 
-  SECTION("Just a trailing comment with no a break") {
+  SUBCASE("Just a trailing comment with no a break") {
     DeserializationError err = deserializeJson(doc, "// comment\n");
 
     REQUIRE(err == DeserializationError::EmptyInput);
   }
 
-  SECTION("Just a block comment") {
+  SUBCASE("Just a block comment") {
     DeserializationError err = deserializeJson(doc, "/*comment*/");
 
     REQUIRE(err == DeserializationError::EmptyInput);
   }
 
-  SECTION("Just a slash") {
+  SUBCASE("Just a slash") {
     DeserializationError err = deserializeJson(doc, "/");
 
     REQUIRE(err == DeserializationError::InvalidInput);
   }
 
-  SECTION("Premature terminator") {
+  SUBCASE("Premature terminator") {
     DeserializationError err = deserializeJson(doc, "/* comment");
 
     REQUIRE(err == DeserializationError::IncompleteInput);
   }
 
-  SECTION("Premature end on sized input") {
+  SUBCASE("Premature end on sized input") {
     DeserializationError err = deserializeJson(doc, "/* comment */", 10);
 
     REQUIRE(err == DeserializationError::IncompleteInput);

@@ -2,9 +2,9 @@
 // Copyright © 2014-2025, Benoit BLANCHON
 // MIT License
 
+#include <doctest.h>
 #include <stdint.h>
 #include <ArduinoJson.hpp>
-#include <catch.hpp>
 
 using namespace ArduinoJson::detail;
 

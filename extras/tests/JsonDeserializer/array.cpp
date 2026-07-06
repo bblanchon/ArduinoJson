@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 
@@ -13,7 +13,7 @@ TEST_CASE("deserialize JSON array") {
   SpyingAllocator spy;
   JsonDocument doc(&spy);
 
-  SECTION("An empty array") {
+  SUBCASE("An empty array") {
     DeserializationError err = deserializeJson(doc, "[]");
     JsonArray arr = doc.as<JsonArray>();
 
@@ -21,8 +21,8 @@ TEST_CASE("deserialize JSON array") {
     REQUIRE(0 == arr.size());
   }
 
-  SECTION("Spaces") {
-    SECTION("Before the opening bracket") {
+  SUBCASE("Spaces") {
+    SUBCASE("Before the opening bracket") {
       DeserializationError err = deserializeJson(doc, "  []");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -30,7 +30,7 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(0 == arr.size());
     }
 
-    SECTION("Before first value") {
+    SUBCASE("Before first value") {
       DeserializationError err = deserializeJson(doc, "[ \t\r\n42]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -39,7 +39,7 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[0] == 42);
     }
 
-    SECTION("After first value") {
+    SUBCASE("After first value") {
       DeserializationError err = deserializeJson(doc, "[42 \t\r\n]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -49,8 +49,8 @@ TEST_CASE("deserialize JSON array") {
     }
   }
 
-  SECTION("Values types") {
-    SECTION("On integer") {
+  SUBCASE("Values types") {
+    SUBCASE("On integer") {
       DeserializationError err = deserializeJson(doc, "[42]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -59,7 +59,7 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[0] == 42);
     }
 
-    SECTION("Two integers") {
+    SUBCASE("Two integers") {
       DeserializationError err = deserializeJson(doc, "[42,84]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -69,13 +69,13 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[1] == 84);
     }
 
-    SECTION("Float") {
+    SUBCASE("Float") {
       DeserializationError err = deserializeJson(doc, "[4.2,1e2]");
       JsonArray arr = doc.as<JsonArray>();
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
-      REQUIRE(arr[0].as<float>() == Approx(4.2f));
+      REQUIRE(arr[0].as<float>() == doctest::Approx(4.2f));
       REQUIRE(arr[1] == 1e2f);
       REQUIRE(spy.log() == AllocatorLog{
                                Allocate(sizeofPool()),
@@ -83,13 +83,13 @@ TEST_CASE("deserialize JSON array") {
                            });
     }
 
-    SECTION("Double") {
+    SUBCASE("Double") {
       DeserializationError err = deserializeJson(doc, "[4.2123456,-7E89]");
       JsonArray arr = doc.as<JsonArray>();
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
-      REQUIRE(arr[0].as<double>() == Approx(4.2123456));
+      REQUIRE(arr[0].as<double>() == doctest::Approx(4.2123456));
       REQUIRE(arr[1] == -7E89);
       REQUIRE(spy.log() == AllocatorLog{
                                Allocate(sizeofPool<VariantData>()),
@@ -101,7 +101,7 @@ TEST_CASE("deserialize JSON array") {
                            });
     }
 
-    SECTION("Unsigned long") {
+    SUBCASE("Unsigned long") {
       DeserializationError err = deserializeJson(doc, "[4294967295]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -110,7 +110,7 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[0] == 4294967295UL);
     }
 
-    SECTION("Boolean") {
+    SUBCASE("Boolean") {
       DeserializationError err = deserializeJson(doc, "[true,false]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -120,19 +120,19 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[1] == false);
     }
 
-    SECTION("Null") {
+    SUBCASE("Null") {
       DeserializationError err = deserializeJson(doc, "[null,null]");
       JsonArray arr = doc.as<JsonArray>();
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
-      REQUIRE(arr[0].as<const char*>() == 0);
-      REQUIRE(arr[1].as<const char*>() == 0);
+      REQUIRE(arr[0].as<const char*>() == nullptr);
+      REQUIRE(arr[1].as<const char*>() == nullptr);
     }
   }
 
-  SECTION("Quotes") {
-    SECTION("Double quotes") {
+  SUBCASE("Quotes") {
+    SUBCASE("Double quotes") {
       DeserializationError err =
           deserializeJson(doc, "[ \"hello\" , \"world\" ]");
       JsonArray arr = doc.as<JsonArray>();
@@ -143,7 +143,7 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[1] == "world");
     }
 
-    SECTION("Single quotes") {
+    SUBCASE("Single quotes") {
       DeserializationError err = deserializeJson(doc, "[ 'hello' , 'world' ]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -153,12 +153,12 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[1] == "world");
     }
 
-    SECTION("No quotes") {
+    SUBCASE("No quotes") {
       DeserializationError err = deserializeJson(doc, "[ hello , world ]");
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("Double quotes (empty strings)") {
+    SUBCASE("Double quotes (empty strings)") {
       DeserializationError err = deserializeJson(doc, "[\"\",\"\"]");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -168,7 +168,7 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[1] == "");
     }
 
-    SECTION("Single quotes (empty strings)") {
+    SUBCASE("Single quotes (empty strings)") {
       DeserializationError err = deserializeJson(doc, "[\'\',\'\']");
       JsonArray arr = doc.as<JsonArray>();
 
@@ -178,69 +178,69 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(arr[1] == "");
     }
 
-    SECTION("No quotes (empty strings)") {
+    SUBCASE("No quotes (empty strings)") {
       DeserializationError err = deserializeJson(doc, "[,]");
 
       REQUIRE(err == DeserializationError::InvalidInput);
     }
 
-    SECTION("Closing single quotes missing") {
+    SUBCASE("Closing single quotes missing") {
       DeserializationError err = deserializeJson(doc, "[\"]");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("Closing double quotes missing") {
+    SUBCASE("Closing double quotes missing") {
       DeserializationError err = deserializeJson(doc, "[\']");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
-  SECTION("Premature null-terminator") {
-    SECTION("After opening bracket") {
+  SUBCASE("Premature null-terminator") {
+    SUBCASE("After opening bracket") {
       DeserializationError err = deserializeJson(doc, "[");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After value") {
+    SUBCASE("After value") {
       DeserializationError err = deserializeJson(doc, "[1");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err = deserializeJson(doc, "[1,");
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
-  SECTION("Premature end of input") {
+  SUBCASE("Premature end of input") {
     const char* input = "[1,2]";
 
-    SECTION("After opening bracket") {
+    SUBCASE("After opening bracket") {
       DeserializationError err = deserializeJson(doc, input, 1);
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After value") {
+    SUBCASE("After value") {
       DeserializationError err = deserializeJson(doc, input, 2);
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
 
-    SECTION("After comma") {
+    SUBCASE("After comma") {
       DeserializationError err = deserializeJson(doc, input, 3);
 
       REQUIRE(err == DeserializationError::IncompleteInput);
     }
   }
 
-  SECTION("Misc") {
-    SECTION("Nested objects") {
+  SUBCASE("Misc") {
+    SUBCASE("Nested objects") {
       char jsonString[] =
           " [ { \"a\" : 1 , \"b\" : 2 } , { \"c\" : 3 , \"d\" : 4 } ] ";
 
@@ -269,7 +269,7 @@ TEST_CASE("deserialize JSON array") {
     }
   }
 
-  SECTION("Should clear the JsonArray") {
+  SUBCASE("Should clear the JsonArray") {
     deserializeJson(doc, "[1,2,3,4]");
     spy.clearLog();
 
@@ -288,7 +288,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
   SpyingAllocator spy(&timebomb);
   JsonDocument doc(&spy);
 
-  SECTION("empty array requires no allocation") {
+  SUBCASE("empty array requires no allocation") {
     timebomb.setCountdown(0);
     char input[] = "[]";
 
@@ -297,7 +297,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("allocation of pool list fails") {
+  SUBCASE("allocation of pool list fails") {
     timebomb.setCountdown(0);
     char input[] = "[1]";
 
@@ -307,7 +307,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     REQUIRE(doc.as<std::string>() == "[]");
   }
 
-  SECTION("allocation of pool fails") {
+  SUBCASE("allocation of pool fails") {
     timebomb.setCountdown(0);
     char input[] = "[1]";
 
@@ -317,7 +317,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     REQUIRE(doc.as<std::string>() == "[]");
   }
 
-  SECTION("allocation of string fails in array") {
+  SUBCASE("allocation of string fails in array") {
     timebomb.setCountdown(1);
     char input[] = "[0,\"hi!\"]";
 
@@ -327,7 +327,7 @@ TEST_CASE("deserialize JSON array under memory constraints") {
     REQUIRE(doc.as<std::string>() == "[0,null]");
   }
 
-  SECTION("don't store space characters") {
+  SUBCASE("don't store space characters") {
     deserializeJson(doc, "  [ \"1234567\" ] ");
 
     REQUIRE(spy.log() ==

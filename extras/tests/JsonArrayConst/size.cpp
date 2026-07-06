@@ -3,22 +3,22 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("JsonArrayConst::size()") {
   JsonDocument doc;
   JsonArrayConst array = doc.to<JsonArray>();
 
-  SECTION("returns 0 if unbound") {
+  SUBCASE("returns 0 if unbound") {
     JsonArrayConst unbound;
     REQUIRE(0U == unbound.size());
   }
 
-  SECTION("returns 0 is empty") {
+  SUBCASE("returns 0 is empty") {
     REQUIRE(0U == array.size());
   }
 
-  SECTION("return number of elements") {
+  SUBCASE("return number of elements") {
     doc.add("hello");
     doc.add("world");
 

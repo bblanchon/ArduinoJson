@@ -15,5 +15,5 @@ add_test(JsonArrayConst JsonArrayConstTests)
 
 set_tests_properties(JsonArrayConst
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

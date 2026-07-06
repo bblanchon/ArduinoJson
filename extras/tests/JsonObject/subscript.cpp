@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "Allocators.hpp"
 #include "Literals.hpp"
@@ -13,7 +13,7 @@ TEST_CASE("JsonObject::operator[]") {
   JsonDocument doc(&spy);
   JsonObject obj = doc.to<JsonObject>();
 
-  SECTION("int") {
+  SUBCASE("int") {
     obj["hello"] = 123;
 
     REQUIRE(123 == obj["hello"].as<int>());
@@ -21,7 +21,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == obj["hello"].is<bool>());
   }
 
-  SECTION("volatile int") {  // issue #415
+  SUBCASE("volatile int") {  // issue #415
     volatile int i = 123;
     obj["hello"] = i;
 
@@ -30,7 +30,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == obj["hello"].is<bool>());
   }
 
-  SECTION("double") {
+  SUBCASE("double") {
     obj["hello"] = 123.45;
 
     REQUIRE(true == obj["hello"].is<double>());
@@ -38,7 +38,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(123.45 == obj["hello"].as<double>());
   }
 
-  SECTION("bool") {
+  SUBCASE("bool") {
     obj["hello"] = true;
 
     REQUIRE(true == obj["hello"].is<bool>());
@@ -46,7 +46,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(true == obj["hello"].as<bool>());
   }
 
-  SECTION("const char*") {
+  SUBCASE("const char*") {
     obj["hello"] = "h3110";
 
     REQUIRE(true == obj["hello"].is<const char*>());
@@ -54,7 +54,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE("h3110"_s == obj["hello"].as<const char*>());
   }
 
-  SECTION("array") {
+  SUBCASE("array") {
     JsonDocument doc2;
     JsonArray arr = doc2.to<JsonArray>();
 
@@ -65,7 +65,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == obj["hello"].is<JsonObject>());
   }
 
-  SECTION("object") {
+  SUBCASE("object") {
     JsonDocument doc2;
     JsonObject obj2 = doc2.to<JsonObject>();
 
@@ -76,7 +76,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == obj["hello"].is<JsonArray>());
   }
 
-  SECTION("array subscript") {
+  SUBCASE("array subscript") {
     JsonDocument doc2;
     JsonArray arr = doc2.to<JsonArray>();
     arr.add(42);
@@ -86,7 +86,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(42 == obj["a"]);
   }
 
-  SECTION("object subscript") {
+  SUBCASE("object subscript") {
     JsonDocument doc2;
     JsonObject obj2 = doc2.to<JsonObject>();
     obj2["x"] = 42;
@@ -96,12 +96,12 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(42 == obj["a"]);
   }
 
-  SECTION("char key[]") {  // issue #423
+  SUBCASE("char key[]") {  // issue #423
     char key[] = "hello";
     obj[key] = 42;
     REQUIRE(42 == obj[key]);
   }
-  SECTION("should duplicate key and value strings") {
+  SUBCASE("should duplicate key and value strings") {
     obj["hello"] = "world";
     REQUIRE(spy.log() == AllocatorLog{
                              Allocate(sizeofPool()),
@@ -110,7 +110,7 @@ TEST_CASE("JsonObject::operator[]") {
                          });
   }
 
-  SECTION("should ignore null key") {
+  SUBCASE("should ignore null key") {
     // object must have a value to make a call to strcmp()
     obj["dummy"] = 42;
 
@@ -121,7 +121,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(obj[null] == null);
   }
 
-  SECTION("obj[key].to<JsonArray>()") {
+  SUBCASE("obj[key].to<JsonArray>()") {
     JsonArray arr = obj["hello"].to<JsonArray>();
 
     REQUIRE(arr.isNull() == false);
@@ -129,7 +129,7 @@ TEST_CASE("JsonObject::operator[]") {
 
 #if defined(HAS_VARIABLE_LENGTH_ARRAY) && \
     !defined(SUBSCRIPT_CONFLICTS_WITH_BUILTIN_OPERATOR)
-  SECTION("obj[VLA] = str") {
+  SUBCASE("obj[VLA] = str") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -139,7 +139,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE("world"_s == obj["hello"]);
   }
 
-  SECTION("obj[str] = VLA") {  // issue #416
+  SUBCASE("obj[str] = VLA") {  // issue #416
     size_t i = 32;
     char vla[i];
     strcpy(vla, "world");
@@ -149,7 +149,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE("world"_s == obj["hello"].as<const char*>());
   }
 
-  SECTION("obj.set(VLA, str)") {
+  SUBCASE("obj.set(VLA, str)") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -159,7 +159,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE("world"_s == obj["hello"]);
   }
 
-  SECTION("obj.set(str, VLA)") {
+  SUBCASE("obj.set(str, VLA)") {
     size_t i = 32;
     char vla[i];
     strcpy(vla, "world");
@@ -169,7 +169,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE("world"_s == obj["hello"].as<const char*>());
   }
 
-  SECTION("obj[VLA]") {
+  SUBCASE("obj[VLA]") {
     size_t i = 16;
     char vla[i];
     strcpy(vla, "hello");
@@ -181,7 +181,7 @@ TEST_CASE("JsonObject::operator[]") {
   }
 #endif
 
-  SECTION("chain") {
+  SUBCASE("chain") {
     obj["hello"]["world"] = 123;
 
     REQUIRE(123 == obj["hello"]["world"].as<int>());
@@ -189,7 +189,7 @@ TEST_CASE("JsonObject::operator[]") {
     REQUIRE(false == obj["hello"]["world"].is<bool>());
   }
 
-  SECTION("JsonVariant") {
+  SUBCASE("JsonVariant") {
     obj["hello"] = "world";
     obj["a\0b"_s] = "ABC";
 

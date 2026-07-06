@@ -3,15 +3,15 @@
 // MIT License
 
 #include <Arduino.h>
+#include <doctest.h>
 #include <ArduinoJson.hpp>
-#include <catch.hpp>
 
 #include <sstream>
 
 using namespace ArduinoJson::detail;
 
 TEST_CASE("Reader<std::istringstream>") {
-  SECTION("read()") {
+  SUBCASE("read()") {
     std::istringstream src("\x01\xFF");
     Reader<std::istringstream> reader(src);
 
@@ -20,7 +20,7 @@ TEST_CASE("Reader<std::istringstream>") {
     REQUIRE(reader.read() == -1);
   }
 
-  SECTION("readBytes() all at once") {
+  SUBCASE("readBytes() all at once") {
     std::istringstream src("ABC");
     Reader<std::istringstream> reader(src);
 
@@ -33,7 +33,7 @@ TEST_CASE("Reader<std::istringstream>") {
     REQUIRE(buffer[3] == 'd');
   }
 
-  SECTION("readBytes() in two parts") {
+  SUBCASE("readBytes() in two parts") {
     std::istringstream src("ABCDEF");
     Reader<std::istringstream> reader(src);
 
@@ -52,7 +52,7 @@ TEST_CASE("Reader<std::istringstream>") {
 }
 
 TEST_CASE("BoundedReader<const char*>") {
-  SECTION("read") {
+  SUBCASE("read") {
     BoundedReader<const char*> reader("\x01\xFF", 2);
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
@@ -60,7 +60,7 @@ TEST_CASE("BoundedReader<const char*>") {
     REQUIRE(reader.read() == -1);
   }
 
-  SECTION("readBytes() all at once") {
+  SUBCASE("readBytes() all at once") {
     BoundedReader<const char*> reader("ABCD", 3);
 
     char buffer[8] = "abcd";
@@ -72,7 +72,7 @@ TEST_CASE("BoundedReader<const char*>") {
     REQUIRE(buffer[3] == 'd');
   }
 
-  SECTION("readBytes() in two parts") {
+  SUBCASE("readBytes() in two parts") {
     BoundedReader<const char*> reader("ABCDEF", 6);
 
     char buffer[8] = "abcdefg";
@@ -90,7 +90,7 @@ TEST_CASE("BoundedReader<const char*>") {
 }
 
 TEST_CASE("Reader<const char*>") {
-  SECTION("read()") {
+  SUBCASE("read()") {
     Reader<const char*> reader("\x01\xFF\x00\x12");
     REQUIRE(reader.read() == 0x01);
     REQUIRE(reader.read() == 0xFF);
@@ -98,7 +98,7 @@ TEST_CASE("Reader<const char*>") {
     REQUIRE(reader.read() == 0x12);
   }
 
-  SECTION("readBytes() all at once") {
+  SUBCASE("readBytes() all at once") {
     Reader<const char*> reader("ABCD");
 
     char buffer[8] = "abcd";
@@ -110,7 +110,7 @@ TEST_CASE("Reader<const char*>") {
     REQUIRE(buffer[3] == 'd');
   }
 
-  SECTION("readBytes() in two parts") {
+  SUBCASE("readBytes() in two parts") {
     Reader<const char*> reader("ABCDEF");
 
     char buffer[8] = "abcdefg";
@@ -128,7 +128,7 @@ TEST_CASE("Reader<const char*>") {
 }
 
 TEST_CASE("IteratorReader") {
-  SECTION("read()") {
+  SUBCASE("read()") {
     std::string src("\x01\xFF");
     IteratorReader<std::string::const_iterator> reader(src.begin(), src.end());
 
@@ -137,7 +137,7 @@ TEST_CASE("IteratorReader") {
     REQUIRE(reader.read() == -1);
   }
 
-  SECTION("readBytes() all at once") {
+  SUBCASE("readBytes() all at once") {
     std::string src("ABC");
     IteratorReader<std::string::const_iterator> reader(src.begin(), src.end());
 
@@ -150,7 +150,7 @@ TEST_CASE("IteratorReader") {
     REQUIRE(buffer[3] == 'd');
   }
 
-  SECTION("readBytes() in two parts") {
+  SUBCASE("readBytes() in two parts") {
     std::string src("ABCDEF");
     IteratorReader<std::string::const_iterator> reader(src.begin(), src.end());
 
@@ -186,7 +186,7 @@ class StreamStub : public Stream {
 };
 
 TEST_CASE("Reader<Stream>") {
-  SECTION("read()") {
+  SUBCASE("read()") {
     StreamStub src("\x01\xFF");
     Reader<StreamStub> reader(src);
 
@@ -195,7 +195,7 @@ TEST_CASE("Reader<Stream>") {
     REQUIRE(reader.read() == -1);
   }
 
-  SECTION("readBytes() all at once") {
+  SUBCASE("readBytes() all at once") {
     StreamStub src("ABC");
     Reader<StreamStub> reader(src);
 
@@ -208,7 +208,7 @@ TEST_CASE("Reader<Stream>") {
     REQUIRE(buffer[3] == 'd');
   }
 
-  SECTION("readBytes() in two parts") {
+  SUBCASE("readBytes() in two parts") {
     StreamStub src("ABCDEF");
     Reader<StreamStub> reader(src);
 

@@ -20,5 +20,5 @@ add_test(IntegrationTests IntegrationTests)
 
 set_tests_properties(IntegrationTests
 	PROPERTIES
-		LABELS "Catch"
+		LABELS "doctest"
 )

@@ -2,8 +2,8 @@
 // Copyright © 2014-2025, Benoit BLANCHON
 // MIT License
 
+#include <doctest.h>
 #include <ArduinoJson.hpp>
-#include <catch.hpp>
 
 #include <ArduinoJson/Memory/Alignment.hpp>
 
@@ -12,7 +12,7 @@
 using namespace ArduinoJson::detail;
 
 TEST_CASE("ResourceManager::allocVariant()") {
-  SECTION("Returns different pointer") {
+  SUBCASE("Returns different pointer") {
     ResourceManager resources;
 
     auto s1 = resources.allocVariant();
@@ -23,7 +23,7 @@ TEST_CASE("ResourceManager::allocVariant()") {
     REQUIRE(s1.ptr() != s2.ptr());
   }
 
-  SECTION("Returns the same slot after calling freeVariant()") {
+  SUBCASE("Returns the same slot after calling freeVariant()") {
     ResourceManager resources;
 
     auto s1 = resources.allocVariant();
@@ -41,14 +41,14 @@ TEST_CASE("ResourceManager::allocVariant()") {
     REQUIRE(s5.id() != s2.id());
   }
 
-  SECTION("Returns aligned pointers") {
+  SUBCASE("Returns aligned pointers") {
     ResourceManager resources;
 
     REQUIRE(isAligned(resources.allocVariant().ptr()));
     REQUIRE(isAligned(resources.allocVariant().ptr()));
   }
 
-  SECTION("Returns null if pool list allocation fails") {
+  SUBCASE("Returns null if pool list allocation fails") {
     ResourceManager resources(FailingAllocator::instance());
 
     auto variant = resources.allocVariant();
@@ -56,7 +56,7 @@ TEST_CASE("ResourceManager::allocVariant()") {
     REQUIRE(variant.ptr() == nullptr);
   }
 
-  SECTION("Returns null if pool allocation fails") {
+  SUBCASE("Returns null if pool allocation fails") {
     ResourceManager resources(FailingAllocator::instance());
 
     resources.allocVariant();
@@ -66,7 +66,7 @@ TEST_CASE("ResourceManager::allocVariant()") {
     REQUIRE(variant.ptr() == nullptr);
   }
 
-  SECTION("Try overflow pool counter") {
+  SUBCASE("Try overflow pool counter") {
     ResourceManager resources;
 
     // this test assumes SlotId is 8-bit; otherwise it consumes a lot of memory

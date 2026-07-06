@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include "CustomReader.hpp"
 #include "Literals.hpp"
@@ -13,7 +13,7 @@ using ArduinoJson::detail::sizeofObject;
 TEST_CASE("deserializeMsgPack(const std::string&)") {
   JsonDocument doc;
 
-  SECTION("should accept const string") {
+  SUBCASE("should accept const string") {
     const std::string input("\x92\x01\x02");
 
     DeserializationError err = deserializeMsgPack(doc, input);
@@ -21,13 +21,13 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("should accept temporary string") {
+  SUBCASE("should accept temporary string") {
     DeserializationError err = deserializeMsgPack(doc, "\x92\x01\x02"_s);
 
     REQUIRE(err == DeserializationError::Ok);
   }
 
-  SECTION("should duplicate content") {
+  SUBCASE("should duplicate content") {
     std::string input("\x91\xA5hello");
 
     DeserializationError err = deserializeMsgPack(doc, input);
@@ -38,7 +38,7 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
     REQUIRE("hello"_s == array[0]);
   }
 
-  SECTION("should accept a zero in input") {
+  SUBCASE("should accept a zero in input") {
     DeserializationError err = deserializeMsgPack(doc, "\x92\x00\x02"_s);
 
     REQUIRE(err == DeserializationError::Ok);
@@ -51,7 +51,7 @@ TEST_CASE("deserializeMsgPack(const std::string&)") {
 TEST_CASE("deserializeMsgPack(std::istream&)") {
   JsonDocument doc;
 
-  SECTION("should accept a zero in input") {
+  SUBCASE("should accept a zero in input") {
     std::istringstream input("\x92\x00\x02"_s);
 
     DeserializationError err = deserializeMsgPack(doc, input);
@@ -62,7 +62,7 @@ TEST_CASE("deserializeMsgPack(std::istream&)") {
     REQUIRE(arr[1] == 2);
   }
 
-  SECTION("should detect incomplete input") {
+  SUBCASE("should detect incomplete input") {
     std::istringstream input("\x92\x00\x02");
 
     DeserializationError err = deserializeMsgPack(doc, input);

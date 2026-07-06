@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <string>
 
@@ -35,13 +35,13 @@ struct CustomAllocator {
 TEST_CASE("BasicJsonDocument") {
   allocatorLog.clear();
 
-  SECTION("is a JsonDocument") {
+  SUBCASE("is a JsonDocument") {
     REQUIRE(
-        is_base_of<JsonDocument, BasicJsonDocument<CustomAllocator>>::value ==
-        true);
+        (is_base_of<JsonDocument, BasicJsonDocument<CustomAllocator>>::value ==
+         true));
   }
 
-  SECTION("deserialize / serialize") {
+  SUBCASE("deserialize / serialize") {
     BasicJsonDocument<CustomAllocator> doc(256);
     deserializeJson(doc, "{\"hello\":\"world\"}");
     REQUIRE(doc.as<std::string>() == "{\"hello\":\"world\"}");
@@ -49,7 +49,7 @@ TEST_CASE("BasicJsonDocument") {
     REQUIRE(allocatorLog == "AARARDDD");
   }
 
-  SECTION("copy") {
+  SUBCASE("copy") {
     BasicJsonDocument<CustomAllocator> doc(256);
     doc["hello"] = "world";
     auto copy = doc;
@@ -57,12 +57,12 @@ TEST_CASE("BasicJsonDocument") {
     REQUIRE(allocatorLog == "AAAAAA");
   }
 
-  SECTION("capacity") {
+  SUBCASE("capacity") {
     BasicJsonDocument<CustomAllocator> doc(256);
     REQUIRE(doc.capacity() == 256);
   }
 
-  SECTION("garbageCollect()") {
+  SUBCASE("garbageCollect()") {
     BasicJsonDocument<CustomAllocator> doc(256);
     doc.garbageCollect();
   }

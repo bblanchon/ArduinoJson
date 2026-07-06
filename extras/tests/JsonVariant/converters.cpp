@@ -3,8 +3,8 @@
 // MIT License
 
 #include <ArduinoJson.h>
+#include <doctest.h>
 #include <stdint.h>
-#include <catch.hpp>
 
 namespace {
 struct Date {
@@ -34,7 +34,7 @@ bool canConvertFromJson(JsonVariantConst src, const Date&) {
 TEST_CASE("Custom converter with overloading") {
   JsonDocument doc;
 
-  SECTION("convert JSON to Date") {
+  SUBCASE("convert JSON to Date") {
     doc["date"]["day"] = 2;
     doc["date"]["month"] = 3;
     doc["date"]["year"] = 2021;
@@ -46,7 +46,7 @@ TEST_CASE("Custom converter with overloading") {
     REQUIRE(date.year == 2021);
   }
 
-  SECTION("is<Date>() returns true") {
+  SUBCASE("is<Date>() returns true") {
     doc["date"]["day"] = 2;
     doc["date"]["month"] = 3;
     doc["date"]["year"] = 2021;
@@ -54,7 +54,7 @@ TEST_CASE("Custom converter with overloading") {
     REQUIRE(doc["date"].is<Date>());
   }
 
-  SECTION("is<Date>() returns false") {
+  SUBCASE("is<Date>() returns false") {
     doc["date"]["day"] = 2;
     doc["date"]["month"] = 3;
     doc["date"]["year"] = "2021";
@@ -62,7 +62,7 @@ TEST_CASE("Custom converter with overloading") {
     REQUIRE(doc["date"].is<Date>() == false);
   }
 
-  SECTION("convert Date to JSON") {
+  SUBCASE("convert Date to JSON") {
     Date date = {19, 3, 2021};
     doc["date"] = date;
 
@@ -109,7 +109,7 @@ struct Converter<Complex> {
 TEST_CASE("Custom converter with specialization") {
   JsonDocument doc;
 
-  SECTION("convert JSON to Complex") {
+  SUBCASE("convert JSON to Complex") {
     doc["value"]["real"] = 2;
     doc["value"]["imag"] = 3;
 
@@ -119,21 +119,21 @@ TEST_CASE("Custom converter with specialization") {
     REQUIRE(value.imag() == 3);
   }
 
-  SECTION("is<Complex>() returns true") {
+  SUBCASE("is<Complex>() returns true") {
     doc["value"]["real"] = 2;
     doc["value"]["imag"] = 3;
 
     REQUIRE(doc["value"].is<Complex>());
   }
 
-  SECTION("is<Complex>() returns false") {
+  SUBCASE("is<Complex>() returns false") {
     doc["value"]["real"] = 2;
     doc["value"]["imag"] = "3";
 
     REQUIRE(doc["value"].is<Complex>() == false);
   }
 
-  SECTION("convert value to JSON") {
+  SUBCASE("convert value to JSON") {
     doc["value"] = Complex(19, 3);
 
     REQUIRE(doc["value"]["real"] == 19);

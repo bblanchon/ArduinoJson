@@ -3,7 +3,7 @@
 // MIT License
 
 #include <ArduinoJson.h>
-#include <catch.hpp>
+#include <doctest.h>
 
 void check(std::string originalJson) {
   JsonDocument doc;
@@ -20,7 +20,7 @@ void check(std::string originalJson) {
 }
 
 TEST_CASE("Round Trip: parse -> prettyPrint -> parse -> print") {
-  SECTION("OpenWeatherMap") {
+  SUBCASE("OpenWeatherMap") {
     check(
         "{\"coord\":{\"lon\":145.77,\"lat\":-16.92},\"sys\":{\"type\":1,\"id\":"
         "8166,\"message\":0.1222,\"country\":\"AU\",\"sunrise\":1414784325,"
@@ -32,7 +32,7 @@ TEST_CASE("Round Trip: parse -> prettyPrint -> parse -> print") {
         "2172797,\"name\":\"Cairns\",\"cod\":200}");
   }
 
-  SECTION("YahooQueryLanguage") {
+  SUBCASE("YahooQueryLanguage") {
     check(
         "{\"query\":{\"count\":40,\"created\":\"2014-11-01T14:16:49Z\","
         "\"lang\":\"fr-FR\",\"results\":{\"item\":[{\"title\":\"Burkina army "
