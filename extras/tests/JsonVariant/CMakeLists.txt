@@ -1,5 +1,5 @@
 # ArduinoJson - https://arduinojson.org
-# Copyright © 2014-2025, Benoit BLANCHON
+# Copyright © 2014-2026, Benoit BLANCHON
 # MIT License
 
 add_executable(JsonVariantTests

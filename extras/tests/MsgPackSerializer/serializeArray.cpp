@@ -1,5 +1,5 @@
 // ArduinoJson - https://arduinojson.org
-// Copyright © 2014-2025, Benoit BLANCHON
+// Copyright © 2014-2026, Benoit BLANCHON
 // MIT License
 
 #define ARDUINOJSON_SLOT_ID_SIZE 4  // required to reach 65536 elements

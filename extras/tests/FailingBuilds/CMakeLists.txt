@@ -1,5 +1,5 @@
 # ArduinoJson - https://arduinojson.org
-# Copyright © 2014-2025, Benoit BLANCHON
+# Copyright © 2014-2026, Benoit BLANCHON
 # MIT License
 
 macro(add_failing_build source_file)

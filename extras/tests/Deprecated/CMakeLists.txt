@@ -1,5 +1,5 @@
 # ArduinoJson - https://arduinojson.org
-# Copyright © 2014-2025, Benoit BLANCHON
+# Copyright © 2014-2026, Benoit BLANCHON
 # MIT License
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
