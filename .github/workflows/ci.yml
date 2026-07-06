@@ -19,6 +19,7 @@ jobs:
         run: find * -type l -printf "::error::%p is a symlink. This is forbidden by the Arduino Library Specification." -exec false {} +
       - name: Clang-format
         run: |
+          clang-format --version
           find src/ extras/ -name '*.[ch]pp' | xargs clang-format -i --verbose --style=file
           git diff --exit-code
       - name: Check URLs
