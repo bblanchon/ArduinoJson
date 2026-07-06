@@ -9,12 +9,12 @@ concurrency:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Install
         run: sudo apt-get install -y clang-format
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Symlinks
         run: find * -type l -printf "::error::%p is a symlink. This is forbidden by the Arduino Library Specification." -exec false {} +
       - name: Clang-format
@@ -32,7 +32,7 @@ jobs:
   gcc:
     name: GCC
     needs: lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -65,7 +65,7 @@ jobs:
         timeout-minutes: 5
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         timeout-minutes: 1
 
       - name: Configure
@@ -139,7 +139,7 @@ jobs:
         if: matrix.clang == 12 # dependency is missing in Ubuntu 22.04
         run: sudo apt-get install -y libunwind-${{ matrix.clang }}-dev
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Configure
         run: cmake -DCMAKE_BUILD_TYPE=Debug .
         env:
@@ -158,14 +158,14 @@ jobs:
   conf_test:
     name: Test configuration on Linux
     needs: [gcc, clang]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Install
         run: |
           sudo apt-get update
           sudo apt-get install -y g++-multilib gcc-avr avr-libc
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: AVR
         run: avr-g++ -std=c++11 -Isrc extras/conf_test/avr.cpp
       - name: GCC 32-bit
@@ -183,7 +183,7 @@ jobs:
     needs: [gcc, clang]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: 32-bit
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
@@ -209,7 +209,7 @@ jobs:
           - xcode: "26.3"
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Select XCode version
         run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Configure
@@ -231,7 +231,7 @@ jobs:
   #   runs-on: ${{ matrix.os }}
   #   steps:
   #     - name: Checkout
-  #       uses: actions/checkout@v4
+  #       uses: actions/checkout@v7
   #     - name: Configure
   #       run: cmake -DCMAKE_BUILD_TYPE=Debug .
   #     - name: Build
@@ -250,10 +250,10 @@ jobs:
             board: arduino:avr:uno
           - core: arduino:samd
             board: arduino:samd:mkr1000
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install arduino-cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
       - name: Install core
@@ -326,14 +326,14 @@ jobs:
             conf_test: esp8266
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up cache for pip
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip
       - name: Set up Python 3.x
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.x"
       - name: Install PlatformIO
@@ -345,7 +345,7 @@ jobs:
         if: ${{ matrix.platform == 'nordicnrf52' }}
         run: find examples/ -name '*.ino' -exec sed -i 's/\(#include <ArduinoJson.h>\)/\1\n#include <Adafruit_TinyUSB.h>/' {} +
       - name: Set up cache for platformio
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.platformio
           key: ${{ runner.os }}-platformio-${{ matrix.platform }}
@@ -394,7 +394,7 @@ jobs:
           - board: argon
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install Particle CLI
         run: |
           bash <( curl -sL https://particle.io/install-cli )
@@ -407,14 +407,14 @@ jobs:
   arm:
     name: GCC for ARM processor
     needs: gcc
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Install
         run: |
           sudo apt-get update
           sudo apt-get install -y g++-arm-linux-gnueabihf
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Configure
         run: cmake .
         env:
@@ -426,12 +426,12 @@ jobs:
   coverage:
     needs: gcc
     name: Coverage
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Install
         run: sudo apt-get install -y lcov ninja-build
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Configure
         run: cmake -G Ninja -DCOVERAGE=true .
       - name: Build
@@ -445,7 +445,7 @@ jobs:
       - name: genhtml
         run: mkdir coverage && genhtml coverage_filtered.info -o coverage -t ArduinoJson
       - name: Upload HTML report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Coverage report
           path: coverage
@@ -458,14 +458,14 @@ jobs:
   valgrind:
     needs: gcc
     name: Valgrind
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Install
         run: |
           sudo apt-get update
           sudo apt-get install -y valgrind ninja-build
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Configure
         run: cmake -G Ninja -D MEMORYCHECK_COMMAND_OPTIONS="--error-exitcode=1 --leak-check=full"  .
       - name: Build
@@ -485,7 +485,7 @@ jobs:
       - name: Install
         run: sudo apt-get install -y clang-tidy libc++-dev libc++abi-dev
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Configure
         run: cmake -G Ninja -DCMAKE_CXX_CLANG_TIDY="clang-tidy;--warnings-as-errors=*" -DCMAKE_BUILD_TYPE=Debug .
         env:
@@ -497,10 +497,10 @@ jobs:
   amalgamate:
     needs: gcc
     name: Amalgamate ArduinoJson.h
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
@@ -551,9 +551,9 @@ jobs:
           path: ~/.espressif
           key: ${{ runner.os }}-esp-idf
       - name: Checkout ArduinoJson
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Checkout ESP-IDF
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: espressif/esp-idf
           path: esp-idf
@@ -573,7 +573,7 @@ jobs:
 
   codeql:
     name: CodeQL
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: gcc
 
     permissions:
@@ -583,7 +583,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3

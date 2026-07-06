@@ -25,8 +25,8 @@ struct Converter {
                 "type 'char' is not supported, use 'signed char', 'unsigned "
                 "char' or another integer type instead");
 
-  static auto toJson(const T& src, JsonVariant dst)
-      -> decltype(convertToJson(src, dst)) {
+  static auto toJson(const T& src,
+                     JsonVariant dst) -> decltype(convertToJson(src, dst)) {
     // clang-format off
     return convertToJson(src, dst); // Error here? See https://arduinojson.org/v7/unsupported-set/
     // clang-format on
