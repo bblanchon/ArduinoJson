@@ -100,11 +100,36 @@ class Number {
 inline Number parseNumber(const char* s) {
   assert(s != 0);
   auto decimalFloat = stringToDecimal<JsonFloat>(s);
+  if (decimalFloat.isError)
+    return Number();
+  if (decimalFloat.exponent == 0) {
+    if (decimalFloat.isNegative) {
+      using significant_t = decltype(decimalFloat)::significand_type;
+      const significant_t sintMantissaMax = significant_t(1)
+                                            << (sizeof(JsonInteger) * 8 - 1);
+      if (decimalFloat.significand <= sintMantissaMax) {
+        return Number(JsonInteger(~decimalFloat.significand + 1));
+      }
+    } else
+      return Number(JsonUInt(decimalFloat.significand));
+  }
+  auto isDoublePrecision = decimalFloat.significand >= 100000000;
+
   auto binaryFloat = decimalToBinaryFloat<JsonFloat>(decimalFloat);
-  // TODO: return int or uint when possible
-  // TODO: if ARDUINOJSON_USE_DOUBLE, return double or float depending on the
-  // value
-  return packBinaryFloat<JsonFloat>(binaryFloat);
+
+  auto result = packBinaryFloat<JsonFloat>(binaryFloat);
+
+#if ARDUINOJSON_USE_DOUBLE
+  printf("Input=%s\n", s);
+  printf("decimal exp=%d\n", decimalFloat.exponent);
+  auto expo = binaryFloat.exponent + Ieee754<JsonFloat>::mantissaSize;
+  printf("binary exp=%d\n", expo);
+  if (!isDoublePrecision && expo >= Ieee754<float>::minExponent &&
+      expo <= Ieee754<float>::maxExponent)
+    return Number(float(result));
+#endif
+
+  return Number(result);
 }
 
 template <typename T>

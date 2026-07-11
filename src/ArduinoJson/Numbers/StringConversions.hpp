@@ -154,6 +154,10 @@ struct FloatBase {
   bool isNegative = false;
   bool isNaN = false;
   bool isInfinity = false;
+
+  // Followings are only used in stringToDecimal()
+  // TODO: use a dedicated type?
+  bool isError = false;
 };
 
 using Float64 = FloatBase<uint64_t, int16_t>;
@@ -246,6 +250,7 @@ struct Ieee754_64 {
   static constexpr uint8_t mantissaSize = 52;
   static constexpr int16_t exponentBias = 1023;
   static constexpr int16_t minExponent = -1022;
+  static constexpr int16_t maxExponent = 1023;
   static constexpr uint16_t nanExponent = 0x7FF;
   static constexpr int16_t maxDecimalExponent = 308;
   static constexpr int16_t minDecimalExponent = -324;
@@ -259,6 +264,7 @@ struct Ieee754_32 {
   static constexpr uint8_t mantissaSize = 23;
   static constexpr int8_t exponentBias = 127;
   static constexpr int8_t minExponent = -126;
+  static constexpr int8_t maxExponent = 127;
   static constexpr uint8_t nanExponent = 0xFF;
   static constexpr int8_t maxDecimalExponent = 38;
   static constexpr int8_t minDecimalExponent = -45;
@@ -506,13 +512,22 @@ inline Float<T> stringToDecimal(const char* s) {
       break;
   }
 
+#if ARDUINOJSON_ENABLE_NAN
+  if (*s == 'n' || *s == 'N') {
+    result.isNaN = true;
+    return result;
+  }
+#endif
+
+#if ARDUINOJSON_ENABLE_INFINITY
   if (*s == 'i' || *s == 'I') {
     result.isInfinity = true;
     return result;
   }
+#endif
 
   if (!isdigit(*s) && *s != '.') {
-    result.isNaN = true;
+    result.isError = true;
     return result;
   }
 
@@ -586,7 +601,7 @@ inline Float<T> stringToDecimal(const char* s) {
 
   // we should be at the end of the string, otherwise it's an error
   if (*s != '\0')
-    result.isNaN = true;
+    result.isError = true;
 
   return result;
 }
