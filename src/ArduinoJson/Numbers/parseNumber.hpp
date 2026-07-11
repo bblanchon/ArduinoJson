@@ -4,13 +4,8 @@
 
 #pragma once
 
-#include <ArduinoJson/Numbers/FloatTraits.hpp>
-#include <ArduinoJson/Numbers/JsonFloat.hpp>
-#include <ArduinoJson/Numbers/convertNumber.hpp>
-#include <ArduinoJson/Polyfills/assert.hpp>
-#include <ArduinoJson/Polyfills/ctype.hpp>
-#include <ArduinoJson/Polyfills/math.hpp>
-#include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Numbers/JsonInteger.hpp>
+#include <ArduinoJson/Numbers/StringConversions.hpp>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -103,131 +98,13 @@ class Number {
 };
 
 inline Number parseNumber(const char* s) {
-  using traits = FloatTraits<JsonFloat>;
-  using mantissa_t = largest_type<traits::mantissa_type, JsonUInt>;
-  using exponent_t = traits::exponent_type;
-
-  ARDUINOJSON_ASSERT(s != 0);
-
-  bool is_negative = false;
-  switch (*s) {
-    case '-':
-      is_negative = true;
-      s++;
-      break;
-    case '+':
-      s++;
-      break;
-  }
-
-#if ARDUINOJSON_ENABLE_NAN
-  if (*s == 'n' || *s == 'N') {
-    return Number(traits::nan());
-  }
-#endif
-
-#if ARDUINOJSON_ENABLE_INFINITY
-  if (*s == 'i' || *s == 'I') {
-    return Number(is_negative ? -traits::inf() : traits::inf());
-  }
-#endif
-
-  if (!isdigit(*s) && *s != '.')
-    return Number();
-
-  mantissa_t mantissa = 0;
-  exponent_t exponent_offset = 0;
-  const mantissa_t maxUint = JsonUInt(-1);
-
-  while (isdigit(*s)) {
-    uint8_t digit = uint8_t(*s - '0');
-    if (mantissa > maxUint / 10)
-      break;
-    mantissa *= 10;
-    if (mantissa > maxUint - digit)
-      break;
-    mantissa += digit;
-    s++;
-  }
-
-  if (*s == '\0') {
-    if (is_negative) {
-      const mantissa_t sintMantissaMax = mantissa_t(1)
-                                         << (sizeof(JsonInteger) * 8 - 1);
-      if (mantissa <= sintMantissaMax) {
-        return Number(JsonInteger(~mantissa + 1));
-      }
-    } else {
-      return Number(JsonUInt(mantissa));
-    }
-  }
-
-  // avoid mantissa overflow
-  while (mantissa > traits::mantissa_max) {
-    mantissa /= 10;
-    exponent_offset++;
-  }
-
-  // remaing digits can't fit in the mantissa
-  while (isdigit(*s)) {
-    exponent_offset++;
-    s++;
-  }
-
-  if (*s == '.') {
-    s++;
-    while (isdigit(*s)) {
-      if (mantissa < traits::mantissa_max / 10) {
-        mantissa = mantissa * 10 + uint8_t(*s - '0');
-        exponent_offset--;
-      }
-      s++;
-    }
-  }
-
-  int exponent = 0;
-  if (*s == 'e' || *s == 'E') {
-    s++;
-    bool negative_exponent = false;
-    if (*s == '-') {
-      negative_exponent = true;
-      s++;
-    } else if (*s == '+') {
-      s++;
-    }
-
-    while (isdigit(*s)) {
-      exponent = exponent * 10 + (*s - '0');
-      if (exponent + exponent_offset > traits::exponent_max) {
-        if (negative_exponent)
-          return Number(is_negative ? -0.0f : 0.0f);
-        else
-          return Number(is_negative ? -traits::inf() : traits::inf());
-      }
-      s++;
-    }
-    if (negative_exponent)
-      exponent = -exponent;
-  }
-  exponent += exponent_offset;
-
-  // we should be at the end of the string, otherwise it's an error
-  if (*s != '\0')
-    return Number();
-
-#if ARDUINOJSON_USE_DOUBLE
-  bool isDouble = exponent < -FloatTraits<float>::exponent_max ||
-                  exponent > FloatTraits<float>::exponent_max ||
-                  mantissa > FloatTraits<float>::mantissa_max;
-  if (isDouble) {
-    auto final_result = multiplyByPowerOfTen(double(mantissa), exponent);
-    return Number(is_negative ? -final_result : final_result);
-  } else
-#endif
-  {
-    auto final_result = multiplyByPowerOfTen(float(mantissa), exponent);
-    return Number(is_negative ? -final_result : final_result);
-  }
+  assert(s != 0);
+  auto decimalFloat = stringToDecimal<JsonFloat>(s);
+  auto binaryFloat = decimalToBinaryFloat<JsonFloat>(decimalFloat);
+  // TODO: return int or uint when possible
+  // TODO: if ARDUINOJSON_USE_DOUBLE, return double or float depending on the
+  // value
+  return packBinaryFloat<JsonFloat>(binaryFloat);
 }
 
 template <typename T>
