@@ -2,8 +2,9 @@
 // Copyright © 2014-2026, Benoit BLANCHON
 // MIT License
 
-#include <ArduinoJson.hpp>
 #include <catch.hpp>
+
+#include <ArduinoJson.hpp>
 
 using namespace ArduinoJson;
 using namespace ArduinoJson::detail;
@@ -50,14 +51,9 @@ TEST_CASE("Invalid value") {
   REQUIRE(result.type() == NumberType::Invalid);
 }
 
-TEST_CASE("float") {
-  auto result = parseNumber("3.402823e38");
-
-  REQUIRE(result.type() == NumberType::Float);
-}
-
-TEST_CASE("double") {
-  auto result = parseNumber("1.7976931348623157e308");
-
-  REQUIRE(result.type() == NumberType::Double);
+TEST_CASE("float or double") {
+  // TODO: test out exponent limits
+  CHECK(parseNumber("3.402823e38").type() == NumberType::Float);
+  CHECK(parseNumber("3.402823e39").type() == NumberType::Double);
+  CHECK(parseNumber("1.7976931348623157e308").type() == NumberType::Double);
 }
