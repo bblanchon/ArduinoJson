@@ -23,7 +23,7 @@ struct Cache {
 using Cache64 = Cache<uint64_t, int16_t, 9>;
 using Cache32 = Cache<uint32_t, int8_t, 6>;
 
-const Cache32& getCache(float) {
+inline const Cache32& getCache(float) {
   static const Cache32 cache = {
       // Binary significand of positive powers of ten
       {
@@ -66,7 +66,8 @@ const Cache32& getCache(float) {
   return cache;
 }
 
-const Cache64& getCache(double) {
+// TODO: move this to a class
+inline const Cache64& getCache(double) {
   static const Cache64 cache = {
       // Binary significand of positive powers of ten
       {
