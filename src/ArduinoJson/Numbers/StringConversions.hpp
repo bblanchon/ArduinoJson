@@ -158,6 +158,22 @@ struct FloatBase {
   // Followings are only used in stringToDecimal()
   // TODO: use a dedicated type?
   bool isError = false;
+
+  bool normalized() {
+    constexpr auto msb = TSignificand(1) << (sizeof(TSignificand) * 8 - 1);
+    return significand == 0 || (significand & msb) != 0;
+  }
+
+  void normalize() {
+    if (!significand)
+      return;
+    constexpr auto msb = TSignificand(1) << (sizeof(TSignificand) * 8 - 1);
+    while ((significand & msb) == 0) {
+      significand <<= 1;
+      exponent--;
+    }
+    assert(normalized());
+  }
 };
 
 using Float64 = FloatBase<uint64_t, int16_t>;
@@ -247,6 +263,7 @@ std::string decimalToString(const TFloat& value, bool useScientificNotation) {
 }
 
 struct Ieee754_64 {
+  static constexpr uint8_t hiddenBitPos = 11;
   static constexpr uint8_t mantissaSize = 52;
   static constexpr int16_t exponentBias = 1023;
   static constexpr int16_t minExponent = -1022;
@@ -261,6 +278,7 @@ struct Ieee754_64 {
 };
 
 struct Ieee754_32 {
+  static constexpr uint8_t hiddenBitPos = 8;
   static constexpr uint8_t mantissaSize = 23;
   static constexpr int8_t exponentBias = 127;
   static constexpr int8_t minExponent = -126;
@@ -280,12 +298,15 @@ template <typename T,
 using Ieee754 =
     typename std::conditional<sizeof(T) == 8, Ieee754_64, Ieee754_32>::type;
 
-template <typename T>
-T packBinaryFloat(Float<T> binaryFloat) {
-  using binary_t = Float<T>;
+template <typename T, typename TSignificant, typename TExponent>
+T packBinaryFloat(FloatBase<TSignificant, TExponent> binaryFloat) {
   using ieee754 = Ieee754<T>;
-  using significand_t = typename binary_t::significand_type;
-  using exponent_t = typename binary_t::exponent_type;
+  using significand_t = TSignificant;
+  using exponent_t = TExponent;
+  using bits_t =
+      typename std::conditional<sizeof(T) == 8, uint64_t, uint32_t>::type;
+
+  assert(binaryFloat.normalized());
 
   if (binaryFloat.isNaN)
     return T(NAN);
@@ -305,15 +326,10 @@ T packBinaryFloat(Float<T> binaryFloat) {
   if (mantissa == 0)
     return bit_cast<T>(signBit);
 
+  // Move MSB to hidden bit location
   // Normalize and adjust exponent.
-  while (mantissa >= (ieee754::hiddenBit << 1)) {
-    mantissa >>= 1;
-    exponent++;
-  }
-  while ((mantissa & ieee754::hiddenBit) == 0) {
-    mantissa <<= 1;
-    exponent--;
-  }
+  mantissa >>= ieee754::hiddenBitPos;
+  exponent = exponent_t(exponent + ieee754::hiddenBitPos);
 
   // Handle subnormal numbers
   if (exponent < ieee754::minExponent) {
@@ -336,8 +352,7 @@ T packBinaryFloat(Float<T> binaryFloat) {
   // max biased exponent here.
   assert(biasedExponent < ieee754::nanExponent);
 
-  significand_t bits =
-      signBit | (biasedExponent << ieee754::mantissaSize) | mantissa;
+  bits_t bits = signBit | (biasedExponent << ieee754::mantissaSize) | mantissa;
   return bit_cast<T>(bits);
 }
 
@@ -618,16 +633,10 @@ Float<T> decimalToBinaryFloat(Float<T> decimalFloat) {
     return result;
 
   using exponent_t = typename Float<T>::exponent_type;
-  using significand_t = typename Float<T>::significand_type;
-  constexpr auto msb = significand_t(1) << (sizeof(significand_t) * 8 - 1);
 
   // Push the most significant bit to the leftmost position.
   // This significantly improves the accuracy of future computations.
-  assert(result.significand != 0);
-  while ((result.significand & msb) == 0) {
-    result.significand <<= 1;
-    result.exponent--;
-  }
+  result.normalize();
 
   const auto& cache = getCache(T());
   const auto* cacheExponents = decimalFloat.exponent < 0
