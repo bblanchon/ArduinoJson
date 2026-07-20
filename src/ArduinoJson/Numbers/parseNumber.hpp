@@ -100,8 +100,16 @@ class Number {
 inline Number parseNumber(const char* s) {
   assert(s != 0);
   auto decimalFloat = stringToDecimal<JsonFloat>(s);
+
   if (decimalFloat.isError)
     return Number();
+
+  if (decimalFloat.isNaN)
+    return NAN;
+
+  if (decimalFloat.isInfinity)
+    return decimalFloat.isNegative ? -INFINITY : INFINITY;
+
   if (decimalFloat.exponent == 0) {
     if (decimalFloat.isNegative) {
       using significant_t = decltype(decimalFloat)::significand_type;
@@ -121,12 +129,11 @@ inline Number parseNumber(const char* s) {
   binaryFloat.normalize();
 
   if (sizeof(JsonFloat) == 8 && hasFewDigits && binaryFloat.exponent <= 64 &&
-      binaryFloat.exponent >= -189) {
+      binaryFloat.exponent >= -190) {
     Float32 binaryFloat32;
     binaryFloat32.significand = uint32_t(binaryFloat.significand >> 32);
     binaryFloat32.exponent = int16_t(binaryFloat.exponent + 32);
     binaryFloat32.isNegative = binaryFloat.isNegative;
-    // TODO: handle NaN and Infinity out of packBinaryFloat()
     // TODO: try casting the double to a float to see if it produces smaller
     // code
     return packBinaryFloat<float>(binaryFloat32);

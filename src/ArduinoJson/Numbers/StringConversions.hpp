@@ -307,13 +307,9 @@ T packBinaryFloat(FloatBase<TSignificant, TExponent> binaryFloat) {
   using bits_t =
       typename std::conditional<sizeof(T) == 8, uint64_t, uint32_t>::type;
 
-  assert(binaryFloat.normalized());
-
-  if (binaryFloat.isNaN)
-    return T(NAN);
-
-  if (binaryFloat.isInfinity)
-    return binaryFloat.isNegative ? -T(INFINITY) : T(INFINITY);
+  ARDUINOJSON_ASSERT(binaryFloat.normalized());
+  ARDUINOJSON_ASSERT(!binaryFloat.isNaN);
+  ARDUINOJSON_ASSERT(!binaryFloat.isInfinity);
 
   const significand_t signBit = binaryFloat.isNegative ? ieee754::signMask : 0;
   significand_t mantissa = binaryFloat.significand;
