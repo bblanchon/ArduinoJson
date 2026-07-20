@@ -566,6 +566,11 @@ inline Float<T> stringToDecimal(const char* s) {
   exponent_t exponentOffset = 0;
   while (isdigit(*s)) {
     exponentOffset++;
+    if (exponentOffset > 100) {
+      // That's way to many digits!
+      result.isError = true;
+      return result;
+    }
     s++;
   }
 
@@ -575,6 +580,11 @@ inline Float<T> stringToDecimal(const char* s) {
       if (result.significand < maxSignificand / 10) {
         result.significand = result.significand * 10 + uint8_t(*s - '0');
         exponentOffset--;
+        if (exponentOffset < -100) {
+          // That's way to many digits!
+          result.isError = true;
+          return result;
+        }
       }
       s++;
     }
@@ -646,6 +656,7 @@ Float<T> decimalToBinaryFloat(Float<T> decimalFloat) {
   if (decimalFloat.exponent < 0)
     decimalFloat.exponent = exponent_t(-decimalFloat.exponent);
 
+  // TODO: we probably don't need to check exponent on each iteration
   for (uint8_t i = 0; i < cache.size && decimalFloat.exponent; i++) {
     int k =
         1 << (cache.size - 1 - i);  // TODO: try shifting left on each iteration
