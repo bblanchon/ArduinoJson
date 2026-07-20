@@ -113,22 +113,11 @@ inline Number parseNumber(const char* s) {
     } else
       return Number(JsonUInt(decimalFloat.significand));
   }
-  auto isDoublePrecision = decimalFloat.significand >= 100000000;
 
   auto binaryFloat = decimalToBinaryFloat<JsonFloat>(decimalFloat);
+  binaryFloat.normalize();
 
   auto result = packBinaryFloat<JsonFloat>(binaryFloat);
-
-#if ARDUINOJSON_USE_DOUBLE
-  printf("Input=%s\n", s);
-  printf("decimal exp=%d\n", decimalFloat.exponent);
-  auto expo = binaryFloat.exponent + Ieee754<JsonFloat>::mantissaSize;
-  printf("binary exp=%d\n", expo);
-  if (!isDoublePrecision && expo >= Ieee754<float>::minExponent &&
-      expo <= Ieee754<float>::maxExponent)
-    return Number(float(result));
-#endif
-
   return Number(result);
 }
 
