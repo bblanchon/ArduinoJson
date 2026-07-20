@@ -6,7 +6,7 @@ add_executable(NumbersTests
 
 	# convertNumber.cpp
 	# decomposeFloat.cpp
-	# parseDouble.cpp
+	parseDouble.cpp
 	parseFloat.cpp
 	parseInteger.cpp
 	parseNumber.cpp

@@ -66,7 +66,7 @@ class Number {
         return convertNumber<T>(value_.asDouble);
 #endif
       default:
-        return T();
+        return is_floating_point<T>::value ? T(NAN) : T();
     }
   }
 
