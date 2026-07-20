@@ -53,6 +53,8 @@ TEST_CASE("Invalid value") {
 
 TEST_CASE("float or double") {
   // TODO: test out exponent limits
+  CHECK(parseNumber("3.4").type() == NumberType::Float);
+  CHECK(parseNumber("3.40e38").type() == NumberType::Float);
   CHECK(parseNumber("3.402823e38").type() == NumberType::Float);
   CHECK(parseNumber("3.402823e39").type() == NumberType::Double);
   CHECK(parseNumber("1.7976931348623157e308").type() == NumberType::Double);

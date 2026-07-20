@@ -114,11 +114,25 @@ inline Number parseNumber(const char* s) {
       return Number(JsonUInt(decimalFloat.significand));
   }
 
+  // TODO: fine-tune the threshold
+  bool hasFewDigits = decimalFloat.significand <= 10000000;
+
   auto binaryFloat = decimalToBinaryFloat<JsonFloat>(decimalFloat);
   binaryFloat.normalize();
 
-  auto result = packBinaryFloat<JsonFloat>(binaryFloat);
-  return Number(result);
+  if (sizeof(JsonFloat) == 8 && hasFewDigits && binaryFloat.exponent <= 64 &&
+      binaryFloat.exponent >= -189) {
+    Float32 binaryFloat32;
+    binaryFloat32.significand = uint32_t(binaryFloat.significand >> 32);
+    binaryFloat32.exponent = int16_t(binaryFloat.exponent + 32);
+    binaryFloat32.isNegative = binaryFloat.isNegative;
+    // TODO: handle NaN and Infinity out of packBinaryFloat()
+    // TODO: try casting the double to a float to see if it produces smaller
+    // code
+    return packBinaryFloat<float>(binaryFloat32);
+  }
+
+  return packBinaryFloat<JsonFloat>(binaryFloat);
 }
 
 template <typename T>
