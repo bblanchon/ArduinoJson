@@ -70,7 +70,9 @@ class TextFormatter {
   }
 
   void writeFloat(JsonFloat value, int8_t decimalPlaces) {
-    if (isnan(value))
+    auto binaryFloat = unpackBinaryFloat(value);
+
+    if (binaryFloat.isNaN)
       return writeRaw(ARDUINOJSON_ENABLE_NAN ? "NaN" : "null");
 
 #if ARDUINOJSON_ENABLE_INFINITY
@@ -79,10 +81,10 @@ class TextFormatter {
       value = -value;
     }
 
-    if (isinf(value))
+    if (value.isInfinity)
       return writeRaw("Infinity");
 #else
-    if (isinf(value))
+    if (value.isInfinity)
       return writeRaw("null");
 
     if (value < 0.0) {
@@ -91,7 +93,7 @@ class TextFormatter {
     }
 #endif
 
-    auto parts = decomposeFloat(value, decimalPlaces);
+    auto decimalFloat = binaryToDecimalFloat<T>(binaryFloat);
 
     writeInteger(parts.integral);
     if (parts.decimalPlaces)

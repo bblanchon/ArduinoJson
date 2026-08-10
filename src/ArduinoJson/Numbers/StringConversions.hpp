@@ -184,7 +184,8 @@ template <typename T>
 using Float = typename std::conditional<sizeof(T) == 8, Float64, Float32>::type;
 
 template <typename TFloat>
-std::string decimalToString(const TFloat& value, bool useScientificNotation) {
+std::string decimalToString(const TFloat& value, bool useScientificNotation,
+                            char* buffer) {
   if (value.isNaN)
     return "NaN";
 
@@ -195,9 +196,6 @@ std::string decimalToString(const TFloat& value, bool useScientificNotation) {
     return value.isNegative ? "-0" : "0";
 
   std::string result;
-
-  if (value.isNegative)
-    result.push_back('-');
 
   char buf[64];
   int index = sizeof(buf) - 1;
@@ -260,7 +258,10 @@ std::string decimalToString(const TFloat& value, bool useScientificNotation) {
     result.append(&buf[index + 1]);
   }
 
-  return result;
+  if (value.isNegative)
+    buf[index--] = '-';
+
+  return &buf[index + 1];
 }
 
 struct Ieee754_64 {
