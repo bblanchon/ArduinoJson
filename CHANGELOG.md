@@ -8,6 +8,7 @@ HEAD
   Version 7.3 introduced a new way to detect string literals, but it fails in some edge cases.
   I could not find a way to fix it, so I chose to remove the optimization rather than keep it broken.
 * Replace the "extension slots" mechanism with a memory pool dedicated to 8-byte values.
+* Speed up character escaping in `serializeJson()` (issue #2226 by @florentbr)
 
 > ### BREAKING CHANGES
 >

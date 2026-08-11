@@ -11,12 +11,13 @@ ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 class EscapeSequence {
  public:
   // Optimized for code size on a 8-bit AVR
+  // Assumes the table is sorted in descending order
   static char escapeChar(char c) {
-    const char* p = escapeTable(false);
-    while (p[0] && p[0] != c) {
+    const char* p = escapeTable(false) - 2;
+    do {
       p += 2;
-    }
-    return p[1];
+    } while (uint8_t(c) < uint8_t(p[0]));
+    return c == p[0] ? p[1] : 0;
   }
 
   // Optimized for code size on a 8-bit AVR
@@ -35,17 +36,18 @@ class EscapeSequence {
   static const char* escapeTable(bool includeOptional) {
     static const char charMap[] = {
         // Optional chars: only used for deserialization
-        '/', '/',    // solidus
-        '\'', '\'',  // single quote
+        47, '/',   // solidus
+        39, '\'',  // single quote
         // Mandatory chars: used for deserialization and serialization
-        '"', '"',    // double quote
-        '\\', '\\',  // reverse solidus
-        '\b', 'b',   // backspace
-        '\f', 'f',   // formfeed
-        '\n', 'n',   // linefeed
-        '\r', 'r',   // carriage return
-        '\t', 't',   // horizontal tab
-        0, 0,        //
+        // Sorted in descending order to allow early exit
+        92, '\\',  // reverse solidus
+        34, '"',   // double quote
+        13, 'r',   // carriage return
+        12, 'f',   // formfeed
+        10, 'n',   // linefeed
+        9, 't',    // horizontal tab
+        8, 'b',    // backspace
+        0, 0,      //
     };
     return &charMap[includeOptional ? 0 : 4];
   }
