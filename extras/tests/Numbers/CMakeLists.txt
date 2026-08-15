@@ -3,8 +3,7 @@
 # MIT License
 
 add_executable(NumbersTests
-
-	# convertNumber.cpp
+	convertNumber.cpp
 	decomposeFloat.cpp
 	parseDouble.cpp
 	parseFloat.cpp
