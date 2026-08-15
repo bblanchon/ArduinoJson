@@ -185,7 +185,9 @@ using Float = typename std::conditional<sizeof(T) == 8, Float64, Float32>::type;
 
 template <typename TFloat>
 const char* decimalToString(const TFloat& value, bool useScientificNotation,
-                            char* buf, uint8_t bufferSize) {
+                            char* buf, uint8_t) {
+  using exponent_t = typename TFloat::exponent_type;
+
   if (value.isNaN)
     return "NaN";
 
@@ -195,14 +197,14 @@ const char* decimalToString(const TFloat& value, bool useScientificNotation,
   if (value.significand == 0)
     return value.isNegative ? "-0" : "0";
 
-  uint8_t index = uint8_t(bufferSize - 1);
-  buf[index--] = '\0';
+  char* tail = buf + (sizeof(value.significand) == 8 ? 30 : 16);
+  char* head = tail;
 
   // position of the decimal point starting from the end
   auto m = value.significand;
 
   if (useScientificNotation) {
-    auto e = value.exponent;
+    exponent_t e = value.exponent;
 
     // remove trailing zeros
     while (m % 10 == 0) {
@@ -211,22 +213,43 @@ const char* decimalToString(const TFloat& value, bool useScientificNotation,
     }
 
     for (;;) {
-      assert(index >= 0);
-      buf[index--] = char('0' + m % 10);
+      ARDUINOJSON_ASSERT(head >= buf);
+      *--head = char('0' + m % 10);
       m /= 10;
       if (m == 0)
         break;
       e++;
       if (m < 10)
-        buf[index--] = '.';
+        *--head = '.';
     }
 
-    result.append(&buf[index + 1]);
+    if (value.isNegative)
+      *--head = '-';
 
-    if (e != 0) {
-      sprintf(buf, "e%d", e);
-      result.append(buf);
+    ARDUINOJSON_ASSERT(e != 0);  // we would not be there if it was not the case
+
+    *tail++ = 'e';
+    if (e < 0) {
+      *tail++ = '-';
+      e = exponent_t(-e);
     }
+
+    ARDUINOJSON_ASSERT(e < 1000);
+    if (e >= 100)
+      tail += 3;
+    else if (e >= 10)
+      tail += 2;
+    else
+      tail += 1;
+
+    *tail = 0;
+
+    while (e) {
+      ARDUINOJSON_ASSERT(head >= buf);
+      *--tail = char('0' + e % 10);
+      e /= 10;
+    }
+
   } else {
     auto pointPosition = -value.exponent;
 
@@ -238,26 +261,26 @@ const char* decimalToString(const TFloat& value, bool useScientificNotation,
 
     // print trailing zeros
     while (pointPosition < 0) {
-      buf[index--] = '0';
+      *--head = '0';
       pointPosition++;
     }
 
     while (m > 0 || pointPosition >= 0) {
-      assert(index >= 0);
-      buf[index--] = char('0' + m % 10);
+      ARDUINOJSON_ASSERT(head >= buf);
+      *--head = char('0' + m % 10);
       m /= 10;
       if (pointPosition == 1)
-        buf[index--] = '.';
+        *--head = '.';
       pointPosition--;
     }
 
-    result.append(&buf[index + 1]);
+    if (value.isNegative)
+      *--head = '-';
+
+    *tail = 0;
   }
 
-  if (value.isNegative)
-    buf[index--] = '-';
-
-  return &buf[index + 1];
+  return head;
 }
 
 struct Ieee754_64 {
