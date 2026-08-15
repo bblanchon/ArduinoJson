@@ -10,6 +10,7 @@
 #include <ArduinoJson/Json/EscapeSequence.hpp>
 #include <ArduinoJson/Numbers/FloatParts.hpp>
 #include <ArduinoJson/Numbers/JsonInteger.hpp>
+#include <ArduinoJson/Numbers/StringConversions.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
 #include <ArduinoJson/Polyfills/attributes.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
@@ -66,43 +67,16 @@ class TextFormatter {
 
   template <typename T>
   void writeFloat(T value) {
-    writeFloat(JsonFloat(value), sizeof(T) >= 8 ? 9 : 6);
-  }
-
-  void writeFloat(JsonFloat value, int8_t decimalPlaces) {
     auto binaryFloat = unpackBinaryFloat(value);
-
-    if (binaryFloat.isNaN)
-      return writeRaw(ARDUINOJSON_ENABLE_NAN ? "NaN" : "null");
-
-#if ARDUINOJSON_ENABLE_INFINITY
-    if (value < 0.0) {
-      writeRaw('-');
-      value = -value;
-    }
-
-    if (value.isInfinity)
-      return writeRaw("Infinity");
-#else
-    if (value.isInfinity)
-      return writeRaw("null");
-
-    if (value < 0.0) {
-      writeRaw('-');
-      value = -value;
-    }
-#endif
-
     auto decimalFloat = binaryToDecimalFloat<T>(binaryFloat);
-
-    writeInteger(parts.integral);
-    if (parts.decimalPlaces)
-      writeDecimals(parts.decimal, parts.decimalPlaces);
-
-    if (parts.exponent) {
-      writeRaw('e');
-      writeInteger(parts.exponent);
-    }
+    char buffer[64];  // TODO: use smaller size if USE_DOUBLE==0
+    // TODO: decide based on decimalFloat.exponent
+    const bool useScientificNotation =
+        abs(value) > ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD ||
+        abs(value) < ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD;
+    const char* str =
+        decimalToString(decimalFloat, useScientificNotation, buffer);
+    writeRaw(str);
   }
 
   template <typename T>

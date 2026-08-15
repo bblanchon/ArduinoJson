@@ -184,8 +184,8 @@ template <typename T>
 using Float = typename std::conditional<sizeof(T) == 8, Float64, Float32>::type;
 
 template <typename TFloat>
-std::string decimalToString(const TFloat& value, bool useScientificNotation,
-                            char* buffer) {
+const char* decimalToString(const TFloat& value, bool useScientificNotation,
+                            char* buf) {
   if (value.isNaN)
     return "NaN";
 
@@ -197,7 +197,6 @@ std::string decimalToString(const TFloat& value, bool useScientificNotation,
 
   std::string result;
 
-  char buf[64];
   int index = sizeof(buf) - 1;
   buf[index--] = '\0';
 
@@ -215,7 +214,7 @@ std::string decimalToString(const TFloat& value, bool useScientificNotation,
 
     for (;;) {
       assert(index >= 0);
-      buf[index--] = '0' + m % 10;
+      buf[index--] = char('0' + m % 10);
       m /= 10;
       if (m == 0)
         break;
@@ -232,7 +231,6 @@ std::string decimalToString(const TFloat& value, bool useScientificNotation,
     }
   } else {
     auto pointPosition = -value.exponent;
-    auto e = 0;
 
     // remove trailing zeros after the decimal point
     while (m % 10 == 0 && pointPosition > 0) {
@@ -248,7 +246,7 @@ std::string decimalToString(const TFloat& value, bool useScientificNotation,
 
     while (m > 0 || pointPosition >= 0) {
       assert(index >= 0);
-      buf[index--] = '0' + m % 10;
+      buf[index--] = char('0' + m % 10);
       m /= 10;
       if (pointPosition == 1)
         buf[index--] = '.';
@@ -380,7 +378,7 @@ Float<T> unpackBinaryFloat(T value) {
   if (exponent != 0) {
     // Normalized number: add the hidden bit back and unbias the exponent
     binaryFloat.significand += ieee754::hiddenBit;
-    exponent -= ieee754::exponentBias;
+    exponent = exponent_t(exponent - ieee754::exponentBias);
   } else if (binaryFloat.significand) {
     // Subnormal number: the exponent is the minimum and there's no hidden bit
     exponent = ieee754::minExponent;
@@ -404,18 +402,21 @@ Float<T> unpackBinaryFloat(T value) {
   // whereas IEEE-754 stores a fractional significand (1.xxxxx). Converting
   // fractional to integer multiplies significand by 2^mantissaSize, so the
   // exponent must decrease by mantissaSize to preserve the value.
-  binaryFloat.exponent = exponent - shift - ieee754::mantissaSize;
+  binaryFloat.exponent = exponent_t(exponent - shift - ieee754::mantissaSize);
 
   return binaryFloat;
 }
 
-constexpr uint64_t constpow10(int k) {
-  return k == 0 ? 1 : 10 * constpow10(k - 1);
+template <typename T>
+constexpr T constpow10(int k) {
+  return k == 0 ? 1 : 10 * constpow10<T>(k - 1);
 }
 
 template <typename T>
 Float<T> binaryToDecimalFloat(Float<T> binaryFloat) {
   Float<T> decimalFloat;
+  using significand_t = typename Float<T>::significand_type;
+  using exponent_t = typename Float<T>::exponent_type;
 
   decimalFloat.isNegative = binaryFloat.isNegative;
   decimalFloat.isNaN = binaryFloat.isNaN;
@@ -441,9 +442,10 @@ Float<T> binaryToDecimalFloat(Float<T> binaryFloat) {
   // reduce the memory footprint.
 
   // The exponent is too high, scale it down
-  for (int8_t i = 0; i < cache.size && binaryFloat.exponent > 3; i++) {
+  for (uint8_t i = 0; i < cache.size && binaryFloat.exponent > 3; i++) {
     // Exponent after multiplying by 10^-(2^N)
-    auto newExponent = binaryFloat.exponent + cache.negativeExponents[i];
+    auto newExponent =
+        exponent_t(binaryFloat.exponent + cache.negativeExponents[i]);
 
     // Skip this power of 10 if it leads to a negative exponent
     // Allow some slack because the is too much distance between the cached
@@ -457,13 +459,15 @@ Float<T> binaryToDecimalFloat(Float<T> binaryFloat) {
         multiplyHigh(binaryFloat.significand, cache.negativeSignificands[i]);
 
     // Increase the power of 10 by 2^N
-    decimalExponent += 1 << (cache.size - 1 - i);
+    const exponent_t exponentOffset = exponent_t(1 << (cache.size - 1 - i));
+    decimalExponent = exponent_t(decimalExponent + exponentOffset);
   }
 
   // The exponent is too low, scale it up
-  for (int8_t i = 0; i < cache.size && binaryFloat.exponent < 0; i++) {
+  for (uint8_t i = 0; i < cache.size && binaryFloat.exponent < 0; i++) {
     // Exponent after multiplying by 10^(2^N)
-    auto newExponent = binaryFloat.exponent + cache.positiveExponents[i];
+    auto newExponent =
+        exponent_t(binaryFloat.exponent + cache.positiveExponents[i]);
 
     // Skip this power of 10 if it leads to a too high exponent
     if (newExponent > 3)
@@ -475,7 +479,8 @@ Float<T> binaryToDecimalFloat(Float<T> binaryFloat) {
         multiplyHigh(binaryFloat.significand, cache.positiveSignificands[i]);
 
     // Increase the power of 10 by 2^N
-    decimalExponent -= 1 << (cache.size - 1 - i);
+    const exponent_t exponentOffset = exponent_t(1 << (cache.size - 1 - i));
+    decimalExponent = exponent_t(decimalExponent - exponentOffset);
   }
 
   // binaryFloat should now be in the range [1, 10), or close enough
@@ -485,12 +490,14 @@ Float<T> binaryToDecimalFloat(Float<T> binaryFloat) {
   // To reduce the number of digits, we divide by a large power ten (10^8)
   // We take this opportunity to cancel the remaining binary exponent
   const uint8_t divisorDigits = sizeof(T) == 8 ? 8 : 3;
-  const uint64_t divisor = constpow10(divisorDigits) >> binaryFloat.exponent;
+  const significand_t divisor =
+      constpow10<significand_t>(divisorDigits) >> binaryFloat.exponent;
 
   // Reduce number of digits and cancel the remaining binary exponent
   decimalFloat.significand = binaryFloat.significand / divisor;
-  decimalFloat.exponent =
-      decimalExponent + divisorDigits;  // adjust for the division by 10^9 above
+
+  // Adjust for the division by 10^N above
+  decimalFloat.exponent = exponent_t(decimalExponent + divisorDigits);
 
   // Round up if needed
   uint64_t rem = binaryFloat.significand % divisor;
