@@ -55,8 +55,8 @@ TEST_CASE("TextFormatter::writeFloat(double)") {
   }
 
   SECTION("Max double") {
-    check<double>(1.7976931348623157E+308, "1.797693135e308");
-    check<double>(-1.7976931348623157E+308, "-1.797693135e308");
+    check<double>(1.7976931348623157E+308, "1.7976931349e308");
+    check<double>(-1.7976931348623157E+308, "-1.7976931349e308");
   }
 
   SECTION("Big exponent") {
@@ -84,20 +84,20 @@ TEST_CASE("TextFormatter::writeFloat(double)") {
   SECTION("Rounding when too many decimals") {
     check<double>(0.000099999999999, "0.0001");
     check<double>(0.0000099999999999, "1e-5");
-    check<double>(0.9999999996, "1");
+    check<double>(0.99999999996, "1");
   }
 
-  SECTION("9 decimal places") {
-    check<double>(0.100000001, "0.100000001");
-    check<double>(0.999999999, "0.999999999");
+  SECTION("10 significant digits") {
+    check<double>(0.1000000001, "0.1000000001");
+    check<double>(0.9999999999, "0.9999999999");
 
     check<double>(9.000000001, "9.000000001");
     check<double>(9.999999999, "9.999999999");
   }
 
-  SECTION("10 decimal places") {
-    check<double>(0.1000000001, "0.1");
-    check<double>(0.9999999999, "1");
+  SECTION("11 significant digits") {
+    check<double>(0.100000000001, "0.1");
+    check<double>(0.99999999999, "1");
 
     check<double>(9.0000000001, "9");
     check<double>(9.9999999999, "10");

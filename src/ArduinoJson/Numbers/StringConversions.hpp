@@ -509,8 +509,16 @@ Float<T> binaryToDecimalFloat(Float<T> binaryFloat) {
   assert(binaryFloat.exponent <= 3);
 
   // To reduce the number of digits, we divide by a large power ten (10^8)
-  // We take this opportunity to cancel the remaining binary exponent
-  const uint8_t divisorDigits = sizeof(T) == 8 ? 8 : 3;
+  // We also take this opportunity to cancel the remaining binary exponent
+  //
+  // The greater this number, the less digits end up in the final string.
+  // 8 (so a division by 10^8) works great but produces many more digits than
+  // previous versions of ArduinoJson.
+  // I bump this value to 9 to artificially reduce the number of significant
+  // digits so as to be in line with older library version and, therefore, make
+  // fair benchmarks.
+  // In the futures, it might make sense to change this back to a lower value.
+  const uint8_t divisorDigits = sizeof(T) == 8 ? 9 : 3;
   const significand_t divisor =
       constpow10<significand_t>(divisorDigits) >> binaryFloat.exponent;
 
