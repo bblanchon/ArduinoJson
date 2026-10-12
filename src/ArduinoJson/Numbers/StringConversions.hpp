@@ -195,7 +195,7 @@ const char* decimalToString(const TFloat& value, bool useScientificNotation,
     return value.isNegative ? "-Infinity" : "Infinity";
 
   if (value.significand == 0)
-    return value.isNegative ? "-0" : "0";
+    return "0";
 
   char* tail = buf + (sizeof(value.significand) == 8 ? 30 : 16);
   char* head = tail;
