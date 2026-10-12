@@ -518,7 +518,7 @@ Float<T> binaryToDecimalFloat(Float<T> binaryFloat) {
   // digits so as to be in line with older library version and, therefore, make
   // fair benchmarks.
   // In the futures, it might make sense to change this back to a lower value.
-  const uint8_t divisorDigits = sizeof(T) == 8 ? 9 : 3;
+  const uint8_t divisorDigits = sizeof(T) == 8 ? 10 : 3;
   const significand_t divisor =
       constpow10<significand_t>(divisorDigits) >> binaryFloat.exponent;
 
