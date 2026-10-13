@@ -90,7 +90,7 @@ TEST_CASE("deserialize JSON array") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(2 == arr.size());
       REQUIRE(arr[0].as<double>() == Approx(4.2123456));
-      REQUIRE(arr[1] == -7E89);
+      REQUIRE(arr[1].as<double>() == Approx(-7E89));
       REQUIRE(spy.log() == AllocatorLog{
                                Allocate(sizeofPool<VariantData>()),
                                Allocate(sizeofPool<EightByteValue>()),

@@ -177,7 +177,7 @@ TEST_CASE("deserialize JSON object") {
       REQUIRE(doc.is<JsonObject>());
       REQUIRE(obj.size() == 2);
       REQUIRE(obj["key1"].as<double>() == Approx(12.3456789));
-      REQUIRE(obj["key2"] == -7E89);
+      REQUIRE(obj["key2"].as<double>() == Approx(-7E89));
     }
 
     SECTION("Booleans") {

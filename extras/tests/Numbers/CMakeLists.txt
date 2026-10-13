@@ -9,6 +9,7 @@ add_executable(NumbersTests
 	parseFloat.cpp
 	parseInteger.cpp
 	parseNumber.cpp
+	stringToDecimal.cpp
 )
 
 add_test(Numbers NumbersTests)

@@ -576,11 +576,10 @@ inline Float<T> stringToDecimal(const char* s) {
 
   while (isdigit(*s)) {
     uint8_t digit = uint8_t(*s - '0');
-    if (result.significand > maxSignificand / 10)
+    // TODO: we don't need to be so accurate for overflow detection
+    if (result.significand > (maxSignificand - digit) / 10)
       break;
     result.significand *= 10;
-    if (result.significand > maxSignificand - digit)
-      break;
     result.significand += digit;
     s++;
   }

@@ -66,3 +66,8 @@ TEST_CASE("parseNumber<uint16_t>()") {
   checkInteger<uint16_t>("-1", 0);
   checkInteger<uint16_t>("65536", 0);
 }
+
+TEST_CASE("parseNumber<uint32_t>()") {
+  checkInteger<uint32_t>("4294967295", 4294967295);
+  checkInteger<uint32_t>("4294967296", 0);
+}
