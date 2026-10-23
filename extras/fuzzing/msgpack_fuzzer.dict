@@ -1,0 +1,52 @@
+# MessagePack format markers for ArduinoJson's msgpack_fuzzer.
+# libFuzzer dictionaries accept \xAB hex escapes only.
+# fixmap / fixarray / fixstr
+"\x81"
+"\x82"
+"\x8f"
+"\x91"
+"\x92"
+"\x9f"
+"\xa1"
+"\xa3"
+"\xa5"
+"\xbf"
+# nil / booleans
+"\xc0"
+"\xc2"
+"\xc3"
+# floats
+"\xca"
+"\xcb"
+# unsigned ints
+"\xcc"
+"\xcd"
+"\xce"
+"\xcf"
+# signed ints
+"\xd0"
+"\xd1"
+"\xd2"
+"\xd3"
+# str
+"\xd9"
+"\xda"
+"\xdb"
+# bin
+"\xc4"
+"\xc5"
+"\xc6"
+# array / map 16/32
+"\xdc"
+"\xdd"
+"\xde"
+"\xdf"
+# ext
+"\xd4"
+"\xd5"
+"\xd6"
+"\xd7"
+"\xd8"
+"\xc7"
+"\xc8"
+"\xc9"
