@@ -1,0 +1,2 @@
+{"sensor":true}
+{"sensor":1,"other":"x"}
