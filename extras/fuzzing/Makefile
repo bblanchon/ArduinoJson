@@ -11,7 +11,10 @@ all: \
 	$(OUT)/msgpack_fuzzer.options \
 	$(OUT)/number_fuzzer \
 	$(OUT)/number_fuzzer_seed_corpus.zip \
-	$(OUT)/number_fuzzer.options
+	$(OUT)/number_fuzzer.options \
+	$(OUT)/filter_fuzzer \
+	$(OUT)/filter_fuzzer_seed_corpus.zip \
+	$(OUT)/filter_fuzzer.options
 
 $(OUT)/%_fuzzer: %_fuzzer.cpp $(shell find ../../src -type f)
 	$(CXX) $(CXXFLAGS) $< -o$@ $(LIB_FUZZING_ENGINE)
