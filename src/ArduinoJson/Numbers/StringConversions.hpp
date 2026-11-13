@@ -7,7 +7,7 @@
 #include <ArduinoJson/Polyfills/bit.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 
-#include <math.h>
+#include <ctype.h>
 
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
@@ -181,7 +181,7 @@ using Float64 = FloatBase<uint64_t, int16_t>;
 using Float32 = FloatBase<uint32_t, int16_t>;
 
 template <typename T>
-using Float = typename std::conditional<sizeof(T) == 8, Float64, Float32>::type;
+using Float = conditional_t<sizeof(T) == 8, Float64, Float32>;
 
 template <typename TFloat>
 const char* decimalToString(const TFloat& value, bool useScientificNotation,
@@ -321,19 +321,15 @@ struct Ieee754_32 {
   static constexpr uint32_t hiddenBit = 0x00800000U;
 };
 
-template <typename T,
-          typename =
-              typename std::enable_if<std::is_floating_point<T>::value>::type>
-using Ieee754 =
-    typename std::conditional<sizeof(T) == 8, Ieee754_64, Ieee754_32>::type;
+template <typename T, typename = enable_if_t<is_floating_point<T>::value>>
+using Ieee754 = conditional_t<sizeof(T) == 8, Ieee754_64, Ieee754_32>;
 
 template <typename T, typename TSignificant, typename TExponent>
 T packBinaryFloat(FloatBase<TSignificant, TExponent> binaryFloat) {
   using ieee754 = Ieee754<T>;
   using significand_t = TSignificant;
   using exponent_t = TExponent;
-  using bits_t =
-      typename std::conditional<sizeof(T) == 8, uint64_t, uint32_t>::type;
+  using bits_t = conditional_t<sizeof(T) == 8, uint64_t, uint32_t>;
 
   ARDUINOJSON_ASSERT(binaryFloat.normalized());
   ARDUINOJSON_ASSERT(!binaryFloat.isNaN);

@@ -7,6 +7,8 @@
 #include <ArduinoJson/Numbers/JsonInteger.hpp>
 #include <ArduinoJson/Numbers/StringConversions.hpp>
 
+#include <math.h>  // NAN, INFINITY
+
 ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 template <typename A, typename B>
