@@ -5,6 +5,9 @@
 
 #include "Literals.hpp"
 
+using ArduinoJson::detail::NumberType;
+using ArduinoJson::detail::parseNumber;
+
 TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 0") {
   JsonDocument doc;
 
@@ -33,6 +36,21 @@ TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 0") {
 
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.isNull());
+    }
+  }
+
+  SECTION("parseNumber()") {
+    SECTION("uint32_t overflow") {
+      SECTION("ULONG_MAX") {
+        auto num1 = parseNumber("4294967295");
+        auto num2 = parseNumber("4294967296");
+
+        REQUIRE(num1.type() == NumberType::UnsignedInteger);
+        CHECK(num1.asUnsignedInteger() == 4294967295); 
+
+        REQUIRE(num2.type() == NumberType::Float);
+        CHECK(num2.asFloat() == Approx(4294967296.0));
+      }
     }
   }
 }

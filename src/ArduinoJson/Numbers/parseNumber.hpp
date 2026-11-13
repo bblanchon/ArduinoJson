@@ -99,7 +99,13 @@ class Number {
 
 inline Number parseNumber(const char* s) {
   assert(s != 0);
+
   auto decimalFloat = stringToDecimal<JsonFloat>(s);
+#if ARDUINOJSON_USE_DOUBLE && !ARDUINOJSON_USE_LONG_LONG
+  using significant_t = decltype(decimalFloat)::significand_type;
+  constexpr auto jsonIntMax = significant_t(1) << (sizeof(JsonInteger) * 8 - 1);
+  constexpr auto jsonUintMax = significant_t(1) << (sizeof(JsonUInt) * 8 - 1);
+#endif
 
   if (decimalFloat.isError)
     return Number();
@@ -112,23 +118,41 @@ inline Number parseNumber(const char* s) {
 
   if (decimalFloat.exponent == 0) {
     if (decimalFloat.isNegative) {
-      using significant_t = decltype(decimalFloat)::significand_type;
-      const significant_t sintMantissaMax = significant_t(1)
-                                            << (sizeof(JsonInteger) * 8 - 1);
-      if (decimalFloat.significand <= sintMantissaMax) {
+#if ARDUINOJSON_USE_DOUBLE && !ARDUINOJSON_USE_LONG_LONG
+      // using significant_t = decltype(decimalFloat)::significand_type;
+      // constexpr auto jsonIntMax = significant_t(1) << (sizeof(JsonInteger) *
+      // 8 - 1); constexpr auto jsonUintMax = significant_t(1) <<
+      // (sizeof(JsonUInt) * 8 - 1);
+      if (decimalFloat.significand <= jsonIntMax) {
         return Number(JsonInteger(~decimalFloat.significand + 1));
       }
-    } else
+      // integer overflow => store as float
+#else
+      return Number(JsonInteger(~decimalFloat.significand + 1));
+#endif
+    } else {
+#if ARDUINOJSON_USE_DOUBLE && !ARDUINOJSON_USE_LONG_LONG
+      if (decimalFloat.significand <= jsonUintMax) {
+        return Number(JsonUInt(decimalFloat.significand));
+      }
+// integer overflow => store as float
+#else
       return Number(JsonUInt(decimalFloat.significand));
+#endif
+    }
   }
 
   // TODO: fine-tune the threshold
-  bool hasFewDigits = decimalFloat.significand <= 10000000;
-
   auto binaryFloat = decimalToBinaryFloat<JsonFloat>(decimalFloat);
   binaryFloat.normalize();
 
-  if (sizeof(JsonFloat) == 8 && hasFewDigits && binaryFloat.exponent <= 64 &&
+#if ARDUINOJSON_USE_DOUBLE && \
+    (!defined(__SIZEOF_DOUBLE__) || __SIZEOF_DOUBLE__ > 4)
+  ARDUINOJSON_ASSERT(sizeof(JsonFloat) == 8);
+
+  bool hasFewDigits = decimalFloat.significand <= 10000000;
+
+  if (hasFewDigits && binaryFloat.exponent <= 64 &&
       binaryFloat.exponent >= -190) {
     Float32 binaryFloat32;
     binaryFloat32.significand = uint32_t(binaryFloat.significand >> 32);
@@ -138,6 +162,7 @@ inline Number parseNumber(const char* s) {
     // code
     return packBinaryFloat<float>(binaryFloat32);
   }
+#endif
 
   return packBinaryFloat<JsonFloat>(binaryFloat);
 }

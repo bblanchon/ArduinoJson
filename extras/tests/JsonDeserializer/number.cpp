@@ -85,6 +85,8 @@ TEST_CASE("deserialize an integer") {
     SECTION("ULONG_MAX + 1") {
       DeserializationError err = deserializeJson(doc, "4294967296");
 
+      CAPTURE(doc.as<std::string>());
+
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<unsigned long>() == false);
       REQUIRE(doc.is<float>() == true);
