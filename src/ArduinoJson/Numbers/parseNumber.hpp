@@ -103,10 +103,8 @@ inline Number parseNumber(const char* s) {
   assert(s != 0);
 
   auto decimalFloat = stringToDecimal<JsonFloat>(s);
-#if ARDUINOJSON_USE_DOUBLE && !ARDUINOJSON_USE_LONG_LONG
+#if ARDUINOJSON_USE_DOUBLE
   using significant_t = decltype(decimalFloat)::significand_type;
-  constexpr auto jsonIntMax = significant_t(1) << (sizeof(JsonInteger) * 8 - 1);
-  constexpr auto jsonUintMax = (significant_t(1) << (sizeof(JsonUInt) * 8)) - 1;
 #endif
 
   if (decimalFloat.isError)
@@ -120,25 +118,28 @@ inline Number parseNumber(const char* s) {
 
   if (decimalFloat.exponent == 0) {
     if (decimalFloat.isNegative) {
-#if ARDUINOJSON_USE_DOUBLE && !ARDUINOJSON_USE_LONG_LONG
-      // using significant_t = decltype(decimalFloat)::significand_type;
-      // constexpr auto jsonIntMax = significant_t(1) << (sizeof(JsonInteger) *
-      // 8 - 1); constexpr auto jsonUintMax = significant_t(1) <<
-      // (sizeof(JsonUInt) * 8 - 1);
+#if ARDUINOJSON_USE_DOUBLE
+      constexpr auto jsonIntMax = significant_t(1)
+                                  << (sizeof(JsonInteger) * 8 - 1);
       if (decimalFloat.significand <= jsonIntMax) {
         return Number(JsonInteger(~decimalFloat.significand + 1));
       }
       // integer overflow => store as float
 #else
+      ARDUINOJSON_ASSERT(sizeof(JsonInteger) >
+                         sizeof(decimalFloat.significand));
       return Number(JsonInteger(~decimalFloat.significand + 1));
 #endif
     } else {
 #if ARDUINOJSON_USE_DOUBLE && !ARDUINOJSON_USE_LONG_LONG
+      constexpr auto jsonUintMax =
+          (significant_t(1) << (sizeof(JsonUInt) * 8)) - 1;
       if (decimalFloat.significand <= jsonUintMax) {
         return Number(JsonUInt(decimalFloat.significand));
       }
-// integer overflow => store as float
+      // integer overflow => store as float
 #else
+      ARDUINOJSON_ASSERT(sizeof(JsonUInt) >= sizeof(decimalFloat.significand));
       return Number(JsonUInt(decimalFloat.significand));
 #endif
     }
