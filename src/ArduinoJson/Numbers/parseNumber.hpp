@@ -104,7 +104,7 @@ inline Number parseNumber(const char* s) {
 #if ARDUINOJSON_USE_DOUBLE && !ARDUINOJSON_USE_LONG_LONG
   using significant_t = decltype(decimalFloat)::significand_type;
   constexpr auto jsonIntMax = significant_t(1) << (sizeof(JsonInteger) * 8 - 1);
-  constexpr auto jsonUintMax = significant_t(1) << (sizeof(JsonUInt) * 8 - 1);
+  constexpr auto jsonUintMax = (significant_t(1) << (sizeof(JsonUInt) * 8)) - 1;
 #endif
 
   if (decimalFloat.isError)

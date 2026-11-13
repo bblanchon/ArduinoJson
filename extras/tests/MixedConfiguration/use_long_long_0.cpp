@@ -41,16 +41,25 @@ TEST_CASE("ARDUINOJSON_USE_LONG_LONG == 0") {
 
   SECTION("parseNumber()") {
     SECTION("uint32_t overflow") {
-      SECTION("ULONG_MAX") {
-        auto num1 = parseNumber("4294967295");
-        auto num2 = parseNumber("4294967296");
+      auto num1 = parseNumber("4294967295");
+      auto num2 = parseNumber("4294967296");
 
-        REQUIRE(num1.type() == NumberType::UnsignedInteger);
-        CHECK(num1.asUnsignedInteger() == 4294967295); 
+      REQUIRE(num1.type() == NumberType::UnsignedInteger);
+      CHECK(num1.asUnsignedInteger() == 4294967295);
 
-        REQUIRE(num2.type() == NumberType::Float);
-        CHECK(num2.asFloat() == Approx(4294967296.0));
-      }
+      REQUIRE(num2.type() == NumberType::Double);
+      CHECK(num2.asDouble() == Approx(4294967296.0));
+    }
+
+    SECTION("int32_t overflow") {
+      auto num1 = parseNumber("-2147483648");
+      auto num2 = parseNumber("-2147483649");
+
+      REQUIRE(num1.type() == NumberType::SignedInteger);
+      CHECK(num1.asSignedInteger() == -2147483648);
+
+      REQUIRE(num2.type() == NumberType::Double);
+      CHECK(num2.asDouble() == Approx(-2147483649.0));
     }
   }
 }
