@@ -145,29 +145,25 @@ inline Number parseNumber(const char* s) {
     }
   }
 
-  // TODO: fine-tune the threshold
   auto binaryFloat = decimalToBinaryFloat<JsonFloat>(decimalFloat);
   binaryFloat.normalize();
+
+  auto result = packBinaryFloat<JsonFloat>(binaryFloat);
 
 #if ARDUINOJSON_USE_DOUBLE && \
     (!defined(__SIZEOF_DOUBLE__) || __SIZEOF_DOUBLE__ > 4)
   ARDUINOJSON_ASSERT(sizeof(JsonFloat) == 8);
 
-  bool hasFewDigits = decimalFloat.significand <= 10000000;
+  // TODO: fine-tune the threshold
+  bool hasFewDigits = decimalFloat.significand <= 1000000;
 
   if (hasFewDigits && binaryFloat.exponent <= 64 &&
       binaryFloat.exponent >= -190) {
-    Float32 binaryFloat32;
-    binaryFloat32.significand = uint32_t(binaryFloat.significand >> 32);
-    binaryFloat32.exponent = int16_t(binaryFloat.exponent + 32);
-    binaryFloat32.isNegative = binaryFloat.isNegative;
-    // TODO: try casting the double to a float to see if it produces smaller
-    // code
-    return packBinaryFloat<float>(binaryFloat32);
+    return float(result);
   }
 #endif
 
-  return packBinaryFloat<JsonFloat>(binaryFloat);
+  return result;
 }
 
 template <typename T>
