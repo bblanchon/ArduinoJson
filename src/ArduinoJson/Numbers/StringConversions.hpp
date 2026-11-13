@@ -189,10 +189,18 @@ const char* decimalToString(const TFloat& value, bool useScientificNotation,
   using exponent_t = typename TFloat::exponent_type;
 
   if (value.isNaN)
+#if ARDUINOJSON_ENABLE_NAN
     return "NaN";
+#else
+    return "null";
+#endif
 
   if (value.isInfinity)
-    return value.isNegative ? "-Infinity" : "Infinity";
+#if ARDUINOJSON_ENABLE_INFINITY
+    return &"-Infinity"[!value.isNegative];
+#else
+    return "null";
+#endif
 
   if (value.significand == 0)
     return "0";
