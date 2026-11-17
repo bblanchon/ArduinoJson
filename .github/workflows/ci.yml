@@ -339,7 +339,7 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip
       - name: Set up Python 3.x
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.x"
       - name: Install PlatformIO
@@ -521,7 +521,7 @@ jobs:
       - name: Amalgamate ArduinoJson.hpp
         run: extras/scripts/build-single-header.sh "src/ArduinoJson.hpp" "$ARDUINOJSON_HPP"
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Single headers
           path: |
@@ -552,7 +552,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.espressif
           key: ${{ runner.os }}-esp-idf
@@ -592,7 +592,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: cpp
 
@@ -602,6 +602,6 @@ jobs:
           cmake --build .
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:cpp"

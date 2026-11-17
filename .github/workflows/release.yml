@@ -16,7 +16,7 @@ jobs:
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Write release body
         id: body
         run: |
@@ -54,11 +54,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Upload component to the component registry
-        uses: espressif/upload-components-ci-action@v1
+        uses: espressif/upload-components-ci-action@v2
         with:
-          name: ArduinoJson
+          components: "ArduinoJson:."
           namespace: bblanchon
           api_token: ${{ secrets.IDF_COMPONENT_API_TOKEN }}
 
@@ -69,7 +69,7 @@ jobs:
       - name: Install
         run: npm install -g particle-cli
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Login
         run: particle login --token ${{ secrets.PARTICLE_TOKEN }}
       - name: Publish
@@ -80,13 +80,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python 3.x
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.x"
       - name: Install PlatformIO
         run: pip install platformio
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Publish
         run: pio pkg publish --no-interactive --no-notify
         env:
