@@ -18,4 +18,10 @@ inline bool issign(char c) {
   return '-' == c || c == '+';
 }
 
+#ifndef isspace
+inline bool isspace(int c) {
+  return c == ' ' || ('\t' <= c && c <= '\r');
+}
+#endif
+
 ARDUINOJSON_END_PRIVATE_NAMESPACE

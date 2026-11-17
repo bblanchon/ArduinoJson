@@ -12,6 +12,7 @@
 #include <ArduinoJson/Memory/ResourceManager.hpp>
 #include <ArduinoJson/Numbers/parseNumber.hpp>
 #include <ArduinoJson/Polyfills/assert.hpp>
+#include <ArduinoJson/Polyfills/ctype.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
 #include <ArduinoJson/Polyfills/utility.hpp>
 #include <ArduinoJson/Variant/VariantData.hpp>

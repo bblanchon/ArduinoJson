@@ -43,7 +43,8 @@
 #define isdigit(c) (((c) >= '0') && ((c) <= '9'))
 #define isprint(c)
 #define isxdigit(c)
-#define isspace(c)
+#define isspace(c) \
+  (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v')
 #define isupper(c)
 #define islower(c)
 #define isalpha(c)
