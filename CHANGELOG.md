@@ -9,6 +9,7 @@ HEAD
   I could not find a way to fix it, so I chose to remove the optimization rather than keep it broken.
 * Replace the "extension slots" mechanism with a memory pool dedicated to 8-byte values.
 * Speed up character escaping in `serializeJson()` (issue #2226 by @florentbr)
+* `deserializeJson()` now allows top-level numbers to be followed by a whitespace (issue #2233 by @DicksonWu654)
 
 > ### BREAKING CHANGES
 >

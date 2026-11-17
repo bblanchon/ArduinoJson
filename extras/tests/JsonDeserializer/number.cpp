@@ -35,6 +35,32 @@ TEST_CASE("deserializeJson() with a top-level number") {
       REQUIRE(doc.as<int>() == -42);
     }
 
+    SECTION("Tolerates a trailing whitespace") {  // issue #2233
+      SECTION("space") {
+        auto err = deserializeJson(doc, "42 ");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<int>() == 42);
+      }
+
+      SECTION("tab") {
+        auto err = deserializeJson(doc, "42\t");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<int>() == 42);
+      }
+
+      SECTION("carriage-return") {
+        auto err = deserializeJson(doc, "42\r");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<int>() == 42);
+      }
+
+      SECTION("newline") {
+        auto err = deserializeJson(doc, "42\n");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<int>() == 42);
+      }
+    }
+
 #if LONG_MAX == 2147483647
     SECTION("LONG_MAX") {
       auto err = deserializeJson(doc, "2147483647");
@@ -120,6 +146,32 @@ TEST_CASE("deserializeJson() with a top-level number") {
       REQUIRE(err == DeserializationError::Ok);
       REQUIRE(doc.is<float>() == true);
       REQUIRE(my::isinf(doc.as<float>()));
+    }
+
+    SECTION("Tolerates a trailing whitespace") {  // issue #2233
+      SECTION("space") {
+        auto err = deserializeJson(doc, "4.2 ");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<float>() == Approx(4.2));
+      }
+
+      SECTION("tab") {
+        auto err = deserializeJson(doc, "4.2\t");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<float>() == Approx(4.2));
+      }
+
+      SECTION("carriage-return") {
+        auto err = deserializeJson(doc, "4.2\r");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<float>() == Approx(4.2));
+      }
+
+      SECTION("newline") {
+        auto err = deserializeJson(doc, "4.2\n");
+        REQUIRE(err == DeserializationError::Ok);
+        REQUIRE(doc.as<float>() == Approx(4.2));
+      }
     }
   }
 }
