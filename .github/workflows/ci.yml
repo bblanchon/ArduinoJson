@@ -116,10 +116,15 @@ jobs:
           - clang: "13"
             runner: ubuntu-22.04
           - clang: 14
+            runner: ubuntu-24.04
           - clang: 15
+            runner: ubuntu-24.04
           - clang: 16
+            runner: ubuntu-24.04
           - clang: 17
+            runner: ubuntu-24.04
           - clang: 18
+            runner: ubuntu-24.04
           - clang: 19
     runs-on: ${{ matrix.runner || 'ubuntu-latest' }}
     steps:
