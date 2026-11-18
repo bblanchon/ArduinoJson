@@ -50,6 +50,10 @@ class JsonDocument : public detail::VariantOperators<const JsonDocument&> {
 
   JsonDocument& operator=(JsonDocument src) {
     swap(*this, src);
+    // clang-tidy-21 reports "Address of stack memory returned to caller" when
+    // MemoryPoolList's swap() reassigns pools_ to preallocatedPools_.
+    // As far as I can tell this is a false positive.
+    // NOLINTNEXTLINE(clang-analyzer-core.StackAddressEscape)
     return *this;
   }
 
