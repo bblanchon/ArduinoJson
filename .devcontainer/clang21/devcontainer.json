@@ -1,0 +1,22 @@
+{
+	"name": "Clang 21",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [
+		"--name=ArduinoJson-clang21"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools",
+				"xaver.clang-format"
+			],
+			"settings": {
+				"cmake.generator": "Unix Makefiles",
+				"cmake.buildDirectory": "/tmp/build",
+				"clang-format.executable": "clang-format"
+			}
+		}
+	}
+}
