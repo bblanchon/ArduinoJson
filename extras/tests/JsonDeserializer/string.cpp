@@ -58,6 +58,12 @@ TEST_CASE("\\u0000") {
   REQUIRE(err == DeserializationError::Ok);
 
   const char* result = doc.as<const char*>();
+
+  // HACK: help clang-tidy realize we are not using the tiny string buffer
+  const auto data = detail::VariantAttorney::getData(doc);
+  REQUIRE(data->type == detail::VariantType::LongString);
+  REQUIRE(data->content.asStringNode->data == result);
+
   CHECK(result[0] == 'w');
   CHECK(result[1] == 'x');
   CHECK(result[2] == 0);
