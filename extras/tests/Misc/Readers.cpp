@@ -89,6 +89,7 @@ TEST_CASE("BoundedReader<const char*>") {
   }
 }
 
+// NOLINTBEGIN(clang-analyzer-security.ArrayBound)
 TEST_CASE("Reader<const char*>") {
   SECTION("read()") {
     Reader<const char*> reader("\x01\xFF\x00\x12");
@@ -126,6 +127,7 @@ TEST_CASE("Reader<const char*>") {
     REQUIRE(buffer[6] == 'g');
   }
 }
+// NOLINTEND(clang-analyzer-security.ArrayBound)
 
 TEST_CASE("IteratorReader") {
   SECTION("read()") {
