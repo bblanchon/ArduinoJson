@@ -86,6 +86,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	else()
 		add_compile_options(-g -O0)
 	endif()
+
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 17)
+		add_compile_options(-Wno-deprecated-literal-operator)
+	endif()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
