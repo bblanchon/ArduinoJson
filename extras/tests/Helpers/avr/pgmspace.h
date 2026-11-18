@@ -11,11 +11,11 @@
 class __FlashStringHelper;
 
 inline const void* convertPtrToFlash(const void* s) {
-  return reinterpret_cast<const char*>(s) + 42;
+  return reinterpret_cast<const void*>(reinterpret_cast<uintptr_t>(s) + 42);
 }
 
 inline const void* convertFlashToPtr(const void* s) {
-  return reinterpret_cast<const char*>(s) - 42;
+  return reinterpret_cast<const void*>(reinterpret_cast<uintptr_t>(s) - 42);
 }
 
 #define PSTR(X) reinterpret_cast<const char*>(convertPtrToFlash(X))
