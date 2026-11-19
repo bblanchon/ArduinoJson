@@ -131,3 +131,31 @@ TEST_CASE("deserialize an integer") {
     }
   }
 }
+
+TEST_CASE("deserialize a number followed by whitespace") {
+  JsonDocument doc;
+
+  SECTION("integer followed by a line feed") {
+    DeserializationError err = deserializeJson(doc, "42\n");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.as<int>() == 42);
+  }
+
+  SECTION("decimal followed by a space") {
+    DeserializationError err = deserializeJson(doc, "1.5 ");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.as<double>() == 1.5);
+  }
+
+  SECTION("exponent followed by a carriage return and line feed") {
+    DeserializationError err = deserializeJson(doc, "1e3\r\n");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.as<double>() == 1000);
+  }
+
+  SECTION("negative number followed by a tab") {
+    DeserializationError err = deserializeJson(doc, "-7\t");
+    REQUIRE(err == DeserializationError::Ok);
+    REQUIRE(doc.as<int>() == -7);
+  }
+}

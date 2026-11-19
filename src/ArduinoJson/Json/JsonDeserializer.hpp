@@ -34,9 +34,19 @@ class JsonDeserializer {
 
     err = parseVariant(variant, filter, nestingLimit);
 
-    if (!err && latch_.last() != 0 && variant->isFloat()) {
-      // We don't detect trailing characters earlier, so we need to check now
-      return DeserializationError::InvalidInput;
+    if (!err && variant->isFloat()) {
+      // We don't detect trailing characters earlier, so we need to check now.
+      // Whitespace may follow a value (RFC 8259 section 2).
+      switch (latch_.last()) {
+        case 0:
+        case ' ':
+        case '\t':
+        case '\r':
+        case '\n':
+          break;
+        default:
+          return DeserializationError::InvalidInput;
+      }
     }
 
     return err;
