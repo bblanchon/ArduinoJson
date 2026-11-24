@@ -73,6 +73,10 @@ TEST_CASE("serializeJson(JsonVariant)") {
     SECTION("NUL char") {
       check("hello\0world"_s, "\"hello\\u0000world\"");
     }
+
+    SECTION("Other control chars") {
+      check("\x01\x0B\x1F\x7F", "\"\\u0001\\u000b\\u001f\x7F\"");
+    }
   }
 
   SECTION("SerializedValue<const char*>") {

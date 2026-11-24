@@ -10,6 +10,7 @@ HEAD
 * Replace the "extension slots" mechanism with a memory pool dedicated to 8-byte values.
 * Speed up character escaping in `serializeJson()` (issue #2226 by @florentbr)
 * `deserializeJson()` now allows top-level numbers to be followed by a whitespace (issue #2233 by @DicksonWu654)
+* `serializeJson()` now escapes all control characters (U+0000 to U+001F), as RFC 8259 requires
 
 > ### BREAKING CHANGES
 >

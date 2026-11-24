@@ -57,10 +57,12 @@ class TextFormatter {
     if (specialChar) {
       writeRaw('\\');
       writeRaw(specialChar);
-    } else if (c) {
+    } else if (uint8_t(c) >= 0x20) {
       writeRaw(c);
     } else {
-      writeRaw("\\u0000");
+      writeRaw("\\u00");
+      writeRaw(char('0' + (c >> 4)));
+      writeRaw("0123456789abcdef"[c & 0x0F]);
     }
   }
 
